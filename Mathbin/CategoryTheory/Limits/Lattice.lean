@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 -/
 import Mathbin.Order.CompleteLattice
+import Mathbin.Data.Fintype.Lattice
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.CategoryTheory.Category.Preorder
 import Mathbin.CategoryTheory.Limits.Shapes.Products

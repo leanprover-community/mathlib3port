@@ -5,7 +5,6 @@ Authors: Bolton Bailey
 -/
 import Mathbin.Data.Nat.Prime
 import Mathbin.Data.Nat.Totient
-import Mathbin.Algebra.Periodic
 import Mathbin.Data.Finset.LocallyFinite
 import Mathbin.Data.Nat.Count
 import Mathbin.Data.Nat.Nth

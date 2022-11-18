@@ -83,7 +83,7 @@ variable (α) [Nonempty α]
 def pi : TwoPointing (α → β) where
   fst _ := q.fst
   snd _ := q.snd
-  fst_ne_snd h := q.fst_ne_snd $ by convert congr_fun h (Classical.arbitrary α)
+  fst_ne_snd h := q.fst_ne_snd <| by convert congr_fun h (Classical.arbitrary α)
 #align two_pointing.pi TwoPointing.pi
 
 @[simp]
@@ -117,7 +117,7 @@ theorem prod_snd : (p.Prod q).snd = (p.snd, q.snd) :=
 
 /-- The sum of two pointings. Keeps the first point from the left and the second point from the
 right. -/
-protected def sum : TwoPointing (α ⊕ β) :=
+protected def sum : TwoPointing (Sum α β) :=
   ⟨(Sum.inl p.fst, Sum.inr q.snd), Sum.inl_ne_inr⟩
 #align two_pointing.sum TwoPointing.sum
 

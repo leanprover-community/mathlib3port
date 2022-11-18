@@ -3,9 +3,9 @@ Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Mathbin.Topology.ContinuousFunction.Compact
 import Mathbin.Analysis.NormedSpace.Units
 import Mathbin.Algebra.Algebra.Spectrum
+import Mathbin.Topology.ContinuousFunction.Algebra
 
 /-!
 # Units of continuous functions
@@ -32,12 +32,12 @@ def unitsLift : C(X, Mˣ) ≃ C(X, M)ˣ where
   toFun f :=
     { val := ⟨fun x => f x, Units.continuous_coe.comp f.Continuous⟩,
       inv := ⟨fun x => ↑(f x)⁻¹, Units.continuous_coe.comp (continuous_inv.comp f.Continuous)⟩,
-      val_inv := ext $ fun x => Units.mul_inv _, inv_val := ext $ fun x => Units.inv_mul _ }
+      val_inv := ext fun x => Units.mul_inv _, inv_val := ext fun x => Units.inv_mul _ }
   invFun f :=
     { toFun := fun x => ⟨f x, f⁻¹ x, ContinuousMap.congr_fun f.mul_inv x, ContinuousMap.congr_fun f.inv_mul x⟩,
       continuous_to_fun :=
-        continuous_induced_rng.2 $
-          Continuous.prod_mk (f : C(X, M)).Continuous $ MulOpposite.continuous_op.comp (↑f⁻¹ : C(X, M)).Continuous }
+        continuous_induced_rng.2 <|
+          Continuous.prod_mk (f : C(X, M)).Continuous <| MulOpposite.continuous_op.comp (↑f⁻¹ : C(X, M)).Continuous }
   left_inv f := by
     ext
     rfl

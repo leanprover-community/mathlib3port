@@ -4,10 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Bhavik Mehta
 -/
 import Mathbin.CategoryTheory.Adjunction.Reflective
-import Mathbin.Topology.Category.TopCat.Default
 import Mathbin.Topology.StoneCech
 import Mathbin.CategoryTheory.Monad.Limits
 import Mathbin.Topology.UrysohnsLemma
+import Mathbin.Topology.Category.TopCat.Limits
 
 /-!
 # The category of Compact Hausdorff Spaces
@@ -239,9 +239,9 @@ theorem epi_iff_surjective {X Y : CompHausCat.{u}} (f : X ⟶ Y) : Epi f ↔ Fun
       exact hy y' hy'
     haveI : NormalSpace ↥Y.to_Top := normalOfCompactT2
     obtain ⟨φ, hφ0, hφ1, hφ01⟩ := exists_continuous_zero_one_of_closed hC hD hCD
-    haveI : CompactSpace (ULift.{u} $ Set.icc (0 : ℝ) 1) := homeomorph.ulift.symm.compact_space
-    haveI : T2Space (ULift.{u} $ Set.icc (0 : ℝ) 1) := homeomorph.ulift.symm.t2_space
-    let Z := of (ULift.{u} $ Set.icc (0 : ℝ) 1)
+    haveI : CompactSpace (ULift.{u} <| Set.icc (0 : ℝ) 1) := homeomorph.ulift.symm.compact_space
+    haveI : T2Space (ULift.{u} <| Set.icc (0 : ℝ) 1) := homeomorph.ulift.symm.t2_space
+    let Z := of (ULift.{u} <| Set.icc (0 : ℝ) 1)
     let g : Y ⟶ Z := ⟨fun y' => ⟨⟨φ y', hφ01 y'⟩⟩, continuous_ulift_up.comp (φ.continuous.subtype_mk fun y' => hφ01 y')⟩
     let h : Y ⟶ Z := ⟨fun _ => ⟨⟨0, set.left_mem_Icc.mpr zero_le_one⟩⟩, continuous_const⟩
     have H : h = g := by

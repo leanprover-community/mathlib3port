@@ -38,7 +38,7 @@ universe u₀ u₁ v₀ v₁ v₂ w w₀ w₁
 
 variable {s : Type u₀} {s' : Type u₁} {r r' w w' : Type _}
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`congr] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`congr] [] -/
 /-- Given a universe polymorphic type family `M.{u} : Type u₁ → Type
 u₂`, this class convert between instantiations, from
 `M.{u} : Type u₁ → Type u₂` to `M.{v} : Type v₁ → Type v₂` and back -/
@@ -71,7 +71,7 @@ def adaptUp (F : Type v₀ → Type v₁) (G : Type max v₀ u₀ → Type u₁)
 /-- convenient shortcut to avoid manipulating `ulift` -/
 def adaptDown {F : Type max u₀ v₀ → Type u₁} {G : Type v₀ → Type v₁} [L : Uliftable G F] [Monad F] {α β} (x : F α)
     (f : α → G β) : G β :=
-  @down.{v₀, v₁, max u₀ v₀} G F L β $ x >>= @up.{v₀, v₁, max u₀ v₀} G F L β ∘ f
+  @down.{v₀, v₁, max u₀ v₀} G F L β <| x >>= @up.{v₀, v₁, max u₀ v₀} G F L β ∘ f
 #align uliftable.adapt_down Uliftable.adaptDown
 
 /-- map function that moves up universes -/
@@ -108,7 +108,7 @@ instance : Uliftable id id where congr α β F := F
 def StateT.uliftable' {m : Type u₀ → Type v₀} {m' : Type u₁ → Type v₁} [Uliftable m m'] (F : s ≃ s') :
     Uliftable (StateT s m)
       (StateT s'
-        m') where congr α β G := StateT.equiv $ Equiv.piCongr F $ fun _ => Uliftable.congr _ _ $ Equiv.prodCongr G F
+        m') where congr α β G := StateT.equiv <| (Equiv.piCongr F) fun _ => Uliftable.congr _ _ <| Equiv.prodCongr G F
 #align state_t.uliftable' StateTₓ.uliftable'
 
 instance {m m'} [Uliftable m m'] : Uliftable (StateT s m) (StateT (ULift s) m') :=
@@ -117,7 +117,7 @@ instance {m m'} [Uliftable m m'] : Uliftable (StateT s m) (StateT (ULift s) m') 
 /-- for specific reader monads, this function helps to create a uliftable instance -/
 def ReaderT.uliftable' {m m'} [Uliftable m m'] (F : s ≃ s') :
     Uliftable (ReaderT s m)
-      (ReaderT s' m') where congr α β G := ReaderT.equiv $ Equiv.piCongr F $ fun _ => Uliftable.congr _ _ G
+      (ReaderT s' m') where congr α β G := ReaderT.equiv <| (Equiv.piCongr F) fun _ => Uliftable.congr _ _ G
 #align reader_t.uliftable' ReaderTₓ.uliftable'
 
 instance {m m'} [Uliftable m m'] : Uliftable (ReaderT s m) (ReaderT (ULift s) m') :=
@@ -134,7 +134,7 @@ instance {s m m'} [Uliftable m m'] : Uliftable (ContT s m) (ContT (ULift s) m') 
 /-- for specific writer monads, this function helps to create a uliftable instance -/
 def WriterT.uliftable' {m m'} [Uliftable m m'] (F : w ≃ w') :
     Uliftable (WriterT w m)
-      (WriterT w' m') where congr α β G := WriterT.equiv $ Uliftable.congr _ _ $ Equiv.prodCongr G F
+      (WriterT w' m') where congr α β G := WriterT.equiv <| Uliftable.congr _ _ <| Equiv.prodCongr G F
 #align writer_t.uliftable' WriterTₓ.uliftable'
 
 instance {m m'} [Uliftable m m'] : Uliftable (WriterT s m) (WriterT (ULift s) m') :=

@@ -156,7 +156,7 @@ protected def finOrthonormalBasis (hn : 0 < n) (h : finrank ℝ E = n) (x : Orie
     OrthonormalBasis (Fin n) ℝ E := by
   haveI := Fin.pos_iff_nonempty.1 hn
   haveI := finite_dimensional_of_finrank (h.symm ▸ hn : 0 < finrank ℝ E)
-  exact ((stdOrthonormalBasis _ _).reindex $ finCongr h).adjustToOrientation x
+  exact ((stdOrthonormalBasis _ _).reindex <| finCongr h).adjustToOrientation x
 #align orientation.fin_orthonormal_basis Orientation.finOrthonormalBasis
 
 /-- `orientation.fin_orthonormal_basis` gives a basis with the required orientation. -/
@@ -165,7 +165,7 @@ theorem fin_orthonormal_basis_orientation (hn : 0 < n) (h : finrank ℝ E = n) (
     (x.finOrthonormalBasis hn h).toBasis.Orientation = x := by
   haveI := Fin.pos_iff_nonempty.1 hn
   haveI := finite_dimensional_of_finrank (h.symm ▸ hn : 0 < finrank ℝ E)
-  exact ((stdOrthonormalBasis _ _).reindex $ finCongr h).orientation_adjust_to_orientation x
+  exact ((stdOrthonormalBasis _ _).reindex <| finCongr h).orientation_adjust_to_orientation x
 #align orientation.fin_orthonormal_basis_orientation Orientation.fin_orthonormal_basis_orientation
 
 section VolumeForm
@@ -263,7 +263,7 @@ theorem volume_form_robust' (b : OrthonormalBasis (Fin n) ℝ E) (v : Fin n → 
 /-- Let `v` be an indexed family of `n` vectors in an oriented `n`-dimensional real inner
 product space `E`. The output of the volume form of `E` when evaluated on `v` is bounded in absolute
 value by the product of the norms of the vectors `v i`. -/
-theorem abs_volume_form_apply_le (v : Fin n → E) : |o.volumeForm v| ≤ ∏ i : Fin n, ∥v i∥ := by
+theorem abs_volume_form_apply_le (v : Fin n → E) : |o.volumeForm v| ≤ ∏ i : Fin n, ‖v i‖ := by
   cases n
   · refine' o.eq_or_eq_neg_of_is_empty.by_cases _ _ <;> rintro rfl <;> simp
     
@@ -281,7 +281,7 @@ theorem abs_volume_form_apply_le (v : Fin n → E) : |o.volumeForm v| ≤ ∏ i 
   simp [b.orthonormal.1 i]
 #align orientation.abs_volume_form_apply_le Orientation.abs_volume_form_apply_le
 
-theorem volume_form_apply_le (v : Fin n → E) : o.volumeForm v ≤ ∏ i : Fin n, ∥v i∥ :=
+theorem volume_form_apply_le (v : Fin n → E) : o.volumeForm v ≤ ∏ i : Fin n, ‖v i‖ :=
   (le_abs_self _).trans (o.abs_volume_form_apply_le v)
 #align orientation.volume_form_apply_le Orientation.volume_form_apply_le
 
@@ -289,7 +289,7 @@ theorem volume_form_apply_le (v : Fin n → E) : o.volumeForm v ≤ ∏ i : Fin 
 real inner product space `E`. The output of the volume form of `E` when evaluated on `v` is, up to
 sign, the product of the norms of the vectors `v i`. -/
 theorem abs_volume_form_apply_of_pairwise_orthogonal {v : Fin n → E} (hv : Pairwise fun i j => ⟪v i, v j⟫ = 0) :
-    |o.volumeForm v| = ∏ i : Fin n, ∥v i∥ := by
+    |o.volumeForm v| = ∏ i : Fin n, ‖v i‖ := by
   cases n
   · refine' o.eq_or_eq_neg_of_is_empty.by_cases _ _ <;> rintro rfl <;> simp
     
@@ -298,17 +298,17 @@ theorem abs_volume_form_apply_of_pairwise_orthogonal {v : Fin n → E} (hv : Pai
   let b : OrthonormalBasis (Fin n.succ) ℝ E := gramSchmidtOrthonormalBasis hdim v
   have hb : b.to_basis.det v = ∏ i, ⟪b i, v i⟫ := gram_schmidt_orthonormal_basis_det hdim v
   rw [o.volume_form_robust' b, hb, Finset.abs_prod]
-  by_cases h:∃ i, v i = 0
+  by_cases h : ∃ i, v i = 0
   obtain ⟨i, hi⟩ := h
   · rw [Finset.prod_eq_zero (Finset.mem_univ i), Finset.prod_eq_zero (Finset.mem_univ i)] <;> simp [hi]
     
   push_neg  at h
   congr
   ext i
-  have hb : b i = ∥v i∥⁻¹ • v i := gram_schmidt_orthonormal_basis_apply_of_orthogonal hdim hv (h i)
+  have hb : b i = ‖v i‖⁻¹ • v i := gram_schmidt_orthonormal_basis_apply_of_orthogonal hdim hv (h i)
   simp only [hb, inner_smul_left, real_inner_self_eq_norm_mul_norm, IsROrC.conj_to_real]
   rw [abs_of_nonneg]
-  · have : ∥v i∥ ≠ 0 := by simpa using h i
+  · have : ‖v i‖ ≠ 0 := by simpa using h i
     field_simp
     
   · positivity

@@ -58,7 +58,7 @@ namespace UniformSpace
 namespace Completion
 
 instance (priority := 100) [SeparatedSpace K] : Nontrivial (hat K) :=
-  ⟨⟨0, 1, fun h => zero_ne_one $ (uniform_embedding_coe K).inj h⟩⟩
+  ⟨⟨0, 1, fun h => zero_ne_one <| (uniform_embedding_coe K).inj h⟩⟩
 
 variable {K}
 
@@ -85,7 +85,7 @@ theorem continuous_hat_inv [CompletableTopField K] {x : hat K} (h : x ≠ 0) : C
     
   · have eq_bot : 𝓝 (0 : hat K) ⊓ 𝓝 y = ⊥ := by
       by_contra h
-      exact y_ne (eq_of_nhds_ne_bot $ ne_bot_iff.mpr h).symm
+      exact y_ne (eq_of_nhds_ne_bot <| ne_bot_iff.mpr h).symm
     erw [dense_inducing_coe.nhds_eq_comap (0 : K), ← Filter.comap_inf, eq_bot]
     exact comap_bot
     
@@ -108,7 +108,7 @@ variable [CompletableTopField K]
 
 @[norm_cast]
 theorem coe_inv (x : K) : (x : hat K)⁻¹ = ((x⁻¹ : K) : hat K) := by
-  by_cases h:x = 0
+  by_cases h : x = 0
   · rw [h, inv_zero]
     dsimp [Inv.inv]
     norm_cast

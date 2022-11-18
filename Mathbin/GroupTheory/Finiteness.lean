@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
 import Mathbin.Data.Set.Finite
-import Mathbin.Data.Finset.Default
 import Mathbin.GroupTheory.QuotientGroup
 import Mathbin.GroupTheory.Submonoid.Operations
 import Mathbin.GroupTheory.Subgroup.Basic
 import Mathbin.SetTheory.Cardinal.Finite
+import Mathbin.Data.Finset.Preimage
 
 /-!
 # Finitely generated monoids and groups
@@ -276,7 +276,7 @@ theorem Group.fg_iff : Group.Fg G ↔ ∃ S : Set G, Subgroup.closure S = (⊤ :
 #align group.fg_iff Group.fg_iff
 
 @[to_additive]
-theorem Group.fg_iff' : Group.Fg G ↔ ∃ (n) (S : Finset G), S.card = n ∧ Subgroup.closure (S : Set G) = ⊤ :=
+theorem Group.fg_iff' : Group.Fg G ↔ ∃ (n : _)(S : Finset G), S.card = n ∧ Subgroup.closure (S : Set G) = ⊤ :=
   Group.fg_def.trans ⟨fun ⟨S, hS⟩ => ⟨S.card, S, rfl, hS⟩, fun ⟨n, S, hn, hS⟩ => ⟨S, hS⟩⟩
 #align group.fg_iff' Group.fg_iff'
 
@@ -284,8 +284,8 @@ theorem Group.fg_iff' : Group.Fg G ↔ ∃ (n) (S : Finset G), S.card = n ∧ Su
 @[to_additive AddGroup.FgIffAddMonoid.fg
       "An additive group is finitely generated if and only\nif it is finitely generated as an additive monoid."]
 theorem Group.FgIffMonoid.fg : Group.Fg G ↔ Monoid.Fg G :=
-  ⟨fun h => Monoid.fg_def.2 $ (Subgroup.fg_iff_submonoid_fg ⊤).1 (Group.fg_def.1 h), fun h =>
-    Group.fg_def.2 $ (Subgroup.fg_iff_submonoid_fg ⊤).2 (Monoid.fg_def.1 h)⟩
+  ⟨fun h => Monoid.fg_def.2 <| (Subgroup.fg_iff_submonoid_fg ⊤).1 (Group.fg_def.1 h), fun h =>
+    Group.fg_def.2 <| (Subgroup.fg_iff_submonoid_fg ⊤).2 (Monoid.fg_def.1 h)⟩
 #align group.fg_iff_monoid.fg Group.FgIffMonoid.fg
 
 theorem GroupFg.iff_add_fg : Group.Fg G ↔ AddGroup.Fg (Additive G) :=
@@ -313,7 +313,7 @@ instance (priority := 100) Group.fg_of_finite [Finite G] : Group.Fg G := by
 @[to_additive]
 theorem Group.fg_of_surjective {G' : Type _} [Group G'] [hG : Group.Fg G] {f : G →* G'} (hf : Function.Surjective f) :
     Group.Fg G' :=
-  Group.FgIffMonoid.fg.mpr $ @Monoid.fg_of_surjective G _ G' _ (Group.FgIffMonoid.fg.mp hG) f hf
+  Group.FgIffMonoid.fg.mpr <| @Monoid.fg_of_surjective G _ G' _ (Group.FgIffMonoid.fg.mp hG) f hf
 #align group.fg_of_surjective Group.fg_of_surjective
 
 @[to_additive]
@@ -409,8 +409,8 @@ end Subgroup
 section QuotientGroup
 
 @[to_additive]
-instance QuotientGroup.fg [Group.Fg G] (N : Subgroup G) [Subgroup.Normal N] : Group.Fg $ G ⧸ N :=
-  Group.fg_of_surjective $ QuotientGroup.mk'_surjective N
+instance QuotientGroup.fg [Group.Fg G] (N : Subgroup G) [Subgroup.Normal N] : Group.Fg <| G ⧸ N :=
+  Group.fg_of_surjective <| QuotientGroup.mk'_surjective N
 #align quotient_group.fg QuotientGroup.fg
 
 end QuotientGroup

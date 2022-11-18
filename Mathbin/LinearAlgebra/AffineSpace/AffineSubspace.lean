@@ -3,7 +3,6 @@ Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 -/
-import Mathbin.Data.Set.Intervals.UnorderedInterval
 import Mathbin.LinearAlgebra.AffineSpace.AffineEquiv
 
 /-!
@@ -23,7 +22,7 @@ This file defines affine subspaces (over modules) and the affine span of a set o
   various lemmas relating to the set of vectors in the `direction`,
   and relating the lattice structure on affine subspaces to that on
   their directions.
-* `affine_subspace.parallel`, notation `‖`, gives the property of two affine subspaces being
+* `affine_subspace.parallel`, notation `∥`, gives the property of two affine subspaces being
   parallel (one being a translate of the other).
 * `affine_span` gives the affine subspace spanned by a set of points,
   with `vector_span` giving its direction.  `affine_span` is defined
@@ -624,7 +623,7 @@ instance : CompleteLattice (AffineSubspace k P) :=
     bot_le := fun _ _ => False.elim, sup := fun s => affineSpan k (⋃ s' ∈ s, (s' : Set P)),
     inf := fun s =>
       mk (⋂ s' ∈ s, (s' : Set P)) fun c p1 p2 p3 hp1 hp2 hp3 =>
-        Set.mem_Inter₂.2 $ fun s2 hs2 => by
+        Set.mem_Inter₂.2 fun s2 hs2 => by
           rw [Set.mem_Inter₂] at *
           exact s2.smul_vsub_vadd_mem c (hp1 s2 hs2) (hp2 s2 hs2) (hp3 s2 hs2),
     le_Sup := fun _ _ h => Set.Subset.trans (Set.subset_bUnion_of_mem h) (subset_span_points k _),
@@ -684,7 +683,7 @@ variable (k V)
 /-- The affine span is the `Inf` of subspaces containing the given
 points. -/
 theorem affine_span_eq_Inf (s : Set P) : affineSpan k s = inf { s' | s ⊆ s' } :=
-  le_antisymm (span_points_subset_coe_of_subset_coe $ Set.subset_Inter₂ $ fun _ => id) (Inf_le (subset_span_points k _))
+  le_antisymm (span_points_subset_coe_of_subset_coe <| Set.subset_Inter₂ fun _ => id) (Inf_le (subset_span_points k _))
 #align affine_subspace.affine_span_eq_Inf AffineSubspace.affine_span_eq_Inf
 
 variable (P)
@@ -707,7 +706,7 @@ theorem span_empty : affineSpan k (∅ : Set P) = ⊥ :=
 /-- The span of `univ` is `⊤`. -/
 @[simp]
 theorem span_univ : affineSpan k (Set.univ : Set P) = ⊤ :=
-  eq_top_iff.2 $ subset_span_points k _
+  eq_top_iff.2 <| subset_span_points k _
 #align affine_subspace.span_univ AffineSubspace.span_univ
 
 variable {k V P}
@@ -1388,7 +1387,7 @@ theorem direction_affine_span_insert {s : AffineSubspace k P} {p1 p2 : P} (hp1 :
 point `p` is in the span of `s` with `p2` added if and only if it is a
 multiple of `p2 -ᵥ p1` added to a point in `s`. -/
 theorem mem_affine_span_insert_iff {s : AffineSubspace k P} {p1 : P} (hp1 : p1 ∈ s) (p2 p : P) :
-    p ∈ affineSpan k (insert p2 (s : Set P)) ↔ ∃ (r : k) (p0 : P) (hp0 : p0 ∈ s), p = r • (p2 -ᵥ p1 : V) +ᵥ p0 := by
+    p ∈ affineSpan k (insert p2 (s : Set P)) ↔ ∃ (r : k)(p0 : P)(hp0 : p0 ∈ s), p = r • (p2 -ᵥ p1 : V) +ᵥ p0 := by
   rw [← mem_coe] at hp1
   rw [← vsub_right_mem_direction_iff_mem (mem_affine_span k (Set.mem_insert_of_mem _ hp1)),
     direction_affine_span_insert hp1, Submodule.mem_sup]
@@ -1463,7 +1462,7 @@ theorem mem_map_iff_mem_of_injective {f : P₁ →ᵃ[k] P₂} {x : P₁} {s : A
 
 @[simp]
 theorem map_bot : (⊥ : AffineSubspace k P₁).map f = ⊥ :=
-  coe_injective $ image_empty f
+  coe_injective <| image_empty f
 #align affine_subspace.map_bot AffineSubspace.map_bot
 
 @[simp]
@@ -1479,13 +1478,13 @@ omit V₂
 
 @[simp]
 theorem map_id (s : AffineSubspace k P₁) : s.map (AffineMap.id k P₁) = s :=
-  coe_injective $ image_id _
+  coe_injective <| image_id _
 #align affine_subspace.map_id AffineSubspace.map_id
 
 include V₂ V₃
 
 theorem map_map (s : AffineSubspace k P₁) (f : P₁ →ᵃ[k] P₂) (g : P₂ →ᵃ[k] P₃) : (s.map f).map g = s.map (g.comp f) :=
-  coe_injective $ image_image _ _ _
+  coe_injective <| image_image _ _ _
 #align affine_subspace.map_map AffineSubspace.map_map
 
 omit V₃
@@ -1638,55 +1637,52 @@ def Parallel (s₁ s₂ : AffineSubspace k P) : Prop :=
 #align affine_subspace.parallel AffineSubspace.Parallel
 
 -- mathport name: affine_subspace.parallel
-/- The notation should logically be U+2225 PARALLEL TO, but that is used globally for norms at
-present, and norms and parallelism are both widely used in geometry, so use U+2016 DOUBLE
-VERTICAL LINE (which is logically more appropriate for norms) instead here to avoid conflict. -/
-scoped[Affine] infixl:50 " ‖ " => AffineSubspace.Parallel
+scoped[Affine] infixl:50 " ∥ " => AffineSubspace.Parallel
 
 @[symm]
-theorem Parallel.symm {s₁ s₂ : AffineSubspace k P} (h : s₁ ‖ s₂) : s₂ ‖ s₁ := by
+theorem Parallel.symm {s₁ s₂ : AffineSubspace k P} (h : s₁ ∥ s₂) : s₂ ∥ s₁ := by
   rcases h with ⟨v, rfl⟩
   refine' ⟨-v, _⟩
   rw [map_map, ← coe_trans_to_affine_map, ← const_vadd_add, neg_add_self, const_vadd_zero, coe_refl_to_affine_map,
     map_id]
 #align affine_subspace.parallel.symm AffineSubspace.Parallel.symm
 
-theorem parallel_comm {s₁ s₂ : AffineSubspace k P} : s₁ ‖ s₂ ↔ s₂ ‖ s₁ :=
+theorem parallel_comm {s₁ s₂ : AffineSubspace k P} : s₁ ∥ s₂ ↔ s₂ ∥ s₁ :=
   ⟨Parallel.symm, Parallel.symm⟩
 #align affine_subspace.parallel_comm AffineSubspace.parallel_comm
 
 @[refl]
-theorem Parallel.refl (s : AffineSubspace k P) : s ‖ s :=
+theorem Parallel.refl (s : AffineSubspace k P) : s ∥ s :=
   ⟨0, by simp⟩
 #align affine_subspace.parallel.refl AffineSubspace.Parallel.refl
 
 @[trans]
-theorem Parallel.trans {s₁ s₂ s₃ : AffineSubspace k P} (h₁₂ : s₁ ‖ s₂) (h₂₃ : s₂ ‖ s₃) : s₁ ‖ s₃ := by
+theorem Parallel.trans {s₁ s₂ s₃ : AffineSubspace k P} (h₁₂ : s₁ ∥ s₂) (h₂₃ : s₂ ∥ s₃) : s₁ ∥ s₃ := by
   rcases h₁₂ with ⟨v₁₂, rfl⟩
   rcases h₂₃ with ⟨v₂₃, rfl⟩
   refine' ⟨v₂₃ + v₁₂, _⟩
   rw [map_map, ← coe_trans_to_affine_map, ← const_vadd_add]
 #align affine_subspace.parallel.trans AffineSubspace.Parallel.trans
 
-theorem Parallel.direction_eq {s₁ s₂ : AffineSubspace k P} (h : s₁ ‖ s₂) : s₁.direction = s₂.direction := by
+theorem Parallel.direction_eq {s₁ s₂ : AffineSubspace k P} (h : s₁ ∥ s₂) : s₁.direction = s₂.direction := by
   rcases h with ⟨v, rfl⟩
   simp
 #align affine_subspace.parallel.direction_eq AffineSubspace.Parallel.direction_eq
 
 @[simp]
-theorem parallel_bot_iff_eq_bot {s : AffineSubspace k P} : s ‖ ⊥ ↔ s = ⊥ := by
+theorem parallel_bot_iff_eq_bot {s : AffineSubspace k P} : s ∥ ⊥ ↔ s = ⊥ := by
   refine' ⟨fun h => _, fun h => h ▸ parallel.refl _⟩
   rcases h with ⟨v, h⟩
   rwa [eq_comm, map_eq_bot_iff] at h
 #align affine_subspace.parallel_bot_iff_eq_bot AffineSubspace.parallel_bot_iff_eq_bot
 
 @[simp]
-theorem bot_parallel_iff_eq_bot {s : AffineSubspace k P} : ⊥ ‖ s ↔ s = ⊥ := by
+theorem bot_parallel_iff_eq_bot {s : AffineSubspace k P} : ⊥ ∥ s ↔ s = ⊥ := by
   rw [parallel_comm, parallel_bot_iff_eq_bot]
 #align affine_subspace.bot_parallel_iff_eq_bot AffineSubspace.bot_parallel_iff_eq_bot
 
 theorem parallel_iff_direction_eq_and_eq_bot_iff_eq_bot {s₁ s₂ : AffineSubspace k P} :
-    s₁ ‖ s₂ ↔ s₁.direction = s₂.direction ∧ (s₁ = ⊥ ↔ s₂ = ⊥) := by
+    s₁ ∥ s₂ ↔ s₁.direction = s₂.direction ∧ (s₁ = ⊥ ↔ s₂ = ⊥) := by
   refine' ⟨fun h => ⟨h.direction_eq, _, _⟩, fun h => _⟩
   · rintro rfl
     exact bot_parallel_iff_eq_bot.1 h
@@ -1695,7 +1691,7 @@ theorem parallel_iff_direction_eq_and_eq_bot_iff_eq_bot {s₁ s₂ : AffineSubsp
     exact parallel_bot_iff_eq_bot.1 h
     
   · rcases h with ⟨hd, hb⟩
-    by_cases hs₁:s₁ = ⊥
+    by_cases hs₁ : s₁ = ⊥
     · rw [hs₁, bot_parallel_iff_eq_bot]
       exact hb.1 hs₁
       

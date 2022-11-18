@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.CategoryTheory.Bicategory.EndCat
-import Mathbin.CategoryTheory.Monoidal.Functorial
+import Mathbin.CategoryTheory.Monoidal.Functor
 
 /-!
 # Promoting a monoidal category to a single object bicategory.

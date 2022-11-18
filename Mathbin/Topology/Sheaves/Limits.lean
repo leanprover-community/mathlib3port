@@ -5,7 +5,6 @@ Authors: Scott Morrison
 -/
 import Mathbin.Topology.Sheaves.Sheaf
 import Mathbin.CategoryTheory.Sites.Limits
-import Mathbin.CategoryTheory.Adjunction.Default
 import Mathbin.CategoryTheory.Limits.FunctorCategory
 
 /-!

@@ -91,7 +91,7 @@ theorem by_contradiction_trick (p : Prop) (h : ∀ f : Prop, (p → f) → f) : 
 unsafe def preprocess_goal : tactic Unit := do
   repeat (intro1 >> skip)
   let tgt ← target >>= whnf_reducible
-  if ¬is_false tgt then mk_mapp `` Classical.by_contradiction [some tgt] >>= apply >> intro1 >> skip else skip
+  if ¬is_false tgt then ((mk_mapp `` Classical.by_contradiction [some tgt] >>= apply) >> intro1) >> skip else skip
 #align auto.preprocess_goal auto.preprocess_goal
 
 /-!
@@ -262,8 +262,8 @@ unsafe def normalize_hyps (cfg : AutoConfig) : tactic Unit := do
 /-- eliminate an existential quantifier if there is one -/
 unsafe def eelim : tactic Unit := do
   let ctx ← local_context
-  first $
-      ctx $ fun h => do
+  first <|
+      ctx fun h => do
         let t ← infer_type h >>= whnf_reducible
         guard (is_app_of t `` Exists)
         let tgt ← target
@@ -291,9 +291,8 @@ unsafe def eelims : tactic Unit :=
       do
         let ctx ← local_context
           first
-            $
+            <|
             ctx
-              $
               fun
                 h
                   =>
@@ -420,18 +419,18 @@ private unsafe def add_hinst_lemma_from_name (md : Transparency) (lhs_lemma : Bo
       (do
           let h ← hinst_lemma.mk_from_decl_core md n lhs_lemma
           tactic.save_const_type_info n ref
-          return $ hs h) <|>
+          return <| hs h) <|>
         (do
             let hs₁ ← smt_tactic.mk_ematch_eqn_lemmas_for_core md n
             tactic.save_const_type_info n ref
-            return $ hs hs₁) <|>
+            return <| hs hs₁) <|>
           report_invalid_em_lemma n
     | _ =>
       (do
           let e ← to_expr p
           let h ← hinst_lemma.mk_core md e lhs_lemma
           try (tactic.save_type_info e ref)
-          return $ hs h) <|>
+          return <| hs h) <|>
         report_invalid_em_lemma n
 #align auto.add_hinst_lemma_from_name auto.add_hinst_lemma_from_name
 
@@ -442,7 +441,7 @@ private unsafe def add_hinst_lemma_from_pexpr (md : Transparency) (lhs_lemma : B
   | p => do
     let new_e ← to_expr p
     let h ← hinst_lemma.mk_core md new_e lhs_lemma
-    return $ hs h
+    return <| hs h
 #align auto.add_hinst_lemma_from_pexpr auto.add_hinst_lemma_from_pexpr
 
 private unsafe def add_hinst_lemmas_from_pexprs (md : Transparency) (lhs_lemma : Bool) (ps : List pexpr)
@@ -457,7 +456,7 @@ universally quantified assumptions, and the supplied lemmas `ps`) and congruence
 unsafe def done (ps : List pexpr) (cfg : AutoConfig := {  }) : tactic Unit := do
   trace_state_if_enabled `auto.done "entering done"
   contradiction <|>
-      (solve1 $ do
+      (solve1 <| do
         revert_all
         using_smt do
             smt_tactic.intros
@@ -488,9 +487,10 @@ private unsafe def case_cont (s : CaseOption) (cont : CaseOption → tactic Unit
     |
     case_option.at_most_one =>-- if the first one succeeds, commit to it, and try the second
           condM
-          (cont case_option.force >> return tt) (cont case_option.at_most_one) skip <|>-- otherwise, try the second
+          (cont case_option.force >> return tt) (cont case_option.at_most_one) skip <|>
+        (-- otherwise, try the second
             swap >>
-            cont case_option.force >>
+            cont case_option.force) >>
           cont case_option.at_most_one
     | case_option.accept => focus' [cont case_option.accept, cont case_option.accept]
 #align auto.case_cont auto.case_cont
@@ -503,7 +503,7 @@ unsafe
     :=
       do
         let t ← infer_type h
-          match t with | q( $ ( a ) ∨ $ ( b ) ) => cases h >> case_cont s cont >> return tt | _ => return ff
+          match t with | q( $ ( a ) ∨ $ ( b ) ) => ( cases h >> case_cont s cont ) >> return tt | _ => return ff
 #align auto.case_hyp auto.case_hyp
 
 unsafe def case_some_hyp_aux (s : CaseOption) (cont : CaseOption → tactic Unit) : List expr → tactic Bool
@@ -537,7 +537,7 @@ it will:
 -/
 unsafe def safe_core (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : AutoConfig) : CaseOption → tactic Unit :=
   fun co =>
-  focus1 $ do
+  focus1 <| do
     trace_state_if_enabled `auto.finish "entering safe_core"
     if cfg then do
         trace_if_enabled `auto.finish "simplifying hypotheses"

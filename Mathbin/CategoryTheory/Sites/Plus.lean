@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
 import Mathbin.CategoryTheory.Sites.Sheaf
-import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 
 /-!
 
@@ -43,7 +42,7 @@ variable (P : Cᵒᵖ ⥤ D)
 def diagram (X : C) : (J.cover X)ᵒᵖ ⥤ D where
   obj S := multiequalizer (S.unop.index P)
   map S T f :=
-    (multiequalizer.lift _ _ fun I => multiequalizer.ι (S.unop.index P) (I.map f.unop)) $ fun I =>
+    (multiequalizer.lift _ _ fun I => multiequalizer.ι (S.unop.index P) (I.map f.unop)) fun I =>
       multiequalizer.condition (S.unop.index P) (I.map f.unop)
   map_id' S := by
     ext I
@@ -58,7 +57,7 @@ def diagram (X : C) : (J.cover X)ᵒᵖ ⥤ D where
 @[simps]
 def diagramPullback {X Y : C} (f : X ⟶ Y) : J.diagram P Y ⟶ (J.pullback f).op ⋙ J.diagram P X where
   app S :=
-    (multiequalizer.lift _ _ fun I => multiequalizer.ι (S.unop.index P) I.base) $ fun I =>
+    (multiequalizer.lift _ _ fun I => multiequalizer.ι (S.unop.index P) I.base) fun I =>
       multiequalizer.condition (S.unop.index P) I.base
   naturality' S T f := by
     ext

@@ -140,8 +140,8 @@ theorem mem_inf {x} : x ∈ S ⊓ T ↔ x ∈ S ∧ x ∈ T :=
 
 instance : HasInf (ConvexCone 𝕜 E) :=
   ⟨fun S =>
-    ⟨⋂ s ∈ S, ↑s, fun c hc x hx => mem_bInter $ fun s hs => s.smul_mem hc $ mem_Inter₂.1 hx s hs, fun x hx y hy =>
-      mem_bInter $ fun s hs => s.add_mem (mem_Inter₂.1 hx s hs) (mem_Inter₂.1 hy s hs)⟩⟩
+    ⟨⋂ s ∈ S, ↑s, fun c hc x hx => mem_bInter fun s hs => s.smul_mem hc <| mem_Inter₂.1 hx s hs, fun x hx y hy =>
+      mem_bInter fun s hs => s.add_mem (mem_Inter₂.1 hx s hs) (mem_Inter₂.1 hy s hs)⟩⟩
 
 @[simp]
 theorem coe_Inf (S : Set (ConvexCone 𝕜 E)) : ↑(inf S) = ⋂ s ∈ S, (s : Set E) :=
@@ -157,7 +157,7 @@ theorem coe_infi {ι : Sort _} (f : ι → ConvexCone 𝕜 E) : ↑(infi f) = �
 #align convex_cone.coe_infi ConvexCone.coe_infi
 
 theorem mem_infi {ι : Sort _} {x : E} {f : ι → ConvexCone 𝕜 E} : x ∈ infi f ↔ ∀ i, x ∈ f i :=
-  mem_Inter₂.trans $ by simp
+  mem_Inter₂.trans <| by simp
 #align convex_cone.mem_infi ConvexCone.mem_infi
 
 variable (𝕜)
@@ -165,7 +165,7 @@ variable (𝕜)
 instance : HasBot (ConvexCone 𝕜 E) :=
   ⟨⟨∅, fun c hc x => False.elim, fun x => False.elim⟩⟩
 
-theorem mem_bot (x : E) : x ∈ (⊥ : ConvexCone 𝕜 E) = False :=
+theorem mem_bot (x : E) : (x ∈ (⊥ : ConvexCone 𝕜 E)) = False :=
   rfl
 #align convex_cone.mem_bot ConvexCone.mem_bot
 
@@ -189,12 +189,12 @@ theorem coe_top : ↑(⊤ : ConvexCone 𝕜 E) = (univ : Set E) :=
 instance : CompleteLattice (ConvexCone 𝕜 E) :=
   { SetLike.partialOrder with le := (· ≤ ·), lt := (· < ·), bot := ⊥, bot_le := fun S x => False.elim, top := ⊤,
     le_top := fun S x hx => mem_top 𝕜 x, inf := (· ⊓ ·), inf := HasInf.inf, sup := fun a b => inf { x | a ≤ x ∧ b ≤ x },
-    sup := fun s => inf { T | ∀ S ∈ s, S ≤ T }, le_sup_left := fun a b => fun x hx => mem_Inf.2 $ fun s hs => hs.1 hx,
-    le_sup_right := fun a b => fun x hx => mem_Inf.2 $ fun s hs => hs.2 hx,
+    sup := fun s => inf { T | ∀ S ∈ s, S ≤ T }, le_sup_left := fun a b => fun x hx => mem_Inf.2 fun s hs => hs.1 hx,
+    le_sup_right := fun a b => fun x hx => mem_Inf.2 fun s hs => hs.2 hx,
     sup_le := fun a b c ha hb x hx => mem_Inf.1 hx c ⟨ha, hb⟩, le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩,
     inf_le_left := fun a b x => And.left, inf_le_right := fun a b x => And.right,
-    le_Sup := fun s p hs x hx => mem_Inf.2 $ fun t ht => ht p hs hx, Sup_le := fun s p hs x hx => mem_Inf.1 hx p hs,
-    le_Inf := fun s a ha x hx => mem_Inf.2 $ fun t ht => ha t ht hx, Inf_le := fun s a ha x hx => mem_Inf.1 hx _ ha }
+    le_Sup := fun s p hs x hx => mem_Inf.2 fun t ht => ht p hs hx, Sup_le := fun s p hs x hx => mem_Inf.1 hx p hs,
+    le_Inf := fun s a ha x hx => mem_Inf.2 fun t ht => ha t ht hx, Inf_le := fun s a ha x hx => mem_Inf.1 hx _ ha }
 
 instance : Inhabited (ConvexCone 𝕜 E) :=
   ⟨⊥⟩
@@ -206,7 +206,7 @@ section Module
 variable [Module 𝕜 E] (S : ConvexCone 𝕜 E)
 
 protected theorem convex : Convex 𝕜 (S : Set E) :=
-  convex_iff_forall_pos.2 $ fun x hx y hy a b ha hb _ => S.add_mem (S.smul_mem ha hx) (S.smul_mem hb hy)
+  convex_iff_forall_pos.2 fun x hx y hy a b ha hb _ => S.add_mem (S.smul_mem ha hx) (S.smul_mem hb hy)
 #align convex_cone.convex ConvexCone.convex
 
 end Module
@@ -249,12 +249,12 @@ theorem mem_map {f : E →ₗ[𝕜] F} {S : ConvexCone 𝕜 E} {y : F} : y ∈ S
 #align convex_cone.mem_map ConvexCone.mem_map
 
 theorem map_map (g : F →ₗ[𝕜] G) (f : E →ₗ[𝕜] F) (S : ConvexCone 𝕜 E) : (S.map f).map g = S.map (g.comp f) :=
-  SetLike.coe_injective $ image_image g f S
+  SetLike.coe_injective <| image_image g f S
 #align convex_cone.map_map ConvexCone.map_map
 
 @[simp]
 theorem map_id (S : ConvexCone 𝕜 E) : S.map LinearMap.id = S :=
-  SetLike.coe_injective $ image_id _
+  SetLike.coe_injective <| image_id _
 #align convex_cone.map_id ConvexCone.map_id
 
 /-- The preimage of a convex cone under a `𝕜`-linear map is a convex cone. -/
@@ -279,7 +279,7 @@ theorem comap_id (S : ConvexCone 𝕜 E) : S.comap LinearMap.id = S :=
 #align convex_cone.comap_id ConvexCone.comap_id
 
 theorem comap_comap (g : F →ₗ[𝕜] G) (f : E →ₗ[𝕜] F) (S : ConvexCone 𝕜 G) : (S.comap g).comap f = S.comap (g.comp f) :=
-  SetLike.coe_injective $ preimage_comp.symm
+  SetLike.coe_injective <| preimage_comp.symm
 #align convex_cone.comap_comap ConvexCone.comap_comap
 
 @[simp]
@@ -446,10 +446,9 @@ theorem coe_zero : ((0 : ConvexCone 𝕜 E) : Set E) = 0 :=
 theorem pointed_zero : (0 : ConvexCone 𝕜 E).Pointed := by rw [pointed, mem_zero]
 #align convex_cone.pointed_zero ConvexCone.pointed_zero
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 instance : Add (ConvexCone 𝕜 E) :=
   ⟨fun K₁ K₂ =>
-    { carrier := { z | ∃ (x : E) (y : E), x ∈ K₁ ∧ y ∈ K₂ ∧ x + y = z },
+    { carrier := { z | ∃ x y : E, x ∈ K₁ ∧ y ∈ K₂ ∧ x + y = z },
       smul_mem' := by
         rintro c hc _ ⟨x, y, hx, hy, rfl⟩
         rw [smul_add]
@@ -459,9 +458,8 @@ instance : Add (ConvexCone 𝕜 E) :=
         use x₁ + y₁, x₂ + y₂, K₁.add_mem hx₁ hy₁, K₂.add_mem hx₂ hy₂
         abel }⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 @[simp]
-theorem mem_add {K₁ K₂ : ConvexCone 𝕜 E} {a : E} : a ∈ K₁ + K₂ ↔ ∃ (x : E) (y : E), x ∈ K₁ ∧ y ∈ K₂ ∧ x + y = a :=
+theorem mem_add {K₁ K₂ : ConvexCone 𝕜 E} {a : E} : a ∈ K₁ + K₂ ↔ ∃ x y : E, x ∈ K₁ ∧ y ∈ K₂ ∧ x + y = a :=
   Iff.rfl
 #align convex_cone.mem_add ConvexCone.mem_add
 
@@ -474,8 +472,8 @@ instance : AddZeroClass (ConvexCone 𝕜 E) :=
 
 instance : AddCommSemigroup (ConvexCone 𝕜 E) where
   add := Add.add
-  add_assoc _ _ _ := SetLike.coe_injective $ Set.addCommSemigroup.add_assoc _ _ _
-  add_comm _ _ := SetLike.coe_injective $ Set.addCommSemigroup.add_comm _ _
+  add_assoc _ _ _ := SetLike.coe_injective <| Set.addCommSemigroup.add_assoc _ _ _
+  add_comm _ _ := SetLike.coe_injective <| Set.addCommSemigroup.add_comm _ _
 
 end Module
 
@@ -547,7 +545,7 @@ theorem positive_le_strictly_positive : strictlyPositive 𝕜 E ≤ positive �
 
 /-- The strictly positive cone of an ordered module is always salient. -/
 theorem salient_strictly_positive : Salient (strictlyPositive 𝕜 E) :=
-  (salient_positive 𝕜 E).anti $ positive_le_strictly_positive 𝕜 E
+  (salient_positive 𝕜 E).anti <| positive_le_strictly_positive 𝕜 E
 #align convex_cone.salient_strictly_positive ConvexCone.salient_strictly_positive
 
 /-- The strictly positive cone of an ordered module is always blunt. -/
@@ -622,7 +620,7 @@ theorem convex_hull_to_cone_is_least (s : Set E) :
 
 theorem convex_hull_to_cone_eq_Inf (s : Set E) :
     (convex_convex_hull 𝕜 s).toCone _ = inf { t : ConvexCone 𝕜 E | s ⊆ t } :=
-  Eq.symm $ IsGlb.Inf_eq $ IsLeast.is_glb $ convex_hull_to_cone_is_least s
+  Eq.symm <| IsGlb.Inf_eq <| IsLeast.is_glb <| convex_hull_to_cone_is_least s
 #align convex_hull_to_cone_eq_Inf convex_hull_to_cone_eq_Inf
 
 end ConeFromConvex
@@ -659,7 +657,7 @@ and `p + s = E`. If `f` is not defined on the whole `E`, then we can extend it t
 submodule without breaking the non-negativity condition. -/
 theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x) (dense : ∀ y, ∃ x : f.domain, (x : E) + y ∈ s)
     (hdom : f.domain ≠ ⊤) : ∃ g, f < g ∧ ∀ x : g.domain, (x : E) ∈ s → 0 ≤ g x := by
-  obtain ⟨y, -, hy⟩ : ∃ (y : E) (h : y ∈ ⊤), y ∉ f.domain :=
+  obtain ⟨y, -, hy⟩ : ∃ (y : E)(h : y ∈ ⊤), y ∉ f.domain :=
     @SetLike.exists_of_lt (Submodule ℝ E) _ _ _ _ (lt_top_iff_ne_top.2 hdom)
   obtain ⟨c, le_c, c_le⟩ :
     ∃ c, (∀ x : f.domain, -(x : E) - y ∈ s → f x ≤ c) ∧ ∀ x : f.domain, (x : E) + y ∈ s → c ≤ f x := by
@@ -833,13 +831,13 @@ theorem mem_inner_dual_cone (y : H) (s : Set H) : y ∈ s.innerDualCone ↔ ∀ 
 
 @[simp]
 theorem inner_dual_cone_empty : (∅ : Set H).innerDualCone = ⊤ :=
-  eq_top_iff.mpr $ fun x hy y => False.elim
+  eq_top_iff.mpr fun x hy y => False.elim
 #align inner_dual_cone_empty inner_dual_cone_empty
 
 /-- Dual cone of the convex cone {0} is the total space. -/
 @[simp]
 theorem inner_dual_cone_zero : (0 : Set H).innerDualCone = ⊤ :=
-  eq_top_iff.mpr $ fun x hy y (hy : y = 0) => hy.symm ▸ inner_zero_left.ge
+  eq_top_iff.mpr fun x hy y (hy : y = 0) => hy.symm ▸ inner_zero_left.ge
 #align inner_dual_cone_zero inner_dual_cone_zero
 
 /-- Dual cone of the total space is the convex cone {0}. -/
@@ -861,11 +859,11 @@ theorem pointed_inner_dual_cone : s.innerDualCone.Pointed := fun x hx => by rw [
 /-- The inner dual cone of a singleton is given by the preimage of the positive cone under the
 linear map `λ y, ⟪x, y⟫`. -/
 theorem inner_dual_cone_singleton (x : H) : ({x} : Set H).innerDualCone = (ConvexCone.positive ℝ ℝ).comap (innerₛₗ x) :=
-  ConvexCone.ext $ fun i => forall_eq
+  ConvexCone.ext fun i => forall_eq
 #align inner_dual_cone_singleton inner_dual_cone_singleton
 
 theorem inner_dual_cone_union (s t : Set H) : (s ∪ t).innerDualCone = s.innerDualCone ⊓ t.innerDualCone :=
-  le_antisymm (le_inf (fun x hx y hy => hx _ $ Or.inl hy) fun x hx y hy => hx _ $ Or.inr hy) fun x hx y =>
+  le_antisymm (le_inf (fun x hx y hy => hx _ <| Or.inl hy) fun x hx y hy => hx _ <| Or.inr hy) fun x hx y =>
     Or.ndrec (hx.1 _) (hx.2 _)
 #align inner_dual_cone_union inner_dual_cone_union
 
@@ -874,14 +872,14 @@ theorem inner_dual_cone_insert (x : H) (s : Set H) :
 #align inner_dual_cone_insert inner_dual_cone_insert
 
 theorem inner_dual_cone_Union {ι : Sort _} (f : ι → Set H) : (⋃ i, f i).innerDualCone = ⨅ i, (f i).innerDualCone := by
-  refine' le_antisymm (le_infi $ fun i x hx y hy => hx _ $ mem_Union_of_mem _ hy) _
+  refine' le_antisymm (le_infi fun i x hx y hy => hx _ <| mem_Union_of_mem _ hy) _
   intro x hx y hy
   rw [ConvexCone.mem_infi] at hx
   obtain ⟨j, hj⟩ := mem_Union.mp hy
   exact hx _ _ hj
 #align inner_dual_cone_Union inner_dual_cone_Union
 
-theorem inner_dual_cone_sUnion (S : Set (Set H)) : (⋃₀ S).innerDualCone = inf (Set.innerDualCone '' S) := by
+theorem inner_dual_cone_sUnion (S : Set (Set H)) : (⋃₀S).innerDualCone = inf (Set.innerDualCone '' S) := by
   simp_rw [Inf_image, sUnion_eq_bUnion, inner_dual_cone_Union]
 #align inner_dual_cone_sUnion inner_dual_cone_sUnion
 

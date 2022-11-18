@@ -60,11 +60,11 @@ theorem Ioo_eq_filter_ssubsets : ioo s t = t.ssubsets.filter ((· ⊂ ·) s) :=
 #align finset.Ioo_eq_filter_ssubsets Finset.Ioo_eq_filter_ssubsets
 
 theorem Iic_eq_powerset : iic s = s.powerset :=
-  filter_true_of_mem $ fun t _ => empty_subset t
+  filter_true_of_mem fun t _ => empty_subset t
 #align finset.Iic_eq_powerset Finset.Iic_eq_powerset
 
 theorem Iio_eq_ssubsets : iio s = s.ssubsets :=
-  filter_true_of_mem $ fun t _ => empty_subset t
+  filter_true_of_mem fun t _ => empty_subset t
 #align finset.Iio_eq_ssubsets Finset.Iio_eq_ssubsets
 
 variable {s t}
@@ -77,7 +77,7 @@ theorem Icc_eq_image_powerset (h : s ⊆ t) : icc s t = (t \ s).powerset.image (
     exact ⟨u \ s, sdiff_le_sdiff_right ht, sup_sdiff_cancel_right hs⟩
     
   · rintro ⟨v, hv, rfl⟩
-    exact ⟨le_sup_left, union_subset h $ hv.trans $ sdiff_subset _ _⟩
+    exact ⟨le_sup_left, union_subset h <| hv.trans <| sdiff_subset _ _⟩
     
 #align finset.Icc_eq_image_powerset Finset.Icc_eq_image_powerset
 

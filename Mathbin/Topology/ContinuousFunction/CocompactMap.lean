@@ -38,7 +38,7 @@ section
 /-- `cocompact_map_class F α β` states that `F` is a type of cocompact continuous maps.
 
 You should also extend this typeclass when you extend `cocompact_map`. -/
-class CocompactMapClass (F : Type _) (α β : outParam $ Type _) [TopologicalSpace α] [TopologicalSpace β] extends
+class CocompactMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α] [TopologicalSpace β] extends
   ContinuousMapClass F α β where
   cocompact_tendsto (f : F) : Tendsto f (cocompact α) (cocompact β)
 #align cocompact_map_class CocompactMapClass
@@ -145,12 +145,12 @@ theorem comp_assoc (f : CocompactMap γ δ) (g : CocompactMap β γ) (h : Cocomp
 
 @[simp]
 theorem id_comp (f : CocompactMap α β) : (CocompactMap.id _).comp f = f :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 #align cocompact_map.id_comp CocompactMap.id_comp
 
 @[simp]
 theorem comp_id (f : CocompactMap α β) : f.comp (CocompactMap.id _) = f :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 #align cocompact_map.comp_id CocompactMap.comp_id
 
 theorem tendsto_of_forall_preimage {f : α → β} (h : ∀ s, IsCompact s → IsCompact (f ⁻¹' s)) :
@@ -168,8 +168,8 @@ theorem is_compact_preimage [T2Space β] (f : CocompactMap α β) ⦃s : Set β�
       (by
         simpa only [preimage_image_preimage, preimage_compl] using
           mem_map.mp
-            (cocompact_tendsto f $ mem_cocompact.mpr ⟨s, hs, compl_subset_compl.mpr (image_preimage_subset f _)⟩))
-  exact is_compact_of_is_closed_subset ht (hs.is_closed.preimage $ map_continuous f) (by simpa using hts)
+            (cocompact_tendsto f <| mem_cocompact.mpr ⟨s, hs, compl_subset_compl.mpr (image_preimage_subset f _)⟩))
+  exact is_compact_of_is_closed_subset ht (hs.is_closed.preimage <| map_continuous f) (by simpa using hts)
 #align cocompact_map.is_compact_preimage CocompactMap.is_compact_preimage
 
 end Basics

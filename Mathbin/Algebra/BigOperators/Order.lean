@@ -144,7 +144,7 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
       "theorem"
       (Command.declId `prod_le_prod_of_subset_of_one_le' [])
       (Command.declSig
-       [(Term.explicitBinder "(" [`h] [":" (Init.Core.«term_⊆_» `s " ⊆ " `t)] [] ")")
+       [(Term.explicitBinder "(" [`h] [":" («term_⊆_» `s "⊆" `t)] [] ")")
         (Term.explicitBinder
          "("
          [`hf]
@@ -154,12 +154,12 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
            (Lean.binderIdent `i)
            («binderTerm∈_» "∈" `t)
            ","
-           (Term.arrow (Init.Core.«term_∉_» `i " ∉ " `s) "→" (Init.Core.«term_≤_» (num "1") " ≤ " (Term.app `f [`i]))))]
+           (Term.arrow («term_∉_» `i "∉" `s) "→" («term_≤_» (num "1") "≤" (Term.app `f [`i]))))]
          []
          ")")]
        (Term.typeSpec
         ":"
-        (Init.Core.«term_≤_»
+        («term_≤_»
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -167,7 +167,7 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
           `s
           ", "
           (Term.app `f [`i]))
-         " ≤ "
+         "≤"
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -187,7 +187,7 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
             (calcTactic
              "calc"
              (calcStep
-              (Init.Core.«term_≤_»
+              («term_≤_»
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -195,16 +195,16 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                 `s
                 ", "
                 (Term.app `f [`i]))
-               " ≤ "
-               (Init.Core.«term_*_»
+               "≤"
+               («term_*_»
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
                  " in "
-                 (Init.Core.«term_\_» `t " \\ " `s)
+                 («term_\_» `t "\\" `s)
                  ", "
                  (Term.app `f [`i]))
-                " * "
+                "*"
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -213,12 +213,12 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                  ", "
                  (Term.app `f [`i]))))
               ":="
-              (Init.Core.«term_$_»
+              («term_<|_»
                `le_mul_of_one_le_left'
-               " $ "
-               (Init.Core.«term_$_»
+               "<|"
+               («term_<|_»
                 `one_le_prod'
-                " $ "
+                "<|"
                 (Term.byTactic
                  "by"
                  (Tactic.tacticSeq
@@ -237,22 +237,22 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                         "]")]
                       []))]))))))
              [(calcStep
-               (Init.Core.«term_=_»
+               («term_=_»
                 (Term.hole "_")
-                " = "
+                "="
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
                  " in "
-                 (Init.Core.«term_∪_» (Init.Core.«term_\_» `t " \\ " `s) " ∪ " `s)
+                 («term_∪_» («term_\_» `t "\\" `s) "∪" `s)
                  ", "
                  (Term.app `f [`i])))
                ":="
                (Term.proj (Term.app `prod_union [`sdiff_disjoint]) "." `symm))
               (calcStep
-               (Init.Core.«term_=_»
+               («term_=_»
                 (Term.hole "_")
-                " = "
+                "="
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -286,7 +286,7 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
            (calcTactic
             "calc"
             (calcStep
-             (Init.Core.«term_≤_»
+             («term_≤_»
               (BigOperators.Algebra.BigOperators.Basic.finset.prod
                "∏"
                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -294,16 +294,16 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                `s
                ", "
                (Term.app `f [`i]))
-              " ≤ "
-              (Init.Core.«term_*_»
+              "≤"
+              («term_*_»
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
                 " in "
-                (Init.Core.«term_\_» `t " \\ " `s)
+                («term_\_» `t "\\" `s)
                 ", "
                 (Term.app `f [`i]))
-               " * "
+               "*"
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -312,12 +312,12 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                 ", "
                 (Term.app `f [`i]))))
              ":="
-             (Init.Core.«term_$_»
+             («term_<|_»
               `le_mul_of_one_le_left'
-              " $ "
-              (Init.Core.«term_$_»
+              "<|"
+              («term_<|_»
                `one_le_prod'
-               " $ "
+               "<|"
                (Term.byTactic
                 "by"
                 (Tactic.tacticSeq
@@ -336,22 +336,22 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                        "]")]
                      []))]))))))
             [(calcStep
-              (Init.Core.«term_=_»
+              («term_=_»
                (Term.hole "_")
-               " = "
+               "="
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
                 " in "
-                (Init.Core.«term_∪_» (Init.Core.«term_\_» `t " \\ " `s) " ∪ " `s)
+                («term_∪_» («term_\_» `t "\\" `s) "∪" `s)
                 ", "
                 (Term.app `f [`i])))
               ":="
               (Term.proj (Term.app `prod_union [`sdiff_disjoint]) "." `symm))
              (calcStep
-              (Init.Core.«term_=_»
+              («term_=_»
                (Term.hole "_")
-               " = "
+               "="
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -377,7 +377,7 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
        (calcTactic
         "calc"
         (calcStep
-         (Init.Core.«term_≤_»
+         («term_≤_»
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -385,16 +385,16 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
            `s
            ", "
            (Term.app `f [`i]))
-          " ≤ "
-          (Init.Core.«term_*_»
+          "≤"
+          («term_*_»
            (BigOperators.Algebra.BigOperators.Basic.finset.prod
             "∏"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
             " in "
-            (Init.Core.«term_\_» `t " \\ " `s)
+            («term_\_» `t "\\" `s)
             ", "
             (Term.app `f [`i]))
-           " * "
+           "*"
            (BigOperators.Algebra.BigOperators.Basic.finset.prod
             "∏"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -403,12 +403,12 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
             ", "
             (Term.app `f [`i]))))
          ":="
-         (Init.Core.«term_$_»
+         («term_<|_»
           `le_mul_of_one_le_left'
-          " $ "
-          (Init.Core.«term_$_»
+          "<|"
+          («term_<|_»
            `one_le_prod'
-           " $ "
+           "<|"
            (Term.byTactic
             "by"
             (Tactic.tacticSeq
@@ -424,22 +424,22 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                  [(Tactic.simpArgs "[" [(Tactic.simpLemma [] [] `mem_sdiff) "," (Tactic.simpLemma [] [] `and_imp)] "]")]
                  []))]))))))
         [(calcStep
-          (Init.Core.«term_=_»
+          («term_=_»
            (Term.hole "_")
-           " = "
+           "="
            (BigOperators.Algebra.BigOperators.Basic.finset.prod
             "∏"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
             " in "
-            (Init.Core.«term_∪_» (Init.Core.«term_\_» `t " \\ " `s) " ∪ " `s)
+            («term_∪_» («term_\_» `t "\\" `s) "∪" `s)
             ", "
             (Term.app `f [`i])))
           ":="
           (Term.proj (Term.app `prod_union [`sdiff_disjoint]) "." `symm))
          (calcStep
-          (Init.Core.«term_=_»
+          («term_=_»
            (Term.hole "_")
-           " = "
+           "="
            (BigOperators.Algebra.BigOperators.Basic.finset.prod
             "∏"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -461,7 +461,7 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
       (calcTactic
        "calc"
        (calcStep
-        (Init.Core.«term_≤_»
+        («term_≤_»
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -469,16 +469,16 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
           `s
           ", "
           (Term.app `f [`i]))
-         " ≤ "
-         (Init.Core.«term_*_»
+         "≤"
+         («term_*_»
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
            " in "
-           (Init.Core.«term_\_» `t " \\ " `s)
+           («term_\_» `t "\\" `s)
            ", "
            (Term.app `f [`i]))
-          " * "
+          "*"
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -487,12 +487,12 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
            ", "
            (Term.app `f [`i]))))
         ":="
-        (Init.Core.«term_$_»
+        («term_<|_»
          `le_mul_of_one_le_left'
-         " $ "
-         (Init.Core.«term_$_»
+         "<|"
+         («term_<|_»
           `one_le_prod'
-          " $ "
+          "<|"
           (Term.byTactic
            "by"
            (Tactic.tacticSeq
@@ -508,22 +508,22 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
                 [(Tactic.simpArgs "[" [(Tactic.simpLemma [] [] `mem_sdiff) "," (Tactic.simpLemma [] [] `and_imp)] "]")]
                 []))]))))))
        [(calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (Term.hole "_")
-          " = "
+          "="
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
            " in "
-           (Init.Core.«term_∪_» (Init.Core.«term_\_» `t " \\ " `s) " ∪ " `s)
+           («term_∪_» («term_\_» `t "\\" `s) "∪" `s)
            ", "
            (Term.app `f [`i])))
          ":="
          (Term.proj (Term.app `prod_union [`sdiff_disjoint]) "." `symm))
         (calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (Term.hole "_")
-          " = "
+          "="
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -568,9 +568,9 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (Term.hole "_")
-       " = "
+       "="
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -603,7 +603,7 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.proj (Term.app `prod_union [`sdiff_disjoint]) "." `symm)
@@ -621,14 +621,14 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `prod_union [`sdiff_disjoint]) ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (Term.hole "_")
-       " = "
+       "="
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
         " in "
-        (Init.Core.«term_∪_» (Init.Core.«term_\_» `t " \\ " `s) " ∪ " `s)
+        («term_∪_» («term_\_» `t "\\" `s) "∪" `s)
         ", "
         (Term.app `f [`i])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -636,7 +636,7 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
        "∏"
        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
        " in "
-       (Init.Core.«term_∪_» (Init.Core.«term_\_» `t " \\ " `s) " ∪ " `s)
+       («term_∪_» («term_\_» `t "\\" `s) "∪" `s)
        ", "
        (Term.app `f [`i]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -651,32 +651,32 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_∪_» (Init.Core.«term_\_» `t " \\ " `s) " ∪ " `s)
+      («term_∪_» («term_\_» `t "\\" `s) "∪" `s)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
 [PrettyPrinter.parenthesize] ...precedences are 66 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 65, term))
-      (Init.Core.«term_\_» `t " \\ " `s)
+      («term_\_» `t "\\" `s)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `t
-[PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 65 >? 70, (some 71, term) <=? (some 65, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 65, (some 66, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
-      (Init.Core.«term_$_»
+      («term_<|_»
        `le_mul_of_one_le_left'
-       " $ "
-       (Init.Core.«term_$_»
+       "<|"
+       («term_<|_»
         `one_le_prod'
-        " $ "
+        "<|"
         (Term.byTactic
          "by"
          (Tactic.tacticSeq
@@ -692,9 +692,9 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
               [(Tactic.simpArgs "[" [(Tactic.simpLemma [] [] `mem_sdiff) "," (Tactic.simpLemma [] [] `and_imp)] "]")]
               []))])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      («term_<|_»
        `one_le_prod'
-       " $ "
+       "<|"
        (Term.byTactic
         "by"
         (Tactic.tacticSeq
@@ -747,17 +747,17 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
       `mem_sdiff
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       `one_le_prod'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 10, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       `le_mul_of_one_le_left'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_≤_»
+      («term_≤_»
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -765,16 +765,16 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
         `s
         ", "
         (Term.app `f [`i]))
-       " ≤ "
-       (Init.Core.«term_*_»
+       "≤"
+       («term_*_»
         (BigOperators.Algebra.BigOperators.Basic.finset.prod
          "∏"
          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
          " in "
-         (Init.Core.«term_\_» `t " \\ " `s)
+         («term_\_» `t "\\" `s)
          ", "
          (Term.app `f [`i]))
-        " * "
+        "*"
         (BigOperators.Algebra.BigOperators.Basic.finset.prod
          "∏"
          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -783,15 +783,15 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
          ", "
          (Term.app `f [`i]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_*_»
+      («term_*_»
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
         " in "
-        (Init.Core.«term_\_» `t " \\ " `s)
+        («term_\_» `t "\\" `s)
         ", "
         (Term.app `f [`i]))
-       " * "
+       "*"
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -827,7 +827,7 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
        "∏"
        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
        " in "
-       (Init.Core.«term_\_» `t " \\ " `s)
+       («term_\_» `t "\\" `s)
        ", "
        (Term.app `f [`i]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -842,13 +842,13 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_\_» `t " \\ " `s)
+      («term_\_» `t "\\" `s)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
 [PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 70, term))
       `t
-[PrettyPrinter.parenthesize] ...precedences are 70 >? 1024, (none, [anonymous]) <=? (some 70, term)
+[PrettyPrinter.parenthesize] ...precedences are 71 >? 1024, (none, [anonymous]) <=? (some 70, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 70, (some 71, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 70 >? 1022, (some 0, term) <=? (some 70, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
@@ -857,7 +857,7 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
       "∏"
       (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
       " in "
-      (Init.Core.«term_\_» `t " \\ " `s)
+      («term_\_» `t "\\" `s)
       ", "
       (Term.app `f [`i]))
      ")")
@@ -884,7 +884,7 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 0, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
      (BigOperators.Algebra.BigOperators.Basic.finset.prod
@@ -920,14 +920,14 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
           calc
             ∏ i in s , f i ≤ ∏ i in t \ s , f i * ∏ i in s , f i
               :=
-              le_mul_of_one_le_left' $ one_le_prod' $ by simpa only [ mem_sdiff , and_imp ]
+              le_mul_of_one_le_left' <| one_le_prod' <| by simpa only [ mem_sdiff , and_imp ]
             _ = ∏ i in t \ s ∪ s , f i := prod_union sdiff_disjoint . symm
               _ = ∏ i in t , f i := by rw [ sdiff_union_of_subset h ]
 #align finset.prod_le_prod_of_subset_of_one_le' Finset.prod_le_prod_of_subset_of_one_le'
 
 @[to_additive sum_mono_set_of_nonneg]
 theorem prod_mono_set_of_one_le' (hf : ∀ x, 1 ≤ f x) : Monotone fun s => ∏ x in s, f x := fun s t hst =>
-  prod_le_prod_of_subset_of_one_le' hst $ fun x _ _ => hf x
+  (prod_le_prod_of_subset_of_one_le' hst) fun x _ _ => hf x
 #align finset.prod_mono_set_of_one_le' Finset.prod_mono_set_of_one_le'
 
 @[to_additive sum_le_univ_sum_of_nonneg]
@@ -941,7 +941,7 @@ theorem prod_eq_one_iff_of_one_le' : (∀ i ∈ s, 1 ≤ f i) → ((∏ i in s, 
   exact fun _ => ⟨fun _ _ => False.elim, fun _ => rfl⟩
   intro a s ha ih H
   have : ∀ i ∈ s, 1 ≤ f i := fun _ => H _ ∘ mem_insert_of_mem
-  rw [prod_insert ha, mul_eq_one_iff' (H _ $ mem_insert_self _ _) (one_le_prod' this), forall_mem_insert, ih this]
+  rw [prod_insert ha, mul_eq_one_iff' (H _ <| mem_insert_self _ _) (one_le_prod' this), forall_mem_insert, ih this]
 #align finset.prod_eq_one_iff_of_one_le' Finset.prod_eq_one_iff_of_one_le'
 
 @[to_additive sum_eq_zero_iff_of_nonneg]
@@ -953,7 +953,7 @@ theorem prod_eq_one_iff_of_le_one' : (∀ i ∈ s, f i ≤ 1) → ((∏ i in s, 
 theorem single_le_prod' (hf : ∀ i ∈ s, 1 ≤ f i) {a} (h : a ∈ s) : f a ≤ ∏ x in s, f x :=
   calc
     f a = ∏ i in {a}, f i := prod_singleton.symm
-    _ ≤ ∏ i in s, f i := prod_le_prod_of_subset_of_one_le' (singleton_subset_iff.2 h) $ fun i hi _ => hf i hi
+    _ ≤ ∏ i in s, f i := (prod_le_prod_of_subset_of_one_le' (singleton_subset_iff.2 h)) fun i hi _ => hf i hi
     
 #align finset.single_le_prod' Finset.single_le_prod'
 
@@ -973,7 +973,7 @@ theorem pow_card_le_prod (s : Finset ι) (f : ι → N) (n : N) (h : ∀ x ∈ s
 
 theorem card_bUnion_le_card_mul [DecidableEq β] (s : Finset ι) (f : ι → Finset β) (n : ℕ)
     (h : ∀ a ∈ s, (f a).card ≤ n) : (s.bUnion f).card ≤ s.card * n :=
-  card_bUnion_le.trans $ sum_le_card_nsmul _ _ _ h
+  card_bUnion_le.trans <| sum_le_card_nsmul _ _ _ h
 #align finset.card_bUnion_le_card_mul Finset.card_bUnion_le_card_mul
 
 variable {ι' : Type _} [DecidableEq ι']
@@ -985,8 +985,8 @@ theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι �
     (∏ y in t, ∏ x in s.filter fun x => g x = y, f x) ≤ ∏ x in s, f x :=
   calc
     (∏ y in t, ∏ x in s.filter fun x => g x = y, f x) ≤ ∏ y in t ∪ s.image g, ∏ x in s.filter fun x => g x = y, f x :=
-      prod_le_prod_of_subset_of_one_le' (subset_union_left _ _) $ fun y hyts => h y
-    _ = ∏ x in s, f x := prod_fiberwise_of_maps_to (fun x hx => mem_union.2 $ Or.inr $ mem_image_of_mem _ hx) _
+      (prod_le_prod_of_subset_of_one_le' (subset_union_left _ _)) fun y hyts => h y
+    _ = ∏ x in s, f x := prod_fiberwise_of_maps_to (fun x hx => mem_union.2 <| Or.inr <| mem_image_of_mem _ hx) _
     
 #align finset.prod_fiberwise_le_prod_of_one_le_prod_fiber' Finset.prod_fiberwise_le_prod_of_one_le_prod_fiber'
 
@@ -1058,7 +1058,7 @@ variable [DecidableEq α] {s : Finset α} {B : Finset (Finset α)} {n : ℕ}
 
 /-- If every element belongs to at most `n` finsets, then the sum of their sizes is at most `n`
 times how many they are. -/
-theorem sum_card_inter_le (h : ∀ a ∈ s, (B.filter $ (· ∈ ·) a).card ≤ n) : (∑ t in B, (s ∩ t).card) ≤ s.card * n := by
+theorem sum_card_inter_le (h : ∀ a ∈ s, (B.filter <| (· ∈ ·) a).card ≤ n) : (∑ t in B, (s ∩ t).card) ≤ s.card * n := by
   refine' le_trans _ (s.sum_le_card_nsmul _ _ h)
   simp_rw [← filter_mem_eq_inter, card_eq_sum_ones, sum_filter]
   exact sum_comm.le
@@ -1066,7 +1066,7 @@ theorem sum_card_inter_le (h : ∀ a ∈ s, (B.filter $ (· ∈ ·) a).card ≤ 
 
 /-- If every element belongs to at most `n` finsets, then the sum of their sizes is at most `n`
 times how many they are. -/
-theorem sum_card_le [Fintype α] (h : ∀ a, (B.filter $ (· ∈ ·) a).card ≤ n) : (∑ s in B, s.card) ≤ Fintype.card α * n :=
+theorem sum_card_le [Fintype α] (h : ∀ a, (B.filter <| (· ∈ ·) a).card ≤ n) : (∑ s in B, s.card) ≤ Fintype.card α * n :=
   calc
     (∑ s in B, s.card) = ∑ s in B, (univ ∩ s).card := by simp_rw [univ_inter]
     _ ≤ Fintype.card α * n := sum_card_inter_le fun a _ => h a
@@ -1075,7 +1075,7 @@ theorem sum_card_le [Fintype α] (h : ∀ a, (B.filter $ (· ∈ ·) a).card ≤
 
 /-- If every element belongs to at least `n` finsets, then the sum of their sizes is at least `n`
 times how many they are. -/
-theorem le_sum_card_inter (h : ∀ a ∈ s, n ≤ (B.filter $ (· ∈ ·) a).card) : s.card * n ≤ ∑ t in B, (s ∩ t).card := by
+theorem le_sum_card_inter (h : ∀ a ∈ s, n ≤ (B.filter <| (· ∈ ·) a).card) : s.card * n ≤ ∑ t in B, (s ∩ t).card := by
   apply (s.card_nsmul_le_sum _ _ h).trans
   simp_rw [← filter_mem_eq_inter, card_eq_sum_ones, sum_filter]
   exact sum_comm.le
@@ -1083,7 +1083,7 @@ theorem le_sum_card_inter (h : ∀ a ∈ s, n ≤ (B.filter $ (· ∈ ·) a).car
 
 /-- If every element belongs to at least `n` finsets, then the sum of their sizes is at least `n`
 times how many they are. -/
-theorem le_sum_card [Fintype α] (h : ∀ a, n ≤ (B.filter $ (· ∈ ·) a).card) : Fintype.card α * n ≤ ∑ s in B, s.card :=
+theorem le_sum_card [Fintype α] (h : ∀ a, n ≤ (B.filter <| (· ∈ ·) a).card) : Fintype.card α * n ≤ ∑ s in B, s.card :=
   calc
     Fintype.card α * n ≤ ∑ s in B, (univ ∩ s).card := le_sum_card_inter fun a _ => h a
     _ = ∑ s in B, s.card := by simp_rw [univ_inter]
@@ -1092,13 +1092,13 @@ theorem le_sum_card [Fintype α] (h : ∀ a, n ≤ (B.filter $ (· ∈ ·) a).ca
 
 /-- If every element belongs to exactly `n` finsets, then the sum of their sizes is `n` times how
 many they are. -/
-theorem sum_card_inter (h : ∀ a ∈ s, (B.filter $ (· ∈ ·) a).card = n) : (∑ t in B, (s ∩ t).card) = s.card * n :=
-  (sum_card_inter_le $ fun a ha => (h a ha).le).antisymm (le_sum_card_inter $ fun a ha => (h a ha).ge)
+theorem sum_card_inter (h : ∀ a ∈ s, (B.filter <| (· ∈ ·) a).card = n) : (∑ t in B, (s ∩ t).card) = s.card * n :=
+  (sum_card_inter_le fun a ha => (h a ha).le).antisymm (le_sum_card_inter fun a ha => (h a ha).ge)
 #align finset.sum_card_inter Finset.sum_card_inter
 
 /-- If every element belongs to exactly `n` finsets, then the sum of their sizes is `n` times how
 many they are. -/
-theorem sum_card [Fintype α] (h : ∀ a, (B.filter $ (· ∈ ·) a).card = n) : (∑ s in B, s.card) = Fintype.card α * n := by
+theorem sum_card [Fintype α] (h : ∀ a, (B.filter <| (· ∈ ·) a).card = n) : (∑ s in B, s.card) = Fintype.card α * n := by
   simp_rw [Fintype.card, ← sum_card_inter fun a _ => h a, univ_inter]
 #align finset.sum_card Finset.sum_card
 
@@ -1109,20 +1109,20 @@ theorem card_le_card_bUnion {s : Finset ι} {f : ι → Finset α} (hs : (s : Se
 #align finset.card_le_card_bUnion Finset.card_le_card_bUnion
 
 theorem card_le_card_bUnion_add_card_fiber {s : Finset ι} {f : ι → Finset α} (hs : (s : Set ι).PairwiseDisjoint f) :
-    s.card ≤ (s.bUnion f).card + (s.filter $ fun i => f i = ∅).card := by
+    s.card ≤ (s.bUnion f).card + (s.filter fun i => f i = ∅).card := by
   rw [← Finset.filter_card_add_filter_neg_card_eq_card fun i => f i = ∅, add_comm]
   exact
     add_le_add_right
-      ((card_le_card_bUnion (hs.subset $ filter_subset _ _) $ fun i hi =>
-            nonempty_of_ne_empty $ (mem_filter.1 hi).2).trans $
-        card_le_of_subset $ bUnion_subset_bUnion_of_subset_left _ $ filter_subset _ _)
+      (((card_le_card_bUnion (hs.subset <| filter_subset _ _)) fun i hi =>
+            nonempty_of_ne_empty <| (mem_filter.1 hi).2).trans <|
+        card_le_of_subset <| bUnion_subset_bUnion_of_subset_left _ <| filter_subset _ _)
       _
 #align finset.card_le_card_bUnion_add_card_fiber Finset.card_le_card_bUnion_add_card_fiber
 
 theorem card_le_card_bUnion_add_one {s : Finset ι} {f : ι → Finset α} (hf : Injective f)
     (hs : (s : Set ι).PairwiseDisjoint f) : s.card ≤ (s.bUnion f).card + 1 :=
-  (card_le_card_bUnion_add_card_fiber hs).trans $
-    add_le_add_left (card_le_one.2 $ fun i hi j hj => hf $ (mem_filter.1 hi).2.trans (mem_filter.1 hj).2.symm) _
+  (card_le_card_bUnion_add_card_fiber hs).trans <|
+    add_le_add_left (card_le_one.2 fun i hi j hj => hf <| (mem_filter.1 hi).2.trans (mem_filter.1 hj).2.symm) _
 #align finset.card_le_card_bUnion_add_one Finset.card_le_card_bUnion_add_one
 
 end DoubleCounting
@@ -1133,12 +1133,12 @@ variable [CanonicallyOrderedMonoid M] {f : ι → M} {s t : Finset ι}
 
 @[simp, to_additive sum_eq_zero_iff]
 theorem prod_eq_one_iff' : (∏ x in s, f x) = 1 ↔ ∀ x ∈ s, f x = 1 :=
-  prod_eq_one_iff_of_one_le' $ fun x hx => one_le (f x)
+  prod_eq_one_iff_of_one_le' fun x hx => one_le (f x)
 #align finset.prod_eq_one_iff' Finset.prod_eq_one_iff'
 
 @[to_additive sum_le_sum_of_subset]
 theorem prod_le_prod_of_subset' (h : s ⊆ t) : (∏ x in s, f x) ≤ ∏ x in t, f x :=
-  prod_le_prod_of_subset_of_one_le' h $ fun x h₁ h₂ => one_le _
+  (prod_le_prod_of_subset_of_one_le' h) fun x h₁ h₂ => one_le _
 #align finset.prod_le_prod_of_subset' Finset.prod_le_prod_of_subset'
 
 @[to_additive sum_mono_set]
@@ -1170,15 +1170,12 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
            (Lean.binderIdent `x)
            («binderTerm∈_» "∈" `s)
            ","
-           (Term.arrow
-            (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1"))
-            "→"
-            (Init.Core.«term_∈_» `x " ∈ " `t)))]
+           (Term.arrow («term_≠_» (Term.app `f [`x]) "≠" (num "1")) "→" («term_∈_» `x "∈" `t)))]
          []
          ")")]
        (Term.typeSpec
         ":"
-        (Init.Core.«term_≤_»
+        («term_≤_»
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -1186,7 +1183,7 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
           `s
           ", "
           (Term.app `f [`x]))
-         " ≤ "
+         "≤"
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -1206,7 +1203,7 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
             (calcTactic
              "calc"
              (calcStep
-              (Init.Core.«term_=_»
+              («term_=_»
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -1214,29 +1211,25 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                 `s
                 ", "
                 (Term.app `f [`x]))
-               " = "
-               (Init.Core.«term_*_»
+               "="
+               («term_*_»
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                  " in "
                  (Term.app
                   `s.filter
-                  [(Term.fun
-                    "fun"
-                    (Term.basicFun [`x] [] "=>" (Init.Core.«term_=_» (Term.app `f [`x]) " = " (num "1"))))])
+                  [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
                  ", "
                  (Term.app `f [`x]))
-                " * "
+                "*"
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                  " in "
                  (Term.app
                   `s.filter
-                  [(Term.fun
-                    "fun"
-                    (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1"))))])
+                  [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
                  ", "
                  (Term.app `f [`x]))))
               ":="
@@ -1264,9 +1257,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                        "fun"
                        (Term.basicFun [(Term.hole "_") (Term.hole "_") `h `n_h] [] "=>" (Term.app `n_h [`h])))])))]))))
              [(calcStep
-               (Init.Core.«term_≤_»
+               («term_≤_»
                 (Term.hole "_")
-                " ≤ "
+                "≤"
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -1277,9 +1270,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                ":="
                (Term.app
                 `mul_le_of_le_one_of_le
-                [(Init.Core.«term_$_»
+                [(«term_<|_»
                   `prod_le_one'
-                  " $ "
+                  "<|"
                   (Term.byTactic
                    "by"
                    (Tactic.tacticSeq
@@ -1296,9 +1289,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                        (Tactic.exact
                         "exact"
                         (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
-                 (Init.Core.«term_$_»
+                 («term_<|_»
                   `prod_le_prod_of_subset'
-                  " $ "
+                  "<|"
                   (Term.byTactic
                    "by"
                    (Tactic.tacticSeq
@@ -1336,7 +1329,7 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
            (calcTactic
             "calc"
             (calcStep
-             (Init.Core.«term_=_»
+             («term_=_»
               (BigOperators.Algebra.BigOperators.Basic.finset.prod
                "∏"
                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -1344,29 +1337,25 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                `s
                ", "
                (Term.app `f [`x]))
-              " = "
-              (Init.Core.«term_*_»
+              "="
+              («term_*_»
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                 " in "
                 (Term.app
                  `s.filter
-                 [(Term.fun
-                   "fun"
-                   (Term.basicFun [`x] [] "=>" (Init.Core.«term_=_» (Term.app `f [`x]) " = " (num "1"))))])
+                 [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
                 ", "
                 (Term.app `f [`x]))
-               " * "
+               "*"
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                 " in "
                 (Term.app
                  `s.filter
-                 [(Term.fun
-                   "fun"
-                   (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1"))))])
+                 [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
                 ", "
                 (Term.app `f [`x]))))
              ":="
@@ -1394,9 +1383,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                       "fun"
                       (Term.basicFun [(Term.hole "_") (Term.hole "_") `h `n_h] [] "=>" (Term.app `n_h [`h])))])))]))))
             [(calcStep
-              (Init.Core.«term_≤_»
+              («term_≤_»
                (Term.hole "_")
-               " ≤ "
+               "≤"
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -1407,9 +1396,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
               ":="
               (Term.app
                `mul_le_of_le_one_of_le
-               [(Init.Core.«term_$_»
+               [(«term_<|_»
                  `prod_le_one'
-                 " $ "
+                 "<|"
                  (Term.byTactic
                   "by"
                   (Tactic.tacticSeq
@@ -1426,9 +1415,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                       (Tactic.exact
                        "exact"
                        (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
-                (Init.Core.«term_$_»
+                («term_<|_»
                  `prod_le_prod_of_subset'
-                 " $ "
+                 "<|"
                  (Term.byTactic
                   "by"
                   (Tactic.tacticSeq
@@ -1458,7 +1447,7 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
        (calcTactic
         "calc"
         (calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -1466,25 +1455,25 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
            `s
            ", "
            (Term.app `f [`x]))
-          " = "
-          (Init.Core.«term_*_»
+          "="
+          («term_*_»
            (BigOperators.Algebra.BigOperators.Basic.finset.prod
             "∏"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
             " in "
             (Term.app
              `s.filter
-             [(Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Core.«term_=_» (Term.app `f [`x]) " = " (num "1"))))])
+             [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
             ", "
             (Term.app `f [`x]))
-           " * "
+           "*"
            (BigOperators.Algebra.BigOperators.Basic.finset.prod
             "∏"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
             " in "
             (Term.app
              `s.filter
-             [(Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1"))))])
+             [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
             ", "
             (Term.app `f [`x]))))
          ":="
@@ -1512,9 +1501,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                   "fun"
                   (Term.basicFun [(Term.hole "_") (Term.hole "_") `h `n_h] [] "=>" (Term.app `n_h [`h])))])))]))))
         [(calcStep
-          (Init.Core.«term_≤_»
+          («term_≤_»
            (Term.hole "_")
-           " ≤ "
+           "≤"
            (BigOperators.Algebra.BigOperators.Basic.finset.prod
             "∏"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -1525,9 +1514,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
           ":="
           (Term.app
            `mul_le_of_le_one_of_le
-           [(Init.Core.«term_$_»
+           [(«term_<|_»
              `prod_le_one'
-             " $ "
+             "<|"
              (Term.byTactic
               "by"
               (Tactic.tacticSeq
@@ -1544,9 +1533,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                   (Tactic.exact
                    "exact"
                    (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
-            (Init.Core.«term_$_»
+            («term_<|_»
              `prod_le_prod_of_subset'
-             " $ "
+             "<|"
              (Term.byTactic
               "by"
               (Tactic.tacticSeq
@@ -1572,7 +1561,7 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
       (calcTactic
        "calc"
        (calcStep
-        (Init.Core.«term_=_»
+        («term_=_»
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -1580,25 +1569,25 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
           `s
           ", "
           (Term.app `f [`x]))
-         " = "
-         (Init.Core.«term_*_»
+         "="
+         («term_*_»
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
            " in "
            (Term.app
             `s.filter
-            [(Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Core.«term_=_» (Term.app `f [`x]) " = " (num "1"))))])
+            [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
            ", "
            (Term.app `f [`x]))
-          " * "
+          "*"
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
            " in "
            (Term.app
             `s.filter
-            [(Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1"))))])
+            [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
            ", "
            (Term.app `f [`x]))))
         ":="
@@ -1626,9 +1615,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                  "fun"
                  (Term.basicFun [(Term.hole "_") (Term.hole "_") `h `n_h] [] "=>" (Term.app `n_h [`h])))])))]))))
        [(calcStep
-         (Init.Core.«term_≤_»
+         («term_≤_»
           (Term.hole "_")
-          " ≤ "
+          "≤"
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -1639,9 +1628,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
          ":="
          (Term.app
           `mul_le_of_le_one_of_le
-          [(Init.Core.«term_$_»
+          [(«term_<|_»
             `prod_le_one'
-            " $ "
+            "<|"
             (Term.byTactic
              "by"
              (Tactic.tacticSeq
@@ -1658,9 +1647,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                  (Tactic.exact
                   "exact"
                   (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
-           (Init.Core.«term_$_»
+           («term_<|_»
             `prod_le_prod_of_subset'
-            " $ "
+            "<|"
             (Term.byTactic
              "by"
              (Tactic.tacticSeq
@@ -1685,9 +1674,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `mul_le_of_le_one_of_le
-       [(Init.Core.«term_$_»
+       [(«term_<|_»
          `prod_le_one'
-         " $ "
+         "<|"
          (Term.byTactic
           "by"
           (Tactic.tacticSeq
@@ -1704,9 +1693,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
               (Tactic.exact
                "exact"
                (Term.fun "fun" (Term.basicFun [(Term.hole "_") (Term.hole "_")] [] "=>" `le_of_eq))))]))))
-        (Init.Core.«term_$_»
+        («term_<|_»
          `prod_le_prod_of_subset'
-         " $ "
+         "<|"
          (Term.byTactic
           "by"
           (Tactic.tacticSeq
@@ -1728,12 +1717,12 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
                   (Tactic.simpLemma [] [] `and_imp)]
                  "]")]
                []))]))))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      («term_<|_»
        `prod_le_prod_of_subset'
-       " $ "
+       "<|"
        (Term.byTactic
         "by"
         (Tactic.tacticSeq
@@ -1812,16 +1801,16 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
       `subset_iff
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       `prod_le_prod_of_subset'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 10, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     (Init.Core.«term_$_»
+     («term_<|_»
       `prod_le_prod_of_subset'
-      " $ "
+      "<|"
       (Term.byTactic
        "by"
        (Tactic.tacticSeq
@@ -1844,12 +1833,12 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
               "]")]
             []))]))))
      ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Init.Core.«term_$_»
+      («term_<|_»
        `prod_le_one'
-       " $ "
+       "<|"
        (Term.byTactic
         "by"
         (Tactic.tacticSeq
@@ -1936,16 +1925,16 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       `prod_le_one'
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1, (some 0, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 10, (some 0, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     (Init.Core.«term_$_»
+     («term_<|_»
       `prod_le_one'
-      " $ "
+      "<|"
       (Term.byTactic
        "by"
        (Tactic.tacticSeq
@@ -1968,9 +1957,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_≤_»
+      («term_≤_»
        (Term.hole "_")
-       " ≤ "
+       "≤"
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -2003,7 +1992,7 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.byTactic
@@ -2127,7 +2116,7 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -2135,46 +2124,46 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
         `s
         ", "
         (Term.app `f [`x]))
-       " = "
-       (Init.Core.«term_*_»
+       "="
+       («term_*_»
         (BigOperators.Algebra.BigOperators.Basic.finset.prod
          "∏"
          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
          " in "
          (Term.app
           `s.filter
-          [(Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Core.«term_=_» (Term.app `f [`x]) " = " (num "1"))))])
+          [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
          ", "
          (Term.app `f [`x]))
-        " * "
+        "*"
         (BigOperators.Algebra.BigOperators.Basic.finset.prod
          "∏"
          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
          " in "
          (Term.app
           `s.filter
-          [(Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1"))))])
+          [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
          ", "
          (Term.app `f [`x]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_*_»
+      («term_*_»
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
         " in "
         (Term.app
          `s.filter
-         [(Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Core.«term_=_» (Term.app `f [`x]) " = " (num "1"))))])
+         [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
         ", "
         (Term.app `f [`x]))
-       " * "
+       "*"
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
         " in "
         (Term.app
          `s.filter
-         [(Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1"))))])
+         [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
         ", "
         (Term.app `f [`x])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2182,9 +2171,7 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
        "∏"
        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
        " in "
-       (Term.app
-        `s.filter
-        [(Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1"))))])
+       (Term.app `s.filter [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
        ", "
        (Term.app `f [`x]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2199,15 +2186,13 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app
-       `s.filter
-       [(Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1"))))])
+      (Term.app `s.filter [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1"))))
+      (Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1"))
+      («term_≠_» (Term.app `f [`x]) "≠" (num "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "1")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -2221,7 +2206,7 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
@@ -2240,9 +2225,7 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
        "∏"
        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
        " in "
-       (Term.app
-        `s.filter
-        [(Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Core.«term_=_» (Term.app `f [`x]) " = " (num "1"))))])
+       (Term.app `s.filter [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
        ", "
        (Term.app `f [`x]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2257,15 +2240,13 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app
-       `s.filter
-       [(Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Core.«term_=_» (Term.app `f [`x]) " = " (num "1"))))])
+      (Term.app `s.filter [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Core.«term_=_» (Term.app `f [`x]) " = " (num "1"))))
+      (Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_» (Term.app `f [`x]) " = " (num "1"))
+      («term_=_» (Term.app `f [`x]) "=" (num "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "1")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -2279,7 +2260,7 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
@@ -2299,9 +2280,7 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
       "∏"
       (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
       " in "
-      (Term.app
-       `s.filter
-       [(Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Core.«term_=_» (Term.app `f [`x]) " = " (num "1"))))])
+      (Term.app `s.filter [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_=_» (Term.app `f [`x]) "=" (num "1"))))])
       ", "
       (Term.app `f [`x]))
      ")")
@@ -2328,7 +2307,7 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 0, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
      (BigOperators.Algebra.BigOperators.Basic.finset.prod
@@ -2368,8 +2347,8 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
             _ ≤ ∏ x in t , f x
               :=
               mul_le_of_le_one_of_le
-                prod_le_one' $ by simp only [ mem_filter , and_imp ] <;> exact fun _ _ => le_of_eq
-                  prod_le_prod_of_subset' $ by simpa only [ subset_iff , mem_filter , and_imp ]
+                prod_le_one' <| by simp only [ mem_filter , and_imp ] <;> exact fun _ _ => le_of_eq
+                  prod_le_prod_of_subset' <| by simpa only [ subset_iff , mem_filter , and_imp ]
 #align finset.prod_le_prod_of_ne_one' Finset.prod_le_prod_of_ne_one'
 
 end CanonicallyOrderedMonoid
@@ -2383,7 +2362,7 @@ theorem prod_lt_prod' (Hle : ∀ i ∈ s, f i ≤ g i) (Hlt : ∃ i ∈ s, f i <
   classical
   rcases Hlt with ⟨i, hi, hlt⟩
   rw [← insert_erase hi, prod_insert (not_mem_erase _ _), prod_insert (not_mem_erase _ _)]
-  exact mul_lt_mul_of_lt_of_le hlt (prod_le_prod'' $ fun j hj => Hle j $ mem_of_mem_erase hj)
+  exact mul_lt_mul_of_lt_of_le hlt (prod_le_prod'' fun j hj => Hle j <| mem_of_mem_erase hj)
 #align finset.prod_lt_prod' Finset.prod_lt_prod'
 
 @[to_additive sum_lt_sum_of_nonempty]
@@ -2412,11 +2391,11 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
       "theorem"
       (Command.declId `prod_lt_prod_of_subset' [])
       (Command.declSig
-       [(Term.explicitBinder "(" [`h] [":" (Init.Core.«term_⊆_» `s " ⊆ " `t)] [] ")")
+       [(Term.explicitBinder "(" [`h] [":" («term_⊆_» `s "⊆" `t)] [] ")")
         (Term.implicitBinder "{" [`i] [":" `ι] "}")
-        (Term.explicitBinder "(" [`ht] [":" (Init.Core.«term_∈_» `i " ∈ " `t)] [] ")")
-        (Term.explicitBinder "(" [`hs] [":" (Init.Core.«term_∉_» `i " ∉ " `s)] [] ")")
-        (Term.explicitBinder "(" [`hlt] [":" (Init.Core.«term_<_» (num "1") " < " (Term.app `f [`i]))] [] ")")
+        (Term.explicitBinder "(" [`ht] [":" («term_∈_» `i "∈" `t)] [] ")")
+        (Term.explicitBinder "(" [`hs] [":" («term_∉_» `i "∉" `s)] [] ")")
+        (Term.explicitBinder "(" [`hlt] [":" («term_<_» (num "1") "<" (Term.app `f [`i]))] [] ")")
         (Term.explicitBinder
          "("
          [`hle]
@@ -2426,12 +2405,12 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
            (Lean.binderIdent `j)
            («binderTerm∈_» "∈" `t)
            ","
-           (Term.arrow (Init.Core.«term_∉_» `j " ∉ " `s) "→" (Init.Core.«term_≤_» (num "1") " ≤ " (Term.app `f [`j]))))]
+           (Term.arrow («term_∉_» `j "∉" `s) "→" («term_≤_» (num "1") "≤" (Term.app `f [`j]))))]
          []
          ")")]
        (Term.typeSpec
         ":"
-        (Init.Core.«term_<_»
+        («term_<_»
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -2439,7 +2418,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
           `s
           ", "
           (Term.app `f [`j]))
-         " < "
+         "<"
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -2459,7 +2438,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
             (calcTactic
              "calc"
              (calcStep
-              (Init.Core.«term_<_»
+              («term_<_»
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -2467,7 +2446,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
                 `s
                 ", "
                 (Term.app `f [`j]))
-               " < "
+               "<"
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -2499,9 +2478,9 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
                       (Term.app `f [`j]))
                      `hlt]))]))))
              [(calcStep
-               (Init.Core.«term_≤_»
+               («term_≤_»
                 (Term.hole "_")
-                " ≤ "
+                "≤"
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -2565,7 +2544,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
            (calcTactic
             "calc"
             (calcStep
-             (Init.Core.«term_<_»
+             («term_<_»
               (BigOperators.Algebra.BigOperators.Basic.finset.prod
                "∏"
                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -2573,7 +2552,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
                `s
                ", "
                (Term.app `f [`j]))
-              " < "
+              "<"
               (BigOperators.Algebra.BigOperators.Basic.finset.prod
                "∏"
                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -2601,9 +2580,9 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
                      (Term.app `f [`j]))
                     `hlt]))]))))
             [(calcStep
-              (Init.Core.«term_≤_»
+              («term_≤_»
                (Term.hole "_")
-               " ≤ "
+               "≤"
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -2659,7 +2638,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
        (calcTactic
         "calc"
         (calcStep
-         (Init.Core.«term_<_»
+         («term_<_»
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -2667,7 +2646,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
            `s
            ", "
            (Term.app `f [`j]))
-          " < "
+          "<"
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -2695,9 +2674,9 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
                  (Term.app `f [`j]))
                 `hlt]))]))))
         [(calcStep
-          (Init.Core.«term_≤_»
+          («term_≤_»
            (Term.hole "_")
-           " ≤ "
+           "≤"
            (BigOperators.Algebra.BigOperators.Basic.finset.prod
             "∏"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -2747,7 +2726,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
       (calcTactic
        "calc"
        (calcStep
-        (Init.Core.«term_<_»
+        («term_<_»
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -2755,7 +2734,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
           `s
           ", "
           (Term.app `f [`j]))
-         " < "
+         "<"
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -2783,9 +2762,9 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
                 (Term.app `f [`j]))
                `hlt]))]))))
        [(calcStep
-         (Init.Core.«term_≤_»
+         («term_≤_»
           (Term.hole "_")
-          " ≤ "
+          "≤"
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -3004,9 +2983,9 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_≤_»
+      («term_≤_»
        (Term.hole "_")
-       " ≤ "
+       "≤"
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -3039,7 +3018,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.byTactic
@@ -3146,7 +3125,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_<_»
+      («term_<_»
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -3154,7 +3133,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
         `s
         ", "
         (Term.app `f [`j]))
-       " < "
+       "<"
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -3220,7 +3199,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 0, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
      (BigOperators.Algebra.BigOperators.Basic.finset.prod
@@ -3272,14 +3251,14 @@ theorem single_lt_prod' {i j : ι} (hij : j ≠ i) (hi : i ∈ s) (hj : j ∈ s)
   calc
     f i = ∏ k in {i}, f k := prod_singleton.symm
     _ < ∏ k in s, f k :=
-      prod_lt_prod_of_subset' (singleton_subset_iff.2 hi) hj (mt mem_singleton.1 hij) hlt $ fun k hks hki =>
+      (prod_lt_prod_of_subset' (singleton_subset_iff.2 hi) hj (mt mem_singleton.1 hij) hlt) fun k hks hki =>
         hle k hks (mt mem_singleton.2 hki)
     
 #align finset.single_lt_prod' Finset.single_lt_prod'
 
 @[to_additive sum_pos]
 theorem one_lt_prod (h : ∀ i ∈ s, 1 < f i) (hs : s.Nonempty) : 1 < ∏ i in s, f i :=
-  lt_of_le_of_lt (by rw [prod_const_one]) $ prod_lt_prod_of_nonempty' hs h
+  lt_of_le_of_lt (by rw [prod_const_one]) <| prod_lt_prod_of_nonempty' hs h
 #align finset.one_lt_prod Finset.one_lt_prod
 
 @[to_additive]
@@ -3289,12 +3268,12 @@ theorem prod_lt_one (h : ∀ i ∈ s, f i < 1) (hs : s.Nonempty) : (∏ i in s, 
 
 @[to_additive sum_pos']
 theorem one_lt_prod' (h : ∀ i ∈ s, 1 ≤ f i) (hs : ∃ i ∈ s, 1 < f i) : 1 < ∏ i in s, f i :=
-  prod_const_one.symm.trans_lt $ prod_lt_prod' h hs
+  prod_const_one.symm.trans_lt <| prod_lt_prod' h hs
 #align finset.one_lt_prod' Finset.one_lt_prod'
 
 @[to_additive]
 theorem prod_lt_one' (h : ∀ i ∈ s, f i ≤ 1) (hs : ∃ i ∈ s, f i < 1) : (∏ i in s, f i) < 1 :=
-  prod_const_one.le.trans_lt' $ prod_lt_prod' h hs
+  prod_const_one.le.trans_lt' <| prod_lt_prod' h hs
 #align finset.prod_lt_one' Finset.prod_lt_one'
 
 @[to_additive]
@@ -3451,7 +3430,7 @@ variable [Fintype ι]
 
 @[to_additive sum_mono, mono]
 theorem prod_mono' [OrderedCommMonoid M] : Monotone fun f : ι → M => ∏ i, f i := fun f g hfg =>
-  Finset.prod_le_prod'' $ fun x _ => hfg x
+  Finset.prod_le_prod'' fun x _ => hfg x
 #align fintype.prod_mono' Fintype.prod_mono'
 
 attribute [mono] sum_mono
@@ -3471,14 +3450,14 @@ open Finset
 /-- A product of finite numbers is still finite -/
 theorem prod_lt_top [CanonicallyOrderedCommSemiring R] [Nontrivial R] [DecidableEq R] {s : Finset ι} {f : ι → WithTop R}
     (h : ∀ i ∈ s, f i ≠ ⊤) : (∏ i in s, f i) < ⊤ :=
-  prod_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => mul_lt_top h₁.Ne h₂.Ne) (coe_lt_top 1) $ fun a ha =>
+  (prod_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => mul_lt_top h₁.Ne h₂.Ne) (coe_lt_top 1)) fun a ha =>
     lt_top_iff_ne_top.2 (h a ha)
 #align with_top.prod_lt_top WithTop.prod_lt_top
 
 /-- A sum of finite numbers is still finite -/
 theorem sum_lt_top [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → WithTop M} (h : ∀ i ∈ s, f i ≠ ⊤) :
     (∑ i in s, f i) < ⊤ :=
-  sum_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => add_lt_top.2 ⟨h₁, h₂⟩) zero_lt_top $ fun i hi =>
+  (sum_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => add_lt_top.2 ⟨h₁, h₂⟩) zero_lt_top) fun i hi =>
     lt_top_iff_ne_top.2 (h i hi)
 #align with_top.sum_lt_top WithTop.sum_lt_top
 
@@ -3487,7 +3466,7 @@ theorem sum_eq_top_iff [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → With
     (∑ i in s, f i) = ⊤ ↔ ∃ i ∈ s, f i = ⊤ := by classical
   constructor
   · contrapose!
-    exact fun h => (sum_lt_top $ fun i hi => h i hi).Ne
+    exact fun h => (sum_lt_top fun i hi => h i hi).Ne
     
   · rintro ⟨i, his, hi⟩
     rw [sum_eq_add_sum_diff_singleton his, hi, top_add]

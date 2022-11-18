@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
 import Mathbin.CategoryTheory.Closed.Cartesian
-import Mathbin.CategoryTheory.Limits.Shapes.ZeroMorphisms
 import Mathbin.CategoryTheory.Punit
 import Mathbin.CategoryTheory.Conj
+import Mathbin.CategoryTheory.Limits.Shapes.ZeroObjects
 
 /-!
 # A cartesian closed category with zero object is trivial
@@ -37,7 +37,7 @@ variable [HasFiniteProducts C] [CartesianClosed C]
 then each homset has exactly one element.
 -/
 def uniqueHomsetOfInitialIsoTerminal [HasInitial C] (i : ⊥_ C ≅ ⊤_ C) (X Y : C) : Unique (X ⟶ Y) :=
-  Equiv.unique $
+  Equiv.unique <|
     calc
       (X ⟶ Y) ≃ (X ⨯ ⊤_ C ⟶ Y) := Iso.homCongr (prod.rightUnitor _).symm (Iso.refl _)
       _ ≃ (X ⨯ ⊥_ C ⟶ Y) := Iso.homCongr (prod.mapIso (Iso.refl _) i.symm) (Iso.refl _)
@@ -61,7 +61,7 @@ one morphism.
 -/
 def equivPunit [HasZeroObject C] : C ≌ Discrete PUnit :=
   Equivalence.mk (Functor.star C) (Functor.fromPunit 0)
-    (NatIso.ofComponents (fun X => { Hom := default, inv := default }) fun X Y f => dec_trivial) (Functor.punitExt _ _)
+    (NatIso.ofComponents (fun X => { Hom := default, inv := default }) fun X Y f => by decide) (Functor.punitExt _ _)
 #align category_theory.equiv_punit CategoryTheory.equivPunit
 
 end CategoryTheory

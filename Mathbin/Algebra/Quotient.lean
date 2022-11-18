@@ -3,7 +3,7 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Data.SetLike.Basic
+import Mathbin.Tactic.Basic
 
 /-!
 # Algebraic quotients
@@ -41,7 +41,7 @@ such as groups, modules and rings.
 
 `A` is a parameter, despite being unused in the definition below, so it appears in the notation.
 -/
-class HasQuotient (A : outParam $ Type u) (B : Type v) where
+class HasQuotient (A : outParam <| Type u) (B : Type v) where
   Quotient' : B → Type max u v
 #align has_quotient HasQuotient
 
@@ -52,7 +52,7 @@ This differs from `has_quotient.quotient'` in that the `A` argument is explicit,
 to make Lean show the notation in the goal state.
 -/
 @[reducible, nolint has_nonempty_instance]
-def HasQuotient.Quotient (A : outParam $ Type u) {B : Type v} [HasQuotient A B] (b : B) : Type max u v :=
+def HasQuotient.Quotient (A : outParam <| Type u) {B : Type v} [HasQuotient A B] (b : B) : Type max u v :=
   HasQuotient.Quotient' b
 #align has_quotient.quotient HasQuotient.Quotient
 

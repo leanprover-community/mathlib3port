@@ -79,8 +79,8 @@ the restriction of `Measure` to (sub-)probability space.)
 def measure : MeasCat ⥤ MeasCat where
   obj X := ⟨@MeasureTheory.Measure X.1 X.2⟩
   map X Y f := ⟨Measure.map (f : X → Y), Measure.measurableMap f f.2⟩
-  map_id' := fun ⟨α, I⟩ => Subtype.eq $ funext $ fun μ => @Measure.map_id α I μ
-  map_comp' := fun X Y Z ⟨f, hf⟩ ⟨g, hg⟩ => Subtype.eq $ funext $ fun μ => (Measure.map_map hg hf).symm
+  map_id' := fun ⟨α, I⟩ => Subtype.eq <| funext fun μ => @Measure.map_id α I μ
+  map_comp' := fun X Y Z ⟨f, hf⟩ ⟨g, hg⟩ => Subtype.eq <| funext fun μ => (Measure.map_map hg hf).symm
 #align Meas.Measure MeasCat.measure
 
 /-- The Giry monad, i.e. the monadic structure associated with `Measure`. -/
@@ -88,13 +88,13 @@ def giry : CategoryTheory.Monad MeasCat where
   toFunctor := measure
   η' :=
     { app := fun X => ⟨@Measure.dirac X.1 X.2, Measure.measurableDirac⟩,
-      naturality' := fun X Y ⟨f, hf⟩ => Subtype.eq $ funext $ fun a => (Measure.map_dirac hf a).symm }
+      naturality' := fun X Y ⟨f, hf⟩ => Subtype.eq <| funext fun a => (Measure.map_dirac hf a).symm }
   μ' :=
     { app := fun X => ⟨@Measure.join X.1 X.2, Measure.measurableJoin⟩,
-      naturality' := fun X Y ⟨f, hf⟩ => Subtype.eq $ funext $ fun μ => Measure.join_map_map hf μ }
-  assoc' α := Subtype.eq $ funext $ fun μ => @Measure.join_map_join _ _ _
-  left_unit' α := Subtype.eq $ funext $ fun μ => @Measure.join_dirac _ _ _
-  right_unit' α := Subtype.eq $ funext $ fun μ => @Measure.join_map_dirac _ _ _
+      naturality' := fun X Y ⟨f, hf⟩ => Subtype.eq <| funext fun μ => Measure.join_map_map hf μ }
+  assoc' α := Subtype.eq <| funext fun μ => @Measure.join_map_join _ _ _
+  left_unit' α := Subtype.eq <| funext fun μ => @Measure.join_dirac _ _ _
+  right_unit' α := Subtype.eq <| funext fun μ => @Measure.join_map_dirac _ _ _
 #align Meas.Giry MeasCat.giry
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr measurable_id, ",", expr measure.measurable_lintegral, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
@@ -103,10 +103,10 @@ nicely under the monad operations. -/
 def integral : giry.Algebra where
   A := MeasCat.of ℝ≥0∞
   a := ⟨fun m : Measure ℝ≥0∞ => ∫⁻ x, x ∂m, Measure.measurableLintegral measurableId⟩
-  unit' := Subtype.eq $ funext $ fun r : ℝ≥0∞ => lintegral_dirac' _ measurableId
+  unit' := Subtype.eq <| funext fun r : ℝ≥0∞ => lintegral_dirac' _ measurableId
   assoc' :=
-    Subtype.eq $
-      funext $ fun μ : Measure (Measure ℝ≥0∞) =>
+    Subtype.eq <|
+      funext fun μ : Measure (Measure ℝ≥0∞) =>
         show (∫⁻ x, x ∂μ.join) = ∫⁻ x, x ∂Measure.map (fun m : Measure ℝ≥0∞ => ∫⁻ x, x ∂m) μ by
           rw [measure.lintegral_join, lintegral_map] <;>
             trace

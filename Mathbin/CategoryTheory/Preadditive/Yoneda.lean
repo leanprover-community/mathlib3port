@@ -42,7 +42,7 @@ def preadditiveYonedaObj (Y : C) : Cᵒᵖ ⥤ ModuleCat.{v} (EndCat Y) where
   obj X := ModuleCat.of _ (X.unop ⟶ Y)
   map X X' f :=
     { toFun := fun g => f.unop ≫ g, map_add' := fun g g' => comp_add _ _ _ _ _ _,
-      map_smul' := fun r g => Eq.symm $ Category.assoc _ _ _ }
+      map_smul' := fun r g => Eq.symm <| Category.assoc _ _ _ }
 #align category_theory.preadditive_yoneda_obj CategoryTheory.preadditiveYonedaObj
 
 /-- The Yoneda embedding for preadditive categories sends an object `Y` to the presheaf sending an
@@ -55,7 +55,7 @@ def preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupCat.{v} where
   map Y Y' f :=
     { app := fun X =>
         { toFun := fun g => g ≫ f, map_zero' := Limits.zero_comp, map_add' := fun g g' => add_comp _ _ _ _ _ _ },
-      naturality' := fun X X' g => AddCommGroupCat.ext _ _ _ _ $ fun x => Category.assoc _ _ _ }
+      naturality' := fun X X' g => (AddCommGroupCat.ext _ _ _ _) fun x => Category.assoc _ _ _ }
   map_id' X := by
     ext
     simp
@@ -85,7 +85,7 @@ def preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupCat.{v} where
   map X X' f :=
     { app := fun Y =>
         { toFun := fun g => f.unop ≫ g, map_zero' := Limits.comp_zero, map_add' := fun g g' => comp_add _ _ _ _ _ _ },
-      naturality' := fun Y Y' g => AddCommGroupCat.ext _ _ _ _ $ fun x => Eq.symm $ Category.assoc _ _ _ }
+      naturality' := fun Y Y' g => (AddCommGroupCat.ext _ _ _ _) fun x => Eq.symm <| Category.assoc _ _ _ }
   map_id' X := by
     ext
     simp

@@ -113,9 +113,9 @@ This essentially lets us commute `cofork.of_π` with `functor.map_cocone`.
 def isColimitMapCoconeCoforkEquiv :
     IsColimit (G.mapCocone (Cofork.ofπ h w)) ≃
       IsColimit (Cofork.ofπ (G.map h) (by simp only [← G.map_comp, w]) : Cofork (G.map f) (G.map g)) :=
-  (IsColimit.precomposeInvEquiv (diagramIsoParallelPair _) _).symm.trans $
-    is_colimit.equiv_iso_colimit $
-      Cofork.ext (Iso.refl _) $ by
+  (IsColimit.precomposeInvEquiv (diagramIsoParallelPair _) _).symm.trans <|
+    is_colimit.equiv_iso_colimit <|
+      Cofork.ext (Iso.refl _) <| by
         dsimp only [cofork.π, cofork.of_π_ι_app]
         dsimp
         rw [category.comp_id, category.id_comp]

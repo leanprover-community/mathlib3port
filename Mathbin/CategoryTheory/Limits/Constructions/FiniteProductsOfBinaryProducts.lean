@@ -7,7 +7,6 @@ import Mathbin.CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Products
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
-import Mathbin.CategoryTheory.Pempty
 import Mathbin.Logic.Equiv.Fin
 
 /-!

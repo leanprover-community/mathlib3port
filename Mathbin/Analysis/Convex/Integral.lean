@@ -66,9 +66,9 @@ theorem Convex.integral_mem [IsProbabilityMeasure μ] (hs : Convex ℝ s) (hsc :
     apply subset_closure
     exact ⟨mem_range_self _, hx⟩
   set G : ℕ → simple_func α E := simple_func.approx_on _ hgm.measurable (range g ∩ s) y₀ h₀
-  have : tendsto (fun n => (G n).integral μ) at_top (𝓝 $ ∫ x, g x ∂μ) :=
+  have : tendsto (fun n => (G n).integral μ) at_top (𝓝 <| ∫ x, g x ∂μ) :=
     tendsto_integral_approx_on_of_measurable hfi _ hg _ (integrable_const _)
-  refine' hsc.mem_of_tendsto this (eventually_of_forall $ fun n => hs.sum_mem _ _ _)
+  refine' hsc.mem_of_tendsto this (eventually_of_forall fun n => hs.sum_mem _ _ _)
   · exact fun _ _ => Ennreal.to_real_nonneg
     
   · rw [← Ennreal.to_real_sum, (G n).sum_range_measure_preimage_singleton, measure_univ, Ennreal.one_to_real]
@@ -106,7 +106,7 @@ function sending `μ`-a.e. points to `s`, then the average value of `f` belongs 
 `⨍ x, f x ∂μ ∈ s`. See also `convex.center_mass_mem` for a finite sum version of this lemma. -/
 theorem Convex.set_average_mem_closure (hs : Convex ℝ s) (h0 : μ t ≠ 0) (ht : μ t ≠ ∞)
     (hfs : ∀ᵐ x ∂μ.restrict t, f x ∈ s) (hfi : IntegrableOn f t μ) : (⨍ x in t, f x ∂μ) ∈ closure s :=
-  hs.closure.set_average_mem isClosedClosure h0 ht (hfs.mono $ fun x hx => subset_closure hx) hfi
+  hs.closure.set_average_mem isClosedClosure h0 ht (hfs.mono fun x hx => subset_closure hx) hfi
 #align convex.set_average_mem_closure Convex.set_average_mem_closure
 
 theorem ConvexOn.average_mem_epigraph [IsFiniteMeasure μ] (hg : ConvexOn ℝ s g) (hgc : ContinuousOn g s)
@@ -232,10 +232,10 @@ theorem ae_eq_const_or_exists_average_ne_compl [IsFiniteMeasure μ] (hfi : Integ
   refine' hfi.ae_eq_of_forall_set_integral_eq _ _ (integrable_const _) fun t ht ht' => _
   clear ht'
   simp only [const_apply, set_integral_const]
-  by_cases h₀:μ t = 0
+  by_cases h₀ : μ t = 0
   · rw [restrict_eq_zero.2 h₀, integral_zero_measure, h₀, Ennreal.zero_to_real, zero_smul]
     
-  by_cases h₀':μ (tᶜ) = 0
+  by_cases h₀' : μ (tᶜ) = 0
   · rw [← ae_eq_univ] at h₀'
     rw [restrict_congr_set h₀', restrict_univ, measure_congr h₀', measure_smul_average]
     
@@ -251,7 +251,7 @@ theorem Convex.average_mem_interior_of_set [IsFiniteMeasure μ] (hs : Convex ℝ
     (hfi : Integrable f μ) (ht : (⨍ x in t, f x ∂μ) ∈ interior s) : (⨍ x, f x ∂μ) ∈ interior s := by
   rw [← measure_to_measurable] at h0
   rw [← restrict_to_measurable (measure_ne_top μ t)] at ht
-  by_cases h0':μ (to_measurable μ tᶜ) = 0
+  by_cases h0' : μ (to_measurable μ tᶜ) = 0
   · rw [← ae_eq_univ] at h0'
     rwa [restrict_congr_set h0', restrict_univ] at ht
     
@@ -309,17 +309,17 @@ theorem StrictConcaveOn.ae_eq_const_or_lt_map_average [IsFiniteMeasure μ] (hg :
     hg.neg.ae_eq_const_or_map_average_lt hgc.neg hsc hfs hfi hgi.neg
 #align strict_concave_on.ae_eq_const_or_lt_map_average StrictConcaveOn.ae_eq_const_or_lt_map_average
 
-/-- If `E` is a strictly convex normed space and `f : α → E` is a function such that `∥f x∥ ≤ C`
+/-- If `E` is a strictly convex normed space and `f : α → E` is a function such that `‖f x‖ ≤ C`
 a.e., then either this function is a.e. equal to its average value, or the norm of its average value
 is strictly less than `C`. -/
-theorem ae_eq_const_or_norm_average_lt_of_norm_le_const [StrictConvexSpace ℝ E] (h_le : ∀ᵐ x ∂μ, ∥f x∥ ≤ C) :
-    f =ᵐ[μ] const α (⨍ x, f x ∂μ) ∨ ∥⨍ x, f x ∂μ∥ < C := by
+theorem ae_eq_const_or_norm_average_lt_of_norm_le_const [StrictConvexSpace ℝ E] (h_le : ∀ᵐ x ∂μ, ‖f x‖ ≤ C) :
+    f =ᵐ[μ] const α (⨍ x, f x ∂μ) ∨ ‖⨍ x, f x ∂μ‖ < C := by
   cases' le_or_lt C 0 with hC0 hC0
   · have : f =ᵐ[μ] 0 := h_le.mono fun x hx => norm_le_zero_iff.1 (hx.trans hC0)
     simp only [average_congr this, Pi.zero_apply, average_zero]
     exact Or.inl this
     
-  by_cases hfi:integrable f μ
+  by_cases hfi : integrable f μ
   swap
   · simp [average_eq, integral_undef hfi, hC0, Ennreal.to_real_pos_iff]
     
@@ -334,11 +334,11 @@ theorem ae_eq_const_or_norm_average_lt_of_norm_le_const [StrictConvexSpace ℝ E
     (strict_convex_closed_ball ℝ (0 : E) C).ae_eq_const_or_average_mem_interior is_closed_ball h_le hfi
 #align ae_eq_const_or_norm_average_lt_of_norm_le_const ae_eq_const_or_norm_average_lt_of_norm_le_const
 
-/-- If `E` is a strictly convex normed space and `f : α → E` is a function such that `∥f x∥ ≤ C`
+/-- If `E` is a strictly convex normed space and `f : α → E` is a function such that `‖f x‖ ≤ C`
 a.e., then either this function is a.e. equal to its average value, or the norm of its integral is
 strictly less than `(μ univ).to_real * C`. -/
 theorem ae_eq_const_or_norm_integral_lt_of_norm_le_const [StrictConvexSpace ℝ E] [IsFiniteMeasure μ]
-    (h_le : ∀ᵐ x ∂μ, ∥f x∥ ≤ C) : f =ᵐ[μ] const α (⨍ x, f x ∂μ) ∨ ∥∫ x, f x ∂μ∥ < (μ univ).toReal * C := by
+    (h_le : ∀ᵐ x ∂μ, ‖f x‖ ≤ C) : f =ᵐ[μ] const α (⨍ x, f x ∂μ) ∨ ‖∫ x, f x ∂μ‖ < (μ univ).toReal * C := by
   cases' eq_or_ne μ 0 with h₀ h₀
   · left
     simp [h₀]
@@ -348,12 +348,12 @@ theorem ae_eq_const_or_norm_integral_lt_of_norm_le_const [StrictConvexSpace ℝ 
   rwa [average_eq, norm_smul, norm_inv, Real.norm_eq_abs, abs_of_pos hμ, ← div_eq_inv_mul, div_lt_iff' hμ] at H
 #align ae_eq_const_or_norm_integral_lt_of_norm_le_const ae_eq_const_or_norm_integral_lt_of_norm_le_const
 
-/-- If `E` is a strictly convex normed space and `f : α → E` is a function such that `∥f x∥ ≤ C`
+/-- If `E` is a strictly convex normed space and `f : α → E` is a function such that `‖f x‖ ≤ C`
 a.e. on a set `t` of finite measure, then either this function is a.e. equal to its average value on
 `t`, or the norm of its integral over `t` is strictly less than `(μ t).to_real * C`. -/
 theorem ae_eq_const_or_norm_set_integral_lt_of_norm_le_const [StrictConvexSpace ℝ E] (ht : μ t ≠ ∞)
-    (h_le : ∀ᵐ x ∂μ.restrict t, ∥f x∥ ≤ C) :
-    f =ᵐ[μ.restrict t] const α (⨍ x in t, f x ∂μ) ∨ ∥∫ x in t, f x ∂μ∥ < (μ t).toReal * C := by
+    (h_le : ∀ᵐ x ∂μ.restrict t, ‖f x‖ ≤ C) :
+    f =ᵐ[μ.restrict t] const α (⨍ x in t, f x ∂μ) ∨ ‖∫ x in t, f x ∂μ‖ < (μ t).toReal * C := by
   haveI := Fact.mk ht.lt_top
   rw [← restrict_apply_univ]
   exact ae_eq_const_or_norm_integral_lt_of_norm_le_const h_le

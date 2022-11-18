@@ -39,7 +39,7 @@ for a version giving an equivalence when there is decidable equality. -/
 @[simps]
 def nthLeBijectionOfForallMemList (l : List α) (nd : l.Nodup) (h : ∀ x : α, x ∈ l) :
     { f : Fin l.length → α // Function.Bijective f } :=
-  ⟨fun i => l.nthLe i i.property, fun i j h => Fin.ext $ (nd.nth_le_inj_iff _ _).1 h, fun x =>
+  ⟨fun i => l.nthLe i i.property, fun i j h => Fin.ext <| (nd.nth_le_inj_iff _ _).1 h, fun x =>
     let ⟨i, hi, hl⟩ := List.mem_iff_nth_le.1 (h x)
     ⟨⟨i, hi⟩, hl⟩⟩
 #align list.nodup.nth_le_bijection_of_forall_mem_list List.Nodup.nthLeBijectionOfForallMemList
@@ -225,7 +225,7 @@ at two distinct indices `n m : ℕ` inside the list `l`.
 -/
 theorem duplicate_iff_exists_distinct_nth_le {l : List α} {x : α} :
     l.Duplicate x ↔
-      ∃ (n : ℕ) (hn : n < l.length) (m : ℕ) (hm : m < l.length) (h : n < m), x = l.nthLe n hn ∧ x = l.nthLe m hm :=
+      ∃ (n : ℕ)(hn : n < l.length)(m : ℕ)(hm : m < l.length)(h : n < m), x = l.nthLe n hn ∧ x = l.nthLe m hm :=
   by classical
   rw [duplicate_iff_two_le_count, le_count_iff_repeat_sublist, sublist_iff_exists_fin_order_embedding_nth_le_eq]
   constructor

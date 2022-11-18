@@ -3,8 +3,8 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Data.Countable.Basic
 import Mathbin.Logic.Small.Basic
+import Mathbin.Data.Countable.Defs
 
 /-!
 # All countable types are small.

@@ -23,7 +23,7 @@ variable [GroupWithZero G]
 underlying type. -/
 @[simps (config := { fullyApplied := false })]
 protected def mulLeft₀ (a : G) (ha : a ≠ 0) : Perm G :=
-  (Units.mk0 a ha).mul_left
+  (Units.mk0 a ha).mulLeft
 #align equiv.mul_left₀ Equiv.mulLeft₀
 
 theorem _root_.mul_left_bijective₀ (a : G) (ha : a ≠ 0) : Function.Bijective ((· * ·) a : G → G) :=
@@ -34,7 +34,7 @@ theorem _root_.mul_left_bijective₀ (a : G) (ha : a ≠ 0) : Function.Bijective
 underlying type. -/
 @[simps (config := { fullyApplied := false })]
 protected def mulRight₀ (a : G) (ha : a ≠ 0) : Perm G :=
-  (Units.mk0 a ha).mul_right
+  (Units.mk0 a ha).mulRight
 #align equiv.mul_right₀ Equiv.mulRight₀
 
 theorem _root_.mul_right_bijective₀ (a : G) (ha : a ≠ 0) : Function.Bijective ((· * a) : G → G) :=

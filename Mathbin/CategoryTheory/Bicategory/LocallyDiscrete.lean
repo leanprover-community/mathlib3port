@@ -69,15 +69,15 @@ instance locallyDiscreteBicategory : Bicategory (LocallyDiscrete C) where
   whiskerLeft X Y Z f g h η := eqToHom (congr_arg₂ (· ≫ ·) rfl (LocallyDiscrete.eq_of_hom η))
   whiskerRight X Y Z f g η h := eqToHom (congr_arg₂ (· ≫ ·) (LocallyDiscrete.eq_of_hom η) rfl)
   associator W X Y Z f g h :=
-    eq_to_iso $ by
+    eq_to_iso <| by
       unfold_projs
       simp only [category.assoc]
   leftUnitor X Y f :=
-    eq_to_iso $ by
+    eq_to_iso <| by
       unfold_projs
       simp only [category.id_comp, mk_as]
   rightUnitor X Y f :=
-    eq_to_iso $ by
+    eq_to_iso <| by
       unfold_projs
       simp only [category.comp_id, mk_as]
 #align category_theory.locally_discrete_bicategory CategoryTheory.locallyDiscreteBicategory

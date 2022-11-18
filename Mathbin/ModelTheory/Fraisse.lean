@@ -97,8 +97,7 @@ def JointEmbedding : Prop :=
 def Amalgamation : Prop :=
   ∀ (M N P : Bundled.{w} L.StructureCat) (MN : M ↪[L] N) (MP : M ↪[L] P),
     M ∈ K →
-      N ∈ K →
-        P ∈ K → ∃ (Q : Bundled.{w} L.StructureCat) (NQ : N ↪[L] Q) (PQ : P ↪[L] Q), Q ∈ K ∧ NQ.comp MN = PQ.comp MP
+      N ∈ K → P ∈ K → ∃ (Q : Bundled.{w} L.StructureCat)(NQ : N ↪[L] Q)(PQ : P ↪[L] Q), Q ∈ K ∧ NQ.comp MN = PQ.comp MP
 #align first_order.language.amalgamation FirstOrder.Language.Amalgamation
 
 /-- A Fraïssé class is a nonempty, isomorphism-invariant, essentially countable class of structures
@@ -163,8 +162,8 @@ theorem age.joint_embedding : JointEmbedding (L.age M) := fun N hN P hP =>
 classes). -/
 theorem age.countable_quotient [h : Countable M] : (Quotient.mk'' '' L.age M).Countable := by classical
   refine'
-    (congr_arg _ (Set.ext $ forall_quotient_iff.2 $ fun N => _)).mp
-      (countable_range $ fun s : Finset M => ⟦⟨closure L (s : Set M), inferInstance⟩⟧)
+    (congr_arg _ (Set.ext <| forall_quotient_iff.2 fun N => _)).mp
+      (countable_range fun s : Finset M => ⟦⟨closure L (s : Set M), inferInstance⟩⟧)
   simp only [mem_image, mem_range, mem_set_of_eq, Quotient.eq]
   constructor
   · rintro ⟨s, hs⟩
@@ -232,7 +231,7 @@ theorem exists_cg_is_age_of (hn : K.Nonempty)
     
 #align first_order.language.exists_cg_is_age_of FirstOrder.Language.exists_cg_is_age_of
 
-theorem exists_countable_is_age_of_iff [Countable (Σ l, L.Functions l)] :
+theorem exists_countable_is_age_of_iff [Countable (Σl, L.Functions l)] :
     (∃ M : Bundled.{w} L.StructureCat, Countable M ∧ L.age M = K) ↔
       K.Nonempty ∧
         (∀ M N : Bundled.{w} L.StructureCat, Nonempty (M ≃[L] N) → (M ∈ K ↔ N ∈ K)) ∧
@@ -265,7 +264,7 @@ variable {L} (K)
 /-- A structure `M` is a Fraïssé limit for a class `K` if it is countably generated,
 ultrahomogeneous, and has age `K`. -/
 @[protect_proj]
-structure IsFraisseLimit [Countable (Σ l, L.Functions l)] [Countable M] : Prop where
+structure IsFraisseLimit [Countable (Σl, L.Functions l)] [Countable M] : Prop where
   ultrahomogeneous : IsUltrahomogeneous L M
   age : L.age M = K
 #align first_order.language.is_fraisse_limit FirstOrder.Language.IsFraisseLimit
@@ -297,7 +296,7 @@ theorem IsUltrahomogeneous.age_is_fraisse [Countable M] (h : L.IsUltrahomogeneou
 namespace IsFraisseLimit
 
 /-- If a class has a Fraïssé limit, it must be Fraïssé. -/
-theorem is_fraisse [Countable (Σ l, L.Functions l)] [Countable M] (h : IsFraisseLimit K M) : IsFraisse K :=
+theorem is_fraisse [Countable (Σl, L.Functions l)] [Countable M] (h : IsFraisseLimit K M) : IsFraisse K :=
   (congr rfl h.age).mp h.ultrahomogeneous.age_is_fraisse
 #align first_order.language.is_fraisse_limit.is_fraisse FirstOrder.Language.IsFraisseLimit.is_fraisse
 

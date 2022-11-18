@@ -184,7 +184,7 @@ theorem projectiveOfBasis {ι : Type _} (b : Basis ι R P) : Projective R P := b
 #align module.projective_of_basis Module.projectiveOfBasis
 
 instance (priority := 100) projectiveOfFree [Module.Free R P] : Module.Projective R P :=
-  projective_of_basis $ Module.Free.chooseBasis R P
+  projective_of_basis <| Module.Free.chooseBasis R P
 #align module.projective_of_free Module.projectiveOfFree
 
 end Ring

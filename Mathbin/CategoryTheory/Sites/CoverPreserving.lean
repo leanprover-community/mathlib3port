@@ -215,9 +215,9 @@ open Limits.WalkingCospan
               [`eq₁ []]
               [(Term.typeSpec
                 ":"
-                (Init.Core.«term_=_»
+                («term_=_»
                  `f₁
-                 " = "
+                 "="
                  (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                   (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                    `c'.X.hom
@@ -253,9 +253,9 @@ open Limits.WalkingCospan
               [`eq₂ []]
               [(Term.typeSpec
                 ":"
-                (Init.Core.«term_=_»
+                («term_=_»
                  `f₂
-                 " = "
+                 "="
                  (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                   (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                    `c'.X.hom
@@ -405,9 +405,9 @@ open Limits.WalkingCospan
              [`eq₁ []]
              [(Term.typeSpec
                ":"
-               (Init.Core.«term_=_»
+               («term_=_»
                 `f₁
-                " = "
+                "="
                 (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                  (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                   `c'.X.hom
@@ -443,9 +443,9 @@ open Limits.WalkingCospan
              [`eq₂ []]
              [(Term.typeSpec
                ":"
-               (Init.Core.«term_=_»
+               («term_=_»
                 `f₂
-                " = "
+                "="
                 (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                  (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                   `c'.X.hom
@@ -660,13 +660,13 @@ theorem
 #align category_theory.compatible_preserving_of_flat CategoryTheory.compatiblePreservingOfFlat
 
 theorem compatiblePreservingOfDownwardsClosed (F : C ⥤ D) [Full F] [Faithful F]
-    (hF : ∀ {c : C} {d : D} (f : d ⟶ F.obj c), Σ c', F.obj c' ≅ d) : CompatiblePreserving K F := by
+    (hF : ∀ {c : C} {d : D} (f : d ⟶ F.obj c), Σc', F.obj c' ≅ d) : CompatiblePreserving K F := by
   constructor
   introv hx he
   obtain ⟨X', e⟩ := hF f₁
   apply (ℱ.1.mapIso e.op).toEquiv.Injective
   simp only [iso.op_hom, iso.to_equiv_fun, ℱ.1.map_iso_hom, ← functor_to_types.map_comp_apply]
-  simpa using hx (F.preimage $ e.hom ≫ f₁) (F.preimage $ e.hom ≫ f₂) hg₁ hg₂ (F.map_injective $ by simpa using he)
+  simpa using hx (F.preimage <| e.hom ≫ f₁) (F.preimage <| e.hom ≫ f₂) hg₁ hg₂ (F.map_injective <| by simpa using he)
 #align category_theory.compatible_preserving_of_downwards_closed CategoryTheory.compatiblePreservingOfDownwardsClosed
 
 /-- If `G` is cover-preserving and compatible-preserving,

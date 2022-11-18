@@ -3,6 +3,7 @@ Copyright (c) 2020 Anatole Dedecker. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Yaël Dillies
 -/
+import Mathbin.Algebra.Order.Group.TypeTags
 import Mathbin.Analysis.NormedSpace.Basic
 
 /-!
@@ -23,7 +24,7 @@ variable {α : Type _}
 `ordered_add_comm_group`. This class is necessary to avoid diamonds caused by both classes
 carrying their own group structure. -/
 class NormedOrderedAddGroup (α : Type _) extends OrderedAddCommGroup α, HasNorm α, MetricSpace α where
-  dist_eq : ∀ x y, dist x y = ∥x - y∥ := by obviously
+  dist_eq : ∀ x y, dist x y = ‖x - y‖ := by obviously
 #align normed_ordered_add_group NormedOrderedAddGroup
 
 /-- A `normed_ordered_group` is a group that is both a `normed_comm_group` and an
@@ -31,14 +32,14 @@ class NormedOrderedAddGroup (α : Type _) extends OrderedAddCommGroup α, HasNor
 carrying their own group structure. -/
 @[to_additive]
 class NormedOrderedGroup (α : Type _) extends OrderedCommGroup α, HasNorm α, MetricSpace α where
-  dist_eq : ∀ x y, dist x y = ∥x / y∥ := by obviously
+  dist_eq : ∀ x y, dist x y = ‖x / y‖ := by obviously
 #align normed_ordered_group NormedOrderedGroup
 
 /-- A `normed_linear_ordered_add_group` is an additive group that is both a `normed_add_comm_group`
 and a `linear_ordered_add_comm_group`. This class is necessary to avoid diamonds caused by both
 classes carrying their own group structure. -/
 class NormedLinearOrderedAddGroup (α : Type _) extends LinearOrderedAddCommGroup α, HasNorm α, MetricSpace α where
-  dist_eq : ∀ x y, dist x y = ∥x - y∥ := by obviously
+  dist_eq : ∀ x y, dist x y = ‖x - y‖ := by obviously
 #align normed_linear_ordered_add_group NormedLinearOrderedAddGroup
 
 /-- A `normed_linear_ordered_group` is a group that is both a `normed_comm_group` and a
@@ -46,14 +47,14 @@ class NormedLinearOrderedAddGroup (α : Type _) extends LinearOrderedAddCommGrou
 carrying their own group structure. -/
 @[to_additive]
 class NormedLinearOrderedGroup (α : Type _) extends LinearOrderedCommGroup α, HasNorm α, MetricSpace α where
-  dist_eq : ∀ x y, dist x y = ∥x / y∥ := by obviously
+  dist_eq : ∀ x y, dist x y = ‖x / y‖ := by obviously
 #align normed_linear_ordered_group NormedLinearOrderedGroup
 
 /-- A `normed_linear_ordered_field` is a field that is both a `normed_field` and a
     `linear_ordered_field`. This class is necessary to avoid diamonds. -/
 class NormedLinearOrderedField (α : Type _) extends LinearOrderedField α, HasNorm α, MetricSpace α where
-  dist_eq : ∀ x y, dist x y = ∥x - y∥ := by obviously
-  norm_mul' : ∀ x y : α, ∥x * y∥ = ∥x∥ * ∥y∥
+  dist_eq : ∀ x y, dist x y = ‖x - y‖ := by obviously
+  norm_mul' : ∀ x y : α, ‖x * y‖ = ‖x‖ * ‖y‖
 #align normed_linear_ordered_field NormedLinearOrderedField
 
 @[to_additive]

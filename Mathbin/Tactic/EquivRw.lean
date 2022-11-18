@@ -111,7 +111,6 @@ unsafe structure equiv_rw_cfg where
   max_depth : ℕ := 10
 #align tactic.equiv_rw_cfg tactic.equiv_rw_cfg
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
@@ -131,7 +130,7 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
             we use the `pre_apply` subtactic of `solve_by_elim` to preprocess each new goal with `intros`.
         -/
       solve_by_elim
-      { use_symmetry := False, use_exfalso := False, lemma_thunks := some (pure Eq::equiv_congr_lemmas),
+      { use_symmetry := False, use_exfalso := False, lemma_thunks := some (pure Eq :: equiv_congr_lemmas),
         ctx_thunk := pure [],
         max_depth := cfg,-- Subgoals may contain function types,
         -- and we want to continue trying to construct equivalences after the binders.
@@ -140,7 +139,7 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
           tt,-- If solve_by_elim gets stuck, make sure it isn't because there's a later `≃` or `↔` goal
         -- that we should still attempt.
         discharger :=
-          sorry >> sorry >> (sorry <|> sorry) <|>
+          (sorry >> sorry) >> (sorry <|> sorry) <|>
             trace_if_enabled `equiv_rw_type "Failed, no congruence lemma applied!" >>
               failed,-- We use the `accept` tactic in `solve_by_elim` to provide tracing.
         accept := fun goals =>
@@ -174,7 +173,7 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
                   trace f! "Attempting to rewrite the type `{ ty_pp }` using `{ eqv_pp } : { eqv_ty_pp }`."
           let q( _ ≃ _ ) ← infer_type eqv | fail f! "{ eqv } must be an `equiv`"
           let equiv_ty ← to_expr ` `( $ ( ty ) ≃ _ )
-          let new_eqv ← Prod.snd <$> ( solve_aux equiv_ty $ equiv_rw_type_core eqv cfg )
+          let new_eqv ← Prod.snd <$> ( solve_aux equiv_ty <| equiv_rw_type_core eqv cfg )
           let new_eqv ← instantiate_mvars new_eqv
           kdepends_on new_eqv eqv >>= guardb
             <|>
@@ -222,7 +221,7 @@ attribute [equiv_rw_simp] Equiv.symm_symm Equiv.apply_symm_apply Equiv.symm_appl
                 let h ← note_anon Eq prf
                 revert h
                 let ex ← to_expr ` `( Equiv.toFun $ ( e ) $ ( x' ) )
-                generalize ex ( by infer_opt_param ) transparency.none
+                generalize ex ( by infer_param ) transparency.none
                 intro x
                 let h ← intro1
                 let b ← target >>= is_prop
@@ -257,20 +256,18 @@ namespace Tactic.Interactive
 open Tactic
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary function to call `equiv_rw_hyp` on a `list pexpr` recursively. -/
 unsafe def equiv_rw_hyp_aux (hyp : Name) (cfg : equiv_rw_cfg) (permissive : Bool := false) : List expr → itactic
   | [] => skip
-  | e::t => do
+  | e :: t => do
     if permissive then equiv_rw_hyp hyp e cfg <|> skip else equiv_rw_hyp hyp e cfg
     equiv_rw_hyp_aux t
 #align tactic.interactive.equiv_rw_hyp_aux tactic.interactive.equiv_rw_hyp_aux
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary function to call `equiv_rw_target` on a `list pexpr` recursively. -/
 unsafe def equiv_rw_target_aux (cfg : equiv_rw_cfg) (permissive : Bool) : List expr → itactic
   | [] => skip
-  | e::t => do
+  | e :: t => do
     if permissive then equiv_rw_target e cfg <|> skip else equiv_rw_target e cfg
     equiv_rw_target_aux t
 #align tactic.interactive.equiv_rw_target_aux tactic.interactive.equiv_rw_target_aux

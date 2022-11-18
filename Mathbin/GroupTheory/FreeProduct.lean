@@ -6,9 +6,9 @@ Authors: David Wärn, Joachim Breitner
 import Mathbin.Algebra.FreeMonoid.Basic
 import Mathbin.GroupTheory.Congruence
 import Mathbin.GroupTheory.IsFreeGroup
-import Mathbin.GroupTheory.Subgroup.Pointwise
 import Mathbin.Data.List.Chain
 import Mathbin.SetTheory.Cardinal.Ordinal
+import Mathbin.Data.Set.Pointwise.Basic
 
 /-!
 # The free product of groups or monoids
@@ -71,7 +71,7 @@ variable {ι : Type _} (M : ∀ i : ι, Type _) [∀ i, Monoid (M i)]
 
 /-- A relation on the free monoid on alphabet `Σ i, M i`, relating `⟨i, 1⟩` with `1` and
 `⟨i, x⟩ * ⟨i, y⟩` with `⟨i, x * y⟩`. -/
-inductive FreeProduct.Rel : FreeMonoid (Σ i, M i) → FreeMonoid (Σ i, M i) → Prop
+inductive FreeProduct.Rel : FreeMonoid (Σi, M i) → FreeMonoid (Σi, M i) → Prop
   | of_one (i : ι) : FreeProduct.Rel (FreeMonoid.of ⟨i, 1⟩) 1
   |
   of_mul {i : ι} (x y : M i) : FreeProduct.Rel (FreeMonoid.of ⟨i, x⟩ * FreeMonoid.of ⟨i, y⟩) (FreeMonoid.of ⟨i, x * y⟩)
@@ -88,7 +88,7 @@ namespace FreeProduct
 letters can come from the same summand. -/
 @[ext.1]
 structure Word where
-  toList : List (Σ i, M i)
+  toList : List (Σi, M i)
   ne_one : ∀ l ∈ to_list, Sigma.snd l ≠ 1
   chain_ne : to_list.Chain' fun l l' => Sigma.fst l ≠ Sigma.fst l'
 #align free_product.word FreeProduct.Word
@@ -97,12 +97,12 @@ variable {M}
 
 /-- The inclusion of a summand into the free product. -/
 def of {i : ι} : M i →* FreeProduct M where
-  toFun x := Con.mk' _ (FreeMonoid.of $ Sigma.mk i x)
+  toFun x := Con.mk' _ (FreeMonoid.of <| Sigma.mk i x)
   map_one' := (Con.eq _).mpr (ConGen.Rel.of _ _ (FreeProduct.Rel.of_one i))
-  map_mul' x y := Eq.symm $ (Con.eq _).mpr (ConGen.Rel.of _ _ (FreeProduct.Rel.of_mul x y))
+  map_mul' x y := Eq.symm <| (Con.eq _).mpr (ConGen.Rel.of _ _ (FreeProduct.Rel.of_mul x y))
 #align free_product.of FreeProduct.of
 
-theorem of_apply {i} (m : M i) : of m = Con.mk' _ (FreeMonoid.of $ Sigma.mk i m) :=
+theorem of_apply {i} (m : M i) : of m = Con.mk' _ (FreeMonoid.of <| Sigma.mk i m) :=
   rfl
 #align free_product.of_apply FreeProduct.of_apply
 
@@ -111,8 +111,8 @@ variable {N : Type _} [Monoid N]
 /-- See note [partially-applied ext lemmas]. -/
 @[ext.1]
 theorem ext_hom (f g : FreeProduct M →* N) (h : ∀ i, f.comp (of : M i →* _) = g.comp of) : f = g :=
-  (MonoidHom.cancel_right Con.mk'_surjective).mp $
-    FreeMonoid.hom_eq $ fun ⟨i, x⟩ => by
+  (MonoidHom.cancel_right Con.mk'_surjective).mp <|
+    FreeMonoid.hom_eq fun ⟨i, x⟩ => by
       rw [MonoidHom.comp_apply, MonoidHom.comp_apply, ← of_apply, ← MonoidHom.comp_apply, ← MonoidHom.comp_apply, h]
 #align free_product.ext_hom FreeProduct.ext_hom
 
@@ -121,7 +121,7 @@ universal property of the free product, charaterizing it as a categorical coprod
 @[simps symmApply]
 def lift : (∀ i, M i →* N) ≃ (FreeProduct M →* N) where
   toFun fi :=
-    Con.lift _ (FreeMonoid.lift $ fun p : Σ i, M i => fi p.fst p.snd) $
+    Con.lift _ (FreeMonoid.lift fun p : Σi, M i => fi p.fst p.snd) <|
       Con.con_gen_le
         (by
           simp_rw [Con.rel_eq_coe, Con.ker_rel]
@@ -160,7 +160,7 @@ theorem induction_on {C : FreeProduct M → Prop} (m : FreeProduct M) (h_one : C
 #align free_product.induction_on FreeProduct.induction_on
 
 theorem of_left_inverse [DecidableEq ι] (i : ι) :
-    Function.LeftInverse (lift $ Pi.mulSingle i (MonoidHom.id (M i))) of := fun x => by
+    Function.LeftInverse (lift <| Pi.mulSingle i (MonoidHom.id (M i))) of := fun x => by
   simp only [lift_of, Pi.mul_single_eq_same, MonoidHom.id_apply]
 #align free_product.of_left_inverse FreeProduct.of_left_inverse
 
@@ -255,7 +255,7 @@ instance : Inhabited (Word M) :=
 
 /-- A reduced word determines an element of the free product, given by multiplication. -/
 def prod (w : Word M) : FreeProduct M :=
-  List.prod (w.toList.map $ fun l => of l.snd)
+  List.prod (w.toList.map fun l => of l.snd)
 #align free_product.word.prod FreeProduct.Word.prod
 
 @[simp]
@@ -270,7 +270,7 @@ def fstIdx (w : Word M) : Option ι :=
 #align free_product.word.fst_idx FreeProduct.Word.fstIdx
 
 theorem fst_idx_ne_iff {w : Word M} {i} : fstIdx w ≠ some i ↔ ∀ l ∈ w.toList.head', i ≠ Sigma.fst l :=
-  not_iff_not.mp $ by simp [fst_idx]
+  not_iff_not.mp <| by simp [fst_idx]
 #align free_product.word.fst_idx_ne_iff FreeProduct.Word.fst_idx_ne_iff
 
 variable (M)
@@ -311,7 +311,7 @@ def rcons {i} (p : Pair M i) : Word M :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given a word of the form `⟨l :: ls, h1, h2⟩`, we can form a word of the form `⟨ls, _, _⟩`,
 dropping the first letter. -/
-private def mk_aux {l} (ls : List (Σ i, M i)) (h1 : ∀ l' ∈ l::ls, Sigma.snd l' ≠ 1) (h2 : (l::ls).Chain' _) : Word M :=
+private def mk_aux {l} (ls : List (Σi, M i)) (h1 : ∀ l' ∈ l::ls, Sigma.snd l' ≠ 1) (h2 : (l::ls).Chain' _) : Word M :=
   ⟨ls, fun l' hl => h1 _ (List.mem_cons_of_mem _ hl), h2.tail⟩
 #align free_product.word.mk_aux free_product.word.mk_aux
 
@@ -331,7 +331,7 @@ theorem prod_rcons {i} (p : Pair M i) : prod (rcons p) = of p.head * prod p.tail
 
 theorem rcons_inj {i} : Function.Injective (rcons : Pair M i → Word M) := by
   rintro ⟨m, w, h⟩ ⟨m', w', h'⟩ he
-  by_cases hm:m = 1 <;> by_cases hm':m' = 1
+  by_cases hm : m = 1 <;> by_cases hm' : m' = 1
   · simp only [rcons, dif_pos hm, dif_pos hm'] at he
     cc
     
@@ -385,7 +385,7 @@ theorem equiv_pair_symm (i) (p : Pair M i) : (equivPair i).symm p = rcons p :=
 #align free_product.word.equiv_pair_symm FreeProduct.Word.equiv_pair_symm
 
 theorem equiv_pair_eq_of_fst_idx_ne {i} {w : Word M} (h : fstIdx w ≠ some i) : equivPair i w = ⟨1, w, h⟩ :=
-  (equivPair i).apply_eq_iff_eq_symm_apply.mpr $ Eq.symm (dif_pos rfl)
+  (equivPair i).apply_eq_iff_eq_symm_apply.mpr <| Eq.symm (dif_pos rfl)
 #align free_product.word.equiv_pair_eq_of_fst_idx_ne FreeProduct.Word.equiv_pair_eq_of_fst_idx_ne
 
 instance summandAction (i) : MulAction (M i) (Word M) where
@@ -478,7 +478,7 @@ open Word
 
 /-- The list represented by a given `neword` -/
 @[simp]
-def toList : ∀ {i j} (w : Neword M i j), List (Σ i, M i)
+def toList : ∀ {i j} (w : Neword M i j), List (Σi, M i)
   | i, _, singleton x hne1 => [⟨i, x⟩]
   | _, _, append w₁ hne w₂ => w₁.toList ++ w₂.toList
 #align free_product.neword.to_list FreeProduct.Neword.toList
@@ -560,12 +560,10 @@ def toWord {i j} (w : Neword M i j) : Word M where
       
 #align free_product.neword.to_word FreeProduct.Neword.toWord
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- Every nonempty `word M` can be constructed as a `neword M i j` -/
-theorem of_word (w : Word M) (h : w ≠ Empty) : ∃ (i) (j) (w' : Neword M i j), w'.toWord = w := by
-  rsuffices ⟨i, j, w, h⟩ : ∃ (i) (j) (w' : neword M i j), w'.to_word.to_list = w.to_list
+theorem of_word (w : Word M) (h : w ≠ Empty) : ∃ (i j : _)(w' : Neword M i j), w'.toWord = w := by
+  rsuffices ⟨i, j, w, h⟩ : ∃ (i j : _)(w' : neword M i j), w'.to_word.to_list = w.to_list
   · refine' ⟨i, j, w, _⟩
     ext
     rw [h]
@@ -779,7 +777,7 @@ theorem lift_word_prod_nontrivial_of_not_empty {i j} (w : Neword H i j) : lift f
     exact lift_word_prod_nontrivial_of_other_i f X hXnonempty hXdisj hpp w h1 h2
     
   · cases' hcard with k hcard
-    by_cases hh:i = k <;> by_cases hl:j = k
+    by_cases hh : i = k <;> by_cases hl : j = k
     · subst hh
       subst hl
       exact lift_word_prod_nontrivial_of_head_eq_last f X hXnonempty hXdisj hpp w
@@ -845,14 +843,14 @@ end PingPongLemma
 @[simps]
 instance {ι : Type _} (G : ι → Type _) [∀ i, Group (G i)] [hG : ∀ i, IsFreeGroup (G i)] :
     IsFreeGroup (FreeProduct G) where
-  Generators := Σ i, IsFreeGroup.Generators (G i)
+  Generators := Σi, IsFreeGroup.Generators (G i)
   MulEquiv :=
     MonoidHom.toMulEquiv
-      (FreeGroup.lift fun x : Σ i, IsFreeGroup.Generators (G i) => FreeProduct.of (IsFreeGroup.of x.2 : G x.1))
+      (FreeGroup.lift fun x : Σi, IsFreeGroup.Generators (G i) => FreeProduct.of (IsFreeGroup.of x.2 : G x.1))
       (FreeProduct.lift fun i : ι =>
         (IsFreeGroup.lift fun x : IsFreeGroup.Generators (G i) =>
-            FreeGroup.of (⟨i, x⟩ : Σ i, IsFreeGroup.Generators (G i)) :
-          G i →* FreeGroup (Σ i, IsFreeGroup.Generators (G i))))
+            FreeGroup.of (⟨i, x⟩ : Σi, IsFreeGroup.Generators (G i)) :
+          G i →* FreeGroup (Σi, IsFreeGroup.Generators (G i))))
       (by
         ext
         simp)
@@ -975,7 +973,8 @@ theorem _root_.free_group.injective_lift_of_ping_pong : Function.Injective (Free
     cases' (lt_or_gt_of_ne hnne0).swap with hlt hgt
     · have h1n : 1 ≤ n := hlt
       calc
-        a i ^ n • X' j ⊆ a i ^ n • Y iᶜ := smul_set_mono ((hXYdisj j i).union_left $ hYdisj hij.symm).subset_compl_right
+        a i ^ n • X' j ⊆ a i ^ n • Y iᶜ :=
+          smul_set_mono ((hXYdisj j i).union_left <| hYdisj hij.symm).subset_compl_right
         _ ⊆ X i := by
           refine' Int.le_induction _ _ _ h1n
           · rw [zpow_one]
@@ -985,7 +984,7 @@ theorem _root_.free_group.injective_lift_of_ping_pong : Function.Injective (Free
             calc
               a i ^ (n + 1) • Y iᶜ = (a i ^ n * a i) • Y iᶜ := by rw [zpow_add, zpow_one]
               _ = a i ^ n • a i • Y iᶜ := MulAction.mul_smul _ _ _
-              _ ⊆ a i ^ n • X i := smul_set_mono $ hX i
+              _ ⊆ a i ^ n • X i := smul_set_mono <| hX i
               _ ⊆ a i ^ n • Y iᶜ := smul_set_mono (hXYdisj i i).subset_compl_right
               _ ⊆ X i := hi
               
@@ -1008,7 +1007,7 @@ theorem _root_.free_group.injective_lift_of_ping_pong : Function.Injective (Free
             calc
               a i ^ (n - 1) • X iᶜ = (a i ^ n * (a i)⁻¹) • X iᶜ := by rw [zpow_sub, zpow_one]
               _ = a i ^ n • (a i)⁻¹ • X iᶜ := MulAction.mul_smul _ _ _
-              _ ⊆ a i ^ n • Y i := smul_set_mono $ hY i
+              _ ⊆ a i ^ n • Y i := smul_set_mono <| hY i
               _ ⊆ a i ^ n • X iᶜ := smul_set_mono (hXYdisj i i).symm.subset_compl_right
               _ ⊆ Y i := hi
               

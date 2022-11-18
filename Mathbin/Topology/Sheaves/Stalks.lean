@@ -10,9 +10,8 @@ import Mathbin.CategoryTheory.Adjunction.Evaluation
 import Mathbin.CategoryTheory.Limits.Types
 import Mathbin.CategoryTheory.Limits.Preserves.Filtered
 import Mathbin.CategoryTheory.Limits.Final
-import Mathbin.Topology.Sober
 import Mathbin.Tactic.Elementwise
-import Mathbin.Algebra.Category.RingCat.Default
+import Mathbin.Algebra.Category.RingCat.Colimits
 
 /-!
 # Stalks
@@ -108,7 +107,7 @@ composition with the `germ` morphisms.
 -/
 theorem stalk_hom_ext (F : X.Presheaf C) {x} {Y : C} {f₁ f₂ : F.stalk x ⟶ Y}
     (ih : ∀ (U : Opens X) (hxU : x ∈ U), F.germ ⟨x, hxU⟩ ≫ f₁ = F.germ ⟨x, hxU⟩ ≫ f₂) : f₁ = f₂ :=
-  colimit.hom_ext $ fun U => by
+  colimit.hom_ext fun U => by
     induction U using Opposite.rec
     cases' U with U hxU
     exact ih U hxU
@@ -204,7 +203,7 @@ theorem stalk_pushforward_iso_of_open_embedding {f : X ⟶ Y} (hf : OpenEmbeddin
     · intro U
       refine' F.map_iso (eq_to_iso _)
       dsimp only [functor.op]
-      exact congr_arg op (Subtype.eq $ Set.preimage_image_eq (unop U).1.1 hf.inj)
+      exact congr_arg op (Subtype.eq <| Set.preimage_image_eq (unop U).1.1 hf.inj)
       
     · intro U V i
       erw [← F.map_comp, ← F.map_comp]
@@ -370,7 +369,7 @@ variable [PreservesFilteredColimits (forget C)]
 every element of the stalk is the germ of a section.
 -/
 theorem germ_exist (F : X.Presheaf C) (x : X) (t : stalk F x) :
-    ∃ (U : Opens X) (m : x ∈ U) (s : F.obj (op U)), F.germ ⟨x, m⟩ s = t := by
+    ∃ (U : Opens X)(m : x ∈ U)(s : F.obj (op U)), F.germ ⟨x, m⟩ s = t := by
   obtain ⟨U, s, e⟩ := Types.jointly_surjective.{v, v} _ (is_colimit_of_preserves (forget C) (colimit.is_colimit _)) t
   revert s e
   rw [show U = op (unop U) from rfl]
@@ -383,7 +382,7 @@ theorem germ_exist (F : X.Presheaf C) (x : X) (t : stalk F x) :
 
 theorem germ_eq (F : X.Presheaf C) {U V : Opens X} (x : X) (mU : x ∈ U) (mV : x ∈ V) (s : F.obj (op U))
     (t : F.obj (op V)) (h : germ F ⟨x, mU⟩ s = germ F ⟨x, mV⟩ t) :
-    ∃ (W : Opens X) (m : x ∈ W) (iU : W ⟶ U) (iV : W ⟶ V), F.map iU.op s = F.map iV.op t := by
+    ∃ (W : Opens X)(m : x ∈ W)(iU : W ⟶ U)(iV : W ⟶ V), F.map iU.op s = F.map iV.op t := by
   obtain ⟨W, iU, iV, e⟩ :=
     (Types.FilteredColimit.is_colimit_eq_iff.{v, v} _
           (is_colimit_of_preserves _ (colimit.is_colimit ((open_nhds.inclusion x).op ⋙ F)))).mp
@@ -435,7 +434,7 @@ is an epi, but this fact is not yet formalized.
 theorem app_injective_of_stalk_functor_map_injective {F : Sheaf C X} {G : Presheaf C X} (f : F.1 ⟶ G) (U : Opens X)
     (h : ∀ x : U, Function.Injective ((stalkFunctor C x.val).map f)) : Function.Injective (f.app (op U)) :=
   fun s t hst =>
-  section_ext F _ _ _ $ fun x => h x $ by rw [stalk_functor_map_germ_apply, stalk_functor_map_germ_apply, hst]
+  (section_ext F _ _ _) fun x => h x <| by rw [stalk_functor_map_germ_apply, stalk_functor_map_germ_apply, hst]
 #align
   Top.presheaf.app_injective_of_stalk_functor_map_injective TopCat.Presheaf.app_injective_of_stalk_functor_map_injective
 
@@ -448,25 +447,25 @@ theorem app_injective_iff_stalk_functor_map_injective {F : Sheaf C X} {G : Presh
 
 instance stalk_functor_preserves_mono (x : X) : Functor.PreservesMonomorphisms (Sheaf.forget C X ⋙ stalkFunctor C x) :=
   ⟨fun 𝓐 𝓑 f m =>
-    ConcreteCategory.mono_of_injective _ $
+    ConcreteCategory.mono_of_injective _ <|
       (app_injective_iff_stalk_functor_map_injective f.1).mpr
         (fun c =>
           (@ConcreteCategory.mono_iff_injective_of_preserves_pullback _ _ (f.1.app (op c)) _).mp
-            ((NatTrans.mono_iff_mono_app _ f.1).mp (@CategoryTheory.presheaf_mono_of_mono _ _ _ _ _ _ _ _ _ _ _ m) $
+            ((NatTrans.mono_iff_mono_app _ f.1).mp (@CategoryTheory.presheaf_mono_of_mono _ _ _ _ _ _ _ _ _ _ _ m) <|
               op c))
         x⟩
 #align Top.presheaf.stalk_functor_preserves_mono TopCat.Presheaf.stalk_functor_preserves_mono
 
-theorem stalk_mono_of_mono {F G : Sheaf C X} (f : F ⟶ G) [Mono f] : ∀ x, mono $ (stalkFunctor C x).map f.1 := fun x =>
+theorem stalk_mono_of_mono {F G : Sheaf C X} (f : F ⟶ G) [Mono f] : ∀ x, mono <| (stalkFunctor C x).map f.1 := fun x =>
   by convert functor.map_mono (Sheaf.forget.{v} C X ⋙ stalk_functor C x) f
 #align Top.presheaf.stalk_mono_of_mono TopCat.Presheaf.stalk_mono_of_mono
 
-theorem mono_of_stalk_mono {F G : Sheaf C X} (f : F ⟶ G) [∀ x, mono $ (stalkFunctor C x).map f.1] : Mono f :=
-  (SheafCat.Hom.mono_iff_presheaf_mono _ _ _).mpr $
-    (NatTrans.mono_iff_mono_app _ _).mpr $ fun U =>
-      (ConcreteCategory.mono_iff_injective_of_preserves_pullback _).mpr $
-        app_injective_of_stalk_functor_map_injective f.1 U.unop $ fun ⟨x, hx⟩ =>
-          (ConcreteCategory.mono_iff_injective_of_preserves_pullback _).mp $ inferInstance
+theorem mono_of_stalk_mono {F G : Sheaf C X} (f : F ⟶ G) [∀ x, mono <| (stalkFunctor C x).map f.1] : Mono f :=
+  (SheafCat.Hom.mono_iff_presheaf_mono _ _ _).mpr <|
+    (NatTrans.mono_iff_mono_app _ _).mpr fun U =>
+      (ConcreteCategory.mono_iff_injective_of_preserves_pullback _).mpr <|
+        (app_injective_of_stalk_functor_map_injective f.1 U.unop) fun ⟨x, hx⟩ =>
+          (ConcreteCategory.mono_iff_injective_of_preserves_pullback _).mp <| inferInstance
 #align Top.presheaf.mono_of_stalk_mono TopCat.Presheaf.mono_of_stalk_mono
 
 theorem mono_iff_stalk_mono {F G : Sheaf C X} (f : F ⟶ G) : Mono f ↔ ∀ x, Mono ((stalkFunctor C x).map f.1) :=
@@ -485,7 +484,7 @@ theorem app_surjective_of_injective_of_locally_surjective {F G : Sheaf C X} (f :
     (hinj : ∀ x : U, Function.Injective ((stalkFunctor C x.1).map f.1))
     (hsurj :
       ∀ (t) (x : U),
-        ∃ (V : Opens X) (m : x.1 ∈ V) (iVU : V ⟶ U) (s : F.1.obj (op V)), f.1.app (op V) s = G.1.map iVU.op t) :
+        ∃ (V : Opens X)(m : x.1 ∈ V)(iVU : V ⟶ U)(s : F.1.obj (op V)), f.1.app (op V) s = G.1.map iVU.op t) :
     Function.Surjective (f.1.app (op U)) := by
   intro t
   -- We use the axiom of choice to pick around each point `x` an open neighborhood `V` and a
@@ -592,12 +591,12 @@ theorem is_iso_iff_stalk_functor_map_iso {F G : Sheaf C X} (f : F ⟶ G) :
 
 end Concrete
 
-instance (F : X.Presheaf CommRingCat) {U : Opens X} (x : U) : Algebra (F.obj $ op U) (F.stalk x) :=
+instance (F : X.Presheaf CommRingCat) {U : Opens X} (x : U) : Algebra (F.obj <| op U) (F.stalk x) :=
   (F.germ x).toAlgebra
 
 @[simp]
 theorem stalk_open_algebra_map {X : TopCat} (F : X.Presheaf CommRingCat) {U : Opens X} (x : U) :
-    algebraMap (F.obj $ op U) (F.stalk x) = F.germ x :=
+    algebraMap (F.obj <| op U) (F.stalk x) = F.germ x :=
   rfl
 #align Top.presheaf.stalk_open_algebra_map TopCat.Presheaf.stalk_open_algebra_map
 

@@ -3,7 +3,6 @@ Copyright © 2021 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 -/
-import Mathbin.Tactic.Basic
 import Mathbin.Algebra.Module.Basic
 
 /-!
@@ -36,7 +35,7 @@ variable {B : Type _} (E : B → Type _)
 This type synonym is used to avoid conflicts with general sigma types.
 -/
 def TotalSpace :=
-  Σ x, E x
+  Σx, E x
 #align bundle.total_space Bundle.TotalSpace
 
 instance [Inhabited B] [Inhabited (E default)] : Inhabited (TotalSpace E) :=

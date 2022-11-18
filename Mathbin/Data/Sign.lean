@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
 import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Data.Fintype.Card
+import Mathbin.Data.Fintype.BigOperators
 import Mathbin.Data.Int.Lemmas
 import Mathbin.Tactic.DeriveFintype
 
@@ -267,7 +267,7 @@ def sign : α →o SignType :=
   ⟨fun a => if 0 < a then 1 else if a < 0 then -1 else 0, fun a b h => by
     dsimp
     split_ifs with h₁ h₂ h₃ h₄ _ _ h₂ h₃ <;> try constructor
-    · cases lt_irrefl 0 (h₁.trans $ h.trans_lt h₃)
+    · cases lt_irrefl 0 (h₁.trans <| h.trans_lt h₃)
       
     · cases h₂ (h₁.trans_le h)
       
@@ -288,7 +288,7 @@ theorem sign_pos (ha : 0 < a) : sign a = 1 := by rwa [sign_apply, if_pos]
 #align sign_pos sign_pos
 
 @[simp]
-theorem sign_neg (ha : a < 0) : sign a = -1 := by rwa [sign_apply, if_neg $ asymm ha, if_pos]
+theorem sign_neg (ha : a < 0) : sign a = -1 := by rwa [sign_apply, if_neg <| asymm ha, if_pos]
 #align sign_neg sign_neg
 
 theorem sign_eq_one_iff : sign a = 1 ↔ 0 < a := by
@@ -434,9 +434,9 @@ theorem sign_eq_sign (n : ℤ) : n.sign = sign n := by
   obtain (_ | _) | _ := n
   · exact congr_arg coe sign_zero.symm
     
-  · exact congr_arg coe (sign_pos $ Int.succ_coe_nat_pos _).symm
+  · exact congr_arg coe (sign_pos <| Int.succ_coe_nat_pos _).symm
     
-  · exact congr_arg coe (_root_.sign_neg $ neg_succ_lt_zero _).symm
+  · exact congr_arg coe (_root_.sign_neg <| neg_succ_lt_zero _).symm
     
 #align int.sign_eq_sign Int.sign_eq_sign
 
@@ -447,12 +447,12 @@ open Finset Nat
 open BigOperators
 
 private theorem exists_signed_sum_aux [DecidableEq α] (s : Finset α) (f : α → ℤ) :
-    ∃ (β : Type u_1) (t : Finset β) (sgn : β → SignType) (g : β → α),
+    ∃ (β : Type u_1)(t : Finset β)(sgn : β → SignType)(g : β → α),
       (∀ b, g b ∈ s) ∧
         (t.card = ∑ a in s, (f a).natAbs) ∧ ∀ a ∈ s, (∑ b in t, if g b = a then (sgn b : ℤ) else 0) = f a :=
   by
   refine'
-    ⟨Σ a : { x // x ∈ s }, ℕ, finset.univ.sigma fun a => range (f a).natAbs, fun a => sign (f a.1), fun a => a.1,
+    ⟨Σa : { x // x ∈ s }, ℕ, finset.univ.sigma fun a => range (f a).natAbs, fun a => sign (f a.1), fun a => a.1,
       fun a => a.1.Prop, _, _⟩
   · simp [@sum_attach _ _ _ _ fun a => (f a).natAbs]
     
@@ -464,24 +464,24 @@ private theorem exists_signed_sum_aux [DecidableEq α] (s : Finset α) (f : α �
 
 /-- We can decompose a sum of absolute value `n` into a sum of `n` signs. -/
 theorem exists_signed_sum [DecidableEq α] (s : Finset α) (f : α → ℤ) :
-    ∃ (β : Type u_1) (_ : Fintype β) (sgn : β → SignType) (g : β → α),
+    ∃ (β : Type u_1)(_ : Fintype β)(sgn : β → SignType)(g : β → α),
       (∀ b, g b ∈ s) ∧
         (Fintype.card β = ∑ a in s, (f a).natAbs) ∧ ∀ a ∈ s, (∑ b, if g b = a then (sgn b : ℤ) else 0) = f a :=
   let ⟨β, t, sgn, g, hg, ht, hf⟩ := exists_signed_sum_aux s f
   ⟨t, inferInstance, fun b => sgn b, fun b => g b, fun b => hg b, by simp [ht], fun a ha =>
-    (@sum_attach _ _ t _ fun b => ite (g b = a) (sgn b : ℤ) 0).trans $ hf _ ha⟩
+    (@sum_attach _ _ t _ fun b => ite (g b = a) (sgn b : ℤ) 0).trans <| hf _ ha⟩
 #align exists_signed_sum exists_signed_sum
 
 /-- We can decompose a sum of absolute value less than `n` into a sum of at most `n` signs. -/
 theorem exists_signed_sum' [Nonempty α] [DecidableEq α] (s : Finset α) (f : α → ℤ) (n : ℕ)
     (h : (∑ i in s, (f i).natAbs) ≤ n) :
-    ∃ (β : Type u_1) (_ : Fintype β) (sgn : β → SignType) (g : β → α),
+    ∃ (β : Type u_1)(_ : Fintype β)(sgn : β → SignType)(g : β → α),
       (∀ b, g b ∉ s → sgn b = 0) ∧ Fintype.card β = n ∧ ∀ a ∈ s, (∑ i, if g i = a then (sgn i : ℤ) else 0) = f a :=
   by
   obtain ⟨β, _, sgn, g, hg, hβ, hf⟩ := exists_signed_sum s f
   skip
   refine'
-    ⟨β ⊕ Fin (n - ∑ i in s, (f i).natAbs), inferInstance, Sum.elim sgn 0, Sum.elim g $ Classical.arbitrary _, _, by
+    ⟨Sum β (Fin (n - ∑ i in s, (f i).natAbs)), inferInstance, Sum.elim sgn 0, Sum.elim g <| Classical.arbitrary _, _, by
       simp [hβ, h], fun a ha => by simp [hf _ ha]⟩
   rintro (b | b) hb
   · cases hb (hg _)

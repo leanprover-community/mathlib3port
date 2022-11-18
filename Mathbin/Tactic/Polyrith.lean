@@ -90,7 +90,7 @@ unsafe def poly.mk_string : Poly → String
   | poly.add p q => "(" ++ poly.mk_string p ++ " + " ++ poly.mk_string q ++ ")"
   | poly.sub p q => "(" ++ poly.mk_string p ++ " - " ++ poly.mk_string q ++ ")"
   | poly.mul p q => "(" ++ poly.mk_string p ++ " * " ++ poly.mk_string q ++ ")"
-  | poly.pow p n => toString $ f!"({(poly.mk_string p)} ^ {n})"
+  | poly.pow p n => toString <| f!"({(poly.mk_string p)} ^ {n})"
   | poly.neg p => "-" ++ poly.mk_string p
 #align polyrith.poly.mk_string polyrith.poly.mk_string
 
@@ -135,7 +135,7 @@ unsafe def poly_form_of_atom (red : Transparency) (vars : List expr) (e : expr) 
     vars.mfoldlWithIndex
         (fun n last e' =>
           match last with
-          | none => tactic.try_core $ tactic.is_def_eq e e' red >> return n
+          | none => tactic.try_core <| tactic.is_def_eq e e' red >> return n
           | some k => return k)
         none
   return
@@ -219,7 +219,7 @@ The following section contains code that can convert an a `poly` object into a `
       |
         m , poly.var n
         =>
-        do let some e ← return $ m . nth n | throwError "unknown variable poly.var { ← n }" return ` `( $ ( e ) )
+        do let some e ← return <| m . nth n | throwError "unknown variable poly.var { ← n }" return ` `( $ ( e ) )
       |
         m , poly.add p q
         =>
@@ -350,7 +350,7 @@ structure SageJsonFailure where
 /-- Parse the json output from `scripts/polyrith.py` into either an error message, a list of `poly`
 objects, or `none` if only trace output was requested. -/
 unsafe def convert_sage_output (j : json) : tactic (Option (List Poly)) := do
-  let r : sage_json_success ⊕ sage_json_failure ←
+  let r : Sum sage_json_success sage_json_failure ←
     decorate_ex "internal json error: "
         (-- try the error format first, so that if both fail we get the message from the success parser
             Sum.inr <$>
@@ -392,8 +392,8 @@ unsafe def parse_target_to_poly : tactic (List expr × poly × expr) := do
 
 /-- Filter `l` to the elements which are equalities of type `expt`. -/
 unsafe def get_equalities_of_type (expt : expr) (l : List expr) : tactic (List expr) :=
-  l.mfilter $ fun h_eq =>
-    succeeds $ do
+  l.mfilter fun h_eq =>
+    succeeds <| do
       let q(@Eq $(R) _ _) ← infer_type h_eq
       unify expt R
 #align polyrith.get_equalities_of_type polyrith.get_equalities_of_type
@@ -451,7 +451,7 @@ It assumes that `python3` is available on the path.
 unsafe def sage_output (arg_list : List String := []) : tactic json := do
   let path ← get_mathlib_dir
   let args := [path ++ "../scripts/polyrith_sage.py"] ++ arg_list
-  let s ← unsafe_run_io $ Io.cmd { cmd := "python3", args }
+  let s ← unsafe_run_io <| Io.cmd { cmd := "python3", args }
   let some j ← pure (json.parse s) |
     throwError "Invalid json: {← s}"
   pure j
@@ -531,27 +531,27 @@ unsafe def create_args (only_on : Bool) (hyps : List pexpr) : tactic (List expr 
   let (m, p, R) ← parse_target_to_poly
   let (eq_names, m, polys) ← parse_ctx_to_polys R m only_on hyps
   let args := [toString R, toString m.length, (polys.map poly.mk_string).toString, p.mk_string]
-  return $ (eq_names, m, R, toString (is_trace_enabled_for `polyrith)::args)
+  return <| (eq_names, m, R, toString (is_trace_enabled_for `polyrith)::args)
 #align polyrith.create_args polyrith.create_args
 
 /-- The second half of `tactic.polyrith` processes the output from Sage into
 a call to `linear_combination`.
 -/
 unsafe def process_output (eq_names : List expr) (m : List expr) (R : expr) (sage_out : json) : tactic format :=
-  focus1 $ do
+  focus1 <| do
     let some coeffs_as_poly ← convert_sage_output sage_out |
       throwError"internal error: No output available"
     let coeffs_as_pexpr ← coeffs_as_poly.mmap (poly.to_pexpr m)
     let eq_names_pexpr := eq_names.map to_pexpr
-    let coeffs_as_expr ← coeffs_as_pexpr.mmap $ fun e => to_expr ``(($(e) : $(R)))
+    let coeffs_as_expr ← coeffs_as_pexpr.mmap fun e => to_expr ``(($(e) : $(R)))
     linear_combo.linear_combination eq_names_pexpr coeffs_as_pexpr
-    let components := (eq_names.zip coeffs_as_expr).filter $ fun pr => not $ pr.2.is_app_of `has_zero.zero
+    let components := (eq_names.zip coeffs_as_expr).filter fun pr => not <| pr.2.is_app_of `has_zero.zero
     let expr_string ← components_to_lc_format components
     let lc_fmt : format := "linear_combination " ++ format.nest 2 (format.group expr_string)
     done <|>
         throwError "polyrith found the following certificate, but it failed to close the goal:
           {← lc_fmt}"
-    return $ "linear_combination " ++ format.nest 2 (format.group expr_string)
+    return <| "linear_combination " ++ format.nest 2 (format.group expr_string)
 #align polyrith.process_output polyrith.process_output
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
@@ -559,7 +559,7 @@ unsafe def process_output (eq_names : List expr) (m : List expr) (R : expr) (sag
 unsafe def no_hypotheses_case : tactic (Option format) :=
   (do
       sorry
-      return $ some "ring") <|>
+      return <| some "ring") <|>
     fail "polyrith did not find any relevant hypotheses and the goal is not provable by ring"
 #align polyrith.no_hypotheses_case polyrith.no_hypotheses_case
 
@@ -568,7 +568,7 @@ unsafe def no_hypotheses_case : tactic (Option format) :=
 unsafe def no_variables_case : tactic (Option format) :=
   (do
       sorry
-      return $ some "ring") <|>
+      return <| some "ring") <|>
     fail "polyrith did not find any variables and the goal is not provable by ring"
 #align polyrith.no_variables_case polyrith.no_variables_case
 

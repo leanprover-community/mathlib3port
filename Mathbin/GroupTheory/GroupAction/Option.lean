@@ -30,7 +30,7 @@ variable [HasSmul M α] [HasSmul N α] (a : M) (b : α) (x : Option α)
 
 @[to_additive Option.hasVadd]
 instance : HasSmul M (Option α) :=
-  ⟨fun a => Option.map $ (· • ·) a⟩
+  ⟨fun a => Option.map <| (· • ·) a⟩
 
 @[to_additive]
 theorem smul_def : a • x = x.map ((· • ·) a) :=
@@ -55,7 +55,7 @@ instance [HasSmul M N] [IsScalarTower M N α] : IsScalarTower M N (Option α) :=
 
 @[to_additive]
 instance [SmulCommClass M N α] : SmulCommClass M N (Option α) :=
-  ⟨fun a b => Function.Commute.option_map $ smul_comm _ _⟩
+  ⟨fun a b => Function.Commute.option_map <| smul_comm _ _⟩
 
 @[to_additive]
 instance [HasSmul Mᵐᵒᵖ α] [IsCentralScalar M α] : IsCentralScalar M (Option α) :=
@@ -65,7 +65,7 @@ instance [HasSmul Mᵐᵒᵖ α] [IsCentralScalar M α] : IsCentralScalar M (Opt
 
 @[to_additive]
 instance [HasFaithfulSmul M α] : HasFaithfulSmul M (Option α) :=
-  ⟨fun x y h => eq_of_smul_eq_smul $ fun b : α => by injection h (some b)⟩
+  ⟨fun x y h => eq_of_smul_eq_smul fun b : α => by injection h (some b)⟩
 
 end HasSmul
 

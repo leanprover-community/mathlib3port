@@ -42,7 +42,7 @@ equivalences `t α ≃ t' α` for all `α`, then every function `α → β` can
 be mapped to a function `t' α → t' β` functorially (see
 `equiv.functor`). -/
 protected def map {α β : Type u} (f : α → β) (x : t' α) : t' β :=
-  eqv β $ map f ((eqv α).symm x)
+  eqv β <| map f ((eqv α).symm x)
 #align equiv.map Equiv.map
 
 /-- The function `equiv.map` transfers the functoriality of `t` to

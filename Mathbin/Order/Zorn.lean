@@ -73,11 +73,11 @@ local infixl:50 " ≺ " => r
 If every chain has an upper bound, then there exists a maximal element. -/
 theorem exists_maximal_of_chains_bounded (h : ∀ c, IsChain r c → ∃ ub, ∀ a ∈ c, a ≺ ub)
     (trans : ∀ {a b c}, a ≺ b → b ≺ c → a ≺ c) : ∃ m, ∀ a, m ≺ a → a ≺ m :=
-  have : ∃ ub, ∀ a ∈ maxChain r, a ≺ ub := h _ $ max_chain_spec.left
+  have : ∃ ub, ∀ a ∈ maxChain r, a ≺ ub := h _ <| max_chain_spec.left
   let ⟨ub, (hub : ∀ a ∈ maxChain r, a ≺ ub)⟩ := this
   ⟨ub, fun a ha =>
-    have : IsChain r (insert a $ maxChain r) := max_chain_spec.1.insert $ fun b hb _ => Or.inr $ trans (hub b hb) ha
-    hub a $ by
+    have : IsChain r (insert a <| maxChain r) := max_chain_spec.1.insert fun b hb _ => Or.inr <| trans (hub b hb) ha
+    hub a <| by
       rw [max_chain_spec.right this (subset_insert _ _)]
       exact mem_insert _ _⟩
 #align exists_maximal_of_chains_bounded exists_maximal_of_chains_bounded
@@ -131,7 +131,7 @@ theorem zorn_nonempty_preorder₀ (s : Set α)
     · exact ⟨x, ⟨hxs, le_rfl⟩, fun z => False.elim⟩
       
     · rcases ih c (fun z hz => (hcs hz).1) hc y hy with ⟨z, hzs, hz⟩
-      exact ⟨z, ⟨hzs, (hcs hy).2.trans $ hz _ hy⟩, hz⟩
+      exact ⟨z, ⟨hzs, (hcs hy).2.trans <| hz _ hy⟩, hz⟩
       
     
 #align zorn_nonempty_preorder₀ zorn_nonempty_preorder₀
@@ -141,7 +141,7 @@ theorem zorn_nonempty_Ici₀ (a : α)
     (ih : ∀ (c) (_ : c ⊆ ici a), IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub, a ≤ ub ∧ ∀ z ∈ c, z ≤ ub) (x : α) (hax : a ≤ x) :
     ∃ m, x ≤ m ∧ ∀ z, m ≤ z → z ≤ m :=
   let ⟨m, hma, hxm, hm⟩ := zorn_nonempty_preorder₀ (ici a) (by simpa using ih) x hax
-  ⟨m, hxm, fun z hmz => hm _ (hax.trans $ hxm.trans hmz) hmz⟩
+  ⟨m, hxm, fun z hmz => hm _ (hax.trans <| hxm.trans hmz) hmz⟩
 #align zorn_nonempty_Ici₀ zorn_nonempty_Ici₀
 
 end Preorder
@@ -194,7 +194,7 @@ theorem zorn_subset_nonempty (S : Set (Set α))
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (c «expr ⊆ » S) -/
 theorem zorn_superset (S : Set (Set α)) (h : ∀ (c) (_ : c ⊆ S), IsChain (· ⊆ ·) c → ∃ lb ∈ S, ∀ s ∈ c, lb ⊆ s) :
     ∃ m ∈ S, ∀ a ∈ S, a ⊆ m → a = m :=
-  @zorn_partial_order₀ (Set α)ᵒᵈ _ S $ fun c cS hc => h c cS hc.symm
+  (@zorn_partial_order₀ (Set α)ᵒᵈ _ S) fun c cS hc => h c cS hc.symm
 #align zorn_superset zorn_superset
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (c «expr ⊆ » S) -/
@@ -211,7 +211,7 @@ theorem IsChain.exists_max_chain (hc : IsChain r c) : ∃ M, @IsMaxChain _ r M �
   · exact ⟨M, ⟨hM₀, fun d hd hMd => (hM₂ _ ⟨hM₁.trans hMd, hd⟩ hMd).symm⟩, hM₁⟩
     
   rintro cs hcs₀ hcs₁ ⟨s, hs⟩
-  refine' ⟨⋃₀ cs, ⟨fun _ ha => Set.mem_sUnion_of_mem ((hcs₀ hs).left ha) hs, _⟩, fun _ => Set.subset_sUnion_of_mem⟩
+  refine' ⟨⋃₀cs, ⟨fun _ ha => Set.mem_sUnion_of_mem ((hcs₀ hs).left ha) hs, _⟩, fun _ => Set.subset_sUnion_of_mem⟩
   rintro y ⟨sy, hsy, hysy⟩ z ⟨sz, hsz, hzsz⟩ hyz
   obtain rfl | hsseq := eq_or_ne sy sz
   · exact (hcs₀ hsy).right hysy hzsz hyz

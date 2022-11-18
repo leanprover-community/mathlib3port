@@ -28,9 +28,9 @@ theorem merge' {f g} (hf : Nat.Partrec f) (hg : Nat.Partrec g) :
   obtain ⟨cg, rfl⟩ := code.exists_code.1 hg
   have : Nat.Partrec fun n => Nat.rfindOpt fun k => cf.evaln k n <|> cg.evaln k n :=
     Partrec.nat_iff.1
-      (Partrec.rfind_opt $
-        primrec.option_orelse.to_comp.comp (code.evaln_prim.to_comp.comp $ (snd.pair (const cf)).pair fst)
-          (code.evaln_prim.to_comp.comp $ (snd.pair (const cg)).pair fst))
+      (Partrec.rfind_opt <|
+        primrec.option_orelse.to_comp.comp (code.evaln_prim.to_comp.comp <| (snd.pair (const cf)).pair fst)
+          (code.evaln_prim.to_comp.comp <| (snd.pair (const cg)).pair fst))
   refine' ⟨_, this, fun n => _⟩
   suffices
   refine' ⟨this, ⟨fun h => (this _ ⟨h, rfl⟩).imp Exists.fst Exists.fst, _⟩⟩
@@ -124,16 +124,16 @@ theorem cond {c : α → Bool} {f : α →. σ} {g : α →. σ} (hc : Computabl
   let ⟨cf, ef⟩ := exists_code.1 hf
   let ⟨cg, eg⟩ := exists_code.1 hg
   ((eval_part.comp (Computable.cond hc (const cf) (const cg)) Computable.id).bind
-        ((@Computable.decode σ _).comp snd).ofOption.to₂).of_eq $
+        ((@Computable.decode σ _).comp snd).ofOption.to₂).of_eq
     fun a => by cases c a <;> simp [ef, eg, encodek]
 #align partrec.cond Partrec.cond
 
-theorem sum_cases {f : α → β ⊕ γ} {g : α → β →. σ} {h : α → γ →. σ} (hf : Computable f) (hg : Partrec₂ g)
+theorem sum_cases {f : α → Sum β γ} {g : α → β →. σ} {h : α → γ →. σ} (hf : Computable f) (hg : Partrec₂ g)
     (hh : Partrec₂ h) : @Partrec _ σ _ _ fun a => Sum.casesOn (f a) (g a) (h a) :=
-  option_some_iff.1 $
+  option_some_iff.1 <|
     (cond (sum_cases hf (const true).to₂ (const false).to₂)
           (sum_cases_left hf (option_some_iff.2 hg).to₂ (const Option.none).to₂)
-          (sum_cases_right hf (const Option.none).to₂ (option_some_iff.2 hh).to₂)).of_eq $
+          (sum_cases_right hf (const Option.none).to₂ (option_some_iff.2 hh).to₂)).of_eq
       fun a => by cases f a <;> simp only [Bool.cond_true, Bool.cond_false]
 #align partrec.sum_cases Partrec.sum_cases
 
@@ -155,7 +155,7 @@ theorem RePred.of_eq {α} [Primcodable α] {p q : α → Prop} (hp : RePred p) (
 #align re_pred.of_eq RePred.of_eq
 
 theorem Partrec.dom_re {α β} [Primcodable α] [Primcodable β] {f : α →. β} (h : Partrec f) : RePred fun a => (f a).Dom :=
-  (h.map (Computable.const ()).to₂).of_eq $ fun n => Part.ext $ fun _ => by simp [Part.dom_iff_mem]
+  (h.map (Computable.const ()).to₂).of_eq fun n => Part.ext fun _ => by simp [Part.dom_iff_mem]
 #align partrec.dom_re Partrec.dom_re
 
 theorem ComputablePred.of_eq {α} [Primcodable α] {p q : α → Prop} (hp : ComputablePred p) (H : ∀ a, p a ↔ q a) :
@@ -174,7 +174,7 @@ open Nat.Partrec (code)
 open Nat.Partrec.Code Computable
 
 theorem computable_iff {p : α → Prop} : ComputablePred p ↔ ∃ f : α → Bool, Computable f ∧ p = fun a => f a :=
-  ⟨fun ⟨D, h⟩ => ⟨_, h, funext $ fun a => propext (Bool.decide_iff _).symm⟩, by
+  ⟨fun ⟨D, h⟩ => ⟨_, h, funext fun a => propext (Bool.decide_iff _).symm⟩, by
     rintro ⟨f, h, rfl⟩ <;> exact ⟨by infer_instance, by simpa using h⟩⟩
 #align computable_pred.computable_iff ComputablePred.computable_iff
 
@@ -190,7 +190,7 @@ protected theorem not {p : α → Prop} (hp : ComputablePred p) : ComputablePred
 theorem to_re {p : α → Prop} (hp : ComputablePred p) : RePred p := by
   obtain ⟨f, hf, rfl⟩ := computable_iff.1 hp
   unfold RePred
-  refine' (Partrec.cond hf (Decidable.Partrec.const' (Part.some ())) Partrec.none).of_eq fun n => Part.ext $ fun a => _
+  refine' (Partrec.cond hf (Decidable.Partrec.const' (Part.some ())) Partrec.none).of_eq fun n => Part.ext fun a => _
   cases a
   cases f n <;> simp
 #align computable_pred.to_re ComputablePred.to_re
@@ -203,7 +203,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
     fixed_point₂
       (Partrec.cond (h.comp fst) ((Partrec.nat_iff.2 hg).comp snd).to₂ ((Partrec.nat_iff.2 hf).comp snd).to₂).to₂
   simp at e
-  by_cases H:eval c ∈ C
+  by_cases H : eval c ∈ C
   · simp only [H, if_true] at e
     rwa [← e]
     
@@ -231,20 +231,17 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
            []
            ","
            (Term.arrow
-            (Init.Core.«term_=_» (Term.app `eval [`cf]) " = " (Term.app `eval [`cg]))
+            («term_=_» (Term.app `eval [`cf]) "=" (Term.app `eval [`cg]))
             "→"
-            (Init.Logic.«term_↔_» (Init.Core.«term_∈_» `cf " ∈ " `C) " ↔ " (Init.Core.«term_∈_» `cg " ∈ " `C))))]
+            («term_↔_» («term_∈_» `cf "∈" `C) "↔" («term_∈_» `cg "∈" `C))))]
          []
          ")")]
        (Term.typeSpec
         ":"
-        (Init.Logic.«term_↔_»
-         (Term.app `ComputablePred [(Term.fun "fun" (Term.basicFun [`c] [] "=>" (Init.Core.«term_∈_» `c " ∈ " `C)))])
-         " ↔ "
-         (Init.Logic.«term_∨_»
-          (Init.Core.«term_=_» `C " = " (Init.Core.«term∅» "∅"))
-          " ∨ "
-          (Init.Core.«term_=_» `C " = " `Set.univ)))))
+        («term_↔_»
+         (Term.app `ComputablePred [(Term.fun "fun" (Term.basicFun [`c] [] "=>" («term_∈_» `c "∈" `C)))])
+         "↔"
+         («term_∨_» («term_=_» `C "=" («term∅» "∅")) "∨" («term_=_» `C "=" `Set.univ)))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -268,10 +265,10 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                    [`f]
                    []
                    ","
-                   (Init.Logic.«term_↔_»
-                    (Init.Core.«term_∈_» `f " ∈ " `C)
-                    " ↔ "
-                    (Init.Core.«term_∈_» (Term.app `eval [`f]) " ∈ " (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+                   («term_↔_»
+                    («term_∈_» `f "∈" `C)
+                    "↔"
+                    («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
                 ":="
                 (Term.fun
                  "fun"
@@ -302,50 +299,50 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                   [`h]
                   []
                   "=>"
-                  (Init.Core.«term_$_»
+                  (Term.app
                    (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
-                   " $ "
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`C0]
-                     []
-                     "=>"
-                     (Init.Core.«term_$_»
-                      `Set.eq_univ_of_forall
-                      " $ "
-                      (Term.fun
-                       "fun"
-                       (Term.basicFun
-                        [`cg]
-                        []
-                        "=>"
-                        (Term.let
-                         "let"
-                         (Term.letDecl
-                          (Term.letPatDecl
-                           (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+                   [(Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`C0]
+                      []
+                      "=>"
+                      (Term.app
+                       `Set.eq_univ_of_forall
+                       [(Term.fun
+                         "fun"
+                         (Term.basicFun
+                          [`cg]
+                          []
+                          "=>"
+                          (Term.let
+                           "let"
+                           (Term.letDecl
+                            (Term.letPatDecl
+                             (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+                             []
+                             []
+                             ":="
+                             (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
                            []
-                           []
-                           ":="
-                           (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
-                         []
-                         (Init.Core.«term_$_»
-                          (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
-                          " $ "
-                          (Term.app
-                           `rice
-                           [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
-                            (Term.app (Term.proj `h "." `of_eq) [`hC])
-                            (Init.Core.«term_$_»
-                             (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-                             " $ "
-                             (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
-                            (Init.Core.«term_$_»
-                             (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-                             " $ "
-                             (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
-                            (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))))))))
+                           («term_<|_»
+                            (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+                            "<|"
+                            (Term.app
+                             `rice
+                             [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                              (Term.app (Term.proj `h "." `of_eq) [`hC])
+                              («term_<|_»
+                               (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                               "<|"
+                               (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+                              («term_<|_»
+                               (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                               "<|"
+                               (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+                              (Term.app
+                               (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1"))
+                               [`fC])])))))])))])))
                 ","
                 (Term.fun
                  "fun"
@@ -417,10 +414,10 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                   [`f]
                   []
                   ","
-                  (Init.Logic.«term_↔_»
-                   (Init.Core.«term_∈_» `f " ∈ " `C)
-                   " ↔ "
-                   (Init.Core.«term_∈_» (Term.app `eval [`f]) " ∈ " (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+                  («term_↔_»
+                   («term_∈_» `f "∈" `C)
+                   "↔"
+                   («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
                ":="
                (Term.fun
                 "fun"
@@ -451,50 +448,50 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                  [`h]
                  []
                  "=>"
-                 (Init.Core.«term_$_»
+                 (Term.app
                   (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
-                  " $ "
-                  (Term.fun
-                   "fun"
-                   (Term.basicFun
-                    [`C0]
-                    []
-                    "=>"
-                    (Init.Core.«term_$_»
-                     `Set.eq_univ_of_forall
-                     " $ "
-                     (Term.fun
-                      "fun"
-                      (Term.basicFun
-                       [`cg]
-                       []
-                       "=>"
-                       (Term.let
-                        "let"
-                        (Term.letDecl
-                         (Term.letPatDecl
-                          (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+                  [(Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`C0]
+                     []
+                     "=>"
+                     (Term.app
+                      `Set.eq_univ_of_forall
+                      [(Term.fun
+                        "fun"
+                        (Term.basicFun
+                         [`cg]
+                         []
+                         "=>"
+                         (Term.let
+                          "let"
+                          (Term.letDecl
+                           (Term.letPatDecl
+                            (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+                            []
+                            []
+                            ":="
+                            (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
                           []
-                          []
-                          ":="
-                          (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
-                        []
-                        (Init.Core.«term_$_»
-                         (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
-                         " $ "
-                         (Term.app
-                          `rice
-                          [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
-                           (Term.app (Term.proj `h "." `of_eq) [`hC])
-                           (Init.Core.«term_$_»
-                            (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-                            " $ "
-                            (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
-                           (Init.Core.«term_$_»
-                            (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-                            " $ "
-                            (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
-                           (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))))))))
+                          («term_<|_»
+                           (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+                           "<|"
+                           (Term.app
+                            `rice
+                            [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                             (Term.app (Term.proj `h "." `of_eq) [`hC])
+                             («term_<|_»
+                              (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                              "<|"
+                              (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+                             («term_<|_»
+                              (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                              "<|"
+                              (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+                             (Term.app
+                              (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1"))
+                              [`fC])])))))])))])))
                ","
                (Term.fun
                 "fun"
@@ -558,10 +555,10 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
               [`f]
               []
               ","
-              (Init.Logic.«term_↔_»
-               (Init.Core.«term_∈_» `f " ∈ " `C)
-               " ↔ "
-               (Init.Core.«term_∈_» (Term.app `eval [`f]) " ∈ " (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+              («term_↔_»
+               («term_∈_» `f "∈" `C)
+               "↔"
+               («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
            ":="
            (Term.fun
             "fun"
@@ -590,50 +587,48 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
              [`h]
              []
              "=>"
-             (Init.Core.«term_$_»
+             (Term.app
               (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
-              " $ "
-              (Term.fun
-               "fun"
-               (Term.basicFun
-                [`C0]
-                []
-                "=>"
-                (Init.Core.«term_$_»
-                 `Set.eq_univ_of_forall
-                 " $ "
-                 (Term.fun
-                  "fun"
-                  (Term.basicFun
-                   [`cg]
-                   []
-                   "=>"
-                   (Term.let
-                    "let"
-                    (Term.letDecl
-                     (Term.letPatDecl
-                      (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`C0]
+                 []
+                 "=>"
+                 (Term.app
+                  `Set.eq_univ_of_forall
+                  [(Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`cg]
+                     []
+                     "=>"
+                     (Term.let
+                      "let"
+                      (Term.letDecl
+                       (Term.letPatDecl
+                        (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+                        []
+                        []
+                        ":="
+                        (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
                       []
-                      []
-                      ":="
-                      (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
-                    []
-                    (Init.Core.«term_$_»
-                     (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
-                     " $ "
-                     (Term.app
-                      `rice
-                      [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
-                       (Term.app (Term.proj `h "." `of_eq) [`hC])
-                       (Init.Core.«term_$_»
-                        (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-                        " $ "
-                        (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
-                       (Init.Core.«term_$_»
-                        (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-                        " $ "
-                        (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
-                       (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))))))))
+                      («term_<|_»
+                       (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+                       "<|"
+                       (Term.app
+                        `rice
+                        [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                         (Term.app (Term.proj `h "." `of_eq) [`hC])
+                         («term_<|_»
+                          (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                          "<|"
+                          (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+                         («term_<|_»
+                          (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                          "<|"
+                          (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+                         (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))])))
            ","
            (Term.fun
             "fun"
@@ -690,10 +685,10 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
              [`f]
              []
              ","
-             (Init.Logic.«term_↔_»
-              (Init.Core.«term_∈_» `f " ∈ " `C)
-              " ↔ "
-              (Init.Core.«term_∈_» (Term.app `eval [`f]) " ∈ " (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+             («term_↔_»
+              («term_∈_» `f "∈" `C)
+              "↔"
+              («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
           ":="
           (Term.fun
            "fun"
@@ -722,50 +717,48 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
             [`h]
             []
             "=>"
-            (Init.Core.«term_$_»
+            (Term.app
              (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
-             " $ "
-             (Term.fun
-              "fun"
-              (Term.basicFun
-               [`C0]
-               []
-               "=>"
-               (Init.Core.«term_$_»
-                `Set.eq_univ_of_forall
-                " $ "
-                (Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`cg]
-                  []
-                  "=>"
-                  (Term.let
-                   "let"
-                   (Term.letDecl
-                    (Term.letPatDecl
-                     (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+             [(Term.fun
+               "fun"
+               (Term.basicFun
+                [`C0]
+                []
+                "=>"
+                (Term.app
+                 `Set.eq_univ_of_forall
+                 [(Term.fun
+                   "fun"
+                   (Term.basicFun
+                    [`cg]
+                    []
+                    "=>"
+                    (Term.let
+                     "let"
+                     (Term.letDecl
+                      (Term.letPatDecl
+                       (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+                       []
+                       []
+                       ":="
+                       (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
                      []
-                     []
-                     ":="
-                     (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
-                   []
-                   (Init.Core.«term_$_»
-                    (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
-                    " $ "
-                    (Term.app
-                     `rice
-                     [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
-                      (Term.app (Term.proj `h "." `of_eq) [`hC])
-                      (Init.Core.«term_$_»
-                       (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-                       " $ "
-                       (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
-                      (Init.Core.«term_$_»
-                       (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-                       " $ "
-                       (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
-                      (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))))))))
+                     («term_<|_»
+                      (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+                      "<|"
+                      (Term.app
+                       `rice
+                       [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                        (Term.app (Term.proj `h "." `of_eq) [`hC])
+                        («term_<|_»
+                         (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                         "<|"
+                         (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+                        («term_<|_»
+                         (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                         "<|"
+                         (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+                        (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))])))
           ","
           (Term.fun
            "fun"
@@ -820,10 +813,10 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
             [`f]
             []
             ","
-            (Init.Logic.«term_↔_»
-             (Init.Core.«term_∈_» `f " ∈ " `C)
-             " ↔ "
-             (Init.Core.«term_∈_» (Term.app `eval [`f]) " ∈ " (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
+            («term_↔_»
+             («term_∈_» `f "∈" `C)
+             "↔"
+             («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))))]
          ":="
          (Term.fun
           "fun"
@@ -852,50 +845,48 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
            [`h]
            []
            "=>"
-           (Init.Core.«term_$_»
+           (Term.app
             (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
-            " $ "
-            (Term.fun
-             "fun"
-             (Term.basicFun
-              [`C0]
-              []
-              "=>"
-              (Init.Core.«term_$_»
-               `Set.eq_univ_of_forall
-               " $ "
-               (Term.fun
-                "fun"
-                (Term.basicFun
-                 [`cg]
-                 []
-                 "=>"
-                 (Term.let
-                  "let"
-                  (Term.letDecl
-                   (Term.letPatDecl
-                    (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+            [(Term.fun
+              "fun"
+              (Term.basicFun
+               [`C0]
+               []
+               "=>"
+               (Term.app
+                `Set.eq_univ_of_forall
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`cg]
+                   []
+                   "=>"
+                   (Term.let
+                    "let"
+                    (Term.letDecl
+                     (Term.letPatDecl
+                      (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+                      []
+                      []
+                      ":="
+                      (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
                     []
-                    []
-                    ":="
-                    (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
-                  []
-                  (Init.Core.«term_$_»
-                   (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
-                   " $ "
-                   (Term.app
-                    `rice
-                    [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
-                     (Term.app (Term.proj `h "." `of_eq) [`hC])
-                     (Init.Core.«term_$_»
-                      (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-                      " $ "
-                      (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
-                     (Init.Core.«term_$_»
-                      (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-                      " $ "
-                      (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
-                     (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))))))))
+                    («term_<|_»
+                     (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+                     "<|"
+                     (Term.app
+                      `rice
+                      [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                       (Term.app (Term.proj `h "." `of_eq) [`hC])
+                       («term_<|_»
+                        (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                        "<|"
+                        (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+                       («term_<|_»
+                        (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                        "<|"
+                        (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+                       (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))])))
          ","
          (Term.fun
           "fun"
@@ -946,50 +937,48 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
           [`h]
           []
           "=>"
-          (Init.Core.«term_$_»
+          (Term.app
            (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
-           " $ "
-           (Term.fun
-            "fun"
-            (Term.basicFun
-             [`C0]
-             []
-             "=>"
-             (Init.Core.«term_$_»
-              `Set.eq_univ_of_forall
-              " $ "
-              (Term.fun
-               "fun"
-               (Term.basicFun
-                [`cg]
-                []
-                "=>"
-                (Term.let
-                 "let"
-                 (Term.letDecl
-                  (Term.letPatDecl
-                   (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`C0]
+              []
+              "=>"
+              (Term.app
+               `Set.eq_univ_of_forall
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`cg]
+                  []
+                  "=>"
+                  (Term.let
+                   "let"
+                   (Term.letDecl
+                    (Term.letPatDecl
+                     (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+                     []
+                     []
+                     ":="
+                     (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
                    []
-                   []
-                   ":="
-                   (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
-                 []
-                 (Init.Core.«term_$_»
-                  (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
-                  " $ "
-                  (Term.app
-                   `rice
-                   [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
-                    (Term.app (Term.proj `h "." `of_eq) [`hC])
-                    (Init.Core.«term_$_»
-                     (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-                     " $ "
-                     (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
-                    (Init.Core.«term_$_»
-                     (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-                     " $ "
-                     (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
-                    (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))))))))
+                   («term_<|_»
+                    (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+                    "<|"
+                    (Term.app
+                     `rice
+                     [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                      (Term.app (Term.proj `h "." `of_eq) [`hC])
+                      («term_<|_»
+                       (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                       "<|"
+                       (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+                      («term_<|_»
+                       (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                       "<|"
+                       (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+                      (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))])))
         ","
         (Term.fun
          "fun"
@@ -1241,19 +1230,60 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
         [`h]
         []
         "=>"
-        (Init.Core.«term_$_»
+        (Term.app
          (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
-         " $ "
-         (Term.fun
-          "fun"
-          (Term.basicFun
-           [`C0]
-           []
-           "=>"
-           (Init.Core.«term_$_»
-            `Set.eq_univ_of_forall
-            " $ "
-            (Term.fun
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`C0]
+            []
+            "=>"
+            (Term.app
+             `Set.eq_univ_of_forall
+             [(Term.fun
+               "fun"
+               (Term.basicFun
+                [`cg]
+                []
+                "=>"
+                (Term.let
+                 "let"
+                 (Term.letDecl
+                  (Term.letPatDecl
+                   (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+                   []
+                   []
+                   ":="
+                   (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+                 []
+                 («term_<|_»
+                  (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+                  "<|"
+                  (Term.app
+                   `rice
+                   [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+                    (Term.app (Term.proj `h "." `of_eq) [`hC])
+                    («term_<|_»
+                     (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                     "<|"
+                     (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+                    («term_<|_»
+                     (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+                     "<|"
+                     (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+                    (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`C0]
+          []
+          "=>"
+          (Term.app
+           `Set.eq_univ_of_forall
+           [(Term.fun
              "fun"
              (Term.basicFun
               [`cg]
@@ -1269,36 +1299,34 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                  ":="
                  (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
                []
-               (Init.Core.«term_$_»
+               («term_<|_»
                 (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
-                " $ "
+                "<|"
                 (Term.app
                  `rice
                  [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
                   (Term.app (Term.proj `h "." `of_eq) [`hC])
-                  (Init.Core.«term_$_»
+                  («term_<|_»
                    (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-                   " $ "
+                   "<|"
                    (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
-                  (Init.Core.«term_$_»
+                  («term_<|_»
                    (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-                   " $ "
+                   "<|"
                    (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
-                  (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))))))))
+                  (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
-       (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
-       " $ "
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`C0]
-         []
-         "=>"
-         (Init.Core.«term_$_»
-          `Set.eq_univ_of_forall
-          " $ "
-          (Term.fun
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`C0]
+        []
+        "=>"
+        (Term.app
+         `Set.eq_univ_of_forall
+         [(Term.fun
            "fun"
            (Term.basicFun
             [`cg]
@@ -1314,100 +1342,59 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
                ":="
                (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
              []
-             (Init.Core.«term_$_»
+             («term_<|_»
               (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
-              " $ "
+              "<|"
               (Term.app
                `rice
                [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
                 (Term.app (Term.proj `h "." `of_eq) [`hC])
-                (Init.Core.«term_$_»
+                («term_<|_»
                  (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-                 " $ "
+                 "<|"
                  (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
-                (Init.Core.«term_$_»
+                («term_<|_»
                  (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-                 " $ "
+                 "<|"
                  (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
-                (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))))))
+                (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun
-       "fun"
-       (Term.basicFun
-        [`C0]
-        []
-        "=>"
-        (Init.Core.«term_$_»
-         `Set.eq_univ_of_forall
-         " $ "
-         (Term.fun
-          "fun"
-          (Term.basicFun
-           [`cg]
-           []
-           "=>"
-           (Term.let
-            "let"
-            (Term.letDecl
-             (Term.letPatDecl
-              (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
-              []
-              []
-              ":="
-              (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
-            []
-            (Init.Core.«term_$_»
-             (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
-             " $ "
-             (Term.app
-              `rice
-              [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
-               (Term.app (Term.proj `h "." `of_eq) [`hC])
-               (Init.Core.«term_$_»
-                (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-                " $ "
-                (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
-               (Init.Core.«term_$_»
-                (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-                " $ "
-                (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
-               (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])]))))))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      (Term.app
        `Set.eq_univ_of_forall
-       " $ "
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`cg]
-         []
-         "=>"
-         (Term.let
-          "let"
-          (Term.letDecl
-           (Term.letPatDecl
-            (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
-            []
-            []
-            ":="
-            (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`cg]
           []
-          (Init.Core.«term_$_»
-           (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
-           " $ "
-           (Term.app
-            `rice
-            [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
-             (Term.app (Term.proj `h "." `of_eq) [`hC])
-             (Init.Core.«term_$_»
-              (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-              " $ "
-              (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
-             (Init.Core.«term_$_»
-              (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-              " $ "
-              (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
-             (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])]))))))
+          "=>"
+          (Term.let
+           "let"
+           (Term.letDecl
+            (Term.letPatDecl
+             (Term.anonymousCtor "⟨" [`cf "," `fC] "⟩")
+             []
+             []
+             ":="
+             (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
+           []
+           («term_<|_»
+            (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
+            "<|"
+            (Term.app
+             `rice
+             [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
+              (Term.app (Term.proj `h "." `of_eq) [`hC])
+              («term_<|_»
+               (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+               "<|"
+               (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
+              («term_<|_»
+               (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
+               "<|"
+               (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
+              (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -1425,20 +1412,20 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
            ":="
            (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
          []
-         (Init.Core.«term_$_»
+         («term_<|_»
           (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
-          " $ "
+          "<|"
           (Term.app
            `rice
            [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
             (Term.app (Term.proj `h "." `of_eq) [`hC])
-            (Init.Core.«term_$_»
+            («term_<|_»
              (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-             " $ "
+             "<|"
              (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
-            (Init.Core.«term_$_»
+            («term_<|_»
              (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-             " $ "
+             "<|"
              (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
             (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1452,37 +1439,37 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
          ":="
          (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])))
        []
-       (Init.Core.«term_$_»
+       («term_<|_»
         (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
-        " $ "
+        "<|"
         (Term.app
          `rice
          [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
           (Term.app (Term.proj `h "." `of_eq) [`hC])
-          (Init.Core.«term_$_»
+          («term_<|_»
            (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-           " $ "
+           "<|"
            (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
-          (Init.Core.«term_$_»
+          («term_<|_»
            (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-           " $ "
+           "<|"
            (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
           (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      («term_<|_»
        (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
-       " $ "
+       "<|"
        (Term.app
         `rice
         [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
          (Term.app (Term.proj `h "." `of_eq) [`hC])
-         (Init.Core.«term_$_»
+         («term_<|_»
           (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-          " $ "
+          "<|"
           (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
-         (Init.Core.«term_$_»
+         («term_<|_»
           (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-          " $ "
+          "<|"
           (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
          (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1490,13 +1477,13 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
        `rice
        [(Set.Data.Set.Basic.term_''_ `eval " '' " `C)
         (Term.app (Term.proj `h "." `of_eq) [`hC])
-        (Init.Core.«term_$_»
+        («term_<|_»
          (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-         " $ "
+         "<|"
          (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
-        (Init.Core.«term_$_»
+        («term_<|_»
          (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-         " $ "
+         "<|"
          (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
         (Term.app (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "1")) [`fC])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
@@ -1528,12 +1515,12 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
      "("
      (Term.app (Term.proj (Term.paren "(" (Term.app `hC [(Term.hole "_")]) ")") "." (fieldIdx "1")) [`fC])
      ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Init.Core.«term_$_»
+      («term_<|_»
        (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-       " $ "
+       "<|"
        (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `eval_part.comp [(Term.app `const [`cg]) `Computable.id])
@@ -1559,27 +1546,27 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `eval_part.comp
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `Partrec.nat_iff
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1, (some 0, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 10, (some 10, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     (Init.Core.«term_$_»
+     («term_<|_»
       (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-      " $ "
+      "<|"
       (Term.app `eval_part.comp [(Term.paren "(" (Term.app `const [`cg]) ")") `Computable.id]))
      ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_<|_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Init.Core.«term_$_»
+      («term_<|_»
        (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-       " $ "
+       "<|"
        (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `eval_part.comp [(Term.app `const [`cf]) `Computable.id])
@@ -1605,19 +1592,19 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `eval_part.comp
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `Partrec.nat_iff
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1, (some 0, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 10, (some 10, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     (Init.Core.«term_$_»
+     («term_<|_»
       (Term.proj `Partrec.nat_iff "." (fieldIdx "1"))
-      " $ "
+      "<|"
       (Term.app `eval_part.comp [(Term.paren "(" (Term.app `const [`cf]) ")") `Computable.id]))
      ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
@@ -1652,8 +1639,8 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `rice
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.proj (Term.app `hC [(Term.hole "_")]) "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.app `hC [(Term.hole "_")])
@@ -1667,8 +1654,8 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `hC [(Term.hole "_")]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app (Term.proj `Set.ne_empty_iff_nonempty "." (fieldIdx "1")) [`C0])
@@ -1700,25 +1687,25 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `cg
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Set.eq_univ_of_forall
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `C0
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj `or_iff_not_imp_left "." (fieldIdx "2"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `or_iff_not_imp_left
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
@@ -1841,17 +1828,17 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
        [`f]
        []
        ","
-       (Init.Logic.«term_↔_»
-        (Init.Core.«term_∈_» `f " ∈ " `C)
-        " ↔ "
-        (Init.Core.«term_∈_» (Term.app `eval [`f]) " ∈ " (Set.Data.Set.Basic.term_''_ `eval " '' " `C))))
+       («term_↔_»
+        («term_∈_» `f "∈" `C)
+        "↔"
+        («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Logic.«term_↔_»
-       (Init.Core.«term_∈_» `f " ∈ " `C)
-       " ↔ "
-       (Init.Core.«term_∈_» (Term.app `eval [`f]) " ∈ " (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))
+      («term_↔_»
+       («term_∈_» `f "∈" `C)
+       "↔"
+       («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C)))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_∈_» (Term.app `eval [`f]) " ∈ " (Set.Data.Set.Basic.term_''_ `eval " '' " `C))
+      («term_∈_» (Term.app `eval [`f]) "∈" (Set.Data.Set.Basic.term_''_ `eval " '' " `C))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Set.Data.Set.Basic.term_''_ `eval " '' " `C)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1871,17 +1858,17 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `eval
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 21 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 20, term))
-      (Init.Core.«term_∈_» `f " ∈ " `C)
+      («term_∈_» `f "∈" `C)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `C
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
-[PrettyPrinter.parenthesize] ...precedences are 20 >? 50, (some 51, term) <=? (some 20, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 21 >? 50, (some 51, term) <=? (some 20, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 20, (some 21, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
@@ -1917,24 +1904,22 @@ theorem
                   h
                     =>
                     or_iff_not_imp_left . 2
-                      $
                       fun
                         C0
                           =>
                           Set.eq_univ_of_forall
-                            $
                             fun
                               cg
                                 =>
                                 let
                                   ⟨ cf , fC ⟩ := Set.ne_empty_iff_nonempty . 1 C0
                                   hC _ . 2
-                                    $
+                                    <|
                                     rice
                                       eval '' C
                                         h . of_eq hC
-                                        Partrec.nat_iff . 1 $ eval_part.comp const cf Computable.id
-                                        Partrec.nat_iff . 1 $ eval_part.comp const cg Computable.id
+                                        Partrec.nat_iff . 1 <| eval_part.comp const cf Computable.id
+                                        Partrec.nat_iff . 1 <| eval_part.comp const cg Computable.id
                                         hC _ . 1 fC
                 ,
                 fun
@@ -1984,18 +1969,16 @@ theorem computable_iff_re_compl_re {p : α → Prop} [DecidablePred p] :
       "theorem"
       (Command.declId `computable_iff_re_compl_re' [])
       (Command.declSig
-       [(Term.implicitBinder "{" [`p] [":" (Term.arrow `α "→" (Init.Core.termProp "Prop"))] "}")]
+       [(Term.implicitBinder "{" [`p] [":" (Term.arrow `α "→" (Term.prop "Prop"))] "}")]
        (Term.typeSpec
         ":"
-        (Init.Logic.«term_↔_»
+        («term_↔_»
          (Term.app `ComputablePred [`p])
-         " ↔ "
-         (Init.Logic.«term_∧_»
+         "↔"
+         («term_∧_»
           (Term.app `RePred [`p])
-          " ∧ "
-          (Term.app
-           `RePred
-           [(Term.fun "fun" (Term.basicFun [`a] [] "=>" (Init.Core.«term¬_» "¬" (Term.app `p [`a]))))])))))
+          "∧"
+          (Term.app `RePred [(Term.fun "fun" (Term.basicFun [`a] [] "=>" («term¬_» "¬" (Term.app `p [`a]))))])))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -2051,7 +2034,7 @@ theorem
 #align computable_pred.computable_iff_re_compl_re' ComputablePred.computable_iff_re_compl_re'
 
 theorem halting_problem_not_re (n) : ¬RePred fun c => ¬(eval c n).Dom
-  | h => halting_problem _ $ computable_iff_re_compl_re'.2 ⟨halting_problem_re _, h⟩
+  | h => halting_problem _ <| computable_iff_re_compl_re'.2 ⟨halting_problem_re _, h⟩
 #align computable_pred.halting_problem_not_re ComputablePred.halting_problem_not_re
 
 end ComputablePred
@@ -2102,7 +2085,7 @@ theorem head {n : ℕ} : @Partrec' n.succ (@head ℕ n) :=
 #align nat.partrec'.head Nat.Partrec'.head
 
 theorem tail {n f} (hf : @Partrec' n f) : @Partrec' n.succ fun v => f v.tail :=
-  (hf.comp _ fun i => @prim _ _ $ Nat.Primrec'.nth i.succ).of_eq $ fun v => by
+  (hf.comp _ fun i => @prim _ _ <| Nat.Primrec'.nth i.succ).of_eq fun v => by
     simp <;> rw [← of_fn_nth v.tail] <;> congr <;> funext i <;> simp
 #align nat.partrec'.tail Nat.Partrec'.tail
 
@@ -2110,7 +2093,7 @@ protected theorem bind {n f g} (hf : @Partrec' n f) (hg : @Partrec' (n + 1) g) :
     @Partrec' n fun v => (f v).bind fun a => g (a ::ᵥ v) :=
   (@comp n (n + 1) g (fun i => Fin.cases f (fun i v => some (v.nth i)) i) hg fun i => by
         refine' Fin.cases _ (fun i => _) i <;> simp [*]
-        exact prim (Nat.Primrec'.nth _)).of_eq $
+        exact prim (Nat.Primrec'.nth _)).of_eq
     fun v => by simp [m_of_fn, Part.bind_assoc, pure]
 #align nat.partrec'.bind Nat.Partrec'.bind
 
@@ -2127,7 +2110,7 @@ def Vec {n m} (f : Vector ℕ n → Vector ℕ m) :=
   ∀ i, Partrec' fun v => (f v).nth i
 #align nat.partrec'.vec Nat.Partrec'.Vec
 
-theorem Vec.prim {n m f} (hf : @Nat.Primrec'.Vec n m f) : Vec f := fun i => prim $ hf i
+theorem Vec.prim {n m f} (hf : @Nat.Primrec'.Vec n m f) : Vec f := fun i => prim <| hf i
 #align nat.partrec'.vec.prim Nat.Partrec'.Vec.prim
 
 protected theorem nil {n} : @Vec n 0 fun _ => nil := fun i => i.elim0
@@ -2142,7 +2125,7 @@ theorem idv {n} : @Vec n n id :=
 #align nat.partrec'.idv Nat.Partrec'.idv
 
 theorem comp' {n m f g} (hf : @Partrec' m f) (hg : @Vec n m g) : Partrec' fun v => f (g v) :=
-  (hf.comp _ hg).of_eq $ fun v => by simp
+  (hf.comp _ hg).of_eq fun v => by simp
 #align nat.partrec'.comp' Nat.Partrec'.comp'
 
 theorem comp₁ {n} (f : ℕ →. ℕ) {g : Vector ℕ n → ℕ} (hf : @Partrec' 1 fun v => f v.head) (hg : @Partrec' n g) :
@@ -2151,12 +2134,12 @@ theorem comp₁ {n} (f : ℕ →. ℕ) {g : Vector ℕ n → ℕ} (hf : @Partrec
 
 theorem rfind_opt {n} {f : Vector ℕ (n + 1) → ℕ} (hf : @Partrec' (n + 1) f) :
     @Partrec' n fun v => Nat.rfindOpt fun a => ofNat (Option ℕ) (f (a ::ᵥ v)) :=
-  ((rfind $
+  ((rfind <|
             (of_prim (Primrec.nat_sub.comp (Primrec.const 1) Primrec.vector_head)).comp₁ (fun n => Part.some (1 - n))
               hf).bind
-        ((prim Nat.Primrec'.pred).comp₁ Nat.pred hf)).of_eq $
+        ((prim Nat.Primrec'.pred).comp₁ Nat.pred hf)).of_eq
     fun v =>
-    Part.ext $ fun b => by
+    Part.ext fun b => by
       simp only [Nat.rfindOpt, exists_prop, tsub_eq_zero_iff_le, Pfun.coe_val, Part.mem_bind_iff, Part.mem_some_iff,
         Option.mem_def, Part.mem_coe]
       refine' exists_congr fun a => (and_congr (iff_of_eq _) Iff.rfl).trans (and_congr_right fun h => _)
@@ -2186,11 +2169,11 @@ theorem of_part : ∀ {n f}, Partrec f → @Partrec' n f :=
   fun f hf => by
   obtain ⟨c, rfl⟩ := exists_code.1 hf
   simpa [eval_eq_rfind_opt] using
-    rfind_opt $
-      of_prim $
-        Primrec.encode_iff.2 $
-          evaln_prim.comp $
-            (primrec.vector_head.pair (Primrec.const c)).pair $ primrec.vector_head.comp Primrec.vector_tail
+    rfind_opt <|
+      of_prim <|
+        Primrec.encode_iff.2 <|
+          evaln_prim.comp <|
+            (primrec.vector_head.pair (Primrec.const c)).pair <| primrec.vector_head.comp Primrec.vector_tail
 #align nat.partrec'.of_part Nat.Partrec'.of_part
 
 theorem part_iff {n f} : @Partrec' n f ↔ Partrec f :=
@@ -2200,21 +2183,21 @@ theorem part_iff {n f} : @Partrec' n f ↔ Partrec f :=
 theorem part_iff₁ {f : ℕ →. ℕ} : (@Partrec' 1 fun v => f v.head) ↔ Partrec f :=
   part_iff.trans
     ⟨fun h =>
-      (h.comp $ (Primrec.vector_of_fn $ fun i => Primrec.id).to_comp).of_eq fun v => by simp only [id.def, head_of_fn],
+      (h.comp <| (Primrec.vector_of_fn fun i => Primrec.id).to_comp).of_eq fun v => by simp only [id.def, head_of_fn],
       fun h => h.comp vector_head⟩
 #align nat.partrec'.part_iff₁ Nat.Partrec'.part_iff₁
 
 theorem part_iff₂ {f : ℕ → ℕ →. ℕ} : (@Partrec' 2 fun v => f v.head v.tail.head) ↔ Partrec₂ f :=
   part_iff.trans
     ⟨fun h =>
-      (h.comp $ vector_cons.comp fst $ vector_cons.comp snd (const nil)).of_eq fun v => by
+      (h.comp <| vector_cons.comp fst <| vector_cons.comp snd (const nil)).of_eq fun v => by
         simp only [cons_head, cons_tail],
       fun h => h.comp vector_head (vector_head.comp vector_tail)⟩
 #align nat.partrec'.part_iff₂ Nat.Partrec'.part_iff₂
 
 theorem vec_iff {m n f} : @Vec m n f ↔ Computable f :=
   ⟨fun h => by simpa only [of_fn_nth] using vector_of_fn fun i => to_part (h i), fun h i =>
-    of_part $ vector_nth.comp h (const i)⟩
+    of_part <| vector_nth.comp h (const i)⟩
 #align nat.partrec'.vec_iff Nat.Partrec'.vec_iff
 
 end Nat.Partrec'

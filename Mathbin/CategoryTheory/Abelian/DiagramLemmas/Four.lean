@@ -93,7 +93,7 @@ A' --f'-> B' --g'-> C' --h'-> D'
 ```
 -/
 theorem mono_of_epi_of_mono_of_mono (hα : Epi α) (hβ : Mono β) (hδ : Mono δ) : Mono γ :=
-  mono_of_zero_of_map_zero _ $ fun c hc =>
+  (mono_of_zero_of_map_zero _) fun c hc =>
     have : h c = 0 :=
       suffices δ (h c) = 0 from zero_of_map_zero _ (pseudo_injective_of_mono _) _ this
       calc
@@ -101,15 +101,15 @@ theorem mono_of_epi_of_mono_of_mono (hα : Epi α) (hβ : Mono β) (hδ : Mono �
         _ = h' 0 := by rw [hc]
         _ = 0 := apply_zero _
         
-    Exists.elim ((pseudo_exact_of_exact hgh).2 _ this) $ fun b hb =>
+    (Exists.elim ((pseudo_exact_of_exact hgh).2 _ this)) fun b hb =>
       have : g' (β b) = 0 :=
         calc
           g' (β b) = γ (g b) := by rw [← comp_apply, comm₂, comp_apply]
           _ = γ c := by rw [hb]
           _ = 0 := hc
           
-      Exists.elim ((pseudo_exact_of_exact hf'g').2 _ this) $ fun a' ha' =>
-        Exists.elim (pseudo_surjective_of_epi α a') $ fun a ha =>
+      (Exists.elim ((pseudo_exact_of_exact hf'g').2 _ this)) fun a' ha' =>
+        (Exists.elim (pseudo_surjective_of_epi α a')) fun a ha =>
           have : f a = b :=
             suffices β (f a) = β b from pseudo_injective_of_mono _ this
             calc
@@ -143,9 +143,9 @@ A' --f'-> B' --g'-> C' --h'-> D'
 ```
 -/
 theorem epi_of_epi_of_epi_of_mono (hα : Epi α) (hγ : Epi γ) (hδ : Mono δ) : Epi β :=
-  Preadditive.epi_of_cancel_zero _ $ fun R r hβr =>
+  (Preadditive.epi_of_cancel_zero _) fun R r hβr =>
     have hf'r : f' ≫ r = 0 :=
-      Limits.zero_of_epi_comp α $
+      Limits.zero_of_epi_comp α <|
         calc
           α ≫ f' ≫ r = f ≫ β ≫ r := by rw [reassoc_of comm₁]
           _ = f ≫ 0 := by rw [hβr]
@@ -169,7 +169,7 @@ theorem epi_of_epi_of_epi_of_mono (hα : Epi α) (hγ : Epi γ) (hδ : Mono δ) 
       mono_inl_of_factor_thru_epi_mono_factorization _ _ (cokernel.π g) (cokernel.desc g h hgh.w ≫ δ) (by simp)
         (cokernel.desc _ _ hz) (by simp) _ (colimit.isColimit _)
     have hzv : z ≫ v = h' ≫ w :=
-      (cancel_epi γ).1 $
+      (cancel_epi γ).1 <|
         calc
           γ ≫ z ≫ v = h ≫ δ ≫ w := by rw [← category.assoc, pushout.condition, category.assoc]
           _ = γ ≫ h' ≫ w := by rw [reassoc_of comm₃]

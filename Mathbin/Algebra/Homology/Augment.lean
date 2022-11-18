@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.Algebra.Homology.Single
-import Mathbin.Tactic.Linarith.Default
 
 /-!
 # Augmentation and truncation of `ℕ`-indexed (co)chain complexes.

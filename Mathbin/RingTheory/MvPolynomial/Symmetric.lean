@@ -3,7 +3,6 @@ Copyright (c) 2020 Hanting Zhang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hanting Zhang, Johan Commelin
 -/
-import Mathbin.Data.Fintype.Card
 import Mathbin.Data.MvPolynomial.Rename
 import Mathbin.Data.MvPolynomial.CommRing
 import Mathbin.Algebra.Algebra.Subalgebra.Basic
@@ -162,7 +161,7 @@ def esymm (n : ℕ) : MvPolynomial σ R :=
 /-- The `n`th elementary symmetric `mv_polynomial σ R` is obtained by evaluating the
 `n`th elementary symmetric at the `multiset` of the monomials -/
 theorem esymm_eq_multiset_esymm : esymm σ R = (Finset.univ.val.map x).esymm :=
-  funext $ fun n => (Finset.univ.esymm_map_val x n).symm
+  funext fun n => (Finset.univ.esymm_map_val x n).symm
 #align mv_polynomial.esymm_eq_multiset_esymm MvPolynomial.esymm_eq_multiset_esymm
 
 theorem aeval_esymm_eq_multiset_esymm [Algebra R S] (f : σ → S) (n : ℕ) :

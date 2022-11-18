@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 -/
 import Mathbin.Data.Polynomial.Degree.Definitions
-import Mathbin.Algebra.GeomSum
+import Mathbin.Data.Polynomial.Induction
 
 /-!
 # Theory of univariate polynomials
@@ -154,7 +154,7 @@ theorem eval₂_of_finsupp {f : R →+* S} {x : S} {p : AddMonoidAlgebra R ℕ} 
   rfl
 #align polynomial.eval₂_of_finsupp Polynomial.eval₂_of_finsupp
 
-theorem eval₂_mul_noncomm (hf : ∀ k, Commute (f $ q.coeff k) x) : eval₂ f x (p * q) = eval₂ f x p * eval₂ f x q := by
+theorem eval₂_mul_noncomm (hf : ∀ k, Commute (f <| q.coeff k) x) : eval₂ f x (p * q) = eval₂ f x p * eval₂ f x q := by
   rcases p with ⟨⟩
   rcases q with ⟨⟩
   simp only [coeff] at hf
@@ -164,7 +164,7 @@ theorem eval₂_mul_noncomm (hf : ∀ k, Commute (f $ q.coeff k) x) : eval₂ f 
 
 @[simp]
 theorem eval₂_mul_X : eval₂ f x (p * X) = eval₂ f x p * x := by
-  refine' trans (eval₂_mul_noncomm _ _ $ fun k => _) (by rw [eval₂_X])
+  refine' trans ((eval₂_mul_noncomm _ _) fun k => _) (by rw [eval₂_X])
   rcases em (k = 1) with (rfl | hk)
   · simp
     
@@ -179,14 +179,14 @@ theorem eval₂_X_mul : eval₂ f x (X * p) = eval₂ f x p * x := by rw [X_mul,
 theorem eval₂_mul_C' (h : Commute (f a) x) : eval₂ f x (p * c a) = eval₂ f x p * f a := by
   rw [eval₂_mul_noncomm, eval₂_C]
   intro k
-  by_cases hk:k = 0
+  by_cases hk : k = 0
   · simp only [hk, h, coeff_C_zero, coeff_C_ne_zero]
     
   · simp only [coeff_C_ne_zero hk, RingHom.map_zero, Commute.zero_left]
     
 #align polynomial.eval₂_mul_C' Polynomial.eval₂_mul_C'
 
-theorem eval₂_list_prod_noncomm (ps : List R[X]) (hf : ∀ p ∈ ps, ∀ (k), Commute (f $ coeff p k) x) :
+theorem eval₂_list_prod_noncomm (ps : List R[X]) (hf : ∀ p ∈ ps, ∀ (k), Commute (f <| coeff p k) x) :
     eval₂ f x ps.Prod = (ps.map (Polynomial.eval₂ f x)).Prod := by
   induction' ps using List.reverseRecOn with ps p ihp
   · simp
@@ -201,7 +201,7 @@ def eval₂RingHom' (f : R →+* S) (x : S) (hf : ∀ a, Commute (f a) x) : R[X]
   toFun := eval₂ f x
   map_add' _ _ := eval₂_add _ _
   map_zero' := eval₂_zero _ _
-  map_mul' p q := eval₂_mul_noncomm f x fun k => hf $ coeff q k
+  map_mul' p q := eval₂_mul_noncomm f x fun k => hf <| coeff q k
   map_one' := eval₂_one _ _
 #align polynomial.eval₂_ring_hom' Polynomial.eval₂RingHom'
 
@@ -239,7 +239,7 @@ variable [CommSemiring S] (f : R →+* S) (x : S)
 
 @[simp]
 theorem eval₂_mul : (p * q).eval₂ f x = p.eval₂ f x * q.eval₂ f x :=
-  eval₂_mul_noncomm _ _ $ fun k => Commute.all _ _
+  (eval₂_mul_noncomm _ _) fun k => Commute.all _ _
 #align polynomial.eval₂_mul Polynomial.eval₂_mul
 
 theorem eval₂_mul_eq_zero_of_left (q : R[X]) (hp : p.eval₂ f x = 0) : (p * q).eval₂ f x = 0 := by
@@ -463,7 +463,7 @@ theorem coeff_zero_eq_eval_zero (p : R[X]) : coeff p 0 = p.eval 0 :=
   calc
     coeff p 0 = coeff p 0 * 0 ^ 0 := by simp
     _ = p.eval 0 :=
-      Eq.symm $ Finset.sum_eq_single _ (fun b _ hb => by simp [zero_pow (Nat.pos_of_ne_zero hb)]) (by simp)
+      Eq.symm <| Finset.sum_eq_single _ (fun b _ hb => by simp [zero_pow (Nat.pos_of_ne_zero hb)]) (by simp)
     
 #align polynomial.coeff_zero_eq_eval_zero Polynomial.coeff_zero_eq_eval_zero
 
@@ -764,7 +764,7 @@ theorem eval₂_eq_eval_map {x : S} : p.eval₂ f x = (p.map f).eval x := by
 #align polynomial.eval₂_eq_eval_map Polynomial.eval₂_eq_eval_map
 
 theorem map_injective (hf : Function.Injective f) : Function.Injective (map f) := fun p q h =>
-  ext $ fun m => hf $ by rw [← coeff_map f, ← coeff_map f, h]
+  ext fun m => hf <| by rw [← coeff_map f, ← coeff_map f, h]
 #align polynomial.map_injective Polynomial.map_injective
 
 theorem map_surjective (hf : Function.Surjective f) : Function.Surjective (map f) := fun p =>
@@ -814,7 +814,7 @@ theorem map_monic_ne_zero (hp : p.Monic) [Nontrivial S] : p.map f ≠ 0 := fun h
 
 theorem degree_map_eq_of_leading_coeff_ne_zero (f : R →+* S) (hf : f (leadingCoeff p) ≠ 0) :
     degree (p.map f) = degree p :=
-  le_antisymm (degree_map_le f _) $ by
+  le_antisymm (degree_map_le f _) <| by
     have hp0 : p ≠ 0 := leading_coeff_ne_zero.mp fun hp0 => hf (trans (congr_arg _ hp0) f.map_zero)
     rw [degree_eq_nat_degree hp0]
     refine' le_degree_of_ne_zero _
@@ -837,17 +837,17 @@ variable (f)
 
 @[simp]
 theorem map_ring_hom_id : mapRingHom (RingHom.id R) = RingHom.id R[X] :=
-  RingHom.ext $ fun x => map_id
+  RingHom.ext fun x => map_id
 #align polynomial.map_ring_hom_id Polynomial.map_ring_hom_id
 
 @[simp]
 theorem map_ring_hom_comp [Semiring T] (f : S →+* T) (g : R →+* S) :
     (mapRingHom f).comp (mapRingHom g) = mapRingHom (f.comp g) :=
-  RingHom.ext $ Polynomial.map_map g f
+  RingHom.ext <| Polynomial.map_map g f
 #align polynomial.map_ring_hom_comp Polynomial.map_ring_hom_comp
 
-protected theorem map_list_prod (L : List R[X]) : L.Prod.map f = (L.map $ map f).Prod :=
-  Eq.symm $ List.prod_hom _ (mapRingHom f).toMonoidHom
+protected theorem map_list_prod (L : List R[X]) : L.Prod.map f = (L.map <| map f).Prod :=
+  Eq.symm <| List.prod_hom _ (mapRingHom f).toMonoidHom
 #align polynomial.map_list_prod Polynomial.map_list_prod
 
 @[simp]
@@ -1115,8 +1115,8 @@ theorem support_map_of_injective [Semiring R] [Semiring S] (p : R[X]) {f : R →
 
 variable [CommSemiring R] [CommSemiring S] (f : R →+* S)
 
-protected theorem map_multiset_prod (m : Multiset R[X]) : m.Prod.map f = (m.map $ map f).Prod :=
-  Eq.symm $ Multiset.prod_hom _ (mapRingHom f).toMonoidHom
+protected theorem map_multiset_prod (m : Multiset R[X]) : m.Prod.map f = (m.map <| map f).Prod :=
+  Eq.symm <| Multiset.prod_hom _ (mapRingHom f).toMonoidHom
 #align polynomial.map_multiset_prod Polynomial.map_multiset_prod
 
 protected theorem map_prod {ι : Type _} (g : ι → R[X]) (s : Finset ι) : (∏ i in s, g i).map f = ∏ i in s, (g i).map f :=

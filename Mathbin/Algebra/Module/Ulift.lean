@@ -54,7 +54,7 @@ instance is_scalar_tower'' [HasSmul R M] [HasSmul M N] [HasSmul R N] [IsScalarTo
 #align ulift.is_scalar_tower'' ULift.is_scalar_tower''
 
 instance [HasSmul R M] [HasSmul Rᵐᵒᵖ M] [IsCentralScalar R M] : IsCentralScalar R (ULift M) :=
-  ⟨fun r m => congr_arg up $ op_smul_eq_smul r m.down⟩
+  ⟨fun r m => congr_arg up <| op_smul_eq_smul r m.down⟩
 
 @[to_additive]
 instance mulAction [Monoid R] [MulAction R M] : MulAction (ULift R) M where
@@ -66,8 +66,8 @@ instance mulAction [Monoid R] [MulAction R M] : MulAction (ULift R) M where
 @[to_additive]
 instance mulAction' [Monoid R] [MulAction R M] : MulAction R (ULift M) where
   smul := (· • ·)
-  mul_smul := fun r s ⟨f⟩ => ext _ _ $ mul_smul _ _ _
-  one_smul := fun ⟨f⟩ => ext _ _ $ one_smul _ _
+  mul_smul := fun r s ⟨f⟩ => ext _ _ <| mul_smul _ _ _
+  one_smul := fun ⟨f⟩ => ext _ _ <| one_smul _ _
 #align ulift.mul_action' ULift.mulAction'
 
 instance smulZeroClass [Zero M] [SmulZeroClass R M] : SmulZeroClass (ULift R) M :=
@@ -117,8 +117,8 @@ instance smulWithZero [Zero R] [Zero M] [SmulWithZero R M] : SmulWithZero (ULift
 #align ulift.smul_with_zero ULift.smulWithZero
 
 instance smulWithZero' [Zero R] [Zero M] [SmulWithZero R M] : SmulWithZero R (ULift M) where
-  smul_zero _ := ULift.ext _ _ $ smul_zero _
-  zero_smul _ := ULift.ext _ _ $ zero_smul _ _
+  smul_zero _ := ULift.ext _ _ <| smul_zero _
+  zero_smul _ := ULift.ext _ _ <| zero_smul _ _
 #align ulift.smul_with_zero' ULift.smulWithZero'
 
 instance mulActionWithZero [MonoidWithZero R] [Zero M] [MulActionWithZero R M] : MulActionWithZero (ULift R) M :=
@@ -134,7 +134,7 @@ instance module [Semiring R] [AddCommMonoid M] [Module R M] : Module (ULift R) M
 #align ulift.module ULift.module
 
 instance module' [Semiring R] [AddCommMonoid M] [Module R M] : Module R (ULift M) :=
-  { ULift.smulWithZero' with add_smul := fun _ _ _ => ULift.ext _ _ $ add_smul _ _ _ }
+  { ULift.smulWithZero' with add_smul := fun _ _ _ => ULift.ext _ _ <| add_smul _ _ _ }
 #align ulift.module' ULift.module'
 
 /-- The `R`-linear equivalence between `ulift M` and `M`.

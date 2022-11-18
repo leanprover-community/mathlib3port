@@ -197,7 +197,7 @@ partition with `to_partition = π₁.to_partition ⊓ π₂` and tags coming fro
 
 Note that usually the result is not a Henstock partition. -/
 def infPrepartition (π : TaggedPrepartition I) (π' : Prepartition I) : TaggedPrepartition I :=
-  π.bUnionPrepartition $ fun J => π'.restrict J
+  π.bUnionPrepartition fun J => π'.restrict J
 #align box_integral.tagged_prepartition.inf_prepartition BoxIntegral.TaggedPrepartition.infPrepartition
 
 @[simp]
@@ -251,7 +251,7 @@ theorem IsHenstock.card_filter_tag_eq_le [Fintype ι] (h : π.IsHenstock) (x : �
 /-- A tagged partition `π` is subordinate to `r : (ι → ℝ) → ℝ` if each box `J ∈ π` is included in
 the closed ball with center `π.tag J` and radius `r (π.tag J)`. -/
 def IsSubordinate [Fintype ι] (π : TaggedPrepartition I) (r : (ι → ℝ) → ioi (0 : ℝ)) : Prop :=
-  ∀ J ∈ π, (J : _).icc ⊆ closedBall (π.Tag J) (r $ π.Tag J)
+  ∀ J ∈ π, (J : _).icc ⊆ closedBall (π.Tag J) (r <| π.Tag J)
 #align box_integral.tagged_prepartition.is_subordinate BoxIntegral.TaggedPrepartition.IsSubordinate
 
 variable {r r₁ r₂ : (ι → ℝ) → ioi (0 : ℝ)}
@@ -265,7 +265,7 @@ theorem is_subordinate_bUnion_tagged [Fintype ι] {π : Prepartition I} {πi : �
 
 theorem IsSubordinate.bUnionPrepartition [Fintype ι] (h : IsSubordinate π r) (πi : ∀ J, Prepartition J) :
     IsSubordinate (π.bUnionPrepartition πi) r := fun J hJ =>
-  Subset.trans (Box.le_iff_Icc.1 $ π.toPrepartition.le_bUnion_index hJ) $ h _ $ π.toPrepartition.bUnion_index_mem hJ
+  Subset.trans (Box.le_iff_Icc.1 <| π.toPrepartition.le_bUnion_index hJ) <| h _ <| π.toPrepartition.bUnion_index_mem hJ
 #align
   box_integral.tagged_prepartition.is_subordinate.bUnion_prepartition BoxIntegral.TaggedPrepartition.IsSubordinate.bUnionPrepartition
 
@@ -282,13 +282,13 @@ theorem IsSubordinate.mono' [Fintype ι] {π : TaggedPrepartition I} (hr₁ : π
 
 theorem IsSubordinate.mono [Fintype ι] {π : TaggedPrepartition I} (hr₁ : π.IsSubordinate r₁)
     (h : ∀ x ∈ I.icc, r₁ x ≤ r₂ x) : π.IsSubordinate r₂ :=
-  hr₁.mono' $ fun J _ => h _ $ π.tag_mem_Icc J
+  hr₁.mono' fun J _ => h _ <| π.tag_mem_Icc J
 #align box_integral.tagged_prepartition.is_subordinate.mono BoxIntegral.TaggedPrepartition.IsSubordinate.mono
 
 theorem IsSubordinate.diam_le [Fintype ι] {π : TaggedPrepartition I} (h : π.IsSubordinate r) (hJ : J ∈ π.boxes) :
     diam J.icc ≤ 2 * r (π.Tag J) :=
   calc
-    diam J.icc ≤ diam (closedBall (π.Tag J) (r $ π.Tag J)) := diam_mono (h J hJ) boundedClosedBall
+    diam J.icc ≤ diam (closedBall (π.Tag J) (r <| π.Tag J)) := diam_mono (h J hJ) boundedClosedBall
     _ ≤ 2 * r (π.Tag J) := diam_closed_ball (le_of_lt (r _).2)
     
 #align box_integral.tagged_prepartition.is_subordinate.diam_le BoxIntegral.TaggedPrepartition.IsSubordinate.diam_le
@@ -373,7 +373,7 @@ theorem disj_union_tag_of_mem_left (h : Disjoint π₁.union π₂.union) (hJ : 
 
 theorem disj_union_tag_of_mem_right (h : Disjoint π₁.union π₂.union) (hJ : J ∈ π₂) :
     (π₁.disjUnion π₂ h).Tag J = π₂.Tag J :=
-  dif_neg $ fun h₁ => h.le_bot ⟨π₁.subset_Union h₁ J.upper_mem, π₂.subset_Union hJ J.upper_mem⟩
+  dif_neg fun h₁ => h.le_bot ⟨π₁.subset_Union h₁ J.upper_mem, π₂.subset_Union hJ J.upper_mem⟩
 #align
   box_integral.tagged_prepartition.disj_union_tag_of_mem_right BoxIntegral.TaggedPrepartition.disj_union_tag_of_mem_right
 

@@ -51,7 +51,7 @@ theorem forall₂_same : ∀ {l : List α}, Forall₂ Rₐ l l ↔ ∀ x ∈ l, 
 #align list.forall₂_same List.forall₂_same
 
 theorem forall₂_refl [IsRefl α Rₐ] (l : List α) : Forall₂ Rₐ l l :=
-  forall₂_same.2 $ fun a h => refl _
+  forall₂_same.2 fun a h => refl _
 #align list.forall₂_refl List.forall₂_refl
 
 @[simp]
@@ -80,8 +80,7 @@ theorem forall₂_nil_right_iff {l} : Forall₂ R l nil ↔ l = nil :=
   ⟨fun H => by cases H <;> rfl, by rintro rfl <;> exact forall₂.nil⟩
 #align list.forall₂_nil_right_iff List.forall₂_nil_right_iff
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b u') -/
-theorem forall₂_cons_left_iff {a l u} : Forall₂ R (a :: l) u ↔ ∃ (b) (u'), R a b ∧ Forall₂ R l u' ∧ u = b :: u' :=
+theorem forall₂_cons_left_iff {a l u} : Forall₂ R (a :: l) u ↔ ∃ b u', R a b ∧ Forall₂ R l u' ∧ u = b :: u' :=
   Iff.intro
     (fun h =>
       match u, h with
@@ -91,8 +90,7 @@ theorem forall₂_cons_left_iff {a l u} : Forall₂ R (a :: l) u ↔ ∃ (b) (u'
     | _, ⟨b, u', h₁, h₂, rfl⟩ => Forall₂.cons h₁ h₂
 #align list.forall₂_cons_left_iff List.forall₂_cons_left_iff
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a u') -/
-theorem forall₂_cons_right_iff {b l u} : Forall₂ R u (b :: l) ↔ ∃ (a) (u'), R a b ∧ Forall₂ R u' l ∧ u = a :: u' :=
+theorem forall₂_cons_right_iff {b l u} : Forall₂ R u (b :: l) ↔ ∃ a u', R a b ∧ Forall₂ R u' l ∧ u = a :: u' :=
   Iff.intro
     (fun h =>
       match u, h with
@@ -183,7 +181,7 @@ theorem forall₂_iff_zip {l₁ l₂} : Forall₂ R l₁ l₂ ↔ length l₁ = 
       constructor
       
     · cases' l₂ with b l₂ <;> injection h₁ with h₁
-      exact forall₂.cons (h₂ $ Or.inl rfl) (IH h₁ $ fun a b h => h₂ $ Or.inr h)
+      exact forall₂.cons (h₂ <| Or.inl rfl) ((IH h₁) fun a b h => h₂ <| Or.inr h)
       ⟩
 #align list.forall₂_iff_zip List.forall₂_iff_zip
 

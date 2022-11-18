@@ -90,7 +90,7 @@ theorem LDL.lower_inv_triangular {i j : n} (hij : i < j) : LDL.lowerInv hS i j =
 by some lower triangular matrix and get a diagonal matrix. -/
 theorem LDL.diag_eq_lower_inv_conj : LDL.diag hS = LDL.lowerInv hS ⬝ S ⬝ (LDL.lowerInv hS)ᴴ := by
   ext (i j)
-  by_cases hij:i = j
+  by_cases hij : i = j
   · simpa only [hij, LDL.diag, diagonal_apply_eq, LDL.diagEntries, Matrix.mul_assoc, inner, Pi.star_apply,
       IsROrC.star_def, star_ring_end_self_apply]
     

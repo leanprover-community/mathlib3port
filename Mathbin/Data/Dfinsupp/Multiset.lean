@@ -48,7 +48,7 @@ def toDfinsupp : Multiset α →+ Π₀ a : α, ℕ where
     { toFun := fun n => s.count n,
       support' := Trunc.mk ⟨s, fun i => (em (i ∈ s)).imp_right Multiset.count_eq_zero_of_not_mem⟩ }
   map_zero' := rfl
-  map_add' s t := Dfinsupp.ext $ fun _ => Multiset.count_add _ _ _
+  map_add' s t := Dfinsupp.ext fun _ => Multiset.count_add _ _ _
 #align multiset.to_dfinsupp Multiset.toDfinsupp
 
 @[simp]
@@ -58,7 +58,7 @@ theorem to_dfinsupp_apply (s : Multiset α) (a : α) : s.toDfinsupp a = s.count 
 
 @[simp]
 theorem to_dfinsupp_support (s : Multiset α) : s.toDfinsupp.support = s.toFinset :=
-  (Finset.filter_eq_self _).mpr fun x hx => count_ne_zero.mpr $ Multiset.mem_to_finset.1 hx
+  (Finset.filter_eq_self _).mpr fun x hx => count_ne_zero.mpr <| Multiset.mem_to_finset.1 hx
 #align multiset.to_dfinsupp_support Multiset.to_dfinsupp_support
 
 @[simp]

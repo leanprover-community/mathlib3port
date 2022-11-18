@@ -8,6 +8,7 @@ import Mathbin.Algebra.GroupWithZero.Basic
 import Mathbin.Algebra.Hom.Aut
 import Mathbin.Algebra.Hom.Group
 import Mathbin.Data.Finite.Basic
+import Mathbin.Data.Fintype.Units
 
 /-!
 # Conjugacy of group elements
@@ -345,7 +346,7 @@ section Fintype
 variable [Fintype α] [DecidableRel (IsConj : α → α → Prop)]
 
 instance {x : ConjClasses α} : Fintype (carrier x) :=
-  Quotient.recOnSubsingleton x $ fun a => conjugatesOf.fintype
+  (Quotient.recOnSubsingleton x) fun a => conjugatesOf.fintype
 
 end Fintype
 

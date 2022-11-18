@@ -137,7 +137,7 @@ instance natCoe [AddMonoidWithOne R] : Coe (ArithmeticFunction ℕ) (ArithmeticF
 
 @[simp]
 theorem nat_coe_nat (f : ArithmeticFunction ℕ) : (↑f : ArithmeticFunction ℕ) = f :=
-  ext $ fun _ => cast_id _
+  ext fun _ => cast_id _
 #align nat.arithmetic_function.nat_coe_nat Nat.ArithmeticFunction.nat_coe_nat
 
 @[simp]
@@ -155,7 +155,7 @@ instance intCoe [AddGroupWithOne R] : Coe (ArithmeticFunction ℤ) (ArithmeticFu
 
 @[simp]
 theorem int_coe_int (f : ArithmeticFunction ℤ) : (↑f : ArithmeticFunction ℤ) = f :=
-  ext $ fun _ => Int.cast_id _
+  ext fun _ => Int.cast_id _
 #align nat.arithmetic_function.int_coe_int Nat.ArithmeticFunction.int_coe_int
 
 @[simp]
@@ -303,7 +303,7 @@ theorem mul_smul' (f g : ArithmeticFunction R) (h : ArithmeticFunction M) : (f *
 theorem one_smul' (b : ArithmeticFunction M) : (1 : ArithmeticFunction R) • b = b := by
   ext
   rw [smul_apply]
-  by_cases x0:x = 0
+  by_cases x0 : x = 0
   · simp [x0]
     
   have h : {(1, x)} ⊆ divisors_antidiagonal x := by simp [x0]
@@ -330,7 +330,7 @@ instance : Monoid (ArithmeticFunction R) :=
     mul_one := fun f => by
       ext
       rw [mul_apply]
-      by_cases x0:x = 0
+      by_cases x0 : x = 0
       · simp [x0]
         
       have h : {(x, 1)} ⊆ divisors_antidiagonal x := by simp [x0]
@@ -494,7 +494,7 @@ theorem coe_mul_zeta_apply [Semiring R] {f : ArithmeticFunction R} {x : ℕ} : (
   rw [sum_map]
   apply sum_congr rfl
   intro y hy
-  by_cases h1:y.fst = 0
+  by_cases h1 : y.fst = 0
   · simp [Function.comp_apply, h1]
     
   · simp only [h1, mul_one, one_mul, Prod.fst_swap, Function.Embedding.coe_fn_mk, Prod.snd_swap, if_false, zeta_apply,
@@ -744,7 +744,7 @@ theorem eq_iff_eq_on_prime_powers [CommMonoidWithZero R] (f : ArithmeticFunction
     
   intro h
   ext n
-  by_cases hn:n = 0
+  by_cases hn : n = 0
   · rw [hn, arithmetic_function.map_zero, arithmetic_function.map_zero]
     
   rw [multiplicative_factorization f hf hn, multiplicative_factorization g hg hn]
@@ -1139,7 +1139,7 @@ theorem sum_eq_iff_sum_mul_moebius_eq [Ring R] {f g : ℕ → R} :
   by
   rw [sum_eq_iff_sum_smul_moebius_eq]
   apply forall_congr'
-  refine' fun a => imp_congr_right fun _ => (sum_congr rfl $ fun x hx => _).congr_left
+  refine' fun a => imp_congr_right fun _ => ((sum_congr rfl) fun x hx => _).congr_left
   rw [zsmul_eq_mul]
 #align nat.arithmetic_function.sum_eq_iff_sum_mul_moebius_eq Nat.ArithmeticFunction.sum_eq_iff_sum_mul_moebius_eq
 

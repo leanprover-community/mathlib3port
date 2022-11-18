@@ -100,11 +100,11 @@ instance is_asymm (r : α → α → Prop) [IsAsymm α r] : IsAsymm (List α) (L
 #align list.lex.is_asymm List.Lex.is_asymm
 
 instance is_strict_total_order (r : α → α → Prop) [IsStrictTotalOrder α r] : IsStrictTotalOrder (List α) (Lex r) :=
-  { is_strict_weak_order_of_is_order_connected with }
+  { isStrictWeakOrder_of_isOrderConnected with }
 #align list.lex.is_strict_total_order List.Lex.is_strict_total_order
 
 instance decidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r] : DecidableRel (Lex r)
-  | l₁, [] => is_false $ fun h => by cases h
+  | l₁, [] => is_false fun h => by cases h
   | [], b :: l₂ => isTrue Lex.nil
   | a :: l₁, b :: l₂ => by
     haveI := DecidableRel l₁ l₂
@@ -155,7 +155,7 @@ theorem _root_.decidable.list.lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} 
       
     · exact (not_lt_of_ge H).elim (succ_pos _)
       
-    · by_cases ab:a = b
+    · by_cases ab : a = b
       · subst b
         apply cons
         exact IH (le_of_succ_le_succ H) (mt (congr_arg _) h)
@@ -173,18 +173,13 @@ theorem _root_.decidable.list.lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} 
       (Command.declId `ne_iff [])
       (Command.declSig
        [(Term.implicitBinder "{" [`l₁ `l₂] [":" (Term.app `List [`α])] "}")
-        (Term.explicitBinder
-         "("
-         [`H]
-         [":" (Init.Core.«term_≤_» (Term.app `length [`l₁]) " ≤ " (Term.app `length [`l₂]))]
-         []
-         ")")]
+        (Term.explicitBinder "(" [`H] [":" («term_≤_» (Term.app `length [`l₁]) "≤" (Term.app `length [`l₂]))] [] ")")]
        (Term.typeSpec
         ":"
-        (Init.Logic.«term_↔_»
-         (Term.app `Lex [(Term.paren "(" (Init.Logic.«term_≠_» (Term.cdot "·") " ≠ " (Term.cdot "·")) ")") `l₁ `l₂])
-         " ↔ "
-         (Init.Logic.«term_≠_» `l₁ " ≠ " `l₂))))
+        («term_↔_»
+         (Term.app `Lex [(Term.paren "(" («term_≠_» (Term.cdot "·") "≠" (Term.cdot "·")) ")") `l₁ `l₂])
+         "↔"
+         («term_≠_» `l₁ "≠" `l₂))))
       (Command.declValSimple
        ":="
        (Term.byTactic

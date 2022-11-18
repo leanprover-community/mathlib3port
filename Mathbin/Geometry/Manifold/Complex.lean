@@ -88,7 +88,7 @@ protected theorem is_locally_constant {f : M → F} (hf : Mdifferentiable 𝓘(�
   -- `f` pulled back by the chart at `p` has a local max at `chart_at E p p`
   have hf'' : IsLocalMax (norm ∘ f ∘ (chart_at E p).symm) (chart_at E p p) := by
     refine' Filter.eventually_of_mem key₁ fun z hz => _
-    refine' (hp₀ ((chart_at E p).symm z) hz).trans (_ : ∥f p₀∥ ≤ ∥f _∥)
+    refine' (hp₀ ((chart_at E p).symm z) hz).trans (_ : ‖f p₀‖ ≤ ‖f _‖)
     rw [← hp, LocalHomeomorph.left_inv _ (mem_chart_source E p)]
   -- so by the maximum principle `f` is equal to `f p` near `p`
   obtain ⟨U, hU, hUf⟩ := (Complex.eventually_eq_of_is_local_max_norm hf' hf'').exists_mem

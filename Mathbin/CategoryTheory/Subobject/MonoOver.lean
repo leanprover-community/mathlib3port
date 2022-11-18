@@ -3,7 +3,6 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Functor.Currying
 import Mathbin.CategoryTheory.Limits.Over
 import Mathbin.CategoryTheory.Limits.Shapes.Images
 import Mathbin.CategoryTheory.Adjunction.Reflective
@@ -286,11 +285,11 @@ variable (X)
 @[simps]
 def congr (e : C ≌ D) : MonoOver X ≌ MonoOver (e.Functor.obj X) where
   Functor :=
-    lift (Over.post e.Functor) $ fun f => by
+    (lift (Over.post e.Functor)) fun f => by
       dsimp
       infer_instance
   inverse :=
-    (lift (Over.post e.inverse) $ fun f => by
+    ((lift (Over.post e.inverse)) fun f => by
         dsimp
         infer_instance) ⋙
       (mapIso (e.unitIso.symm.app X)).Functor

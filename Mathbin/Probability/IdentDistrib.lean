@@ -44,7 +44,7 @@ instance:
 
 We also register several dot notation shortcuts for convenience.
 For instance, if `h : ident_distrib f g μ ν`, then `h.sq` states that `f^2` and `g^2` are
-identically distributed, and `h.norm` states that `∥f∥` and `∥g∥` are identically distributed, and
+identically distributed, and `h.norm` states that `‖f‖` and `‖g‖` are identically distributed, and
 so on.
 -/
 
@@ -167,7 +167,7 @@ theorem lintegral_eq {f : α → ℝ≥0∞} {g : β → ℝ≥0∞} (h : IdentD
 
 theorem integral_eq [NormedAddCommGroup γ] [NormedSpace ℝ γ] [CompleteSpace γ] [BorelSpace γ]
     (h : IdentDistrib f g μ ν) : (∫ x, f x ∂μ) = ∫ x, g x ∂ν := by
-  by_cases hf:ae_strongly_measurable f μ
+  by_cases hf : ae_strongly_measurable f μ
   · have A : ae_strongly_measurable id (measure.map f μ) := by
       rw [ae_strongly_measurable_iff_ae_measurable_separable]
       rcases(ae_strongly_measurable_iff_ae_measurable_separable.1 hf).2 with ⟨t, t_sep, ht⟩
@@ -190,10 +190,10 @@ theorem integral_eq [NormedAddCommGroup γ] [NormedSpace ℝ γ] [CompleteSpace 
 
 theorem snorm_eq [NormedAddCommGroup γ] [OpensMeasurableSpace γ] (h : IdentDistrib f g μ ν) (p : ℝ≥0∞) :
     snorm f p μ = snorm g p ν := by
-  by_cases h0:p = 0
+  by_cases h0 : p = 0
   · simp [h0]
     
-  by_cases h_top:p = ∞
+  by_cases h_top : p = ∞
   · simp only [h_top, snorm, snorm_ess_sup, Ennreal.top_ne_zero, eq_self_iff_true, if_true, if_false]
     apply ess_sup_eq
     exact h.comp (measurable_coe_nnreal_ennreal.comp measurableNnnorm)
@@ -228,12 +228,12 @@ theorem integrable_iff [NormedAddCommGroup γ] [BorelSpace γ] (h : IdentDistrib
 #align probability_theory.ident_distrib.integrable_iff ProbabilityTheory.IdentDistrib.integrable_iff
 
 protected theorem norm [NormedAddCommGroup γ] [BorelSpace γ] (h : IdentDistrib f g μ ν) :
-    IdentDistrib (fun x => ∥f x∥) (fun x => ∥g x∥) μ ν :=
+    IdentDistrib (fun x => ‖f x‖) (fun x => ‖g x‖) μ ν :=
   h.comp measurableNorm
 #align probability_theory.ident_distrib.norm ProbabilityTheory.IdentDistrib.norm
 
 protected theorem nnnorm [NormedAddCommGroup γ] [BorelSpace γ] (h : IdentDistrib f g μ ν) :
-    IdentDistrib (fun x => ∥f x∥₊) (fun x => ∥g x∥₊) μ ν :=
+    IdentDistrib (fun x => ‖f x‖₊) (fun x => ‖g x‖₊) μ ν :=
   h.comp measurableNnnorm
 #align probability_theory.ident_distrib.nnnorm ProbabilityTheory.IdentDistrib.nnnorm
 
@@ -302,17 +302,17 @@ theorem Memℒp.uniformIntegrableOfIdentDistribAux {ι : Type _} {f : ι → α 
     (hp' : p ≠ ∞) (hℒp : Memℒp (f j) p μ) (hfmeas : ∀ i, StronglyMeasurable (f i))
     (hf : ∀ i, IdentDistrib (f i) (f j) μ μ) : UniformIntegrable f p μ := by
   refine' uniform_integrable_of' hp hp' hfmeas fun ε hε => _
-  by_cases hι:Nonempty ι
+  by_cases hι : Nonempty ι
   swap
-  · exact ⟨0, fun i => False.elim (hι $ Nonempty.intro i)⟩
+  · exact ⟨0, fun i => False.elim (hι <| Nonempty.intro i)⟩
     
   obtain ⟨C, hC₁, hC₂⟩ := hℒp.snorm_indicator_norm_ge_pos_le μ (hfmeas _) hε
-  have hmeas : ∀ i, MeasurableSet { x | (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ∥f i x∥₊ } := fun i =>
+  have hmeas : ∀ i, MeasurableSet { x | (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ‖f i x‖₊ } := fun i =>
     measurableSetLe measurableConst (hfmeas _).Measurable.nnnorm
   refine' ⟨⟨C, hC₁.le⟩, fun i => le_trans (le_of_eq _) hC₂⟩
   have :
-    { x : α | (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ∥f i x∥₊ }.indicator (f i) =
-      (fun x : E => if (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ∥x∥₊ then x else 0) ∘ f i :=
+    { x : α | (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ‖f i x‖₊ }.indicator (f i) =
+      (fun x : E => if (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ‖x‖₊ then x else 0) ∘ f i :=
     by
     ext x
     simp only [Set.indicator, Set.mem_set_of_eq]
@@ -329,14 +329,14 @@ theorem Memℒp.uniformIntegrableOfIdentDistrib {ι : Type _} {f : ι → α →
     (hℒp : Memℒp (f j) p μ) (hf : ∀ i, IdentDistrib (f i) (f j) μ μ) : UniformIntegrable f p μ := by
   have hfmeas : ∀ i, ae_strongly_measurable (f i) μ := fun i => (hf i).ae_strongly_measurable_iff.2 hℒp.1
   set g : ι → α → E := fun i => (hfmeas i).some
-  have hgmeas : ∀ i, strongly_measurable (g i) := fun i => (Exists.choose_spec $ hfmeas i).1
-  have hgeq : ∀ i, g i =ᵐ[μ] f i := fun i => (Exists.choose_spec $ hfmeas i).2.symm
+  have hgmeas : ∀ i, strongly_measurable (g i) := fun i => (Exists.choose_spec <| hfmeas i).1
+  have hgeq : ∀ i, g i =ᵐ[μ] f i := fun i => (Exists.choose_spec <| hfmeas i).2.symm
   have hgℒp : mem_ℒp (g j) p μ := hℒp.ae_eq (hgeq j).symm
   exact
     uniform_integrable.ae_eq
-      (mem_ℒp.uniform_integrable_of_ident_distrib_aux hp hp' hgℒp hgmeas $ fun i =>
+      ((mem_ℒp.uniform_integrable_of_ident_distrib_aux hp hp' hgℒp hgmeas) fun i =>
         (ident_distrib.of_ae_eq (hgmeas i).AeMeasurable (hgeq i)).trans
-          ((hf i).trans $ ident_distrib.of_ae_eq (hfmeas j).AeMeasurable (hgeq j).symm))
+          ((hf i).trans <| ident_distrib.of_ae_eq (hfmeas j).AeMeasurable (hgeq j).symm))
       hgeq
 #align
   probability_theory.mem_ℒp.uniform_integrable_of_ident_distrib ProbabilityTheory.Memℒp.uniformIntegrableOfIdentDistrib

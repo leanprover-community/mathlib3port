@@ -135,7 +135,7 @@ instance : NonUnitalAlgHomClass (A →ₙₐ[R] B) R A B where
 
 @[ext.1]
 theorem ext {f g : A →ₙₐ[R] B} (h : ∀ x, f x = g x) : f = g :=
-  coe_injective $ funext h
+  coe_injective <| funext h
 #align non_unital_alg_hom.ext NonUnitalAlgHom.ext
 
 theorem ext_iff {f g : A →ₙₐ[R] B} : f = g ↔ ∀ x, f x = g x :=

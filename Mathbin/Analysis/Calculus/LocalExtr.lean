@@ -74,17 +74,17 @@ section Module
 variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ} {a : E} {f' : E →L[ℝ] ℝ}
 
 /-- "Positive" tangent cone to `s` at `x`; the only difference from `tangent_cone_at`
-is that we require `c n → ∞` instead of `∥c n∥ → ∞`. One can think about `pos_tangent_cone_at`
+is that we require `c n → ∞` instead of `‖c n‖ → ∞`. One can think about `pos_tangent_cone_at`
 as `tangent_cone_at nnreal` but we have no theory of normed semifields yet. -/
 def posTangentConeAt (s : Set E) (x : E) : Set E :=
   { y : E |
-    ∃ (c : ℕ → ℝ) (d : ℕ → E),
+    ∃ (c : ℕ → ℝ)(d : ℕ → E),
       (∀ᶠ n in at_top, x + d n ∈ s) ∧ Tendsto c atTop atTop ∧ Tendsto (fun n => c n • d n) atTop (𝓝 y) }
 #align pos_tangent_cone_at posTangentConeAt
 
 theorem pos_tangent_cone_at_mono : Monotone fun s => posTangentConeAt s a := by
   rintro s t hst y ⟨c, d, hd, hc, hcd⟩
-  exact ⟨c, d, mem_of_superset hd $ fun h hn => hst hn, hc, hcd⟩
+  exact ⟨c, d, (mem_of_superset hd) fun h hn => hst hn, hc, hcd⟩
 #align pos_tangent_cone_at_mono pos_tangent_cone_at_mono
 
 theorem mem_pos_tangent_cone_at_of_segment_subset {s : Set E} {x y : E} (h : segment ℝ x y ⊆ s) :
@@ -111,7 +111,7 @@ theorem mem_pos_tangent_cone_at_of_segment_subset' {s : Set E} {x y : E} (h : se
 #align mem_pos_tangent_cone_at_of_segment_subset' mem_pos_tangent_cone_at_of_segment_subset'
 
 theorem pos_tangent_cone_at_univ : posTangentConeAt univ a = univ :=
-  eq_univ_of_forall $ fun x => mem_pos_tangent_cone_at_of_segment_subset' (subset_univ _)
+  eq_univ_of_forall fun x => mem_pos_tangent_cone_at_of_segment_subset' (subset_univ _)
 #align pos_tangent_cone_at_univ pos_tangent_cone_at_univ
 
 /-- If `f` has a local max on `s` at `a`, `f'` is the derivative of `f` at `a` within `s`, and
@@ -119,7 +119,7 @@ theorem pos_tangent_cone_at_univ : posTangentConeAt univ a = univ :=
 theorem IsLocalMaxOn.has_fderiv_within_at_nonpos {s : Set E} (h : IsLocalMaxOn f s a) (hf : HasFderivWithinAt f f' s a)
     {y} (hy : y ∈ posTangentConeAt s a) : f' y ≤ 0 := by
   rcases hy with ⟨c, d, hd, hc, hcd⟩
-  have hc' : tendsto (fun n => ∥c n∥) at_top at_top := tendsto_at_top_mono (fun n => le_abs_self _) hc
+  have hc' : tendsto (fun n => ‖c n‖) at_top at_top := tendsto_at_top_mono (fun n => le_abs_self _) hc
   refine' le_of_tendsto (hf.lim at_top hd hc' hcd) _
   replace hd : tendsto (fun n => a + d n) at_top (𝓝[s] (a + 0))
   exact tendsto_inf.2 ⟨tendsto_const_nhds.add (tangentConeAt.lim_zero _ hc' hcd), by rwa [tendsto_principal]⟩
@@ -148,7 +148,7 @@ theorem IsLocalMaxOn.fderiv_within_nonpos {s : Set E} (h : IsLocalMaxOn f s a) {
 both `y` and `-y` belong to the positive tangent cone of `s` at `a`, then `f' y ≤ 0`. -/
 theorem IsLocalMaxOn.has_fderiv_within_at_eq_zero {s : Set E} (h : IsLocalMaxOn f s a) (hf : HasFderivWithinAt f f' s a)
     {y} (hy : y ∈ posTangentConeAt s a) (hy' : -y ∈ posTangentConeAt s a) : f' y = 0 :=
-  le_antisymm (h.has_fderiv_within_at_nonpos hf hy) $ by simpa using h.has_fderiv_within_at_nonpos hf hy'
+  le_antisymm (h.has_fderiv_within_at_nonpos hf hy) <| by simpa using h.has_fderiv_within_at_nonpos hf hy'
 #align is_local_max_on.has_fderiv_within_at_eq_zero IsLocalMaxOn.has_fderiv_within_at_eq_zero
 
 /-- If `f` has a local max on `s` at `a` and both `y` and `-y` belong to the positive tangent cone
@@ -209,7 +209,7 @@ theorem IsLocalMin.fderiv_eq_zero (h : IsLocalMin f a) : fderiv ℝ f a = 0 :=
 
 /-- **Fermat's Theorem**: the derivative of a function at a local maximum equals zero. -/
 theorem IsLocalMax.has_fderiv_at_eq_zero (h : IsLocalMax f a) (hf : HasFderivAt f f' a) : f' = 0 :=
-  neg_eq_zero.1 $ h.neg.has_fderiv_at_eq_zero hf.neg
+  neg_eq_zero.1 <| h.neg.has_fderiv_at_eq_zero hf.neg
 #align is_local_max.has_fderiv_at_eq_zero IsLocalMax.has_fderiv_at_eq_zero
 
 /-- **Fermat's Theorem**: the derivative of a function at a local maximum equals zero. -/
@@ -246,7 +246,7 @@ theorem IsLocalMin.deriv_eq_zero (h : IsLocalMin f a) : deriv f a = 0 :=
 
 /-- **Fermat's Theorem**: the derivative of a function at a local maximum equals zero. -/
 theorem IsLocalMax.has_deriv_at_eq_zero (h : IsLocalMax f a) (hf : HasDerivAt f f' a) : f' = 0 :=
-  neg_eq_zero.1 $ h.neg.has_deriv_at_eq_zero hf.neg
+  neg_eq_zero.1 <| h.neg.has_deriv_at_eq_zero hf.neg
 #align is_local_max.has_deriv_at_eq_zero IsLocalMax.has_deriv_at_eq_zero
 
 /-- **Fermat's Theorem**: the derivative of a function at a local maximum equals zero. -/
@@ -280,8 +280,8 @@ theorem exists_Ioo_extr_on_Icc (hab : a < b) (hfc : ContinuousOn f (icc a b)) (h
   exact is_compact_Icc.exists_forall_le Ne hfc
   obtain ⟨C, Cmem, Cge⟩ : ∃ C ∈ Icc a b, ∀ x ∈ Icc a b, f x ≤ f C
   exact is_compact_Icc.exists_forall_ge Ne hfc
-  by_cases hc:f c = f a
-  · by_cases hC:f C = f a
+  by_cases hc : f c = f a
+  · by_cases hC : f C = f a
     · have : ∀ x ∈ Icc a b, f x = f a := fun x hx => le_antisymm (hC ▸ Cge x hx) (hc ▸ cle x hx)
       -- `f` is a constant, so we can take any point in `Ioo a b`
       rcases exists_between hab with ⟨c', hc'⟩
@@ -290,11 +290,11 @@ theorem exists_Ioo_extr_on_Icc (hab : a < b) (hfc : ContinuousOn f (icc a b)) (h
       rw [mem_set_of_eq, this x hx, ← hC]
       exact Cge c' ⟨le_of_lt hc'.1, le_of_lt hc'.2⟩
       
-    · refine' ⟨C, ⟨lt_of_le_of_ne Cmem.1 $ mt _ hC, lt_of_le_of_ne Cmem.2 $ mt _ hC⟩, Or.inr Cge⟩
+    · refine' ⟨C, ⟨lt_of_le_of_ne Cmem.1 <| mt _ hC, lt_of_le_of_ne Cmem.2 <| mt _ hC⟩, Or.inr Cge⟩
       exacts[fun h => by rw [h], fun h => by rw [h, hfI]]
       
     
-  · refine' ⟨c, ⟨lt_of_le_of_ne cmem.1 $ mt _ hc, lt_of_le_of_ne cmem.2 $ mt _ hc⟩, Or.inl cle⟩
+  · refine' ⟨c, ⟨lt_of_le_of_ne cmem.1 <| mt _ hc, lt_of_le_of_ne cmem.2 <| mt _ hc⟩, Or.inl cle⟩
     exacts[fun h => by rw [h], fun h => by rw [h, hfI]]
     
 #align exists_Ioo_extr_on_Icc exists_Ioo_extr_on_Icc
@@ -304,14 +304,14 @@ point of the corresponding open interval. -/
 theorem exists_local_extr_Ioo (hab : a < b) (hfc : ContinuousOn f (icc a b)) (hfI : f a = f b) :
     ∃ c ∈ ioo a b, IsLocalExtr f c :=
   let ⟨c, cmem, hc⟩ := exists_Ioo_extr_on_Icc f hab hfc hfI
-  ⟨c, cmem, hc.IsLocalExtr $ Icc_mem_nhds cmem.1 cmem.2⟩
+  ⟨c, cmem, hc.IsLocalExtr <| Icc_mem_nhds cmem.1 cmem.2⟩
 #align exists_local_extr_Ioo exists_local_extr_Ioo
 
 /-- **Rolle's Theorem** `has_deriv_at` version -/
 theorem exists_has_deriv_at_eq_zero (hab : a < b) (hfc : ContinuousOn f (icc a b)) (hfI : f a = f b)
     (hff' : ∀ x ∈ ioo a b, HasDerivAt f (f' x) x) : ∃ c ∈ ioo a b, f' c = 0 :=
   let ⟨c, cmem, hc⟩ := exists_local_extr_Ioo f hab hfc hfI
-  ⟨c, cmem, hc.has_deriv_at_eq_zero $ hff' c cmem⟩
+  ⟨c, cmem, hc.has_deriv_at_eq_zero <| hff' c cmem⟩
 #align exists_has_deriv_at_eq_zero exists_has_deriv_at_eq_zero
 
 /-- **Rolle's Theorem** `deriv` version -/
@@ -383,8 +383,8 @@ theorem card_roots_to_finset_le_card_roots_derivative_diff_roots_succ (p : ℝ[X
 /-- The number of roots of a real polynomial is at most the number of roots of its derivative plus
 one. -/
 theorem card_roots_to_finset_le_derivative (p : ℝ[X]) : p.roots.toFinset.card ≤ p.derivative.roots.toFinset.card + 1 :=
-  p.card_roots_to_finset_le_card_roots_derivative_diff_roots_succ.trans $
-    add_le_add_right (Finset.card_mono $ Finset.sdiff_subset _ _) _
+  p.card_roots_to_finset_le_card_roots_derivative_diff_roots_succ.trans <|
+    add_le_add_right (Finset.card_mono <| Finset.sdiff_subset _ _) _
 #align polynomial.card_roots_to_finset_le_derivative Polynomial.card_roots_to_finset_le_derivative
 
 /-- The number of roots of a real polynomial (counted with multiplicities) is at most the number of
@@ -393,15 +393,15 @@ theorem card_roots_le_derivative (p : ℝ[X]) : p.roots.card ≤ p.derivative.ro
   calc
     p.roots.card = ∑ x in p.roots.toFinset, p.roots.count x := (Multiset.to_finset_sum_count_eq _).symm
     _ = ∑ x in p.roots.toFinset, p.roots.count x - 1 + 1 :=
-      Eq.symm $
-        Finset.sum_congr rfl $ fun x hx =>
-          tsub_add_cancel_of_le $ Nat.succ_le_iff.2 $ Multiset.count_pos.2 $ Multiset.mem_to_finset.1 hx
+      Eq.symm <|
+        (Finset.sum_congr rfl) fun x hx =>
+          tsub_add_cancel_of_le <| Nat.succ_le_iff.2 <| Multiset.count_pos.2 <| Multiset.mem_to_finset.1 hx
     _ = (∑ x in p.roots.toFinset, p.rootMultiplicity x - 1) + p.roots.toFinset.card := by
       simp only [Finset.sum_add_distrib, Finset.card_eq_sum_ones, count_roots]
     _ ≤
         (∑ x in p.roots.toFinset, p.derivative.rootMultiplicity x) +
           ((p.derivative.roots.toFinset \ p.roots.toFinset).card + 1) :=
-      add_le_add (Finset.sum_le_sum $ fun x hx => root_multiplicity_sub_one_le_derivative_root_multiplicity _ _)
+      add_le_add (Finset.sum_le_sum fun x hx => root_multiplicity_sub_one_le_derivative_root_multiplicity _ _)
         p.card_roots_to_finset_le_card_roots_derivative_diff_roots_succ
     _ ≤
         (∑ x in p.roots.toFinset, p.derivative.roots.count x) +
@@ -409,7 +409,7 @@ theorem card_roots_le_derivative (p : ℝ[X]) : p.roots.card ≤ p.derivative.ro
       by
       simp only [← count_roots]
       refine' add_le_add_left (add_le_add_right ((Finset.card_eq_sum_ones _).trans_le _) _) _
-      refine' Finset.sum_le_sum fun x hx => Nat.succ_le_iff.2 $ _
+      refine' Finset.sum_le_sum fun x hx => Nat.succ_le_iff.2 <| _
       rw [Multiset.count_pos, ← Multiset.mem_to_finset]
       exact (Finset.mem_sdiff.1 hx).1
     _ = p.derivative.roots.card + 1 := by

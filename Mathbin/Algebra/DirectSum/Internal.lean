@@ -54,7 +54,7 @@ instance AddCommGroup.ofSubgroupOnRing [Ring R] [SetLike σ R] [AddSubgroupClass
 theorem SetLike.algebra_map_mem_graded [Zero ι] [CommSemiring S] [Semiring R] [Algebra S R] (A : ι → Submodule S R)
     [SetLike.HasGradedOne A] (s : S) : algebraMap S R s ∈ A 0 := by
   rw [Algebra.algebra_map_eq_smul_one]
-  exact (A 0).smul_mem s $ SetLike.one_mem_graded _
+  exact (A 0).smul_mem s <| SetLike.one_mem_graded _
 #align set_like.algebra_map_mem_graded SetLike.algebra_map_mem_graded
 
 theorem SetLike.nat_cast_mem_graded [Zero ι] [AddMonoidWithOne R] [SetLike σ R] [AddSubmonoidClass σ R] (A : ι → σ)
@@ -115,8 +115,8 @@ instance gcommSemiring [AddCommMonoid ι] [CommSemiring R] [SetLike σ R] [AddSu
 instance gring [AddMonoid ι] [Ring R] [SetLike σ R] [AddSubgroupClass σ R] (A : ι → σ) [SetLike.GradedMonoid A] :
     DirectSum.Gring fun i => A i :=
   { SetLike.gsemiring A with intCast := fun z => ⟨z, SetLike.int_cast_mem_graded _ _⟩,
-    int_cast_of_nat := fun n => Subtype.ext $ Int.cast_of_nat _,
-    int_cast_neg_succ_of_nat := fun n => Subtype.ext $ Int.cast_negSucc n }
+    int_cast_of_nat := fun n => Subtype.ext <| Int.cast_of_nat _,
+    int_cast_neg_succ_of_nat := fun n => Subtype.ext <| Int.cast_negSucc n }
 #align set_like.gring SetLike.gring
 
 /-- Build a `gcomm_semiring` instance for a collection of additive submonoids. -/
@@ -283,11 +283,11 @@ namespace Submodule
 /-- Build a `galgebra` instance for a collection of `submodule`s. -/
 instance galgebra [AddMonoid ι] [CommSemiring S] [Semiring R] [Algebra S R] (A : ι → Submodule S R)
     [SetLike.GradedMonoid A] : DirectSum.Galgebra S fun i => A i where
-  toFun := ((Algebra.linearMap S R).codRestrict (A 0) $ SetLike.algebra_map_mem_graded A).toAddMonoidHom
-  map_one := Subtype.ext $ (algebraMap S R).map_one
-  map_mul x y := Sigma.subtype_ext (add_zero 0).symm $ (algebraMap S R).map_mul _ _
-  commutes := fun r ⟨i, xi⟩ => Sigma.subtype_ext ((zero_add i).trans (add_zero i).symm) $ Algebra.commutes _ _
-  smul_def := fun r ⟨i, xi⟩ => Sigma.subtype_ext (zero_add i).symm $ Algebra.smul_def _ _
+  toFun := ((Algebra.linearMap S R).codRestrict (A 0) <| SetLike.algebra_map_mem_graded A).toAddMonoidHom
+  map_one := Subtype.ext <| (algebraMap S R).map_one
+  map_mul x y := Sigma.subtype_ext (add_zero 0).symm <| (algebraMap S R).map_mul _ _
+  commutes := fun r ⟨i, xi⟩ => Sigma.subtype_ext ((zero_add i).trans (add_zero i).symm) <| Algebra.commutes _ _
+  smul_def := fun r ⟨i, xi⟩ => Sigma.subtype_ext (zero_add i).symm <| Algebra.smul_def _ _
 #align submodule.galgebra Submodule.galgebra
 
 @[simp]
@@ -320,7 +320,7 @@ def DirectSum.coeAlgHom [AddMonoid ι] [CommSemiring S] [Semiring R] [Algebra S 
 `direct_sum.coe_alg_hom`. -/
 theorem Submodule.supr_eq_to_submodule_range [AddMonoid ι] [CommSemiring S] [Semiring R] [Algebra S R]
     (A : ι → Submodule S R) [SetLike.GradedMonoid A] : (⨆ i, A i) = (DirectSum.coeAlgHom A).range.toSubmodule :=
-  (Submodule.supr_eq_range_dfinsupp_lsum A).trans $ SetLike.coe_injective rfl
+  (Submodule.supr_eq_range_dfinsupp_lsum A).trans <| SetLike.coe_injective rfl
 #align submodule.supr_eq_to_submodule_range Submodule.supr_eq_to_submodule_range
 
 @[simp]

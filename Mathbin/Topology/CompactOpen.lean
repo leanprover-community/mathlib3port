@@ -72,13 +72,13 @@ theorem gen_union (s t : Set α) (u : Set β) : CompactOpen.gen (s ∪ t) u = Co
 #align continuous_map.gen_union ContinuousMap.gen_union
 
 theorem gen_empty_right {s : Set α} (h : s.Nonempty) : CompactOpen.gen s (∅ : Set β) = ∅ :=
-  eq_empty_of_forall_not_mem $ fun f => (h.image _).not_subset_empty
+  eq_empty_of_forall_not_mem fun f => (h.image _).not_subset_empty
 #align continuous_map.gen_empty_right ContinuousMap.gen_empty_right
 
 -- The compact-open topology on the space of continuous maps α → β.
 instance compactOpen : TopologicalSpace C(α, β) :=
   TopologicalSpace.generateFrom
-    { m | ∃ (s : Set α) (hs : IsCompact s) (u : Set β) (hu : IsOpen u), m = CompactOpen.gen s u }
+    { m | ∃ (s : Set α)(hs : IsCompact s)(u : Set β)(hu : IsOpen u), m = CompactOpen.gen s u }
 #align continuous_map.compact_open ContinuousMap.compactOpen
 
 protected theorem is_open_gen {s : Set α} (hs : IsCompact s) {u : Set β} (hu : IsOpen u) :
@@ -99,7 +99,7 @@ private theorem preimage_gen {s : Set α} (hs : IsCompact s) {u : Set γ} (hu : 
 
 /-- C(α, -) is a functor. -/
 theorem continuous_comp : Continuous (ContinuousMap.comp g : C(α, β) → C(α, γ)) :=
-  continuous_generated_from $ fun m ⟨s, hs, u, hu, hm⟩ => by
+  continuous_generated_from fun m ⟨s, hs, u, hu, hm⟩ => by
     rw [hm, preimage_gen g hs hu] <;> exact ContinuousMap.is_open_gen hs (hu.preimage g.2)
 #align continuous_map.continuous_comp ContinuousMap.continuous_comp
 
@@ -114,7 +114,7 @@ private theorem image_gen {s : Set α} (hs : IsCompact s) {u : Set γ} (hu : IsO
 
 /-- C(-, γ) is a functor. -/
 theorem continuous_comp_left : Continuous (fun g => g.comp f : C(β, γ) → C(α, γ)) :=
-  continuous_generated_from $ fun m ⟨s, hs, u, hu, hm⟩ => by
+  continuous_generated_from fun m ⟨s, hs, u, hu, hm⟩ => by
     rw [hm, image_gen f hs hu]
     exact ContinuousMap.is_open_gen (hs.image f.2) hu
 #align continuous_map.continuous_comp_left ContinuousMap.continuous_comp_left
@@ -136,14 +136,14 @@ theorem continuous_comp' [LocallyCompactSpace β] : Continuous fun x : C(α, β)
       rintro ⟨φ₀, ψ₀⟩ H
       obtain ⟨L, hL, hKL, hLU⟩ := exists_compact_between (hK.image φ₀.2) (hU.preimage ψ₀.2) H
       use { φ : C(α, β) | φ '' K ⊆ interior L } ×ˢ { ψ : C(β, γ) | ψ '' L ⊆ U }
-      use fun ⟨φ, ψ⟩ ⟨hφ, hψ⟩ => subset_trans hφ (interior_subset.trans $ image_subset_iff.mp hψ)
+      use fun ⟨φ, ψ⟩ ⟨hφ, hψ⟩ => subset_trans hφ (interior_subset.trans <| image_subset_iff.mp hψ)
       use (ContinuousMap.is_open_gen hK is_open_interior).Prod (ContinuousMap.is_open_gen hL hU)
       exact mem_prod.mpr ⟨hKL, image_subset_iff.mpr hLU⟩)
 #align continuous_map.continuous_comp' ContinuousMap.continuous_comp'
 
 theorem continuous.comp' {X : Type _} [TopologicalSpace X] [LocallyCompactSpace β] {f : X → C(α, β)} {g : X → C(β, γ)}
     (hf : Continuous f) (hg : Continuous g) : Continuous fun x => (g x).comp (f x) :=
-  continuous_comp'.comp (hf.prod_mk hg : Continuous $ fun x => (f x, g x))
+  continuous_comp'.comp (hf.prod_mk hg : Continuous fun x => (f x, g x))
 #align continuous_map.continuous.comp' ContinuousMap.continuous.comp'
 
 end Functorial
@@ -157,7 +157,7 @@ variable {α β}
 
 See also `continuous_map.continuous_eval` -/
 theorem continuous_eval' [LocallyCompactSpace α] : Continuous fun p : C(α, β) × α => p.1 p.2 :=
-  continuous_iff_continuous_at.mpr $ fun ⟨f, x⟩ n hn =>
+  continuous_iff_continuous_at.mpr fun ⟨f, x⟩ n hn =>
     let ⟨v, vn, vo, fxv⟩ := mem_nhds_iff.mp hn
     have : v ∈ 𝓝 (f x) := IsOpen.mem_nhds vo fxv
     let ⟨s, hs, sv, sc⟩ := LocallyCompactSpace.local_compact_nhds x (f ⁻¹' v) (f.Continuous.Tendsto x this)
@@ -292,7 +292,7 @@ theorem exists_tendsto_compact_open_iff_forall [LocallyCompactSpace α] [T2Space
       exact tendsto_nhds_unique h₁ h₂
     -- So glue the `f s hs` together and prove that this glued function `f₀` is a limit on each
     -- compact set `s`
-    have hs : ∀ x : α, ∃ (s) (hs : IsCompact s), s ∈ 𝓝 x := by
+    have hs : ∀ x : α, ∃ (s : _)(hs : IsCompact s), s ∈ 𝓝 x := by
       intro x
       obtain ⟨s, hs, hs'⟩ := exists_compact_mem_nhds x
       exact ⟨s, hs, hs'⟩
@@ -324,7 +324,7 @@ theorem image_coev {y : β} (s : Set α) : coev α β y '' s = ({y} : Set β) ×
 
 -- The coevaluation map β → C(α, β × α) is continuous (always).
 theorem continuous_coev : Continuous (coev α β) :=
-  continuous_generated_from $ by
+  continuous_generated_from <| by
     rintro _ ⟨s, sc, u, uo, rfl⟩
     rw [is_open_iff_forall_mem_open]
     intro y hy
@@ -387,7 +387,7 @@ theorem curry_apply (f : C(α × β, γ)) (a : α) (b : β) : f.curry a b = f (a
 /-- The uncurried form of a continuous map `α → C(β, γ)` is a continuous map `α × β → γ`. -/
 theorem continuous_uncurry_of_continuous [LocallyCompactSpace β] (f : C(α, C(β, γ))) :
     Continuous (Function.uncurry fun x y => f x y) :=
-  continuous_eval'.comp $ f.Continuous.prod_map continuous_id
+  continuous_eval'.comp <| f.Continuous.prod_map continuous_id
 #align continuous_map.continuous_uncurry_of_continuous ContinuousMap.continuous_uncurry_of_continuous
 
 /-- The uncurried form of a continuous map `α → C(β, γ)` as a continuous map `α × β → γ` (if `β` is

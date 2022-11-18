@@ -32,8 +32,8 @@ def free : Type u ⥤ CommRingCat.{u} where
   map X Y f := (↑(rename f : _ →ₐ[ℤ] _) : MvPolynomial X ℤ →+* MvPolynomial Y ℤ)
   -- TODO these next two fields can be done by `tidy`, but the calls in `dsimp` and `simp` it
   -- generates are too slow.
-  map_id' X := RingHom.ext $ rename_id
-  map_comp' X Y Z f g := RingHom.ext $ fun p => (rename_rename f g p).symm
+  map_id' X := RingHom.ext <| rename_id
+  map_comp' X Y Z f g := RingHom.ext fun p => (rename_rename f g p).symm
 #align CommRing.free CommRingCat.free
 
 @[simp]
@@ -52,7 +52,7 @@ def adj : free ⊣ forget CommRingCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X R => homEquiv,
       hom_equiv_naturality_left_symm' := fun _ _ Y f g =>
-        RingHom.ext $ fun x => eval₂_cast_comp f (Int.castRingHom Y) g x }
+        RingHom.ext fun x => eval₂_cast_comp f (Int.castRingHom Y) g x }
 #align CommRing.adj CommRingCat.adj
 
 instance : IsRightAdjoint (forget CommRingCat.{u}) :=

@@ -69,7 +69,7 @@ theorem iterate_succ_apply (n : ℕ) (x : α) : (f^[n.succ]) x = (f^[n]) (f x) :
 #print Function.iterate_id /-
 @[simp]
 theorem iterate_id (n : ℕ) : (id : α → α)^[n] = id :=
-  Nat.recOn n rfl $ fun n ihn => by rw [iterate_succ, ihn, comp.left_id]
+  (Nat.recOn n rfl) fun n ihn => by rw [iterate_succ, ihn, comp.left_id]
 #align function.iterate_id Function.iterate_id
 -/
 
@@ -88,7 +88,7 @@ theorem iterate_add_apply (m n : ℕ) (x : α) : (f^[m + n]) x = (f^[m]) ((f^[n]
 #print Function.iterate_one /-
 @[simp]
 theorem iterate_one : f^[1] = f :=
-  funext $ fun a => rfl
+  funext fun a => rfl
 #align function.iterate_one Function.iterate_one
 -/
 
@@ -103,19 +103,19 @@ variable {f}
 
 #print Function.iterate_fixed /-
 theorem iterate_fixed {x} (h : f x = x) (n : ℕ) : (f^[n]) x = x :=
-  Nat.recOn n rfl $ fun n ihn => by rw [iterate_succ_apply, h, ihn]
+  (Nat.recOn n rfl) fun n ihn => by rw [iterate_succ_apply, h, ihn]
 #align function.iterate_fixed Function.iterate_fixed
 -/
 
 #print Function.Injective.iterate /-
 theorem Injective.iterate (Hinj : Injective f) (n : ℕ) : Injective (f^[n]) :=
-  Nat.recOn n injective_id $ fun n ihn => ihn.comp Hinj
+  (Nat.recOn n injective_id) fun n ihn => ihn.comp Hinj
 #align function.injective.iterate Function.Injective.iterate
 -/
 
 #print Function.Surjective.iterate /-
 theorem Surjective.iterate (Hsurj : Surjective f) (n : ℕ) : Surjective (f^[n]) :=
-  Nat.recOn n surjective_id $ fun n ihn => ihn.comp Hsurj
+  (Nat.recOn n surjective_id) fun n ihn => ihn.comp Hsurj
 #align function.surjective.iterate Function.Surjective.iterate
 -/
 
@@ -130,13 +130,13 @@ namespace Semiconj
 #print Function.Semiconj.iterate_right /-
 theorem iterate_right {f : α → β} {ga : α → α} {gb : β → β} (h : Semiconj f ga gb) (n : ℕ) :
     Semiconj f (ga^[n]) (gb^[n]) :=
-  Nat.recOn n id_right $ fun n ihn => ihn.compRight h
+  (Nat.recOn n id_right) fun n ihn => ihn.compRight h
 #align function.semiconj.iterate_right Function.Semiconj.iterate_right
 -/
 
 #print Function.Semiconj.iterate_left /-
-theorem iterate_left {g : ℕ → α → α} (H : ∀ n, Semiconj f (g n) (g $ n + 1)) (n k : ℕ) :
-    Semiconj (f^[n]) (g k) (g $ n + k) := by
+theorem iterate_left {g : ℕ → α → α} (H : ∀ n, Semiconj f (g n) (g <| n + 1)) (n k : ℕ) :
+    Semiconj (f^[n]) (g k) (g <| n + k) := by
   induction' n with n ihn generalizing k
   · rw [Nat.zero_add]
     exact id_left
@@ -173,7 +173,7 @@ theorem iterate_iterate (h : Commute f g) (m n : ℕ) : Commute (f^[m]) (g^[n]) 
 
 #print Function.Commute.iterate_eq_of_map_eq /-
 theorem iterate_eq_of_map_eq (h : Commute f g) (n : ℕ) {x} (hx : f x = g x) : (f^[n]) x = (g^[n]) x :=
-  Nat.recOn n rfl $ fun n ihn => by
+  (Nat.recOn n rfl) fun n ihn => by
     simp only [iterate_succ_apply, hx, (h.iterate_left n).Eq, ihn, ((refl g).iterate_right n).Eq]
 #align function.commute.iterate_eq_of_map_eq Function.Commute.iterate_eq_of_map_eq
 -/
@@ -266,7 +266,7 @@ variable {f}
 
 #print Function.LeftInverse.iterate /-
 theorem LeftInverse.iterate {g : α → α} (hg : LeftInverse g f) (n : ℕ) : LeftInverse (g^[n]) (f^[n]) :=
-  (Nat.recOn n fun _ => rfl) $ fun n ihn => by
+  (Nat.recOn n fun _ => rfl) fun n ihn => by
     rw [iterate_succ', iterate_succ]
     exact ihn.comp hg
 #align function.left_inverse.iterate Function.LeftInverse.iterate

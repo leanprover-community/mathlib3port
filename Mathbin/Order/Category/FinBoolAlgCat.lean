@@ -3,6 +3,7 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
+import Mathbin.Data.Fintype.Powerset
 import Mathbin.Order.Category.BoolAlgCat
 import Mathbin.Order.Category.FinPartialOrderCat
 import Mathbin.Order.Hom.CompleteLattice
@@ -98,7 +99,7 @@ instance forget_to_FinPartialOrder_faithful : Faithful (forget₂ FinBoolAlgCat 
 them. -/
 @[simps]
 def Iso.mk {α β : FinBoolAlgCat.{u}} (e : α ≃o β) : α ≅ β where
-  Hom := (e : BoundedLatticeHom α β)
+  hom := (e : BoundedLatticeHom α β)
   inv := (e.symm : BoundedLatticeHom β α)
   hom_inv_id' := by
     ext
@@ -118,8 +119,8 @@ def dual : FinBoolAlgCat ⥤ FinBoolAlgCat where
 /-- The equivalence between `FinBoolAlg` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : FinBoolAlgCat ≌ FinBoolAlgCat :=
-  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk $ OrderIso.dualDual X) $ fun X Y f => rfl)
-    ((NatIso.ofComponents fun X => iso.mk $ OrderIso.dualDual X) $ fun X Y f => rfl)
+  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align FinBoolAlg.dual_equiv FinBoolAlgCat.dualEquiv
 
 end FinBoolAlgCat
@@ -127,7 +128,7 @@ end FinBoolAlgCat
 /-- The powerset functor. `set` as a functor. -/
 @[simps]
 def fintypeToFinBoolAlgOp : FintypeCat ⥤ FinBoolAlgCatᵒᵖ where
-  obj X := op $ FinBoolAlgCat.of (Set X)
-  map X Y f := Quiver.Hom.op $ (CompleteLatticeHom.setPreimage f : BoundedLatticeHom (Set Y) (Set X))
+  obj X := op <| FinBoolAlgCat.of (Set X)
+  map X Y f := Quiver.Hom.op <| (CompleteLatticeHom.setPreimage f : BoundedLatticeHom (Set Y) (Set X))
 #align Fintype_to_FinBoolAlg_op fintypeToFinBoolAlgOp
 

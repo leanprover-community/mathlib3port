@@ -227,9 +227,9 @@ protected def AddMonoidWithOne.binary {R : Type _} [AddMonoid R] [One R] : AddMo
 
 namespace NeZero
 
-theorem ne' (n : ℕ) (R) [AddMonoidWithOne R] [h : NeZero (n : R)] : (n : R) ≠ 0 :=
+theorem nat_cast_ne (n : ℕ) (R) [AddMonoidWithOne R] [h : NeZero (n : R)] : (n : R) ≠ 0 :=
   h.out
-#align ne_zero.ne' NeZero.ne'
+#align ne_zero.nat_cast_ne NeZero.nat_cast_ne
 
 theorem of_ne_zero_coe (R) [AddMonoidWithOne R] {n : ℕ} [h : NeZero (n : R)] : NeZero n :=
   ⟨by

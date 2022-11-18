@@ -35,11 +35,11 @@ variable {α 𝕜 E : Type _} {m m0 : MeasurableSpace α} [NormedAddCommGroup E]
 
 theorem condexp_ae_eq_restrict_zero (hs : measurable_set[m] s) (hf : f =ᵐ[μ.restrict s] 0) :
     μ[f|m] =ᵐ[μ.restrict s] 0 := by
-  by_cases hm:m ≤ m0
+  by_cases hm : m ≤ m0
   swap
   · simp_rw [condexp_of_not_le hm]
     
-  by_cases hμm:sigma_finite (μ.trim hm)
+  by_cases hμm : sigma_finite (μ.trim hm)
   swap
   · simp_rw [condexp_of_not_sigma_finite hm hμm]
     
@@ -47,7 +47,7 @@ theorem condexp_ae_eq_restrict_zero (hs : measurable_set[m] s) (hf : f =ᵐ[μ.r
   have : sigma_finite ((μ.restrict s).trim hm) := by
     rw [← restrict_trim hm _ hs]
     exact restrict.sigma_finite _ s
-  by_cases hf_int:integrable f μ
+  by_cases hf_int : integrable f μ
   swap
   · rw [condexp_undef hf_int]
     
@@ -71,7 +71,7 @@ theorem condexp_ae_eq_restrict_zero (hs : measurable_set[m] s) (hf : f =ᵐ[μ.r
 /-- Auxiliary lemma for `condexp_indicator`. -/
 theorem condexp_indicator_aux (hs : measurable_set[m] s) (hf : f =ᵐ[μ.restrict (sᶜ)] 0) :
     μ[s.indicator f|m] =ᵐ[μ] s.indicator (μ[f|m]) := by
-  by_cases hm:m ≤ m0
+  by_cases hm : m ≤ m0
   swap
   · simp_rw [condexp_of_not_le hm, Set.indicator_zero']
     
@@ -85,11 +85,11 @@ theorem condexp_indicator_aux (hs : measurable_set[m] s) (hf : f =ᵐ[μ.restric
 respect to the σ-algebra `m` is a.e. equal to the indicator of the conditional expectation. -/
 theorem condexp_indicator (hf_int : Integrable f μ) (hs : measurable_set[m] s) :
     μ[s.indicator f|m] =ᵐ[μ] s.indicator (μ[f|m]) := by
-  by_cases hm:m ≤ m0
+  by_cases hm : m ≤ m0
   swap
   · simp_rw [condexp_of_not_le hm, Set.indicator_zero']
     
-  by_cases hμm:sigma_finite (μ.trim hm)
+  by_cases hμm : sigma_finite (μ.trim hm)
   swap
   · simp_rw [condexp_of_not_sigma_finite hm hμm, Set.indicator_zero']
     
@@ -115,7 +115,7 @@ theorem condexp_indicator (hf_int : Integrable f μ) (hs : measurable_set[m] s) 
         · rw [Set.indicator_indicator, Set.inter_self]
           
       filter_upwards [this] with x hx
-      by_cases hxs:x ∈ s
+      by_cases hxs : x ∈ s
       · simp only [hx, hxs, Set.indicator_of_mem]
         
       · simp only [hxs, Set.indicator_of_not_mem, not_false_iff]
@@ -173,7 +173,7 @@ theorem condexp_ae_eq_restrict_of_measurable_space_eq_on {m m₂ m0 : Measurable
     (hs : ∀ t, measurable_set[m] (s ∩ t) ↔ measurable_set[m₂] (s ∩ t)) : μ[f|m] =ᵐ[μ.restrict s] μ[f|m₂] := by
   rw [ae_eq_restrict_iff_indicator_ae_eq (hm _ hs_m)]
   have hs_m₂ : measurable_set[m₂] s := by rwa [← Set.inter_univ s, ← hs Set.univ, Set.inter_univ]
-  by_cases hf_int:integrable f μ
+  by_cases hf_int : integrable f μ
   swap
   · simp_rw [condexp_undef hf_int]
     

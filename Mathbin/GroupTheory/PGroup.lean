@@ -101,10 +101,10 @@ noncomputable def powEquiv {n : ℕ} (hn : p.Coprime n) : G ≃ G :=
     order_eq_card_zpowers' g ▸ hG.order_of_coprime hn g
   { toFun := (· ^ n), invFun := fun g => (powCoprime (h g)).symm ⟨g, Subgroup.mem_zpowers g⟩,
     left_inv := fun g =>
-      Subtype.ext_iff.1 $
+      Subtype.ext_iff.1 <|
         (powCoprime (h (g ^ n))).left_inv
-          ⟨g, _, Subtype.ext_iff.1 $ (powCoprime (h g)).left_inv ⟨g, Subgroup.mem_zpowers g⟩⟩,
-    right_inv := fun g => Subtype.ext_iff.1 $ (powCoprime (h g)).right_inv ⟨g, Subgroup.mem_zpowers g⟩ }
+          ⟨g, _, Subtype.ext_iff.1 <| (powCoprime (h g)).left_inv ⟨g, Subgroup.mem_zpowers g⟩⟩,
+    right_inv := fun g => Subtype.ext_iff.1 <| (powCoprime (h g)).right_inv ⟨g, Subgroup.mem_zpowers g⟩ }
 #align is_p_group.pow_equiv IsPGroup.powEquiv
 
 @[simp]
@@ -154,8 +154,8 @@ theorem card_eq_or_dvd : Nat.card G = 1 ∨ p ∣ Nat.card G := by
 theorem nontrivial_iff_card [Fintype G] : Nontrivial G ↔ ∃ n > 0, card G = p ^ n :=
   ⟨fun hGnt =>
     let ⟨k, hk⟩ := iff_card.1 hG
-    ⟨k, Nat.pos_of_ne_zero $ fun hk0 => by rw [hk0, pow_zero] at hk <;> exact fintype.one_lt_card.ne' hk, hk⟩,
-    fun ⟨k, hk0, hk⟩ => one_lt_card_iff_nontrivial.1 $ hk.symm ▸ one_lt_pow (Fact.out p.Prime).one_lt (ne_of_gt hk0)⟩
+    ⟨k, Nat.pos_of_ne_zero fun hk0 => by rw [hk0, pow_zero] at hk <;> exact fintype.one_lt_card.ne' hk, hk⟩,
+    fun ⟨k, hk0, hk⟩ => one_lt_card_iff_nontrivial.1 <| hk.symm ▸ one_lt_pow (Fact.out p.Prime).one_lt (ne_of_gt hk0)⟩
 #align is_p_group.nontrivial_iff_card IsPGroup.nontrivial_iff_card
 
 variable {α : Type _} [MulAction G α]
@@ -175,7 +175,7 @@ variable (α) [Fintype α]
 theorem card_modeq_card_fixed_points [Fintype (fixedPoints G α)] : card α ≡ card (fixedPoints G α) [MOD p] := by
   classical
   calc
-    card α = card (Σ y : Quotient (orbit_rel G α), { x // Quotient.mk' x = y }) :=
+    card α = card (Σy : Quotient (orbit_rel G α), { x // Quotient.mk' x = y }) :=
       card_congr (Equiv.sigmaFiberEquiv (@Quotient.mk' _ (orbit_rel G α))).symm
     _ = ∑ a : Quotient (orbit_rel G α), card { x // Quotient.mk' x = a } := card_sigma _
     _ ≡ ∑ a : fixed_points G α, 1 [MOD p] := _
@@ -198,7 +198,7 @@ theorem card_modeq_card_fixed_points [Fintype (fixedPoints G α)] : card α ≡ 
           (mt (pow_dvd_pow p)
             (by rwa [pow_one, ← hk, ← Nat.modeq_zero_iff_dvd, ← Zmod.eq_iff_modeq_nat, ← key, Nat.cast_zero]))))
   exact
-    ⟨⟨b, mem_fixed_points_iff_card_orbit_eq_one.2 $ by rw [hk, this, pow_zero]⟩, Finset.mem_univ _,
+    ⟨⟨b, mem_fixed_points_iff_card_orbit_eq_one.2 <| by rw [hk, this, pow_zero]⟩, Finset.mem_univ _,
       ne_of_eq_of_ne Nat.cast_one one_ne_zero, rfl⟩
 #align is_p_group.card_modeq_card_fixed_points IsPGroup.card_modeq_card_fixed_points
 
@@ -360,7 +360,7 @@ open Subgroup
 theorem card_center_eq_prime_pow (hn : 0 < n) [Fintype (center G)] : ∃ k > 0, card (center G) = p ^ k := by
   have hcG := to_subgroup (of_card hGpn) (center G)
   rcases iff_card.1 hcG with ⟨k, hk⟩
-  haveI : Nontrivial G := (nontrivial_iff_card $ of_card hGpn).2 ⟨n, hn, hGpn⟩
+  haveI : Nontrivial G := (nontrivial_iff_card <| of_card hGpn).2 ⟨n, hn, hGpn⟩
   exact (nontrivial_iff_card hcG).mp (center_nontrivial (of_card hGpn))
 #align is_p_group.card_center_eq_prime_pow IsPGroup.card_center_eq_prime_pow
 

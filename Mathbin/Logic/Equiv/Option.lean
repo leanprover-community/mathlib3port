@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
 import Mathbin.Control.EquivFunctor
-import Mathbin.Logic.Equiv.Basic
+import Mathbin.Data.Option.Basic
+import Mathbin.Data.Subtype
+import Mathbin.Logic.Equiv.Defs
 
 /-!
 # Equivalences for `option α`
@@ -31,13 +33,13 @@ section OptionCongr
 def optionCongr (e : α ≃ β) : Option α ≃ Option β where
   toFun := Option.map e
   invFun := Option.map e.symm
-  left_inv x := (Option.map_map _ _ _).trans $ e.symm_comp_self.symm ▸ congr_fun Option.map_id x
-  right_inv x := (Option.map_map _ _ _).trans $ e.self_comp_symm.symm ▸ congr_fun Option.map_id x
+  left_inv x := (Option.map_map _ _ _).trans <| e.symm_comp_self.symm ▸ congr_fun Option.map_id x
+  right_inv x := (Option.map_map _ _ _).trans <| e.self_comp_symm.symm ▸ congr_fun Option.map_id x
 #align equiv.option_congr Equiv.optionCongr
 
 @[simp]
 theorem option_congr_refl : optionCongr (Equiv.refl α) = Equiv.refl _ :=
-  ext $ congr_fun Option.map_id
+  ext <| congr_fun Option.map_id
 #align equiv.option_congr_refl Equiv.option_congr_refl
 
 @[simp]
@@ -48,7 +50,7 @@ theorem option_congr_symm (e : α ≃ β) : (optionCongr e).symm = optionCongr e
 @[simp]
 theorem option_congr_trans (e₁ : α ≃ β) (e₂ : β ≃ γ) :
     (optionCongr e₁).trans (optionCongr e₂) = optionCongr (e₁.trans e₂) :=
-  ext $ Option.map_map _ _
+  ext <| Option.map_map _ _
 #align equiv.option_congr_trans Equiv.option_congr_trans
 
 /-- When `α` and `β` are in the same universe, this is the same as the result of
@@ -67,7 +69,7 @@ variable (e : Option α ≃ Option β)
 private def remove_none_aux (x : α) : β :=
   if h : (e (some x)).isSome then Option.get h
   else
-    Option.get $
+    Option.get <|
       show (e none).isSome by
         rw [← Option.ne_none_iff_is_some]
         intro hn
@@ -144,7 +146,7 @@ theorem some_remove_none_iff {x : α} : some (removeNone e x) = e none ↔ e.sym
 
 @[simp]
 theorem remove_none_option_congr (e : α ≃ β) : removeNone e.optionCongr = e :=
-  Equiv.ext $ fun x => Option.some_injective _ $ remove_none_some _ ⟨e x, by simp [EquivFunctor.map]⟩
+  Equiv.ext fun x => Option.some_injective _ <| remove_none_some _ ⟨e x, by simp [EquivFunctor.map]⟩
 #align equiv.remove_none_option_congr Equiv.remove_none_option_congr
 
 end RemoveNone
@@ -177,7 +179,7 @@ def optionSubtype [DecidableEq β] (x : β) : { e : Option α ≃ β // e none =
             
           simp only [cases_on'_some, Function.comp_apply, Subtype.coe_eta, symm_apply_apply, dite_eq_ite]
           exact if_neg (e a).property,
-        right_inv := fun b => by by_cases h:b = x <;> simp [h] },
+        right_inv := fun b => by by_cases h : b = x <;> simp [h] },
       rfl⟩
   left_inv e := by
     ext a

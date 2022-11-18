@@ -77,7 +77,7 @@ theorem mem_convex_hull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepe
   refine' ⟨⟨i₀, hi₀⟩, k, _, by convert ksum, _⟩
   · simp only [and_imp, sub_nonneg, mem_erase, Ne.def, Subtype.coe_mk]
     intro e hei₀ het
-    by_cases hes:e ∈ s
+    by_cases hes : e ∈ s
     · have hge : 0 < g e := by
         rw [mem_filter] at hes
         exact hes.2
@@ -115,7 +115,7 @@ include hx
 /-- Given a point `x` in the convex hull of a set `s`, this is a finite subset of `s` of minimum
 cardinality, whose convex hull contains `x`. -/
 noncomputable def minCardFinsetOfMemConvexHull : Finset E :=
-  Function.argminOn Finset.card Nat.lt_wf { t | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) }
+  Function.argminOn Finset.card Nat.lt_wfRel.wf { t | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) }
     (by simpa only [convex_hull_eq_union_convex_hull_finite_subsets s, exists_prop, mem_Union] using hx)
 #align caratheodory.min_card_finset_of_mem_convex_hull Caratheodory.minCardFinsetOfMemConvexHull
 
@@ -182,8 +182,8 @@ theorem convex_hull_eq_union :
 
 /-- A more explicit version of `convex_hull_eq_union`. -/
 theorem eq_pos_convex_span_of_mem_convex_hull {x : E} (hx : x ∈ convexHull 𝕜 s) :
-    ∃ (ι : Sort (u + 1)) (_ : Fintype ι),
-      ∃ (z : ι → E) (w : ι → 𝕜) (hss : Set.range z ⊆ s) (hai : AffineIndependent 𝕜 z) (hw : ∀ i, 0 < w i),
+    ∃ (ι : Sort (u + 1))(_ : Fintype ι),
+      ∃ (z : ι → E)(w : ι → 𝕜)(hss : Set.range z ⊆ s)(hai : AffineIndependent 𝕜 z)(hw : ∀ i, 0 < w i),
         (∑ i, w i) = 1 ∧ (∑ i, w i • z i) = x :=
   by
   rw [convex_hull_eq_union] at hx

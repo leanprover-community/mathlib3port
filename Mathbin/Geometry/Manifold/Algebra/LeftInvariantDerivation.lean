@@ -78,7 +78,7 @@ theorem coe_injective : @Function.Injective (LeftInvariantDerivation I G) (_ →
 
 @[ext.1]
 theorem ext (h : ∀ f, X f = Y f) : X = Y :=
-  coe_injective $ funext h
+  coe_injective <| funext h
 #align left_invariant_derivation.ext LeftInvariantDerivation.ext
 
 variable (X Y f)

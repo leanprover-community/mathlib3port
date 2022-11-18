@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
 import Mathbin.GroupTheory.Index
-import Mathbin.GroupTheory.QuotientGroup
 import Mathbin.GroupTheory.Subgroup.Pointwise
 import Mathbin.GroupTheory.GroupAction.ConjAct
 

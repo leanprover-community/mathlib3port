@@ -3,7 +3,6 @@ Copyright (c) 2022 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Jeremy Avigad, Johan Commelin
 -/
-import Mathbin.LinearAlgebra.Matrix.Symmetric
 import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
 import Mathbin.LinearAlgebra.Matrix.PosDef
 

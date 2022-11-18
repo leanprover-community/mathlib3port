@@ -76,9 +76,9 @@ theorem LinearOrder.bot_topological_space_eq_generate_from {α} [LinearOrder α]
     (⊥ : TopologicalSpace α) = generateFrom { s | ∃ a, s = ioi a ∨ s = iio a } := by
   refine' (eq_bot_of_singletons_open fun a => _).symm
   have h_singleton_eq_inter : {a} = Iic a ∩ Ici a := by rw [inter_comm, Ici_inter_Iic, Icc_self a]
-  by_cases ha_top:IsTop a
+  by_cases ha_top : IsTop a
   · rw [ha_top.Iic_eq, inter_comm, inter_univ] at h_singleton_eq_inter
-    by_cases ha_bot:IsBot a
+    by_cases ha_bot : IsBot a
     · rw [ha_bot.Ici_eq] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       apply is_open_univ
@@ -91,7 +91,7 @@ theorem LinearOrder.bot_topological_space_eq_generate_from {α} [LinearOrder α]
     
   · rw [is_top_iff_is_max] at ha_top
     rw [← Iio_succ_of_not_is_max ha_top] at h_singleton_eq_inter
-    by_cases ha_bot:IsBot a
+    by_cases ha_bot : IsBot a
     · rw [ha_bot.Ici_eq, inter_univ] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩

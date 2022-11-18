@@ -206,7 +206,7 @@ theorem mat_poly_equiv_eq_X_pow_sub_C {K : Type _} (k : ℕ) [Field K] (M : Matr
   ext m
   rw [coeff_sub, coeff_C, mat_poly_equiv_coeff_apply, RingHom.map_matrix_apply, Matrix.map_apply,
     AlgHom.coe_to_ring_hom, Dmatrix.sub_apply, coeff_X_pow]
-  by_cases hij:i = j
+  by_cases hij : i = j
   · rw [hij, charmatrix_apply_eq, AlgHom.map_sub, expand_C, expand_X, coeff_sub, coeff_X_pow, coeff_C]
     split_ifs with mp m0 <;> simp only [Matrix.one_apply_eq, Dmatrix.zero_apply]
     

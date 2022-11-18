@@ -285,7 +285,7 @@ protected theorem induction_on' {M : R[T;T⁻¹] → Prop} (p : R[T;T⁻¹]) (h_
 #align laurent_polynomial.induction_on' LaurentPolynomial.induction_on'
 
 theorem commute_T (n : ℤ) (f : R[T;T⁻¹]) : Commute (t n) f :=
-  (f.inductionOn' fun p q Tp Tq => Commute.add_right Tp Tq) $ fun m a =>
+  (f.inductionOn' fun p q Tp Tq => Commute.add_right Tp Tq) fun m a =>
     show t n * _ = _ by
       rw [T, T, ← single_eq_C, single_mul_single, single_mul_single, single_mul_single]
       simp [add_comm]
@@ -300,7 +300,7 @@ theorem T_mul (n : ℤ) (f : R[T;T⁻¹]) : t n * f = f * t n :=
 nonnegative degree coincide with the ones of `f`.  The terms of negative degree of `f` "vanish".
 `trunc` is a left-inverse to `polynomial.to_laurent`. -/
 def trunc : R[T;T⁻¹] →+ R[X] :=
-  (toFinsuppIso R).symm.toAddMonoidHom.comp $ comap_domain.add_monoid_hom $ fun a b => Int.ofNat.inj
+  (toFinsuppIso R).symm.toAddMonoidHom.comp <| comap_domain.add_monoid_hom fun a b => Int.ofNat.inj
 #align laurent_polynomial.trunc LaurentPolynomial.trunc
 
 @[simp]
@@ -308,7 +308,7 @@ theorem trunc_C_mul_T (n : ℤ) (r : R) : trunc (c r * t n) = ite (0 ≤ n) (mon
   apply (to_finsupp_iso R).Injective
   rw [← single_eq_C_mul_T, Trunc, AddMonoidHom.coe_comp, Function.comp_apply, comap_domain.add_monoid_hom_apply,
     to_finsupp_iso_apply]
-  by_cases n0:0 ≤ n
+  by_cases n0 : 0 ≤ n
   · lift n to ℕ using n0
     erw [comap_domain_single, to_finsupp_iso_symm_apply]
     simp only [Int.coe_nat_nonneg, Int.toNat_coe_nat, if_true, to_finsupp_iso_apply, to_finsupp_monomial]
@@ -351,7 +351,7 @@ theorem _root_.polynomial.to_laurent_ne_zero {f : R[X]} : f ≠ 0 ↔ f.toLauren
   (map_ne_zero_iff _ Polynomial.to_laurent_injective).symm
 #align laurent_polynomial._root_.polynomial.to_laurent_ne_zero laurent_polynomial._root_.polynomial.to_laurent_ne_zero
 
-theorem exists_T_pow (f : R[T;T⁻¹]) : ∃ (n : ℕ) (f' : R[X]), f'.toLaurent = f * t n := by
+theorem exists_T_pow (f : R[T;T⁻¹]) : ∃ (n : ℕ)(f' : R[X]), f'.toLaurent = f * t n := by
   apply f.induction_on' _ fun n a => _ <;> clear f
   · rintro f g ⟨m, fn, hf⟩ ⟨n, gn, hg⟩
     refine' ⟨m + n, fn * X ^ n + gn * X ^ m, _⟩
@@ -489,7 +489,7 @@ end ExactDegrees
 section DegreeBounds
 
 theorem degree_C_mul_T_le (n : ℤ) (a : R) : (c a * t n).degree ≤ n := by
-  by_cases a0:a = 0
+  by_cases a0 : a = 0
   · simp only [a0, map_zero, zero_mul, degree_zero, bot_le]
     
   · exact (degree_C_mul_T n a a0).le

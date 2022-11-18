@@ -16,7 +16,7 @@ open NthRewrite
 metavariables in the tactic state, and without creating any metavariables which cannot be
 discharged by `cfg.discharger` in the process. -/
 unsafe def rewrite_without_new_mvars (r : expr) (e : expr) (cfg : nth_rewrite.cfg := {  }) : tactic (expr × expr) :=
-  lock_tactic_state $-- This makes sure that we forget everything in between rewrites;
+  lock_tactic_state <|-- This makes sure that we forget everything in between rewrites;
   -- otherwise we don't correctly find everything!
   do
     let (new_t, prf, metas) ← rewrite_core r e { cfg.to_rewrite_cfg with md := semireducible }

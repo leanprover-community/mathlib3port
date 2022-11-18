@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
 import Mathbin.Data.Finset.LocallyFinite
-import Mathbin.Data.Fintype.Card
+import Mathbin.Data.Fintype.BigOperators
 
 /-!
 # Intervals in a pi type
@@ -27,7 +27,7 @@ section LocallyFinite
 variable [DecidableEq ι] [Fintype ι] [∀ i, DecidableEq (α i)] [∀ i, PartialOrder (α i)] [∀ i, LocallyFiniteOrder (α i)]
 
 instance : LocallyFiniteOrder (∀ i, α i) :=
-  LocallyFiniteOrder.ofIcc _ (fun a b => pi_finset $ fun i => icc (a i) (b i)) fun a b x => by
+  LocallyFiniteOrder.ofIcc _ (fun a b => pi_finset fun i => icc (a i) (b i)) fun a b x => by
     simp_rw [mem_pi_finset, mem_Icc, le_def, forall_and]
 
 variable (a b : ∀ i, α i)
@@ -60,7 +60,7 @@ section Bot
 variable [∀ i, LocallyFiniteOrderBot (α i)] (b : ∀ i, α i)
 
 instance : LocallyFiniteOrderBot (∀ i, α i) :=
-  LocallyFiniteOrderTop.ofIic _ (fun b => pi_finset $ fun i => iic (b i)) fun b x => by
+  LocallyFiniteOrderTop.ofIic _ (fun b => pi_finset fun i => iic (b i)) fun b x => by
     simp_rw [mem_pi_finset, mem_Iic, le_def]
 
 theorem card_Iic : (iic b).card = ∏ i, (iic (b i)).card :=
@@ -77,7 +77,7 @@ section Top
 variable [∀ i, LocallyFiniteOrderTop (α i)] (a : ∀ i, α i)
 
 instance : LocallyFiniteOrderTop (∀ i, α i) :=
-  LocallyFiniteOrderTop.ofIci _ (fun a => pi_finset $ fun i => ici (a i)) fun a x => by
+  LocallyFiniteOrderTop.ofIci _ (fun a => pi_finset fun i => ici (a i)) fun a x => by
     simp_rw [mem_pi_finset, mem_Ici, le_def]
 
 theorem card_Ici : (ici a).card = ∏ i, (ici (a i)).card :=

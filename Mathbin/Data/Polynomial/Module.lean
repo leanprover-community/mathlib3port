@@ -160,7 +160,7 @@ theorem smul_single_apply (i : ℕ) (f : R[X]) (m : M) (n : ℕ) :
     exacts[rfl, zero_add 0]
     
   · rw [monomial_smul_single, single_apply, coeff_monomial, ite_smul, zero_smul]
-    by_cases h:i ≤ n
+    by_cases h : i ≤ n
     · simp_rw [eq_tsub_iff_add_eq_of_le h, if_pos h]
       
     · rw [if_neg h, ite_eq_right_iff]

@@ -205,7 +205,7 @@ private unsafe def proof_for_edges : side × List edge → tactic (Option proof_
         | side.R => edges.reverse.mmap fun e => e.Proof >>= mk_eq_symm
     let proof ← combine_proofs proofs
     let hows := edges.map fun e => e.how
-    return $ some ⟨proof, s, hows⟩
+    return <| some ⟨proof, s, hows⟩
 #align tactic.rewrite_search.graph.proof_for_edges tactic.rewrite_search.graph.proof_for_edges
 
 /-- Checks to see if an empty series of rewrites will solve this, because it's an expression
@@ -225,7 +225,7 @@ unsafe def find_proof : tactic (graph × expr × List proof_unit) :=
     let g ← find_solving_edge g 0
     let (left_edges, right_edges) ← solution_paths g
     let units ← [(Side.L, left_edges), (Side.R, right_edges)].mmapFilter proof_for_edges
-    let proof ← combine_proofs $ Units.map $ fun u => u.Proof
+    let proof ← combine_proofs <| Units.map fun u => u.Proof
     return (g, proof, Units)
 #align tactic.rewrite_search.graph.find_proof tactic.rewrite_search.graph.find_proof
 

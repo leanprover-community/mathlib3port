@@ -89,7 +89,7 @@ theorem cancel_right {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} (comm : a ≫ f₁ = b �
     IsKernelPair f₁ a b :=
   { w := comm,
     is_limit' :=
-      ⟨PullbackCone.isLimitAux' _ $ fun s => by
+      ⟨(PullbackCone.isLimitAux' _) fun s => by
           let s' : pullback_cone (f₁ ≫ f₂) (f₁ ≫ f₂) := pullback_cone.mk s.fst s.snd (s.condition_assoc _)
           refine'
             ⟨big_k.is_limit.lift s', big_k.is_limit.fac _ walking_cospan.left,
@@ -115,7 +115,7 @@ The converse of `cancel_right_of_mono`.
 theorem comp_of_mono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [Mono f₂] (small_k : IsKernelPair f₁ a b) : IsKernelPair (f₁ ≫ f₂) a b :=
   { w := by rw [small_k.w_assoc],
     is_limit' :=
-      ⟨PullbackCone.isLimitAux' _ $ fun s => by
+      ⟨(PullbackCone.isLimitAux' _) fun s => by
           refine' ⟨_, _, _, _⟩
           apply (pullback_cone.is_limit.lift' small_k.is_limit s.fst s.snd _).1
           rw [← cancel_mono f₂, assoc, s.condition, assoc]
@@ -162,8 +162,8 @@ def toCoequalizer (k : IsKernelPair f a b) [r : RegularEpi f] : IsColimit (Cofor
 (`A ×[Z] X ⟶ Y ×[Z] X`) is a kernel pair for `Y ×[Z] X ⟶ X`. -/
 protected theorem pullback {X Y Z A : C} {g : Y ⟶ Z} {a₁ a₂ : A ⟶ Y} (h : IsKernelPair g a₁ a₂) (f : X ⟶ Z)
     [HasPullback f g] [HasPullback f (a₁ ≫ g)] :
-    IsKernelPair (pullback.fst : pullback f g ⟶ X) (pullback.map f _ f _ (𝟙 X) a₁ (𝟙 Z) (by simp) $ Category.comp_id _)
-      (pullback.map _ _ _ _ (𝟙 X) a₂ (𝟙 Z) (by simp) $ (Category.comp_id _).trans h.1.1) :=
+    IsKernelPair (pullback.fst : pullback f g ⟶ X) (pullback.map f _ f _ (𝟙 X) a₁ (𝟙 Z) (by simp) <| Category.comp_id _)
+      (pullback.map _ _ _ _ (𝟙 X) a₂ (𝟙 Z) (by simp) <| (Category.comp_id _).trans h.1.1) :=
   by
   refine' ⟨⟨_⟩, ⟨_⟩⟩
   · rw [pullback.lift_fst, pullback.lift_fst]
@@ -191,7 +191,7 @@ protected theorem pullback {X Y Z A : C} {g : Y ⟶ Z} {a₁ a₂ : A ⟶ Y} (h 
       · rw [pullback.lift_fst]
         conv_rhs => rw [← h₁, category.assoc, pullback_cone.mk_fst]
         congr 1
-        refine' ((pullback.lift_fst _ _ _).trans $ category.comp_id _).symm
+        refine' ((pullback.lift_fst _ _ _).trans <| category.comp_id _).symm
         
       · rw [pullback.lift_snd]
         apply pullback_cone.is_limit.hom_ext h.is_limit <;>

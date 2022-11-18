@@ -4,8 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import Mathbin.RingTheory.FiniteType
-import Mathbin.RingTheory.Ideal.LocalRing
-import Mathbin.RingTheory.Nakayama
 
 /-!
 
@@ -125,7 +123,7 @@ theorem reesAlgebra.fg (hI : I.Fg) : (reesAlgebra I).Fg := by classical
 #align rees_algebra.fg reesAlgebra.fg
 
 instance [IsNoetherianRing R] : Algebra.FiniteType R (reesAlgebra I) :=
-  ⟨(reesAlgebra I).fg_top.mpr (reesAlgebra.fg $ IsNoetherian.noetherian I)⟩
+  ⟨(reesAlgebra I).fg_top.mpr (reesAlgebra.fg <| IsNoetherian.noetherian I)⟩
 
 instance [IsNoetherianRing R] : IsNoetherianRing (reesAlgebra I) :=
   Algebra.FiniteType.is_noetherian_ring R _

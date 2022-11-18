@@ -125,7 +125,7 @@ section Module
 instance : AddCommMonoid (⨂[R] i, s i) :=
   { (addConGen (PiTensorProduct.Eqv R s)).AddMonoid with
     add_comm := fun x y =>
-      AddCon.induction_on₂ x y $ fun x y => Quotient.sound' $ AddConGen.Rel.of _ _ $ Eqv.add_comm _ _ }
+      (AddCon.induction_on₂ x y) fun x y => Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.add_comm _ _ }
 
 instance : Inhabited (⨂[R] i, s i) :=
   ⟨0⟩
@@ -136,32 +136,32 @@ variable (R) {s}
 over all `i : ι`, multiplied by the coefficient `r`. Note that this is meant as an auxiliary
 definition for this file alone, and that one should use `tprod` defined below for most purposes. -/
 def tprodCoeff (r : R) (f : ∀ i, s i) : ⨂[R] i, s i :=
-  AddCon.mk' _ $ FreeAddMonoid.of (r, f)
+  AddCon.mk' _ <| FreeAddMonoid.of (r, f)
 #align pi_tensor_product.tprod_coeff PiTensorProduct.tprodCoeff
 
 variable {R}
 
 theorem zero_tprod_coeff (f : ∀ i, s i) : tprodCoeff R 0 f = 0 :=
-  Quotient.sound' $ AddConGen.Rel.of _ _ $ Eqv.of_zero_scalar _
+  Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_zero_scalar _
 #align pi_tensor_product.zero_tprod_coeff PiTensorProduct.zero_tprod_coeff
 
 theorem zero_tprod_coeff' (z : R) (f : ∀ i, s i) (i : ι) (hf : f i = 0) : tprodCoeff R z f = 0 :=
-  Quotient.sound' $ AddConGen.Rel.of _ _ $ Eqv.of_zero _ _ i hf
+  Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_zero _ _ i hf
 #align pi_tensor_product.zero_tprod_coeff' PiTensorProduct.zero_tprod_coeff'
 
 theorem add_tprod_coeff (z : R) (f : ∀ i, s i) (i : ι) (m₁ m₂ : s i) :
     tprodCoeff R z (update f i m₁) + tprodCoeff R z (update f i m₂) = tprodCoeff R z (update f i (m₁ + m₂)) :=
-  Quotient.sound' $ AddConGen.Rel.of _ _ (Eqv.of_add z f i m₁ m₂)
+  Quotient.sound' <| AddConGen.Rel.of _ _ (Eqv.of_add z f i m₁ m₂)
 #align pi_tensor_product.add_tprod_coeff PiTensorProduct.add_tprod_coeff
 
 theorem add_tprod_coeff' (z₁ z₂ : R) (f : ∀ i, s i) :
     tprodCoeff R z₁ f + tprodCoeff R z₂ f = tprodCoeff R (z₁ + z₂) f :=
-  Quotient.sound' $ AddConGen.Rel.of _ _ (Eqv.of_add_scalar z₁ z₂ f)
+  Quotient.sound' <| AddConGen.Rel.of _ _ (Eqv.of_add_scalar z₁ z₂ f)
 #align pi_tensor_product.add_tprod_coeff' PiTensorProduct.add_tprod_coeff'
 
 theorem smul_tprod_coeff_aux (z : R) (f : ∀ i, s i) (i : ι) (r : R) :
     tprodCoeff R z (update f i (r • f i)) = tprodCoeff R (r * z) f :=
-  Quotient.sound' $ AddConGen.Rel.of _ _ $ Eqv.of_smul _ _ _ _
+  Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_smul _ _ _ _
 #align pi_tensor_product.smul_tprod_coeff_aux PiTensorProduct.smul_tprod_coeff_aux
 
 theorem smul_tprod_coeff (z : R) (f : ∀ i, s i) (i : ι) (r : R₁) [HasSmul R₁ R] [IsScalarTower R₁ R R]
@@ -182,15 +182,15 @@ def liftAddHom (φ : (R × ∀ i, s i) → F) (C0 : ∀ (r : R) (f : ∀ i, s i)
     (C_add_scalar : ∀ (r r' : R) (f : ∀ i, s i), φ (r, f) + φ (r', f) = φ (r + r', f))
     (C_smul : ∀ (r : R) (f : ∀ i, s i) (i : ι) (r' : R), φ (r, update f i (r' • f i)) = φ (r' * r, f)) :
     (⨂[R] i, s i) →+ F :=
-  (addConGen (PiTensorProduct.Eqv R s)).lift (FreeAddMonoid.lift φ) $
-    AddCon.add_con_gen_le $ fun x y hxy =>
+  (addConGen (PiTensorProduct.Eqv R s)).lift (FreeAddMonoid.lift φ) <|
+    AddCon.add_con_gen_le fun x y hxy =>
       match x, y, hxy with
-      | _, _, eqv.of_zero r' f i hf => (AddCon.ker_rel _).2 $ by simp [FreeAddMonoid.lift_eval_of, C0 r' f i hf]
-      | _, _, eqv.of_zero_scalar f => (AddCon.ker_rel _).2 $ by simp [FreeAddMonoid.lift_eval_of, C0']
-      | _, _, eqv.of_add z f i m₁ m₂ => (AddCon.ker_rel _).2 $ by simp [FreeAddMonoid.lift_eval_of, C_add]
-      | _, _, eqv.of_add_scalar z₁ z₂ f => (AddCon.ker_rel _).2 $ by simp [FreeAddMonoid.lift_eval_of, C_add_scalar]
-      | _, _, eqv.of_smul z f i r' => (AddCon.ker_rel _).2 $ by simp [FreeAddMonoid.lift_eval_of, C_smul]
-      | _, _, eqv.add_comm x y => (AddCon.ker_rel _).2 $ by simp_rw [AddMonoidHom.map_add, add_comm]
+      | _, _, eqv.of_zero r' f i hf => (AddCon.ker_rel _).2 <| by simp [FreeAddMonoid.lift_eval_of, C0 r' f i hf]
+      | _, _, eqv.of_zero_scalar f => (AddCon.ker_rel _).2 <| by simp [FreeAddMonoid.lift_eval_of, C0']
+      | _, _, eqv.of_add z f i m₁ m₂ => (AddCon.ker_rel _).2 <| by simp [FreeAddMonoid.lift_eval_of, C_add]
+      | _, _, eqv.of_add_scalar z₁ z₂ f => (AddCon.ker_rel _).2 <| by simp [FreeAddMonoid.lift_eval_of, C_add_scalar]
+      | _, _, eqv.of_smul z f i r' => (AddCon.ker_rel _).2 <| by simp [FreeAddMonoid.lift_eval_of, C_smul]
+      | _, _, eqv.add_comm x y => (AddCon.ker_rel _).2 <| by simp_rw [AddMonoidHom.map_add, add_comm]
 #align pi_tensor_product.lift_add_hom PiTensorProduct.liftAddHom
 
 @[elab_as_elim]
@@ -391,7 +391,7 @@ theorem lift.tprod (f : ∀ i, s i) : lift φ (tprod R f) = φ f :=
 #align pi_tensor_product.lift.tprod PiTensorProduct.lift.tprod
 
 theorem lift.unique' {φ' : (⨂[R] i, s i) →ₗ[R] E} (H : φ'.compMultilinearMap (tprod R) = φ) : φ' = lift φ :=
-  ext $ H.symm ▸ (lift.symm_apply_apply φ).symm
+  ext <| H.symm ▸ (lift.symm_apply_apply φ).symm
 #align pi_tensor_product.lift.unique' PiTensorProduct.lift.unique'
 
 theorem lift.unique {φ' : (⨂[R] i, s i) →ₗ[R] E} (H : ∀ f, φ' (tprod R f) = φ f) : φ' = lift φ :=
@@ -405,7 +405,7 @@ theorem lift_symm (φ' : (⨂[R] i, s i) →ₗ[R] E) : lift.symm φ' = φ'.comp
 
 @[simp]
 theorem lift_tprod : lift (tprod R : MultilinearMap R s _) = LinearMap.id :=
-  Eq.symm $ lift.unique' rfl
+  Eq.symm <| lift.unique' rfl
 #align pi_tensor_product.lift_tprod PiTensorProduct.lift_tprod
 
 section
@@ -440,7 +440,7 @@ theorem reindex_tprod (e : ι ≃ ι₂) (f : ∀ i, M) : reindex R M e (tprod R
 theorem reindex_comp_tprod (e : ι ≃ ι₂) :
     (reindex R M e : (⨂[R] i : ι, M) →ₗ[R] ⨂[R] i : ι₂, M).compMultilinearMap (tprod R) =
       (tprod R : MultilinearMap R (fun i => M) _).domDomCongr e.symm :=
-  MultilinearMap.ext $ reindex_tprod e
+  MultilinearMap.ext <| reindex_tprod e
 #align pi_tensor_product.reindex_comp_tprod PiTensorProduct.reindex_comp_tprod
 
 @[simp]
@@ -547,10 +547,10 @@ theorem subsingleton_equiv_apply_tprod [Subsingleton ι] (i : ι) (f : ι → M)
 section Tmul
 
 /-- Collapse a `tensor_product` of `pi_tensor_product`s. -/
-private def tmul : ((⨂[R] i : ι, M) ⊗[R] ⨂[R] i : ι₂, M) →ₗ[R] ⨂[R] i : ι ⊕ ι₂, M :=
+private def tmul : ((⨂[R] i : ι, M) ⊗[R] ⨂[R] i : ι₂, M) →ₗ[R] ⨂[R] i : Sum ι ι₂, M :=
   TensorProduct.lift
     { toFun := fun a =>
-        PiTensorProduct.lift $ PiTensorProduct.lift (MultilinearMap.currySumEquiv R _ _ M _ (tprod R)) a,
+        PiTensorProduct.lift <| PiTensorProduct.lift (MultilinearMap.currySumEquiv R _ _ M _ (tprod R)) a,
       map_add' := fun a b => by simp only [LinearEquiv.map_add, LinearMap.map_add],
       map_smul' := fun r a => by simp only [LinearEquiv.map_smul, LinearMap.map_smul, RingHom.id_apply] }
 #align pi_tensor_product.tmul pi_tensor_product.tmul
@@ -562,13 +562,13 @@ private theorem tmul_apply (a : ι → M) (b : ι₂ → M) :
 #align pi_tensor_product.tmul_apply pi_tensor_product.tmul_apply
 
 /-- Expand `pi_tensor_product` into a `tensor_product` of two factors. -/
-private def tmul_symm : (⨂[R] i : ι ⊕ ι₂, M) →ₗ[R] (⨂[R] i : ι, M) ⊗[R] ⨂[R] i : ι₂, M :=
+private def tmul_symm : (⨂[R] i : Sum ι ι₂, M) →ₗ[R] (⨂[R] i : ι, M) ⊗[R] ⨂[R] i : ι₂, M :=
   -- by using tactic mode, we avoid the need for a lot of `@`s and `_`s
-    PiTensorProduct.lift $
+    PiTensorProduct.lift <|
     by apply MultilinearMap.domCoprod <;> [exact tprod R, exact tprod R]
 #align pi_tensor_product.tmul_symm pi_tensor_product.tmul_symm
 
-private theorem tmul_symm_apply (a : ι ⊕ ι₂ → M) :
+private theorem tmul_symm_apply (a : Sum ι ι₂ → M) :
     tmulSymm (⨂ₜ[R] i, a i) = (⨂ₜ[R] i, a (Sum.inl i)) ⊗ₜ[R] ⨂ₜ[R] i, a (Sum.inr i) :=
   PiTensorProduct.lift.tprod _
 #align pi_tensor_product.tmul_symm_apply pi_tensor_product.tmul_symm_apply
@@ -582,7 +582,7 @@ attribute [local ext.1] TensorProduct.ext
 
 For simplicity, this is defined only for homogeneously- (rather than dependently-) typed components.
 -/
-def tmulEquiv : ((⨂[R] i : ι, M) ⊗[R] ⨂[R] i : ι₂, M) ≃ₗ[R] ⨂[R] i : ι ⊕ ι₂, M :=
+def tmulEquiv : ((⨂[R] i : ι, M) ⊗[R] ⨂[R] i : ι₂, M) ≃ₗ[R] ⨂[R] i : Sum ι ι₂, M :=
   LinearEquiv.ofLinear tmul tmulSymm
     (by
       ext x
@@ -602,7 +602,7 @@ theorem tmul_equiv_apply (a : ι → M) (b : ι₂ → M) :
 #align pi_tensor_product.tmul_equiv_apply PiTensorProduct.tmul_equiv_apply
 
 @[simp]
-theorem tmul_equiv_symm_apply (a : ι ⊕ ι₂ → M) :
+theorem tmul_equiv_symm_apply (a : Sum ι ι₂ → M) :
     (tmulEquiv R M).symm (⨂ₜ[R] i, a i) = (⨂ₜ[R] i, a (Sum.inl i)) ⊗ₜ[R] ⨂ₜ[R] i, a (Sum.inr i) :=
   tmul_symm_apply a
 #align pi_tensor_product.tmul_equiv_symm_apply PiTensorProduct.tmul_equiv_symm_apply

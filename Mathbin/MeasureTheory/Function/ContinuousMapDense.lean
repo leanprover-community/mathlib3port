@@ -6,7 +6,6 @@ Authors: Heather Macbeth
 import Mathbin.MeasureTheory.Measure.Regular
 import Mathbin.MeasureTheory.Function.SimpleFuncDenseLp
 import Mathbin.Topology.UrysohnsLemma
-import Mathbin.MeasureTheory.Function.L1Space
 
 /-!
 # Approximation in Lᵖ by continuous functions
@@ -87,8 +86,8 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
   intro ε hε
   -- A little bit of pre-emptive work, to find `η : ℝ≥0` which will be a margin small enough for
   -- our purposes
-  obtain ⟨η, hη_pos, hη_le⟩ : ∃ η, 0 < η ∧ (↑(∥bit0 ∥c∥∥₊ * (2 * η) ^ (1 / p.to_real)) : ℝ) ≤ ε := by
-    have : Filter.Tendsto (fun x : ℝ≥0 => ∥bit0 ∥c∥∥₊ * (2 * x) ^ (1 / p.to_real)) (𝓝 0) (𝓝 0) := by
+  obtain ⟨η, hη_pos, hη_le⟩ : ∃ η, 0 < η ∧ (↑(‖bit0 ‖c‖‖₊ * (2 * η) ^ (1 / p.to_real)) : ℝ) ≤ ε := by
+    have : Filter.Tendsto (fun x : ℝ≥0 => ‖bit0 ‖c‖‖₊ * (2 * x) ^ (1 / p.to_real)) (𝓝 0) (𝓝 0) := by
       have : Filter.Tendsto (fun x : ℝ≥0 => 2 * x) (𝓝 0) (𝓝 (2 * 0)) := filter.tendsto_id.const_mul 2
       convert ((Nnreal.continuous_at_rpow_const (Or.inr hp₀')).Tendsto.comp this).const_mul _
       simp [hp₀''.ne']
@@ -101,10 +100,10 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
   have hη_pos' : (0 : ℝ≥0∞) < η := Ennreal.coe_pos.2 hη_pos
   -- Use the regularity of the measure to `η`-approximate `s` by an open superset and a closed
   -- subset
-  obtain ⟨u, su, u_open, μu⟩ : ∃ (u) (_ : u ⊇ s), IsOpen u ∧ μ u < μ s + ↑η := by
+  obtain ⟨u, su, u_open, μu⟩ : ∃ (u : _)(_ : u ⊇ s), IsOpen u ∧ μ u < μ s + ↑η := by
     refine' s.exists_is_open_lt_of_lt _ _
     simpa using Ennreal.add_lt_add_left hsμ.ne hη_pos'
-  obtain ⟨F, Fs, F_closed, μF⟩ : ∃ (F) (_ : F ⊆ s), IsClosed F ∧ μ s < μ F + ↑η :=
+  obtain ⟨F, Fs, F_closed, μF⟩ : ∃ (F : _)(_ : F ⊆ s), IsClosed F ∧ μ s < μ F + ↑η :=
     hs.exists_is_closed_lt_add hsμ.ne hη_pos'.ne'
   have : Disjoint (uᶜ) F := (Fs.trans su).disjoint_compl_left
   have h_μ_sdiff : μ (u \ F) ≤ 2 * η := by
@@ -123,16 +122,16 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
   obtain ⟨g, hgu, hgF, hg_range⟩ := exists_continuous_zero_one_of_closed u_open.is_closed_compl F_closed this
   -- Multiply this by `c` to get a continuous approximation to the function `f`; the key point is
   -- that this is pointwise bounded by the indicator of the set `u \ F`
-  have g_norm : ∀ x, ∥g x∥ = g x := fun x => by rw [Real.norm_eq_abs, abs_of_nonneg (hg_range x).1]
-  have gc_bd : ∀ x, ∥g x • c - s.indicator (fun x => c) x∥ ≤ ∥(u \ F).indicator (fun x => bit0 ∥c∥) x∥ := by
+  have g_norm : ∀ x, ‖g x‖ = g x := fun x => by rw [Real.norm_eq_abs, abs_of_nonneg (hg_range x).1]
+  have gc_bd : ∀ x, ‖g x • c - s.indicator (fun x => c) x‖ ≤ ‖(u \ F).indicator (fun x => bit0 ‖c‖) x‖ := by
     intro x
-    by_cases hu:x ∈ u
+    by_cases hu : x ∈ u
     · rw [← Set.diff_union_of_subset (Fs.trans su)] at hu
       cases' hu with hFu hF
       · refine' (norm_sub_le _ _).trans _
         refine' (add_le_add_left (norm_indicator_le_norm_self (fun x => c) x) _).trans _
-        have h₀ : g x * ∥c∥ + ∥c∥ ≤ 2 * ∥c∥ := by nlinarith [(hg_range x).1, (hg_range x).2, norm_nonneg c]
-        have h₁ : (2 : ℝ) * ∥c∥ = bit0 ∥c∥ := by simpa using add_mul (1 : ℝ) 1 ∥c∥
+        have h₀ : g x * ‖c‖ + ‖c‖ ≤ 2 * ‖c‖ := by nlinarith [(hg_range x).1, (hg_range x).2, norm_nonneg c]
+        have h₁ : (2 : ℝ) * ‖c‖ = bit0 ‖c‖ := by simpa using add_mul (1 : ℝ) 1 ‖c‖
         simp [hFu, norm_smul, h₀, ← h₁, g_norm x]
         
       · simp [hgF hF, Fs hF]
@@ -143,7 +142,7 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
       
   -- The rest is basically just `ennreal`-arithmetic
   have gc_snorm :
-    snorm ((fun x => g x • c) - s.indicator fun x => c) p μ ≤ (↑(∥bit0 ∥c∥∥₊ * (2 * η) ^ (1 / p.to_real)) : ℝ≥0∞) := by
+    snorm ((fun x => g x • c) - s.indicator fun x => c) p μ ≤ (↑(‖bit0 ‖c‖‖₊ * (2 * η) ^ (1 / p.to_real)) : ℝ≥0∞) := by
     refine' (snorm_mono_ae (Filter.eventually_of_forall gc_bd)).trans _
     rw [snorm_indicator_const (u_open.sdiff F_closed).MeasurableSet hp₀.ne' hp]
     push_cast [← Ennreal.coe_rpow_of_nonneg _ hp₀']
@@ -161,9 +160,9 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     exact Ennreal.to_real_le_coe_of_le_coe gc_snorm
     
   · rw [SetLike.mem_coe, mem_bounded_continuous_function_iff]
-    refine' ⟨BoundedContinuousFunction.ofNormedAddCommGroup _ gc_cont ∥c∥ _, rfl⟩
+    refine' ⟨BoundedContinuousFunction.ofNormedAddCommGroup _ gc_cont ‖c‖ _, rfl⟩
     intro x
-    have h₀ : g x * ∥c∥ ≤ ∥c∥ := by nlinarith [(hg_range x).1, (hg_range x).2, norm_nonneg c]
+    have h₀ : g x * ‖c‖ ≤ ‖c‖ := by nlinarith [(hg_range x).1, (hg_range x).2, norm_nonneg c]
     simp [norm_smul, g_norm x, h₀]
     
 #align measure_theory.Lp.bounded_continuous_function_dense MeasureTheory.lp.bounded_continuous_function_dense

@@ -5,7 +5,6 @@ Authors: Alex Kontorovich, Heather Macbeth
 -/
 import Mathbin.MeasureTheory.Measure.Haar
 import Mathbin.MeasureTheory.Group.FundamentalDomain
-import Mathbin.Topology.CompactOpen
 import Mathbin.Algebra.Group.Opposite
 
 /-!

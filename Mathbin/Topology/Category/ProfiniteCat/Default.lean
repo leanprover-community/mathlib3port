@@ -9,7 +9,6 @@ import Mathbin.Topology.SubsetProperties
 import Mathbin.Topology.LocallyConstant.Basic
 import Mathbin.CategoryTheory.Adjunction.Reflective
 import Mathbin.CategoryTheory.Monad.Limits
-import Mathbin.CategoryTheory.Limits.Constructions.EpiMono
 import Mathbin.CategoryTheory.FintypeCat
 
 /-!
@@ -147,8 +146,8 @@ def ProfiniteCat.toCompHausEquivalence (X : CompHausCat.{u}) (Y : ProfiniteCat.{
   invFun g :=
     { toFun := Continuous.connectedComponentsLift g.2,
       continuous_to_fun := Continuous.connected_components_lift_continuous g.2 }
-  left_inv f := ContinuousMap.ext $ ConnectedComponents.surjective_coe.forall.2 $ fun a => rfl
-  right_inv f := ContinuousMap.ext $ fun x => rfl
+  left_inv f := ContinuousMap.ext <| ConnectedComponents.surjective_coe.forall.2 fun a => rfl
+  right_inv f := ContinuousMap.ext fun x => rfl
 #align Profinite.to_CompHaus_equivalence ProfiniteCat.toCompHausEquivalence
 
 /-- The connected_components functor from compact Hausdorff spaces to profinite spaces,
@@ -319,8 +318,8 @@ theorem epi_iff_surjective {X Y : ProfiniteCat.{u}} (f : X ⟶ Y) : Epi f ↔ Fu
     have hUy : U ∈ nhds y := hU.mem_nhds hyU
     obtain ⟨V, hV, hyV, hVU⟩ := is_topological_basis_clopen.mem_nhds_iff.mp hUy
     classical
-    letI : TopologicalSpace (ULift.{u} $ Fin 2) := ⊥
-    let Z := of (ULift.{u} $ Fin 2)
+    letI : TopologicalSpace (ULift.{u} <| Fin 2) := ⊥
+    let Z := of (ULift.{u} <| Fin 2)
     let g : Y ⟶ Z := ⟨(LocallyConstant.ofClopen hV).map ULift.up, LocallyConstant.continuous _⟩
     let h : Y ⟶ Z := ⟨fun _ => ⟨1⟩, continuous_const⟩
     have H : h = g := by

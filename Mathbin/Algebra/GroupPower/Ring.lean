@@ -7,7 +7,9 @@ import Mathbin.Algebra.GroupPower.Basic
 import Mathbin.Algebra.GroupWithZero.Commute
 import Mathbin.Algebra.Hom.Ring
 import Mathbin.Algebra.Ring.Commute
-import Mathbin.Data.Nat.Order.Lemmas
+import Mathbin.Algebra.GroupWithZero.Divisibility
+import Mathbin.Algebra.Ring.Divisibility
+import Mathbin.Data.Nat.Order.Basic
 
 /-!
 # Power operations on monoids with zero, semirings, and rings

@@ -3,7 +3,6 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Chris Hughes
 -/
-import Mathbin.Data.Fintype.Card
 import Mathbin.Data.Polynomial.RingDivision
 import Mathbin.GroupTheory.SpecificGroups.Cyclic
 import Mathbin.Algebra.GeomSum
@@ -40,11 +39,11 @@ section CancelMonoidWithZero
 variable {M : Type _} [CancelMonoidWithZero M] [Finite M]
 
 theorem mul_right_bijective_of_finite₀ {a : M} (ha : a ≠ 0) : Bijective fun b => a * b :=
-  Finite.injective_iff_bijective.1 $ mul_right_injective₀ ha
+  Finite.injective_iff_bijective.1 <| mul_right_injective₀ ha
 #align mul_right_bijective_of_finite₀ mul_right_bijective_of_finite₀
 
 theorem mul_left_bijective_of_finite₀ {a : M} (ha : a ≠ 0) : Bijective fun b => b * a :=
-  Finite.injective_iff_bijective.1 $ mul_left_injective₀ ha
+  Finite.injective_iff_bijective.1 <| mul_left_injective₀ ha
 #align mul_left_bijective_of_finite₀ mul_left_bijective_of_finite₀
 
 /-- Every finite nontrivial cancel_monoid_with_zero is a group_with_zero. -/
@@ -119,7 +118,7 @@ theorem is_cyclic_of_subgroup_is_domain [Finite G] (f : G →* R) (hf : Injectiv
 To support `ℤˣ` and other infinite monoids with finite groups of units, this requires only
 `finite Rˣ` rather than deducing it from `finite R`. -/
 instance [Finite Rˣ] : IsCyclic Rˣ :=
-  is_cyclic_of_subgroup_is_domain (Units.coeHom R) $ Units.ext
+  is_cyclic_of_subgroup_is_domain (Units.coeHom R) <| Units.ext
 
 section
 
@@ -140,7 +139,7 @@ end
 variable [Fintype G]
 
 theorem card_fiber_eq_of_mem_range {H : Type _} [Group H] [DecidableEq H] (f : G →* H) {x y : H} (hx : x ∈ Set.range f)
-    (hy : y ∈ Set.range f) : (univ.filter $ fun g => f g = x).card = (univ.filter $ fun g => f g = y).card := by
+    (hy : y ∈ Set.range f) : (univ.filter fun g => f g = x).card = (univ.filter fun g => f g = y).card := by
   rcases hx with ⟨x, rfl⟩
   rcases hy with ⟨y, rfl⟩
   refine' card_congr (fun g _ => g * x⁻¹ * y) _ _ fun g hg => ⟨g * y⁻¹ * x, _⟩
@@ -198,7 +197,7 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
   show (∑ b : MonoidHom.range f.to_hom_units, (b : R)) = 0
   calc
     (∑ b : MonoidHom.range f.to_hom_units, (b : R)) = ∑ n in range (orderOf x), x ^ n :=
-      Eq.symm $
+      Eq.symm <|
         sum_bij (fun n _ => x ^ n) (by simp only [mem_univ, forall_true_iff])
           (by simp only [imp_true_iff, eq_self_iff_true, Subgroup.coe_pow, Units.coe_pow, coe_coe])
           (fun m n hm hn =>

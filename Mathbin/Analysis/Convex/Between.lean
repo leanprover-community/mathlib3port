@@ -472,7 +472,7 @@ variable {R}
 theorem wbtw_smul_vadd_smul_vadd_of_nonneg_of_le (x : P) (v : V) {r₁ r₂ : R} (hr₁ : 0 ≤ r₁) (hr₂ : r₁ ≤ r₂) :
     Wbtw R x (r₁ • v +ᵥ x) (r₂ • v +ᵥ x) := by
   refine' ⟨r₁ / r₂, ⟨div_nonneg hr₁ (hr₁.trans hr₂), div_le_one_of_le hr₂ (hr₁.trans hr₂)⟩, _⟩
-  by_cases h:r₁ = 0
+  by_cases h : r₁ = 0
   · simp [h]
     
   simp [line_map_apply, smul_smul, ((hr₁.lt_of_ne' h).trans_le hr₂).Ne.symm]
@@ -529,7 +529,7 @@ theorem Wbtw.trans_left_right {w x y z : P} (h₁ : Wbtw R w y z) (h₂ : Wbtw R
     vadd_right_cancel_iff, div_mul_eq_mul_div, div_sub_div_same]
   nth_rw 0 [← mul_one (t₁ - t₂ * t₁)]
   rw [← mul_sub, mul_div_assoc]
-  by_cases h:1 - t₂ * t₁ = 0
+  by_cases h : 1 - t₂ * t₁ = 0
   · rw [sub_eq_zero, eq_comm] at h
     rw [h]
     suffices t₁ = 1 by simp [this]

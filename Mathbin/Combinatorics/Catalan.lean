@@ -5,6 +5,7 @@ Authors: Julian Kuelshammer
 -/
 import Mathbin.Data.Nat.Choose.Central
 import Mathbin.Algebra.BigOperators.Fin
+import Mathbin.Algebra.CharZero
 import Mathbin.Tactic.FieldSimp
 import Mathbin.Tactic.LinearCombination
 

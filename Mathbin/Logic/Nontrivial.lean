@@ -28,24 +28,21 @@ variable {α : Type _} {β : Type _}
 open Classical
 
 #print Nontrivial /-
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 /-- Predicate typeclass for expressing that a type is not reduced to a single element. In rings,
 this is equivalent to `0 ≠ 1`. In vector spaces, this is equivalent to positive dimension. -/
 class Nontrivial (α : Type _) : Prop where
-  exists_pair_ne : ∃ (x : α) (y : α), x ≠ y
+  exists_pair_ne : ∃ x y : α, x ≠ y
 #align nontrivial Nontrivial
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 #print nontrivial_iff /-
-theorem nontrivial_iff : Nontrivial α ↔ ∃ (x : α) (y : α), x ≠ y :=
+theorem nontrivial_iff : Nontrivial α ↔ ∃ x y : α, x ≠ y :=
   ⟨fun h => h.exists_pair_ne, fun h => ⟨h⟩⟩
 #align nontrivial_iff nontrivial_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 #print exists_pair_ne /-
-theorem exists_pair_ne (α : Type _) [Nontrivial α] : ∃ (x : α) (y : α), x ≠ y :=
+theorem exists_pair_ne (α : Type _) [Nontrivial α] : ∃ x y : α, x ≠ y :=
   Nontrivial.exists_pair_ne
 #align exists_pair_ne exists_pair_ne
 -/
@@ -54,7 +51,7 @@ theorem exists_pair_ne (α : Type _) [Nontrivial α] : ∃ (x : α) (y : α), x 
 -- See Note [decidable namespace]
 protected theorem Decidable.exists_ne [Nontrivial α] [DecidableEq α] (x : α) : ∃ y, y ≠ x := by
   rcases exists_pair_ne α with ⟨y, y', h⟩
-  by_cases hx:x = y
+  by_cases hx : x = y
   · rw [← hx] at h
     exact ⟨y', h.symm⟩
     
@@ -74,11 +71,11 @@ protected theorem Decidable.exists_ne [Nontrivial α] [DecidableEq α] (x : α) 
        [(Term.instBinder "[" [] (Term.app `Nontrivial [`α]) "]") (Term.explicitBinder "(" [`x] [":" `α] [] ")")]
        (Term.typeSpec
         ":"
-        (Init.Logic.«term∃_,_»
+        («term∃_,_»
          "∃"
-         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `y) []))
-         ", "
-         (Init.Logic.«term_≠_» `y " ≠ " `x))))
+         (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `y)] []))
+         ","
+         («term_≠_» `y "≠" `x))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -153,17 +150,15 @@ theorem nontrivial_of_lt [Preorder α] (x y : α) (h : x < y) : Nontrivial α :=
 #align nontrivial_of_lt nontrivial_of_lt
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 #print exists_pair_lt /-
-theorem exists_pair_lt (α : Type _) [Nontrivial α] [LinearOrder α] : ∃ (x : α) (y : α), x < y := by
+theorem exists_pair_lt (α : Type _) [Nontrivial α] [LinearOrder α] : ∃ x y : α, x < y := by
   rcases exists_pair_ne α with ⟨x, y, hxy⟩
   cases lt_or_gt_of_ne hxy <;> exact ⟨_, _, h⟩
 #align exists_pair_lt exists_pair_lt
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 #print nontrivial_iff_lt /-
-theorem nontrivial_iff_lt [LinearOrder α] : Nontrivial α ↔ ∃ (x : α) (y : α), x < y :=
+theorem nontrivial_iff_lt [LinearOrder α] : Nontrivial α ↔ ∃ x y : α, x < y :=
   ⟨fun h => @exists_pair_lt α h _, fun ⟨x, y, h⟩ => nontrivial_of_lt x y h⟩
 #align nontrivial_iff_lt nontrivial_iff_lt
 -/
@@ -176,7 +171,7 @@ theorem nontrivial_iff_exists_ne (x : α) : Nontrivial α ↔ ∃ y, y ≠ x :=
 
 #print Subtype.nontrivial_iff_exists_ne /-
 theorem Subtype.nontrivial_iff_exists_ne (p : α → Prop) (x : Subtype p) :
-    Nontrivial (Subtype p) ↔ ∃ (y : α) (hy : p y), y ≠ x := by
+    Nontrivial (Subtype p) ↔ ∃ (y : α)(hy : p y), y ≠ x := by
   simp only [nontrivial_iff_exists_ne x, Subtype.exists, Ne.def, Subtype.ext_iff, Subtype.coe_mk]
 #align subtype.nontrivial_iff_exists_ne Subtype.nontrivial_iff_exists_ne
 -/
@@ -227,14 +222,14 @@ theorem not_nontrivial_iff_subsingleton : ¬Nontrivial α ↔ Subsingleton α :=
 -/
 
 #print not_nontrivial /-
-theorem not_nontrivial (α) [Subsingleton α] : ¬Nontrivial α := fun ⟨⟨x, y, h⟩⟩ => h $ Subsingleton.elim x y
+theorem not_nontrivial (α) [Subsingleton α] : ¬Nontrivial α := fun ⟨⟨x, y, h⟩⟩ => h <| Subsingleton.elim x y
 #align not_nontrivial not_nontrivial
 -/
 
 #print not_subsingleton /-
 theorem not_subsingleton (α) [h : Nontrivial α] : ¬Subsingleton α :=
   let ⟨⟨x, y, hxy⟩⟩ := h
-  fun ⟨h'⟩ => hxy $ h' x y
+  fun ⟨h'⟩ => hxy <| h' x y
 #align not_subsingleton not_subsingleton
 -/
 
@@ -249,7 +244,7 @@ theorem subsingleton_or_nontrivial (α : Type _) : Subsingleton α ∨ Nontrivia
 #print false_of_nontrivial_of_subsingleton /-
 theorem false_of_nontrivial_of_subsingleton (α : Type _) [Nontrivial α] [Subsingleton α] : False :=
   let ⟨x, y, h⟩ := exists_pair_ne α
-  h $ Subsingleton.elim x y
+  h <| Subsingleton.elim x y
 #align false_of_nontrivial_of_subsingleton false_of_nontrivial_of_subsingleton
 -/
 
@@ -297,7 +292,7 @@ which it does not take a given value. -/
 protected theorem Function.Injective.exists_ne [Nontrivial α] {f : α → β} (hf : Function.Injective f) (y : β) :
     ∃ x, f x ≠ y := by
   rcases exists_pair_ne α with ⟨x₁, x₂, hx⟩
-  by_cases h:f x₂ = y
+  by_cases h : f x₂ = y
   · exact ⟨x₁, (hf.ne_iff' h).2 hx⟩
     
   · exact ⟨x₂, h⟩
@@ -505,7 +500,7 @@ end Pi
 
 #print Function.nontrivial /-
 instance Function.nontrivial [h : Nonempty α] [Nontrivial β] : Nontrivial (α → β) :=
-  h.elim $ fun a => Pi.nontrivial_at a
+  h.elim fun a => Pi.nontrivial_at a
 #align function.nontrivial Function.nontrivial
 -/
 

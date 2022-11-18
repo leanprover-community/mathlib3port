@@ -3,8 +3,9 @@ Copyright (c) 2022 Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
+import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Data.Fintype.Card
-import Mathbin.Algebra.BigOperators.Default
+import Mathbin.Data.Prod.Lex
 
 /-!
 # Multiset coercion to type
@@ -40,7 +41,7 @@ instance from inadverently applying to other sigma types. One should not use thi
 directly. -/
 @[nolint has_nonempty_instance]
 def Multiset.ToType (m : Multiset α) : Type _ :=
-  Σ x : α, Fin (m.count x)
+  Σx : α, Fin (m.count x)
 #align multiset.to_type Multiset.ToType
 
 /-- Create a type that has the same number of elements as the multiset.
@@ -95,7 +96,7 @@ protected theorem Multiset.forall_coe (p : m → Prop) : (∀ x : m, p x) ↔ �
 #align multiset.forall_coe Multiset.forall_coe
 
 @[simp]
-protected theorem Multiset.exists_coe (p : m → Prop) : (∃ x : m, p x) ↔ ∃ (x : α) (i : Fin (m.count x)), p ⟨x, i⟩ :=
+protected theorem Multiset.exists_coe (p : m → Prop) : (∃ x : m, p x) ↔ ∃ (x : α)(i : Fin (m.count x)), p ⟨x, i⟩ :=
   Sigma.exists
 #align multiset.exists_coe Multiset.exists_coe
 
@@ -121,7 +122,7 @@ theorem Multiset.mem_to_enum_finset (m : Multiset α) (p : α × ℕ) : p ∈ m.
 #align multiset.mem_to_enum_finset Multiset.mem_to_enum_finset
 
 theorem Multiset.mem_of_mem_to_enum_finset {p : α × ℕ} (h : p ∈ m.toEnumFinset) : p.1 ∈ m :=
-  Multiset.count_pos.mp $ pos_of_gt $ (m.mem_to_enum_finset p).mp h
+  Multiset.count_pos.mp <| pos_of_gt <| (m.mem_to_enum_finset p).mp h
 #align multiset.mem_of_mem_to_enum_finset Multiset.mem_of_mem_to_enum_finset
 
 @[mono]
@@ -136,7 +137,7 @@ theorem Multiset.to_enum_finset_subset_iff {m₁ m₂ : Multiset α} : m₁.toEn
   refine' ⟨fun h => _, Multiset.to_enum_finset_mono⟩
   rw [Multiset.le_iff_count]
   intro x
-  by_cases hx:x ∈ m₁
+  by_cases hx : x ∈ m₁
   · apply Nat.le_of_pred_lt
     have : (x, m₁.count x - 1) ∈ m₁.to_enum_finset := by
       rw [Multiset.mem_to_enum_finset]

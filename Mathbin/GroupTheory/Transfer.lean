@@ -44,10 +44,10 @@ variable (R S T : leftTransversals (H : Set G)) [FiniteIndex H]
 noncomputable def diff : A :=
   let α := MemLeftTransversals.toEquiv S.2
   let β := MemLeftTransversals.toEquiv T.2
-  (@Finset.univ (G ⧸ H) H.fintypeQuotientOfFiniteIndex).Prod $ fun q =>
+  (@Finset.univ (G ⧸ H) H.fintypeQuotientOfFiniteIndex).Prod fun q =>
     ϕ
       ⟨(α q)⁻¹ * β q,
-        QuotientGroup.left_rel_apply.mp $ Quotient.exact' ((α.symm_apply_apply q).trans (β.symm_apply_apply q).symm)⟩
+        QuotientGroup.left_rel_apply.mp <| Quotient.exact' ((α.symm_apply_apply q).trans (β.symm_apply_apply q).symm)⟩
 #align subgroup.left_transversals.diff Subgroup.leftTransversals.diff
 
 @[to_additive]
@@ -65,7 +65,7 @@ theorem diff_self : diff ϕ T T = 1 :=
 
 @[to_additive]
 theorem diff_inv : (diff ϕ S T)⁻¹ = diff ϕ T S :=
-  inv_eq_of_mul_eq_one_right $ (diff_mul_diff ϕ S T S).trans $ diff_self ϕ S
+  inv_eq_of_mul_eq_one_right <| (diff_mul_diff ϕ S T S).trans <| diff_self ϕ S
 #align subgroup.left_transversals.diff_inv Subgroup.leftTransversals.diff_inv
 
 @[to_additive]
@@ -134,7 +134,7 @@ theorem transfer_eq_prod_quotient_orbit_rel_zpowers_quot [FiniteIndex H] (g : G)
 /-- Auxillary lemma in order to state `transfer_eq_pow`. -/
 theorem transfer_eq_pow_aux (g : G) (key : ∀ (k : ℕ) (g₀ : G), g₀⁻¹ * g ^ k * g₀ ∈ H → g₀⁻¹ * g ^ k * g₀ = g ^ k) :
     g ^ H.index ∈ H := by
-  by_cases hH:H.index = 0
+  by_cases hH : H.index = 0
   · rw [hH, pow_zero]
     exact H.one_mem
     

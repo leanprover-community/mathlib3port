@@ -49,8 +49,8 @@ theorem RespectsIso.basic_open_iff (hP : RespectsIso @P) {X Y : SchemeCat} [IsAf
     (r : Y.Presheaf.obj (Opposite.op ⊤)) :
     P (SchemeCat.Γ.map (f ∣_ Y.basicOpen r).op) ↔
       P
-        (@IsLocalization.Away.map (Y.Presheaf.obj (Opposite.op ⊤)) _ (Y.Presheaf.obj (Opposite.op $ Y.basicOpen r)) _ _
-          (X.Presheaf.obj (Opposite.op ⊤)) _ (X.Presheaf.obj (Opposite.op $ X.basicOpen (SchemeCat.Γ.map f.op r))) _ _
+        (@IsLocalization.Away.map (Y.Presheaf.obj (Opposite.op ⊤)) _ (Y.Presheaf.obj (Opposite.op <| Y.basicOpen r)) _ _
+          (X.Presheaf.obj (Opposite.op ⊤)) _ (X.Presheaf.obj (Opposite.op <| X.basicOpen (SchemeCat.Γ.map f.op r))) _ _
           (SchemeCat.Γ.map f.op) r _ _) :=
   by
   rw [Γ_map_morphism_restrict, hP.cancel_left_is_iso, hP.cancel_right_is_iso, ←
@@ -224,10 +224,10 @@ theorem affine_locally_iff_affine_opens_le (hP : RingHom.RespectsIso @P) {X Y : 
 theorem schemeRestrictBasicOpenOfLocalizationPreserves (h₁ : RingHom.RespectsIso @P)
     (h₂ : RingHom.LocalizationPreserves @P) {X Y : SchemeCat} [IsAffine Y] (f : X ⟶ Y) (r : Y.Presheaf.obj (op ⊤))
     (H : sourceAffineLocally (@P) f)
-    (U : (X.restrict ((Opens.map f.1.base).obj $ Y.basicOpen r).OpenEmbedding).affineOpens) :
+    (U : (X.restrict ((Opens.map f.1.base).obj <| Y.basicOpen r).OpenEmbedding).affineOpens) :
     P
       (SchemeCat.Γ.map
-        ((X.restrict ((Opens.map f.1.base).obj $ Y.basicOpen r).OpenEmbedding).ofRestrict U.1.OpenEmbedding ≫
+        ((X.restrict ((Opens.map f.1.base).obj <| Y.basicOpen r).OpenEmbedding).ofRestrict U.1.OpenEmbedding ≫
             f ∣_ Y.basicOpen r).op) :=
   by
   specialize H ⟨_, U.2.image_is_open_immersion (X.of_restrict _)⟩
@@ -416,29 +416,26 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : SchemeCat} (f : X ⟶ Y) [Is
         ":"
         (Term.app
          `Tfae
-         [(Init.Core.«term[_,»
+         [(«term[_]»
            "["
            [(Term.app `sourceAffineLocally [(Term.explicit "@" `P) `f])
             ","
-            (Init.Logic.«term∃_,_»
+            («term∃_,_»
              "∃"
-             (Std.ExtendedBinder.extBinders
-              (Std.ExtendedBinder.extBinderCollection
-               [(Std.ExtendedBinder.extBinderParenthesized
-                 "("
-                 (Std.ExtendedBinder.extBinder
-                  (Lean.binderIdent `𝒰)
-                  [(group ":" (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`X]))])
-                 ")")
-                (Std.ExtendedBinder.extBinderParenthesized
-                 "("
-                 (Std.ExtendedBinder.extBinder
-                  (Lean.binderIdent (Term.hole "_"))
-                  [(group
-                    ":"
-                    (Term.forall "∀" [`i] [] "," (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])])))])
-                 ")")]))
-             ", "
+             (Lean.explicitBinders
+              [(Lean.bracketedExplicitBinders
+                "("
+                [(Lean.binderIdent `𝒰)]
+                ":"
+                (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`X])
+                ")")
+               (Lean.bracketedExplicitBinders
+                "("
+                [(Lean.binderIdent (Term.hole "_"))]
+                ":"
+                (Term.forall "∀" [`i] [] "," (Term.app `IsAffine [(Term.app (Term.proj `𝒰 "." `obj) [`i])]))
+                ")")])
+             ","
              (Term.forall
               "∀"
               [`i]
@@ -887,17 +884,17 @@ theorem
         ":"
         (Term.app
          `Tfae
-         [(Init.Core.«term[_,»
+         [(«term[_]»
            "["
            [(Term.app `sourceAffineLocally [(Term.explicit "@" `P) `f])
             ","
-            (Init.Logic.«term∃_,_»
+            («term∃_,_»
              "∃"
-             (Std.ExtendedBinder.extBinders
-              (Std.ExtendedBinder.extBinder
-               (Lean.binderIdent `𝒰)
-               [(group ":" (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`X]))]))
-             ", "
+             (Lean.explicitBinders
+              (Lean.unbracketedExplicitBinders
+               [(Lean.binderIdent `𝒰)]
+               [":" (Term.app (Term.explicitUniv `SchemeCat.OpenCover ".{" [`u] "}") [`X])]))
+             ","
              (Term.forall
               "∀"
               [`i]

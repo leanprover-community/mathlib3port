@@ -27,12 +27,12 @@ variable {A : Type u} [CommRing A] [IsDomain A] [IsNoetherianRing A]
 theorem exists_prime_spectrum_prod_le (I : Ideal R) :
     ∃ Z : Multiset (PrimeSpectrum R), Multiset.prod (Z.map (coe : Subtype _ → Ideal R)) ≤ I := by
   refine' IsNoetherian.induction (fun (M : Ideal R) hgt => _) I
-  by_cases h_prM:M.is_prime
+  by_cases h_prM : M.is_prime
   · use {⟨M, h_prM⟩}
     rw [Multiset.map_singleton, Multiset.prod_singleton, Subtype.coe_mk]
     exact le_rfl
     
-  by_cases htop:M = ⊤
+  by_cases htop : M = ⊤
   · rw [htop]
     exact ⟨0, le_top⟩
     
@@ -67,13 +67,13 @@ theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) 
   intro h_nzM
   have hA_nont : Nontrivial A
   apply IsDomain.to_nontrivial A
-  by_cases h_topM:M = ⊤
+  by_cases h_topM : M = ⊤
   · rcases h_topM with rfl
     obtain ⟨p_id, h_nzp, h_pp⟩ : ∃ p : Ideal A, p ≠ ⊥ ∧ p.IsPrime := by apply ring.not_is_field_iff_exists_prime.mp h_fA
     use ({⟨p_id, h_pp⟩} : Multiset (PrimeSpectrum A)), le_top
     rwa [Multiset.map_singleton, Multiset.prod_singleton, Subtype.coe_mk]
     
-  by_cases h_prM:M.is_prime
+  by_cases h_prM : M.is_prime
   · use ({⟨M, h_prM⟩} : Multiset (PrimeSpectrum A))
     rw [Multiset.map_singleton, Multiset.prod_singleton, Subtype.coe_mk]
     exact ⟨le_rfl, h_nzM⟩
@@ -103,7 +103,7 @@ theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) 
 open TopologicalSpace
 
 instance : NoetherianSpace (PrimeSpectrum R) := by
-  rw [(noetherian_space_tfae $ PrimeSpectrum R).out 0 1]
+  rw [(noetherian_space_tfae <| PrimeSpectrum R).out 0 1]
   have H := ‹IsNoetherianRing R›
   rw [is_noetherian_ring_iff, is_noetherian_iff_well_founded] at H
   exact (closeds_embedding R).dual.WellFounded H

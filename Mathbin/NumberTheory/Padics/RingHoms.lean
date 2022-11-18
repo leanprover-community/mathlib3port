@@ -59,7 +59,7 @@ variable (p) (r : ℚ)
 omit hp_prime
 
 /-- `mod_part p r` is an integer that satisfies
-`∥(r - mod_part p r : ℚ_[p])∥ < 1` when `∥(r : ℚ_[p])∥ ≤ 1`,
+`‖(r - mod_part p r : ℚ_[p])‖ < 1` when `‖(r : ℚ_[p])‖ ≤ 1`,
 see `padic_int.norm_sub_mod_part`.
 It is the unique non-negative integer that is `< p` with this property.
 
@@ -83,19 +83,19 @@ theorem mod_part_lt_p : modPart p r < p := by
 #align padic_int.mod_part_lt_p PadicInt.mod_part_lt_p
 
 theorem mod_part_nonneg : 0 ≤ modPart p r :=
-  Int.mod_nonneg _ $ by exact_mod_cast hp_prime.1.NeZero
+  Int.mod_nonneg _ <| by exact_mod_cast hp_prime.1.NeZero
 #align padic_int.mod_part_nonneg PadicInt.mod_part_nonneg
 
-theorem is_unit_denom (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : IsUnit (r.denom : ℤ_[p]) := by
+theorem is_unit_denom (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) : IsUnit (r.denom : ℤ_[p]) := by
   rw [is_unit_iff]
   apply le_antisymm (r.denom : ℤ_[p]).2
   rw [← not_lt, val_eq_coe, coe_nat_cast]
   intro norm_denom_lt
-  have hr : ∥(r * r.denom : ℚ_[p])∥ = ∥(r.num : ℚ_[p])∥ := by
+  have hr : ‖(r * r.denom : ℚ_[p])‖ = ‖(r.num : ℚ_[p])‖ := by
     rw_mod_cast [@Rat.mul_denom_eq_num r]
     rfl
   rw [padicNormE.mul] at hr
-  have key : ∥(r.num : ℚ_[p])∥ < 1 := by
+  have key : ‖(r.num : ℚ_[p])‖ < 1 := by
     calc
       _ = _ := hr.symm
       _ < 1 * 1 := mul_lt_mul' h norm_denom_lt (norm_nonneg _) zero_lt_one
@@ -109,7 +109,7 @@ theorem is_unit_denom (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : IsUnit (r.deno
   rwa [← r.cop.gcd_eq_one, Nat.dvd_gcd_iff, ← Int.coe_nat_dvd_left, ← Int.coe_nat_dvd]
 #align padic_int.is_unit_denom PadicInt.is_unit_denom
 
-theorem norm_sub_mod_part_aux (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : ↑p ∣ r.num - r.num * r.denom.gcdA p % p * ↑r.denom := by
+theorem norm_sub_mod_part_aux (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) : ↑p ∣ r.num - r.num * r.denom.gcdA p % p * ↑r.denom := by
   rw [← Zmod.int_coe_zmod_eq_zero_iff_dvd]
   simp only [Int.cast_ofNat, Zmod.nat_cast_mod, Int.cast_mul, Int.cast_sub]
   have := congr_arg (coe : ℤ → Zmod p) (gcd_eq_gcd_ab r.denom p)
@@ -128,7 +128,7 @@ theorem norm_sub_mod_part_aux (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : ↑p �
   exact is_unit_denom r h
 #align padic_int.norm_sub_mod_part_aux PadicInt.norm_sub_mod_part_aux
 
-theorem norm_sub_mod_part (h : ∥(r : ℚ_[p])∥ ≤ 1) : ∥(⟨r, h⟩ - modPart p r : ℤ_[p])∥ < 1 := by
+theorem norm_sub_mod_part (h : ‖(r : ℚ_[p])‖ ≤ 1) : ‖(⟨r, h⟩ - modPart p r : ℤ_[p])‖ < 1 := by
   let n := mod_part p r
   rw [norm_lt_one_iff_dvd, ← (is_unit_denom r h).dvd_mul_right]
   suffices ↑p ∣ r.num - n * r.denom by
@@ -141,8 +141,8 @@ theorem norm_sub_mod_part (h : ∥(r : ℚ_[p])∥ ≤ 1) : ∥(⟨r, h⟩ - mod
   exact norm_sub_mod_part_aux r h
 #align padic_int.norm_sub_mod_part PadicInt.norm_sub_mod_part
 
-theorem exists_mem_range_of_norm_rat_le_one (h : ∥(r : ℚ_[p])∥ ≤ 1) :
-    ∃ n : ℤ, 0 ≤ n ∧ n < p ∧ ∥(⟨r, h⟩ - n : ℤ_[p])∥ < 1 :=
+theorem exists_mem_range_of_norm_rat_le_one (h : ‖(r : ℚ_[p])‖ ≤ 1) :
+    ∃ n : ℤ, 0 ≤ n ∧ n < p ∧ ‖(⟨r, h⟩ - n : ℤ_[p])‖ < 1 :=
   ⟨modPart p r, mod_part_nonneg _, mod_part_lt_p _, norm_sub_mod_part _ h⟩
 #align padic_int.exists_mem_range_of_norm_rat_le_one PadicInt.exists_mem_range_of_norm_rat_le_one
 
@@ -177,10 +177,10 @@ variable (x : ℤ_[p])
 theorem exists_mem_range : ∃ n : ℕ, n < p ∧ x - n ∈ maximalIdeal ℤ_[p] := by
   simp only [maximal_ideal_eq_span_p, Ideal.mem_span_singleton, ← norm_lt_one_iff_dvd]
   obtain ⟨r, hr⟩ := rat_dense p (x : ℚ_[p]) zero_lt_one
-  have H : ∥(r : ℚ_[p])∥ ≤ 1 := by
+  have H : ‖(r : ℚ_[p])‖ ≤ 1 := by
     rw [norm_sub_rev] at hr
     calc
-      _ = ∥(r : ℚ_[p]) - x + x∥ := by ring_nf
+      _ = ‖(r : ℚ_[p]) - x + x‖ := by ring_nf
       _ ≤ _ := padicNormE.nonarchimedean _ _
       _ ≤ _ := max_le (le_of_lt hr) x.2
       
@@ -198,7 +198,7 @@ theorem exists_mem_range : ∃ n : ℕ, n < p ∧ x - n ∈ maximalIdeal ℤ_[p]
 #align padic_int.exists_mem_range PadicInt.exists_mem_range
 
 /-- `zmod_repr x` is the unique natural number smaller than `p`
-satisfying `∥(x - zmod_repr x : ℤ_[p])∥ < 1`.
+satisfying `‖(x - zmod_repr x : ℤ_[p])‖ < 1`.
 -/
 def zmodRepr : ℕ :=
   Classical.choose (exists_mem_range x)
@@ -607,7 +607,7 @@ def limNthHom (r : R) : ℤ_[p] :=
   ofIntSeq (nthHom f r) (isCauSeqNthHom f_compat r)
 #align padic_int.lim_nth_hom PadicInt.limNthHom
 
-theorem lim_nth_hom_spec (r : R) : ∀ ε : ℝ, 0 < ε → ∃ N : ℕ, ∀ n ≥ N, ∥limNthHom f_compat r - nthHom f r n∥ < ε := by
+theorem lim_nth_hom_spec (r : R) : ∀ ε : ℝ, 0 < ε → ∃ N : ℕ, ∀ n ≥ N, ‖limNthHom f_compat r - nthHom f r n‖ < ε := by
   intro ε hε
   obtain ⟨ε', hε'0, hε'⟩ : ∃ v : ℚ, (0 : ℝ) < v ∧ ↑v < ε := exists_rat_btwn hε
   norm_cast  at hε'0
@@ -624,15 +624,15 @@ theorem lim_nth_hom_zero : limNthHom f_compat 0 = 0 := by simp [lim_nth_hom] <;>
 #align padic_int.lim_nth_hom_zero PadicInt.lim_nth_hom_zero
 
 theorem lim_nth_hom_one : limNthHom f_compat 1 = 1 :=
-  Subtype.ext $ Quot.sound $ nth_hom_seq_one _
+  Subtype.ext <| Quot.sound <| nth_hom_seq_one _
 #align padic_int.lim_nth_hom_one PadicInt.lim_nth_hom_one
 
 theorem lim_nth_hom_add (r s : R) : limNthHom f_compat (r + s) = limNthHom f_compat r + limNthHom f_compat s :=
-  Subtype.ext $ Quot.sound $ nth_hom_seq_add _ _ _
+  Subtype.ext <| Quot.sound <| nth_hom_seq_add _ _ _
 #align padic_int.lim_nth_hom_add PadicInt.lim_nth_hom_add
 
 theorem lim_nth_hom_mul (r s : R) : limNthHom f_compat (r * s) = limNthHom f_compat r * limNthHom f_compat s :=
-  Subtype.ext $ Quot.sound $ nth_hom_seq_mul _ _ _
+  Subtype.ext <| Quot.sound <| nth_hom_seq_mul _ _ _
 #align padic_int.lim_nth_hom_mul PadicInt.lim_nth_hom_mul
 
 -- TODO: generalize this to arbitrary complete discrete valuation rings
@@ -668,7 +668,7 @@ See also `padic_int.lift_unique`.
 -/
 theorem lift_spec (n : ℕ) : (toZmodPow n).comp (lift f_compat) = f n := by
   ext r
-  rw [RingHom.comp_apply, ← Zmod.nat_cast_zmod_val (f n r), ← map_nat_cast $ to_zmod_pow n, ← sub_eq_zero, ←
+  rw [RingHom.comp_apply, ← Zmod.nat_cast_zmod_val (f n r), ← map_nat_cast <| to_zmod_pow n, ← sub_eq_zero, ←
     RingHom.map_sub, ← RingHom.mem_ker, ker_to_zmod_pow]
   apply lift_sub_val_mem_span
 #align padic_int.lift_spec PadicInt.lift_spec

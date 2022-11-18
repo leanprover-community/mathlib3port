@@ -152,7 +152,7 @@ Case conversion may be inaccurate. Consider using '#align graded_monoid.gmonoid.
 `gmonoid.gnpow` should be used instead. -/
 def gnpowRec : ∀ (n : ℕ) {i}, A i → A (n • i)
   | 0, i, a => cast (congr_arg A (zero_nsmul i).symm) GhasOne.one
-  | n + 1, i, a => cast (congr_arg A (succ_nsmul i n).symm) (GhasMul.mul a $ gnpow_rec _ a)
+  | n + 1, i, a => cast (congr_arg A (succ_nsmul i n).symm) (GhasMul.mul a <| gnpow_rec _ a)
 #align graded_monoid.gmonoid.gnpow_rec GradedMonoid.Gmonoid.gnpowRec
 
 @[simp]
@@ -169,7 +169,7 @@ unsafe def apply_gnpow_rec_zero_tac : tactic Unit :=
 
 @[simp]
 theorem gnpow_rec_succ (n : ℕ) (a : GradedMonoid A) :
-    (GradedMonoid.mk _ $ gnpowRec n.succ a.snd) = a * ⟨_, gnpowRec n a.snd⟩ :=
+    (GradedMonoid.mk _ <| gnpowRec n.succ a.snd) = a * ⟨_, gnpowRec n a.snd⟩ :=
   Sigma.ext (succ_nsmul _ _) (heq_of_cast_eq _ rfl).symm
 #align graded_monoid.gmonoid.gnpow_rec_succ GradedMonoid.Gmonoid.gnpow_rec_succ
 
@@ -196,7 +196,7 @@ class Gmonoid [AddMonoid ι] extends GhasMul A, GhasOne A where
   gnpow_zero' : ∀ a : GradedMonoid A, GradedMonoid.mk _ (gnpow 0 a.snd) = 1 := by
     run_tac
       gmonoid.apply_gnpow_rec_zero_tac
-  gnpow_succ' : ∀ (n : ℕ) (a : GradedMonoid A), (GradedMonoid.mk _ $ gnpow n.succ a.snd) = a * ⟨_, gnpow n a.snd⟩ := by
+  gnpow_succ' : ∀ (n : ℕ) (a : GradedMonoid A), (GradedMonoid.mk _ <| gnpow n.succ a.snd) = a * ⟨_, gnpow n a.snd⟩ := by
     run_tac
       gmonoid.apply_gnpow_rec_succ_tac
 #align graded_monoid.gmonoid GradedMonoid.Gmonoid
@@ -279,7 +279,7 @@ variable {A}
 
 @[simp]
 theorem mk_zero_smul {i} (a : A 0) (b : A i) : mk _ (a • b) = mk _ a * mk _ b :=
-  Sigma.ext (zero_add _).symm $ eq_rec_heq _ _
+  Sigma.ext (zero_add _).symm <| eq_rec_heq _ _
 #align graded_monoid.mk_zero_smul GradedMonoid.mk_zero_smul
 
 @[simp]
@@ -299,7 +299,7 @@ variable {A}
 
 @[simp]
 theorem mk_zero_pow (a : A 0) (n : ℕ) : mk _ (a ^ n) = mk _ a ^ n :=
-  Sigma.ext (nsmul_zero n).symm $ eq_rec_heq _ _
+  Sigma.ext (nsmul_zero n).symm <| eq_rec_heq _ _
 #align graded_monoid.mk_zero_pow GradedMonoid.mk_zero_pow
 
 variable (A)
@@ -547,7 +547,7 @@ theorem list_prod_map_mem_graded {ι'} (l : List ι') (i : ι' → ι) (r : ι' 
     exact one_mem_graded _
     
   · rw [List.map_cons, List.map_cons, List.prod_cons, List.sum_cons]
-    exact mul_mem_graded (h _ $ List.mem_cons_self _ _) (l_ih $ fun j hj => h _ $ List.mem_cons_of_mem _ hj)
+    exact mul_mem_graded (h _ <| List.mem_cons_self _ _) (l_ih fun j hj => h _ <| List.mem_cons_of_mem _ hj)
     
 #align set_like.list_prod_map_mem_graded SetLike.list_prod_map_mem_graded
 
@@ -607,7 +607,7 @@ theorem SetLike.list_dprod_eq (A : ι → S) [SetLike.GradedMonoid A] (fι : α 
     (l.dprod fι fA : (fun i => ↥(A i)) _) =
       ⟨List.prod (l.map fun a => fA a),
         (l.dprod_index_eq_map_sum fι).symm ▸ list_prod_map_mem_graded l _ _ fun i hi => (fA i).Prop⟩ :=
-  Subtype.ext $ SetLike.coe_list_dprod _ _ _ _
+  Subtype.ext <| SetLike.coe_list_dprod _ _ _ _
 #align set_like.list_dprod_eq SetLike.list_dprod_eq
 
 end Dprod

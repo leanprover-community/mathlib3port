@@ -41,8 +41,8 @@ open Set Filter
 
 variable {ι α β : Type _}
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`cobounded] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`le_cofinite] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`cobounded] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`le_cofinite] [] -/
 /-- A **bornology** on a type `α` is a filter of cobounded sets which contains the cofinite filter.
 Such spaces are equivalently specified by their bounded sets, see `bornology.of_bounded`
 and `bornology.ext_iff_is_bounded`-/
@@ -77,8 +77,8 @@ and showing that they satisfy the appropriate conditions. -/
 @[simps]
 def Bornology.ofBounded' {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B)
     (subset_mem : ∀ s₁ ∈ B, ∀ s₂ : Set α, s₂ ⊆ s₁ → s₂ ∈ B)
-    (union_mem : ∀ (s₁ s₂) (_ : s₁ ∈ B) (_ : s₂ ∈ B), s₁ ∪ s₂ ∈ B) (sUnion_univ : ⋃₀ B = univ) : Bornology α :=
-  Bornology.ofBounded B empty_mem subset_mem union_mem $ fun x => by
+    (union_mem : ∀ (s₁ s₂) (_ : s₁ ∈ B) (_ : s₂ ∈ B), s₁ ∪ s₂ ∈ B) (sUnion_univ : ⋃₀B = univ) : Bornology α :=
+  (Bornology.ofBounded B empty_mem subset_mem union_mem) fun x => by
     rw [sUnion_eq_univ_iff] at sUnion_univ
     rcases sUnion_univ x with ⟨s, hs, hxs⟩
     exact subset_mem s hs {x} (singleton_subset_iff.mpr hxs)
@@ -166,18 +166,18 @@ theorem IsBounded.subset (ht : IsBounded t) (hs : s ⊆ t) : IsBounded s :=
 #align bornology.is_bounded.subset Bornology.IsBounded.subset
 
 @[simp]
-theorem sUnion_bounded_univ : ⋃₀ { s : Set α | IsBounded s } = univ :=
-  sUnion_eq_univ_iff.2 $ fun a => ⟨{a}, is_bounded_singleton, mem_singleton a⟩
+theorem sUnion_bounded_univ : ⋃₀{ s : Set α | IsBounded s } = univ :=
+  sUnion_eq_univ_iff.2 fun a => ⟨{a}, is_bounded_singleton, mem_singleton a⟩
 #align bornology.sUnion_bounded_univ Bornology.sUnion_bounded_univ
 
 theorem comap_cobounded_le_iff [Bornology β] {f : α → β} :
     (cobounded β).comap f ≤ cobounded α ↔ ∀ ⦃s⦄, IsBounded s → IsBounded (f '' s) := by
   refine'
     ⟨fun h s hs => _, fun h t ht =>
-      ⟨(f '' tᶜ)ᶜ, h $ is_cobounded.compl ht, compl_subset_comm.1 $ subset_preimage_image _ _⟩⟩
+      ⟨(f '' tᶜ)ᶜ, h <| is_cobounded.compl ht, compl_subset_comm.1 <| subset_preimage_image _ _⟩⟩
   obtain ⟨t, ht, hts⟩ := h hs.compl
   rw [subset_compl_comm, ← preimage_compl] at hts
-  exact (is_cobounded.compl ht).Subset ((image_subset f hts).trans $ image_preimage_subset _ _)
+  exact (is_cobounded.compl ht).Subset ((image_subset f hts).trans <| image_preimage_subset _ _)
 #align bornology.comap_cobounded_le_iff Bornology.comap_cobounded_le_iff
 
 end
@@ -235,7 +235,7 @@ theorem is_bounded_bUnion_finset (s : Finset ι) {f : ι → Set α} : IsBounded
   is_bounded_bUnion s.finite_to_set
 #align bornology.is_bounded_bUnion_finset Bornology.is_bounded_bUnion_finset
 
-theorem is_bounded_sUnion {S : Set (Set α)} (hs : S.Finite) : IsBounded (⋃₀ S) ↔ ∀ s ∈ S, IsBounded s := by
+theorem is_bounded_sUnion {S : Set (Set α)} (hs : S.Finite) : IsBounded (⋃₀S) ↔ ∀ s ∈ S, IsBounded s := by
   rw [sUnion_eq_bUnion, is_bounded_bUnion hs]
 #align bornology.is_bounded_sUnion Bornology.is_bounded_sUnion
 

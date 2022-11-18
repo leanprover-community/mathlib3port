@@ -31,7 +31,7 @@ section Ext
 variable {M N : Dmatrix m n α}
 
 theorem ext_iff : (∀ i j, M i j = N i j) ↔ M = N :=
-  ⟨fun h => funext $ fun i => funext $ h i, fun h => by simp [h]⟩
+  ⟨fun h => funext fun i => funext <| h i, fun h => by simp [h]⟩
 #align dmatrix.ext_iff Dmatrix.ext_iff
 
 @[ext.1]

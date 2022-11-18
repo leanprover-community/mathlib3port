@@ -61,7 +61,7 @@ def upath01 : Path (ULift.up 0 : ULift.{u} I) (ULift.up 1) where
 attribute [local instance] Path.Homotopic.setoid
 
 /-- The homotopy path class of 0 → 1 in `ulift I` -/
-def uhpath01 : @fromTop (TopCat.of $ ULift.{u} I) (ULift.up (0 : I)) ⟶ fromTop (ULift.up 1) :=
+def uhpath01 : @fromTop (TopCat.of <| ULift.{u} I) (ULift.up (0 : I)) ⟶ fromTop (ULift.up 1) :=
   ⟦upath01⟧
 #align unit_interval.uhpath01 unitInterval.uhpath01
 
@@ -92,7 +92,7 @@ include hfg
 
 /-- If `f(p(t) = g(q(t))` for two paths `p` and `q`, then the induced path homotopy classes
 `f(p)` and `g(p)` are the same as well, despite having a priori different types -/
-theorem heq_path_of_eq_image : (πₘ f).map ⟦p⟧ == (πₘ g).map ⟦q⟧ := by
+theorem heq_path_of_eq_image : HEq ((πₘ f).map ⟦p⟧) ((πₘ g).map ⟦q⟧) := by
   simp only [map_eq, ← Path.Homotopic.map_lift]
   apply Path.Homotopic.hpath_hext
   exact hfg
@@ -151,7 +151,7 @@ theorem ulift_apply (i : ULift.{u} I) (x : X) : H.uliftMap (i, x) = H (i.down, x
  typechecker. In particular, the first path should be on the ulifted unit interval. -/
 abbrev prodToProdTopI {a₁ a₂ : TopCat.of (ULift I)} {b₁ b₂ : X} (p₁ : fromTop a₁ ⟶ fromTop a₂)
     (p₂ : fromTop b₁ ⟶ fromTop b₂) :=
-  @CategoryTheory.Functor.map _ _ _ _ (prodToProdTop (TopCat.of $ ULift I) X) (a₁, b₁) (a₂, b₂) (p₁, p₂)
+  @CategoryTheory.Functor.map _ _ _ _ (prodToProdTop (TopCat.of <| ULift I) X) (a₁, b₁) (a₂, b₂) (p₁, p₂)
 #align continuous_map.homotopy.prod_to_prod_Top_I ContinuousMap.Homotopy.prodToProdTopI
 
 /-- The diagonal path `d` of a homotopy `H` on a path `p` -/

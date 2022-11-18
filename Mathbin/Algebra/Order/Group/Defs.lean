@@ -6,6 +6,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 import Mathbin.Order.Hom.Basic
 import Mathbin.Algebra.Hom.Equiv.Units.Basic
 import Mathbin.Algebra.Order.Sub.Defs
+import Mathbin.Algebra.Order.Monoid.Defs
 
 /-!
 # Ordered groups
@@ -88,12 +89,12 @@ theorem inv_mul_le_iff_le_mul : b⁻¹ * a ≤ c ↔ a ≤ b * c := by rw [← m
 
 @[to_additive neg_le_iff_add_nonneg']
 theorem inv_le_iff_one_le_mul' : a⁻¹ ≤ b ↔ 1 ≤ a * b :=
-  (mul_le_mul_iff_left a).symm.trans $ by rw [mul_inv_self]
+  (mul_le_mul_iff_left a).symm.trans <| by rw [mul_inv_self]
 #align inv_le_iff_one_le_mul' inv_le_iff_one_le_mul'
 
 @[to_additive]
 theorem le_inv_iff_mul_le_one_left : a ≤ b⁻¹ ↔ b * a ≤ 1 :=
-  (mul_le_mul_iff_left b).symm.trans $ by rw [mul_inv_self]
+  (mul_le_mul_iff_left b).symm.trans <| by rw [mul_inv_self]
 #align le_inv_iff_mul_le_one_left le_inv_iff_mul_le_one_left
 
 @[to_additive]
@@ -102,7 +103,7 @@ theorem le_inv_mul_iff_le : 1 ≤ b⁻¹ * a ↔ b ≤ a := by rw [← mul_le_mu
 
 @[to_additive]
 theorem inv_mul_le_one_iff : a⁻¹ * b ≤ 1 ↔ b ≤ a :=
-  trans inv_mul_le_iff_le_mul $ by rw [mul_one]
+  trans inv_mul_le_iff_le_mul <| by rw [mul_one]
 #align inv_mul_le_one_iff inv_mul_le_one_iff
 
 end TypeclassesLeftLe
@@ -139,12 +140,12 @@ theorem inv_mul_lt_iff_lt_mul : b⁻¹ * a < c ↔ a < b * c := by rw [← mul_l
 
 @[to_additive]
 theorem inv_lt_iff_one_lt_mul' : a⁻¹ < b ↔ 1 < a * b :=
-  (mul_lt_mul_iff_left a).symm.trans $ by rw [mul_inv_self]
+  (mul_lt_mul_iff_left a).symm.trans <| by rw [mul_inv_self]
 #align inv_lt_iff_one_lt_mul' inv_lt_iff_one_lt_mul'
 
 @[to_additive]
 theorem lt_inv_iff_mul_lt_one' : a < b⁻¹ ↔ b * a < 1 :=
-  (mul_lt_mul_iff_left b).symm.trans $ by rw [mul_inv_self]
+  (mul_lt_mul_iff_left b).symm.trans <| by rw [mul_inv_self]
 #align lt_inv_iff_mul_lt_one' lt_inv_iff_mul_lt_one'
 
 @[to_additive]
@@ -153,7 +154,7 @@ theorem lt_inv_mul_iff_lt : 1 < b⁻¹ * a ↔ b < a := by rw [← mul_lt_mul_if
 
 @[to_additive]
 theorem inv_mul_lt_one_iff : a⁻¹ * b < 1 ↔ b < a :=
-  trans inv_mul_lt_iff_lt_mul $ by rw [mul_one]
+  trans inv_mul_lt_iff_lt_mul <| by rw [mul_one]
 #align inv_mul_lt_one_iff inv_mul_lt_one_iff
 
 end TypeclassesLeftLt
@@ -178,27 +179,27 @@ theorem Right.one_le_inv_iff : 1 ≤ a⁻¹ ↔ a ≤ 1 := by
 
 @[to_additive neg_le_iff_add_nonneg]
 theorem inv_le_iff_one_le_mul : a⁻¹ ≤ b ↔ 1 ≤ b * a :=
-  (mul_le_mul_iff_right a).symm.trans $ by rw [inv_mul_self]
+  (mul_le_mul_iff_right a).symm.trans <| by rw [inv_mul_self]
 #align inv_le_iff_one_le_mul inv_le_iff_one_le_mul
 
 @[to_additive]
 theorem le_inv_iff_mul_le_one_right : a ≤ b⁻¹ ↔ a * b ≤ 1 :=
-  (mul_le_mul_iff_right b).symm.trans $ by rw [inv_mul_self]
+  (mul_le_mul_iff_right b).symm.trans <| by rw [inv_mul_self]
 #align le_inv_iff_mul_le_one_right le_inv_iff_mul_le_one_right
 
 @[simp, to_additive]
 theorem mul_inv_le_iff_le_mul : a * b⁻¹ ≤ c ↔ a ≤ c * b :=
-  (mul_le_mul_iff_right b).symm.trans $ by rw [inv_mul_cancel_right]
+  (mul_le_mul_iff_right b).symm.trans <| by rw [inv_mul_cancel_right]
 #align mul_inv_le_iff_le_mul mul_inv_le_iff_le_mul
 
 @[simp, to_additive]
 theorem le_mul_inv_iff_mul_le : c ≤ a * b⁻¹ ↔ c * b ≤ a :=
-  (mul_le_mul_iff_right b).symm.trans $ by rw [inv_mul_cancel_right]
+  (mul_le_mul_iff_right b).symm.trans <| by rw [inv_mul_cancel_right]
 #align le_mul_inv_iff_mul_le le_mul_inv_iff_mul_le
 
 @[simp, to_additive]
 theorem mul_inv_le_one_iff_le : a * b⁻¹ ≤ 1 ↔ a ≤ b :=
-  mul_inv_le_iff_le_mul.trans $ by rw [one_mul]
+  mul_inv_le_iff_le_mul.trans <| by rw [one_mul]
 #align mul_inv_le_one_iff_le mul_inv_le_one_iff_le
 
 @[to_additive]
@@ -207,7 +208,7 @@ theorem le_mul_inv_iff_le : 1 ≤ a * b⁻¹ ↔ b ≤ a := by rw [← mul_le_mu
 
 @[to_additive]
 theorem mul_inv_le_one_iff : b * a⁻¹ ≤ 1 ↔ b ≤ a :=
-  trans mul_inv_le_iff_le_mul $ by rw [one_mul]
+  trans mul_inv_le_iff_le_mul <| by rw [one_mul]
 #align mul_inv_le_one_iff mul_inv_le_one_iff
 
 end TypeclassesRightLe
@@ -228,12 +229,12 @@ theorem Right.one_lt_inv_iff : 1 < a⁻¹ ↔ a < 1 := by rw [← mul_lt_mul_iff
 
 @[to_additive]
 theorem inv_lt_iff_one_lt_mul : a⁻¹ < b ↔ 1 < b * a :=
-  (mul_lt_mul_iff_right a).symm.trans $ by rw [inv_mul_self]
+  (mul_lt_mul_iff_right a).symm.trans <| by rw [inv_mul_self]
 #align inv_lt_iff_one_lt_mul inv_lt_iff_one_lt_mul
 
 @[to_additive]
 theorem lt_inv_iff_mul_lt_one : a < b⁻¹ ↔ a * b < 1 :=
-  (mul_lt_mul_iff_right b).symm.trans $ by rw [inv_mul_self]
+  (mul_lt_mul_iff_right b).symm.trans <| by rw [inv_mul_self]
 #align lt_inv_iff_mul_lt_one lt_inv_iff_mul_lt_one
 
 @[simp, to_additive]
@@ -242,7 +243,7 @@ theorem mul_inv_lt_iff_lt_mul : a * b⁻¹ < c ↔ a < c * b := by rw [← mul_l
 
 @[simp, to_additive]
 theorem lt_mul_inv_iff_mul_lt : c < a * b⁻¹ ↔ c * b < a :=
-  (mul_lt_mul_iff_right b).symm.trans $ by rw [inv_mul_cancel_right]
+  (mul_lt_mul_iff_right b).symm.trans <| by rw [inv_mul_cancel_right]
 #align lt_mul_inv_iff_mul_lt lt_mul_inv_iff_mul_lt
 
 @[simp, to_additive]
@@ -255,7 +256,7 @@ theorem lt_mul_inv_iff_lt : 1 < a * b⁻¹ ↔ b < a := by rw [← mul_lt_mul_if
 
 @[to_additive]
 theorem mul_inv_lt_one_iff : b * a⁻¹ < 1 ↔ b < a :=
-  trans mul_inv_lt_iff_lt_mul $ by rw [one_mul]
+  trans mul_inv_lt_iff_lt_mul <| by rw [one_mul]
 #align mul_inv_lt_one_iff mul_inv_lt_one_iff
 
 end TypeclassesRightLt
@@ -1032,7 +1033,7 @@ def mkOfPositiveCone {α : Type _} [AddCommGroup α] (C : PositiveCone α) : Ord
     lt_iff_le_not_le := fun a b => by simp <;> rw [C.pos_iff] <;> simp, le_refl := fun a => by simp [C.zero_nonneg],
     le_trans := fun a b c nab nbc => by
       simp [-sub_eq_add_neg] <;> rw [← sub_add_sub_cancel] <;> exact C.add_nonneg nbc nab,
-    le_antisymm := fun a b nab nba => eq_of_sub_eq_zero $ C.nonneg_antisymm nba (by rw [neg_sub] <;> exact nab),
+    le_antisymm := fun a b nab nba => eq_of_sub_eq_zero <| C.nonneg_antisymm nba (by rw [neg_sub] <;> exact nab),
     add_le_add_left := fun a b nab c => by simpa [(· ≤ ·), Preorder.Le] using nab }
 #align ordered_add_comm_group.mk_of_positive_cone OrderedAddCommGroup.mkOfPositiveCone
 

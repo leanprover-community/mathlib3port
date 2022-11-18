@@ -36,7 +36,7 @@ namespace Pgame
 birthdays of its left and right games. It may be thought as the "step" in which a certain game is
 constructed. -/
 noncomputable def birthday : Pgame.{u} → Ordinal.{u}
-  | ⟨xl, xr, xL, xR⟩ => max (lsub.{u, u} $ fun i => birthday (xL i)) (lsub.{u, u} $ fun i => birthday (xR i))
+  | ⟨xl, xr, xL, xR⟩ => max (lsub.{u, u} fun i => birthday (xL i)) (lsub.{u, u} fun i => birthday (xR i))
 #align pgame.birthday Pgame.birthday
 
 theorem birthday_def (x : Pgame) :

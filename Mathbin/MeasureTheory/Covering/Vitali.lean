@@ -57,7 +57,7 @@ wider applicability.
 -/
 theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : Set ι) (δ : ι → ℝ) (τ : ℝ) (hτ : 1 < τ)
     (δnonneg : ∀ a ∈ t, 0 ≤ δ a) (R : ℝ) (δle : ∀ a ∈ t, δ a ≤ R) (hne : ∀ a ∈ t, (B a).Nonempty) :
-    ∃ (u) (_ : u ⊆ t), u.PairwiseDisjoint B ∧ ∀ a ∈ t, ∃ b ∈ u, (B a ∩ B b).Nonempty ∧ δ a ≤ τ * δ b := by
+    ∃ (u : _)(_ : u ⊆ t), u.PairwiseDisjoint B ∧ ∀ a ∈ t, ∃ b ∈ u, (B a ∩ B b).Nonempty ∧ δ a ≤ τ * δ b := by
   /- The proof could be formulated as a transfinite induction. First pick an element of `t` with `δ`
     as large as possible (up to a factor of `τ`). Then among the remaining elements not intersecting
     the already chosen one, pick another element with large `δ`. Go on forever (transfinitely) until
@@ -78,12 +78,12 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
   -- By Zorn, choose a maximal family in the good set `T` of disjoint families.
   obtain ⟨u, uT, hu⟩ : ∃ u ∈ T, ∀ v ∈ T, u ⊆ v → v = u := by
     refine' zorn_subset _ fun U UT hU => _
-    refine' ⟨⋃₀ U, _, fun s hs => subset_sUnion_of_mem hs⟩
+    refine' ⟨⋃₀U, _, fun s hs => subset_sUnion_of_mem hs⟩
     simp only [Set.sUnion_subset_iff, and_imp, exists_prop, forall_exists_index, mem_sUnion, Set.mem_set_of_eq]
     refine'
       ⟨fun u hu => (UT hu).1, (pairwise_disjoint_sUnion hU.directed_on).2 fun u hu => (UT hu).2.1,
         fun a hat b u uU hbu hab => _⟩
-    obtain ⟨c, cu, ac, hc⟩ : ∃ (c : ι) (H : c ∈ u), (B a ∩ B c).Nonempty ∧ δ a ≤ τ * δ c := (UT uU).2.2 a hat b hbu hab
+    obtain ⟨c, cu, ac, hc⟩ : ∃ (c : ι)(H : c ∈ u), (B a ∩ B c).Nonempty ∧ δ a ≤ τ * δ c := (UT uU).2.2 a hat b hbu hab
     exact ⟨c, ⟨u, uU, cu⟩, ac, hc⟩
   -- the only nontrivial bit is to check that every `a ∈ t` intersects an element `b ∈ u` with
   -- comparatively large `δ b`. Assume this is not the case, then we will contradict the maximality.
@@ -93,7 +93,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
     intro c hc
     by_contra
     rw [not_disjoint_iff_nonempty_inter] at h
-    obtain ⟨d, du, ad, hd⟩ : ∃ (d : ι) (H : d ∈ u), (B a ∩ B d).Nonempty ∧ δ a ≤ τ * δ d := uT.2.2 a hat c hc h
+    obtain ⟨d, du, ad, hd⟩ : ∃ (d : ι)(H : d ∈ u), (B a ∩ B d).Nonempty ∧ δ a ≤ τ * δ d := uT.2.2 a hat c hc h
     exact lt_irrefl _ ((hu d du ad).trans_le hd)
   -- Let `A` be all the elements of `t` which do not intersect the family `u`. It is nonempty as it
   -- contains `a`. We will pick an element `a'` of `A` with `δ a'` almost as large as possible.
@@ -135,7 +135,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
   · intro c ct b ba'u hcb
     -- if `c` already intersects an element of `u`, then it intersects an element of `u` with
     -- large `δ` by the assumption on `u`, and there is nothing left to do.
-    by_cases H:∃ d ∈ u, (B c ∩ B d).Nonempty
+    by_cases H : ∃ d ∈ u, (B c ∩ B d).Nonempty
     · rcases H with ⟨d, du, hd⟩
       rcases uT.2.2 c ct d du hd with ⟨d', d'u, hd'⟩
       exact ⟨d', mem_insert_of_mem _ d'u, hd'⟩
@@ -168,14 +168,14 @@ extract a disjoint subfamily `u ⊆ t` so that all balls in `t` are covered by t
 dilations of balls in `u`. -/
 theorem exists_disjoint_subfamily_covering_enlargment_closed_ball [MetricSpace α] (t : Set ι) (x : ι → α) (r : ι → ℝ)
     (R : ℝ) (hr : ∀ a ∈ t, r a ≤ R) :
-    ∃ (u) (_ : u ⊆ t),
+    ∃ (u : _)(_ : u ⊆ t),
       (u.PairwiseDisjoint fun a => closedBall (x a) (r a)) ∧
         ∀ a ∈ t, ∃ b ∈ u, closedBall (x a) (r a) ⊆ closedBall (x b) (5 * r b) :=
   by
   rcases eq_empty_or_nonempty t with (rfl | tnonempty)
   · exact ⟨∅, subset.refl _, pairwise_disjoint_empty, by simp⟩
     
-  by_cases ht:∀ a ∈ t, r a < 0
+  by_cases ht : ∀ a ∈ t, r a < 0
   · exact
       ⟨t, subset.rfl, fun a ha b hb hab => by
         simp only [Function.onFun, closed_ball_eq_empty.2 (ht a ha), empty_disjoint], fun a ha =>
@@ -220,7 +220,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     (c : ι → α) (B : ι → Set α) (hB : ∀ a ∈ t, B a ⊆ closedBall (c a) (r a))
     (μB : ∀ a ∈ t, μ (closedBall (c a) (3 * r a)) ≤ C * μ (B a)) (ht : ∀ a ∈ t, (interior (B a)).Nonempty)
     (h't : ∀ a ∈ t, IsClosed (B a)) (hf : ∀ x ∈ s, ∀ ε > (0 : ℝ), ∃ a ∈ t, r a ≤ ε ∧ c a = x) :
-    ∃ (u) (_ : u ⊆ t), u.Countable ∧ u.PairwiseDisjoint B ∧ μ (s \ ⋃ a ∈ u, B a) = 0 := by
+    ∃ (u : _)(_ : u ⊆ t), u.Countable ∧ u.PairwiseDisjoint B ∧ μ (s \ ⋃ a ∈ u, B a) = 0 := by
   /- The idea of the proof is the following. Assume for simplicity that `μ` is finite. Applying the
     abstract Vitali covering theorem with `δ = r` given by `hf`, one obtains a disjoint subfamily `u`,
     such that any element of `t` intersects an element of `u` with comparable radius. Fix `ε > 0`.
@@ -242,7 +242,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
   -- choose around each `x` a small ball on which the measure is finite
   have : ∀ x, ∃ R, 0 < R ∧ R ≤ 1 ∧ μ (closed_ball x (20 * R)) < ∞ := by
     intro x
-    obtain ⟨R, Rpos, μR⟩ : ∃ (R : ℝ) (hR : 0 < R), μ (closed_ball x R) < ∞ :=
+    obtain ⟨R, Rpos, μR⟩ : ∃ (R : ℝ)(hR : 0 < R), μ (closed_ball x R) < ∞ :=
       (μ.finite_at_nhds x).exists_mem_basis nhds_basis_closed_ball
     refine' ⟨min 1 (R / 20), _, min_le_left _ _, _⟩
     · simp only [true_and_iff, lt_min_iff, zero_lt_one]
@@ -261,7 +261,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
   let t' := { a ∈ t | r a ≤ R (c a) }
   -- extract a disjoint subfamily `u` of `t'` thanks to the abstract Vitali covering theorem.
   obtain ⟨u, ut', u_disj, hu⟩ :
-    ∃ (u) (_ : u ⊆ t'), u.PairwiseDisjoint B ∧ ∀ a ∈ t', ∃ b ∈ u, (B a ∩ B b).Nonempty ∧ r a ≤ 2 * r b := by
+    ∃ (u : _)(_ : u ⊆ t'), u.PairwiseDisjoint B ∧ ∀ a ∈ t', ∃ b ∈ u, (B a ∩ B b).Nonempty ∧ r a ≤ 2 * r b := by
     have A : ∀ a ∈ t', r a ≤ 1 := by
       intro a ha
       apply ha.2.trans (hR1 (c a))
@@ -361,7 +361,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     have : ball x (R x) \ k ∈ 𝓝 z := by
       apply IsOpen.mem_nhds (is_open_ball.sdiff k_closed) _
       exact (mem_diff _).2 ⟨mem_of_mem_inter_right hz, z_notmem_k⟩
-    obtain ⟨d, dpos, hd⟩ : ∃ (d : ℝ) (dpos : 0 < d), closed_ball z d ⊆ ball x (R x) \ k :=
+    obtain ⟨d, dpos, hd⟩ : ∃ (d : ℝ)(dpos : 0 < d), closed_ball z d ⊆ ball x (R x) \ k :=
       nhds_basis_closed_ball.mem_iff.1 this
     -- choose an element `a` of the family `t` contained in this small ball
     obtain ⟨a, hat, ad, rfl⟩ : ∃ a ∈ t, r a ≤ min d (R z) ∧ c a = z
@@ -435,7 +435,7 @@ protected def vitaliFamily [MetricSpace α] [MeasurableSpace α] [OpensMeasurabl
         p.2.2 ⊆ closed_ball p.2.1 p.1 ∧
           μ (closed_ball p.2.1 (3 * p.1)) ≤ C * μ p.2.2 ∧
             (interior p.2.2).Nonempty ∧ IsClosed p.2.2 ∧ p.2.2 ∈ f p.2.1 ∧ p.2.1 ∈ s }
-    have A : ∀ x ∈ s, ∀ ε : ℝ, ε > 0 → ∃ (p : ℝ × α × Set α) (Hp : p ∈ t), p.1 ≤ ε ∧ p.2.1 = x := by
+    have A : ∀ x ∈ s, ∀ ε : ℝ, ε > 0 → ∃ (p : ℝ × α × Set α)(Hp : p ∈ t), p.1 ≤ ε ∧ p.2.1 = x := by
       intro x xs ε εpos
       rcases ffine x xs ε εpos with ⟨a, ha, h'a⟩
       rcases fsubset x xs ha with ⟨a_closed, a_int, ⟨r, ar, μr⟩⟩

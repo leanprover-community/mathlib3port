@@ -82,7 +82,7 @@ theorem range_proj_Icc : range (projIcc a b h) = univ :=
   (proj_Icc_surjective h).range_eq
 #align set.range_proj_Icc Set.range_proj_Icc
 
-theorem monotone_proj_Icc : Monotone (projIcc a b h) := fun x y hxy => max_le_max le_rfl $ min_le_min le_rfl hxy
+theorem monotone_proj_Icc : Monotone (projIcc a b h) := fun x y hxy => max_le_max le_rfl <| min_le_min le_rfl hxy
 #align set.monotone_proj_Icc Set.monotone_proj_Icc
 
 theorem strict_mono_on_proj_Icc : StrictMonoOn (projIcc a b h) (icc a b) := fun x hx y hy hxy => by
@@ -100,7 +100,7 @@ theorem Icc_extend_range (f : icc a b → β) : range (iccExtend h f) = range f 
 #align set.Icc_extend_range Set.Icc_extend_range
 
 theorem Icc_extend_of_le_left (f : icc a b → β) (hx : x ≤ a) : iccExtend h f x = f ⟨a, left_mem_Icc.2 h⟩ :=
-  congr_arg f $ proj_Icc_of_le_left h hx
+  congr_arg f <| proj_Icc_of_le_left h hx
 #align set.Icc_extend_of_le_left Set.Icc_extend_of_le_left
 
 @[simp]
@@ -109,7 +109,7 @@ theorem Icc_extend_left (f : icc a b → β) : iccExtend h f a = f ⟨a, left_me
 #align set.Icc_extend_left Set.Icc_extend_left
 
 theorem Icc_extend_of_right_le (f : icc a b → β) (hx : b ≤ x) : iccExtend h f x = f ⟨b, right_mem_Icc.2 h⟩ :=
-  congr_arg f $ proj_Icc_of_right_le h hx
+  congr_arg f <| proj_Icc_of_right_le h hx
 #align set.Icc_extend_of_right_le Set.Icc_extend_of_right_le
 
 @[simp]
@@ -118,12 +118,12 @@ theorem Icc_extend_right (f : icc a b → β) : iccExtend h f b = f ⟨b, right_
 #align set.Icc_extend_right Set.Icc_extend_right
 
 theorem Icc_extend_of_mem (f : icc a b → β) (hx : x ∈ icc a b) : iccExtend h f x = f ⟨x, hx⟩ :=
-  congr_arg f $ proj_Icc_of_mem h hx
+  congr_arg f <| proj_Icc_of_mem h hx
 #align set.Icc_extend_of_mem Set.Icc_extend_of_mem
 
 @[simp]
 theorem Icc_extend_coe (f : icc a b → β) (x : icc a b) : iccExtend h f x = f x :=
-  congr_arg f $ proj_Icc_coe h x
+  congr_arg f <| proj_Icc_coe h x
 #align set.Icc_extend_coe Set.Icc_extend_coe
 
 end Set
@@ -133,7 +133,7 @@ open Set
 variable [Preorder β] {a b : α} (h : a ≤ b) {f : icc a b → β}
 
 theorem Monotone.Icc_extend (hf : Monotone f) : Monotone (iccExtend h f) :=
-  hf.comp $ monotone_proj_Icc h
+  hf.comp <| monotone_proj_Icc h
 #align monotone.Icc_extend Monotone.Icc_extend
 
 theorem StrictMono.strict_mono_on_Icc_extend (hf : StrictMono f) : StrictMonoOn (iccExtend h f) (icc a b) :=

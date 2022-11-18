@@ -36,7 +36,7 @@ theorem Sup_def {s : Set ℕ} (h : ∃ n, ∀ a ∈ s, a ≤ n) : sup s = @Nat.f
 #align nat.Sup_def Nat.Sup_def
 
 theorem _root_.set.infinite.nat.Sup_eq_zero {s : Set ℕ} (h : s.Infinite) : sup s = 0 :=
-  dif_neg $ fun ⟨n, hn⟩ =>
+  dif_neg fun ⟨n, hn⟩ =>
     let ⟨k, hks, hk⟩ := h.exists_nat_lt n
     (hn k hks).not_lt hk
 #align nat._root_.set.infinite.nat.Sup_eq_zero nat._root_.set.infinite.nat.Sup_eq_zero
@@ -112,7 +112,7 @@ theorem Inf_upward_closed_eq_succ_iff {s : Set ℕ} (hs : ∀ k₁ k₂ : ℕ, k
     
   · rintro ⟨H, H'⟩
     rw [Inf_def (⟨_, H⟩ : s.nonempty), find_eq_iff]
-    exact ⟨H, fun n hnk hns => H' $ hs n k (lt_succ_iff.mp hnk) hns⟩
+    exact ⟨H, fun n hnk hns => H' <| hs n k (lt_succ_iff.mp hnk) hns⟩
     
 #align nat.Inf_upward_closed_eq_succ_iff Nat.Inf_upward_closed_eq_succ_iff
 
@@ -147,7 +147,7 @@ theorem Inf_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ inf { m | p m }) : inf 
     · exact (h.subset hp).elim
       
     rw [tsub_add_cancel_of_le hn]
-    exact Inf_mem (nonempty_of_pos_Inf $ n.zero_le.trans_lt hnp)
+    exact Inf_mem (nonempty_of_pos_Inf <| n.zero_le.trans_lt hnp)
     
   · have hp : ∃ n, n ∈ { m | p m } := ⟨_, hm⟩
     rw [Nat.Inf_def ⟨m, hm⟩, Nat.Inf_def hp]
@@ -163,7 +163,7 @@ theorem Inf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < inf { m | p m }) : inf { 
   obtain ⟨m, hm⟩ := nonempty_of_pos_Inf h
   refine'
     le_cInf ⟨m + n, _⟩ fun b hb =>
-      le_of_not_lt $ fun hbn => ne_of_mem_of_not_mem _ (not_mem_of_lt_Inf h) (tsub_eq_zero_of_le hbn.le)
+      le_of_not_lt fun hbn => ne_of_mem_of_not_mem _ (not_mem_of_lt_Inf h) (tsub_eq_zero_of_le hbn.le)
   · dsimp
     rwa [add_tsub_cancel_right]
     

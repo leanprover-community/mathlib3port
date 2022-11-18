@@ -129,8 +129,8 @@ the image of 'the differential to `Cⱼ`') is isomorphic to the kernel of `d : C
 the image of `d : Cᵢ → Cⱼ` when `rel i j` and `rel j k`. -/
 def homologyIso (C : HomologicalComplex V c) {i j k : ι} (hij : c.Rel i j) (hjk : c.Rel j k) :
     C.homology j ≅ homology (C.d i j) (C.d j k) (C.d_comp_d i j k) :=
-  homology.mapIso _ _ (Arrow.isoMk (C.xPrevIso hij) (Iso.refl _) $ by dsimp <;> rw [C.d_to_eq hij, category.comp_id])
-    (Arrow.isoMk (Iso.refl _) (C.xNextIso hjk) $ by dsimp <;> rw [C.d_from_comp_X_next_iso hjk, category.id_comp]) rfl
+  homology.mapIso _ _ (Arrow.isoMk (C.xPrevIso hij) (Iso.refl _) <| by dsimp <;> rw [C.d_to_eq hij, category.comp_id])
+    (Arrow.isoMk (Iso.refl _) (C.xNextIso hjk) <| by dsimp <;> rw [C.d_from_comp_X_next_iso hjk, category.id_comp]) rfl
 #align homological_complex.homology_iso HomologicalComplex.homologyIso
 
 end
@@ -141,12 +141,12 @@ end HomologicalComplex
 def ChainComplex.homologyZeroIso [HasKernels V] [HasImages V] [HasCokernels V] (C : ChainComplex V ℕ)
     [Epi (factorThruImage (C.d 1 0))] : C.homology 0 ≅ cokernel (C.d 1 0) :=
   (homology.mapIso _ _
-        (Arrow.isoMk (C.xPrevIso rfl) (Iso.refl _) $ by rw [C.d_to_eq rfl] <;> exact (category.comp_id _).symm :
+        (Arrow.isoMk (C.xPrevIso rfl) (Iso.refl _) <| by rw [C.d_to_eq rfl] <;> exact (category.comp_id _).symm :
           Arrow.mk (C.dTo 0) ≅ Arrow.mk (C.d 1 0))
-        (Arrow.isoMk (Iso.refl _) (Iso.refl _) $ by
-            simp [C.d_from_eq_zero fun h : _ = _ => one_ne_zero $ by rwa [ChainComplex.next_nat_zero] at h] :
+        (Arrow.isoMk (Iso.refl _) (Iso.refl _) <| by
+            simp [C.d_from_eq_zero fun h : _ = _ => one_ne_zero <| by rwa [ChainComplex.next_nat_zero] at h] :
           Arrow.mk (C.dFrom 0) ≅ Arrow.mk 0)
-        rfl).trans $
+        rfl).trans <|
     homologyOfZeroRight _
 #align chain_complex.homology_zero_iso ChainComplex.homologyZeroIso
 
@@ -157,8 +157,8 @@ def CochainComplex.homologyZeroIso [HasZeroObject V] [HasKernels V] [HasImages V
           (Arrow.isoMk (C.xPrevIsoSelf (by rw [CochainComplex.prev_nat_zero] <;> exact one_ne_zero)) (Iso.refl _)
               (by simp) :
             Arrow.mk (C.dTo 0) ≅ Arrow.mk 0)
-          (Arrow.isoMk (Iso.refl _) (C.xNextIso rfl) (by simp) : Arrow.mk (C.dFrom 0) ≅ Arrow.mk (C.d 0 1)) $
-        by simpa).trans $
+          (Arrow.isoMk (Iso.refl _) (C.xNextIso rfl) (by simp) : Arrow.mk (C.dFrom 0) ≅ Arrow.mk (C.d 0 1)) <|
+        by simpa).trans <|
     homologyOfZeroLeft _
 #align cochain_complex.homology_zero_iso CochainComplex.homologyZeroIso
 

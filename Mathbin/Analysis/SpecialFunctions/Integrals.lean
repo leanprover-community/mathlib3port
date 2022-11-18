@@ -52,11 +52,11 @@ theorem intervalIntegrablePow : IntervalIntegrable (fun x => x ^ n) μ a b :=
 #align interval_integral.interval_integrable_pow intervalIntegral.intervalIntegrablePow
 
 theorem intervalIntegrableZpow {n : ℤ} (h : 0 ≤ n ∨ (0 : ℝ) ∉ [a, b]) : IntervalIntegrable (fun x => x ^ n) μ a b :=
-  (continuous_on_id.zpow₀ n $ fun x hx => h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
+  ((continuous_on_id.zpow₀ n) fun x hx => h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
 #align interval_integral.interval_integrable_zpow intervalIntegral.intervalIntegrableZpow
 
 theorem intervalIntegrableRpow {r : ℝ} (h : 0 ≤ r ∨ (0 : ℝ) ∉ [a, b]) : IntervalIntegrable (fun x => x ^ r) μ a b :=
-  (continuous_on_id.rpow_const $ fun x hx => h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
+  (continuous_on_id.rpow_const fun x hx => h.symm.imp (ne_of_mem_of_not_mem hx) id).IntervalIntegrable
 #align interval_integral.interval_integrable_rpow intervalIntegral.intervalIntegrableRpow
 
 /-- Alternative version with a weaker hypothesis on `r`, but assuming the measure is volume. -/
@@ -151,7 +151,7 @@ theorem IntervalIntegrable.log (hf : ContinuousOn f [a, b]) (h : ∀ x : ℝ, x 
 
 @[simp]
 theorem intervalIntegrableLog (h : (0 : ℝ) ∉ [a, b]) : IntervalIntegrable log μ a b :=
-  IntervalIntegrable.log continuous_on_id $ fun x hx => ne_of_mem_of_not_mem hx h
+  (IntervalIntegrable.log continuous_on_id) fun x hx => ne_of_mem_of_not_mem hx h
 #align interval_integral.interval_integrable_log intervalIntegral.intervalIntegrableLog
 
 @[simp]
@@ -345,7 +345,7 @@ theorem integral_pow_abs_sub_interval_oc : (∫ x in Ι a b, |x - a| ^ n) = |b -
       (∫ x in Ι a b, |x - a| ^ n) = ∫ x in a..b, |x - a| ^ n := by rw [interval_oc_of_le hab, ← integral_of_le hab]
       _ = ∫ x in 0 ..b - a, x ^ n := by
         simp only [integral_comp_sub_right fun x => |x| ^ n, sub_self]
-        refine' integral_congr fun x hx => congr_arg₂ Pow.pow (abs_of_nonneg $ _) rfl
+        refine' integral_congr fun x hx => congr_arg₂ Pow.pow (abs_of_nonneg <| _) rfl
         rw [interval_of_le (sub_nonneg.2 hab)] at hx
         exact hx.1
       _ = |b - a| ^ (n + 1) / (n + 1) := by simp [abs_of_nonneg (sub_nonneg.2 hab)]
@@ -355,7 +355,7 @@ theorem integral_pow_abs_sub_interval_oc : (∫ x in Ι a b, |x - a| ^ n) = |b -
       (∫ x in Ι a b, |x - a| ^ n) = ∫ x in b..a, |x - a| ^ n := by rw [interval_oc_of_lt hab, ← integral_of_le hab.le]
       _ = ∫ x in b - a..0, (-x) ^ n := by
         simp only [integral_comp_sub_right fun x => |x| ^ n, sub_self]
-        refine' integral_congr fun x hx => congr_arg₂ Pow.pow (abs_of_nonpos $ _) rfl
+        refine' integral_congr fun x hx => congr_arg₂ Pow.pow (abs_of_nonpos <| _) rfl
         rw [interval_of_le (sub_nonpos.2 hab.le)] at hx
         exact hx.2
       _ = |b - a| ^ (n + 1) / (n + 1) := by simp [integral_comp_neg fun x => x ^ n, abs_of_neg (sub_neg.2 hab)]
@@ -378,18 +378,18 @@ theorem integral_const_on_unit_interval : (∫ x in a..a + 1, b) = b := by simp
 theorem integral_inv (h : (0 : ℝ) ∉ [a, b]) : (∫ x in a..b, x⁻¹) = log (b / a) := by
   have h' := fun x hx => ne_of_mem_of_not_mem hx h
   rw [integral_deriv_eq_sub' _ deriv_log' (fun x hx => differentiable_at_log (h' x hx))
-      (continuous_on_inv₀.mono $ subset_compl_singleton_iff.mpr h),
+      (continuous_on_inv₀.mono <| subset_compl_singleton_iff.mpr h),
     log_div (h' b right_mem_interval) (h' a left_mem_interval)]
 #align integral_inv integral_inv
 
 @[simp]
 theorem integral_inv_of_pos (ha : 0 < a) (hb : 0 < b) : (∫ x in a..b, x⁻¹) = log (b / a) :=
-  integral_inv $ not_mem_interval_of_lt ha hb
+  integral_inv <| not_mem_interval_of_lt ha hb
 #align integral_inv_of_pos integral_inv_of_pos
 
 @[simp]
 theorem integral_inv_of_neg (ha : a < 0) (hb : b < 0) : (∫ x in a..b, x⁻¹) = log (b / a) :=
-  integral_inv $ not_mem_interval_of_gt ha hb
+  integral_inv <| not_mem_interval_of_gt ha hb
 #align integral_inv_of_neg integral_inv_of_neg
 
 theorem integral_one_div (h : (0 : ℝ) ∉ [a, b]) : (∫ x : ℝ in a..b, 1 / x) = log (b / a) := by
@@ -433,7 +433,7 @@ theorem integral_log (h : (0 : ℝ) ∉ [a, b]) : (∫ x in a..b, log x) = b * l
   obtain ⟨h', heq⟩ := fun x hx => ne_of_mem_of_not_mem hx h, fun x hx => mul_inv_cancel (h' x hx)
   convert
       integral_mul_deriv_eq_deriv_mul (fun x hx => has_deriv_at_log (h' x hx)) (fun x hx => hasDerivAtId x)
-        (continuous_on_inv₀.mono $ subset_compl_singleton_iff.mpr h).IntervalIntegrable
+        (continuous_on_inv₀.mono <| subset_compl_singleton_iff.mpr h).IntervalIntegrable
         continuous_on_const.interval_integrable using
       1 <;>
     simp [integral_congr HEq, mul_comm, ← sub_add]
@@ -441,12 +441,12 @@ theorem integral_log (h : (0 : ℝ) ∉ [a, b]) : (∫ x in a..b, log x) = b * l
 
 @[simp]
 theorem integral_log_of_pos (ha : 0 < a) (hb : 0 < b) : (∫ x in a..b, log x) = b * log b - a * log a - b + a :=
-  integral_log $ not_mem_interval_of_lt ha hb
+  integral_log <| not_mem_interval_of_lt ha hb
 #align integral_log_of_pos integral_log_of_pos
 
 @[simp]
 theorem integral_log_of_neg (ha : a < 0) (hb : b < 0) : (∫ x in a..b, log x) = b * log b - a * log a - b + a :=
-  integral_log $ not_mem_interval_of_gt ha hb
+  integral_log <| not_mem_interval_of_gt ha hb
 #align integral_log_of_neg integral_log_of_neg
 
 @[simp]

@@ -3,7 +3,6 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.Algebra.BigOperators.Intervals
 import Mathbin.MeasureTheory.Constructions.Pi
 
 /-!
@@ -350,7 +349,7 @@ section FromMeasurableSpacesToSetsOfSets
 
 theorem IndepCat.indepSets [MeasurableSpace Ω] {μ : Measure Ω} {m : ι → MeasurableSpace Ω} {s : ι → Set (Set Ω)}
     (hms : ∀ n, m n = generateFrom (s n)) (h_indep : IndepCat m μ) : IndepSets s μ := fun S f hfs =>
-  h_indep S $ fun x hxS => ((hms x).symm ▸ measurableSetGenerateFrom (hfs x hxS) : measurable_set[m x] (f x))
+  (h_indep S) fun x hxS => ((hms x).symm ▸ measurableSetGenerateFrom (hfs x hxS) : measurable_set[m x] (f x))
 #align probability_theory.Indep.Indep_sets ProbabilityTheory.IndepCat.indepSets
 
 theorem Indep.indepSets [MeasurableSpace Ω] {μ : Measure Ω} {s1 s2 : Set (Set Ω)}
@@ -457,9 +456,9 @@ theorem IndepSet.indepGenerateFromOfDisjoint [IsProbabilityMeasure μ] {s : ι �
   refine'
     indep_sets.indep' (fun t ht => generate_from_pi_Union_Inter_le _ _ _ _ (measurable_set_generate_from ht))
       (fun t ht => generate_from_pi_Union_Inter_le _ _ _ _ (measurable_set_generate_from ht)) _ _ _
-  · exact fun k => generate_from_le $ fun t ht => (Set.mem_singleton_iff.1 ht).symm ▸ hsm k
+  · exact fun k => generate_from_le fun t ht => (Set.mem_singleton_iff.1 ht).symm ▸ hsm k
     
-  · exact fun k => generate_from_le $ fun t ht => (Set.mem_singleton_iff.1 ht).symm ▸ hsm k
+  · exact fun k => generate_from_le fun t ht => (Set.mem_singleton_iff.1 ht).symm ▸ hsm k
     
   · exact is_pi_system_pi_Union_Inter _ (fun k => IsPiSystem.singleton _) _
     
@@ -995,10 +994,10 @@ theorem measure_eq_zero_or_one_or_top_of_indep_set_self {t : Set Ω} (h_indep : 
   specialize
     h_indep t t (measurable_set_generate_from (Set.mem_singleton t))
       (measurable_set_generate_from (Set.mem_singleton t))
-  by_cases h0:μ t = 0
+  by_cases h0 : μ t = 0
   · exact Or.inl h0
     
-  by_cases h_top:μ t = ∞
+  by_cases h_top : μ t = ∞
   · exact Or.inr (Or.inr h_top)
     
   rw [← one_mul (μ (t ∩ t)), Set.inter_self, Ennreal.mul_eq_mul_right h0 h_top] at h_indep

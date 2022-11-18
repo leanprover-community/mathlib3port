@@ -24,7 +24,7 @@ section NormedField
 `x → a`, `x ≠ a`. -/
 theorem Filter.IsBoundedUnder.is_o_sub_self_inv {𝕜 E : Type _} [NormedField 𝕜] [HasNorm E] {a : 𝕜} {f : 𝕜 → E}
     (h : IsBoundedUnder (· ≤ ·) (𝓝[≠] a) (norm ∘ f)) : f =o[𝓝[≠] a] fun x => (x - a)⁻¹ := by
-  refine' (h.is_O_const (@one_ne_zero ℝ _ _)).trans_is_o (is_o_const_left.2 $ Or.inr _)
+  refine' (h.is_O_const (one_ne_zero' ℝ)).trans_is_o (is_o_const_left.2 <| Or.inr _)
   simp only [(· ∘ ·), norm_inv]
   exact (tendsto_norm_sub_self_punctured_nhds a).inv_tendsto_zero
 #align filter.is_bounded_under.is_o_sub_self_inv Filter.IsBoundedUnder.is_o_sub_self_inv
@@ -80,7 +80,7 @@ theorem Asymptotics.is_o_pow_pow_at_top_of_lt [OrderTopology 𝕜] {p q : ℕ} (
 #align asymptotics.is_o_pow_pow_at_top_of_lt Asymptotics.is_o_pow_pow_at_top_of_lt
 
 theorem Asymptotics.IsO.trans_tendsto_norm_at_top {α : Type _} {u v : α → 𝕜} {l : Filter α} (huv : u =O[l] v)
-    (hu : Tendsto (fun x => ∥u x∥) l atTop) : Tendsto (fun x => ∥v x∥) l atTop := by
+    (hu : Tendsto (fun x => ‖u x‖) l atTop) : Tendsto (fun x => ‖v x‖) l atTop := by
   rcases huv.exists_pos with ⟨c, hc, hcuv⟩
   rw [is_O_with] at hcuv
   convert tendsto.at_top_div_const hc (tendsto_at_top_mono' l hcuv hu)
@@ -99,21 +99,21 @@ open Finset
 theorem Asymptotics.IsO.sum_range {α : Type _} [NormedAddCommGroup α] {f : ℕ → α} {g : ℕ → ℝ} (h : f =o[at_top] g)
     (hg : 0 ≤ g) (h'g : Tendsto (fun n => ∑ i in range n, g i) atTop atTop) :
     (fun n => ∑ i in range n, f i) =o[at_top] fun n => ∑ i in range n, g i := by
-  have A : ∀ i, ∥g i∥ = g i := fun i => Real.norm_of_nonneg (hg i)
-  have B : ∀ n, ∥∑ i in range n, g i∥ = ∑ i in range n, g i := fun n => by rwa [Real.norm_eq_abs, abs_sum_of_nonneg']
+  have A : ∀ i, ‖g i‖ = g i := fun i => Real.norm_of_nonneg (hg i)
+  have B : ∀ n, ‖∑ i in range n, g i‖ = ∑ i in range n, g i := fun n => by rwa [Real.norm_eq_abs, abs_sum_of_nonneg']
   apply is_o_iff.2 fun ε εpos => _
-  obtain ⟨N, hN⟩ : ∃ N : ℕ, ∀ b : ℕ, N ≤ b → ∥f b∥ ≤ ε / 2 * g b := by
+  obtain ⟨N, hN⟩ : ∃ N : ℕ, ∀ b : ℕ, N ≤ b → ‖f b‖ ≤ ε / 2 * g b := by
     simpa only [A, eventually_at_top] using is_o_iff.mp h (half_pos εpos)
   have : (fun n : ℕ => ∑ i in range N, f i) =o[at_top] fun n : ℕ => ∑ i in range n, g i := by
     apply is_o_const_left.2
     exact Or.inr (h'g.congr fun n => (B n).symm)
   filter_upwards [is_o_iff.1 this (half_pos εpos), Ici_mem_at_top N] with n hn Nn
   calc
-    ∥∑ i in range n, f i∥ = ∥(∑ i in range N, f i) + ∑ i in Ico N n, f i∥ := by rw [sum_range_add_sum_Ico _ Nn]
-    _ ≤ ∥∑ i in range N, f i∥ + ∥∑ i in Ico N n, f i∥ := norm_add_le _ _
-    _ ≤ ∥∑ i in range N, f i∥ + ∑ i in Ico N n, ε / 2 * g i :=
+    ‖∑ i in range n, f i‖ = ‖(∑ i in range N, f i) + ∑ i in Ico N n, f i‖ := by rw [sum_range_add_sum_Ico _ Nn]
+    _ ≤ ‖∑ i in range N, f i‖ + ‖∑ i in Ico N n, f i‖ := norm_add_le _ _
+    _ ≤ ‖∑ i in range N, f i‖ + ∑ i in Ico N n, ε / 2 * g i :=
       add_le_add le_rfl (norm_sum_le_of_le _ fun i hi => hN _ (mem_Ico.1 hi).1)
-    _ ≤ ∥∑ i in range N, f i∥ + ∑ i in range n, ε / 2 * g i := by
+    _ ≤ ‖∑ i in range N, f i‖ + ∑ i in range n, ε / 2 * g i := by
       refine' add_le_add le_rfl _
       apply sum_le_sum_of_subset_of_nonneg
       · rw [range_eq_Ico]
@@ -122,10 +122,10 @@ theorem Asymptotics.IsO.sum_range {α : Type _} [NormedAddCommGroup α] {f : ℕ
       · intro i hi hident
         exact mul_nonneg (half_pos εpos).le (hg i)
         
-    _ ≤ ε / 2 * ∥∑ i in range n, g i∥ + ε / 2 * ∑ i in range n, g i := by
+    _ ≤ ε / 2 * ‖∑ i in range n, g i‖ + ε / 2 * ∑ i in range n, g i := by
       rw [← mul_sum]
       exact add_le_add hn (mul_le_mul_of_nonneg_left le_rfl (half_pos εpos).le)
-    _ = ε * ∥∑ i in range n, g i∥ := by
+    _ = ε * ‖∑ i in range n, g i‖ := by
       simp [B]
       ring
     

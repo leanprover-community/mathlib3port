@@ -31,8 +31,8 @@ protected def Function.Injective.distrib {S} [Mul R] [Add R] [Distrib S] (f : R 
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) : Distrib R where
   mul := (· * ·)
   add := (· + ·)
-  left_distrib x y z := hf $ by simp only [*, left_distrib]
-  right_distrib x y z := hf $ by simp only [*, right_distrib]
+  left_distrib x y z := hf <| by simp only [*, left_distrib]
+  right_distrib x y z := hf <| by simp only [*, right_distrib]
 #align function.injective.distrib Function.Injective.distrib
 
 /-- Pushforward a `distrib` instance along a surjective function.
@@ -42,8 +42,8 @@ protected def Function.Surjective.distrib {S} [Distrib R] [Add S] [Mul S] (f : R
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) : Distrib S where
   mul := (· * ·)
   add := (· + ·)
-  left_distrib := hf.forall₃.2 $ fun x y z => by simp only [← add, ← mul, left_distrib]
-  right_distrib := hf.forall₃.2 $ fun x y z => by simp only [← add, ← mul, right_distrib]
+  left_distrib := hf.forall₃.2 fun x y z => by simp only [← add, ← mul, left_distrib]
+  right_distrib := hf.forall₃.2 fun x y z => by simp only [← add, ← mul, right_distrib]
 #align function.surjective.distrib Function.Surjective.distrib
 
 section InjectiveSurjectiveMaps
@@ -201,8 +201,8 @@ preserves `-` and `*` to a type which has distributive negation. -/
 @[reducible]
 protected def Function.Injective.hasDistribNeg [Neg β] [Mul β] (f : β → α) (hf : Injective f) (neg : ∀ a, f (-a) = -f a)
     (mul : ∀ a b, f (a * b) = f a * f b) : HasDistribNeg β :=
-  { hf.HasInvolutiveNeg _ neg, ‹Mul β› with neg_mul := fun x y => hf $ by erw [neg, mul, neg, neg_mul, mul],
-    mul_neg := fun x y => hf $ by erw [neg, mul, neg, mul_neg, mul] }
+  { hf.HasInvolutiveNeg _ neg, ‹Mul β› with neg_mul := fun x y => hf <| by erw [neg, mul, neg, neg_mul, mul],
+    mul_neg := fun x y => hf <| by erw [neg, mul, neg, mul_neg, mul] }
 #align function.injective.has_distrib_neg Function.Injective.hasDistribNeg
 
 -- See note [reducible non-instances]
@@ -213,11 +213,11 @@ protected def Function.Surjective.hasDistribNeg [Neg β] [Mul β] (f : α → β
     (neg : ∀ a, f (-a) = -f a) (mul : ∀ a b, f (a * b) = f a * f b) : HasDistribNeg β :=
   { hf.HasInvolutiveNeg _ neg, ‹Mul β› with
     neg_mul :=
-      hf.Forall₂.2 $ fun x y => by
+      hf.Forall₂.2 fun x y => by
         erw [← neg, ← mul, neg_mul, neg, mul]
         rfl,
     mul_neg :=
-      hf.Forall₂.2 $ fun x y => by
+      hf.Forall₂.2 fun x y => by
         erw [← neg, ← mul, mul_neg, neg, mul]
         rfl }
 #align function.surjective.has_distrib_neg Function.Surjective.hasDistribNeg

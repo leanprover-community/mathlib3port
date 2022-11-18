@@ -143,7 +143,7 @@ noncomputable instance : HasInf (Filtration ι m) :=
   ⟨fun s =>
     { seq := fun i => if Set.Nonempty s then inf ((fun f : Filtration ι m => f i) '' s) else m,
       mono' := fun i j hij => by
-        by_cases h_nonempty:Set.Nonempty s
+        by_cases h_nonempty : Set.Nonempty s
         swap
         · simp only [h_nonempty, Set.nonempty_image_iff, if_false, le_refl]
           
@@ -153,7 +153,7 @@ noncomputable instance : HasInf (Filtration ι m) :=
         have hfi_mem : f i ∈ (fun g : filtration ι m => g i) '' s := ⟨f, hf_mem, rfl⟩
         exact Inf_le hfi_mem,
       le' := fun i => by
-        by_cases h_nonempty:Set.Nonempty s
+        by_cases h_nonempty : Set.Nonempty s
         swap
         · simp only [h_nonempty, if_false, le_refl]
           
@@ -170,7 +170,7 @@ noncomputable instance : CompleteLattice (Filtration ι m) where
   le := (· ≤ ·)
   le_refl f i := le_rfl
   le_trans f g h h_fg h_gh i := (h_fg i).trans (h_gh i)
-  le_antisymm f g h_fg h_gf := filtration.ext $ funext $ fun i => (h_fg i).antisymm (h_gf i)
+  le_antisymm f g h_fg h_gf := filtration.ext <| funext fun i => (h_fg i).antisymm (h_gf i)
   sup := (· ⊔ ·)
   le_sup_left f g i := le_sup_left
   le_sup_right f g i := le_sup_right
@@ -182,7 +182,7 @@ noncomputable instance : CompleteLattice (Filtration ι m) where
   sup := sup
   le_Sup s f hf_mem i := le_Sup ⟨f, hf_mem, rfl⟩
   Sup_le s f h_forall i :=
-    Sup_le $ fun m' hm' => by
+    Sup_le fun m' hm' => by
       obtain ⟨g, hg_mem, hfm'⟩ := hm'
       rw [← hfm']
       exact h_forall g hg_mem i
@@ -192,7 +192,7 @@ noncomputable instance : CompleteLattice (Filtration ι m) where
     simp only [Inf_def, hs, if_true]
     exact Inf_le ⟨f, hf_mem, rfl⟩
   le_Inf s f h_forall i := by
-    by_cases hs:s.nonempty
+    by_cases hs : s.nonempty
     swap
     · simp only [Inf_def, hs, if_false]
       exact f.le i
@@ -270,7 +270,7 @@ of σ-algebras such that that sequence of functions is measurable with respect t
 the filtration. -/
 def natural (u : ι → Ω → β) (hum : ∀ i, StronglyMeasurable (u i)) : Filtration ι m where
   seq i := ⨆ j ≤ i, MeasurableSpace.comap (u j) mβ
-  mono' i j hij := bsupr_mono $ fun k => ge_trans hij
+  mono' i j hij := bsupr_mono fun k => ge_trans hij
   le' i := by
     refine' supr₂_le _
     rintro j hj s ⟨t, ht, rfl⟩
@@ -300,7 +300,7 @@ theorem filtration_of_set_eq_natural [MulZeroOneClass β] [Nontrivial β] {s : �
     suffices
       MeasurableSpace.generateFrom
           { t | ∃ H : n ≤ i, measurable_set[MeasurableSpace.comap ((s n).indicator (fun ω => 1 : Ω → β)) mβ] t } ≤
-        generate_from { t | ∃ (j : ι) (H : j ≤ i), s j = t }
+        generate_from { t | ∃ (j : ι)(H : j ≤ i), s j = t }
       by exact this _ ht
     refine' generate_from_le _
     rintro t ⟨hn, u, hu, hu'⟩

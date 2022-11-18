@@ -6,6 +6,7 @@ Authors: Scott Morrison
 import Mathbin.Algebra.Group.Pi
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
 import Mathbin.Algebra.Category.ModuleCat.Limits
+import Mathbin.Algebra.Category.ModuleCat.Abelian
 import Mathbin.Algebra.Homology.ShortExact.Abelian
 
 /-!
@@ -48,7 +49,8 @@ def binaryProductLimitCone (M N : ModuleCat.{v} R) : Limits.LimitCone (pair M N)
       fac' := by
         rintro s (⟨⟩ | ⟨⟩) <;>
           · ext x
-            simp
+            simp only [binary_fan.π_app_right, binary_fan.π_app_left, ModuleCat.coe_comp, Function.comp_apply,
+              LinearMap.fst_apply, LinearMap.snd_apply, LinearMap.prod_apply, Pi.prod]
             ,
       uniq' := fun s m w => by ext <;> [rw [← w ⟨walking_pair.left⟩], rw [← w ⟨walking_pair.right⟩]] <;> rfl }
 #align Module.binary_product_limit_cone ModuleCat.binaryProductLimitCone
@@ -158,9 +160,9 @@ open ModuleCat
 of modules.-/
 noncomputable def lequivProdOfRightSplitExact {f : B →ₗ[R] M} (hj : Function.Injective j) (exac : j.range = g.ker)
     (h : g.comp f = LinearMap.id) : (A × B) ≃ₗ[R] M :=
-  (({ RightSplit := ⟨asHom f, h⟩, mono := (ModuleCat.mono_iff_injective $ asHom j).mpr hj,
+  (({ RightSplit := ⟨asHom f, h⟩, mono := (ModuleCat.mono_iff_injective <| asHom j).mpr hj,
                   exact := (exact_iff _ _).mpr exac } :
-                RightSplit _ _).Splitting.Iso.trans $
+                RightSplit _ _).Splitting.Iso.trans <|
         biprodIsoProd _ _).toLinearEquiv.symm
 #align lequiv_prod_of_right_split_exact lequivProdOfRightSplitExact
 
@@ -168,9 +170,9 @@ noncomputable def lequivProdOfRightSplitExact {f : B →ₗ[R] M} (hj : Function
 of modules.-/
 noncomputable def lequivProdOfLeftSplitExact {f : M →ₗ[R] A} (hg : Function.Surjective g) (exac : j.range = g.ker)
     (h : f.comp j = LinearMap.id) : (A × B) ≃ₗ[R] M :=
-  (({ LeftSplit := ⟨asHom f, h⟩, Epi := (ModuleCat.epi_iff_surjective $ asHom g).mpr hg,
+  (({ LeftSplit := ⟨asHom f, h⟩, Epi := (ModuleCat.epi_iff_surjective <| asHom g).mpr hg,
                   exact := (exact_iff _ _).mpr exac } :
-                LeftSplit _ _).Splitting.Iso.trans $
+                LeftSplit _ _).Splitting.Iso.trans <|
         biprodIsoProd _ _).toLinearEquiv.symm
 #align lequiv_prod_of_left_split_exact lequivProdOfLeftSplitExact
 

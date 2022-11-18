@@ -3,12 +3,10 @@ Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Analysis.NormedSpace.Banach
 import Mathbin.Analysis.NormedSpace.FiniteDimension
 import Mathbin.Analysis.Calculus.AffineMap
 import Mathbin.Analysis.Convex.Combination
 import Mathbin.LinearAlgebra.AffineSpace.Basis
-import Mathbin.LinearAlgebra.AffineSpace.FiniteDimensional
 
 /-!
 # Bases in normed affine spaces.
@@ -36,8 +34,8 @@ variable [MetricSpace P] [NormedAddTorsor E P]
 include E
 
 theorem is_open_map_barycentric_coord [Nontrivial ι] (b : AffineBasis ι 𝕜 P) (i : ι) : IsOpenMap (b.Coord i) :=
-  AffineMap.is_open_map_linear_iff.mp $
-    (b.Coord i).linear.is_open_map_of_finite_dimensional $
+  AffineMap.is_open_map_linear_iff.mp <|
+    (b.Coord i).linear.is_open_map_of_finite_dimensional <|
       (b.Coord i).surjective_iff_linear_surjective.mpr (b.surjective_coord i)
 #align is_open_map_barycentric_coord is_open_map_barycentric_coord
 
@@ -95,7 +93,7 @@ theorem IsOpen.exists_between_affine_independent_span_eq_top {s u : Set P} (hu :
     (hne : s.Nonempty) (h : AffineIndependent ℝ (coe : s → P)) :
     ∃ t : Set P, s ⊆ t ∧ t ⊆ u ∧ AffineIndependent ℝ (coe : t → P) ∧ affineSpan ℝ t = ⊤ := by
   obtain ⟨q, hq⟩ := hne
-  obtain ⟨ε, ε0, hεu⟩ := metric.nhds_basis_closed_ball.mem_iff.1 (hu.mem_nhds $ hsu hq)
+  obtain ⟨ε, ε0, hεu⟩ := metric.nhds_basis_closed_ball.mem_iff.1 (hu.mem_nhds <| hsu hq)
   obtain ⟨t, ht₁, ht₂, ht₃⟩ := exists_subset_affine_independent_affine_span_eq_top h
   let f : P → P := fun y => line_map q y (ε / dist y q)
   have hf : ∀ y, f y ∈ u := by
@@ -114,7 +112,7 @@ theorem IsOpen.exists_between_affine_independent_span_eq_top {s u : Set P} (hu :
     simp [w, hp]
     
   · rintro y ⟨⟨p, hp⟩, rfl⟩
-    by_cases hps:p ∈ s <;>
+    by_cases hps : p ∈ s <;>
       simp only [w, hps, line_map_apply_one, Units.coe_mk0, dif_neg, dif_pos, not_false_iff, Units.coe_one,
           Subtype.coe_mk] <;>
         [exact hsu hps, exact hf p]
@@ -127,7 +125,7 @@ theorem IsOpen.exists_between_affine_independent_span_eq_top {s u : Set P} (hu :
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (s «expr ⊆ » u) -/
 theorem IsOpen.exists_subset_affine_independent_span_eq_top {u : Set P} (hu : IsOpen u) (hne : u.Nonempty) :
-    ∃ (s) (_ : s ⊆ u), AffineIndependent ℝ (coe : s → P) ∧ affineSpan ℝ s = ⊤ := by
+    ∃ (s : _)(_ : s ⊆ u), AffineIndependent ℝ (coe : s → P) ∧ affineSpan ℝ s = ⊤ := by
   rcases hne with ⟨x, hx⟩
   rcases hu.exists_between_affine_independent_span_eq_top (singleton_subset_iff.mpr hx) (singleton_nonempty _)
       (affine_independent_of_subsingleton _ _) with
@@ -138,12 +136,12 @@ theorem IsOpen.exists_subset_affine_independent_span_eq_top {u : Set P} (hu : Is
 /-- The affine span of a nonempty open set is `⊤`. -/
 theorem IsOpen.affine_span_eq_top {u : Set P} (hu : IsOpen u) (hne : u.Nonempty) : affineSpan ℝ u = ⊤ :=
   let ⟨s, hsu, hs, hs'⟩ := hu.exists_subset_affine_independent_span_eq_top hne
-  top_unique $ hs' ▸ affine_span_mono _ hsu
+  top_unique <| hs' ▸ affine_span_mono _ hsu
 #align is_open.affine_span_eq_top IsOpen.affine_span_eq_top
 
-theorem affine_span_eq_top_of_nonempty_interior {s : Set V} (hs : (interior $ convexHull ℝ s).Nonempty) :
+theorem affine_span_eq_top_of_nonempty_interior {s : Set V} (hs : (interior <| convexHull ℝ s).Nonempty) :
     affineSpan ℝ s = ⊤ :=
-  top_unique $
+  top_unique <|
     is_open_interior.affine_span_eq_top hs ▸ (affine_span_mono _ interior_subset).trans_eq (affine_span_convex_hull _)
 #align affine_span_eq_top_of_nonempty_interior affine_span_eq_top_of_nonempty_interior
 

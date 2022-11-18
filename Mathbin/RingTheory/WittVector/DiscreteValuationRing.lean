@@ -133,7 +133,7 @@ section PerfectRing
 
 variable {k : Type _} [CommRing k] [CharP k p] [PerfectRing k p]
 
-theorem exists_eq_pow_p_mul (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ) (b : 𝕎 k), b.coeff 0 ≠ 0 ∧ a = p ^ m * b := by
+theorem exists_eq_pow_p_mul (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ)(b : 𝕎 k), b.coeff 0 ≠ 0 ∧ a = p ^ m * b := by
   obtain ⟨m, c, hc, hcm⟩ := WittVector.verschiebung_nonzero ha
   obtain ⟨b, rfl⟩ := (frobenius_bijective p k).Surjective.iterate m c
   rw [WittVector.iterate_frobenius_coeff] at hc
@@ -158,7 +158,7 @@ section PerfectField
 
 variable {k : Type _} [Field k] [CharP k p] [PerfectRing k p]
 
-theorem exists_eq_pow_p_mul' (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ) (b : Units (𝕎 k)), a = p ^ m * b := by
+theorem exists_eq_pow_p_mul' (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ)(b : Units (𝕎 k)), a = p ^ m * b := by
   obtain ⟨m, b, h₁, h₂⟩ := exists_eq_pow_p_mul a ha
   let b₀ := Units.mk0 (b.coeff 0) h₁
   have hb₀ : b.coeff 0 = b₀ := rfl

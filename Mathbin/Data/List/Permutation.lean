@@ -82,7 +82,7 @@ theorem permutations_aux2_append (t : α) (ts : List α) (r : List β) (ys : Lis
 
 /-- The `ts` argument to `permutations_aux2` can be folded into the `f` argument. -/
 theorem permutations_aux2_comp_append {t : α} {ts ys : List α} {r : List β} (f : List α → β) :
-    (permutationsAux2 t [] r ys $ fun x => f (x ++ ts)).2 = (permutationsAux2 t ts r ys f).2 := by
+    ((permutationsAux2 t [] r ys) fun x => f (x ++ ts)).2 = (permutationsAux2 t ts r ys f).2 := by
   induction ys generalizing f
   · simp
     
@@ -144,10 +144,9 @@ theorem permutations'_aux_eq_permutations_aux2 (t : α) (ts : List α) :
   simp [map_permutations_aux2]
 #align list.permutations'_aux_eq_permutations_aux2 List.permutations'_aux_eq_permutations_aux2
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (l₁ l₂) -/
 theorem mem_permutations_aux2 {t : α} {ts : List α} {ys : List α} {l l' : List α} :
     l' ∈ (permutationsAux2 t ts [] ys (append l)).2 ↔
-      ∃ (l₁) (l₂), l₂ ≠ [] ∧ ys = l₁ ++ l₂ ∧ l' = l ++ l₁ ++ t :: l₂ ++ ts :=
+      ∃ l₁ l₂, l₂ ≠ [] ∧ ys = l₁ ++ l₂ ∧ l' = l ++ l₁ ++ t :: l₂ ++ ts :=
   by
   induction' ys with y ys ih generalizing l
   · simp (config := { contextual := true })
@@ -171,9 +170,8 @@ theorem mem_permutations_aux2 {t : α} {ts : List α} {ys : List α} {l l' : Lis
     
 #align list.mem_permutations_aux2 List.mem_permutations_aux2
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (l₁ l₂) -/
 theorem mem_permutations_aux2' {t : α} {ts : List α} {ys : List α} {l : List α} :
-    l ∈ (permutationsAux2 t ts [] ys id).2 ↔ ∃ (l₁) (l₂), l₂ ≠ [] ∧ ys = l₁ ++ l₂ ∧ l = l₁ ++ t :: l₂ ++ ts := by
+    l ∈ (permutationsAux2 t ts [] ys id).2 ↔ ∃ l₁ l₂, l₂ ≠ [] ∧ ys = l₁ ++ l₂ ∧ l = l₁ ++ t :: l₂ ++ ts := by
   rw [show @id (List α) = append nil by funext <;> rfl] <;> apply mem_permutations_aux2
 #align list.mem_permutations_aux2' List.mem_permutations_aux2'
 
@@ -191,16 +189,13 @@ theorem foldr_permutations_aux2 (t : α) (ts : List α) (r L : List (List α)) :
       ]
 #align list.foldr_permutations_aux2 List.foldr_permutations_aux2
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (l₁ l₂) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (l₁ l₂) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (l₁ l₂) -/
 theorem mem_foldr_permutations_aux2 {t : α} {ts : List α} {r L : List (List α)} {l' : List α} :
     l' ∈ foldr (fun y r => (permutationsAux2 t ts r y id).2) r L ↔
-      l' ∈ r ∨ ∃ (l₁) (l₂), l₁ ++ l₂ ∈ L ∧ l₂ ≠ [] ∧ l' = l₁ ++ t :: l₂ ++ ts :=
+      l' ∈ r ∨ ∃ l₁ l₂, l₁ ++ l₂ ∈ L ∧ l₂ ≠ [] ∧ l' = l₁ ++ t :: l₂ ++ ts :=
   by
   have :
-    (∃ a : List α, a ∈ L ∧ ∃ (l₁ : List α) (l₂ : List α), ¬l₂ = nil ∧ a = l₁ ++ l₂ ∧ l' = l₁ ++ t :: (l₂ ++ ts)) ↔
-      ∃ (l₁ : List α) (l₂ : List α), ¬l₂ = nil ∧ l₁ ++ l₂ ∈ L ∧ l' = l₁ ++ t :: (l₂ ++ ts) :=
+    (∃ a : List α, a ∈ L ∧ ∃ l₁ l₂ : List α, ¬l₂ = nil ∧ a = l₁ ++ l₂ ∧ l' = l₁ ++ t :: (l₂ ++ ts)) ↔
+      ∃ l₁ l₂ : List α, ¬l₂ = nil ∧ l₁ ++ l₂ ∈ L ∧ l' = l₁ ++ t :: (l₂ ++ ts) :=
     ⟨fun ⟨a, aL, l₁, l₂, l0, e, h⟩ => ⟨l₁, l₂, l0, e ▸ aL, h⟩, fun ⟨l₁, l₂, l0, aL, h⟩ => ⟨_, aL, l₁, l₂, l0, rfl, h⟩⟩
   rw [foldr_permutations_aux2] <;>
     simp [mem_permutations_aux2', this, or_comm, or_left_comm, or_assoc, and_comm, and_left_comm, and_assoc]

@@ -3,11 +3,7 @@ Copyright (c) 2021 Aaron Anderson, Jesse Michael Han, Floris van Doorn. All righ
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 -/
-import Mathbin.CategoryTheory.ConcreteCategory.Bundled
-import Mathbin.Data.Fin.Tuple.Basic
 import Mathbin.Data.Fin.VecNotation
-import Mathbin.Logic.Encodable.Basic
-import Mathbin.Logic.Small.List
 import Mathbin.SetTheory.Cardinal.Basic
 
 /-!
@@ -129,7 +125,7 @@ instance : Inhabited Language :=
 
 /-- The sum of two languages consists of the disjoint union of their symbols. -/
 protected def sum (L : Language.{u, v}) (L' : Language.{u', v'}) : Language :=
-  ⟨fun n => L.Functions n ⊕ L'.Functions n, fun n => L.Relations n ⊕ L'.Relations n⟩
+  ⟨fun n => Sum (L.Functions n) (L'.Functions n), fun n => Sum (L.Relations n) (L'.Relations n)⟩
 #align first_order.language.sum FirstOrder.Language.sum
 
 variable (L : Language.{u, v})
@@ -148,7 +144,7 @@ theorem constants_mk₂ (c f₁ f₂ : Type u) (r₁ r₂ : Type v) : (Language.
 /-- The type of symbols in a given language. -/
 @[nolint has_nonempty_instance]
 def Symbols :=
-  (Σ l, L.Functions l) ⊕ Σ l, L.Relations l
+  Sum (Σl, L.Functions l) (Σl, L.Relations l)
 #align first_order.language.symbols FirstOrder.Language.Symbols
 
 /-- The cardinality of a language is the cardinality of its type of symbols. -/
@@ -236,7 +232,7 @@ instance is_empty_empty : IsEmpty Language.empty.Symbols := by
   exact ⟨fun _ => inferInstance, fun _ => inferInstance⟩
 #align first_order.language.is_empty_empty FirstOrder.Language.is_empty_empty
 
-instance Countable.countable_functions [h : Countable L.Symbols] : Countable (Σ l, L.Functions l) :=
+instance Countable.countable_functions [h : Countable L.Symbols] : Countable (Σl, L.Functions l) :=
   @Function.Injective.countable _ _ h _ Sum.inl_injective
 #align first_order.language.countable.countable_functions FirstOrder.Language.Countable.countable_functions
 
@@ -403,7 +399,7 @@ end StructureCat
 
 /-- `hom_class L F M N` states that `F` is a type of `L`-homomorphisms. You should extend this
   typeclass when you extend `first_order.language.hom`. -/
-class HomClass (L : outParam Language) (F : Type _) (M N : outParam $ Type _) [FunLike F M fun _ => N]
+class HomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _) [FunLike F M fun _ => N]
   [L.StructureCat M] [L.StructureCat N] where
   map_fun : ∀ (φ : F) {n} (f : L.Functions n) (x), φ (funMap f x) = funMap f (φ ∘ x)
   map_rel : ∀ (φ : F) {n} (r : L.Relations n) (x), RelMap r x → RelMap r (φ ∘ x)
@@ -411,7 +407,7 @@ class HomClass (L : outParam Language) (F : Type _) (M N : outParam $ Type _) [F
 
 /-- `strong_hom_class L F M N` states that `F` is a type of `L`-homomorphisms which preserve
   relations in both directions. -/
-class StrongHomClass (L : outParam Language) (F : Type _) (M N : outParam $ Type _) [FunLike F M fun _ => N]
+class StrongHomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _) [FunLike F M fun _ => N]
   [L.StructureCat M] [L.StructureCat N] where
   map_fun : ∀ (φ : F) {n} (f : L.Functions n) (x), φ (funMap f x) = funMap f (φ ∘ x)
   map_rel : ∀ (φ : F) {n} (r : L.Relations n) (x), RelMap r (φ ∘ x) ↔ RelMap r x

@@ -579,7 +579,7 @@ attribute [local semireducible] Int.NonNeg
 @[simp]
 theorem nat_cast_to_nat (p : ℕ) : ∀ {z : ℤ} (h : 0 ≤ z), (z.toNat : Zmod p) = z
   | (n : ℕ), h => by simp only [Int.cast_ofNat, Int.toNat_coe_nat]
-  | -[1+ n], h => False.elim h
+  | -[n+1], h => False.elim h
 #align zmod.nat_cast_to_nat Zmod.nat_cast_to_nat
 
 theorem val_injective (n : ℕ) [NeZero n] : Function.Injective (Zmod.val : Zmod n → ℕ) := by
@@ -618,7 +618,7 @@ theorem val_mul {n : ℕ} (a b : Zmod n) : (a * b).val = a.val * b.val % n := by
 
 instance nontrivial (n : ℕ) [Fact (1 < n)] : Nontrivial (Zmod n) :=
   ⟨⟨0, 1, fun h =>
-      zero_ne_one $
+      zero_ne_one <|
         calc
           0 = (0 : Zmod n).val := by rw [val_zero]
           _ = (1 : Zmod n).val := congr_arg Zmod.val h
@@ -783,7 +783,7 @@ def chineseRemainder {m n : ℕ} (h : m.Coprime n) : Zmod (m * n) ≃+* Zmod m �
 
 -- todo: this can be made a `unique` instance.
 instance subsingleton_units : Subsingleton (Zmod 2)ˣ :=
-  ⟨dec_trivial⟩
+  ⟨by decide⟩
 #align zmod.subsingleton_units Zmod.subsingleton_units
 
 theorem le_div_two_iff_lt_neg (n : ℕ) [hn : Fact ((n : ℕ) % 2 = 1)] {x : Zmod n} (hx0 : x ≠ 0) :
@@ -792,12 +792,12 @@ theorem le_div_two_iff_lt_neg (n : ℕ) [hn : Fact ((n : ℕ) % 2 = 1)] {x : Zmo
     ⟨by
       rintro rfl
       simpa [fact_iff] using hn⟩
-  have hn2 : (n : ℕ) / 2 < n := Nat.div_lt_of_lt_mul ((lt_mul_iff_one_lt_left $ NeZero.pos n).2 dec_trivial)
+  have hn2 : (n : ℕ) / 2 < n := Nat.div_lt_of_lt_mul ((lt_mul_iff_one_lt_left <| NeZero.pos n).2 (by decide))
   have hn2' : (n : ℕ) - n / 2 = n / 2 + 1 := by
     conv =>
     lhs
     congr
-    rw [← Nat.succ_sub_one n, Nat.succ_sub $ NeZero.pos n]
+    rw [← Nat.succ_sub_one n, Nat.succ_sub <| NeZero.pos n]
     rw [← Nat.two_mul_odd_div_two hn.1, two_mul, ← Nat.succ_add, add_tsub_cancel_right]
   have hxn : (n : ℕ) - x.val < n := by
     rw [tsub_lt_iff_tsub_lt x.val_le le_rfl, tsub_self]
@@ -855,7 +855,7 @@ theorem neg_val' {n : ℕ} [NeZero n] (a : Zmod n) : (-a).val = (n - a.val) % n 
 
 theorem neg_val {n : ℕ} [NeZero n] (a : Zmod n) : (-a).val = if a = 0 then 0 else n - a.val := by
   rw [neg_val']
-  by_cases h:a = 0
+  by_cases h : a = 0
   · rw [if_pos h, h, val_zero, tsub_zero, Nat.mod_self]
     
   rw [if_neg h]
@@ -916,7 +916,7 @@ theorem nat_abs_val_min_abs_le {n : ℕ} [NeZero n] (x : Zmod n) : x.valMinAbs.n
     ring
   norm_cast
   calc
-    (n : ℕ) % 2 + n / 2 ≤ 1 + n / 2 := Nat.add_le_add_right (Nat.le_of_lt_succ (Nat.mod_lt _ dec_trivial)) _
+    (n : ℕ) % 2 + n / 2 ≤ 1 + n / 2 := Nat.add_le_add_right (Nat.le_of_lt_succ (Nat.mod_lt _ (by decide))) _
     _ ≤ x.val := by
       rw [add_comm]
       exact Nat.succ_le_of_lt (lt_of_not_ge h)
@@ -970,10 +970,10 @@ theorem nat_abs_val_min_abs_neg {n : ℕ} (a : Zmod n) : (-a).valMinAbs.natAbs =
   cases n
   · simp only [Int.natAbs_neg, val_min_abs_def_zero]
     
-  by_cases ha0:a = 0
+  by_cases ha0 : a = 0
   · rw [ha0, neg_zero]
     
-  by_cases haa:-a = a
+  by_cases haa : -a = a
   · rw [haa]
     
   suffices hpa : (n + 1 : ℕ) - a.val ≤ (n + 1) / 2 ↔ (n + 1 : ℕ) / 2 < a.val
@@ -1094,7 +1094,7 @@ variable (n) {A : Type _} [AddGroup A]
 /-- The map from `zmod n` induced by `f : ℤ →+ A` that maps `n` to `0`. -/
 @[simps]
 def lift : { f : ℤ →+ A // f n = 0 } ≃ (Zmod n →+ A) :=
-  (Equiv.subtypeEquivRight $ by
+  (Equiv.subtypeEquivRight <| by
         intro f
         rw [ker_int_cast_add_hom]
         constructor
@@ -1103,7 +1103,7 @@ def lift : { f : ℤ →+ A // f n = 0 } ≃ (Zmod n →+ A) :=
           
         · intro h
           refine' h (AddSubgroup.mem_zmultiples _)
-          ).trans $
+          ).trans <|
     (Int.castAddHom (Zmod n)).liftOfRightInverse coe int_cast_zmod_cast
 #align zmod.lift Zmod.lift
 
@@ -1120,12 +1120,12 @@ theorem lift_cast_add_hom (x : ℤ) : lift n f (Int.castAddHom (Zmod n) x) = f x
 
 @[simp]
 theorem lift_comp_coe : Zmod.lift n f ∘ coe = f :=
-  funext $ lift_coe _ _
+  funext <| lift_coe _ _
 #align zmod.lift_comp_coe Zmod.lift_comp_coe
 
 @[simp]
 theorem lift_comp_cast_add_hom : (Zmod.lift n f).comp (Int.castAddHom (Zmod n)) = f :=
-  AddMonoidHom.ext $ lift_cast_add_hom _ _
+  AddMonoidHom.ext <| lift_cast_add_hom _ _
 #align zmod.lift_comp_cast_add_hom Zmod.lift_comp_cast_add_hom
 
 end lift

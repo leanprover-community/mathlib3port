@@ -45,7 +45,7 @@ scoped[Real] notation "ψ" => goldenConj
 
 /-- The inverse of the golden ratio is the opposite of its conjugate. -/
 theorem inv_gold : φ⁻¹ = -ψ := by
-  have : 1 + Real.sqrt 5 ≠ 0 := ne_of_gt (add_pos (by norm_num) $ real.sqrt_pos.mpr (by norm_num))
+  have : 1 + Real.sqrt 5 ≠ 0 := ne_of_gt (add_pos (by norm_num) <| real.sqrt_pos.mpr (by norm_num))
   field_simp [sub_mul, mul_add]
   norm_num
 #align inv_gold inv_gold
@@ -102,7 +102,7 @@ theorem gold_conj_sq : ψ ^ 2 = ψ + 1 := by
 #align gold_conj_sq gold_conj_sq
 
 theorem gold_pos : 0 < φ :=
-  mul_pos (by apply add_pos <;> norm_num) $ inv_pos.2 zero_lt_two
+  mul_pos (by apply add_pos <;> norm_num) <| inv_pos.2 zero_lt_two
 #align gold_pos gold_pos
 
 theorem gold_ne_zero : φ ≠ 0 :=

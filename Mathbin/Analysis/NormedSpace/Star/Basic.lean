@@ -16,7 +16,7 @@ import Mathbin.Algebra.Star.Unitary
 A normed star group is a normed group with a compatible `star` which is isometric.
 
 A C⋆-ring is a normed star group that is also a ring and that verifies the stronger
-condition `∥x⋆ * x∥ = ∥x∥^2` for all `x`.  If a C⋆-ring is also a star algebra, then it is a
+condition `‖x⋆ * x‖ = ‖x‖^2` for all `x`.  If a C⋆-ring is also a star algebra, then it is a
 C⋆-algebra.
 
 To get a C⋆-algebra `E` over field `𝕜`, use
@@ -25,7 +25,7 @@ To get a C⋆-algebra `E` over field `𝕜`, use
 
 ## TODO
 
-- Show that `∥x⋆ * x∥ = ∥x∥^2` is equivalent to `∥x⋆ * x∥ = ∥x⋆∥ * ∥x∥`, which is used as the
+- Show that `‖x⋆ * x‖ = ‖x‖^2` is equivalent to `‖x⋆ * x‖ = ‖x⋆‖ * ‖x‖`, which is used as the
   definition of C*-algebras in some sources (e.g. Wikipedia).
 
 -/
@@ -38,7 +38,7 @@ local postfix:max "⋆" => star
 
 /-- A normed star group is a normed group with a compatible `star` which is isometric. -/
 class NormedStarGroup (E : Type _) [SeminormedAddCommGroup E] [StarAddMonoid E] : Prop where
-  norm_star : ∀ x : E, ∥x⋆∥ = ∥x∥
+  norm_star : ∀ x : E, ‖x⋆‖ = ‖x‖
 #align normed_star_group NormedStarGroup
 
 export NormedStarGroup (norm_star)
@@ -52,8 +52,8 @@ section NormedStarGroup
 variable [SeminormedAddCommGroup E] [StarAddMonoid E] [NormedStarGroup E]
 
 @[simp]
-theorem nnnorm_star (x : E) : ∥star x∥₊ = ∥x∥₊ :=
-  Subtype.ext $ norm_star _
+theorem nnnorm_star (x : E) : ‖star x‖₊ = ‖x‖₊ :=
+  Subtype.ext <| norm_star _
 #align nnnorm_star nnnorm_star
 
 /-- The `star` map in a normed star group is a normed group homomorphism. -/
@@ -63,7 +63,7 @@ def starNormedAddGroupHom : NormedAddGroupHom E E :=
 
 /-- The `star` map in a normed star group is an isometry -/
 theorem starIsometry : Isometry (star : E → E) :=
-  show Isometry starAddEquiv from AddMonoidHomClass.isometryOfNorm starAddEquiv (show ∀ x, ∥x⋆∥ = ∥x∥ from norm_star)
+  show Isometry starAddEquiv from AddMonoidHomClass.isometryOfNorm starAddEquiv (show ∀ x, ‖x⋆‖ = ‖x‖ from norm_star)
 #align star_isometry starIsometry
 
 instance (priority := 100) NormedStarGroup.to_has_continuous_star : HasContinuousStar E :=
@@ -77,10 +77,10 @@ instance RingHomIsometric.starRingEnd [NormedCommRing E] [StarRing E] [NormedSta
   ⟨norm_star⟩
 #align ring_hom_isometric.star_ring_end RingHomIsometric.starRingEnd
 
-/-- A C*-ring is a normed star ring that satifies the stronger condition `∥x⋆ * x∥ = ∥x∥^2`
+/-- A C*-ring is a normed star ring that satifies the stronger condition `‖x⋆ * x‖ = ‖x‖^2`
 for every `x`. -/
 class CstarRing (E : Type _) [NonUnitalNormedRing E] [StarRing E] : Prop where
-  norm_star_mul_self : ∀ {x : E}, ∥x⋆ * x∥ = ∥x∥ * ∥x∥
+  norm_star_mul_self : ∀ {x : E}, ‖x⋆ * x‖ = ‖x‖ * ‖x‖
 #align cstar_ring CstarRing
 
 instance : CstarRing ℝ where norm_star_mul_self x := by simp only [star, id.def, norm_mul]
@@ -96,38 +96,38 @@ variable [NonUnitalNormedRing E] [StarRing E] [CstarRing E]
 instance (priority := 100) toNormedStarGroup : NormedStarGroup E :=
   ⟨by
     intro x
-    by_cases htriv:x = 0
+    by_cases htriv : x = 0
     · simp only [htriv, star_zero]
       
-    · have hnt : 0 < ∥x∥ := norm_pos_iff.mpr htriv
-      have hnt_star : 0 < ∥x⋆∥ := norm_pos_iff.mpr ((AddEquiv.map_ne_zero_iff starAddEquiv).mpr htriv)
+    · have hnt : 0 < ‖x‖ := norm_pos_iff.mpr htriv
+      have hnt_star : 0 < ‖x⋆‖ := norm_pos_iff.mpr ((AddEquiv.map_ne_zero_iff starAddEquiv).mpr htriv)
       have h₁ :=
         calc
-          ∥x∥ * ∥x∥ = ∥x⋆ * x∥ := norm_star_mul_self.symm
-          _ ≤ ∥x⋆∥ * ∥x∥ := norm_mul_le _ _
+          ‖x‖ * ‖x‖ = ‖x⋆ * x‖ := norm_star_mul_self.symm
+          _ ≤ ‖x⋆‖ * ‖x‖ := norm_mul_le _ _
           
       have h₂ :=
         calc
-          ∥x⋆∥ * ∥x⋆∥ = ∥x * x⋆∥ := by rw [← norm_star_mul_self, star_star]
-          _ ≤ ∥x∥ * ∥x⋆∥ := norm_mul_le _ _
+          ‖x⋆‖ * ‖x⋆‖ = ‖x * x⋆‖ := by rw [← norm_star_mul_self, star_star]
+          _ ≤ ‖x‖ * ‖x⋆‖ := norm_mul_le _ _
           
       exact le_antisymm (le_of_mul_le_mul_right h₂ hnt_star) (le_of_mul_le_mul_right h₁ hnt)
       ⟩
 #align cstar_ring.to_normed_star_group CstarRing.toNormedStarGroup
 
-theorem norm_self_mul_star {x : E} : ∥x * x⋆∥ = ∥x∥ * ∥x∥ := by
+theorem norm_self_mul_star {x : E} : ‖x * x⋆‖ = ‖x‖ * ‖x‖ := by
   nth_rw 0 [← star_star x]
   simp only [norm_star_mul_self, norm_star]
 #align cstar_ring.norm_self_mul_star CstarRing.norm_self_mul_star
 
-theorem norm_star_mul_self' {x : E} : ∥x⋆ * x∥ = ∥x⋆∥ * ∥x∥ := by rw [norm_star_mul_self, norm_star]
+theorem norm_star_mul_self' {x : E} : ‖x⋆ * x‖ = ‖x⋆‖ * ‖x‖ := by rw [norm_star_mul_self, norm_star]
 #align cstar_ring.norm_star_mul_self' CstarRing.norm_star_mul_self'
 
-theorem nnnorm_self_mul_star {x : E} : ∥x * star x∥₊ = ∥x∥₊ * ∥x∥₊ :=
+theorem nnnorm_self_mul_star {x : E} : ‖x * star x‖₊ = ‖x‖₊ * ‖x‖₊ :=
   Subtype.ext norm_self_mul_star
 #align cstar_ring.nnnorm_self_mul_star CstarRing.nnnorm_self_mul_star
 
-theorem nnnorm_star_mul_self {x : E} : ∥x⋆ * x∥₊ = ∥x∥₊ * ∥x∥₊ :=
+theorem nnnorm_star_mul_self {x : E} : ‖x⋆ * x‖₊ = ‖x‖₊ * ‖x‖₊ :=
   Subtype.ext norm_star_mul_self
 #align cstar_ring.nnnorm_star_mul_self CstarRing.nnnorm_star_mul_self
 
@@ -178,7 +178,7 @@ instance _root_.prod.cstar_ring :
       exact (le_max_right _ _).trans (le_abs_self _)
       
     · rw [le_sup_iff]
-      rcases le_total ∥x.fst∥ ∥x.snd∥ with (h | h) <;> simp [h]
+      rcases le_total ‖x.fst‖ ‖x.snd‖ with (h | h) <;> simp [h]
       
 #align cstar_ring._root_.prod.cstar_ring cstar_ring._root_.prod.cstar_ring
 
@@ -202,8 +202,8 @@ section Unital
 variable [NormedRing E] [StarRing E] [CstarRing E]
 
 @[simp]
-theorem norm_one [Nontrivial E] : ∥(1 : E)∥ = 1 := by
-  have : 0 < ∥(1 : E)∥ := norm_pos_iff.mpr one_ne_zero
+theorem norm_one [Nontrivial E] : ‖(1 : E)‖ = 1 := by
+  have : 0 < ‖(1 : E)‖ := norm_pos_iff.mpr one_ne_zero
   rw [← mul_left_inj' this.ne', ← norm_star_mul_self, mul_one, star_one, one_mul]
 #align cstar_ring.norm_one CstarRing.norm_one
 
@@ -211,55 +211,55 @@ theorem norm_one [Nontrivial E] : ∥(1 : E)∥ = 1 := by
 instance (priority := 100) [Nontrivial E] : NormOneClass E :=
   ⟨norm_one⟩
 
-theorem norm_coe_unitary [Nontrivial E] (U : unitary E) : ∥(U : E)∥ = 1 := by
+theorem norm_coe_unitary [Nontrivial E] (U : unitary E) : ‖(U : E)‖ = 1 := by
   rw [← sq_eq_sq (norm_nonneg _) zero_le_one, one_pow 2, sq, ← CstarRing.norm_star_mul_self, unitary.coe_star_mul_self,
     CstarRing.norm_one]
 #align cstar_ring.norm_coe_unitary CstarRing.norm_coe_unitary
 
 @[simp]
-theorem norm_of_mem_unitary [Nontrivial E] {U : E} (hU : U ∈ unitary E) : ∥U∥ = 1 :=
+theorem norm_of_mem_unitary [Nontrivial E] {U : E} (hU : U ∈ unitary E) : ‖U‖ = 1 :=
   norm_coe_unitary ⟨U, hU⟩
 #align cstar_ring.norm_of_mem_unitary CstarRing.norm_of_mem_unitary
 
 @[simp]
-theorem norm_coe_unitary_mul (U : unitary E) (A : E) : ∥(U : E) * A∥ = ∥A∥ := by
+theorem norm_coe_unitary_mul (U : unitary E) (A : E) : ‖(U : E) * A‖ = ‖A‖ := by
   nontriviality E
   refine' le_antisymm _ _
   · calc
-      _ ≤ ∥(U : E)∥ * ∥A∥ := norm_mul_le _ _
-      _ = ∥A∥ := by rw [norm_coe_unitary, one_mul]
+      _ ≤ ‖(U : E)‖ * ‖A‖ := norm_mul_le _ _
+      _ = ‖A‖ := by rw [norm_coe_unitary, one_mul]
       
     
   · calc
-      _ = ∥(U : E)⋆ * U * A∥ := by rw [unitary.coe_star_mul_self U, one_mul]
-      _ ≤ ∥(U : E)⋆∥ * ∥(U : E) * A∥ := by
+      _ = ‖(U : E)⋆ * U * A‖ := by rw [unitary.coe_star_mul_self U, one_mul]
+      _ ≤ ‖(U : E)⋆‖ * ‖(U : E) * A‖ := by
         rw [mul_assoc]
         exact norm_mul_le _ _
-      _ = ∥(U : E) * A∥ := by rw [norm_star, norm_coe_unitary, one_mul]
+      _ = ‖(U : E) * A‖ := by rw [norm_star, norm_coe_unitary, one_mul]
       
     
 #align cstar_ring.norm_coe_unitary_mul CstarRing.norm_coe_unitary_mul
 
 @[simp]
-theorem norm_unitary_smul (U : unitary E) (A : E) : ∥U • A∥ = ∥A∥ :=
+theorem norm_unitary_smul (U : unitary E) (A : E) : ‖U • A‖ = ‖A‖ :=
   norm_coe_unitary_mul U A
 #align cstar_ring.norm_unitary_smul CstarRing.norm_unitary_smul
 
-theorem norm_mem_unitary_mul {U : E} (A : E) (hU : U ∈ unitary E) : ∥U * A∥ = ∥A∥ :=
+theorem norm_mem_unitary_mul {U : E} (A : E) (hU : U ∈ unitary E) : ‖U * A‖ = ‖A‖ :=
   norm_coe_unitary_mul ⟨U, hU⟩ A
 #align cstar_ring.norm_mem_unitary_mul CstarRing.norm_mem_unitary_mul
 
 @[simp]
-theorem norm_mul_coe_unitary (A : E) (U : unitary E) : ∥A * U∥ = ∥A∥ :=
+theorem norm_mul_coe_unitary (A : E) (U : unitary E) : ‖A * U‖ = ‖A‖ :=
   calc
-    _ = ∥((U : E)⋆ * A⋆)⋆∥ := by simp only [star_star, star_mul]
-    _ = ∥(U : E)⋆ * A⋆∥ := by rw [norm_star]
-    _ = ∥A⋆∥ := norm_mem_unitary_mul (star A) (unitary.star_mem U.Prop)
-    _ = ∥A∥ := norm_star _
+    _ = ‖((U : E)⋆ * A⋆)⋆‖ := by simp only [star_star, star_mul]
+    _ = ‖(U : E)⋆ * A⋆‖ := by rw [norm_star]
+    _ = ‖A⋆‖ := norm_mem_unitary_mul (star A) (unitary.star_mem U.Prop)
+    _ = ‖A‖ := norm_star _
     
 #align cstar_ring.norm_mul_coe_unitary CstarRing.norm_mul_coe_unitary
 
-theorem norm_mul_mem_unitary (A : E) {U : E} (hU : U ∈ unitary E) : ∥A * U∥ = ∥A∥ :=
+theorem norm_mul_mem_unitary (A : E) {U : E} (hU : U ∈ unitary E) : ‖A * U‖ = ‖A‖ :=
   norm_mul_coe_unitary A ⟨U, hU⟩
 #align cstar_ring.norm_mul_mem_unitary CstarRing.norm_mul_mem_unitary
 
@@ -268,7 +268,7 @@ end Unital
 end CstarRing
 
 theorem IsSelfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E] {x : E} (hx : IsSelfAdjoint x)
-    (n : ℕ) : ∥x ^ 2 ^ n∥₊ = ∥x∥₊ ^ 2 ^ n := by
+    (n : ℕ) : ‖x ^ 2 ^ n‖₊ = ‖x‖₊ ^ 2 ^ n := by
   induction' n with k hk
   · simp only [pow_zero, pow_one]
     
@@ -279,7 +279,7 @@ theorem IsSelfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing 
 #align is_self_adjoint.nnnorm_pow_two_pow IsSelfAdjoint.nnnorm_pow_two_pow
 
 theorem selfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E] (x : selfAdjoint E) (n : ℕ) :
-    ∥x ^ 2 ^ n∥₊ = ∥x∥₊ ^ 2 ^ n :=
+    ‖x ^ 2 ^ n‖₊ = ‖x‖₊ ^ 2 ^ n :=
   x.Prop.nnnorm_pow_two_pow _
 #align self_adjoint.nnnorm_pow_two_pow selfAdjoint.nnnorm_pow_two_pow
 
@@ -322,20 +322,20 @@ variable [NormedSpace 𝕜 E] [IsScalarTower 𝕜 E E] [SmulCommClass 𝕜 E E] 
 /-- In a C⋆-algebra `E`, either unital or non-unital, multiplication on the left by `a : E` has
 norm equal to the norm of `a`. -/
 @[simp]
-theorem op_nnnorm_mul : ∥mul 𝕜 E a∥₊ = ∥a∥₊ := by
+theorem op_nnnorm_mul : ‖mul 𝕜 E a‖₊ = ‖a‖₊ := by
   rw [← Sup_closed_unit_ball_eq_nnnorm]
   refine' cSup_eq_of_forall_le_of_forall_lt_exists_gt _ _ fun r hr => _
   · exact (metric.nonempty_closed_ball.mpr zero_le_one).image _
     
   · rintro - ⟨x, hx, rfl⟩
-    exact ((mul 𝕜 E a).unit_le_op_norm x $ mem_closed_ball_zero_iff.mp hx).trans (op_norm_mul_apply_le 𝕜 E a)
+    exact ((mul 𝕜 E a).unit_le_op_norm x <| mem_closed_ball_zero_iff.mp hx).trans (op_norm_mul_apply_le 𝕜 E a)
     
-  · have ha : 0 < ∥a∥₊ := zero_le'.trans_lt hr
-    rw [← inv_inv ∥a∥₊, Nnreal.lt_inv_iff_mul_lt (inv_ne_zero ha.ne')] at hr
-    obtain ⟨k, hk₁, hk₂⟩ := NormedField.exists_lt_nnnorm_lt 𝕜 (mul_lt_mul_of_pos_right hr $ Nnreal.inv_pos.2 ha)
+  · have ha : 0 < ‖a‖₊ := zero_le'.trans_lt hr
+    rw [← inv_inv ‖a‖₊, Nnreal.lt_inv_iff_mul_lt (inv_ne_zero ha.ne')] at hr
+    obtain ⟨k, hk₁, hk₂⟩ := NormedField.exists_lt_nnnorm_lt 𝕜 (mul_lt_mul_of_pos_right hr <| Nnreal.inv_pos.2 ha)
     refine' ⟨_, ⟨k • star a, _, rfl⟩, _⟩
     · simpa only [mem_closed_ball_zero_iff, norm_smul, one_mul, norm_star] using
-        (Nnreal.le_inv_iff_mul_le ha.ne').1 (one_mul ∥a∥₊⁻¹ ▸ hk₂.le : ∥k∥₊ ≤ ∥a∥₊⁻¹)
+        (Nnreal.le_inv_iff_mul_le ha.ne').1 (one_mul ‖a‖₊⁻¹ ▸ hk₂.le : ‖k‖₊ ≤ ‖a‖₊⁻¹)
       
     · simp only [map_smul, nnnorm_smul, mul_apply', mul_smul_comm, CstarRing.nnnorm_self_mul_star]
       rwa [← Nnreal.div_lt_iff (mul_pos ha ha).ne', div_eq_mul_inv, mul_inv, ← mul_assoc]
@@ -346,7 +346,7 @@ theorem op_nnnorm_mul : ∥mul 𝕜 E a∥₊ = ∥a∥₊ := by
 /-- In a C⋆-algebra `E`, either unital or non-unital, multiplication on the right by `a : E` has
 norm eqaul to the norm of `a`. -/
 @[simp]
-theorem op_nnnorm_mul_flip : ∥(mul 𝕜 E).flip a∥₊ = ∥a∥₊ := by
+theorem op_nnnorm_mul_flip : ‖(mul 𝕜 E).flip a‖₊ = ‖a‖₊ := by
   rw [← Sup_unit_ball_eq_nnnorm, ← nnnorm_star, ← @op_nnnorm_mul 𝕜 E, ← Sup_unit_ball_eq_nnnorm]
   congr 1
   simp only [mul_apply', flip_apply]
@@ -363,13 +363,13 @@ variable (E)
 /-- In a C⋆-algebra `E`, either unital or non-unital, the left regular representation is an
 isometry. -/
 theorem mulIsometry : Isometry (mul 𝕜 E) :=
-  AddMonoidHomClass.isometryOfNorm _ fun a => congr_arg coe $ op_nnnorm_mul 𝕜 a
+  AddMonoidHomClass.isometryOfNorm _ fun a => congr_arg coe <| op_nnnorm_mul 𝕜 a
 #align mul_isometry mulIsometry
 
 /-- In a C⋆-algebra `E`, either unital or non-unital, the right regular anti-representation is an
 isometry. -/
 theorem mulFlipIsometry : Isometry (mul 𝕜 E).flip :=
-  AddMonoidHomClass.isometryOfNorm _ fun a => congr_arg coe $ op_nnnorm_mul_flip 𝕜 a
+  AddMonoidHomClass.isometryOfNorm _ fun a => congr_arg coe <| op_nnnorm_mul_flip 𝕜 a
 #align mul_flip_isometry mulFlipIsometry
 
 end Mul

@@ -199,11 +199,11 @@ theorem boole_mul {α} [MulZeroOneClass α] (P : Prop) [Decidable P] (a : α) :
 #align boole_mul boole_mul
 
 theorem ite_mul_zero_left {α : Type _} [MulZeroClass α] (P : Prop) [Decidable P] (a b : α) :
-    ite P (a * b) 0 = ite P a 0 * b := by by_cases h:P <;> simp [h]
+    ite P (a * b) 0 = ite P a 0 * b := by by_cases h : P <;> simp [h]
 #align ite_mul_zero_left ite_mul_zero_left
 
 theorem ite_mul_zero_right {α : Type _} [MulZeroClass α] (P : Prop) [Decidable P] (a b : α) :
-    ite P (a * b) 0 = a * ite P b 0 := by by_cases h:P <;> simp [h]
+    ite P (a * b) 0 = a * ite P b 0 := by by_cases h : P <;> simp [h]
 #align ite_mul_zero_right ite_mul_zero_right
 
 theorem ite_and_mul_zero {α : Type _} [MulZeroClass α] (P Q : Prop) [Decidable P] [Decidable Q] (a b : α) :
@@ -380,8 +380,8 @@ variable [NonUnitalNonAssocRing α]
 instance (priority := 100) NonUnitalNonAssocRing.toHasDistribNeg : HasDistribNeg α where
   neg := Neg.neg
   neg_neg := neg_neg
-  neg_mul a b := eq_neg_of_add_eq_zero_left $ by rw [← right_distrib, add_left_neg, zero_mul]
-  mul_neg a b := eq_neg_of_add_eq_zero_left $ by rw [← left_distrib, add_left_neg, mul_zero]
+  neg_mul a b := eq_neg_of_add_eq_zero_left <| by rw [← right_distrib, add_left_neg, zero_mul]
+  mul_neg a b := eq_neg_of_add_eq_zero_left <| by rw [← left_distrib, add_left_neg, mul_zero]
 #align non_unital_non_assoc_ring.to_has_distrib_neg NonUnitalNonAssocRing.toHasDistribNeg
 
 theorem mul_sub_left_distrib (a b c : α) : a * (b - c) = a * b - a * c := by
@@ -456,16 +456,16 @@ variable [Ring α] {a b c d e : α}
 -- see Note [lower instance priority]
 instance (priority := 100) Ring.toNonUnitalRing : NonUnitalRing α :=
   { ‹Ring α› with
-    zero_mul := fun a => add_left_cancel $ show 0 * a + 0 * a = 0 * a + 0 by rw [← add_mul, zero_add, add_zero],
-    mul_zero := fun a => add_left_cancel $ show a * 0 + a * 0 = a * 0 + 0 by rw [← mul_add, add_zero, add_zero] }
+    zero_mul := fun a => add_left_cancel <| show 0 * a + 0 * a = 0 * a + 0 by rw [← add_mul, zero_add, add_zero],
+    mul_zero := fun a => add_left_cancel <| show a * 0 + a * 0 = a * 0 + 0 by rw [← mul_add, add_zero, add_zero] }
 #align ring.to_non_unital_ring Ring.toNonUnitalRing
 
 -- A (unital, associative) ring is a not-necessarily-associative ring 
 -- see Note [lower instance priority]
 instance (priority := 100) Ring.toNonAssocRing : NonAssocRing α :=
   { ‹Ring α› with
-    zero_mul := fun a => add_left_cancel $ show 0 * a + 0 * a = 0 * a + 0 by rw [← add_mul, zero_add, add_zero],
-    mul_zero := fun a => add_left_cancel $ show a * 0 + a * 0 = a * 0 + 0 by rw [← mul_add, add_zero, add_zero] }
+    zero_mul := fun a => add_left_cancel <| show 0 * a + 0 * a = 0 * a + 0 by rw [← add_mul, zero_add, add_zero],
+    mul_zero := fun a => add_left_cancel <| show a * 0 + a * 0 = a * 0 + 0 by rw [← mul_add, add_zero, add_zero] }
 #align ring.to_non_assoc_ring Ring.toNonAssocRing
 
 #print Ring.toSemiring /-

@@ -191,7 +191,7 @@ open Polynomial
 @[simp]
 theorem iterate_derivative_at_0 (n ν : ℕ) :
     ((Polynomial.derivative^[ν]) (bernsteinPolynomial R n ν)).eval 0 = (pochhammer R ν).eval (n - (ν - 1) : ℕ) := by
-  by_cases h:ν ≤ n
+  by_cases h : ν ≤ n
   · induction' ν with ν ih generalizing n h
     · simp [eval_at_0]
       

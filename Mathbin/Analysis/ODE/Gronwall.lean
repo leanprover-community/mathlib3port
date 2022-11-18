@@ -9,8 +9,8 @@ import Mathbin.Analysis.SpecialFunctions.ExpDeriv
 # Grönwall's inequality
 
 The main technical result of this file is the Grönwall-like inequality
-`norm_le_gronwall_bound_of_norm_deriv_right_le`. It states that if `f : ℝ → E` satisfies `∥f a∥ ≤ δ`
-and `∀ x ∈ [a, b), ∥f' x∥ ≤ K * ∥f x∥ + ε`, then for all `x ∈ [a, b]` we have `∥f x∥ ≤ δ * exp (K *
+`norm_le_gronwall_bound_of_norm_deriv_right_le`. It states that if `f : ℝ → E` satisfies `‖f a‖ ≤ δ`
+and `∀ x ∈ [a, b), ‖f' x‖ ≤ K * ‖f x‖ + ε`, then for all `x ∈ [a, b]` we have `‖f x‖ ≤ δ * exp (K *
 x) + (ε / K) * (exp (K * x) - 1)`.
 
 Then we use this inequality to prove some estimates on the possible rate of growth of the distance
@@ -22,7 +22,7 @@ Sec. 4.5][HubbardWest-ode], where `norm_le_gronwall_bound_of_norm_deriv_right_le
 
 ## TODO
 
-- Once we have FTC, prove an inequality for a function satisfying `∥f' x∥ ≤ K x * ∥f x∥ + ε`,
+- Once we have FTC, prove an inequality for a function satisfying `‖f' x‖ ≤ K x * ‖f x‖ + ε`,
   or more generally `liminf_{y→x+0} (f y - f x)/(y - x) ≤ K x * f x + ε` with any sign
   of `K x` and `f x`.
 -/
@@ -43,16 +43,16 @@ noncomputable def gronwallBound (δ K ε x : ℝ) : ℝ :=
 #align gronwall_bound gronwallBound
 
 theorem gronwall_bound_K0 (δ ε : ℝ) : gronwallBound δ 0 ε = fun x => δ + ε * x :=
-  funext $ fun x => if_pos rfl
+  funext fun x => if_pos rfl
 #align gronwall_bound_K0 gronwall_bound_K0
 
 theorem gronwall_bound_of_K_ne_0 {δ K ε : ℝ} (hK : K ≠ 0) :
     gronwallBound δ K ε = fun x => δ * exp (K * x) + ε / K * (exp (K * x) - 1) :=
-  funext $ fun x => if_neg hK
+  funext fun x => if_neg hK
 #align gronwall_bound_of_K_ne_0 gronwall_bound_of_K_ne_0
 
 theorem hasDerivAtGronwallBound (δ K ε x : ℝ) : HasDerivAt (gronwallBound δ K ε) (K * gronwallBound δ K ε x + ε) x := by
-  by_cases hK:K = 0
+  by_cases hK : K = 0
   · subst K
     simp only [gronwall_bound_K0, zero_mul, zero_add]
     convert ((hasDerivAtId x).const_mul ε).const_add δ
@@ -75,7 +75,7 @@ theorem hasDerivAtGronwallBoundShift (δ K ε x a : ℝ) :
 #align has_deriv_at_gronwall_bound_shift hasDerivAtGronwallBoundShift
 
 theorem gronwall_bound_x0 (δ K ε : ℝ) : gronwallBound δ K ε 0 = δ := by
-  by_cases hK:K = 0
+  by_cases hK : K = 0
   · simp only [gronwallBound, if_pos hK, mul_zero, add_zero]
     
   · simp only [gronwallBound, if_neg hK, mul_zero, exp_zero, sub_self, mul_one, add_zero]
@@ -83,7 +83,7 @@ theorem gronwall_bound_x0 (δ K ε : ℝ) : gronwallBound δ K ε 0 = δ := by
 #align gronwall_bound_x0 gronwall_bound_x0
 
 theorem gronwall_bound_ε0 (δ K x : ℝ) : gronwallBound δ K 0 x = δ * exp (K * x) := by
-  by_cases hK:K = 0
+  by_cases hK : K = 0
   · simp only [gronwall_bound_K0, hK, zero_mul, exp_zero, add_zero, mul_one]
     
   · simp only [gronwall_bound_of_K_ne_0 hK, zero_div, zero_mul, add_zero]
@@ -94,7 +94,7 @@ theorem gronwall_bound_ε0_δ0 (K x : ℝ) : gronwallBound 0 K 0 x = 0 := by sim
 #align gronwall_bound_ε0_δ0 gronwall_bound_ε0_δ0
 
 theorem gronwall_bound_continuous_ε (δ K x : ℝ) : Continuous fun ε => gronwallBound δ K ε x := by
-  by_cases hK:K = 0
+  by_cases hK : K = 0
   · simp only [gronwall_bound_K0, hK]
     exact continuous_const.add (continuous_id.mul continuous_const)
     
@@ -111,7 +111,7 @@ the inequalities `f a ≤ δ` and
 `∀ x ∈ [a, b), liminf_{z→x+0} (f z - f x)/(z - x) ≤ K * (f x) + ε`, then `f x`
 is bounded by `gronwall_bound δ K ε (x - a)` on `[a, b]`.
 
-See also `norm_le_gronwall_bound_of_norm_deriv_right_le` for a version bounding `∥f x∥`,
+See also `norm_le_gronwall_bound_of_norm_deriv_right_le` for a version bounding `‖f x‖`,
 `f : ℝ → E`. -/
 theorem le_gronwall_bound_of_liminf_deriv_right_le {f f' : ℝ → ℝ} {δ K ε : ℝ} {a b : ℝ} (hf : ContinuousOn f (icc a b))
     (hf' : ∀ x ∈ ico a b, ∀ r, f' x < r → ∃ᶠ z in 𝓝[>] x, (z - x)⁻¹ * (f z - f x) < r) (ha : f a ≤ δ)
@@ -139,12 +139,12 @@ theorem le_gronwall_bound_of_liminf_deriv_right_le {f f' : ℝ → ℝ} {δ K ε
 #align le_gronwall_bound_of_liminf_deriv_right_le le_gronwall_bound_of_liminf_deriv_right_le
 
 /-- A Grönwall-like inequality: if `f : ℝ → E` is continuous on `[a, b]`, has right derivative
-`f' x` at every point `x ∈ [a, b)`, and satisfies the inequalities `∥f a∥ ≤ δ`,
-`∀ x ∈ [a, b), ∥f' x∥ ≤ K * ∥f x∥ + ε`, then `∥f x∥` is bounded by `gronwall_bound δ K ε (x - a)`
+`f' x` at every point `x ∈ [a, b)`, and satisfies the inequalities `‖f a‖ ≤ δ`,
+`∀ x ∈ [a, b), ‖f' x‖ ≤ K * ‖f x‖ + ε`, then `‖f x‖` is bounded by `gronwall_bound δ K ε (x - a)`
 on `[a, b]`. -/
 theorem norm_le_gronwall_bound_of_norm_deriv_right_le {f f' : ℝ → E} {δ K ε : ℝ} {a b : ℝ}
-    (hf : ContinuousOn f (icc a b)) (hf' : ∀ x ∈ ico a b, HasDerivWithinAt f (f' x) (ici x) x) (ha : ∥f a∥ ≤ δ)
-    (bound : ∀ x ∈ ico a b, ∥f' x∥ ≤ K * ∥f x∥ + ε) : ∀ x ∈ icc a b, ∥f x∥ ≤ gronwallBound δ K ε (x - a) :=
+    (hf : ContinuousOn f (icc a b)) (hf' : ∀ x ∈ ico a b, HasDerivWithinAt f (f' x) (ici x) x) (ha : ‖f a‖ ≤ δ)
+    (bound : ∀ x ∈ ico a b, ‖f' x‖ ≤ K * ‖f x‖ + ε) : ∀ x ∈ icc a b, ‖f x‖ ≤ gronwallBound δ K ε (x - a) :=
   le_gronwall_bound_of_liminf_deriv_right_le (continuous_norm.comp_continuous_on hf)
     (fun x hx r hr => (hf' x hx).liminf_right_slope_norm_le hr) ha bound
 #align norm_le_gronwall_bound_of_norm_deriv_right_le norm_le_gronwall_bound_of_norm_deriv_right_le

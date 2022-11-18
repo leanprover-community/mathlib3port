@@ -101,7 +101,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
                    "if"
                    (Lean.binderIdent `h)
                    ":"
-                   (Init.Core.«term_=_» `f " = " (num "0"))
+                   («term_=_» `f "=" (num "0"))
                    "then"
                    (num "0")
                    "else"
@@ -181,7 +181,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
                   "if"
                   (Lean.binderIdent `h)
                   ":"
-                  (Init.Core.«term_=_» `f " = " (num "0"))
+                  («term_=_» `f "=" (num "0"))
                   "then"
                   (num "0")
                   "else"
@@ -251,7 +251,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
               "if"
               (Lean.binderIdent `h)
               ":"
-              (Init.Core.«term_=_» `f " = " (num "0"))
+              («term_=_» `f "=" (num "0"))
               "then"
               (num "0")
               "else"
@@ -317,7 +317,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
              "if"
              (Lean.binderIdent `h)
              ":"
-             (Init.Core.«term_=_» `f " = " (num "0"))
+             («term_=_» `f "=" (num "0"))
              "then"
              (num "0")
              "else"
@@ -381,7 +381,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
             "if"
             (Lean.binderIdent `h)
             ":"
-            (Init.Core.«term_=_» `f " = " (num "0"))
+            («term_=_» `f "=" (num "0"))
             "then"
             (num "0")
             "else"
@@ -578,7 +578,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
          "if"
          (Lean.binderIdent `h)
          ":"
-         (Init.Core.«term_=_» `f " = " (num "0"))
+         («term_=_» `f "=" (num "0"))
          "then"
          (num "0")
          "else"
@@ -592,7 +592,7 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
        "if"
        (Lean.binderIdent `h)
        ":"
-       (Init.Core.«term_=_» `f " = " (num "0"))
+       («term_=_» `f "=" (num "0"))
        "then"
        (num "0")
        "else"
@@ -634,13 +634,13 @@ theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X
       (num "0")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_» `f " = " (num "0"))
+      («term_=_» `f "=" (num "0"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `f
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'

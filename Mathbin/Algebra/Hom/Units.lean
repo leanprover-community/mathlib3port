@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Chris Hughes, Kevin Buzzard
 -/
 import Mathbin.Algebra.Hom.Group
-import Mathbin.Algebra.Group.Commute
+import Mathbin.Algebra.Group.Units
 
 /-!
 # Monoid homomorphisms and units
@@ -42,7 +42,7 @@ equal at `x⁻¹`. -/
       "If two homomorphisms from a subtraction monoid to an additive monoid are equal at an\nadditive unit `x`, then they are equal at `-x`."]
 theorem IsUnit.eq_on_inv {F G N} [DivisionMonoid G] [Monoid N] [MonoidHomClass F G N] {x : G} (hx : IsUnit x) (f g : F)
     (h : f x = g x) : f x⁻¹ = g x⁻¹ :=
-  left_inv_eq_right_inv (map_mul_eq_one f hx.inv_mul_cancel) $ h.symm ▸ map_mul_eq_one g $ hx.mul_inv_cancel
+  left_inv_eq_right_inv (map_mul_eq_one f hx.inv_mul_cancel) <| h.symm ▸ map_mul_eq_one g <| hx.mul_inv_cancel
 #align is_unit.eq_on_inv IsUnit.eq_on_inv
 
 /-- If two homomorphism from a group to a monoid are equal at `x`, then they are equal at `x⁻¹`. -/
@@ -137,8 +137,8 @@ this map is a monoid homomorphism too. -/
       "If a map `g : M → add_units N` agrees with a homomorphism `f : M →+ N`, then this map\nis an add_monoid homomorphism too."]
 def liftRight (f : M →* N) (g : M → Nˣ) (h : ∀ x, ↑(g x) = f x) : M →* Nˣ where
   toFun := g
-  map_one' := Units.ext $ (h 1).symm ▸ f.map_one
-  map_mul' x y := Units.ext $ by simp only [h, coe_mul, f.map_mul]
+  map_one' := Units.ext <| (h 1).symm ▸ f.map_one
+  map_mul' x y := Units.ext <| by simp only [h, coe_mul, f.map_mul]
 #align units.lift_right Units.liftRight
 
 @[simp, to_additive]
@@ -206,7 +206,7 @@ to `f : M →* Nˣ`. See also `units.lift_right` for a computable version. -/
 @[to_additive
       "If a homomorphism `f : M →+ N` sends each element to an `is_add_unit`, then it can be\nlifted to `f : M →+ add_units N`. See also `add_units.lift_right` for a computable version."]
 noncomputable def liftRight (f : M →* N) (hf : ∀ x, IsUnit (f x)) : M →* Nˣ :=
-  (Units.liftRight f fun x => (hf x).Unit) $ fun x => rfl
+  (Units.liftRight f fun x => (hf x).Unit) fun x => rfl
 #align is_unit.lift_right IsUnit.liftRight
 
 @[to_additive]

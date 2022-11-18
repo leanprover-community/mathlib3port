@@ -88,7 +88,7 @@ open Sum PUnit
 This is useful when considering the associated polynomial endofunctor.
 -/
 @[simps]
-def natαEquivPunitSumPunit : nat_α ≃ PUnit.{u + 1} ⊕ PUnit where
+def natαEquivPunitSumPunit : nat_α ≃ Sum PUnit.{u + 1} PUnit where
   toFun c :=
     match c with
     | nat_α.zero => inl unit
@@ -147,12 +147,11 @@ def ofList : List γ → WType (Listβ γ)
   | List.cons hd tl => ⟨Listα.cons hd, fun _ => of_list tl⟩
 #align W_type.of_list WType.ofList
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The isomorphism from the `W_type` construction of lists to lists -/
 @[simp]
 def toList : WType (Listβ γ) → List γ
   | WType.mk list_α.nil f => []
-  | WType.mk (list_α.cons hd) f => hd::to_list (f PUnit.unit)
+  | WType.mk (list_α.cons hd) f => hd :: to_list (f PUnit.unit)
 #align W_type.to_list WType.toList
 
 theorem left_inv_list : Function.LeftInverse (ofList γ) (toList _)
@@ -180,7 +179,7 @@ def equivList : WType (Listβ γ) ≃ List γ where
 /-- `W_type.list_α` is equivalent to `γ` with an extra point.
 This is useful when considering the associated polynomial endofunctor
 -/
-def listαEquivPunitSum : Listα γ ≃ PUnit.{v + 1} ⊕ γ where
+def listαEquivPunitSum : Listα γ ≃ Sum PUnit.{v + 1} γ where
   toFun c :=
     match c with
     | list_α.nil => Sum.inl PUnit.unit

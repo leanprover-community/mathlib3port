@@ -124,7 +124,7 @@ theorem select_add_select_not : ∀ x : 𝕎 R, select P x + select (fun i => ¬
   apply Finset.sum_congr rfl
   refine' fun m hm => mul_eq_mul_left_iff.mpr (Or.inl _)
   rw [ite_pow, ite_pow, zero_pow (pow_pos hp.out.pos _)]
-  by_cases Pm:P m
+  by_cases Pm : P m
   · rw [if_pos Pm, if_neg _, add_zero]
     exact not_not.mpr Pm
     

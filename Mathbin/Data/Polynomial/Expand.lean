@@ -82,7 +82,7 @@ theorem expand_one (f : R[X]) : expand R 1 f = f :=
 #align polynomial.expand_one Polynomial.expand_one
 
 theorem expand_pow (f : R[X]) : expand R (p ^ q) f = (expand R p^[q]) f :=
-  Nat.recOn q (by rw [pow_zero, expand_one, Function.iterate_zero, id]) $ fun n ih => by
+  (Nat.recOn q (by rw [pow_zero, expand_one, Function.iterate_zero, id])) fun n ih => by
     rw [Function.iterate_succ_apply', pow_succ, expand_mul, ih]
 #align polynomial.expand_pow Polynomial.expand_pow
 
@@ -126,7 +126,7 @@ theorem coeff_expand_mul' {p : ℕ} (hp : 0 < p) (f : R[X]) (n : ℕ) : (expand 
 
 /-- Expansion is injective. -/
 theorem expand_injective {n : ℕ} (hn : 0 < n) : Function.Injective (expand R n) := fun g g' H =>
-  ext $ fun k => by rw [← coeff_expand_mul hn, H, coeff_expand_mul hn]
+  ext fun k => by rw [← coeff_expand_mul hn, H, coeff_expand_mul hn]
 #align polynomial.expand_injective Polynomial.expand_injective
 
 theorem expand_inj {p : ℕ} (hp : 0 < p) {f g : R[X]} : expand R p f = expand R p g ↔ f = g :=
@@ -149,12 +149,12 @@ theorem nat_degree_expand (p : ℕ) (f : R[X]) : (expand R p f).natDegree = f.na
   cases' p.eq_zero_or_pos with hp hp
   · rw [hp, coe_expand, pow_zero, mul_zero, ← C_1, eval₂_hom, nat_degree_C]
     
-  by_cases hf:f = 0
+  by_cases hf : f = 0
   · rw [hf, AlgHom.map_zero, nat_degree_zero, zero_mul]
     
   have hf1 : expand R p f ≠ 0 := mt (expand_eq_zero hp).1 hf
   rw [← WithBot.coe_eq_coe, ← degree_eq_nat_degree hf1]
-  refine' le_antisymm ((degree_le_iff_coeff_zero _ _).2 $ fun n hn => _) _
+  refine' le_antisymm ((degree_le_iff_coeff_zero _ _).2 fun n hn => _) _
   · rw [coeff_expand hp]
     split_ifs with hpn
     · rw [coeff_eq_zero_of_nat_degree_lt]
@@ -177,7 +177,7 @@ theorem Monic.expand {p : ℕ} {f : R[X]} (hp : 0 < p) (h : f.Monic) : (expand R
 #align polynomial.monic.expand Polynomial.Monic.expand
 
 theorem map_expand {p : ℕ} {f : R →+* S} {q : R[X]} : map f (expand R p q) = expand S p (map f q) := by
-  by_cases hp:p = 0
+  by_cases hp : p = 0
   · simp [hp]
     
   ext
@@ -292,9 +292,9 @@ theorem of_irreducible_expand {p : ℕ} (hp : p ≠ 0) {f : R[X]} (hf : Irreduci
 
 theorem of_irreducible_expand_pow {p : ℕ} (hp : p ≠ 0) {f : R[X]} {n : ℕ} :
     Irreducible (expand R (p ^ n) f) → Irreducible f :=
-  (Nat.recOn n fun hf => by rwa [pow_zero, expand_one] at hf) $ fun n ih hf =>
-    ih $
-      of_irreducible_expand hp $ by
+  (Nat.recOn n fun hf => by rwa [pow_zero, expand_one] at hf) fun n ih hf =>
+    ih <|
+      of_irreducible_expand hp <| by
         rw [pow_succ] at hf
         rwa [expand_expand]
 #align polynomial.of_irreducible_expand_pow Polynomial.of_irreducible_expand_pow

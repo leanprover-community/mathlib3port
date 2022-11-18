@@ -3,8 +3,8 @@ Copyright (c) 2022 Junyan Xu. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 -/
-import Mathbin.Logic.Relation
 import Mathbin.Order.Basic
+import Mathbin.Logic.Relation
 
 /-!
 # Game addition relation
@@ -51,7 +51,7 @@ theorem rprod_le_trans_gen_game_add : Prod.Rprod rα rβ ≤ Relation.TransGen (
   h.rec
     (by
       intro _ _ _ _ hα hβ
-      exact Relation.TransGen.tail (Relation.TransGen.single $ game_add.fst hα) (game_add.snd hβ))
+      exact Relation.TransGen.tail (Relation.TransGen.single <| game_add.fst hα) (game_add.snd hβ))
 #align prod.rprod_le_trans_gen_game_add Prod.rprod_le_trans_gen_game_add
 
 end Prod

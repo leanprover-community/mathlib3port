@@ -32,16 +32,16 @@ theorem exists_subset_mul_div (ht : t.Nonempty) : ∃ u : Finset α, u.card * t.
     C.exists_maximal (filter_nonempty_iff.2 ⟨∅, empty_mem_powerset _, Set.pairwise_disjoint_empty⟩)
   rw [mem_filter, mem_powerset] at hu
   refine'
-    ⟨u, (card_mul_iff.2 $ pairwise_disjoint_smul_iff.1 hu.2).ge.trans (card_le_of_subset $ mul_subset_mul_right hu.1),
+    ⟨u, (card_mul_iff.2 <| pairwise_disjoint_smul_iff.1 hu.2).ge.trans (card_le_of_subset <| mul_subset_mul_right hu.1),
       fun a ha => _⟩
   rw [mul_div_assoc]
-  by_cases hau:a ∈ u
+  by_cases hau : a ∈ u
   · exact subset_mul_left _ ht.one_mem_div hau
     
-  by_cases H:∀ b ∈ u, Disjoint (a • t) (b • t)
-  · refine' (hCmax _ _ $ ssubset_insert hau).elim
+  by_cases H : ∀ b ∈ u, Disjoint (a • t) (b • t)
+  · refine' (hCmax _ _ <| ssubset_insert hau).elim
     rw [mem_filter, mem_powerset, insert_subset, coe_insert]
-    exact ⟨⟨ha, hu.1⟩, hu.2.insert $ fun b hb _ => H _ hb⟩
+    exact ⟨⟨ha, hu.1⟩, hu.2.insert fun b hb _ => H _ hb⟩
     
   push_neg  at H
   simp_rw [not_disjoint_iff, ← inv_smul_mem_iff] at H

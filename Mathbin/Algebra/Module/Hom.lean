@@ -29,8 +29,8 @@ instance : DistribMulAction R (A →+ B) where
   smul r f := { toFun := r • f, map_zero' := by simp, map_add' := fun x y => by simp [smul_add] }
   one_smul f := by simp
   mul_smul r s f := by simp [mul_smul]
-  smul_add r f g := ext $ fun x => by simp [smul_add]
-  smul_zero r := ext $ fun x => by simp [smul_zero]
+  smul_add r f g := ext fun x => by simp [smul_add]
+  smul_zero r := ext fun x => by simp [smul_zero]
 
 @[simp]
 theorem coe_smul (r : R) (f : A →+ B) : ⇑(r • f) = r • f :=
@@ -42,19 +42,19 @@ theorem smul_apply (r : R) (f : A →+ B) (x : A) : (r • f) x = r • f x :=
 #align add_monoid_hom.smul_apply AddMonoidHom.smul_apply
 
 instance [SmulCommClass R S B] : SmulCommClass R S (A →+ B) :=
-  ⟨fun a b f => ext $ fun x => smul_comm _ _ _⟩
+  ⟨fun a b f => ext fun x => smul_comm _ _ _⟩
 
 instance [HasSmul R S] [IsScalarTower R S B] : IsScalarTower R S (A →+ B) :=
-  ⟨fun a b f => ext $ fun x => smul_assoc _ _ _⟩
+  ⟨fun a b f => ext fun x => smul_assoc _ _ _⟩
 
 instance [DistribMulAction Rᵐᵒᵖ B] [IsCentralScalar R B] : IsCentralScalar R (A →+ B) :=
-  ⟨fun a b => ext $ fun x => op_smul_eq_smul _ _⟩
+  ⟨fun a b => ext fun x => op_smul_eq_smul _ _⟩
 
 end
 
 instance [Semiring R] [AddMonoid A] [AddCommMonoid B] [Module R B] : Module R (A →+ B) :=
-  { AddMonoidHom.distribMulAction with add_smul := fun r s x => ext $ fun y => by simp [add_smul],
-    zero_smul := fun x => ext $ fun y => by simp [zero_smul] }
+  { AddMonoidHom.distribMulAction with add_smul := fun r s x => ext fun y => by simp [add_smul],
+    zero_smul := fun x => ext fun y => by simp [zero_smul] }
 
 end AddMonoidHom
 

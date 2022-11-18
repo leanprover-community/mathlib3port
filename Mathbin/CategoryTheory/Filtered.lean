@@ -8,7 +8,6 @@ import Mathbin.CategoryTheory.Limits.Cones
 import Mathbin.CategoryTheory.Adjunction.Basic
 import Mathbin.CategoryTheory.Category.Preorder
 import Mathbin.CategoryTheory.Category.Ulift
-import Mathbin.Order.BoundedOrder
 
 /-!
 # Filtered categories
@@ -65,8 +64,8 @@ variable (C : Type u) [Category.{v} C]
    are equal.
 -/
 class IsFilteredOrEmpty : Prop where
-  cocone_objs : ∀ X Y : C, ∃ (Z) (f : X ⟶ Z) (g : Y ⟶ Z), True
-  cocone_maps : ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), ∃ (Z) (h : Y ⟶ Z), f ≫ h = g ≫ h
+  cocone_objs : ∀ X Y : C, ∃ (Z : _)(f : X ⟶ Z)(g : Y ⟶ Z), True
+  cocone_maps : ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), ∃ (Z : _)(h : Y ⟶ Z), f ≫ h = g ≫ h
 #align category_theory.is_filtered_or_empty CategoryTheory.IsFilteredOrEmpty
 
 /-- A category `is_filtered` if
@@ -109,8 +108,8 @@ example (α : Type u) [SemilatticeSup α] [OrderBot α] : IsFiltered α := by in
 example (α : Type u) [SemilatticeSup α] [OrderTop α] : IsFiltered α := by infer_instance
 
 instance : IsFiltered (Discrete PUnit) where
-  cocone_objs X Y := ⟨⟨PUnit.unit⟩, ⟨⟨dec_trivial⟩⟩, ⟨⟨dec_trivial⟩⟩, trivial⟩
-  cocone_maps X Y f g := ⟨⟨PUnit.unit⟩, ⟨⟨dec_trivial⟩⟩, dec_trivial⟩
+  cocone_objs X Y := ⟨⟨PUnit.unit⟩, ⟨⟨by decide⟩⟩, ⟨⟨by decide⟩⟩, trivial⟩
+  cocone_maps X Y f g := ⟨⟨PUnit.unit⟩, ⟨⟨by decide⟩⟩, by decide⟩
   Nonempty := ⟨⟨PUnit.unit⟩⟩
 
 namespace IsFiltered
@@ -183,19 +182,17 @@ theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempt
     
 #align category_theory.is_filtered.sup_objs_exists CategoryTheory.IsFiltered.sup_objs_exists
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (X Y) -/
-variable (O : Finset C) (H : Finset (Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y))
+variable (O : Finset C) (H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (X Y) -/
 /-- Given any `finset` of objects `{X, ...}` and
 indexed collection of `finset`s of morphisms `{f, ...}` in `C`,
 there exists an object `S`, with a morphism `T X : X ⟶ S` from each `X`,
 such that the triangles commute: `f ≫ T Y = T X`, for `f : X ⟶ Y` in the `finset`.
 -/
 theorem sup_exists :
-    ∃ (S : C) (T : ∀ {X : C}, X ∈ O → (X ⟶ S)),
+    ∃ (S : C)(T : ∀ {X : C}, X ∈ O → (X ⟶ S)),
       ∀ {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y},
-        (⟨X, Y, mX, mY, f⟩ : Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H → f ≫ T mY = T mX :=
+        (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H → f ≫ T mY = T mX :=
   by classical
   apply Finset.induction_on H
   · obtain ⟨S, f⟩ := sup_objs_exists O
@@ -206,9 +203,9 @@ theorem sup_exists :
     refine' ⟨coeq (f ≫ T' mY) (T' mX), fun Z mZ => T' mZ ≫ coeq_hom (f ≫ T' mY) (T' mX), _⟩
     intro X' Y' mX' mY' f' mf'
     rw [← category.assoc]
-    by_cases h:X = X' ∧ Y = Y'
+    by_cases h : X = X' ∧ Y = Y'
     · rcases h with ⟨rfl, rfl⟩
-      by_cases hf:f = f'
+      by_cases hf : f = f'
       · subst hf
         apply coeq_condition
         
@@ -239,24 +236,21 @@ noncomputable def toSup {X : C} (m : X ∈ O) : X ⟶ sup O H :=
   (sup_exists O H).some_spec.some m
 #align category_theory.is_filtered.to_sup CategoryTheory.IsFiltered.toSup
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (X Y) -/
 /-- The triangles of consisting of a morphism in `H` and the maps to `sup O H` commute.
 -/
 theorem to_sup_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
-    (mf : (⟨X, Y, mX, mY, f⟩ : Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H) :
-    f ≫ toSup O H mY = toSup O H mX :=
+    (mf : (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H) : f ≫ toSup O H mY = toSup O H mX :=
   (sup_exists O H).some_spec.some_spec mX mY mf
 #align category_theory.is_filtered.to_sup_commutes CategoryTheory.IsFiltered.to_sup_commutes
 
 variable {J : Type v} [SmallCategory J] [FinCategory J]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (X Y) -/
 /-- If we have `is_filtered C`, then for any functor `F : J ⥤ C` with `fin_category J`,
 there exists a cocone over `F`.
 -/
 theorem cocone_nonempty (F : J ⥤ C) : Nonempty (Cocone F) := by classical
   let O := finset.univ.image F.obj
-  let H : Finset (Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) :=
+  let H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
     finset.univ.bUnion fun X : J =>
       finset.univ.bUnion fun Y : J => finset.univ.image fun f : X ⟶ Y => ⟨F.obj X, F.obj Y, by simp, by simp, F.map f⟩
   obtain ⟨Z, f, w⟩ := sup_exists O H
@@ -378,7 +372,7 @@ in a filtered category, we can construct an object `s` and two morphisms from `k
 making the resulting squares commute.
 -/
 theorem bowtie {j₁ j₂ k₁ k₂ : C} (f₁ : j₁ ⟶ k₁) (g₁ : j₁ ⟶ k₂) (f₂ : j₂ ⟶ k₁) (g₂ : j₂ ⟶ k₂) :
-    ∃ (s : C) (α : k₁ ⟶ s) (β : k₂ ⟶ s), f₁ ≫ α = g₁ ≫ β ∧ f₂ ≫ α = g₂ ≫ β := by
+    ∃ (s : C)(α : k₁ ⟶ s)(β : k₂ ⟶ s), f₁ ≫ α = g₁ ≫ β ∧ f₂ ≫ α = g₂ ≫ β := by
   let sa := max k₁ k₂
   let sb := coeq (f₁ ≫ left_to_max _ _) (g₁ ≫ right_to_max _ _)
   let sc := coeq (f₂ ≫ left_to_max _ _) (g₂ ≫ right_to_max _ _)
@@ -418,8 +412,8 @@ in a filtered category, we can construct an object `s` and three morphisms from 
 to `s`, making the resulting sqaures commute.
 -/
 theorem tulip {j₁ j₂ j₃ k₁ k₂ l : C} (f₁ : j₁ ⟶ k₁) (f₂ : j₂ ⟶ k₁) (f₃ : j₂ ⟶ k₂) (f₄ : j₃ ⟶ k₂) (g₁ : j₁ ⟶ l)
-    (g₂ : j₃ ⟶ l) :
-    ∃ (s : C) (α : k₁ ⟶ s) (β : l ⟶ s) (γ : k₂ ⟶ s), f₁ ≫ α = g₁ ≫ β ∧ f₂ ≫ α = f₃ ≫ γ ∧ f₄ ≫ γ = g₂ ≫ β := by
+    (g₂ : j₃ ⟶ l) : ∃ (s : C)(α : k₁ ⟶ s)(β : l ⟶ s)(γ : k₂ ⟶ s), f₁ ≫ α = g₁ ≫ β ∧ f₂ ≫ α = f₃ ≫ γ ∧ f₄ ≫ γ = g₂ ≫ β :=
+  by
   let sa := max₃ k₁ l k₂
   let sb := coeq (f₁ ≫ first_to_max₃ k₁ l k₂) (g₁ ≫ second_to_max₃ k₁ l k₂)
   let sc := coeq (f₂ ≫ first_to_max₃ k₁ l k₂) (f₃ ≫ third_to_max₃ k₁ l k₂)
@@ -456,8 +450,8 @@ end IsFiltered
    are equal.
 -/
 class IsCofilteredOrEmpty : Prop where
-  cocone_objs : ∀ X Y : C, ∃ (W) (f : W ⟶ X) (g : W ⟶ Y), True
-  cocone_maps : ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), ∃ (W) (h : W ⟶ X), h ≫ f = h ≫ g
+  cocone_objs : ∀ X Y : C, ∃ (W : _)(f : W ⟶ X)(g : W ⟶ Y), True
+  cocone_maps : ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), ∃ (W : _)(h : W ⟶ X), h ≫ f = h ≫ g
 #align category_theory.is_cofiltered_or_empty CategoryTheory.IsCofilteredOrEmpty
 
 /-- A category `is_cofiltered` if
@@ -502,8 +496,8 @@ example (α : Type u) [SemilatticeInf α] [OrderBot α] : IsCofiltered α := by 
 example (α : Type u) [SemilatticeInf α] [OrderTop α] : IsCofiltered α := by infer_instance
 
 instance : IsCofiltered (Discrete PUnit) where
-  cocone_objs X Y := ⟨⟨PUnit.unit⟩, ⟨⟨dec_trivial⟩⟩, ⟨⟨dec_trivial⟩⟩, trivial⟩
-  cocone_maps X Y f g := ⟨⟨PUnit.unit⟩, ⟨⟨dec_trivial⟩⟩, dec_trivial⟩
+  cocone_objs X Y := ⟨⟨PUnit.unit⟩, ⟨⟨by decide⟩⟩, ⟨⟨by decide⟩⟩, trivial⟩
+  cocone_maps X Y f g := ⟨⟨PUnit.unit⟩, ⟨⟨by decide⟩⟩, by decide⟩
   Nonempty := ⟨⟨PUnit.unit⟩⟩
 
 namespace IsCofiltered
@@ -576,19 +570,17 @@ theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempt
     
 #align category_theory.is_cofiltered.inf_objs_exists CategoryTheory.IsCofiltered.inf_objs_exists
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (X Y) -/
-variable (O : Finset C) (H : Finset (Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y))
+variable (O : Finset C) (H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (X Y) -/
 /-- Given any `finset` of objects `{X, ...}` and
 indexed collection of `finset`s of morphisms `{f, ...}` in `C`,
 there exists an object `S`, with a morphism `T X : S ⟶ X` from each `X`,
 such that the triangles commute: `T X ≫ f = T Y`, for `f : X ⟶ Y` in the `finset`.
 -/
 theorem inf_exists :
-    ∃ (S : C) (T : ∀ {X : C}, X ∈ O → (S ⟶ X)),
+    ∃ (S : C)(T : ∀ {X : C}, X ∈ O → (S ⟶ X)),
       ∀ {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y},
-        (⟨X, Y, mX, mY, f⟩ : Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H → T mX ≫ f = T mY :=
+        (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H → T mX ≫ f = T mY :=
   by classical
   apply Finset.induction_on H
   · obtain ⟨S, f⟩ := inf_objs_exists O
@@ -599,9 +591,9 @@ theorem inf_exists :
     refine' ⟨Eq (T' mX ≫ f) (T' mY), fun Z mZ => eq_hom (T' mX ≫ f) (T' mY) ≫ T' mZ, _⟩
     intro X' Y' mX' mY' f' mf'
     rw [category.assoc]
-    by_cases h:X = X' ∧ Y = Y'
+    by_cases h : X = X' ∧ Y = Y'
     · rcases h with ⟨rfl, rfl⟩
-      by_cases hf:f = f'
+      by_cases hf : f = f'
       · subst hf
         apply eq_condition
         
@@ -632,24 +624,21 @@ noncomputable def infTo {X : C} (m : X ∈ O) : inf O H ⟶ X :=
   (inf_exists O H).some_spec.some m
 #align category_theory.is_cofiltered.inf_to CategoryTheory.IsCofiltered.infTo
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (X Y) -/
 /-- The triangles consisting of a morphism in `H` and the maps from `inf O H` commute.
 -/
 theorem inf_to_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
-    (mf : (⟨X, Y, mX, mY, f⟩ : Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H) :
-    infTo O H mX ≫ f = infTo O H mY :=
+    (mf : (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H) : infTo O H mX ≫ f = infTo O H mY :=
   (inf_exists O H).some_spec.some_spec mX mY mf
 #align category_theory.is_cofiltered.inf_to_commutes CategoryTheory.IsCofiltered.inf_to_commutes
 
 variable {J : Type w} [SmallCategory J] [FinCategory J]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (X Y) -/
 /-- If we have `is_cofiltered C`, then for any functor `F : J ⥤ C` with `fin_category J`,
 there exists a cone over `F`.
 -/
 theorem cone_nonempty (F : J ⥤ C) : Nonempty (Cone F) := by classical
   let O := finset.univ.image F.obj
-  let H : Finset (Σ' (X : C) (Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) :=
+  let H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
     finset.univ.bUnion fun X : J =>
       finset.univ.bUnion fun Y : J => finset.univ.image fun f : X ⟶ Y => ⟨F.obj X, F.obj Y, by simp, by simp, F.map f⟩
   obtain ⟨Z, f, w⟩ := inf_exists O H

@@ -37,12 +37,12 @@ variable [Semiring A] [Algebra R A]
 /-- Note that this instance also provides `algebra R R[X]`. -/
 instance algebraOfAlgebra : Algebra R A[X] where
   smul_def' r p :=
-    to_finsupp_injective $ by
+    to_finsupp_injective <| by
       dsimp only [RingHom.to_fun_eq_coe, RingHom.comp_apply]
       rw [to_finsupp_smul, to_finsupp_mul, to_finsupp_C]
       exact Algebra.smul_def' _ _
   commutes' r p :=
-    to_finsupp_injective $ by
+    to_finsupp_injective <| by
       dsimp only [RingHom.to_fun_eq_coe, RingHom.comp_apply]
       simp_rw [to_finsupp_mul, to_finsupp_C]
       convert Algebra.commutes' r p.to_finsupp
@@ -172,7 +172,7 @@ theorem adjoin_X : Algebra.adjoin R ({x} : Set R[X]) = ⊤ := by
 
 @[ext.1]
 theorem alg_hom_ext {f g : R[X] →ₐ[R] A} (h : f x = g x) : f = g :=
-  AlgHom.ext_of_adjoin_eq_top adjoin_X $ fun p hp => (Set.mem_singleton_iff.1 hp).symm ▸ h
+  (AlgHom.ext_of_adjoin_eq_top adjoin_X) fun p hp => (Set.mem_singleton_iff.1 hp).symm ▸ h
 #align polynomial.alg_hom_ext Polynomial.alg_hom_ext
 
 theorem aeval_def (p : R[X]) : aeval x p = eval₂ (algebraMap R A) x p :=
@@ -238,12 +238,12 @@ theorem aeval_comp {A : Type _} [CommSemiring A] [Algebra R A] (x : A) : aeval x
 #align polynomial.aeval_comp Polynomial.aeval_comp
 
 theorem aeval_alg_hom (f : A →ₐ[R] B) (x : A) : aeval (f x) = f.comp (aeval x) :=
-  alg_hom_ext $ by simp only [aeval_X, AlgHom.comp_apply]
+  alg_hom_ext <| by simp only [aeval_X, AlgHom.comp_apply]
 #align polynomial.aeval_alg_hom Polynomial.aeval_alg_hom
 
 @[simp]
 theorem aeval_X_left : aeval (x : R[X]) = AlgHom.id R R[X] :=
-  alg_hom_ext $ aeval_X x
+  alg_hom_ext <| aeval_X x
 #align polynomial.aeval_X_left Polynomial.aeval_X_left
 
 theorem aeval_X_left_apply (p : R[X]) : aeval x p = p :=
@@ -351,7 +351,7 @@ theorem aeval_tower_C (x : R) : aevalTower g y (c x) = g x :=
 
 @[simp]
 theorem aeval_tower_comp_C : (aevalTower g y : R[X] →+* A').comp c = g :=
-  RingHom.ext $ aeval_tower_C _ _
+  RingHom.ext <| aeval_tower_C _ _
 #align polynomial.aeval_tower_comp_C Polynomial.aeval_tower_comp_C
 
 @[simp]
@@ -370,7 +370,7 @@ theorem aeval_tower_to_alg_hom (x : R) : aevalTower g y (IsScalarTower.toAlgHom 
 
 @[simp]
 theorem aeval_tower_comp_to_alg_hom : (aevalTower g y).comp (IsScalarTower.toAlgHom S R R[X]) = g :=
-  AlgHom.coe_ring_hom_injective $ aeval_tower_comp_algebra_map _ _
+  AlgHom.coe_ring_hom_injective <| aeval_tower_comp_algebra_map _ _
 #align polynomial.aeval_tower_comp_to_alg_hom Polynomial.aeval_tower_comp_to_alg_hom
 
 @[simp]
@@ -396,7 +396,7 @@ variable [CommRing S] {f : R →+* S}
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : S[X]} (i : ℕ) (dvd_eval : p ∣ f.eval z)
     (dvd_terms : ∀ (j) (_ : j ≠ i), p ∣ f.coeff j * z ^ j) : p ∣ f.coeff i * z ^ i := by
-  by_cases hi:i ∈ f.support
+  by_cases hi : i ∈ f.support
   · rw [eval, eval₂, Sum] at dvd_eval
     rw [← Finset.insert_erase hi, Finset.sum_insert (Finset.not_mem_erase _ _)] at dvd_eval
     refine' (dvd_add_left _).mp dvd_eval
@@ -452,7 +452,7 @@ theorem eval_mul_X_sub_C {p : R[X]} (r : R) : (p * (X - c r)).eval r = 0 := by
 #align polynomial.eval_mul_X_sub_C Polynomial.eval_mul_X_sub_C
 
 theorem not_is_unit_X_sub_C [Nontrivial R] (r : R) : ¬IsUnit (X - c r) := fun ⟨⟨_, g, hfg, hgf⟩, rfl⟩ =>
-  @zero_ne_one R _ _ $ by erw [← eval_mul_X_sub_C, hgf, eval_one]
+  zero_ne_one' R <| by erw [← eval_mul_X_sub_C, hgf, eval_one]
 #align polynomial.not_is_unit_X_sub_C Polynomial.not_is_unit_X_sub_C
 
 end Ring

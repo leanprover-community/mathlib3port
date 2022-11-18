@@ -7,7 +7,6 @@ import Mathbin.CategoryTheory.Groupoid
 import Mathbin.AlgebraicTopology.FundamentalGroupoid.Basic
 import Mathbin.Topology.Category.TopCat.Limits
 import Mathbin.Topology.Homotopy.Product
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Products
 
 /-!
 # Fundamental groupoid preserves products

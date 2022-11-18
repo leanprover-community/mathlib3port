@@ -174,7 +174,6 @@ end Field
 
 section IsField
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 /-- A predicate to express that a (semi)ring is a (semi)field.
 
 This is mainly useful because such a predicate does not contain data,
@@ -182,7 +181,7 @@ and can therefore be easily transported along ring isomorphisms.
 Additionaly, this is useful when trying to prove that
 a particular ring structure extends to a (semi)field. -/
 structure IsField (R : Type u) [Semiring R] : Prop where
-  exists_pair_ne : ∃ (x : R) (y : R), x ≠ y
+  exists_pair_ne : ∃ x y : R, x ≠ y
   mul_comm : ∀ x y : R, x * y = y * x
   mul_inv_cancel : ∀ {a : R}, a ≠ 0 → ∃ b, a * b = 1
 #align is_field IsField

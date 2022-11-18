@@ -3,9 +3,8 @@ Copyright (c) 2021 Vladimir Goryachev. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Vladimir Goryachev, Kyle Miller, Scott Morrison, Eric Rodriguez
 -/
-import Mathbin.Data.List.Basic
-import Mathbin.Data.Nat.Prime
-import Mathbin.SetTheory.Cardinal.Finite
+import Mathbin.SetTheory.Cardinal.Basic
+import Mathbin.Tactic.Ring
 
 /-!
 # Counting on ℕ
@@ -64,11 +63,11 @@ theorem count_succ (n : ℕ) : count p (n + 1) = count p n + if p n then 1 else 
 
 @[mono]
 theorem count_monotone : Monotone (count p) :=
-  monotone_nat_of_le_succ $ fun n => by by_cases h:p n <;> simp [count_succ, h]
+  monotone_nat_of_le_succ fun n => by by_cases h : p n <;> simp [count_succ, h]
 #align nat.count_monotone Nat.count_monotone
 
 theorem count_add (a b : ℕ) : count p (a + b) = count p a + count (fun k => p (a + k)) b := by
-  have : Disjoint ((range a).filter p) (((range b).map $ addLeftEmbedding a).filter p) := by
+  have : Disjoint ((range a).filter p) (((range b).map <| addLeftEmbedding a).filter p) := by
     apply disjoint_filter_filter
     rw [Finset.disjoint_left]
     simp_rw [mem_map, mem_range, add_left_embedding_apply]
@@ -95,15 +94,15 @@ variable {p}
 
 @[simp]
 theorem count_lt_count_succ_iff {n : ℕ} : count p n < count p (n + 1) ↔ p n := by
-  by_cases h:p n <;> simp [count_succ, h]
+  by_cases h : p n <;> simp [count_succ, h]
 #align nat.count_lt_count_succ_iff Nat.count_lt_count_succ_iff
 
 theorem count_succ_eq_succ_count_iff {n : ℕ} : count p (n + 1) = count p n + 1 ↔ p n := by
-  by_cases h:p n <;> simp [h, count_succ]
+  by_cases h : p n <;> simp [h, count_succ]
 #align nat.count_succ_eq_succ_count_iff Nat.count_succ_eq_succ_count_iff
 
 theorem count_succ_eq_count_iff {n : ℕ} : count p (n + 1) = count p n ↔ ¬p n := by
-  by_cases h:p n <;> simp [h, count_succ]
+  by_cases h : p n <;> simp [h, count_succ]
 #align nat.count_succ_eq_count_iff Nat.count_succ_eq_count_iff
 
 alias count_succ_eq_succ_count_iff ↔ _ count_succ_eq_succ_count
@@ -120,7 +119,7 @@ theorem lt_of_count_lt_count {a b : ℕ} (h : count p a < count p b) : a < b :=
 #align nat.lt_of_count_lt_count Nat.lt_of_count_lt_count
 
 theorem count_strict_mono {m n : ℕ} (hm : p m) (hmn : m < n) : count p m < count p n :=
-  (count_lt_count_succ_iff.2 hm).trans_le $ count_monotone _ (Nat.succ_le_iff.2 hmn)
+  (count_lt_count_succ_iff.2 hm).trans_le <| count_monotone _ (Nat.succ_le_iff.2 hmn)
 #align nat.count_strict_mono Nat.count_strict_mono
 
 theorem count_injective {m n : ℕ} (hm : p m) (hn : p n) (heq : count p m = count p n) : m = n := by

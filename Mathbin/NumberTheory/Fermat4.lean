@@ -71,9 +71,8 @@ def Minimal (a b c : ℤ) : Prop :=
   Fermat42 a b c ∧ ∀ a1 b1 c1 : ℤ, Fermat42 a1 b1 c1 → Int.natAbs c ≤ Int.natAbs c1
 #align fermat_42.minimal Fermat42.Minimal
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a0 b0 c0) -/
 /-- if we have a solution to `a ^ 4 + b ^ 4 = c ^ 2` then there must be a minimal one. -/
-theorem exists_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ (a0) (b0) (c0), Minimal a0 b0 c0 := by
+theorem exists_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Minimal a0 b0 c0 := by
   let S : Set ℕ := { n | ∃ s : ℤ × ℤ × ℤ, Fermat42 s.1 s.2.1 s.2.2 ∧ n = Int.natAbs s.2.2 }
   have S_nonempty : S.nonempty := by
     use Int.natAbs c
@@ -127,9 +126,8 @@ theorem neg_of_minimal {a b c : ℤ} : Minimal a b c → Minimal a b (-c) := by
   rwa [Int.natAbs_neg c]
 #align fermat_42.neg_of_minimal Fermat42.neg_of_minimal
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a0 b0 c0) -/
 /-- We can assume that a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2` has `a` odd. -/
-theorem exists_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ (a0) (b0) (c0), Minimal a0 b0 c0 ∧ a0 % 2 = 1 := by
+theorem exists_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Minimal a0 b0 c0 ∧ a0 % 2 = 1 := by
   obtain ⟨a0, b0, c0, hf⟩ := exists_minimal h
   cases' Int.mod_two_eq_zero_or_one a0 with hap hap
   · cases' Int.mod_two_eq_zero_or_one b0 with hbp hbp
@@ -145,11 +143,10 @@ theorem exists_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ (a0) (b0) (c
   exact ⟨a0, ⟨b0, ⟨c0, hf, hap⟩⟩⟩
 #align fermat_42.exists_odd_minimal Fermat42.exists_odd_minimal
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a0 b0 c0) -/
 /-- We can assume that a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2` has
 `a` odd and `c` positive. -/
-theorem exists_pos_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) :
-    ∃ (a0) (b0) (c0), Minimal a0 b0 c0 ∧ a0 % 2 = 1 ∧ 0 < c0 := by
+theorem exists_pos_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Minimal a0 b0 c0 ∧ a0 % 2 = 1 ∧ 0 < c0 :=
+  by
   obtain ⟨a0, b0, c0, hf, hc⟩ := exists_odd_minimal h
   rcases lt_trichotomy 0 c0 with (h1 | rfl | h1)
   · use a0, b0, c0

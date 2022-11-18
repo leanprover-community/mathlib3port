@@ -43,10 +43,8 @@ theorem map_to_fraction_ring_apply {B : Type _} [CommRing B] [Algebra A B] [IsLo
   rfl
 #align localization.map_to_fraction_ring_apply Localization.map_to_fraction_ring_apply
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a s) -/
 theorem mem_range_map_to_fraction_ring_iff (B : Type _) [CommRing B] [Algebra A B] [IsLocalization S B] (hS : S ≤ A⁰)
-    (x : K) :
-    x ∈ (mapToFractionRing K S B hS).range ↔ ∃ (a : A) (s : A) (hs : s ∈ S), x = IsLocalization.mk' K a ⟨s, hS hs⟩ :=
+    (x : K) : x ∈ (mapToFractionRing K S B hS).range ↔ ∃ (a s : A)(hs : s ∈ S), x = IsLocalization.mk' K a ⟨s, hS hs⟩ :=
   ⟨by
     rintro ⟨x, rfl⟩
     obtain ⟨a, s, rfl⟩ := IsLocalization.mk'_surjective S x
@@ -59,7 +57,7 @@ theorem mem_range_map_to_fraction_ring_iff (B : Type _) [CommRing B] [Algebra A 
 
 instance isLocalizationRangeMapToFractionRing (B : Type _) [CommRing B] [Algebra A B] [IsLocalization S B]
     (hS : S ≤ A⁰) : IsLocalization S (mapToFractionRing K S B hS).range :=
-  IsLocalization.isLocalizationOfAlgEquiv S $
+  IsLocalization.isLocalizationOfAlgEquiv S <|
     show B ≃ₐ[A] _ from
       AlgEquiv.ofBijective (mapToFractionRing K S B hS).range_restrict
         (by
@@ -75,7 +73,6 @@ instance isFractionRingRangeMapToFractionRing (B : Type _) [CommRing B] [Algebra
   IsFractionRing.isFractionRingOfIsLocalization S _ _ hS
 #align localization.is_fraction_ring_range_map_to_fraction_ring Localization.isFractionRingRangeMapToFractionRing
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a s) -/
 /-- Given a commutative ring `A` with fraction ring `K`, and a submonoid `S` of `A` which
 contains no zero divisor, this is the localization of `A` at `S`, considered as
 a subalgebra of `K` over `A`.
@@ -85,7 +82,7 @@ The carrier of this subalgebra is defined as the set of all `x : K` of the form
 -/
 noncomputable def subalgebra (hS : S ≤ A⁰) : Subalgebra A K :=
   (mapToFractionRing K S (Localization S) hS).range.copy
-      { x | ∃ (a : A) (s : A) (hs : s ∈ S), x = IsLocalization.mk' K a ⟨s, hS hs⟩ } $
+      { x | ∃ (a s : A)(hs : s ∈ S), x = IsLocalization.mk' K a ⟨s, hS hs⟩ } <|
     by
     ext
     symm
@@ -114,12 +111,9 @@ variable [Field K] [Algebra A K] [IsFractionRing A K]
 
 namespace Subalgebra
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a s) -/
 theorem mem_range_map_to_fraction_ring_iff_of_field (B : Type _) [CommRing B] [Algebra A B] [IsLocalization S B]
     (x : K) :
-    x ∈ (mapToFractionRing K S B hS).range ↔
-      ∃ (a : A) (s : A) (hs : s ∈ S), x = algebraMap A K a * (algebraMap A K s)⁻¹ :=
-  by
+    x ∈ (mapToFractionRing K S B hS).range ↔ ∃ (a s : A)(hs : s ∈ S), x = algebraMap A K a * (algebraMap A K s)⁻¹ := by
   rw [mem_range_map_to_fraction_ring_iff]
   iterate 3 congr with
   convert Iff.rfl
@@ -128,7 +122,6 @@ theorem mem_range_map_to_fraction_ring_iff_of_field (B : Type _) [CommRing B] [A
 #align
   localization.subalgebra.mem_range_map_to_fraction_ring_iff_of_field Localization.subalgebra.mem_range_map_to_fraction_ring_iff_of_field
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a s) -/
 /-- Given a domain `A` with fraction field `K`, and a submonoid `S` of `A` which
 contains no zero divisor, this is the localization of `A` at `S`, considered as
 a subalgebra of `K` over `A`.
@@ -138,7 +131,7 @@ The carrier of this subalgebra is defined as the set of all `x : K` of the form
 -/
 noncomputable def ofField : Subalgebra A K :=
   (mapToFractionRing K S (Localization S) hS).range.copy
-      { x | ∃ (a : A) (s : A) (hs : s ∈ S), x = algebraMap A K a * (algebraMap A K s)⁻¹ } $
+      { x | ∃ (a s : A)(hs : s ∈ S), x = algebraMap A K a * (algebraMap A K s)⁻¹ } <|
     by
     ext
     symm

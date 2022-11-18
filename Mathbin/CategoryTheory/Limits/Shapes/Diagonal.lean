@@ -219,9 +219,9 @@ def pullbackDiagonalMapIdIso :
       pullback f g :=
   by
   refine'
-    (as_iso $ pullback.map _ _ _ _ (𝟙 _) (pullback.congr_hom _ _).Hom (𝟙 _) _ _) ≪≫
+    (as_iso <| pullback.map _ _ _ _ (𝟙 _) (pullback.congr_hom _ _).Hom (𝟙 _) _ _) ≪≫
       pullback_diagonal_map_iso i (𝟙 _) (f ≫ inv pullback.fst) (g ≫ inv pullback.fst) ≪≫
-        (as_iso $ pullback.map _ _ _ _ (𝟙 _) (𝟙 _) pullback.fst _ _)
+        (as_iso <| pullback.map _ _ _ _ (𝟙 _) (𝟙 _) pullback.fst _ _)
   · rw [← category.comp_id pullback.snd, ← condition, category.assoc, is_iso.inv_hom_id_assoc]
     
   · rw [← category.comp_id pullback.snd, ← condition, category.assoc, is_iso.inv_hom_id_assoc]

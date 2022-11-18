@@ -514,7 +514,7 @@ theorem mem_inf (x : M) : x ∈ N ⊓ N' ↔ x ∈ N ∧ x ∈ N' := by
   rw [← mem_coe_submodule, ← mem_coe_submodule, ← mem_coe_submodule, inf_coe_to_submodule, Submodule.mem_inf]
 #align lie_submodule.mem_inf LieSubmodule.mem_inf
 
-theorem mem_sup (x : M) : x ∈ N ⊔ N' ↔ ∃ (y ∈ N) (z ∈ N'), y + z = x := by
+theorem mem_sup (x : M) : x ∈ N ⊔ N' ↔ ∃ y ∈ N, ∃ z ∈ N', y + z = x := by
   rw [← mem_coe_submodule, sup_coe_to_submodule, Submodule.mem_sup]
   exact Iff.rfl
 #align lie_submodule.mem_sup LieSubmodule.mem_sup
@@ -553,13 +553,13 @@ theorem subsingleton_iff : Subsingleton (LieSubmodule R L M) ↔ Subsingleton M 
   have h : Subsingleton (LieSubmodule R L M) ↔ Subsingleton (Submodule R M) := by
     rw [← subsingleton_iff_bot_eq_top, ← subsingleton_iff_bot_eq_top, ← coe_to_submodule_eq_iff, top_coe_submodule,
       bot_coe_submodule]
-  h.trans $ Submodule.subsingleton_iff R
+  h.trans <| Submodule.subsingleton_iff R
 #align lie_submodule.subsingleton_iff LieSubmodule.subsingleton_iff
 
 @[simp]
 theorem nontrivial_iff : Nontrivial (LieSubmodule R L M) ↔ Nontrivial M :=
   not_iff_not.mp
-    ((not_nontrivial_iff_subsingleton.trans $ subsingleton_iff R L M).trans not_nontrivial_iff_subsingleton.symm)
+    ((not_nontrivial_iff_subsingleton.trans <| subsingleton_iff R L M).trans not_nontrivial_iff_subsingleton.symm)
 #align lie_submodule.nontrivial_iff LieSubmodule.nontrivial_iff
 
 instance [Nontrivial M] : Nontrivial (LieSubmodule R L M) :=
@@ -698,7 +698,7 @@ theorem span_empty : lieSpan R L (∅ : Set M) = ⊥ :=
 
 @[simp]
 theorem span_univ : lieSpan R L (Set.univ : Set M) = ⊤ :=
-  eq_top_iff.2 $ SetLike.le_def.2 $ subset_lie_span
+  eq_top_iff.2 <| SetLike.le_def.2 <| subset_lie_span
 #align lie_submodule.span_univ LieSubmodule.span_univ
 
 theorem lie_span_eq_bot_iff : lieSpan R L s = ⊥ ↔ ∀ m ∈ s, m = (0 : M) := by
@@ -823,7 +823,7 @@ Note that unlike `lie_submodule.map`, we must take the `lie_span` of the image. 
 this is because although `f` makes `L'` into a Lie module over `L`, in general the `L` submodules of
 `L'` are not the same as the ideals of `L'`. -/
 def map : LieIdeal R L' :=
-  LieSubmodule.lieSpan R L' $ (I : Submodule R L).map (f : L →ₗ[R] L')
+  LieSubmodule.lieSpan R L' <| (I : Submodule R L).map (f : L →ₗ[R] L')
 #align lie_ideal.map LieIdeal.map
 
 /-- A morphism of Lie algebras `f : L → L'` pulls back Lie ideals of `L'` to Lie ideals of `L`.

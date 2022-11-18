@@ -70,7 +70,7 @@ theorem IsSRGWith.top : (⊤ : SimpleGraph V).IsSRGWith (Fintype.card V) (Fintyp
     of_adj := fun v w h => by
       rw [card_common_neighbors_top]
       exact h,
-    of_not_adj := fun v w h h' => False.elim $ by simpa using h }
+    of_not_adj := fun v w h h' => False.elim <| by simpa using h }
 #align simple_graph.is_SRG_with.top SimpleGraph.IsSRGWith.top
 
 theorem IsSRGWith.card_neighbor_finset_union_eq {v w : V} (h : G.IsSRGWith n k ℓ μ) :
@@ -103,7 +103,8 @@ theorem IsSRGWith.card_neighbor_finset_union_of_adj {v w : V} (h : G.IsSRGWith n
   simple_graph.is_SRG_with.card_neighbor_finset_union_of_adj SimpleGraph.IsSRGWith.card_neighbor_finset_union_of_adj
 
 theorem compl_neighbor_finset_sdiff_inter_eq {v w : V} :
-    G.neighborFinset vᶜ \ {v} ∩ (G.neighborFinset wᶜ \ {w}) = G.neighborFinset vᶜ ∩ G.neighborFinset wᶜ \ ({w} ∪ {v}) :=
+    G.neighborFinset vᶜ \ {v} ∩ (G.neighborFinset wᶜ \ {w}) =
+      (G.neighborFinset vᶜ ∩ G.neighborFinset wᶜ) \ ({w} ∪ {v}) :=
   by
   ext
   rw [← not_iff_not]
@@ -111,7 +112,7 @@ theorem compl_neighbor_finset_sdiff_inter_eq {v w : V} :
 #align simple_graph.compl_neighbor_finset_sdiff_inter_eq SimpleGraph.compl_neighbor_finset_sdiff_inter_eq
 
 theorem sdiff_compl_neighbor_finset_inter_eq {v w : V} (h : G.Adj v w) :
-    G.neighborFinset vᶜ ∩ G.neighborFinset wᶜ \ ({w} ∪ {v}) = G.neighborFinset vᶜ ∩ G.neighborFinset wᶜ := by
+    (G.neighborFinset vᶜ ∩ G.neighborFinset wᶜ) \ ({w} ∪ {v}) = G.neighborFinset vᶜ ∩ G.neighborFinset wᶜ := by
   ext
   simp only [and_imp, mem_union, mem_sdiff, mem_compl, and_iff_left_iff_imp, mem_neighbor_finset, mem_inter,
     mem_singleton]

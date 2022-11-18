@@ -112,7 +112,7 @@ Case conversion may be inaccurate. Consider using '#align function.semiconj.opti
 theorem option_map {f : α → β} {ga : α → α} {gb : β → β} (h : Semiconj f ga gb) :
     Semiconj (Option.map f) (Option.map ga) (Option.map gb)
   | none => rfl
-  | some a => congr_arg some $ h _
+  | some a => congr_arg some <| h _
 #align function.semiconj.option_map Function.Semiconj.option_map
 
 end Semiconj
@@ -210,7 +210,7 @@ but is expected to have type
   forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β}, (Function.Semiconj₂.{u_1 u_2} α β f ga gb) -> (Eq.{(max (succ u_1) (succ u_2))} (α -> α -> β) (Function.bicompr.{u_1 u_1 u_1 u_2} α α α β f ga) (Function.bicompl.{u_1 u_1 u_2 u_2 u_2} α α β β β gb f f))
 Case conversion may be inaccurate. Consider using '#align function.semiconj₂.comp_eq Function.Semiconj₂.comp_eqₓ'. -/
 protected theorem comp_eq (h : Semiconj₂ f ga gb) : bicompr f ga = bicompl gb f f :=
-  funext $ fun x => funext $ h x
+  funext fun x => funext <| h x
 #align function.semiconj₂.comp_eq Function.Semiconj₂.comp_eq
 
 #print Function.Semiconj₂.id_left /-
@@ -230,19 +230,19 @@ theorem comp {f' : β → γ} {gc : γ → γ → γ} (hf' : Semiconj₂ f' gb g
 
 theorem is_associative_right [IsAssociative α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) :
     IsAssociative β gb :=
-  ⟨h_surj.forall₃.2 $ fun x₁ x₂ x₃ => by simp only [← h.eq, @IsAssociative.assoc _ ga]⟩
+  ⟨h_surj.forall₃.2 fun x₁ x₂ x₃ => by simp only [← h.eq, @IsAssociative.assoc _ ga]⟩
 #align function.semiconj₂.is_associative_right Function.Semiconj₂.is_associative_right
 
 theorem is_associative_left [IsAssociative β gb] (h : Semiconj₂ f ga gb) (h_inj : Injective f) : IsAssociative α ga :=
-  ⟨fun x₁ x₂ x₃ => h_inj $ by simp only [h.eq, @IsAssociative.assoc _ gb]⟩
+  ⟨fun x₁ x₂ x₃ => h_inj <| by simp only [h.eq, @IsAssociative.assoc _ gb]⟩
 #align function.semiconj₂.is_associative_left Function.Semiconj₂.is_associative_left
 
 theorem is_idempotent_right [IsIdempotent α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) : IsIdempotent β gb :=
-  ⟨h_surj.forall.2 $ fun x => by simp only [← h.eq, @IsIdempotent.idempotent _ ga]⟩
+  ⟨h_surj.forall.2 fun x => by simp only [← h.eq, @IsIdempotent.idempotent _ ga]⟩
 #align function.semiconj₂.is_idempotent_right Function.Semiconj₂.is_idempotent_right
 
 theorem is_idempotent_left [IsIdempotent β gb] (h : Semiconj₂ f ga gb) (h_inj : Injective f) : IsIdempotent α ga :=
-  ⟨fun x => h_inj $ by rw [h.eq, @IsIdempotent.idempotent _ gb]⟩
+  ⟨fun x => h_inj <| by rw [h.eq, @IsIdempotent.idempotent _ gb]⟩
 #align function.semiconj₂.is_idempotent_left Function.Semiconj₂.is_idempotent_left
 
 end Semiconj₂

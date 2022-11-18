@@ -217,7 +217,7 @@ theorem order_eq_zero_iff (hp : p ≠ 0) : p.order = 0 ↔ p 0 ≠ 0 := by class
   simp [order_eq_find this, hp]
 #align formal_multilinear_series.order_eq_zero_iff FormalMultilinearSeries.order_eq_zero_iff
 
-theorem order_eq_zero_iff' : p.order = 0 ↔ p = 0 ∨ p 0 ≠ 0 := by by_cases h:p = 0 <;> simp [h, order_eq_zero_iff]
+theorem order_eq_zero_iff' : p.order = 0 ↔ p = 0 ∨ p 0 ≠ 0 := by by_cases h : p = 0 <;> simp [h, order_eq_zero_iff]
 #align formal_multilinear_series.order_eq_zero_iff' FormalMultilinearSeries.order_eq_zero_iff'
 
 theorem apply_order_ne_zero (hp : p ≠ 0) : p p.order ≠ 0 := by classical
@@ -273,7 +273,7 @@ theorem apply_eq_pow_smul_coeff : (p n fun _ => z) = z ^ n • p.coeff n := by s
 #align formal_multilinear_series.apply_eq_pow_smul_coeff FormalMultilinearSeries.apply_eq_pow_smul_coeff
 
 @[simp]
-theorem norm_apply_eq_norm_coef : ∥p n∥ = ∥coeff p n∥ := by
+theorem norm_apply_eq_norm_coef : ‖p n‖ = ‖coeff p n‖ := by
   rw [← mk_pi_field_coeff_eq p, ContinuousMultilinearMap.norm_mk_pi_field]
 #align formal_multilinear_series.norm_apply_eq_norm_coef FormalMultilinearSeries.norm_apply_eq_norm_coef
 

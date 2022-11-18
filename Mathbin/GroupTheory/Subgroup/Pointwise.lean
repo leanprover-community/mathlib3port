@@ -61,16 +61,16 @@ theorem closure_to_submonoid (S : Set G) : (closure S).toSubmonoid = Submonoid.c
 theorem closure_induction_left {p : G → Prop} {x : G} (h : x ∈ closure s) (H1 : p 1)
     (Hmul : ∀ x ∈ s, ∀ (y), p y → p (x * y)) (Hinv : ∀ x ∈ s, ∀ (y), p y → p (x⁻¹ * y)) : p x :=
   let key := (closure_to_submonoid s).le
-  Submonoid.closure_induction_left (key h) H1 $ fun x hx =>
-    hx.elim (Hmul x) $ fun hx y hy => (congr_arg _ $ inv_inv x).mp $ Hinv x⁻¹ hx y hy
+  (Submonoid.closure_induction_left (key h) H1) fun x hx =>
+    (hx.elim (Hmul x)) fun hx y hy => (congr_arg _ <| inv_inv x).mp <| Hinv x⁻¹ hx y hy
 #align subgroup.closure_induction_left Subgroup.closure_induction_left
 
 @[to_additive]
 theorem closure_induction_right {p : G → Prop} {x : G} (h : x ∈ closure s) (H1 : p 1)
     (Hmul : ∀ (x), ∀ y ∈ s, p x → p (x * y)) (Hinv : ∀ (x), ∀ y ∈ s, p x → p (x * y⁻¹)) : p x :=
   let key := (closure_to_submonoid s).le
-  Submonoid.closure_induction_right (key h) H1 $ fun x y hy =>
-    hy.elim (Hmul x y) $ fun hy hx => (congr_arg _ $ inv_inv y).mp $ Hinv x y⁻¹ hy hx
+  (Submonoid.closure_induction_right (key h) H1) fun x y hy =>
+    (hy.elim (Hmul x y)) fun hy hx => (congr_arg _ <| inv_inv y).mp <| Hinv x y⁻¹ hy hx
 #align subgroup.closure_induction_right Subgroup.closure_induction_right
 
 @[simp, to_additive]
@@ -85,7 +85,7 @@ the closure of `k`. -/
       "An induction principle for additive closure membership. If `p` holds for `0` and all\nelements of `k` and their negation, and is preserved under addition, then `p` holds for all\nelements of the additive closure of `k`."]
 theorem closure_induction'' {p : G → Prop} {x} (h : x ∈ closure s) (Hk : ∀ x ∈ s, p x) (Hk_inv : ∀ x ∈ s, p x⁻¹)
     (H1 : p 1) (Hmul : ∀ x y, p x → p y → p (x * y)) : p x :=
-  (closure_induction_left h H1 fun x hx y hy => Hmul x y (Hk x hx) hy) $ fun x hx y => Hmul x⁻¹ y $ Hk_inv x hx
+  (closure_induction_left h H1 fun x hx y hy => Hmul x y (Hk x hx) hy) fun x hx y => Hmul x⁻¹ y <| Hk_inv x hx
 #align subgroup.closure_induction'' Subgroup.closure_induction''
 
 /-- An induction principle for elements of `⨆ i, S i`.
@@ -124,10 +124,10 @@ theorem supr_induction' {ι : Sort _} (S : ι → Subgroup G) {C : ∀ x, (x ∈
 
 @[to_additive]
 theorem closure_mul_le (S T : Set G) : closure (S * T) ≤ closure S ⊔ closure T :=
-  Inf_le $ fun x ⟨s, t, hs, ht, hx⟩ =>
+  Inf_le fun x ⟨s, t, hs, ht, hx⟩ =>
     hx ▸
-      (closure S ⊔ closure T).mul_mem (SetLike.le_def.mp le_sup_left $ subset_closure hs)
-        (SetLike.le_def.mp le_sup_right $ subset_closure ht)
+      (closure S ⊔ closure T).mul_mem (SetLike.le_def.mp le_sup_left <| subset_closure hs)
+        (SetLike.le_def.mp le_sup_right <| subset_closure ht)
 #align subgroup.closure_mul_le Subgroup.closure_mul_le
 
 @[to_additive]
@@ -280,7 +280,7 @@ theorem smul_bot (a : α) : a • (⊥ : Subgroup G) = ⊥ := by simp [SetLike.e
 #align subgroup.smul_bot Subgroup.smul_bot
 
 instance pointwise_central_scalar [MulDistribMulAction αᵐᵒᵖ G] [IsCentralScalar α G] : IsCentralScalar α (Subgroup G) :=
-  ⟨fun a S => (congr_arg fun f => S.map f) $ MonoidHom.ext $ op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_arg fun f => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
 #align subgroup.pointwise_central_scalar Subgroup.pointwise_central_scalar
 
 theorem conj_smul_le_of_le {P H : Subgroup G} (hP : P ≤ H) (h : H) : MulAut.conj (h : G) • P ≤ H := by
@@ -458,7 +458,7 @@ theorem mem_smul_pointwise_iff_exists (m : A) (a : α) (S : AddSubgroup A) : m �
 #align add_subgroup.mem_smul_pointwise_iff_exists AddSubgroup.mem_smul_pointwise_iff_exists
 
 instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ A] [IsCentralScalar α A] : IsCentralScalar α (AddSubgroup A) :=
-  ⟨fun a S => (congr_arg fun f => S.map f) $ AddMonoidHom.ext $ op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_arg fun f => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
 #align add_subgroup.pointwise_central_scalar AddSubgroup.pointwise_central_scalar
 
 end Monoid

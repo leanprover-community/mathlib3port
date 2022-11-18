@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 -/
 import Mathbin.Algebra.CharP.Invertible
-import Mathbin.Data.Fintype.Card
+import Mathbin.Data.Fintype.BigOperators
 import Mathbin.Data.MvPolynomial.Variables
 import Mathbin.Data.MvPolynomial.CommRing
 import Mathbin.Data.MvPolynomial.Expand

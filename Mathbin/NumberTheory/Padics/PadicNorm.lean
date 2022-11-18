@@ -86,7 +86,7 @@ theorem padic_norm_p (hp : 1 < p) : padicNorm p p = p⁻¹ := by simp [padicNorm
 See also `padic_norm.padic_norm_p` for a version assuming `1 < p`. -/
 @[simp]
 theorem padic_norm_p_of_prime [Fact p.Prime] : padicNorm p p = p⁻¹ :=
-  padic_norm_p $ Nat.Prime.one_lt (Fact.out _)
+  padic_norm_p <| Nat.Prime.one_lt (Fact.out _)
 #align padic_norm.padic_norm_p_of_prime padicNorm.padic_norm_p_of_prime
 
 /-- The `p`-adic norm of `q` is `1` if `q` is prime and not equal to `p`. -/
@@ -108,7 +108,7 @@ theorem padic_norm_p_lt_one (hp : 1 < p) : padicNorm p p < 1 := by
 
 See also `padic_norm.padic_norm_p_lt_one` for a version assuming `1 < p`. -/
 theorem padic_norm_p_lt_one_of_prime [Fact p.Prime] : padicNorm p p < 1 :=
-  padic_norm_p_lt_one $ Nat.Prime.one_lt (Fact.out _)
+  padic_norm_p_lt_one <| Nat.Prime.one_lt (Fact.out _)
 #align padic_norm.padic_norm_p_lt_one_of_prime padicNorm.padic_norm_p_lt_one_of_prime
 
 /-- `padic_norm p q` takes discrete values `p ^ -z` for `z : ℤ`. -/
@@ -333,7 +333,7 @@ theorem sum_lt {α : Type _} {F : α → ℚ} {t : ℚ} {s : Finset α} :
     s.Nonempty → (∀ i ∈ s, padicNorm p (F i) < t) → padicNorm p (∑ i in s, F i) < t := by classical
   refine' s.induction_on (by rintro ⟨-, ⟨⟩⟩) _
   rintro a S haS IH - ht
-  by_cases hs:S.nonempty
+  by_cases hs : S.nonempty
   · rw [Finset.sum_insert haS]
     exact
       lt_of_le_of_lt padicNorm.nonarchimedean
@@ -347,7 +347,7 @@ theorem sum_le {α : Type _} {F : α → ℚ} {t : ℚ} {s : Finset α} :
     s.Nonempty → (∀ i ∈ s, padicNorm p (F i) ≤ t) → padicNorm p (∑ i in s, F i) ≤ t := by classical
   refine' s.induction_on (by rintro ⟨-, ⟨⟩⟩) _
   rintro a S haS IH - ht
-  by_cases hs:S.nonempty
+  by_cases hs : S.nonempty
   · rw [Finset.sum_insert haS]
     exact
       padic_norm.nonarchimedean.trans

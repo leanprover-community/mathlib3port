@@ -82,7 +82,7 @@ theorem log_stirling_seq_diff_has_sum (m : ℕ) :
   by
   change HasSum ((fun b : ℕ => 1 / (2 * (b : ℝ) + 1) * ((1 / (2 * m.succ + 1)) ^ 2) ^ b) ∘ succ) _
   refine' (has_sum_nat_add_iff 1).mpr _
-  convert (has_sum_log_one_add_inv $ cast_pos.mpr (succ_pos m)).mul_left ((m.succ : ℝ) + 1 / 2)
+  convert (has_sum_log_one_add_inv <| cast_pos.mpr (succ_pos m)).mul_left ((m.succ : ℝ) + 1 / 2)
   · ext k
     rw [← pow_mul, pow_add]
     push_cast
@@ -109,7 +109,7 @@ theorem log_stirling_seq_diff_has_sum (m : ℕ) :
 
 /-- The sequence `log ∘ stirling_seq ∘ succ` is monotone decreasing -/
 theorem log_stirling_seq'_antitone : Antitone (Real.log ∘ stirling_seq ∘ succ) :=
-  antitone_nat_of_succ_le $ fun n => sub_nonneg.mp $ (log_stirling_seq_diff_has_sum n).Nonneg $ fun m => by positivity
+  antitone_nat_of_succ_le fun n => sub_nonneg.mp <| (log_stirling_seq_diff_has_sum n).Nonneg fun m => by positivity
 #align stirling.log_stirling_seq'_antitone Stirling.log_stirling_seq'_antitone
 
 /-- We have a bound for successive elements in the sequence `log (stirling_seq k)`.
@@ -125,14 +125,14 @@ theorem log_stirling_seq_diff_le_geo_sum (n : ℕ) :
     by
     refine' (has_sum_geometric_of_lt_1 h_nonneg _).mul_left ((1 / (2 * (n.succ : ℝ) + 1)) ^ 2)
     rw [one_div, inv_pow]
-    exact inv_lt_one (one_lt_pow ((lt_add_iff_pos_left 1).mpr $ by positivity) two_ne_zero)
+    exact inv_lt_one (one_lt_pow ((lt_add_iff_pos_left 1).mpr <| by positivity) two_ne_zero)
   have hab :
     ∀ k : ℕ,
       1 / (2 * (k.succ : ℝ) + 1) * ((1 / (2 * n.succ + 1)) ^ 2) ^ k.succ ≤ ((1 / (2 * n.succ + 1)) ^ 2) ^ k.succ :=
     by
     refine' fun k => mul_le_of_le_one_left (pow_nonneg h_nonneg k.succ) _
     rw [one_div]
-    exact inv_le_one (le_add_of_nonneg_left $ by positivity)
+    exact inv_le_one (le_add_of_nonneg_left <| by positivity)
   exact has_sum_le hab (log_stirling_seq_diff_has_sum n) g
 #align stirling.log_stirling_seq_diff_le_geo_sum Stirling.log_stirling_seq_diff_le_geo_sum
 
@@ -168,13 +168,13 @@ theorem log_stirling_seq_bounded_aux : ∃ c : ℝ, ∀ n : ℕ, log (stirlingSe
     field_simp
   have h₂ : (∑ k : ℕ in range n, (1 : ℝ) / k.succ ^ 2) ≤ d :=
     sum_le_tsum (range n) (fun k _ => by positivity)
-      ((summable_nat_add_iff 1).mpr $ real.summable_one_div_nat_pow.mpr one_lt_two)
+      ((summable_nat_add_iff 1).mpr <| real.summable_one_div_nat_pow.mpr one_lt_two)
   calc
     log (stirling_seq 1) - log (stirling_seq n.succ) = log_stirling_seq' 0 - log_stirling_seq' n := rfl
     _ = ∑ k in range n, log_stirling_seq' k - log_stirling_seq' (k + 1) := by rw [← sum_range_sub' log_stirling_seq' n]
     _ ≤ ∑ k in range n, 1 / 4 * (1 / k.succ ^ 2) := sum_le_sum fun k _ => h₁ k
     _ = 1 / 4 * ∑ k in range n, 1 / k.succ ^ 2 := by rw [mul_sum]
-    _ ≤ 1 / 4 * d := mul_le_mul_of_nonneg_left h₂ $ by positivity
+    _ ≤ 1 / 4 * d := mul_le_mul_of_nonneg_left h₂ <| by positivity
     
 #align stirling.log_stirling_seq_bounded_aux Stirling.log_stirling_seq_bounded_aux
 

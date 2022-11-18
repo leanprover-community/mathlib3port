@@ -165,13 +165,13 @@ theorem continuous_coe : @Continuous C(α, β) (α → β) _ _ coeFn :=
 instance : HasNorm C(α, E) where norm x := dist x 0
 
 @[simp]
-theorem _root_.bounded_continuous_function.norm_mk_of_compact (f : C(α, E)) : ∥mkOfCompact f∥ = ∥f∥ :=
+theorem _root_.bounded_continuous_function.norm_mk_of_compact (f : C(α, E)) : ‖mkOfCompact f‖ = ‖f‖ :=
   rfl
 #align
   continuous_map._root_.bounded_continuous_function.norm_mk_of_compact continuous_map._root_.bounded_continuous_function.norm_mk_of_compact
 
 @[simp]
-theorem _root_.bounded_continuous_function.norm_to_continuous_map_eq (f : α →ᵇ E) : ∥f.toContinuousMap∥ = ∥f∥ :=
+theorem _root_.bounded_continuous_function.norm_to_continuous_map_eq (f : α →ᵇ E) : ‖f.toContinuousMap‖ = ‖f‖ :=
   rfl
 #align
   continuous_map._root_.bounded_continuous_function.norm_to_continuous_map_eq continuous_map._root_.bounded_continuous_function.norm_to_continuous_map_eq
@@ -192,49 +192,49 @@ variable (f : C(α, E))
 
 -- The corresponding lemmas for `bounded_continuous_function` are stated with `{f}`,
 -- and so can not be used in dot notation.
-theorem norm_coe_le_norm (x : α) : ∥f x∥ ≤ ∥f∥ :=
+theorem norm_coe_le_norm (x : α) : ‖f x‖ ≤ ‖f‖ :=
   (mkOfCompact f).norm_coe_le_norm x
 #align continuous_map.norm_coe_le_norm ContinuousMap.norm_coe_le_norm
 
 /-- Distance between the images of any two points is at most twice the norm of the function. -/
-theorem dist_le_two_norm (x y : α) : dist (f x) (f y) ≤ 2 * ∥f∥ :=
+theorem dist_le_two_norm (x y : α) : dist (f x) (f y) ≤ 2 * ‖f‖ :=
   (mkOfCompact f).dist_le_two_norm x y
 #align continuous_map.dist_le_two_norm ContinuousMap.dist_le_two_norm
 
 /-- The norm of a function is controlled by the supremum of the pointwise norms -/
-theorem norm_le {C : ℝ} (C0 : (0 : ℝ) ≤ C) : ∥f∥ ≤ C ↔ ∀ x : α, ∥f x∥ ≤ C :=
+theorem norm_le {C : ℝ} (C0 : (0 : ℝ) ≤ C) : ‖f‖ ≤ C ↔ ∀ x : α, ‖f x‖ ≤ C :=
   @BoundedContinuousFunction.norm_le _ _ _ _ (mkOfCompact f) _ C0
 #align continuous_map.norm_le ContinuousMap.norm_le
 
-theorem norm_le_of_nonempty [Nonempty α] {M : ℝ} : ∥f∥ ≤ M ↔ ∀ x, ∥f x∥ ≤ M :=
+theorem norm_le_of_nonempty [Nonempty α] {M : ℝ} : ‖f‖ ≤ M ↔ ∀ x, ‖f x‖ ≤ M :=
   @BoundedContinuousFunction.norm_le_of_nonempty _ _ _ _ _ (mkOfCompact f) _
 #align continuous_map.norm_le_of_nonempty ContinuousMap.norm_le_of_nonempty
 
-theorem norm_lt_iff {M : ℝ} (M0 : 0 < M) : ∥f∥ < M ↔ ∀ x, ∥f x∥ < M :=
+theorem norm_lt_iff {M : ℝ} (M0 : 0 < M) : ‖f‖ < M ↔ ∀ x, ‖f x‖ < M :=
   @BoundedContinuousFunction.norm_lt_iff_of_compact _ _ _ _ _ (mkOfCompact f) _ M0
 #align continuous_map.norm_lt_iff ContinuousMap.norm_lt_iff
 
-theorem nnnorm_lt_iff {M : ℝ≥0} (M0 : 0 < M) : ∥f∥₊ < M ↔ ∀ x : α, ∥f x∥₊ < M :=
+theorem nnnorm_lt_iff {M : ℝ≥0} (M0 : 0 < M) : ‖f‖₊ < M ↔ ∀ x : α, ‖f x‖₊ < M :=
   f.norm_lt_iff M0
 #align continuous_map.nnnorm_lt_iff ContinuousMap.nnnorm_lt_iff
 
-theorem norm_lt_iff_of_nonempty [Nonempty α] {M : ℝ} : ∥f∥ < M ↔ ∀ x, ∥f x∥ < M :=
+theorem norm_lt_iff_of_nonempty [Nonempty α] {M : ℝ} : ‖f‖ < M ↔ ∀ x, ‖f x‖ < M :=
   @BoundedContinuousFunction.norm_lt_iff_of_nonempty_compact _ _ _ _ _ _ (mkOfCompact f) _
 #align continuous_map.norm_lt_iff_of_nonempty ContinuousMap.norm_lt_iff_of_nonempty
 
-theorem nnnorm_lt_iff_of_nonempty [Nonempty α] {M : ℝ≥0} : ∥f∥₊ < M ↔ ∀ x, ∥f x∥₊ < M :=
+theorem nnnorm_lt_iff_of_nonempty [Nonempty α] {M : ℝ≥0} : ‖f‖₊ < M ↔ ∀ x, ‖f x‖₊ < M :=
   f.norm_lt_iff_of_nonempty
 #align continuous_map.nnnorm_lt_iff_of_nonempty ContinuousMap.nnnorm_lt_iff_of_nonempty
 
-theorem apply_le_norm (f : C(α, ℝ)) (x : α) : f x ≤ ∥f∥ :=
+theorem apply_le_norm (f : C(α, ℝ)) (x : α) : f x ≤ ‖f‖ :=
   le_trans (le_abs.mpr (Or.inl (le_refl (f x)))) (f.norm_coe_le_norm x)
 #align continuous_map.apply_le_norm ContinuousMap.apply_le_norm
 
-theorem neg_norm_le_apply (f : C(α, ℝ)) (x : α) : -∥f∥ ≤ f x :=
+theorem neg_norm_le_apply (f : C(α, ℝ)) (x : α) : -‖f‖ ≤ f x :=
   le_trans (neg_le_neg (f.norm_coe_le_norm x)) (neg_le.mp (neg_le_abs_self (f x)))
 #align continuous_map.neg_norm_le_apply ContinuousMap.neg_norm_le_apply
 
-theorem norm_eq_supr_norm : ∥f∥ = ⨆ x : α, ∥f x∥ :=
+theorem norm_eq_supr_norm : ‖f‖ = ⨆ x : α, ‖f x‖ :=
   (mkOfCompact f).norm_eq_supr_norm
 #align continuous_map.norm_eq_supr_norm ContinuousMap.norm_eq_supr_norm
 
@@ -377,8 +377,9 @@ Transferred version of `continuous_linear_map.comp_left_continuous_bounded`,
 upgraded version of `continuous_linear_map.comp_left_continuous`,
 similar to `linear_map.comp_left`. -/
 protected def ContinuousLinearMap.compLeftContinuousCompact (g : β →L[𝕜] γ) : C(X, β) →L[𝕜] C(X, γ) :=
-  (linearIsometryBoundedOfCompact X γ 𝕜).symm.toLinearIsometry.toContinuousLinearMap.comp $
-    (g.compLeftContinuousBounded X).comp $ (linearIsometryBoundedOfCompact X β 𝕜).toLinearIsometry.toContinuousLinearMap
+  (linearIsometryBoundedOfCompact X γ 𝕜).symm.toLinearIsometry.toContinuousLinearMap.comp <|
+    (g.compLeftContinuousBounded X).comp <|
+      (linearIsometryBoundedOfCompact X β 𝕜).toLinearIsometry.toContinuousLinearMap
 #align continuous_linear_map.comp_left_continuous_compact ContinuousLinearMap.compLeftContinuousCompact
 
 @[simp]
@@ -440,8 +441,8 @@ def compRightHomeomorph {X Y : Type _} (T : Type _) [TopologicalSpace X] [Compac
     [CompactSpace Y] [MetricSpace T] (f : X ≃ₜ Y) : C(Y, T) ≃ₜ C(X, T) where
   toFun := compRightContinuousMap T f.toContinuousMap
   invFun := compRightContinuousMap T f.symm.toContinuousMap
-  left_inv g := ext $ fun _ => congr_arg g (f.apply_symm_apply _)
-  right_inv g := ext $ fun _ => congr_arg g (f.symm_apply_apply _)
+  left_inv g := ext fun _ => congr_arg g (f.apply_symm_apply _)
+  right_inv g := ext fun _ => congr_arg g (f.symm_apply_apply _)
 #align continuous_map.comp_right_homeomorph ContinuousMap.compRightHomeomorph
 
 theorem comp_right_alg_hom_continuous {X Y : Type _} (R A : Type _) [TopologicalSpace X] [CompactSpace X]
@@ -461,7 +462,7 @@ variable {X : Type _} [TopologicalSpace X] [T2Space X] [LocallyCompactSpace X]
 variable {E : Type _} [NormedAddCommGroup E] [CompleteSpace E]
 
 theorem summable_of_locally_summable_norm {ι : Type _} {F : ι → C(X, E)}
-    (hF : ∀ K : Compacts X, Summable fun i => ∥(F i).restrict K∥) : Summable F := by
+    (hF : ∀ K : Compacts X, Summable fun i => ‖(F i).restrict K‖) : Summable F := by
   refine' (ContinuousMap.exists_tendsto_compact_open_iff_forall _).2 fun K hK => _
   lift K to compacts X using hK
   have A : ∀ s : Finset ι, restrict (↑K) (∑ i in s, F i) = ∑ i in s, restrict K (F i) := by

@@ -86,7 +86,7 @@ theorem coe_cast_ring_hom [NonAssocRing α] : ⇑(castRingHom α) = coe :=
 
 theorem cast_commute [NonAssocRing α] : ∀ (m : ℤ) (x : α), Commute (↑m) x
   | (n : ℕ), x => by simpa using n.cast_commute x
-  | -[1+ n], x => by
+  | -[n+1], x => by
     simpa only [cast_neg_succ_of_nat, Commute.neg_left_iff, Commute.neg_right_iff] using (n + 1).cast_commute (-x)
 #align int.cast_commute Int.cast_commute
 
@@ -109,7 +109,7 @@ theorem cast_mono [OrderedRing α] : Monotone (coe : ℤ → α) := by
 @[simp]
 theorem cast_nonneg [OrderedRing α] [Nontrivial α] : ∀ {n : ℤ}, (0 : α) ≤ n ↔ 0 ≤ n
   | (n : ℕ) => by simp
-  | -[1+ n] => by
+  | -[n+1] => by
     have : -(n : α) < 1 := lt_of_le_of_lt (by simp) zero_lt_one
     simpa [(neg_succ_lt_zero n).not_le, ← sub_eq_add_neg, le_neg] using this.not_le
 #align int.cast_nonneg Int.cast_nonneg
@@ -120,7 +120,7 @@ theorem cast_le [OrderedRing α] [Nontrivial α] {m n : ℤ} : (m : α) ≤ n �
 #align int.cast_le Int.cast_le
 
 theorem cast_strict_mono [OrderedRing α] [Nontrivial α] : StrictMono (coe : ℤ → α) :=
-  strict_mono_of_le_iff_le $ fun m n => cast_le.symm
+  strict_mono_of_le_iff_le fun m n => cast_le.symm
 #align int.cast_strict_mono Int.cast_strict_mono
 
 @[simp, norm_cast]
@@ -227,19 +227,19 @@ if `f 1 = g 1`. -/
 theorem ext_int [AddMonoid A] {f g : ℤ →+ A} (h1 : f 1 = g 1) : f = g :=
   have : f.comp (Int.ofNatHom : ℕ →+ ℤ) = g.comp (Int.ofNatHom : ℕ →+ ℤ) := ext_nat' _ _ h1
   have : ∀ n : ℕ, f n = g n := ext_iff.1 this
-  ext $ fun n => Int.casesOn n this $ fun n => eq_on_neg _ _ (this $ n + 1)
+  ext fun n => (Int.casesOn n this) fun n => eq_on_neg _ _ (this <| n + 1)
 #align add_monoid_hom.ext_int AddMonoidHom.ext_int
 
 variable [AddGroupWithOne A]
 
 theorem eq_int_cast_hom (f : ℤ →+ A) (h1 : f 1 = 1) : f = Int.castAddHom A :=
-  ext_int $ by simp [h1]
+  ext_int <| by simp [h1]
 #align add_monoid_hom.eq_int_cast_hom AddMonoidHom.eq_int_cast_hom
 
 end AddMonoidHom
 
 theorem eq_int_cast' [AddGroupWithOne α] [AddMonoidHomClass F ℤ α] (f : F) (h₁ : f 1 = 1) : ∀ n : ℤ, f n = n :=
-  AddMonoidHom.ext_iff.1 $ (f : ℤ →+ α).eq_int_cast_hom h₁
+  AddMonoidHom.ext_iff.1 <| (f : ℤ →+ α).eq_int_cast_hom h₁
 #align eq_int_cast' eq_int_cast'
 
 @[simp]
@@ -255,7 +255,7 @@ open Multiplicative
 
 @[ext.1]
 theorem ext_mint {f g : Multiplicative ℤ →* M} (h1 : f (ofAdd 1) = g (ofAdd 1)) : f = g :=
-  MonoidHom.ext $ AddMonoidHom.ext_iff.mp $ @AddMonoidHom.ext_int _ _ f.toAdditive g.toAdditive h1
+  MonoidHom.ext <| AddMonoidHom.ext_iff.mp <| @AddMonoidHom.ext_int _ _ f.toAdditive g.toAdditive h1
 #align monoid_hom.ext_mint MonoidHom.ext_mint
 
 /-- If two `monoid_hom`s agree on `-1` and the naturals then they are equal. -/
@@ -281,7 +281,7 @@ variable {M : Type _} [MonoidWithZero M]
 @[ext.1]
 theorem ext_int {f g : ℤ →*₀ M} (h_neg_one : f (-1) = g (-1))
     (h_nat : f.comp Int.ofNatHom.toMonoidWithZeroHom = g.comp Int.ofNatHom.toMonoidWithZeroHom) : f = g :=
-  to_monoid_hom_injective $ MonoidHom.ext_int h_neg_one $ MonoidHom.ext (congr_fun h_nat : _)
+  to_monoid_hom_injective <| MonoidHom.ext_int h_neg_one <| MonoidHom.ext (congr_fun h_nat : _)
 #align monoid_with_zero_hom.ext_int MonoidWithZeroHom.ext_int
 
 end MonoidWithZeroHom
@@ -289,10 +289,10 @@ end MonoidWithZeroHom
 /-- If two `monoid_with_zero_hom`s agree on `-1` and the _positive_ naturals then they are equal. -/
 theorem ext_int' [MonoidWithZero α] [MonoidWithZeroHomClass F ℤ α] {f g : F} (h_neg_one : f (-1) = g (-1))
     (h_pos : ∀ n : ℕ, 0 < n → f n = g n) : f = g :=
-  FunLike.ext _ _ $ fun n =>
+  (FunLike.ext _ _) fun n =>
     haveI :=
       FunLike.congr_fun
-        (@MonoidWithZeroHom.ext_int _ _ (f : ℤ →*₀ α) (g : ℤ →*₀ α) h_neg_one $ MonoidWithZeroHom.ext_nat h_pos) n
+        (@MonoidWithZeroHom.ext_int _ _ (f : ℤ →*₀ α) (g : ℤ →*₀ α) h_neg_one <| MonoidWithZeroHom.ext_nat h_pos) n
     this
 #align ext_int' ext_int'
 
@@ -313,11 +313,11 @@ theorem map_int_cast [RingHomClass F α β] (f : F) (n : ℤ) : f n = n :=
 namespace RingHom
 
 theorem eq_int_cast' (f : ℤ →+* α) : f = Int.castRingHom α :=
-  RingHom.ext $ eq_int_cast f
+  RingHom.ext <| eq_int_cast f
 #align ring_hom.eq_int_cast' RingHom.eq_int_cast'
 
 theorem ext_int {R : Type _} [NonAssocSemiring R] (f g : ℤ →+* R) : f = g :=
-  coe_add_monoid_hom_injective $ AddMonoidHom.ext_int $ f.map_one.trans g.map_one.symm
+  coe_add_monoid_hom_injective <| AddMonoidHom.ext_int <| f.map_one.trans g.map_one.symm
 #align ring_hom.ext_int RingHom.ext_int
 
 instance Int.subsingleton_ring_hom {R : Type _} [NonAssocSemiring R] : Subsingleton (ℤ →+* R) :=

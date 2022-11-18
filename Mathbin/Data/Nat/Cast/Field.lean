@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Yaël Dillies, Patrick Stevens
 -/
 import Mathbin.Algebra.Order.Field.Basic
+import Mathbin.Algebra.Order.Ring.Nontrivial
+import Mathbin.Data.Nat.Cast.Basic
 
 /-!
 # Cast of naturals into fields
@@ -46,7 +48,7 @@ theorem cast_div_le {m n : ℕ} : ((m / n : ℕ) : α) ≤ m / n := by
 #align nat.cast_div_le Nat.cast_div_le
 
 theorem inv_pos_of_nat {n : ℕ} : 0 < ((n : α) + 1)⁻¹ :=
-  inv_pos.2 $ add_pos_of_nonneg_of_pos n.cast_nonneg zero_lt_one
+  inv_pos.2 <| add_pos_of_nonneg_of_pos n.cast_nonneg zero_lt_one
 #align nat.inv_pos_of_nat Nat.inv_pos_of_nat
 
 theorem one_div_pos_of_nat {n : ℕ} : 0 < 1 / ((n : α) + 1) := by

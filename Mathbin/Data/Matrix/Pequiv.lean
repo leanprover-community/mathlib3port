@@ -102,7 +102,7 @@ theorem to_pequiv_mul_matrix [Fintype m] [DecidableEq m] [Semiring α] (f : m �
 
 theorem mul_to_pequiv_to_matrix {m n α : Type _} [Fintype n] [DecidableEq n] [Semiring α] (f : n ≃ n)
     (M : Matrix m n α) : M ⬝ f.toPequiv.toMatrix = M.submatrix id f.symm :=
-  Matrix.ext $ fun i j => by
+  Matrix.ext fun i j => by
     rw [Pequiv.matrix_mul_apply, ← Equiv.to_pequiv_symm, Equiv.to_pequiv_apply, Matrix.submatrix_apply, id.def]
 #align pequiv.mul_to_pequiv_to_matrix Pequiv.mul_to_pequiv_to_matrix
 

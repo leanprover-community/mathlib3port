@@ -95,7 +95,7 @@ instance gradeBy.graded_monoid [AddMonoid M] [AddMonoid ι] [CommSemiring R] (f 
     SetLike.GradedMonoid (gradeBy R f : ι → Submodule R (AddMonoidAlgebra R M)) where
   one_mem m h := by
     rw [one_def] at h
-    by_cases H:(1 : R) = (0 : R)
+    by_cases H : (1 : R) = (0 : R)
     · rw [H, Finsupp.single_zero] at h
       exfalso
       exact h

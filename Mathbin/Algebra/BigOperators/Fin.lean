@@ -3,7 +3,7 @@ Copyright (c) 2020 Yury Kudryashov, Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Anne Baanen
 -/
-import Mathbin.Data.Fintype.Card
+import Mathbin.Data.Fintype.BigOperators
 import Mathbin.Data.Fintype.Fin
 import Mathbin.Logic.Equiv.Fin
 
@@ -207,7 +207,7 @@ theorem partial_prod_succ' (f : Fin (n + 1) → α) (j : Fin (n + 1)) :
 @[to_additive]
 theorem partial_prod_left_inv {G : Type _} [Group G] (f : Fin (n + 1) → G) :
     (f 0 • partialProd fun i : Fin n => (f i)⁻¹ * f i.succ) = f :=
-  funext $ fun x =>
+  funext fun x =>
     Fin.inductionOn x (by simp) fun x hx => by
       simp only [coe_eq_cast_succ, Pi.smul_apply, smul_eq_mul] at hx⊢
       rw [partial_prod_succ, ← mul_assoc, hx, mul_inv_cancel_left]
@@ -245,7 +245,7 @@ theorem prod_take_of_fn {n : ℕ} (f : Fin n → α) (i : ℕ) :
   induction' i with i IH
   · simp [A]
     
-  by_cases h:i < n
+  by_cases h : i < n
   · have : i < length (of_fn f) := by rwa [length_of_fn f]
     rw [prod_take_succ _ _ this]
     have A :
@@ -263,7 +263,7 @@ theorem prod_take_of_fn {n : ℕ} (f : Fin n → α) (i : ℕ) :
       rw [← length_of_fn f] at h
       have : length (of_fn f) ≤ i := not_lt.mp h
       rw [take_all_of_le this, take_all_of_le (le_trans this (Nat.le_succ _))]
-    have B : ∀ j : Fin n, (j : ℕ) < i.succ = ((j : ℕ) < i) := by
+    have B : ∀ j : Fin n, ((j : ℕ) < i.succ) = ((j : ℕ) < i) := by
       intro j
       have : (j : ℕ) < i := lt_of_lt_of_le j.2 (not_lt.mp h)
       simp [this, lt_trans this (Nat.lt_succ_self _)]

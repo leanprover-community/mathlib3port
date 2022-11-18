@@ -69,7 +69,7 @@ theorem involute_involute : ∀ a : CliffordAlgebra Q, involute (involute a) = a
 /-- `clifford_algebra.involute` as an `alg_equiv`. -/
 @[simps]
 def involuteEquiv : CliffordAlgebra Q ≃ₐ[R] CliffordAlgebra Q :=
-  AlgEquiv.ofAlgHom involute involute (AlgHom.ext $ involute_involute) (AlgHom.ext $ involute_involute)
+  AlgEquiv.ofAlgHom involute involute (AlgHom.ext <| involute_involute) (AlgHom.ext <| involute_involute)
 #align clifford_algebra.involute_equiv CliffordAlgebra.involuteEquiv
 
 end Involute
@@ -83,7 +83,7 @@ Also called *transpose* in some literature. -/
 def reverse : CliffordAlgebra Q →ₗ[R] CliffordAlgebra Q :=
   (opLinearEquiv R).symm.toLinearMap.comp
     (CliffordAlgebra.lift Q
-        ⟨(MulOpposite.opLinearEquiv R).toLinearMap.comp (ι Q), fun m => unop_injective $ by simp⟩).toLinearMap
+        ⟨(MulOpposite.opLinearEquiv R).toLinearMap.comp (ι Q), fun m => unop_injective <| by simp⟩).toLinearMap
 #align clifford_algebra.reverse CliffordAlgebra.reverse
 
 @[simp]
@@ -163,7 +163,7 @@ section List
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Taking the reverse of the product a list of $n$ vectors lifted via `ι` is equivalent to
 taking the product of the reverse of that list. -/
-theorem reverse_prod_map_ι : ∀ l : List M, reverse (l.map $ ι Q).Prod = (l.map $ ι Q).reverse.Prod
+theorem reverse_prod_map_ι : ∀ l : List M, reverse (l.map <| ι Q).Prod = (l.map <| ι Q).reverse.Prod
   | [] => by simp
   | x::xs => by simp [reverse_prod_map_ι xs]
 #align clifford_algebra.reverse_prod_map_ι CliffordAlgebra.reverse_prod_map_ι
@@ -171,7 +171,7 @@ theorem reverse_prod_map_ι : ∀ l : List M, reverse (l.map $ ι Q).Prod = (l.m
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Taking the involute of the product a list of $n$ vectors lifted via `ι` is equivalent to
 premultiplying by ${-1}^n$. -/
-theorem involute_prod_map_ι : ∀ l : List M, involute (l.map $ ι Q).Prod = (-1 : R) ^ l.length • (l.map $ ι Q).Prod
+theorem involute_prod_map_ι : ∀ l : List M, involute (l.map <| ι Q).Prod = (-1 : R) ^ l.length • (l.map <| ι Q).Prod
   | [] => by simp
   | x::xs => by simp [pow_add, involute_prod_map_ι xs]
 #align clifford_algebra.involute_prod_map_ι CliffordAlgebra.involute_prod_map_ι

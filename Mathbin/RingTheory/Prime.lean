@@ -20,14 +20,12 @@ open Finset
 
 open BigOperators
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (t u) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c) -/
 /-- If `x * y = a * ∏ i in s, p i` where `p i` is always prime, then
   `x` and `y` can both be written as a divisor of `a` multiplied by
   a product over a subset of `s`  -/
 theorem mul_eq_mul_prime_prod {α : Type _} [DecidableEq α] {x y a : R} {s : Finset α} {p : α → R}
     (hp : ∀ i ∈ s, Prime (p i)) (hx : x * y = a * ∏ i in s, p i) :
-    ∃ (t : Finset α) (u : Finset α) (b : R) (c : R),
+    ∃ (t u : Finset α)(b c : R),
       t ∪ u = s ∧ Disjoint t u ∧ a = b * c ∧ (x = b * ∏ i in t, p i) ∧ y = c * ∏ i in u, p i :=
   by
   induction' s using Finset.induction with i s his ih generalizing x y a
@@ -53,12 +51,10 @@ theorem mul_eq_mul_prime_prod {α : Type _} [DecidableEq α] {x y a : R} {s : Fi
     
 #align mul_eq_mul_prime_prod mul_eq_mul_prime_prod
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c) -/
 /-- If ` x * y = a * p ^ n` where `p` is prime, then `x` and `y` can both be written
   as the product of a power of `p` and a divisor of `a`. -/
 theorem mul_eq_mul_prime_pow {x y a p : R} {n : ℕ} (hp : Prime p) (hx : x * y = a * p ^ n) :
-    ∃ (i : ℕ) (j : ℕ) (b : R) (c : R), i + j = n ∧ a = b * c ∧ x = b * p ^ i ∧ y = c * p ^ j := by
+    ∃ (i j : ℕ)(b c : R), i + j = n ∧ a = b * c ∧ x = b * p ^ i ∧ y = c * p ^ j := by
   rcases mul_eq_mul_prime_prod (fun _ _ => hp) (show x * y = a * (range n).Prod fun _ => p by simpa) with
     ⟨t, u, b, c, htus, htu, rfl, rfl, rfl⟩
   exact ⟨t.card, u.card, b, c, by rw [← card_disjoint_union htu, htus, card_range], by simp⟩

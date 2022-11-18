@@ -79,12 +79,12 @@ unsafe def alias_attr : user_attribute Unit target where
 
 /-- The core tactic which handles `alias d ← al`. Creates an alias `al` for declaration `d`. -/
 unsafe def alias_direct (doc : Option String) (d : declaration) (al : Name) : tactic Unit := do
-  updateex_env $ fun env =>
+  updateex_env fun env =>
       env
         (match d with
         | declaration.defn n ls t _ _ _ =>
           declaration.defn al ls t (expr.const n (level.param <$> ls)) ReducibilityHints.abbrev tt
-        | declaration.thm n ls t _ => declaration.thm al ls t $ task.pure $ expr.const n (level.param <$> ls)
+        | declaration.thm n ls t _ => declaration.thm al ls t <| task.pure <| expr.const n (level.param <$> ls)
         | _ => undefined)
   let target := target.plain d.to_name
   alias_attr al target tt
@@ -101,7 +101,7 @@ unsafe def alias_direct (doc : Option String) (d : declaration) (al : Name) : ta
     mk_iff_mp_app
     ( iffmp : Name ) : expr → ( ℕ → expr ) → tactic expr
     | expr.pi n bi e t , f => expr.lam n bi e <$> mk_iff_mp_app t fun n => f ( n + 1 ) ( expr.var n )
-      | q( $ ( a ) ↔ $ ( b ) ) , f => pure $ @ expr.const true iffmp [ ] a b ( f 0 )
+      | q( $ ( a ) ↔ $ ( b ) ) , f => pure <| @ expr.const true iffmp [ ] a b ( f 0 )
       | _ , f => fail "Target theorem must have the form `Π x y z, a ↔ b`"
 #align tactic.alias.mk_iff_mp_app tactic.alias.mk_iff_mp_app
 
@@ -118,7 +118,7 @@ unsafe def alias_iff (doc : Option String) (d : declaration) (ns al : Name) (is_
       let iffmp := if is_forward then `iff.mp else `iff.mpr
       let v ← mk_iff_mp_app iffmp t fun _ => expr.const d.to_name (level.param <$> ls)
       let t' ← infer_type v
-      updateex_env $ fun env => env (declaration.thm al ls t' $ task.pure v)
+      updateex_env fun env => env (declaration.thm al ls t' <| task.pure v)
       alias_attr al target tt
       add_doc_string al (doc target)
 #align tactic.alias.alias_iff tactic.alias.alias_iff
@@ -128,14 +128,14 @@ unsafe def make_left_right : Name → tactic (Name × Name)
   | Name.mk_string s p => do
     let buf : CharBuffer := s.toCharBuffer
     let parts := s.splitOn '_'
-    let (left, _ :: right) ← pure $ parts.span (· ≠ "iff")
+    let (left, _ :: right) ← pure <| parts.span (· ≠ "iff")
     let pfx (a b : String) := a.toList.isPrefixOf b.toList
-    let (suffix', right') ← pure $ right.reverse.span fun s => pfx "left" s ∨ pfx "right" s
+    let (suffix', right') ← pure <| right.reverse.span fun s => pfx "left" s ∨ pfx "right" s
     let right := right'.reverse
     let suffix := suffix'.reverse
     pure
-        (p <.> "_".intercalate (right ++ "of" :: left ++ suffix),
-          p <.> "_".intercalate (left ++ "of" :: right ++ suffix))
+        (.str p ("_".intercalate (right ++ "of" :: left ++ suffix)),
+          .str p ("_".intercalate (left ++ "of" :: right ++ suffix)))
   | _ => failed
 #align tactic.alias.make_left_right tactic.alias.make_left_right
 
@@ -173,7 +173,7 @@ The `..` notation attempts to generate the 'of'-names automatically when the
 input theorem has the form `A_iff_B` or `A_iff_B_left` etc.
 -/
 @[user_command]
-unsafe def alias_cmd (meta_info : decl_meta_info) (_ : parse $ tk "alias") : lean.parser Unit := do
+unsafe def alias_cmd (meta_info : decl_meta_info) (_ : parse <| tk "alias") : lean.parser Unit := do
   let old ← ident
   let d ←
     (do
@@ -185,7 +185,7 @@ unsafe def alias_cmd (meta_info : decl_meta_info) (_ : parse $ tk "alias") : lea
   (do
         tk "←" <|> tk "<-"
         let aliases ← many ident
-        ↑(aliases $ fun al => alias_direct doc d (ns al))) <|>
+        ↑(aliases fun al => alias_direct doc d (ns al))) <|>
       do
       tk "↔" <|> tk "<->"
       let (left, right) ←
@@ -205,7 +205,7 @@ unsafe def get_alias_target (n : Name) : tactic (Option target) := do
   let tt ← has_attribute' `alias n |
     pure none
   let v ← alias_attr.get_param n
-  pure $ some v
+  pure <| some v
 #align tactic.alias.get_alias_target tactic.alias.get_alias_target
 
 end Tactic.Alias

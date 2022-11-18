@@ -8,8 +8,6 @@ import Mathbin.Analysis.Complex.Basic
 import Mathbin.Analysis.Convex.Uniform
 import Mathbin.Analysis.NormedSpace.Completion
 import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
-import Mathbin.Analysis.NormedSpace.Banach
-import Mathbin.LinearAlgebra.SesquilinearForm
 
 /-!
 # Inner product space
@@ -102,14 +100,14 @@ end Notations
 
 /-- An inner product space is a vector space with an additional operation called inner product.
 The norm could be derived from the inner product, instead we require the existence of a norm and
-the fact that `∥x∥^2 = re ⟪x, x⟫` to be able to put instances on `𝕂` or product
+the fact that `‖x‖^2 = re ⟪x, x⟫` to be able to put instances on `𝕂` or product
 spaces.
 
 To construct a norm from an inner product, see `inner_product_space.of_core`.
 -/
 class InnerProductSpace (𝕜 : Type _) (E : Type _) [IsROrC 𝕜] extends NormedAddCommGroup E, NormedSpace 𝕜 E,
   HasInner 𝕜 E where
-  norm_sq_eq_inner : ∀ x : E, ∥x∥ ^ 2 = re (inner x x)
+  norm_sq_eq_inner : ∀ x : E, ‖x‖ ^ 2 = re (inner x x)
   conj_sym : ∀ x y, conj (inner y x) = inner x y
   add_left : ∀ x y z, inner (x + y) z = inner x z + inner y z
   smul_left : ∀ x y r, inner (r • x) y = conj r * inner x y
@@ -293,7 +291,7 @@ We need this for the `core` structure to prove the triangle inequality below whe
 showing the core is a normed group.
 -/
 theorem inner_mul_inner_self_le (x y : F) : abs ⟪x, y⟫ * abs ⟪y, x⟫ ≤ re ⟪x, x⟫ * re ⟪y, y⟫ := by
-  by_cases hy:y = 0
+  by_cases hy : y = 0
   · rw [hy]
     simp only [IsROrC.abs_zero, inner_zero_left, mul_zero, AddMonoidHom.map_zero]
     
@@ -342,23 +340,23 @@ def toHasNorm : HasNorm F where norm x := sqrt (re ⟪x, x⟫)
 
 attribute [local instance] to_has_norm
 
-theorem norm_eq_sqrt_inner (x : F) : ∥x∥ = sqrt (re ⟪x, x⟫) :=
+theorem norm_eq_sqrt_inner (x : F) : ‖x‖ = sqrt (re ⟪x, x⟫) :=
   rfl
 #align inner_product_space.of_core.norm_eq_sqrt_inner InnerProductSpace.OfCore.norm_eq_sqrt_inner
 
-theorem inner_self_eq_norm_mul_norm (x : F) : re ⟪x, x⟫ = ∥x∥ * ∥x∥ := by
+theorem inner_self_eq_norm_mul_norm (x : F) : re ⟪x, x⟫ = ‖x‖ * ‖x‖ := by
   rw [norm_eq_sqrt_inner, ← sqrt_mul inner_self_nonneg (re ⟪x, x⟫), sqrt_mul_self inner_self_nonneg]
 #align inner_product_space.of_core.inner_self_eq_norm_mul_norm InnerProductSpace.OfCore.inner_self_eq_norm_mul_norm
 
-theorem sqrt_norm_sq_eq_norm {x : F} : sqrt (norm_sqF x) = ∥x∥ :=
+theorem sqrt_norm_sq_eq_norm {x : F} : sqrt (norm_sqF x) = ‖x‖ :=
   rfl
 #align inner_product_space.of_core.sqrt_norm_sq_eq_norm InnerProductSpace.OfCore.sqrt_norm_sq_eq_norm
 
 /-- Cauchy–Schwarz inequality with norm -/
-theorem abs_inner_le_norm (x y : F) : abs ⟪x, y⟫ ≤ ∥x∥ * ∥y∥ :=
+theorem abs_inner_le_norm (x y : F) : abs ⟪x, y⟫ ≤ ‖x‖ * ‖y‖ :=
   nonneg_le_nonneg_of_sq_le_sq (mul_nonneg (sqrt_nonneg _) (sqrt_nonneg _))
     (by
-      have H : ∥x∥ * ∥y∥ * (∥x∥ * ∥y∥) = re ⟪y, y⟫ * re ⟪x, x⟫ := by
+      have H : ‖x‖ * ‖y‖ * (‖x‖ * ‖y‖) = re ⟪y, y⟫ * re ⟪x, x⟫ := by
         simp only [inner_self_eq_norm_mul_norm]
         ring
       rw [H]
@@ -375,16 +373,16 @@ def toNormedAddCommGroup : NormedAddCommGroup F :=
     { toFun := fun x => sqrt (re ⟪x, x⟫), map_zero' := by simp only [sqrt_zero, inner_zero_right, map_zero],
       neg' := fun x => by simp only [inner_neg_left, neg_neg, inner_neg_right],
       add_le' := fun x y => by
-        have h₁ : abs ⟪x, y⟫ ≤ ∥x∥ * ∥y∥ := abs_inner_le_norm _ _
+        have h₁ : abs ⟪x, y⟫ ≤ ‖x‖ * ‖y‖ := abs_inner_le_norm _ _
         have h₂ : re ⟪x, y⟫ ≤ abs ⟪x, y⟫ := re_le_abs _
-        have h₃ : re ⟪x, y⟫ ≤ ∥x∥ * ∥y∥ := by linarith
-        have h₄ : re ⟪y, x⟫ ≤ ∥x∥ * ∥y∥ := by rwa [← inner_conj_sym, conj_re]
-        have : ∥x + y∥ * ∥x + y∥ ≤ (∥x∥ + ∥y∥) * (∥x∥ + ∥y∥) := by
+        have h₃ : re ⟪x, y⟫ ≤ ‖x‖ * ‖y‖ := by linarith
+        have h₄ : re ⟪y, x⟫ ≤ ‖x‖ * ‖y‖ := by rwa [← inner_conj_sym, conj_re]
+        have : ‖x + y‖ * ‖x + y‖ ≤ (‖x‖ + ‖y‖) * (‖x‖ + ‖y‖) := by
           simp only [← inner_self_eq_norm_mul_norm, inner_add_add_self, mul_add, mul_comm, map_add]
           linarith
         exact nonneg_le_nonneg_of_sq_le_sq (add_nonneg (sqrt_nonneg _) (sqrt_nonneg _)) this,
       eq_zero_of_map_eq_zero' := fun x hx =>
-        (inner_self_eq_zero : ⟪x, x⟫ = 0 ↔ x = 0).1 $ by
+        (inner_self_eq_zero : ⟪x, x⟫ = 0 ↔ x = 0).1 <| by
           change sqrt (re ⟪x, x⟫) = 0 at hx
           rw [sqrt_eq_zero inner_self_nonneg] at hx
           exact ext (by simp [hx]) (by simp [inner_self_im_zero]) }
@@ -414,7 +412,7 @@ def InnerProductSpace.ofCore [AddCommGroup F] [Module 𝕜 F] (c : InnerProductS
   exact
     { c with
       norm_sq_eq_inner := fun x => by
-        have h₁ : ∥x∥ ^ 2 = sqrt (re (c.inner x x)) ^ 2 := rfl
+        have h₁ : ‖x‖ ^ 2 = sqrt (re (c.inner x x)) ^ 2 := rfl
         have h₂ : 0 ≤ re (c.inner x x) := InnerProductSpace.OfCore.inner_self_nonneg
         simp [h₁, sq_sqrt, h₂] }
 #align inner_product_space.of_core InnerProductSpace.ofCore
@@ -611,8 +609,8 @@ theorem inner_self_re_to_K {x : E} : (re ⟪x, x⟫ : 𝕜) = ⟪x, x⟫ := by
   rw [IsROrC.ext_iff] <;> exact ⟨by simp, by simp [inner_self_nonneg_im]⟩
 #align inner_self_re_to_K inner_self_re_to_K
 
-theorem inner_self_eq_norm_sq_to_K (x : E) : ⟪x, x⟫ = (∥x∥ ^ 2 : 𝕜) := by
-  suffices (IsROrC.re ⟪x, x⟫ : 𝕜) = ∥x∥ ^ 2 by simpa [inner_self_re_to_K] using this
+theorem inner_self_eq_norm_sq_to_K (x : E) : ⟪x, x⟫ = (‖x‖ ^ 2 : 𝕜) := by
+  suffices (IsROrC.re ⟪x, x⟫ : 𝕜) = ‖x‖ ^ 2 by simpa [inner_self_re_to_K] using this
   exact_mod_cast (norm_sq_eq_inner x).symm
 #align inner_self_eq_norm_sq_to_K inner_self_eq_norm_sq_to_K
 
@@ -712,7 +710,7 @@ theorem parallelogram_law {x y : E} : ⟪x + y, x + y⟫ + ⟪x - y, x - y⟫ = 
 
 /-- Cauchy–Schwarz inequality. This proof follows "Proof 2" on Wikipedia. -/
 theorem inner_mul_inner_self_le (x y : E) : abs ⟪x, y⟫ * abs ⟪y, x⟫ ≤ re ⟪x, x⟫ * re ⟪y, y⟫ := by
-  by_cases hy:y = 0
+  by_cases hy : y = 0
   · rw [hy]
     simp only [IsROrC.abs_zero, inner_zero_left, mul_zero, AddMonoidHom.map_zero]
     
@@ -794,7 +792,7 @@ include 𝕜
 
 /-- An orthonormal set of vectors in an `inner_product_space` -/
 def Orthonormal (v : ι → E) : Prop :=
-  (∀ i, ∥v i∥ = 1) ∧ ∀ {i j}, i ≠ j → ⟪v i, v j⟫ = 0
+  (∀ i, ‖v i‖ = 1) ∧ ∀ {i j}, i ≠ j → ⟪v i, v j⟫ = 0
 #align orthonormal Orthonormal
 
 omit 𝕜
@@ -817,8 +815,8 @@ theorem orthonormal_iff_ite {v : ι → E} : Orthonormal 𝕜 v ↔ ∀ i j, ⟪
   · intro h
     constructor
     · intro i
-      have h' : ∥v i∥ ^ 2 = 1 ^ 2 := by simp [norm_sq_eq_inner, h i i]
-      have h₁ : 0 ≤ ∥v i∥ := norm_nonneg _
+      have h' : ‖v i‖ ^ 2 = 1 ^ 2 := by simp [norm_sq_eq_inner, h i i]
+      have h₁ : 0 ≤ ‖v i‖ := norm_nonneg _
       have h₂ : (0 : ℝ) ≤ 1 := zero_le_one
       rwa [sq_eq_sq h₁ h₂] at h'
       
@@ -871,14 +869,14 @@ omit dec_E
         (Term.explicitBinder "(" [`i] [":" `ι] [] ")")]
        (Term.typeSpec
         ":"
-        (Init.Core.«term_=_»
+        («term_=_»
          (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
           "⟪"
           (Term.app `v [`i])
           ", "
           (Term.app `Finsupp.total [`ι `E `𝕜 `v `l])
           "⟫")
-         " = "
+         "="
          (Term.app `l [`i]))))
       (Command.declValSimple
        ":="
@@ -1025,10 +1023,10 @@ omit dec_E
         (Term.explicitBinder "(" [`l] [":" (Term.arrow `ι "→" `𝕜)] [] ")")
         (Term.implicitBinder "{" [`s] [":" (Term.app `Finset [`ι])] "}")
         (Term.implicitBinder "{" [`i] [":" `ι] "}")
-        (Term.explicitBinder "(" [`hi] [":" (Init.Core.«term_∈_» `i " ∈ " `s)] [] ")")]
+        (Term.explicitBinder "(" [`hi] [":" («term_∈_» `i "∈" `s)] [] ")")]
        (Term.typeSpec
         ":"
-        (Init.Core.«term_=_»
+        («term_=_»
          (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
           "⟪"
           (Term.app `v [`i])
@@ -1041,7 +1039,7 @@ omit dec_E
            ", "
            (Algebra.Group.Defs.«term_•_» (Term.app `l [`i]) " • " (Term.app `v [`i])))
           "⟫")
-         " = "
+         "="
          (Term.app `l [`i]))))
       (Command.declValSimple
        ":="
@@ -1215,10 +1213,10 @@ theorem Orthonormal.inner_left_finsupp {v : ι → E} (hv : Orthonormal 𝕜 v) 
         (Term.explicitBinder "(" [`l] [":" (Term.arrow `ι "→" `𝕜)] [] ")")
         (Term.implicitBinder "{" [`s] [":" (Term.app `Finset [`ι])] "}")
         (Term.implicitBinder "{" [`i] [":" `ι] "}")
-        (Term.explicitBinder "(" [`hi] [":" (Init.Core.«term_∈_» `i " ∈ " `s)] [] ")")]
+        (Term.explicitBinder "(" [`hi] [":" («term_∈_» `i "∈" `s)] [] ")")]
        (Term.typeSpec
         ":"
-        (Init.Core.«term_=_»
+        («term_=_»
          (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
           "⟪"
           (BigOperators.Algebra.BigOperators.Basic.finset.sum
@@ -1231,7 +1229,7 @@ theorem Orthonormal.inner_left_finsupp {v : ι → E} (hv : Orthonormal 𝕜 v) 
           ", "
           (Term.app `v [`i])
           "⟫")
-         " = "
+         "="
          (Term.app (ComplexConjugate.Algebra.Star.Basic.star_ring_end "conj") [(Term.app `l [`i])]))))
       (Command.declValSimple
        ":="
@@ -1423,7 +1421,7 @@ theorem Orthonormal.inner_sum {v : ι → E} (hv : Orthonormal 𝕜 v) (l₁ l�
         (Term.implicitBinder "{" [`a] [":" (Term.arrow `ι "→" (Term.arrow `ι "→" `𝕜))] "}")]
        (Term.typeSpec
         ":"
-        (Init.Core.«term_=_»
+        («term_=_»
          (BigOperators.Algebra.BigOperators.Basic.finset.sum
           "∑"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -1440,7 +1438,7 @@ theorem Orthonormal.inner_sum {v : ι → E} (hv : Orthonormal 𝕜 v) (l₁ l�
             (Term.app `a [`i `j])
             " • "
             (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫» "⟪" (Term.app `v [`j]) ", " (Term.app `v [`i]) "⟫"))))
-         " = "
+         "="
          (BigOperators.Algebra.BigOperators.Basic.finset.sum
           "∑"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `k) []))
@@ -1636,7 +1634,7 @@ variable (𝕜 E)
            "("
            (Term.fun "fun" (Term.basicFun [`x] [] "=>" `x))
            ":"
-           [(Term.arrow (Term.typeAscription "(" (Init.Core.«term∅» "∅") ":" [(Term.app `Set [`E])] ")") "→" `E)]
+           [(Term.arrow (Term.typeAscription "(" («term∅» "∅") ":" [(Term.app `Set [`E])] ")") "→" `E)]
            ")")])))
       (Command.declValSimple
        ":="
@@ -1707,7 +1705,7 @@ theorem orthonormalUnionOfDirected {η : Type _} {s : η → Set E} (hs : Direct
 #align orthonormal_Union_of_directed orthonormalUnionOfDirected
 
 theorem orthonormalSUnionOfDirected {s : Set (Set E)} (hs : DirectedOn (· ⊆ ·) s)
-    (h : ∀ a ∈ s, Orthonormal 𝕜 (fun x => x : (a : Set E) → E)) : Orthonormal 𝕜 (fun x => x : ⋃₀ s → E) := by
+    (h : ∀ a ∈ s, Orthonormal 𝕜 (fun x => x : (a : Set E) → E)) : Orthonormal 𝕜 (fun x => x : ⋃₀s → E) := by
   rw [Set.sUnion_eq_Union] <;> exact orthonormalUnionOfDirected hs.directed_coe (by simpa using h)
 #align orthonormal_sUnion_of_directed orthonormalSUnionOfDirected
 
@@ -1716,12 +1714,12 @@ theorem orthonormalSUnionOfDirected {s : Set (Set E)} (hs : DirectedOn (· ⊆ �
 /-- Given an orthonormal set `v` of vectors in `E`, there exists a maximal orthonormal set
 containing it. -/
 theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coe : s → E)) :
-    ∃ (w) (_ : w ⊇ s), Orthonormal 𝕜 (coe : w → E) ∧ ∀ (u) (_ : u ⊇ w), Orthonormal 𝕜 (coe : u → E) → u = w := by
+    ∃ (w : _)(_ : w ⊇ s), Orthonormal 𝕜 (coe : w → E) ∧ ∀ (u) (_ : u ⊇ w), Orthonormal 𝕜 (coe : u → E) → u = w := by
   obtain ⟨b, bi, sb, h⟩ := zorn_subset_nonempty { b | Orthonormal 𝕜 (coe : b → E) } _ _ hs
   · refine' ⟨b, sb, bi, _⟩
     exact fun u hus hu => h u hu hus
     
-  · refine' fun c hc cc c0 => ⟨⋃₀ c, _, _⟩
+  · refine' fun c hc cc c0 => ⟨⋃₀c, _, _⟩
     · exact orthonormalSUnionOfDirected cc.directed_on fun x xc => hc xc
       
     · exact fun _ => Set.subset_sUnion_of_mem
@@ -1730,7 +1728,7 @@ theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coe : s �
 #align exists_maximal_orthonormal exists_maximal_orthonormal
 
 theorem Orthonormal.ne_zero {v : ι → E} (hv : Orthonormal 𝕜 v) (i : ι) : v i ≠ 0 := by
-  have : ∥v i∥ ≠ 0 := by
+  have : ‖v i‖ ≠ 0 := by
     rw [hv.1 i]
     norm_num
   simpa using this
@@ -1754,34 +1752,34 @@ end OrthonormalSets
 
 section Norm
 
-theorem norm_eq_sqrt_inner (x : E) : ∥x∥ = sqrt (re ⟪x, x⟫) := by
-  have h₁ : ∥x∥ ^ 2 = re ⟪x, x⟫ := norm_sq_eq_inner x
+theorem norm_eq_sqrt_inner (x : E) : ‖x‖ = sqrt (re ⟪x, x⟫) := by
+  have h₁ : ‖x‖ ^ 2 = re ⟪x, x⟫ := norm_sq_eq_inner x
   have h₂ := congr_arg sqrt h₁
   simpa using h₂
 #align norm_eq_sqrt_inner norm_eq_sqrt_inner
 
-theorem norm_eq_sqrt_real_inner (x : F) : ∥x∥ = sqrt ⟪x, x⟫_ℝ := by
+theorem norm_eq_sqrt_real_inner (x : F) : ‖x‖ = sqrt ⟪x, x⟫_ℝ := by
   have h := @norm_eq_sqrt_inner ℝ F _ _ x
   simpa using h
 #align norm_eq_sqrt_real_inner norm_eq_sqrt_real_inner
 
-theorem inner_self_eq_norm_mul_norm (x : E) : re ⟪x, x⟫ = ∥x∥ * ∥x∥ := by
+theorem inner_self_eq_norm_mul_norm (x : E) : re ⟪x, x⟫ = ‖x‖ * ‖x‖ := by
   rw [norm_eq_sqrt_inner, ← sqrt_mul inner_self_nonneg (re ⟪x, x⟫), sqrt_mul_self inner_self_nonneg]
 #align inner_self_eq_norm_mul_norm inner_self_eq_norm_mul_norm
 
-theorem inner_self_eq_norm_sq (x : E) : re ⟪x, x⟫ = ∥x∥ ^ 2 := by rw [pow_two, inner_self_eq_norm_mul_norm]
+theorem inner_self_eq_norm_sq (x : E) : re ⟪x, x⟫ = ‖x‖ ^ 2 := by rw [pow_two, inner_self_eq_norm_mul_norm]
 #align inner_self_eq_norm_sq inner_self_eq_norm_sq
 
-theorem real_inner_self_eq_norm_mul_norm (x : F) : ⟪x, x⟫_ℝ = ∥x∥ * ∥x∥ := by
+theorem real_inner_self_eq_norm_mul_norm (x : F) : ⟪x, x⟫_ℝ = ‖x‖ * ‖x‖ := by
   have h := @inner_self_eq_norm_mul_norm ℝ F _ _ x
   simpa using h
 #align real_inner_self_eq_norm_mul_norm real_inner_self_eq_norm_mul_norm
 
-theorem real_inner_self_eq_norm_sq (x : F) : ⟪x, x⟫_ℝ = ∥x∥ ^ 2 := by rw [pow_two, real_inner_self_eq_norm_mul_norm]
+theorem real_inner_self_eq_norm_sq (x : F) : ⟪x, x⟫_ℝ = ‖x‖ ^ 2 := by rw [pow_two, real_inner_self_eq_norm_mul_norm]
 #align real_inner_self_eq_norm_sq real_inner_self_eq_norm_sq
 
 /-- Expand the square -/
-theorem norm_add_sq {x y : E} : ∥x + y∥ ^ 2 = ∥x∥ ^ 2 + 2 * re ⟪x, y⟫ + ∥y∥ ^ 2 := by
+theorem norm_add_sq {x y : E} : ‖x + y‖ ^ 2 = ‖x‖ ^ 2 + 2 * re ⟪x, y⟫ + ‖y‖ ^ 2 := by
   repeat' rw [sq, ← inner_self_eq_norm_mul_norm]
   rw [inner_add_add_self, two_mul]
   simp only [add_assoc, add_left_inj, add_right_inj, AddMonoidHom.map_add]
@@ -1791,7 +1789,7 @@ theorem norm_add_sq {x y : E} : ∥x + y∥ ^ 2 = ∥x∥ ^ 2 + 2 * re ⟪x, y�
 alias norm_add_sq ← norm_add_pow_two
 
 /-- Expand the square -/
-theorem norm_add_sq_real {x y : F} : ∥x + y∥ ^ 2 = ∥x∥ ^ 2 + 2 * ⟪x, y⟫_ℝ + ∥y∥ ^ 2 := by
+theorem norm_add_sq_real {x y : F} : ‖x + y‖ ^ 2 = ‖x‖ ^ 2 + 2 * ⟪x, y⟫_ℝ + ‖y‖ ^ 2 := by
   have h := @norm_add_sq ℝ F _ _
   simpa using h
 #align norm_add_sq_real norm_add_sq_real
@@ -1799,19 +1797,19 @@ theorem norm_add_sq_real {x y : F} : ∥x + y∥ ^ 2 = ∥x∥ ^ 2 + 2 * ⟪x, y
 alias norm_add_sq_real ← norm_add_pow_two_real
 
 /-- Expand the square -/
-theorem norm_add_mul_self {x y : E} : ∥x + y∥ * ∥x + y∥ = ∥x∥ * ∥x∥ + 2 * re ⟪x, y⟫ + ∥y∥ * ∥y∥ := by
+theorem norm_add_mul_self {x y : E} : ‖x + y‖ * ‖x + y‖ = ‖x‖ * ‖x‖ + 2 * re ⟪x, y⟫ + ‖y‖ * ‖y‖ := by
   repeat' rw [← sq]
   exact norm_add_sq
 #align norm_add_mul_self norm_add_mul_self
 
 /-- Expand the square -/
-theorem norm_add_mul_self_real {x y : F} : ∥x + y∥ * ∥x + y∥ = ∥x∥ * ∥x∥ + 2 * ⟪x, y⟫_ℝ + ∥y∥ * ∥y∥ := by
+theorem norm_add_mul_self_real {x y : F} : ‖x + y‖ * ‖x + y‖ = ‖x‖ * ‖x‖ + 2 * ⟪x, y⟫_ℝ + ‖y‖ * ‖y‖ := by
   have h := @norm_add_mul_self ℝ F _ _
   simpa using h
 #align norm_add_mul_self_real norm_add_mul_self_real
 
 /-- Expand the square -/
-theorem norm_sub_sq {x y : E} : ∥x - y∥ ^ 2 = ∥x∥ ^ 2 - 2 * re ⟪x, y⟫ + ∥y∥ ^ 2 := by
+theorem norm_sub_sq {x y : E} : ‖x - y‖ ^ 2 = ‖x‖ ^ 2 - 2 * re ⟪x, y⟫ + ‖y‖ ^ 2 := by
   repeat' rw [sq, ← inner_self_eq_norm_mul_norm]
   rw [inner_sub_sub_self]
   calc
@@ -1826,29 +1824,29 @@ theorem norm_sub_sq {x y : E} : ∥x - y∥ ^ 2 = ∥x∥ ^ 2 - 2 * re ⟪x, y�
 alias norm_sub_sq ← norm_sub_pow_two
 
 /-- Expand the square -/
-theorem norm_sub_sq_real {x y : F} : ∥x - y∥ ^ 2 = ∥x∥ ^ 2 - 2 * ⟪x, y⟫_ℝ + ∥y∥ ^ 2 :=
+theorem norm_sub_sq_real {x y : F} : ‖x - y‖ ^ 2 = ‖x‖ ^ 2 - 2 * ⟪x, y⟫_ℝ + ‖y‖ ^ 2 :=
   norm_sub_sq
 #align norm_sub_sq_real norm_sub_sq_real
 
 alias norm_sub_sq_real ← norm_sub_pow_two_real
 
 /-- Expand the square -/
-theorem norm_sub_mul_self {x y : E} : ∥x - y∥ * ∥x - y∥ = ∥x∥ * ∥x∥ - 2 * re ⟪x, y⟫ + ∥y∥ * ∥y∥ := by
+theorem norm_sub_mul_self {x y : E} : ‖x - y‖ * ‖x - y‖ = ‖x‖ * ‖x‖ - 2 * re ⟪x, y⟫ + ‖y‖ * ‖y‖ := by
   repeat' rw [← sq]
   exact norm_sub_sq
 #align norm_sub_mul_self norm_sub_mul_self
 
 /-- Expand the square -/
-theorem norm_sub_mul_self_real {x y : F} : ∥x - y∥ * ∥x - y∥ = ∥x∥ * ∥x∥ - 2 * ⟪x, y⟫_ℝ + ∥y∥ * ∥y∥ := by
+theorem norm_sub_mul_self_real {x y : F} : ‖x - y‖ * ‖x - y‖ = ‖x‖ * ‖x‖ - 2 * ⟪x, y⟫_ℝ + ‖y‖ * ‖y‖ := by
   have h := @norm_sub_mul_self ℝ F _ _
   simpa using h
 #align norm_sub_mul_self_real norm_sub_mul_self_real
 
 /-- Cauchy–Schwarz inequality with norm -/
-theorem abs_inner_le_norm (x y : E) : abs ⟪x, y⟫ ≤ ∥x∥ * ∥y∥ :=
+theorem abs_inner_le_norm (x y : E) : abs ⟪x, y⟫ ≤ ‖x‖ * ‖y‖ :=
   nonneg_le_nonneg_of_sq_le_sq (mul_nonneg (norm_nonneg _) (norm_nonneg _))
     (by
-      have : ∥x∥ * ∥y∥ * (∥x∥ * ∥y∥) = re ⟪x, x⟫ * re ⟪y, y⟫
+      have : ‖x‖ * ‖y‖ * (‖x‖ * ‖y‖) = re ⟪x, x⟫ * re ⟪y, y⟫
       simp only [inner_self_eq_norm_mul_norm]
       ring
       rw [this]
@@ -1859,32 +1857,32 @@ theorem abs_inner_le_norm (x y : E) : abs ⟪x, y⟫ ≤ ∥x∥ * ∥y∥ :=
       exact inner_mul_inner_self_le _ _)
 #align abs_inner_le_norm abs_inner_le_norm
 
-theorem norm_inner_le_norm (x y : E) : ∥⟪x, y⟫∥ ≤ ∥x∥ * ∥y∥ :=
+theorem norm_inner_le_norm (x y : E) : ‖⟪x, y⟫‖ ≤ ‖x‖ * ‖y‖ :=
   (IsROrC.norm_eq_abs _).le.trans (abs_inner_le_norm x y)
 #align norm_inner_le_norm norm_inner_le_norm
 
-theorem nnnorm_inner_le_nnnorm (x y : E) : ∥⟪x, y⟫∥₊ ≤ ∥x∥₊ * ∥y∥₊ :=
+theorem nnnorm_inner_le_nnnorm (x y : E) : ‖⟪x, y⟫‖₊ ≤ ‖x‖₊ * ‖y‖₊ :=
   norm_inner_le_norm x y
 #align nnnorm_inner_le_nnnorm nnnorm_inner_le_nnnorm
 
-theorem re_inner_le_norm (x y : E) : re ⟪x, y⟫ ≤ ∥x∥ * ∥y∥ :=
+theorem re_inner_le_norm (x y : E) : re ⟪x, y⟫ ≤ ‖x‖ * ‖y‖ :=
   le_trans (re_le_abs (inner x y)) (abs_inner_le_norm x y)
 #align re_inner_le_norm re_inner_le_norm
 
 /-- Cauchy–Schwarz inequality with norm -/
-theorem abs_real_inner_le_norm (x y : F) : absR ⟪x, y⟫_ℝ ≤ ∥x∥ * ∥y∥ := by
+theorem abs_real_inner_le_norm (x y : F) : absR ⟪x, y⟫_ℝ ≤ ‖x‖ * ‖y‖ := by
   have h := @abs_inner_le_norm ℝ F _ _ x y
   simpa using h
 #align abs_real_inner_le_norm abs_real_inner_le_norm
 
 /-- Cauchy–Schwarz inequality with norm -/
-theorem real_inner_le_norm (x y : F) : ⟪x, y⟫_ℝ ≤ ∥x∥ * ∥y∥ :=
+theorem real_inner_le_norm (x y : F) : ⟪x, y⟫_ℝ ≤ ‖x‖ * ‖y‖ :=
   le_trans (le_abs_self _) (abs_real_inner_le_norm _ _)
 #align real_inner_le_norm real_inner_le_norm
 
 include 𝕜
 
-theorem parallelogram_law_with_norm (x y : E) : ∥x + y∥ * ∥x + y∥ + ∥x - y∥ * ∥x - y∥ = 2 * (∥x∥ * ∥x∥ + ∥y∥ * ∥y∥) :=
+theorem parallelogram_law_with_norm (x y : E) : ‖x + y‖ * ‖x + y‖ + ‖x - y‖ * ‖x - y‖ = 2 * (‖x‖ * ‖x‖ + ‖y‖ * ‖y‖) :=
   by
   simp only [← inner_self_eq_norm_mul_norm]
   rw [← re.map_add, parallelogram_law, two_mul, two_mul]
@@ -1892,15 +1890,15 @@ theorem parallelogram_law_with_norm (x y : E) : ∥x + y∥ * ∥x + y∥ + ∥x
 #align parallelogram_law_with_norm parallelogram_law_with_norm
 
 theorem parallelogram_law_with_nnnorm (x y : E) :
-    ∥x + y∥₊ * ∥x + y∥₊ + ∥x - y∥₊ * ∥x - y∥₊ = 2 * (∥x∥₊ * ∥x∥₊ + ∥y∥₊ * ∥y∥₊) :=
-  Subtype.ext $ parallelogram_law_with_norm x y
+    ‖x + y‖₊ * ‖x + y‖₊ + ‖x - y‖₊ * ‖x - y‖₊ = 2 * (‖x‖₊ * ‖x‖₊ + ‖y‖₊ * ‖y‖₊) :=
+  Subtype.ext <| parallelogram_law_with_norm x y
 #align parallelogram_law_with_nnnorm parallelogram_law_with_nnnorm
 
 omit 𝕜
 
 /-- Polarization identity: The real part of the  inner product, in terms of the norm. -/
 theorem re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two (x y : E) :
-    re ⟪x, y⟫ = (∥x + y∥ * ∥x + y∥ - ∥x∥ * ∥x∥ - ∥y∥ * ∥y∥) / 2 := by
+    re ⟪x, y⟫ = (‖x + y‖ * ‖x + y‖ - ‖x‖ * ‖x‖ - ‖y‖ * ‖y‖) / 2 := by
   rw [norm_add_mul_self]
   ring
 #align
@@ -1908,7 +1906,7 @@ theorem re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_tw
 
 /-- Polarization identity: The real part of the  inner product, in terms of the norm. -/
 theorem re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two (x y : E) :
-    re ⟪x, y⟫ = (∥x∥ * ∥x∥ + ∥y∥ * ∥y∥ - ∥x - y∥ * ∥x - y∥) / 2 := by
+    re ⟪x, y⟫ = (‖x‖ * ‖x‖ + ‖y‖ * ‖y‖ - ‖x - y‖ * ‖x - y‖) / 2 := by
   rw [norm_sub_mul_self]
   ring
 #align
@@ -1916,7 +1914,7 @@ theorem re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_tw
 
 /-- Polarization identity: The real part of the  inner product, in terms of the norm. -/
 theorem re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_four (x y : E) :
-    re ⟪x, y⟫ = (∥x + y∥ * ∥x + y∥ - ∥x - y∥ * ∥x - y∥) / 4 := by
+    re ⟪x, y⟫ = (‖x + y‖ * ‖x + y‖ - ‖x - y‖ * ‖x - y‖) / 4 := by
   rw [norm_add_mul_self, norm_sub_mul_self]
   ring
 #align
@@ -1924,7 +1922,7 @@ theorem re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_four (x y : E) :
 
 /-- Polarization identity: The imaginary part of the inner product, in terms of the norm. -/
 theorem im_inner_eq_norm_sub_I_smul_mul_self_sub_norm_add_I_smul_mul_self_div_four (x y : E) :
-    im ⟪x, y⟫ = (∥x - IK • y∥ * ∥x - IK • y∥ - ∥x + IK • y∥ * ∥x + IK • y∥) / 4 := by
+    im ⟪x, y⟫ = (‖x - IK • y‖ * ‖x - IK • y‖ - ‖x + IK • y‖ * ‖x + IK • y‖) / 4 := by
   simp only [norm_add_mul_self, norm_sub_mul_self, inner_smul_right, I_mul_re]
   ring
 #align
@@ -1932,7 +1930,7 @@ theorem im_inner_eq_norm_sub_I_smul_mul_self_sub_norm_add_I_smul_mul_self_div_fo
 
 /-- Polarization identity: The inner product, in terms of the norm. -/
 theorem inner_eq_sum_norm_sq_div_four (x y : E) :
-    ⟪x, y⟫ = (∥x + y∥ ^ 2 - ∥x - y∥ ^ 2 + (∥x - IK • y∥ ^ 2 - ∥x + IK • y∥ ^ 2) * IK) / 4 := by
+    ⟪x, y⟫ = (‖x + y‖ ^ 2 - ‖x - y‖ ^ 2 + (‖x - IK • y‖ ^ 2 - ‖x + IK • y‖ ^ 2) * IK) / 4 := by
   rw [← re_add_im ⟪x, y⟫, re_inner_eq_norm_add_mul_self_sub_norm_sub_mul_self_div_four,
     im_inner_eq_norm_sub_I_smul_mul_self_sub_norm_add_I_smul_mul_self_div_four]
   push_cast
@@ -1943,18 +1941,18 @@ theorem inner_eq_sum_norm_sq_div_four (x y : E) :
 zero. See also `euclidean_geometry.dist_inversion_inversion` for inversions around a general
 point. -/
 theorem dist_div_norm_sq_smul {x y : F} (hx : x ≠ 0) (hy : y ≠ 0) (R : ℝ) :
-    dist ((R / ∥x∥) ^ 2 • x) ((R / ∥y∥) ^ 2 • y) = R ^ 2 / (∥x∥ * ∥y∥) * dist x y :=
-  have hx' : ∥x∥ ≠ 0 := norm_ne_zero_iff.2 hx
-  have hy' : ∥y∥ ≠ 0 := norm_ne_zero_iff.2 hy
+    dist ((R / ‖x‖) ^ 2 • x) ((R / ‖y‖) ^ 2 • y) = R ^ 2 / (‖x‖ * ‖y‖) * dist x y :=
+  have hx' : ‖x‖ ≠ 0 := norm_ne_zero_iff.2 hx
+  have hy' : ‖y‖ ≠ 0 := norm_ne_zero_iff.2 hy
   calc
-    dist ((R / ∥x∥) ^ 2 • x) ((R / ∥y∥) ^ 2 • y) = sqrt (∥(R / ∥x∥) ^ 2 • x - (R / ∥y∥) ^ 2 • y∥ ^ 2) := by
+    dist ((R / ‖x‖) ^ 2 • x) ((R / ‖y‖) ^ 2 • y) = sqrt (‖(R / ‖x‖) ^ 2 • x - (R / ‖y‖) ^ 2 • y‖ ^ 2) := by
       rw [dist_eq_norm, sqrt_sq (norm_nonneg _)]
-    _ = sqrt ((R ^ 2 / (∥x∥ * ∥y∥)) ^ 2 * ∥x - y∥ ^ 2) :=
-      congr_arg sqrt $ by
+    _ = sqrt ((R ^ 2 / (‖x‖ * ‖y‖)) ^ 2 * ‖x - y‖ ^ 2) :=
+      congr_arg sqrt <| by
         field_simp [sq, norm_sub_mul_self_real, norm_smul, real_inner_smul_left, inner_smul_right,
           Real.norm_of_nonneg (mul_self_nonneg _)]
         ring
-    _ = R ^ 2 / (∥x∥ * ∥y∥) * dist x y := by
+    _ = R ^ 2 / (‖x‖ * ‖y‖) * dist x y := by
       rw [sqrt_mul (sq_nonneg _), sqrt_sq (norm_nonneg _),
         sqrt_sq (div_nonneg (sq_nonneg _) (mul_nonneg (norm_nonneg _) (norm_nonneg _))), dist_eq_norm]
     
@@ -1963,13 +1961,13 @@ theorem dist_div_norm_sq_smul {x y : F} (hx : x ≠ 0) (hy : y ≠ 0) (R : ℝ) 
 -- See note [lower instance priority]
 instance (priority := 100) InnerProductSpace.toUniformConvexSpace : UniformConvexSpace F :=
   ⟨fun ε hε => by
-    refine' ⟨2 - sqrt (4 - ε ^ 2), sub_pos_of_lt $ (sqrt_lt' zero_lt_two).2 _, fun x hx y hy hxy => _⟩
+    refine' ⟨2 - sqrt (4 - ε ^ 2), sub_pos_of_lt <| (sqrt_lt' zero_lt_two).2 _, fun x hx y hy hxy => _⟩
     · norm_num
       exact pow_pos hε _
       
     rw [sub_sub_cancel]
     refine' le_sqrt_of_sq_le _
-    rw [sq, eq_sub_iff_add_eq.2 (parallelogram_law_with_norm x y), ← sq ∥x - y∥, hx, hy]
+    rw [sq, eq_sub_iff_add_eq.2 (parallelogram_law_with_norm x y), ← sq ‖x - y‖, hx, hy]
     norm_num
     exact pow_le_pow_of_le_left hε.le hxy _⟩
 #align inner_product_space.to_uniform_convex_space InnerProductSpace.toUniformConvexSpace
@@ -2105,7 +2103,7 @@ theorem Orthonormal.mapLinearIsometryEquiv {v : Basis ι 𝕜 E} (hv : Orthonorm
 /-- A linear map that sends an orthonormal basis to orthonormal vectors is a linear isometry. -/
 def LinearMap.isometryOfOrthonormal (f : E →ₗ[𝕜] E') {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v)
     (hf : Orthonormal 𝕜 (f ∘ v)) : E →ₗᵢ[𝕜] E' :=
-  f.isometryOfInner $ fun x y => by
+  f.isometryOfInner fun x y => by
     rw [← v.total_repr x, ← v.total_repr y, Finsupp.apply_total, Finsupp.apply_total, hv.inner_finsupp_eq_sum_left,
       hf.inner_finsupp_eq_sum_left]
 #align linear_map.isometry_of_orthonormal LinearMap.isometryOfOrthonormal
@@ -2126,7 +2124,7 @@ theorem LinearMap.isometry_of_orthonormal_to_linear_map (f : E →ₗ[𝕜] E') 
 isometric equivalence. -/
 def LinearEquiv.isometryOfOrthonormal (f : E ≃ₗ[𝕜] E') {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v)
     (hf : Orthonormal 𝕜 (f ∘ v)) : E ≃ₗᵢ[𝕜] E' :=
-  f.isometryOfInner $ fun x y => by
+  f.isometryOfInner fun x y => by
     rw [← LinearEquiv.coe_coe] at hf
     rw [← v.total_repr x, ← v.total_repr y, ← LinearEquiv.coe_coe, Finsupp.apply_total, Finsupp.apply_total,
       hv.inner_finsupp_eq_sum_left, hf.inner_finsupp_eq_sum_left]
@@ -2171,20 +2169,20 @@ theorem Orthonormal.equiv_apply {ι' : Type _} {v : Basis ι 𝕜 E} (hv : Ortho
 @[simp]
 theorem Orthonormal.equiv_refl {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) :
     hv.Equiv hv (Equiv.refl ι) = LinearIsometryEquiv.refl 𝕜 E :=
-  v.ext_linear_isometry_equiv $ fun i => by simp
+  v.ext_linear_isometry_equiv fun i => by simp
 #align orthonormal.equiv_refl Orthonormal.equiv_refl
 
 @[simp]
 theorem Orthonormal.equiv_symm {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) {v' : Basis ι' 𝕜 E'} (hv' : Orthonormal 𝕜 v')
     (e : ι ≃ ι') : (hv.Equiv hv' e).symm = hv'.Equiv hv e.symm :=
-  v'.ext_linear_isometry_equiv $ fun i => (hv.Equiv hv' e).Injective (by simp)
+  v'.ext_linear_isometry_equiv fun i => (hv.Equiv hv' e).Injective (by simp)
 #align orthonormal.equiv_symm Orthonormal.equiv_symm
 
 @[simp]
 theorem Orthonormal.equiv_trans {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) {v' : Basis ι' 𝕜 E'} (hv' : Orthonormal 𝕜 v')
     (e : ι ≃ ι') {v'' : Basis ι'' 𝕜 E''} (hv'' : Orthonormal 𝕜 v'') (e' : ι' ≃ ι'') :
     (hv.Equiv hv' e).trans (hv'.Equiv hv'' e') = hv.Equiv hv'' (e.trans e') :=
-  v.ext_linear_isometry_equiv $ fun i => by simp
+  v.ext_linear_isometry_equiv fun i => by simp
 #align orthonormal.equiv_trans Orthonormal.equiv_trans
 
 theorem Orthonormal.map_equiv {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) {v' : Basis ι' 𝕜 E'} (hv' : Orthonormal 𝕜 v')
@@ -2196,35 +2194,35 @@ end
 
 /-- Polarization identity: The real inner product, in terms of the norm. -/
 theorem real_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two (x y : F) :
-    ⟪x, y⟫_ℝ = (∥x + y∥ * ∥x + y∥ - ∥x∥ * ∥x∥ - ∥y∥ * ∥y∥) / 2 :=
-  re_to_real.symm.trans $ re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two x y
+    ⟪x, y⟫_ℝ = (‖x + y‖ * ‖x + y‖ - ‖x‖ * ‖x‖ - ‖y‖ * ‖y‖) / 2 :=
+  re_to_real.symm.trans <| re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two x y
 #align
   real_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two real_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two
 
 /-- Polarization identity: The real inner product, in terms of the norm. -/
 theorem real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two (x y : F) :
-    ⟪x, y⟫_ℝ = (∥x∥ * ∥x∥ + ∥y∥ * ∥y∥ - ∥x - y∥ * ∥x - y∥) / 2 :=
-  re_to_real.symm.trans $ re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two x y
+    ⟪x, y⟫_ℝ = (‖x‖ * ‖x‖ + ‖y‖ * ‖y‖ - ‖x - y‖ * ‖x - y‖) / 2 :=
+  re_to_real.symm.trans <| re_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two x y
 #align
   real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two
 
 /-- Pythagorean theorem, if-and-only-if vector inner product form. -/
 theorem norm_add_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero (x y : F) :
-    ∥x + y∥ * ∥x + y∥ = ∥x∥ * ∥x∥ + ∥y∥ * ∥y∥ ↔ ⟪x, y⟫_ℝ = 0 := by
+    ‖x + y‖ * ‖x + y‖ = ‖x‖ * ‖x‖ + ‖y‖ * ‖y‖ ↔ ⟪x, y⟫_ℝ = 0 := by
   rw [norm_add_mul_self, add_right_cancel_iff, add_right_eq_self, mul_eq_zero]
   norm_num
 #align
   norm_add_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero norm_add_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero
 
 /-- Pythagorean theorem, if-and-if vector inner product form using square roots. -/
-theorem norm_add_eq_sqrt_iff_real_inner_eq_zero {x y : F} : ∥x + y∥ = sqrt (∥x∥ * ∥x∥ + ∥y∥ * ∥y∥) ↔ ⟪x, y⟫_ℝ = 0 := by
+theorem norm_add_eq_sqrt_iff_real_inner_eq_zero {x y : F} : ‖x + y‖ = sqrt (‖x‖ * ‖x‖ + ‖y‖ * ‖y‖) ↔ ⟪x, y⟫_ℝ = 0 := by
   rw [← norm_add_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero, eq_comm,
     sqrt_eq_iff_mul_self_eq (add_nonneg (mul_self_nonneg _) (mul_self_nonneg _)) (norm_nonneg _)]
 #align norm_add_eq_sqrt_iff_real_inner_eq_zero norm_add_eq_sqrt_iff_real_inner_eq_zero
 
 /-- Pythagorean theorem, vector inner product form. -/
 theorem norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero (x y : E) (h : ⟪x, y⟫ = 0) :
-    ∥x + y∥ * ∥x + y∥ = ∥x∥ * ∥x∥ + ∥y∥ * ∥y∥ := by
+    ‖x + y‖ * ‖x + y‖ = ‖x‖ * ‖x‖ + ‖y‖ * ‖y‖ := by
   rw [norm_add_mul_self, add_right_cancel_iff, add_right_eq_self, mul_eq_zero]
   apply Or.inr
   simp only [h, zero_re']
@@ -2232,14 +2230,14 @@ theorem norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero (x y : E) (h : ⟪x,
 
 /-- Pythagorean theorem, vector inner product form. -/
 theorem norm_add_sq_eq_norm_sq_add_norm_sq_real {x y : F} (h : ⟪x, y⟫_ℝ = 0) :
-    ∥x + y∥ * ∥x + y∥ = ∥x∥ * ∥x∥ + ∥y∥ * ∥y∥ :=
+    ‖x + y‖ * ‖x + y‖ = ‖x‖ * ‖x‖ + ‖y‖ * ‖y‖ :=
   (norm_add_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero x y).2 h
 #align norm_add_sq_eq_norm_sq_add_norm_sq_real norm_add_sq_eq_norm_sq_add_norm_sq_real
 
 /-- Pythagorean theorem, subtracting vectors, if-and-only-if vector
 inner product form. -/
 theorem norm_sub_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero (x y : F) :
-    ∥x - y∥ * ∥x - y∥ = ∥x∥ * ∥x∥ + ∥y∥ * ∥y∥ ↔ ⟪x, y⟫_ℝ = 0 := by
+    ‖x - y‖ * ‖x - y‖ = ‖x‖ * ‖x‖ + ‖y‖ * ‖y‖ ↔ ⟪x, y⟫_ℝ = 0 := by
   rw [norm_sub_mul_self, add_right_cancel_iff, sub_eq_add_neg, add_right_eq_self, neg_eq_zero, mul_eq_zero]
   norm_num
 #align
@@ -2247,7 +2245,7 @@ theorem norm_sub_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero (x y : F) :
 
 /-- Pythagorean theorem, subtracting vectors, if-and-if vector inner product form using square
 roots. -/
-theorem norm_sub_eq_sqrt_iff_real_inner_eq_zero {x y : F} : ∥x - y∥ = sqrt (∥x∥ * ∥x∥ + ∥y∥ * ∥y∥) ↔ ⟪x, y⟫_ℝ = 0 := by
+theorem norm_sub_eq_sqrt_iff_real_inner_eq_zero {x y : F} : ‖x - y‖ = sqrt (‖x‖ * ‖x‖ + ‖y‖ * ‖y‖) ↔ ⟪x, y⟫_ℝ = 0 := by
   rw [← norm_sub_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero, eq_comm,
     sqrt_eq_iff_mul_self_eq (add_nonneg (mul_self_nonneg _) (mul_self_nonneg _)) (norm_nonneg _)]
 #align norm_sub_eq_sqrt_iff_real_inner_eq_zero norm_sub_eq_sqrt_iff_real_inner_eq_zero
@@ -2255,13 +2253,13 @@ theorem norm_sub_eq_sqrt_iff_real_inner_eq_zero {x y : F} : ∥x - y∥ = sqrt (
 /-- Pythagorean theorem, subtracting vectors, vector inner product
 form. -/
 theorem norm_sub_sq_eq_norm_sq_add_norm_sq_real {x y : F} (h : ⟪x, y⟫_ℝ = 0) :
-    ∥x - y∥ * ∥x - y∥ = ∥x∥ * ∥x∥ + ∥y∥ * ∥y∥ :=
+    ‖x - y‖ * ‖x - y‖ = ‖x‖ * ‖x‖ + ‖y‖ * ‖y‖ :=
   (norm_sub_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero x y).2 h
 #align norm_sub_sq_eq_norm_sq_add_norm_sq_real norm_sub_sq_eq_norm_sq_add_norm_sq_real
 
 /-- The sum and difference of two vectors are orthogonal if and only
 if they have the same norm. -/
-theorem real_inner_add_sub_eq_zero_iff (x y : F) : ⟪x + y, x - y⟫_ℝ = 0 ↔ ∥x∥ = ∥y∥ := by
+theorem real_inner_add_sub_eq_zero_iff (x y : F) : ⟪x + y, x - y⟫_ℝ = 0 ↔ ‖x‖ = ‖y‖ := by
   conv_rhs => rw [← mul_self_inj_of_nonneg (norm_nonneg _) (norm_nonneg _)]
   simp only [← inner_self_eq_norm_mul_norm, inner_add_left, inner_sub_right, real_inner_comm y x, sub_eq_zero,
     re_to_real]
@@ -2276,7 +2274,7 @@ theorem real_inner_add_sub_eq_zero_iff (x y : F) : ⟪x + y, x - y⟫_ℝ = 0 �
 #align real_inner_add_sub_eq_zero_iff real_inner_add_sub_eq_zero_iff
 
 /-- Given two orthogonal vectors, their sum and difference have equal norms. -/
-theorem norm_sub_eq_norm_add {v w : E} (h : ⟪v, w⟫ = 0) : ∥w - v∥ = ∥w + v∥ := by
+theorem norm_sub_eq_norm_add {v w : E} (h : ⟪v, w⟫ = 0) : ‖w - v‖ = ‖w + v‖ := by
   rw [← mul_self_inj_of_nonneg (norm_nonneg _) (norm_nonneg _)]
   simp [h, ← inner_self_eq_norm_mul_norm, inner_add_left, inner_add_right, inner_sub_left, inner_sub_right,
     inner_re_symm]
@@ -2284,26 +2282,26 @@ theorem norm_sub_eq_norm_add {v w : E} (h : ⟪v, w⟫ = 0) : ∥w - v∥ = ∥w
 
 /-- The real inner product of two vectors, divided by the product of their
 norms, has absolute value at most 1. -/
-theorem abs_real_inner_div_norm_mul_norm_le_one (x y : F) : absR (⟪x, y⟫_ℝ / (∥x∥ * ∥y∥)) ≤ 1 := by
+theorem abs_real_inner_div_norm_mul_norm_le_one (x y : F) : absR (⟪x, y⟫_ℝ / (‖x‖ * ‖y‖)) ≤ 1 := by
   rw [_root_.abs_div]
-  by_cases h:0 = absR (∥x∥ * ∥y∥)
+  by_cases h : 0 = absR (‖x‖ * ‖y‖)
   · rw [← h, div_zero]
     norm_num
     
-  · change 0 ≠ absR (∥x∥ * ∥y∥) at h
-    rw [div_le_iff' (lt_of_le_of_ne (ge_iff_le.mp (_root_.abs_nonneg (∥x∥ * ∥y∥))) h)]
+  · change 0 ≠ absR (‖x‖ * ‖y‖) at h
+    rw [div_le_iff' (lt_of_le_of_ne (ge_iff_le.mp (_root_.abs_nonneg (‖x‖ * ‖y‖))) h)]
     convert abs_real_inner_le_norm x y using 1
     rw [_root_.abs_mul, _root_.abs_of_nonneg (norm_nonneg x), _root_.abs_of_nonneg (norm_nonneg y), mul_one]
     
 #align abs_real_inner_div_norm_mul_norm_le_one abs_real_inner_div_norm_mul_norm_le_one
 
 /-- The inner product of a vector with a multiple of itself. -/
-theorem real_inner_smul_self_left (x : F) (r : ℝ) : ⟪r • x, x⟫_ℝ = r * (∥x∥ * ∥x∥) := by
+theorem real_inner_smul_self_left (x : F) (r : ℝ) : ⟪r • x, x⟫_ℝ = r * (‖x‖ * ‖x‖) := by
   rw [real_inner_smul_left, ← real_inner_self_eq_norm_mul_norm]
 #align real_inner_smul_self_left real_inner_smul_self_left
 
 /-- The inner product of a vector with a multiple of itself. -/
-theorem real_inner_smul_self_right (x : F) (r : ℝ) : ⟪x, r • x⟫_ℝ = r * (∥x∥ * ∥x∥) := by
+theorem real_inner_smul_self_right (x : F) (r : ℝ) : ⟪x, r • x⟫_ℝ = r * (‖x‖ * ‖x‖) := by
   rw [inner_smul_right, ← real_inner_self_eq_norm_mul_norm]
 #align real_inner_smul_self_right real_inner_smul_self_right
 
@@ -2311,8 +2309,8 @@ theorem real_inner_smul_self_right (x : F) (r : ℝ) : ⟪x, r • x⟫_ℝ = r 
 itself, divided by the product of their norms, has absolute value
 1. -/
 theorem abs_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul {x : E} {r : 𝕜} (hx : x ≠ 0) (hr : r ≠ 0) :
-    abs ⟪x, r • x⟫ / (∥x∥ * ∥r • x∥) = 1 := by
-  have hx' : ∥x∥ ≠ 0 := by simp [norm_eq_zero, hx]
+    abs ⟪x, r • x⟫ / (‖x‖ * ‖r • x‖) = 1 := by
+  have hx' : ‖x‖ ≠ 0 := by simp [norm_eq_zero, hx]
   have hr' : abs r ≠ 0 := by simp [IsROrC.abs_eq_zero, hr]
   rw [inner_smul_right, IsROrC.abs_mul, ← inner_self_re_abs, inner_self_eq_norm_mul_norm, norm_smul]
   rw [IsROrC.norm_eq_abs, ← mul_assoc, ← div_div, mul_div_cancel _ hx', ← div_div, mul_comm, mul_div_cancel _ hr',
@@ -2324,7 +2322,7 @@ theorem abs_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul {x : E} {r 
 itself, divided by the product of their norms, has absolute value
 1. -/
 theorem abs_real_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul {x : F} {r : ℝ} (hx : x ≠ 0) (hr : r ≠ 0) :
-    absR ⟪x, r • x⟫_ℝ / (∥x∥ * ∥r • x∥) = 1 := by
+    absR ⟪x, r • x⟫_ℝ / (‖x‖ * ‖r • x‖) = 1 := by
   rw [← abs_to_real]
   exact abs_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul hx hr
 #align
@@ -2333,8 +2331,8 @@ theorem abs_real_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul {x : F
 /-- The inner product of a nonzero vector with a positive multiple of
 itself, divided by the product of their norms, has value 1. -/
 theorem real_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_pos_mul {x : F} {r : ℝ} (hx : x ≠ 0) (hr : 0 < r) :
-    ⟪x, r • x⟫_ℝ / (∥x∥ * ∥r • x∥) = 1 := by
-  rw [real_inner_smul_self_right, norm_smul, Real.norm_eq_abs, ← mul_assoc ∥x∥, mul_comm _ (absR r), mul_assoc,
+    ⟪x, r • x⟫_ℝ / (‖x‖ * ‖r • x‖) = 1 := by
+  rw [real_inner_smul_self_right, norm_smul, Real.norm_eq_abs, ← mul_assoc ‖x‖, mul_comm _ (absR r), mul_assoc,
     _root_.abs_of_nonneg (le_of_lt hr), div_self]
   exact mul_ne_zero (ne_of_gt hr) fun h => hx (norm_eq_zero.1 (eq_zero_of_mul_self_eq_zero h))
 #align
@@ -2343,8 +2341,8 @@ theorem real_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_pos_mul {x : F} {r : �
 /-- The inner product of a nonzero vector with a negative multiple of
 itself, divided by the product of their norms, has value -1. -/
 theorem real_inner_div_norm_mul_norm_eq_neg_one_of_ne_zero_of_neg_mul {x : F} {r : ℝ} (hx : x ≠ 0) (hr : r < 0) :
-    ⟪x, r • x⟫_ℝ / (∥x∥ * ∥r • x∥) = -1 := by
-  rw [real_inner_smul_self_right, norm_smul, Real.norm_eq_abs, ← mul_assoc ∥x∥, mul_comm _ (absR r), mul_assoc,
+    ⟪x, r • x⟫_ℝ / (‖x‖ * ‖r • x‖) = -1 := by
+  rw [real_inner_smul_self_right, norm_smul, Real.norm_eq_abs, ← mul_assoc ‖x‖, mul_comm _ (absR r), mul_assoc,
     abs_of_neg hr, neg_mul, div_neg_eq_neg_div, div_self]
   exact mul_ne_zero (ne_of_lt hr) fun h => hx (norm_eq_zero.1 (eq_zero_of_mul_self_eq_zero h))
 #align
@@ -2354,7 +2352,7 @@ theorem real_inner_div_norm_mul_norm_eq_neg_one_of_ne_zero_of_neg_mul {x : F} {r
 norms, has absolute value 1 if and only if they are nonzero and one is
 a multiple of the other. One form of equality case for Cauchy-Schwarz. -/
 theorem abs_inner_div_norm_mul_norm_eq_one_iff (x y : E) :
-    abs (⟪x, y⟫ / (∥x∥ * ∥y∥)) = 1 ↔ x ≠ 0 ∧ ∃ r : 𝕜, r ≠ 0 ∧ y = r • x := by
+    abs (⟪x, y⟫ / (‖x‖ * ‖y‖)) = 1 ↔ x ≠ 0 ∧ ∃ r : 𝕜, r ≠ 0 ∧ y = r • x := by
   constructor
   · intro h
     have hx0 : x ≠ 0 := by
@@ -2362,7 +2360,7 @@ theorem abs_inner_div_norm_mul_norm_eq_one_iff (x y : E) :
       rw [hx0, inner_zero_left, zero_div] at h
       norm_num at h
     refine' And.intro hx0 _
-    set r := ⟪x, y⟫ / (∥x∥ * ∥x∥) with hr
+    set r := ⟪x, y⟫ / (‖x‖ * ‖x‖) with hr
     use r
     set t := y - r • x with ht
     have ht0 : ⟪x, t⟫ = 0 := by
@@ -2370,7 +2368,7 @@ theorem abs_inner_div_norm_mul_norm_eq_one_iff (x y : E) :
       norm_cast
       rw [← inner_self_eq_norm_mul_norm, inner_self_re_to_K, div_mul_cancel _ fun h => hx0 (inner_self_eq_zero.1 h),
         sub_self]
-    replace h : ∥r • x∥ / ∥t + r • x∥ = 1
+    replace h : ‖r • x‖ / ‖t + r • x‖ = 1
     · rw [← sub_add_cancel y (r • x), ← ht, inner_add_right, ht0, zero_add, inner_smul_right, IsROrC.abs_div,
         IsROrC.abs_mul, ← inner_self_re_abs, inner_self_eq_norm_mul_norm] at h
       norm_cast  at h
@@ -2382,7 +2380,7 @@ theorem abs_inner_div_norm_mul_norm_eq_one_iff (x y : E) :
       rw [hr0, zero_smul, norm_zero, zero_div] at h
       norm_num at h
     refine' And.intro hr0 _
-    have h2 : ∥r • x∥ ^ 2 = ∥t + r • x∥ ^ 2 := by rw [eq_of_div_eq_one h]
+    have h2 : ‖r • x‖ ^ 2 = ‖t + r • x‖ ^ 2 := by rw [eq_of_div_eq_one h]
     replace h2 : ⟪r • x, r • x⟫ = ⟪t, t⟫ + ⟪t, r • x⟫ + ⟪r • x, t⟫ + ⟪r • x, r • x⟫
     · rw [sq, sq, ← inner_self_eq_norm_mul_norm, ← inner_self_eq_norm_mul_norm] at h2
       have h2' := congr_arg (fun z : ℝ => (z : 𝕜)) h2
@@ -2411,20 +2409,20 @@ theorem abs_inner_div_norm_mul_norm_eq_one_iff (x y : E) :
 norms, has absolute value 1 if and only if they are nonzero and one is
 a multiple of the other. One form of equality case for Cauchy-Schwarz. -/
 theorem abs_real_inner_div_norm_mul_norm_eq_one_iff (x y : F) :
-    absR (⟪x, y⟫_ℝ / (∥x∥ * ∥y∥)) = 1 ↔ x ≠ 0 ∧ ∃ r : ℝ, r ≠ 0 ∧ y = r • x := by
+    absR (⟪x, y⟫_ℝ / (‖x‖ * ‖y‖)) = 1 ↔ x ≠ 0 ∧ ∃ r : ℝ, r ≠ 0 ∧ y = r • x := by
   have := @abs_inner_div_norm_mul_norm_eq_one_iff ℝ F _ _ x y
   simpa [coe_real_eq_id] using this
 #align abs_real_inner_div_norm_mul_norm_eq_one_iff abs_real_inner_div_norm_mul_norm_eq_one_iff
 
 /-- If the inner product of two vectors is equal to the product of their norms, then the two vectors
 are multiples of each other. One form of the equality case for Cauchy-Schwarz.
-Compare `inner_eq_norm_mul_iff`, which takes the stronger hypothesis `⟪x, y⟫ = ∥x∥ * ∥y∥`. -/
+Compare `inner_eq_norm_mul_iff`, which takes the stronger hypothesis `⟪x, y⟫ = ‖x‖ * ‖y‖`. -/
 theorem abs_inner_eq_norm_iff (x y : E) (hx0 : x ≠ 0) (hy0 : y ≠ 0) :
-    abs ⟪x, y⟫ = ∥x∥ * ∥y∥ ↔ ∃ r : 𝕜, r ≠ 0 ∧ y = r • x := by
-  have hx0' : ∥x∥ ≠ 0 := by simp [norm_eq_zero, hx0]
-  have hy0' : ∥y∥ ≠ 0 := by simp [norm_eq_zero, hy0]
-  have hxy0 : ∥x∥ * ∥y∥ ≠ 0 := by simp [hx0', hy0']
-  have h₁ : abs ⟪x, y⟫ = ∥x∥ * ∥y∥ ↔ abs (⟪x, y⟫ / (∥x∥ * ∥y∥)) = 1 := by
+    abs ⟪x, y⟫ = ‖x‖ * ‖y‖ ↔ ∃ r : 𝕜, r ≠ 0 ∧ y = r • x := by
+  have hx0' : ‖x‖ ≠ 0 := by simp [norm_eq_zero, hx0]
+  have hy0' : ‖y‖ ≠ 0 := by simp [norm_eq_zero, hy0]
+  have hxy0 : ‖x‖ * ‖y‖ ≠ 0 := by simp [hx0', hy0']
+  have h₁ : abs ⟪x, y⟫ = ‖x‖ * ‖y‖ ↔ abs (⟪x, y⟫ / (‖x‖ * ‖y‖)) = 1 := by
     refine' ⟨_, _⟩
     · intro h
       norm_cast
@@ -2443,7 +2441,7 @@ theorem abs_inner_eq_norm_iff (x y : E) (hx0 : x ≠ 0) (hy0 : y ≠ 0) :
 norms, has value 1 if and only if they are nonzero and one is
 a positive multiple of the other. -/
 theorem real_inner_div_norm_mul_norm_eq_one_iff (x y : F) :
-    ⟪x, y⟫_ℝ / (∥x∥ * ∥y∥) = 1 ↔ x ≠ 0 ∧ ∃ r : ℝ, 0 < r ∧ y = r • x := by
+    ⟪x, y⟫_ℝ / (‖x‖ * ‖y‖) = 1 ↔ x ≠ 0 ∧ ∃ r : ℝ, 0 < r ∧ y = r • x := by
   constructor
   · intro h
     have ha := h
@@ -2468,7 +2466,7 @@ theorem real_inner_div_norm_mul_norm_eq_one_iff (x y : F) :
 norms, has value -1 if and only if they are nonzero and one is
 a negative multiple of the other. -/
 theorem real_inner_div_norm_mul_norm_eq_neg_one_iff (x y : F) :
-    ⟪x, y⟫_ℝ / (∥x∥ * ∥y∥) = -1 ↔ x ≠ 0 ∧ ∃ r : ℝ, r < 0 ∧ y = r • x := by
+    ⟪x, y⟫_ℝ / (‖x‖ * ‖y‖) = -1 ↔ x ≠ 0 ∧ ∃ r : ℝ, r < 0 ∧ y = r • x := by
   constructor
   · intro h
     have ha := h
@@ -2490,16 +2488,16 @@ theorem real_inner_div_norm_mul_norm_eq_neg_one_iff (x y : F) :
 #align real_inner_div_norm_mul_norm_eq_neg_one_iff real_inner_div_norm_mul_norm_eq_neg_one_iff
 
 /-- If the inner product of two vectors is equal to the product of their norms (i.e.,
-`⟪x, y⟫ = ∥x∥ * ∥y∥`), then the two vectors are nonnegative real multiples of each other. One form
+`⟪x, y⟫ = ‖x‖ * ‖y‖`), then the two vectors are nonnegative real multiples of each other. One form
 of the equality case for Cauchy-Schwarz.
-Compare `abs_inner_eq_norm_iff`, which takes the weaker hypothesis `abs ⟪x, y⟫ = ∥x∥ * ∥y∥`. -/
-theorem inner_eq_norm_mul_iff {x y : E} : ⟪x, y⟫ = (∥x∥ : 𝕜) * ∥y∥ ↔ (∥y∥ : 𝕜) • x = (∥x∥ : 𝕜) • y := by
-  by_cases h:x = 0 ∨ y = 0
+Compare `abs_inner_eq_norm_iff`, which takes the weaker hypothesis `abs ⟪x, y⟫ = ‖x‖ * ‖y‖`. -/
+theorem inner_eq_norm_mul_iff {x y : E} : ⟪x, y⟫ = (‖x‖ : 𝕜) * ‖y‖ ↔ (‖y‖ : 𝕜) • x = (‖x‖ : 𝕜) • y := by
+  by_cases h : x = 0 ∨ y = 0
   -- WLOG `x` and `y` are nonzero
   · cases h <;> simp [h]
     
   calc
-    ⟪x, y⟫ = (∥x∥ : 𝕜) * ∥y∥ ↔ ∥x∥ * ∥y∥ = re ⟪x, y⟫ := by
+    ⟪x, y⟫ = (‖x‖ : 𝕜) * ‖y‖ ↔ ‖x‖ * ‖y‖ = re ⟪x, y⟫ := by
       norm_cast
       constructor
       · intro h'
@@ -2510,40 +2508,40 @@ theorem inner_eq_norm_mul_iff {x y : E} : ⟪x, y⟫ = (∥x∥ : 𝕜) * ∥y�
         rw [h'] at cauchy_schwarz⊢
         rwa [re_eq_self_of_le]
         
-    _ ↔ 2 * ∥x∥ * ∥y∥ * (∥x∥ * ∥y∥ - re ⟪x, y⟫) = 0 := by simp [h, show (2 : ℝ) ≠ 0 by norm_num, sub_eq_zero]
-    _ ↔ ∥(∥y∥ : 𝕜) • x - (∥x∥ : 𝕜) • y∥ * ∥(∥y∥ : 𝕜) • x - (∥x∥ : 𝕜) • y∥ = 0 := by
+    _ ↔ 2 * ‖x‖ * ‖y‖ * (‖x‖ * ‖y‖ - re ⟪x, y⟫) = 0 := by simp [h, show (2 : ℝ) ≠ 0 by norm_num, sub_eq_zero]
+    _ ↔ ‖(‖y‖ : 𝕜) • x - (‖x‖ : 𝕜) • y‖ * ‖(‖y‖ : 𝕜) • x - (‖x‖ : 𝕜) • y‖ = 0 := by
       simp only [norm_sub_mul_self, inner_smul_left, inner_smul_right, norm_smul, conj_of_real, IsROrC.norm_eq_abs,
         abs_of_real, of_real_im, of_real_re, mul_re, abs_norm_eq_norm]
       refine' Eq.congr _ rfl
       ring
-    _ ↔ (∥y∥ : 𝕜) • x = (∥x∥ : 𝕜) • y := by simp [norm_sub_eq_zero_iff]
+    _ ↔ (‖y‖ : 𝕜) • x = (‖x‖ : 𝕜) • y := by simp [norm_sub_eq_zero_iff]
     
 #align inner_eq_norm_mul_iff inner_eq_norm_mul_iff
 
 /-- If the inner product of two vectors is equal to the product of their norms (i.e.,
-`⟪x, y⟫ = ∥x∥ * ∥y∥`), then the two vectors are nonnegative real multiples of each other. One form
+`⟪x, y⟫ = ‖x‖ * ‖y‖`), then the two vectors are nonnegative real multiples of each other. One form
 of the equality case for Cauchy-Schwarz.
-Compare `abs_inner_eq_norm_iff`, which takes the weaker hypothesis `abs ⟪x, y⟫ = ∥x∥ * ∥y∥`. -/
-theorem inner_eq_norm_mul_iff_real {x y : F} : ⟪x, y⟫_ℝ = ∥x∥ * ∥y∥ ↔ ∥y∥ • x = ∥x∥ • y :=
+Compare `abs_inner_eq_norm_iff`, which takes the weaker hypothesis `abs ⟪x, y⟫ = ‖x‖ * ‖y‖`. -/
+theorem inner_eq_norm_mul_iff_real {x y : F} : ⟪x, y⟫_ℝ = ‖x‖ * ‖y‖ ↔ ‖y‖ • x = ‖x‖ • y :=
   inner_eq_norm_mul_iff
 #align inner_eq_norm_mul_iff_real inner_eq_norm_mul_iff_real
 
 /-- If the inner product of two unit vectors is `1`, then the two vectors are equal. One form of
 the equality case for Cauchy-Schwarz. -/
-theorem inner_eq_norm_mul_iff_of_norm_one {x y : E} (hx : ∥x∥ = 1) (hy : ∥y∥ = 1) : ⟪x, y⟫ = 1 ↔ x = y := by
+theorem inner_eq_norm_mul_iff_of_norm_one {x y : E} (hx : ‖x‖ = 1) (hy : ‖y‖ = 1) : ⟪x, y⟫ = 1 ↔ x = y := by
   convert inner_eq_norm_mul_iff using 2 <;> simp [hx, hy]
 #align inner_eq_norm_mul_iff_of_norm_one inner_eq_norm_mul_iff_of_norm_one
 
-theorem inner_lt_norm_mul_iff_real {x y : F} : ⟪x, y⟫_ℝ < ∥x∥ * ∥y∥ ↔ ∥y∥ • x ≠ ∥x∥ • y :=
+theorem inner_lt_norm_mul_iff_real {x y : F} : ⟪x, y⟫_ℝ < ‖x‖ * ‖y‖ ↔ ‖y‖ • x ≠ ‖x‖ • y :=
   calc
-    ⟪x, y⟫_ℝ < ∥x∥ * ∥y∥ ↔ ⟪x, y⟫_ℝ ≠ ∥x∥ * ∥y∥ := ⟨ne_of_lt, lt_of_le_of_ne (real_inner_le_norm _ _)⟩
-    _ ↔ ∥y∥ • x ≠ ∥x∥ • y := not_congr inner_eq_norm_mul_iff_real
+    ⟪x, y⟫_ℝ < ‖x‖ * ‖y‖ ↔ ⟪x, y⟫_ℝ ≠ ‖x‖ * ‖y‖ := ⟨ne_of_lt, lt_of_le_of_ne (real_inner_le_norm _ _)⟩
+    _ ↔ ‖y‖ • x ≠ ‖x‖ • y := not_congr inner_eq_norm_mul_iff_real
     
 #align inner_lt_norm_mul_iff_real inner_lt_norm_mul_iff_real
 
 /-- If the inner product of two unit vectors is strictly less than `1`, then the two vectors are
 distinct. One form of the equality case for Cauchy-Schwarz. -/
-theorem inner_lt_one_iff_real_of_norm_one {x y : F} (hx : ∥x∥ = 1) (hy : ∥y∥ = 1) : ⟪x, y⟫_ℝ < 1 ↔ x ≠ y := by
+theorem inner_lt_one_iff_real_of_norm_one {x y : F} (hx : ‖x‖ = 1) (hy : ‖y‖ = 1) : ⟪x, y⟫_ℝ < 1 ↔ x ≠ y := by
   convert inner_lt_norm_mul_iff_real <;> simp [hx, hy]
 #align inner_lt_one_iff_real_of_norm_one inner_lt_one_iff_real_of_norm_one
 
@@ -2553,7 +2551,7 @@ theorem inner_sum_smul_sum_smul_of_sum_eq_zero {ι₁ : Type _} {s₁ : Finset �
     (h₁ : (∑ i in s₁, w₁ i) = 0) {ι₂ : Type _} {s₂ : Finset ι₂} {w₂ : ι₂ → ℝ} (v₂ : ι₂ → F)
     (h₂ : (∑ i in s₂, w₂ i) = 0) :
     ⟪∑ i₁ in s₁, w₁ i₁ • v₁ i₁, ∑ i₂ in s₂, w₂ i₂ • v₂ i₂⟫_ℝ =
-      (-∑ i₁ in s₁, ∑ i₂ in s₂, w₁ i₁ * w₂ i₂ * (∥v₁ i₁ - v₂ i₂∥ * ∥v₁ i₁ - v₂ i₂∥)) / 2 :=
+      (-∑ i₁ in s₁, ∑ i₂ in s₂, w₁ i₁ * w₂ i₂ * (‖v₁ i₁ - v₂ i₂‖ * ‖v₁ i₁ - v₂ i₂‖)) / 2 :=
   by
   simp_rw [sum_inner, inner_sum, real_inner_smul_left, real_inner_smul_right,
     real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two, ← div_sub_div_same, ← div_add_div_same,
@@ -2598,7 +2596,7 @@ theorem innerSL_apply (v w : E) : innerSL v w = ⟪v, w⟫ :=
 /-- `innerSL` is an isometry. Note that the associated `linear_isometry` is defined in
 `inner_product_space.dual` as `to_dual_map`.  -/
 @[simp]
-theorem innerSL_apply_norm {x : E} : ∥(innerSL x : E →L[𝕜] 𝕜)∥ = ∥x∥ := by
+theorem innerSL_apply_norm {x : E} : ‖(innerSL x : E →L[𝕜] 𝕜)‖ = ‖x‖ := by
   refine' le_antisymm ((innerSL x : E →L[𝕜] 𝕜).op_norm_le_bound (norm_nonneg _) fun y => norm_inner_le_norm _ _) _
   cases' eq_or_lt_of_le (norm_nonneg x) with h h
   · have : x = 0 := norm_eq_zero.mp (Eq.symm h)
@@ -2606,13 +2604,13 @@ theorem innerSL_apply_norm {x : E} : ∥(innerSL x : E →L[𝕜] 𝕜)∥ = ∥
     
   · refine' (mul_le_mul_right h).mp _
     calc
-      ∥x∥ * ∥x∥ = ∥x∥ ^ 2 := by ring
+      ‖x‖ * ‖x‖ = ‖x‖ ^ 2 := by ring
       _ = re ⟪x, x⟫ := norm_sq_eq_inner _
       _ ≤ abs ⟪x, x⟫ := re_le_abs _
-      _ = ∥innerSL x x∥ := by
+      _ = ‖innerSL x x‖ := by
         rw [← IsROrC.norm_eq_abs]
         rfl
-      _ ≤ ∥innerSL x∥ * ∥x∥ := (innerSL x : E →L[𝕜] 𝕜).le_op_norm _
+      _ ≤ ‖innerSL x‖ * ‖x‖ := (innerSL x : E →L[𝕜] 𝕜).le_op_norm _
       
     
 #align innerSL_apply_norm innerSL_apply_norm
@@ -2643,15 +2641,15 @@ theorem to_sesq_form_apply_coe (f : E →L[𝕜] E') (x : E') : toSesqForm f x =
   rfl
 #align continuous_linear_map.to_sesq_form_apply_coe ContinuousLinearMap.to_sesq_form_apply_coe
 
-theorem to_sesq_form_apply_norm_le {f : E →L[𝕜] E'} {v : E'} : ∥toSesqForm f v∥ ≤ ∥f∥ * ∥v∥ := by
+theorem to_sesq_form_apply_norm_le {f : E →L[𝕜] E'} {v : E'} : ‖toSesqForm f v‖ ≤ ‖f‖ * ‖v‖ := by
   refine' op_norm_le_bound _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) _
   intro x
-  have h₁ : ∥f x∥ ≤ ∥f∥ * ∥x∥ := le_op_norm _ _
+  have h₁ : ‖f x‖ ≤ ‖f‖ * ‖x‖ := le_op_norm _ _
   have h₂ := @norm_inner_le_norm 𝕜 E' _ _ v (f x)
   calc
-    ∥⟪v, f x⟫∥ ≤ ∥v∥ * ∥f x∥ := h₂
-    _ ≤ ∥v∥ * (∥f∥ * ∥x∥) := mul_le_mul_of_nonneg_left h₁ (norm_nonneg v)
-    _ = ∥f∥ * ∥v∥ * ∥x∥ := by ring
+    ‖⟪v, f x⟫‖ ≤ ‖v‖ * ‖f x‖ := h₂
+    _ ≤ ‖v‖ * (‖f‖ * ‖x‖) := mul_le_mul_of_nonneg_left h₁ (norm_nonneg v)
+    _ = ‖f‖ * ‖v‖ * ‖x‖ := by ring
     
 #align continuous_linear_map.to_sesq_form_apply_norm_le ContinuousLinearMap.to_sesq_form_apply_norm_le
 
@@ -2684,14 +2682,14 @@ variable {ι : Type _} (x : E) {v : ι → E}
 
 /-- Bessel's inequality for finite sums. -/
 theorem Orthonormal.sum_inner_products_le {s : Finset ι} (hv : Orthonormal 𝕜 v) :
-    (∑ i in s, ∥⟪v i, x⟫∥ ^ 2) ≤ ∥x∥ ^ 2 := by
+    (∑ i in s, ‖⟪v i, x⟫‖ ^ 2) ≤ ‖x‖ ^ 2 := by
   have h₂ : (∑ i in s, ∑ j in s, ⟪v i, x⟫ * ⟪x, v j⟫ * ⟪v j, v i⟫) = (∑ k in s, ⟪v k, x⟫ * ⟪x, v k⟫ : 𝕜) :=
     hv.inner_left_right_finset
-  have h₃ : ∀ z : 𝕜, re (z * conj z) = ∥z∥ ^ 2 := by
+  have h₃ : ∀ z : 𝕜, re (z * conj z) = ‖z‖ ^ 2 := by
     intro z
     simp only [mul_conj, norm_sq_eq_def']
     norm_cast
-  suffices hbf : ∥x - ∑ i in s, ⟪v i, x⟫ • v i∥ ^ 2 = ∥x∥ ^ 2 - ∑ i in s, ∥⟪v i, x⟫∥ ^ 2
+  suffices hbf : ‖x - ∑ i in s, ⟪v i, x⟫ • v i‖ ^ 2 = ‖x‖ ^ 2 - ∑ i in s, ‖⟪v i, x⟫‖ ^ 2
   · rw [← sub_nonneg, ← hbf]
     simp only [norm_nonneg, pow_nonneg]
     
@@ -2702,20 +2700,20 @@ theorem Orthonormal.sum_inner_products_le {s : Finset ι} (hv : Orthonormal 𝕜
 #align orthonormal.sum_inner_products_le Orthonormal.sum_inner_products_le
 
 /-- Bessel's inequality. -/
-theorem Orthonormal.tsum_inner_products_le (hv : Orthonormal 𝕜 v) : (∑' i, ∥⟪v i, x⟫∥ ^ 2) ≤ ∥x∥ ^ 2 := by
+theorem Orthonormal.tsum_inner_products_le (hv : Orthonormal 𝕜 v) : (∑' i, ‖⟪v i, x⟫‖ ^ 2) ≤ ‖x‖ ^ 2 := by
   refine' tsum_le_of_sum_le' _ fun s => hv.sum_inner_products_le x
   simp only [norm_nonneg, pow_nonneg]
 #align orthonormal.tsum_inner_products_le Orthonormal.tsum_inner_products_le
 
 /-- The sum defined in Bessel's inequality is summable. -/
-theorem Orthonormal.inner_products_summable (hv : Orthonormal 𝕜 v) : Summable fun i => ∥⟪v i, x⟫∥ ^ 2 := by
-  use ⨆ s : Finset ι, ∑ i in s, ∥⟪v i, x⟫∥ ^ 2
+theorem Orthonormal.inner_products_summable (hv : Orthonormal 𝕜 v) : Summable fun i => ‖⟪v i, x⟫‖ ^ 2 := by
+  use ⨆ s : Finset ι, ∑ i in s, ‖⟪v i, x⟫‖ ^ 2
   apply has_sum_of_is_lub_of_nonneg
   · intro b
     simp only [norm_nonneg, pow_nonneg]
     
   · refine' is_lub_csupr _
-    use ∥x∥ ^ 2
+    use ‖x‖ ^ 2
     rintro y ⟨s, rfl⟩
     exact hv.sum_inner_products_le x
     
@@ -2816,7 +2814,7 @@ theorem OrthogonalFamily.inner_right_dfinsupp (l : ⨁ i, G i) (i : ι) (v : G i
     ⟪V i v, l.Sum fun j => V j⟫ = ⟪v, l i⟫ :=
   calc
     ⟪V i v, l.Sum fun j => V j⟫ = l.Sum fun j => fun w => ⟪V i v, V j w⟫ := Dfinsupp.inner_sum (fun j => V j) l (V i v)
-    _ = l.Sum fun j => fun w => ite (i = j) ⟪V i v, V j w⟫ 0 := congr_arg l.Sum $ funext $ fun j => funext $ hV.eq_ite v
+    _ = l.Sum fun j => fun w => ite (i = j) ⟪V i v, V j w⟫ 0 := congr_arg l.Sum <| funext fun j => funext <| hV.eq_ite v
     _ = ⟪v, l i⟫ := by
       simp only [Dfinsupp.sum, Submodule.coe_inner, Finset.sum_ite_eq, ite_eq_left_iff, Dfinsupp.mem_support_to_fun]
       split_ifs with h h
@@ -2842,7 +2840,7 @@ omit dec_ι dec_V
         (Term.explicitBinder "(" [`v] [":" (Term.app `G [`i])] [] ")")]
        (Term.typeSpec
         ":"
-        (Init.Core.«term_=_»
+        («term_=_»
          (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
           "⟪"
           (Term.app `V [`i `v])
@@ -2853,7 +2851,7 @@ omit dec_ι dec_V
            ", "
            (Term.app `V [`j (Term.app `l [`j])]))
           "⟫")
-         " = "
+         "="
          (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫» "⟪" `v ", " (Term.app `l [`i]) "⟫"))))
       (Command.declValSimple
        ":="
@@ -2867,7 +2865,7 @@ omit dec_ι dec_V
             (calcTactic
              "calc"
              (calcStep
-              (Init.Core.«term_=_»
+              («term_=_»
                (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
                 "⟪"
                 (Term.app `V [`i `v])
@@ -2878,7 +2876,7 @@ omit dec_ι dec_V
                  ", "
                  (Term.app `V [`j (Term.app `l [`j])]))
                 "⟫")
-               " = "
+               "="
                (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
                 "∑"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) [(group ":" `ι)]))
@@ -2896,16 +2894,16 @@ omit dec_ι dec_V
                 (Tactic.tacticSeq1Indented
                  [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `inner_sum)] "]") [])]))))
              [(calcStep
-               (Init.Core.«term_=_»
+               («term_=_»
                 (Term.hole "_")
-                " = "
+                "="
                 (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
                  "∑"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
                  ", "
                  (Term.app
                   `ite
-                  [(Init.Core.«term_=_» `i " = " `j)
+                  [(«term_=_» `i "=" `j)
                    (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
                     "⟪"
                     (Term.app `V [`i `v])
@@ -2914,17 +2912,16 @@ omit dec_ι dec_V
                     "⟫")
                    (num "0")])))
                ":="
-               (Init.Core.«term_$_»
+               («term_<|_»
                 (Term.app `congr_arg [(Term.app `Finset.sum [`Finset.univ])])
-                " $ "
-                (Init.Core.«term_$_»
+                "<|"
+                (Term.app
                  `funext
-                 " $ "
-                 (Term.fun "fun" (Term.basicFun [`j] [] "=>" (Term.app `hV.eq_ite [`v (Term.app `l [`j])]))))))
+                 [(Term.fun "fun" (Term.basicFun [`j] [] "=>" (Term.app `hV.eq_ite [`v (Term.app `l [`j])])))])))
               (calcStep
-               (Init.Core.«term_=_»
+               («term_=_»
                 (Term.hole "_")
-                " = "
+                "="
                 (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫» "⟪" `v ", " (Term.app `l [`i]) "⟫"))
                ":="
                (Term.byTactic
@@ -2946,7 +2943,7 @@ omit dec_ι dec_V
            (calcTactic
             "calc"
             (calcStep
-             (Init.Core.«term_=_»
+             («term_=_»
               (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
                "⟪"
                (Term.app `V [`i `v])
@@ -2957,7 +2954,7 @@ omit dec_ι dec_V
                 ", "
                 (Term.app `V [`j (Term.app `l [`j])]))
                "⟫")
-              " = "
+              "="
               (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
                "∑"
                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) [(group ":" `ι)]))
@@ -2975,16 +2972,16 @@ omit dec_ι dec_V
                (Tactic.tacticSeq1Indented
                 [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `inner_sum)] "]") [])]))))
             [(calcStep
-              (Init.Core.«term_=_»
+              («term_=_»
                (Term.hole "_")
-               " = "
+               "="
                (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
                 "∑"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
                 ", "
                 (Term.app
                  `ite
-                 [(Init.Core.«term_=_» `i " = " `j)
+                 [(«term_=_» `i "=" `j)
                   (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
                    "⟪"
                    (Term.app `V [`i `v])
@@ -2993,17 +2990,16 @@ omit dec_ι dec_V
                    "⟫")
                   (num "0")])))
               ":="
-              (Init.Core.«term_$_»
+              («term_<|_»
                (Term.app `congr_arg [(Term.app `Finset.sum [`Finset.univ])])
-               " $ "
-               (Init.Core.«term_$_»
+               "<|"
+               (Term.app
                 `funext
-                " $ "
-                (Term.fun "fun" (Term.basicFun [`j] [] "=>" (Term.app `hV.eq_ite [`v (Term.app `l [`j])]))))))
+                [(Term.fun "fun" (Term.basicFun [`j] [] "=>" (Term.app `hV.eq_ite [`v (Term.app `l [`j])])))])))
              (calcStep
-              (Init.Core.«term_=_»
+              («term_=_»
                (Term.hole "_")
-               " = "
+               "="
                (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫» "⟪" `v ", " (Term.app `l [`i]) "⟫"))
               ":="
               (Term.byTactic
@@ -3017,7 +3013,7 @@ omit dec_ι dec_V
        (calcTactic
         "calc"
         (calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
            "⟪"
            (Term.app `V [`i `v])
@@ -3028,7 +3024,7 @@ omit dec_ι dec_V
             ", "
             (Term.app `V [`j (Term.app `l [`j])]))
            "⟫")
-          " = "
+          "="
           (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
            "∑"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) [(group ":" `ι)]))
@@ -3046,16 +3042,16 @@ omit dec_ι dec_V
            (Tactic.tacticSeq1Indented
             [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `inner_sum)] "]") [])]))))
         [(calcStep
-          (Init.Core.«term_=_»
+          («term_=_»
            (Term.hole "_")
-           " = "
+           "="
            (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
             "∑"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
             ", "
             (Term.app
              `ite
-             [(Init.Core.«term_=_» `i " = " `j)
+             [(«term_=_» `i "=" `j)
               (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
                "⟪"
                (Term.app `V [`i `v])
@@ -3064,17 +3060,16 @@ omit dec_ι dec_V
                "⟫")
               (num "0")])))
           ":="
-          (Init.Core.«term_$_»
+          («term_<|_»
            (Term.app `congr_arg [(Term.app `Finset.sum [`Finset.univ])])
-           " $ "
-           (Init.Core.«term_$_»
+           "<|"
+           (Term.app
             `funext
-            " $ "
-            (Term.fun "fun" (Term.basicFun [`j] [] "=>" (Term.app `hV.eq_ite [`v (Term.app `l [`j])]))))))
+            [(Term.fun "fun" (Term.basicFun [`j] [] "=>" (Term.app `hV.eq_ite [`v (Term.app `l [`j])])))])))
          (calcStep
-          (Init.Core.«term_=_»
+          («term_=_»
            (Term.hole "_")
-           " = "
+           "="
            (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫» "⟪" `v ", " (Term.app `l [`i]) "⟫"))
           ":="
           (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))]))
@@ -3082,7 +3077,7 @@ omit dec_ι dec_V
       (calcTactic
        "calc"
        (calcStep
-        (Init.Core.«term_=_»
+        («term_=_»
          (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
           "⟪"
           (Term.app `V [`i `v])
@@ -3093,7 +3088,7 @@ omit dec_ι dec_V
            ", "
            (Term.app `V [`j (Term.app `l [`j])]))
           "⟫")
-         " = "
+         "="
          (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
           "∑"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) [(group ":" `ι)]))
@@ -3111,16 +3106,16 @@ omit dec_ι dec_V
           (Tactic.tacticSeq1Indented
            [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `inner_sum)] "]") [])]))))
        [(calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (Term.hole "_")
-          " = "
+          "="
           (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
            "∑"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
            ", "
            (Term.app
             `ite
-            [(Init.Core.«term_=_» `i " = " `j)
+            [(«term_=_» `i "=" `j)
              (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
               "⟪"
               (Term.app `V [`i `v])
@@ -3129,17 +3124,16 @@ omit dec_ι dec_V
               "⟫")
              (num "0")])))
          ":="
-         (Init.Core.«term_$_»
+         («term_<|_»
           (Term.app `congr_arg [(Term.app `Finset.sum [`Finset.univ])])
-          " $ "
-          (Init.Core.«term_$_»
+          "<|"
+          (Term.app
            `funext
-           " $ "
-           (Term.fun "fun" (Term.basicFun [`j] [] "=>" (Term.app `hV.eq_ite [`v (Term.app `l [`j])]))))))
+           [(Term.fun "fun" (Term.basicFun [`j] [] "=>" (Term.app `hV.eq_ite [`v (Term.app `l [`j])])))])))
         (calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (Term.hole "_")
-          " = "
+          "="
           (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫» "⟪" `v ", " (Term.app `l [`i]) "⟫"))
          ":="
          (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))])
@@ -3151,10 +3145,7 @@ omit dec_ι dec_V
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
-       (Term.hole "_")
-       " = "
-       (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫» "⟪" `v ", " (Term.app `l [`i]) "⟫"))
+      («term_=_» (Term.hole "_") "=" (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫» "⟪" `v ", " (Term.app `l [`i]) "⟫"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫» "⟪" `v ", " (Term.app `l [`i]) "⟫")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3174,21 +3165,17 @@ omit dec_ι dec_V
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
-      (Init.Core.«term_$_»
+      («term_<|_»
        (Term.app `congr_arg [(Term.app `Finset.sum [`Finset.univ])])
-       " $ "
-       (Init.Core.«term_$_»
-        `funext
-        " $ "
-        (Term.fun "fun" (Term.basicFun [`j] [] "=>" (Term.app `hV.eq_ite [`v (Term.app `l [`j])])))))
+       "<|"
+       (Term.app `funext [(Term.fun "fun" (Term.basicFun [`j] [] "=>" (Term.app `hV.eq_ite [`v (Term.app `l [`j])])))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
-       `funext
-       " $ "
-       (Term.fun "fun" (Term.basicFun [`j] [] "=>" (Term.app `hV.eq_ite [`v (Term.app `l [`j])]))))
+      (Term.app `funext [(Term.fun "fun" (Term.basicFun [`j] [] "=>" (Term.app `hV.eq_ite [`v (Term.app `l [`j])])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun "fun" (Term.basicFun [`j] [] "=>" (Term.app `hV.eq_ite [`v (Term.app `l [`j])])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3222,12 +3209,12 @@ omit dec_ι dec_V
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `j
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `funext
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.app `congr_arg [(Term.app `Finset.sum [`Finset.univ])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
@@ -3246,19 +3233,19 @@ omit dec_ι dec_V
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `congr_arg
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (Term.hole "_")
-       " = "
+       "="
        (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
         "∑"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
         ", "
         (Term.app
          `ite
-         [(Init.Core.«term_=_» `i " = " `j)
+         [(«term_=_» `i "=" `j)
           (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
            "⟪"
            (Term.app `V [`i `v])
@@ -3273,7 +3260,7 @@ omit dec_ι dec_V
        ", "
        (Term.app
         `ite
-        [(Init.Core.«term_=_» `i " = " `j)
+        [(«term_=_» `i "=" `j)
          (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
           "⟪"
           (Term.app `V [`i `v])
@@ -3284,7 +3271,7 @@ omit dec_ι dec_V
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `ite
-       [(Init.Core.«term_=_» `i " = " `j)
+       [(«term_=_» `i "=" `j)
         (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
          "⟪"
          (Term.app `V [`i `v])
@@ -3348,18 +3335,18 @@ omit dec_ι dec_V
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_=_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_=_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-      (Init.Core.«term_=_» `i " = " `j)
+      («term_=_» `i "=" `j)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `j
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 50, (some 51, term) <=? (some 1023, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Init.Core.«term_=_» `i " = " `j) ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" («term_=_» `i "=" `j) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ite
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
@@ -3367,7 +3354,7 @@ omit dec_ι dec_V
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.byTactic
@@ -3384,7 +3371,7 @@ omit dec_ι dec_V
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
         "⟪"
         (Term.app `V [`i `v])
@@ -3395,7 +3382,7 @@ omit dec_ι dec_V
          ", "
          (Term.app `V [`j (Term.app `l [`j])]))
         "⟫")
-       " = "
+       "="
        (BigOperators.Algebra.BigOperators.Basic.finset.sum_univ
         "∑"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) [(group ":" `ι)]))
@@ -3532,7 +3519,7 @@ omit dec_ι dec_V
       `V
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
@@ -3558,7 +3545,7 @@ theorem
           ⟪ V i v , ∑ j : ι , V j l j ⟫ = ∑ j : ι , ⟪ V i v , V j l j ⟫ := by rw [ inner_sum ]
           _ = ∑ j , ite i = j ⟪ V i v , V j l j ⟫ 0
               :=
-              congr_arg Finset.sum Finset.univ $ funext $ fun j => hV.eq_ite v l j
+              congr_arg Finset.sum Finset.univ <| funext fun j => hV.eq_ite v l j
             _ = ⟪ v , l i ⟫ := by simp
 #align orthogonal_family.inner_right_fintype OrthogonalFamily.inner_right_fintype
 
@@ -3573,7 +3560,7 @@ theorem
         (Term.explicitBinder "(" [`s] [":" (Term.app `Finset [`ι])] [] ")")]
        (Term.typeSpec
         ":"
-        (Init.Core.«term_=_»
+        («term_=_»
          (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
           "⟪"
           (BigOperators.Algebra.BigOperators.Basic.finset.sum
@@ -3592,7 +3579,7 @@ theorem
            ", "
            (Term.app `V [`j (Term.app `l₂ [`j])]))
           "⟫")
-         " = "
+         "="
          (BigOperators.Algebra.BigOperators.Basic.finset.sum
           "∑"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -3612,7 +3599,7 @@ theorem
             (calcTactic
              "calc"
              (calcStep
-              (Init.Core.«term_=_»
+              («term_=_»
                (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
                 "⟪"
                 (BigOperators.Algebra.BigOperators.Basic.finset.sum
@@ -3631,7 +3618,7 @@ theorem
                  ", "
                  (Term.app `V [`j (Term.app `l₂ [`j])]))
                 "⟫")
-               " = "
+               "="
                (BigOperators.Algebra.BigOperators.Basic.finset.sum
                 "∑"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -3663,9 +3650,9 @@ theorem
                    ["[" [(Tactic.simpLemma [] [] `sum_inner) "," (Tactic.simpLemma [] [] `inner_sum)] "]"]
                    [])]))))
              [(calcStep
-               (Init.Core.«term_=_»
+               («term_=_»
                 (Term.hole "_")
-                " = "
+                "="
                 (BigOperators.Algebra.BigOperators.Basic.finset.sum
                  "∑"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -3680,7 +3667,7 @@ theorem
                   ", "
                   (Term.app
                    `ite
-                   [(Init.Core.«term_=_» `i " = " `j)
+                   [(«term_=_» `i "=" `j)
                     (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
                      "⟪"
                      (Term.app `V [`i (Term.app `l₁ [`i])])
@@ -3709,9 +3696,9 @@ theorem
                    []
                    (Tactic.apply "apply" `hV.eq_ite)]))))
               (calcStep
-               (Init.Core.«term_=_»
+               («term_=_»
                 (Term.hole "_")
-                " = "
+                "="
                 (BigOperators.Algebra.BigOperators.Basic.finset.sum
                  "∑"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -3747,7 +3734,7 @@ theorem
            (calcTactic
             "calc"
             (calcStep
-             (Init.Core.«term_=_»
+             («term_=_»
               (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
                "⟪"
                (BigOperators.Algebra.BigOperators.Basic.finset.sum
@@ -3766,7 +3753,7 @@ theorem
                 ", "
                 (Term.app `V [`j (Term.app `l₂ [`j])]))
                "⟫")
-              " = "
+              "="
               (BigOperators.Algebra.BigOperators.Basic.finset.sum
                "∑"
                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -3798,9 +3785,9 @@ theorem
                   ["[" [(Tactic.simpLemma [] [] `sum_inner) "," (Tactic.simpLemma [] [] `inner_sum)] "]"]
                   [])]))))
             [(calcStep
-              (Init.Core.«term_=_»
+              («term_=_»
                (Term.hole "_")
-               " = "
+               "="
                (BigOperators.Algebra.BigOperators.Basic.finset.sum
                 "∑"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -3815,7 +3802,7 @@ theorem
                  ", "
                  (Term.app
                   `ite
-                  [(Init.Core.«term_=_» `i " = " `j)
+                  [(«term_=_» `i "=" `j)
                    (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
                     "⟪"
                     (Term.app `V [`i (Term.app `l₁ [`i])])
@@ -3844,9 +3831,9 @@ theorem
                   []
                   (Tactic.apply "apply" `hV.eq_ite)]))))
              (calcStep
-              (Init.Core.«term_=_»
+              («term_=_»
                (Term.hole "_")
-               " = "
+               "="
                (BigOperators.Algebra.BigOperators.Basic.finset.sum
                 "∑"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -3874,7 +3861,7 @@ theorem
        (calcTactic
         "calc"
         (calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
            "⟪"
            (BigOperators.Algebra.BigOperators.Basic.finset.sum
@@ -3893,7 +3880,7 @@ theorem
             ", "
             (Term.app `V [`j (Term.app `l₂ [`j])]))
            "⟫")
-          " = "
+          "="
           (BigOperators.Algebra.BigOperators.Basic.finset.sum
            "∑"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -3925,9 +3912,9 @@ theorem
               ["[" [(Tactic.simpLemma [] [] `sum_inner) "," (Tactic.simpLemma [] [] `inner_sum)] "]"]
               [])]))))
         [(calcStep
-          (Init.Core.«term_=_»
+          («term_=_»
            (Term.hole "_")
-           " = "
+           "="
            (BigOperators.Algebra.BigOperators.Basic.finset.sum
             "∑"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -3942,7 +3929,7 @@ theorem
              ", "
              (Term.app
               `ite
-              [(Init.Core.«term_=_» `i " = " `j)
+              [(«term_=_» `i "=" `j)
                (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
                 "⟪"
                 (Term.app `V [`i (Term.app `l₁ [`i])])
@@ -3971,9 +3958,9 @@ theorem
               []
               (Tactic.apply "apply" `hV.eq_ite)]))))
          (calcStep
-          (Init.Core.«term_=_»
+          («term_=_»
            (Term.hole "_")
-           " = "
+           "="
            (BigOperators.Algebra.BigOperators.Basic.finset.sum
             "∑"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -3991,7 +3978,7 @@ theorem
       (calcTactic
        "calc"
        (calcStep
-        (Init.Core.«term_=_»
+        («term_=_»
          (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
           "⟪"
           (BigOperators.Algebra.BigOperators.Basic.finset.sum
@@ -4010,7 +3997,7 @@ theorem
            ", "
            (Term.app `V [`j (Term.app `l₂ [`j])]))
           "⟫")
-         " = "
+         "="
          (BigOperators.Algebra.BigOperators.Basic.finset.sum
           "∑"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -4042,9 +4029,9 @@ theorem
              ["[" [(Tactic.simpLemma [] [] `sum_inner) "," (Tactic.simpLemma [] [] `inner_sum)] "]"]
              [])]))))
        [(calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (Term.hole "_")
-          " = "
+          "="
           (BigOperators.Algebra.BigOperators.Basic.finset.sum
            "∑"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -4059,7 +4046,7 @@ theorem
             ", "
             (Term.app
              `ite
-             [(Init.Core.«term_=_» `i " = " `j)
+             [(«term_=_» `i "=" `j)
               (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
                "⟪"
                (Term.app `V [`i (Term.app `l₁ [`i])])
@@ -4088,9 +4075,9 @@ theorem
              []
              (Tactic.apply "apply" `hV.eq_ite)]))))
         (calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (Term.hole "_")
-          " = "
+          "="
           (BigOperators.Algebra.BigOperators.Basic.finset.sum
            "∑"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -4121,9 +4108,9 @@ theorem
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (Term.hole "_")
-       " = "
+       "="
        (BigOperators.Algebra.BigOperators.Basic.finset.sum
         "∑"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `i) []))
@@ -4170,7 +4157,7 @@ theorem
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.byTactic
@@ -4217,9 +4204,9 @@ theorem
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (Term.hole "_")
-       " = "
+       "="
        (BigOperators.Algebra.BigOperators.Basic.finset.sum
         "∑"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -4234,7 +4221,7 @@ theorem
          ", "
          (Term.app
           `ite
-          [(Init.Core.«term_=_» `i " = " `j)
+          [(«term_=_» `i "=" `j)
            (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
             "⟪"
             (Term.app `V [`i (Term.app `l₁ [`i])])
@@ -4257,7 +4244,7 @@ theorem
         ", "
         (Term.app
          `ite
-         [(Init.Core.«term_=_» `i " = " `j)
+         [(«term_=_» `i "=" `j)
           (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
            "⟪"
            (Term.app `V [`i (Term.app `l₁ [`i])])
@@ -4274,7 +4261,7 @@ theorem
        ", "
        (Term.app
         `ite
-        [(Init.Core.«term_=_» `i " = " `j)
+        [(«term_=_» `i "=" `j)
          (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
           "⟪"
           (Term.app `V [`i (Term.app `l₁ [`i])])
@@ -4285,7 +4272,7 @@ theorem
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `ite
-       [(Init.Core.«term_=_» `i " = " `j)
+       [(«term_=_» `i "=" `j)
         (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
          "⟪"
          (Term.app `V [`i (Term.app `l₁ [`i])])
@@ -4358,18 +4345,18 @@ theorem
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_=_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_=_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
-      (Init.Core.«term_=_» `i " = " `j)
+      («term_=_» `i "=" `j)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `j
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `i
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 50, (some 51, term) <=? (some 1023, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Init.Core.«term_=_» `i " = " `j) ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" («term_=_» `i "=" `j) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `ite
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
@@ -4384,7 +4371,7 @@ theorem
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.byTactic
@@ -4420,7 +4407,7 @@ theorem
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (Analysis.InnerProductSpace.Basic.«term⟪_,_⟫»
         "⟪"
         (BigOperators.Algebra.BigOperators.Basic.finset.sum
@@ -4439,7 +4426,7 @@ theorem
          ", "
          (Term.app `V [`j (Term.app `l₂ [`j])]))
         "⟫")
-       " = "
+       "="
        (BigOperators.Algebra.BigOperators.Basic.finset.sum
         "∑"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `j) []))
@@ -4649,7 +4636,7 @@ theorem
       `s
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
@@ -4679,8 +4666,8 @@ theorem
             _ = ∑ i in s , ⟪ l₁ i , l₂ i ⟫ := by simp [ Finset.sum_ite_of_true ]
 #align orthogonal_family.inner_sum OrthogonalFamily.inner_sum
 
-theorem OrthogonalFamily.norm_sum (l : ∀ i, G i) (s : Finset ι) : ∥∑ i in s, V i (l i)∥ ^ 2 = ∑ i in s, ∥l i∥ ^ 2 := by
-  have : (∥∑ i in s, V i (l i)∥ ^ 2 : 𝕜) = ∑ i in s, ∥l i∥ ^ 2 := by simp [← inner_self_eq_norm_sq_to_K, hV.inner_sum]
+theorem OrthogonalFamily.norm_sum (l : ∀ i, G i) (s : Finset ι) : ‖∑ i in s, V i (l i)‖ ^ 2 = ∑ i in s, ‖l i‖ ^ 2 := by
+  have : (‖∑ i in s, V i (l i)‖ ^ 2 : 𝕜) = ∑ i in s, ‖l i‖ ^ 2 := by simp [← inner_self_eq_norm_sq_to_K, hV.inner_sum]
   exact_mod_cast this
 #align orthogonal_family.norm_sum OrthogonalFamily.norm_sum
 
@@ -4691,13 +4678,13 @@ theorem OrthogonalFamily.comp {γ : Type _} {f : γ → ι} (hf : Function.Injec
 #align orthogonal_family.comp OrthogonalFamily.comp
 
 theorem OrthogonalFamily.orthonormalSigmaOrthonormal {α : ι → Type _} {v_family : ∀ i, α i → G i}
-    (hv_family : ∀ i, Orthonormal 𝕜 (v_family i)) : Orthonormal 𝕜 fun a : Σ i, α i => V a.1 (v_family a.1 a.2) := by
+    (hv_family : ∀ i, Orthonormal 𝕜 (v_family i)) : Orthonormal 𝕜 fun a : Σi, α i => V a.1 (v_family a.1 a.2) := by
   constructor
   · rintro ⟨i, v⟩
     simpa using (hv_family i).1 v
     
   rintro ⟨i, v⟩ ⟨j, w⟩ hvw
-  by_cases hij:i = j
+  by_cases hij : i = j
   · subst hij
     have : v ≠ w := by simpa using hvw
     simpa using (hv_family i).2 this
@@ -4709,18 +4696,18 @@ theorem OrthogonalFamily.orthonormalSigmaOrthonormal {α : ι → Type _} {v_fam
 include dec_ι
 
 theorem OrthogonalFamily.norm_sq_diff_sum (f : ∀ i, G i) (s₁ s₂ : Finset ι) :
-    ∥(∑ i in s₁, V i (f i)) - ∑ i in s₂, V i (f i)∥ ^ 2 = (∑ i in s₁ \ s₂, ∥f i∥ ^ 2) + ∑ i in s₂ \ s₁, ∥f i∥ ^ 2 := by
+    ‖(∑ i in s₁, V i (f i)) - ∑ i in s₂, V i (f i)‖ ^ 2 = (∑ i in s₁ \ s₂, ‖f i‖ ^ 2) + ∑ i in s₂ \ s₁, ‖f i‖ ^ 2 := by
   rw [← Finset.sum_sdiff_sub_sum_sdiff, sub_eq_add_neg, ← Finset.sum_neg_distrib]
   let F : ∀ i, G i := fun i => if i ∈ s₁ then f i else -f i
   have hF₁ : ∀ i ∈ s₁ \ s₂, F i = f i := fun i hi => if_pos (Finset.sdiff_subset _ _ hi)
   have hF₂ : ∀ i ∈ s₂ \ s₁, F i = -f i := fun i hi => if_neg (finset.mem_sdiff.mp hi).2
-  have hF : ∀ i, ∥F i∥ = ∥f i∥ := by
+  have hF : ∀ i, ‖F i‖ = ‖f i‖ := by
     intro i
     dsimp [F]
     split_ifs <;> simp
   have :
-    ∥(∑ i in s₁ \ s₂, V i (F i)) + ∑ i in s₂ \ s₁, V i (F i)∥ ^ 2 =
-      (∑ i in s₁ \ s₂, ∥F i∥ ^ 2) + ∑ i in s₂ \ s₁, ∥F i∥ ^ 2 :=
+    ‖(∑ i in s₁ \ s₂, V i (F i)) + ∑ i in s₂ \ s₁, V i (F i)‖ ^ 2 =
+      (∑ i in s₁ \ s₂, ‖F i‖ ^ 2) + ∑ i in s₂ \ s₁, ‖F i‖ ^ 2 :=
     by
     have hs : Disjoint (s₁ \ s₂) (s₂ \ s₁) := disjoint_sdiff_sdiff
     simpa only [Finset.sum_union hs] using hV.norm_sum F (s₁ \ s₂ ∪ s₂ \ s₁)
@@ -4740,9 +4727,9 @@ theorem OrthogonalFamily.norm_sq_diff_sum (f : ∀ i, G i) (s₁ s₂ : Finset �
 omit dec_ι
 
 /-- A family `f` of mutually-orthogonal elements of `E` is summable, if and only if
-`(λ i, ∥f i∥ ^ 2)` is summable. -/
+`(λ i, ‖f i‖ ^ 2)` is summable. -/
 theorem OrthogonalFamily.summable_iff_norm_sq_summable [CompleteSpace E] (f : ∀ i, G i) :
-    (Summable fun i => V i (f i)) ↔ Summable fun i => ∥f i∥ ^ 2 := by classical
+    (Summable fun i => V i (f i)) ↔ Summable fun i => ‖f i‖ ^ 2 := by classical
   simp only [summable_iff_cauchy_seq_finset, NormedAddCommGroup.cauchy_seq_iff, Real.norm_eq_abs]
   constructor
   · intro hf ε hε
@@ -4751,9 +4738,9 @@ theorem OrthogonalFamily.summable_iff_norm_sq_summable [CompleteSpace E] (f : �
     intro s₁ hs₁ s₂ hs₂
     rw [← Finset.sum_sdiff_sub_sum_sdiff]
     refine' (_root_.abs_sub _ _).trans_lt _
-    have : ∀ i, 0 ≤ ∥f i∥ ^ 2 := fun i : ι => sq_nonneg _
+    have : ∀ i, 0 ≤ ‖f i‖ ^ 2 := fun i : ι => sq_nonneg _
     simp only [Finset.abs_sum_of_nonneg' this]
-    have : ((∑ i in s₁ \ s₂, ∥f i∥ ^ 2) + ∑ i in s₂ \ s₁, ∥f i∥ ^ 2) < sqrt ε ^ 2 := by
+    have : ((∑ i in s₁ \ s₂, ‖f i‖ ^ 2) + ∑ i in s₂ \ s₁, ‖f i‖ ^ 2) < sqrt ε ^ 2 := by
       rw [← hV.norm_sq_diff_sum, sq_lt_sq, _root_.abs_of_nonneg (sqrt_nonneg _), _root_.abs_of_nonneg (norm_nonneg _)]
       exact H s₁ hs₁ s₂ hs₂
     have hη := sq_sqrt (le_of_lt hε)
@@ -4767,7 +4754,7 @@ theorem OrthogonalFamily.summable_iff_norm_sq_summable [CompleteSpace E] (f : �
     refine' (abs_lt_of_sq_lt_sq' _ (le_of_lt hε)).2
     have has : a ≤ s₁ ⊓ s₂ := le_inf hs₁ hs₂
     rw [hV.norm_sq_diff_sum]
-    have Hs₁ : (∑ x : ι in s₁ \ s₂, ∥f x∥ ^ 2) < ε ^ 2 / 2 := by
+    have Hs₁ : (∑ x : ι in s₁ \ s₂, ‖f x‖ ^ 2) < ε ^ 2 / 2 := by
       convert H _ hs₁ _ has
       have : s₁ ⊓ s₂ ⊆ s₁ := Finset.inter_subset_left _ _
       rw [← Finset.sum_sdiff this, add_tsub_cancel_right, Finset.abs_sum_of_nonneg']
@@ -4775,7 +4762,7 @@ theorem OrthogonalFamily.summable_iff_norm_sq_summable [CompleteSpace E] (f : �
         
       · exact fun i => sq_nonneg _
         
-    have Hs₂ : (∑ x : ι in s₂ \ s₁, ∥f x∥ ^ 2) < ε ^ 2 / 2 := by
+    have Hs₂ : (∑ x : ι in s₂ \ s₁, ‖f x‖ ^ 2) < ε ^ 2 / 2 := by
       convert H _ hs₂ _ has
       have : s₁ ⊓ s₂ ⊆ s₂ := Finset.inter_subset_right _ _
       rw [← Finset.sum_sdiff this, add_tsub_cancel_right, Finset.abs_sum_of_nonneg']
@@ -4916,7 +4903,7 @@ theorem ContinuousOn.inner (hf : ContinuousOn f s) (hg : ContinuousOn g s) : Con
 
 @[continuity]
 theorem Continuous.inner (hf : Continuous f) (hg : Continuous g) : Continuous fun t => ⟪f t, g t⟫ :=
-  continuous_iff_continuous_at.2 $ fun x => hf.ContinuousAt.inner hg.ContinuousAt
+  continuous_iff_continuous_at.2 fun x => hf.ContinuousAt.inner hg.ContinuousAt
 #align continuous.inner Continuous.inner
 
 end Continuous
@@ -4933,13 +4920,13 @@ theorem ContinuousLinearMap.re_apply_inner_self_apply (T : E →L[𝕜] E) (x : 
 #align continuous_linear_map.re_apply_inner_self_apply ContinuousLinearMap.re_apply_inner_self_apply
 
 theorem ContinuousLinearMap.re_apply_inner_self_continuous (T : E →L[𝕜] E) : Continuous T.reApplyInnerSelf :=
-  reClm.Continuous.comp $ T.Continuous.inner continuous_id
+  reClm.Continuous.comp <| T.Continuous.inner continuous_id
 #align continuous_linear_map.re_apply_inner_self_continuous ContinuousLinearMap.re_apply_inner_self_continuous
 
 theorem ContinuousLinearMap.re_apply_inner_self_smul (T : E →L[𝕜] E) (x : E) {c : 𝕜} :
-    T.reApplyInnerSelf (c • x) = ∥c∥ ^ 2 * T.reApplyInnerSelf x := by
+    T.reApplyInnerSelf (c • x) = ‖c‖ ^ 2 * T.reApplyInnerSelf x := by
   simp only [ContinuousLinearMap.map_smul, ContinuousLinearMap.re_apply_inner_self_apply, inner_smul_left,
-    inner_smul_right, ← mul_assoc, mul_conj, norm_sq_eq_def', ← smul_re, Algebra.smul_def (∥c∥ ^ 2) ⟪T x, x⟫,
+    inner_smul_right, ← mul_assoc, mul_conj, norm_sq_eq_def', ← smul_re, Algebra.smul_def (‖c‖ ^ 2) ⟪T x, x⟫,
     algebra_map_eq_of_real]
 #align continuous_linear_map.re_apply_inner_self_smul ContinuousLinearMap.re_apply_inner_self_smul
 
@@ -5006,7 +4993,7 @@ theorem mem_orthogonal_singleton_of_inner_right (u : E) {v : E} (hv : ⟪u, v⟫
 
 /-- A vector orthogonal to `u` lies in `(𝕜 ∙ u)ᗮ`. -/
 theorem mem_orthogonal_singleton_of_inner_left (u : E) {v : E} (hv : ⟪v, u⟫ = 0) : v ∈ (𝕜 ∙ u)ᗮ :=
-  mem_orthogonal_singleton_of_inner_right u $ inner_eq_zero_sym.2 hv
+  mem_orthogonal_singleton_of_inner_right u <| inner_eq_zero_sym.2 hv
 #align mem_orthogonal_singleton_of_inner_left mem_orthogonal_singleton_of_inner_left
 
 theorem Submodule.sub_mem_orthogonal_of_inner_left {x y : E} (h : ∀ v : K, ⟪x, v⟫ = ⟪y, v⟫) : x - y ∈ Kᗮ := by
@@ -5105,7 +5092,7 @@ theorem Submodule.infi_orthogonal {ι : Type _} (K : ι → Submodule 𝕜 E) : 
 #align submodule.infi_orthogonal Submodule.infi_orthogonal
 
 /-- The inf of a set of orthogonal subspaces equals the subspace orthogonal to the sup. -/
-theorem Submodule.Inf_orthogonal (s : Set $ Submodule 𝕜 E) : (⨅ K ∈ s, Kᗮ) = (sup s)ᗮ :=
+theorem Submodule.Inf_orthogonal (s : Set <| Submodule 𝕜 E) : (⨅ K ∈ s, Kᗮ) = (sup s)ᗮ :=
   (Submodule.orthogonal_gc 𝕜 E).l_Sup.symm
 #align submodule.Inf_orthogonal Submodule.Inf_orthogonal
 
@@ -5152,7 +5139,7 @@ open UniformSpace Function
 
 instance {𝕜' E' : Type _} [TopologicalSpace 𝕜'] [UniformSpace E'] [HasInner 𝕜' E'] :
     HasInner 𝕜'
-      (Completion E') where inner := curry $ (dense_inducing_coe.Prod dense_inducing_coe).extend (uncurry inner)
+      (Completion E') where inner := curry <| (dense_inducing_coe.Prod dense_inducing_coe).extend (uncurry inner)
 
 @[simp]
 theorem inner_coe (a b : E) : inner (a : Completion E) (b : Completion E) = (inner a b : 𝕜) :=

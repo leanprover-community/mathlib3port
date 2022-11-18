@@ -80,7 +80,7 @@ A description of the path compression optimization can be found at:
 
 -/
 unsafe def closure :=
-  ref (expr_map (ℕ ⊕ expr × expr))
+  ref (expr_map (Sum ℕ (expr × expr)))
 #align tactic.closure tactic.closure
 
 namespace Closure
@@ -100,11 +100,11 @@ unsafe def to_tactic_format (cl : closure) : tactic format := do
   let m ← read_ref cl
   let l := m.toList
   let fmt ←
-    l.mmap $ fun ⟨x, y⟩ =>
+    l.mmap fun ⟨x, y⟩ =>
         match y with
         | Sum.inl y => f!"{(← x)} ⇐ {← y}"
         | Sum.inr ⟨y, p⟩ => f!"({(← x)}, {(← y)}) : {← infer_type p}"
-  pure $ to_fmt fmt
+  pure <| to_fmt fmt
 #align tactic.closure.to_tactic_format tactic.closure.to_tactic_format
 
 unsafe instance : has_to_tactic_format closure :=
@@ -125,7 +125,7 @@ unsafe def root (cl : closure) : expr → tactic (ℕ × expr × expr)
       | some (Sum.inr (e₀, p₀)) => do
         let (n, e₁, p₁) ← root e₀
         let p ← mk_app `` Iff.trans [p₀, p₁]
-        modify_ref cl $ fun m => m e (Sum.inr (e₁, p))
+        (modify_ref cl) fun m => m e (Sum.inr (e₁, p))
         pure (n, e₁, p)
 #align tactic.closure.root tactic.closure.root
 
@@ -134,7 +134,7 @@ unsafe def merge_intl (cl : closure) (p e₀ p₀ e₁ p₁ : expr) : tactic Uni
   let p₂ ← mk_app `` Iff.symm [p₀]
   let p ← mk_app `` Iff.trans [p₂, p]
   let p ← mk_app `` Iff.trans [p, p₁]
-  modify_ref cl $ fun m => m e₀ $ Sum.inr (e₁, p)
+  (modify_ref cl) fun m => m e₀ <| Sum.inr (e₁, p)
 #align tactic.closure.merge_intl tactic.closure.merge_intl
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -164,7 +164,7 @@ unsafe def merge_intl (cl : closure) (p e₀ p₀ e₁ p₁ : expr) : tactic Uni
 
 /-- Sequentially assign numbers to the nodes of the graph as they are being visited. -/
 unsafe def assign_preorder (cl : closure) (e : expr) : tactic Unit :=
-  modify_ref cl $ fun m => m.insert e (Sum.inl m.size)
+  (modify_ref cl) fun m => m.insert e (Sum.inl m.size)
 #align tactic.closure.assign_preorder tactic.closure.assign_preorder
 
 /-- `prove_eqv cl e₀ e₁` constructs a proof of equivalence of `e₀` and `e₁` if
@@ -186,7 +186,7 @@ unsafe def prove_impl (cl : closure) (e₀ e₁ : expr) : tactic expr :=
 unsafe def is_eqv (cl : closure) (e₀ e₁ : expr) : tactic Bool := do
   let (_, r, p₀) ← root cl e₀
   let (_, r', p₁) ← root cl e₁
-  return $ r = r'
+  return <| r = r'
 #align tactic.closure.is_eqv tactic.closure.is_eqv
 
 end Closure
@@ -194,13 +194,13 @@ end Closure
 /-- mutable graphs between local propositions that imply each other with the proof of implication -/
 @[reducible]
 unsafe def impl_graph :=
-  ref (expr_map (List $ expr × expr))
+  ref (expr_map (List <| expr × expr))
 #align tactic.impl_graph tactic.impl_graph
 
 /-- `with_impl_graph f` creates an empty `impl_graph` `g`, executes `f` on `g`, and then deletes
 `g`, returning the output of `f`. -/
 unsafe def with_impl_graph {α} : (impl_graph → tactic α) → tactic α :=
-  using_new_ref (expr_map.mk (List $ expr × expr))
+  using_new_ref (expr_map.mk (List <| expr × expr))
 #align tactic.with_impl_graph tactic.with_impl_graph
 
 namespace ImplGraph
@@ -230,7 +230,7 @@ namespace ImplGraph
                     let m ← read_ref g
                     let xs := ( m v₀ ) . getOrElse [ ]
                     let xs' := ( m v₁ ) . getOrElse [ ]
-                    modify_ref g $ fun m => ( m v₀ ( ( v₁ , p ) :: xs ) ) . insert v₁ xs'
+                    ( modify_ref g ) fun m => ( m v₀ ( ( v₁ , p ) :: xs ) ) . insert v₁ xs'
               |
                 q( $ ( v₀ ) ↔ $ ( v₁ ) )
                 =>
@@ -246,9 +246,9 @@ section Scc
 
 open List
 
-parameter (g : expr_map (List $ expr × expr))
+parameter (g : expr_map (List <| expr × expr))
 
-parameter (visit : ref $ expr_map Bool)
+parameter (visit : ref <| expr_map Bool)
 
 parameter (cl : closure)
 
@@ -305,10 +305,10 @@ unsafe def dfs_at : List (expr × expr) → expr → tactic Unit
       | some ff => collapse vs v
       | none => do
         cl v
-        modify_ref visit $ fun m => m v ff
+        (modify_ref visit) fun m => m v ff
         let ns ← g v
-        ns $ fun ⟨w, e⟩ => dfs_at ((v, e) :: vs) w
-        modify_ref visit $ fun m => m v tt
+        ns fun ⟨w, e⟩ => dfs_at ((v, e) :: vs) w
+        (modify_ref visit) fun m => m v tt
         pure ()
 #align tactic.impl_graph.dfs_at tactic.impl_graph.dfs_at
 
@@ -316,12 +316,12 @@ end Scc
 
 /-- Use the local assumptions to create a set of equivalence classes. -/
 unsafe def mk_scc (cl : closure) : tactic (expr_map (List (expr × expr))) :=
-  with_impl_graph $ fun g =>
-    using_new_ref (expr_map.mk Bool) $ fun visit => do
+  with_impl_graph fun g =>
+    (using_new_ref (expr_map.mk Bool)) fun visit => do
       let ls ← local_context
-      ls $ fun l => try (g l)
+      ls fun l => try (g l)
       let m ← read_ref g
-      m $ fun ⟨v, _⟩ => impl_graph.dfs_at m visit cl [] v
+      m fun ⟨v, _⟩ => impl_graph.dfs_at m visit cl [] v
       pure m
 #align tactic.impl_graph.mk_scc tactic.impl_graph.mk_scc
 
@@ -349,20 +349,20 @@ unsafe
   def
     interactive.scc
     : tactic Unit
-    := closure.with_new_closure $ fun cl => do impl_graph.mk_scc cl let q( $ ( p ) ↔ $ ( q ) ) ← target cl p q >>= exact
+    := closure.with_new_closure fun cl => do impl_graph.mk_scc cl let q( $ ( p ) ↔ $ ( q ) ) ← target cl p q >>= exact
 #align tactic.interactive.scc tactic.interactive.scc
 
 /-- Collect all the available equivalences and implications and
 add assumptions for every equivalence that can be proven using the
 strongly connected components technique. Mostly useful for testing. -/
 unsafe def interactive.scc' : tactic Unit :=
-  closure.with_new_closure $ fun cl => do
+  closure.with_new_closure fun cl => do
     let m ← impl_graph.mk_scc cl
     let ls := m.toList.map Prod.fst
     let ls' := Prod.mk <$> ls <*> ls
-    ls' $ fun x => do
+    ls' fun x => do
         let h ← get_unused_name `h
-        try $ closure.prove_eqv cl x.1 x.2 >>= note h none
+        try <| closure.prove_eqv cl x.1 x.2 >>= note h none
 #align tactic.interactive.scc' tactic.interactive.scc'
 
 /-- `scc` uses the available equivalences and implications to prove

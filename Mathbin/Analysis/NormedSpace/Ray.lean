@@ -11,7 +11,7 @@ import Mathbin.Analysis.NormedSpace.Basic
 
 In this file we prove some lemmas about the `same_ray` predicate in case of a real normed space. In
 this case, for two vectors `x y` in the same ray, the norm of their sum is equal to the sum of their
-norms and `∥y∥ • x = ∥x∥ • y`.
+norms and `‖y‖ • x = ‖x‖ • y`.
 -/
 
 
@@ -26,12 +26,12 @@ variable {x y : E}
 /-- If `x` and `y` are on the same ray, then the triangle inequality becomes the equality: the norm
 of `x + y` is the sum of the norms of `x` and `y`. The converse is true for a strictly convex
 space. -/
-theorem norm_add (h : SameRay ℝ x y) : ∥x + y∥ = ∥x∥ + ∥y∥ := by
+theorem norm_add (h : SameRay ℝ x y) : ‖x + y‖ = ‖x‖ + ‖y‖ := by
   rcases h.exists_eq_smul with ⟨u, a, b, ha, hb, -, rfl, rfl⟩
   rw [← add_smul, norm_smul_of_nonneg (add_nonneg ha hb), norm_smul_of_nonneg ha, norm_smul_of_nonneg hb, add_mul]
 #align same_ray.norm_add SameRay.norm_add
 
-theorem norm_sub (h : SameRay ℝ x y) : ∥x - y∥ = |∥x∥ - ∥y∥| := by
+theorem norm_sub (h : SameRay ℝ x y) : ‖x - y‖ = |‖x‖ - ‖y‖| := by
   rcases h.exists_eq_smul with ⟨u, a, b, ha, hb, -, rfl, rfl⟩
   wlog (discharger := tactic.skip) hab : b ≤ a := le_total b a using a b, b a
   · rw [← sub_nonneg] at hab
@@ -43,9 +43,9 @@ theorem norm_sub (h : SameRay ℝ x y) : ∥x - y∥ = |∥x∥ - ∥y∥| := by
     
 #align same_ray.norm_sub SameRay.norm_sub
 
-theorem norm_smul_eq (h : SameRay ℝ x y) : ∥x∥ • y = ∥y∥ • x := by
+theorem norm_smul_eq (h : SameRay ℝ x y) : ‖x‖ • y = ‖y‖ • x := by
   rcases h.exists_eq_smul with ⟨u, a, b, ha, hb, -, rfl, rfl⟩
-  simp only [norm_smul_of_nonneg, *, mul_smul, smul_comm ∥u∥]
+  simp only [norm_smul_of_nonneg, *, mul_smul, smul_comm ‖u‖]
   apply smul_comm
 #align same_ray.norm_smul_eq SameRay.norm_smul_eq
 
@@ -65,23 +65,23 @@ theorem norm_inj_on_ray_right (hy : y ≠ 0) : { x | SameRay ℝ x y }.InjOn nor
   simpa only [same_ray_comm] using norm_inj_on_ray_left hy
 #align norm_inj_on_ray_right norm_inj_on_ray_right
 
-theorem same_ray_iff_norm_smul_eq : SameRay ℝ x y ↔ ∥x∥ • y = ∥y∥ • x :=
+theorem same_ray_iff_norm_smul_eq : SameRay ℝ x y ↔ ‖x‖ • y = ‖y‖ • x :=
   ⟨SameRay.norm_smul_eq, fun h =>
-    or_iff_not_imp_left.2 $ fun hx =>
-      or_iff_not_imp_left.2 $ fun hy => ⟨∥y∥, ∥x∥, norm_pos_iff.2 hy, norm_pos_iff.2 hx, h.symm⟩⟩
+    or_iff_not_imp_left.2 fun hx =>
+      or_iff_not_imp_left.2 fun hy => ⟨‖y‖, ‖x‖, norm_pos_iff.2 hy, norm_pos_iff.2 hx, h.symm⟩⟩
 #align same_ray_iff_norm_smul_eq same_ray_iff_norm_smul_eq
 
 /-- Two nonzero vectors `x y` in a real normed space are on the same ray if and only if the unit
-vectors `∥x∥⁻¹ • x` and `∥y∥⁻¹ • y` are equal. -/
-theorem same_ray_iff_inv_norm_smul_eq_of_ne (hx : x ≠ 0) (hy : y ≠ 0) : SameRay ℝ x y ↔ ∥x∥⁻¹ • x = ∥y∥⁻¹ • y := by
+vectors `‖x‖⁻¹ • x` and `‖y‖⁻¹ • y` are equal. -/
+theorem same_ray_iff_inv_norm_smul_eq_of_ne (hx : x ≠ 0) (hy : y ≠ 0) : SameRay ℝ x y ↔ ‖x‖⁻¹ • x = ‖y‖⁻¹ • y := by
   rw [inv_smul_eq_iff₀, smul_comm, eq_comm, inv_smul_eq_iff₀, same_ray_iff_norm_smul_eq] <;> rwa [norm_ne_zero_iff]
 #align same_ray_iff_inv_norm_smul_eq_of_ne same_ray_iff_inv_norm_smul_eq_of_ne
 
 alias same_ray_iff_inv_norm_smul_eq_of_ne ↔ SameRay.inv_norm_smul_eq _
 
 /-- Two vectors `x y` in a real normed space are on the ray if and only if one of them is zero or
-the unit vectors `∥x∥⁻¹ • x` and `∥y∥⁻¹ • y` are equal. -/
-theorem same_ray_iff_inv_norm_smul_eq : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ ∥x∥⁻¹ • x = ∥y∥⁻¹ • y := by
+the unit vectors `‖x‖⁻¹ • x` and `‖y‖⁻¹ • y` are equal. -/
+theorem same_ray_iff_inv_norm_smul_eq : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ ‖x‖⁻¹ • x = ‖y‖⁻¹ • y := by
   rcases eq_or_ne x 0 with (rfl | hx)
   · simp [SameRay.zero_left]
     
@@ -92,7 +92,7 @@ theorem same_ray_iff_inv_norm_smul_eq : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ 
 #align same_ray_iff_inv_norm_smul_eq same_ray_iff_inv_norm_smul_eq
 
 /-- Two vectors of the same norm are on the same ray if and only if they are equal. -/
-theorem same_ray_iff_of_norm_eq (h : ∥x∥ = ∥y∥) : SameRay ℝ x y ↔ x = y := by
+theorem same_ray_iff_of_norm_eq (h : ‖x‖ = ‖y‖) : SameRay ℝ x y ↔ x = y := by
   obtain rfl | hy := eq_or_ne y 0
   · rw [norm_zero, norm_eq_zero] at h
     exact iff_of_true (SameRay.zero_right _) h
@@ -101,17 +101,17 @@ theorem same_ray_iff_of_norm_eq (h : ∥x∥ = ∥y∥) : SameRay ℝ x y ↔ x 
     
 #align same_ray_iff_of_norm_eq same_ray_iff_of_norm_eq
 
-theorem not_same_ray_iff_of_norm_eq (h : ∥x∥ = ∥y∥) : ¬SameRay ℝ x y ↔ x ≠ y :=
+theorem not_same_ray_iff_of_norm_eq (h : ‖x‖ = ‖y‖) : ¬SameRay ℝ x y ↔ x ≠ y :=
   (same_ray_iff_of_norm_eq h).Not
 #align not_same_ray_iff_of_norm_eq not_same_ray_iff_of_norm_eq
 
 /-- If two points on the same ray have the same norm, then they are equal. -/
-theorem SameRay.eq_of_norm_eq (h : SameRay ℝ x y) (hn : ∥x∥ = ∥y∥) : x = y :=
+theorem SameRay.eq_of_norm_eq (h : SameRay ℝ x y) (hn : ‖x‖ = ‖y‖) : x = y :=
   (same_ray_iff_of_norm_eq hn).mp h
 #align same_ray.eq_of_norm_eq SameRay.eq_of_norm_eq
 
 /-- The norms of two vectors on the same ray are equal if and only if they are equal. -/
-theorem SameRay.norm_eq_iff (h : SameRay ℝ x y) : ∥x∥ = ∥y∥ ↔ x = y :=
+theorem SameRay.norm_eq_iff (h : SameRay ℝ x y) : ‖x‖ = ‖y‖ ↔ x = y :=
   ⟨h.eq_of_norm_eq, fun h => h ▸ rfl⟩
 #align same_ray.norm_eq_iff SameRay.norm_eq_iff
 

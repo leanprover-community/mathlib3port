@@ -54,20 +54,20 @@ instance : InnerProductSpace ℝ ℍ :=
       add_left := fun x y z => by simp only [inner_def, add_mul, add_re],
       smul_left := fun x y r => by simp [inner_def] }
 
-theorem norm_sq_eq_norm_sq (a : ℍ) : normSq a = ∥a∥ * ∥a∥ := by rw [← inner_self, real_inner_self_eq_norm_mul_norm]
+theorem norm_sq_eq_norm_sq (a : ℍ) : normSq a = ‖a‖ * ‖a‖ := by rw [← inner_self, real_inner_self_eq_norm_mul_norm]
 #align quaternion.norm_sq_eq_norm_sq Quaternion.norm_sq_eq_norm_sq
 
 instance : NormOneClass ℍ :=
   ⟨by rw [norm_eq_sqrt_real_inner, inner_self, norm_sq.map_one, Real.sqrt_one]⟩
 
 @[simp, norm_cast]
-theorem norm_coe (a : ℝ) : ∥(a : ℍ)∥ = ∥a∥ := by
+theorem norm_coe (a : ℝ) : ‖(a : ℍ)‖ = ‖a‖ := by
   rw [norm_eq_sqrt_real_inner, inner_self, norm_sq_coe, Real.sqrt_sq_eq_abs, Real.norm_eq_abs]
 #align quaternion.norm_coe Quaternion.norm_coe
 
 @[simp, norm_cast]
-theorem nnnorm_coe (a : ℝ) : ∥(a : ℍ)∥₊ = ∥a∥₊ :=
-  Subtype.ext $ norm_coe a
+theorem nnnorm_coe (a : ℝ) : ‖(a : ℍ)‖₊ = ‖a‖₊ :=
+  Subtype.ext <| norm_coe a
 #align quaternion.nnnorm_coe Quaternion.nnnorm_coe
 
 noncomputable instance : NormedDivisionRing ℍ where

@@ -47,7 +47,7 @@ quaternion
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Command.lean:390:34: infer kinds are unsupported in Lean 4: mk {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:382:34: infer kinds are unsupported in Lean 4: mk {} -/
 /-- Quaternion algebra over a type with fixed coefficients $a=i^2$ and $b=j^2$.
 Implemented as a structure with four fields: `re`, `im_i`, `im_j`, and `im_k`. -/
 @[nolint unused_arguments, ext.1]
@@ -324,9 +324,9 @@ theorem smul_coe : x • (y : ℍ[R,c₁,c₂]) = ↑(x * y) := by rw [coe_mul, 
 
 /-- Quaternion conjugate. -/
 def conj : ℍ[R,c₁,c₂] ≃ₗ[R] ℍ[R,c₁,c₂] :=
-  LinearEquiv.ofInvolutive
+  (LinearEquiv.ofInvolutive
       { toFun := fun a => ⟨a.1, -a.2, -a.3, -a.4⟩, map_add' := fun a b => by ext <;> simp [neg_add],
-        map_smul' := fun r a => by ext <;> simp } $
+        map_smul' := fun r a => by ext <;> simp })
     fun a => by simp
 #align quaternion_algebra.conj QuaternionAlgebra.conj
 
@@ -392,7 +392,7 @@ theorem conj_eq_two_re_sub : a.conj = ↑(2 * a.re) - a :=
 
 theorem commute_conj_self : Commute a.conj a := by
   rw [a.conj_eq_two_re_sub]
-  exact (coe_commute (2 * a.re) a).subLeft (Commute.refl a)
+  exact (coe_commute (2 * a.re) a).sub_left (Commute.refl a)
 #align quaternion_algebra.commute_conj_self QuaternionAlgebra.commute_conj_self
 
 theorem commute_self_conj : Commute a a.conj :=
@@ -670,22 +670,22 @@ theorem coe_sub : ((x - y : R) : ℍ[R]) = x - y :=
 
 @[simp]
 theorem mul_re : (a * b).re = a.re * b.re - a.imI * b.imI - a.imJ * b.imJ - a.imK * b.imK :=
-  (QuaternionAlgebra.has_mul_mul_re a b).trans $ by simp only [one_mul, neg_mul, sub_eq_add_neg, neg_neg]
+  (QuaternionAlgebra.has_mul_mul_re a b).trans <| by simp only [one_mul, neg_mul, sub_eq_add_neg, neg_neg]
 #align quaternion.mul_re Quaternion.mul_re
 
 @[simp]
 theorem mul_im_i : (a * b).imI = a.re * b.imI + a.imI * b.re + a.imJ * b.imK - a.imK * b.imJ :=
-  (QuaternionAlgebra.has_mul_mul_im_i a b).trans $ by simp only [one_mul, neg_mul, sub_eq_add_neg, neg_neg]
+  (QuaternionAlgebra.has_mul_mul_im_i a b).trans <| by simp only [one_mul, neg_mul, sub_eq_add_neg, neg_neg]
 #align quaternion.mul_im_i Quaternion.mul_im_i
 
 @[simp]
 theorem mul_im_j : (a * b).imJ = a.re * b.imJ - a.imI * b.imK + a.imJ * b.re + a.imK * b.imI :=
-  (QuaternionAlgebra.has_mul_mul_im_j a b).trans $ by simp only [one_mul, neg_mul, sub_eq_add_neg, neg_neg]
+  (QuaternionAlgebra.has_mul_mul_im_j a b).trans <| by simp only [one_mul, neg_mul, sub_eq_add_neg, neg_neg]
 #align quaternion.mul_im_j Quaternion.mul_im_j
 
 @[simp]
 theorem mul_im_k : (a * b).imK = a.re * b.imK + a.imI * b.imJ - a.imJ * b.imI + a.imK * b.re :=
-  (QuaternionAlgebra.has_mul_mul_im_k a b).trans $ by simp only [one_mul, neg_mul, sub_eq_add_neg, neg_neg]
+  (QuaternionAlgebra.has_mul_mul_im_k a b).trans <| by simp only [one_mul, neg_mul, sub_eq_add_neg, neg_neg]
 #align quaternion.mul_im_k Quaternion.mul_im_k
 
 @[simp, norm_cast]
@@ -898,7 +898,7 @@ def normSq : ℍ[R] →*₀ R where
   map_zero' := by rw [conj_zero, zero_mul, zero_re]
   map_one' := by rw [conj_one, one_mul, one_re]
   map_mul' x y :=
-    coe_injective $ by
+    coe_injective <| by
       conv_lhs =>
         rw [← mul_conj_eq_coe, conj_mul, mul_assoc, ← mul_assoc y, y.mul_conj_eq_coe, coe_commutes, ← mul_assoc,
           x.mul_conj_eq_coe, ← coe_mul]
@@ -1013,7 +1013,7 @@ section QuaternionAlgebra
 variable {R : Type _} (c₁ c₂ : R)
 
 private theorem pow_four [Infinite R] : (#R) ^ 4 = (#R) :=
-  power_nat_eq (aleph_0_le_mk R) $ by simp
+  power_nat_eq (aleph_0_le_mk R) <| by simp
 #align cardinal.pow_four cardinal.pow_four
 
 /-- The cardinality of a quaternion algebra, as a type. -/

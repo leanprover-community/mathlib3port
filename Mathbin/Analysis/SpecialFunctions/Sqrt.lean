@@ -169,7 +169,7 @@ theorem ContDiffOn.sqrt (hf : ContDiffOn ℝ n f s) (hs : ∀ x ∈ s, f x ≠ 0
 #align cont_diff_on.sqrt ContDiffOn.sqrt
 
 theorem ContDiff.sqrt (hf : ContDiff ℝ n f) (h : ∀ x, f x ≠ 0) : ContDiff ℝ n fun y => sqrt (f y) :=
-  cont_diff_iff_cont_diff_at.2 $ fun x => hf.ContDiffAt.sqrt (h x)
+  cont_diff_iff_cont_diff_at.2 fun x => hf.ContDiffAt.sqrt (h x)
 #align cont_diff.sqrt ContDiff.sqrt
 
 end fderiv

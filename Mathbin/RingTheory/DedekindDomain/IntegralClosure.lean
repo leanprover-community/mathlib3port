@@ -62,7 +62,7 @@ variable [Algebra C L] [IsIntegralClosure C A L] [Algebra A C] [IsScalarTower A 
 theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type _} [Fintype ι] [DecidableEq ι]
     (b : Basis ι K L) (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
     ((Algebra.linearMap C L).restrictScalars A).range ≤
-      Submodule.span A (Set.range $ (traceForm K L).dualBasis (trace_form_nondegenerate K L) b) :=
+      Submodule.span A (Set.range <| (traceForm K L).dualBasis (trace_form_nondegenerate K L) b) :=
   by
   let db := (trace_form K L).dualBasis (trace_form_nondegenerate K L) b
   rintro _ ⟨x, rfl⟩
@@ -89,7 +89,7 @@ theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type 
 theorem integral_closure_le_span_dual_basis [IsSeparable K L] {ι : Type _} [Fintype ι] [DecidableEq ι] (b : Basis ι K L)
     (hb_int : ∀ i, IsIntegral A (b i)) [IsIntegrallyClosed A] :
     (integralClosure A L).toSubmodule ≤
-      Submodule.span A (Set.range $ (traceForm K L).dualBasis (trace_form_nondegenerate K L) b) :=
+      Submodule.span A (Set.range <| (traceForm K L).dualBasis (trace_form_nondegenerate K L) b) :=
   by
   refine' le_trans _ (IsIntegralClosure.range_le_span_dual_basis (integralClosure A L) b hb_int)
   intro x hx
@@ -103,7 +103,7 @@ include K
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (y «expr ≠ » (0 : A)) -/
 /-- Send a set of `x`'es in a finite extension `L` of the fraction field of `R`
 to `(y : R) • x ∈ integral_closure R L`. -/
-theorem exists_integral_multiples (s : Finset L) : ∃ (y) (_ : y ≠ (0 : A)), ∀ x ∈ s, IsIntegral A (y • x) := by
+theorem exists_integral_multiples (s : Finset L) : ∃ (y : _)(_ : y ≠ (0 : A)), ∀ x ∈ s, IsIntegral A (y • x) := by
   haveI := Classical.decEq L
   refine' s.induction _ _
   · use 1, one_ne_zero
@@ -132,7 +132,7 @@ variable (L)
 
 /-- If `L` is a finite extension of `K = Frac(A)`,
 then `L` has a basis over `A` consisting of integral elements. -/
-theorem FiniteDimensional.exists_is_basis_integral : ∃ (s : Finset L) (b : Basis s K L), ∀ x, IsIntegral A (b x) := by
+theorem FiniteDimensional.exists_is_basis_integral : ∃ (s : Finset L)(b : Basis s K L), ∀ x, IsIntegral A (b x) := by
   letI := Classical.decEq L
   letI : IsNoetherian K L := IsNoetherian.iff_fg.2 inferInstance
   let s' := IsNoetherian.finsetBasisIndex K L
@@ -185,7 +185,7 @@ theorem IsIntegralClosure.is_noetherian [IsIntegrallyClosed A] [IsNoetherianRing
 integrally closed and Noetherian, the integral closure `C` of `A` in `L` is
 Noetherian. -/
 theorem IsIntegralClosure.is_noetherian_ring [IsIntegrallyClosed A] [IsNoetherianRing A] : IsNoetherianRing C :=
-  is_noetherian_ring_iff.mpr $ is_noetherian_of_tower A (IsIntegralClosure.is_noetherian A K L C)
+  is_noetherian_ring_iff.mpr <| is_noetherian_of_tower A (IsIntegralClosure.is_noetherian A K L C)
 #align is_integral_closure.is_noetherian_ring IsIntegralClosure.is_noetherian_ring
 
 variable {A K}

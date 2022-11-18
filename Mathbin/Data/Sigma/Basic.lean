@@ -6,6 +6,7 @@ Authors: Johannes Hölzl
 import Mathbin.Meta.Univs
 import Mathbin.Tactic.Lint.Default
 import Mathbin.Tactic.Ext
+import Mathbin.Logic.Function.Basic
 
 /-!
 THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
@@ -51,7 +52,7 @@ instance [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableE
     | _, b₁, _, b₂, is_true (Eq.refl a) =>
       match b₁, b₂, h₂ a b₁ b₂ with
       | _, _, is_true (Eq.refl b) => isTrue rfl
-      | b₁, b₂, is_false n => isFalse fun h => Sigma.noConfusion h fun e₁ e₂ => n $ eq_of_heq e₂
+      | b₁, b₂, is_false n => isFalse fun h => Sigma.noConfusion h fun e₁ e₂ => n <| eq_of_heq e₂
     | a₁, _, a₂, _, is_false n => isFalse fun h => Sigma.noConfusion h fun e₁ e₂ => n e₁
 
 /- warning: sigma.mk.inj_iff -> Sigma.mk.inj_iff is a dubious translation:
@@ -62,7 +63,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sigma.mk.inj_iff Sigma.mk.inj_iffₓ'. -/
 -- sometimes the built-in injectivity support does not work
 @[simp, nolint simp_nf]
-theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} : Sigma.mk a₁ b₁ = ⟨a₂, b₂⟩ ↔ a₁ = a₂ ∧ b₁ == b₂ := by simp
+theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} : Sigma.mk a₁ b₁ = ⟨a₂, b₂⟩ ↔ a₁ = a₂ ∧ HEq b₁ b₂ := by simp
 #align sigma.mk.inj_iff Sigma.mk.inj_iff
 
 /- warning: sigma.eta -> Sigma.eta is a dubious translation:
@@ -72,7 +73,7 @@ but is expected to have type
   forall {α : Type.{u_1}} {β : α -> Type.{u_2}} (x : Sigma.{u_1 u_2} α (fun (a : α) => β a)), Eq.{(max (succ u_1) (succ u_2))} (Sigma.{u_1 u_2} α β) (Sigma.mk.{u_1 u_2} α β (Sigma.fst.{u_1 u_2} α (fun (a : α) => β a) x) (Sigma.snd.{u_1 u_2} α (fun (a : α) => β a) x)) x
 Case conversion may be inaccurate. Consider using '#align sigma.eta Sigma.etaₓ'. -/
 @[simp]
-theorem eta : ∀ x : Σ a, β a, Sigma.mk x.1 x.2 = x
+theorem eta : ∀ x : Σa, β a, Sigma.mk x.1 x.2 = x
   | ⟨i, x⟩ => rfl
 #align sigma.eta Sigma.eta
 
@@ -83,7 +84,7 @@ but is expected to have type
   forall {α : Type.{u_1}} {β : α -> Type.{u_2}} {x₀ : Sigma.{u_1 u_2} α β} {x₁ : Sigma.{u_1 u_2} α β}, (Eq.{succ u_1} α (Sigma.fst.{u_1 u_2} α β x₀) (Sigma.fst.{u_1 u_2} α β x₁)) -> (HEq.{succ u_2} (β (Sigma.fst.{u_1 u_2} α β x₀)) (Sigma.snd.{u_1 u_2} α β x₀) (β (Sigma.fst.{u_1 u_2} α β x₁)) (Sigma.snd.{u_1 u_2} α β x₁)) -> (Eq.{(max (succ u_1) (succ u_2))} (Sigma.{u_1 u_2} α β) x₀ x₁)
 Case conversion may be inaccurate. Consider using '#align sigma.ext Sigma.extₓ'. -/
 @[ext.1]
-theorem ext {x₀ x₁ : Sigma β} (h₀ : x₀.1 = x₁.1) (h₁ : x₀.2 == x₁.2) : x₀ = x₁ := by
+theorem ext {x₀ x₁ : Sigma β} (h₀ : x₀.1 = x₁.1) (h₁ : HEq x₀.2 x₁.2) : x₀ = x₁ := by
   cases x₀
   cases x₁
   cases h₀
@@ -97,7 +98,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u_1}} {β : α -> Type.{u_2}} {x₀ : Sigma.{u_1 u_2} α β} {x₁ : Sigma.{u_1 u_2} α β}, Iff (Eq.{(max (succ u_1) (succ u_2))} (Sigma.{u_1 u_2} α β) x₀ x₁) (And (Eq.{succ u_1} α (Sigma.fst.{u_1 u_2} α β x₀) (Sigma.fst.{u_1 u_2} α β x₁)) (HEq.{succ u_2} (β (Sigma.fst.{u_1 u_2} α β x₀)) (Sigma.snd.{u_1 u_2} α β x₀) (β (Sigma.fst.{u_1 u_2} α β x₁)) (Sigma.snd.{u_1 u_2} α β x₁)))
 Case conversion may be inaccurate. Consider using '#align sigma.ext_iff Sigma.ext_iffₓ'. -/
-theorem ext_iff {x₀ x₁ : Sigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ x₀.2 == x₁.2 := by
+theorem ext_iff {x₀ x₁ : Sigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq x₀.2 x₁.2 := by
   cases x₀
   cases x₁
   exact Sigma.mk.inj_iff
@@ -107,13 +108,13 @@ theorem ext_iff {x₀ x₁ : Sigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ x�
 /-- A specialized ext lemma for equality of sigma types over an indexed subtype. -/
 @[ext.1]
 theorem subtype_ext {β : Type _} {p : α → β → Prop} :
-    ∀ {x₀ x₁ : Σ a, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
+    ∀ {x₀ x₁ : Σa, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
   | ⟨a₀, b₀, hb₀⟩, ⟨a₁, b₁, hb₁⟩, rfl, rfl => rfl
 #align sigma.subtype_ext Sigma.subtype_ext
 -/
 
 #print Sigma.subtype_ext_iff /-
-theorem subtype_ext_iff {β : Type _} {p : α → β → Prop} {x₀ x₁ : Σ a, Subtype (p a)} :
+theorem subtype_ext_iff {β : Type _} {p : α → β → Prop} {x₀ x₁ : Σa, Subtype (p a)} :
     x₀ = x₁ ↔ x₀.fst = x₁.fst ∧ (x₀.snd : β) = x₁.snd :=
   ⟨fun h => h ▸ ⟨rfl, rfl⟩, fun ⟨h₁, h₂⟩ => subtype_ext h₁ h₂⟩
 #align sigma.subtype_ext_iff Sigma.subtype_ext_iff
@@ -126,7 +127,7 @@ but is expected to have type
   forall {α : Type.{u_1}} {β : α -> Type.{u_2}} {p : (Sigma.{u_1 u_2} α (fun (a : α) => β a)) -> Prop}, Iff (forall (x : Sigma.{u_1 u_2} α (fun (a : α) => β a)), p x) (forall (a : α) (b : β a), p (Sigma.mk.{u_1 u_2} α (fun (a : α) => β a) a b))
 Case conversion may be inaccurate. Consider using '#align sigma.forall Sigma.forallₓ'. -/
 @[simp]
-theorem forall {p : (Σ a, β a) → Prop} : (∀ x, p x) ↔ ∀ a b, p ⟨a, b⟩ :=
+theorem forall {p : (Σa, β a) → Prop} : (∀ x, p x) ↔ ∀ a b, p ⟨a, b⟩ :=
   ⟨fun h a b => h ⟨a, b⟩, fun h ⟨a, b⟩ => h a b⟩
 #align sigma.forall Sigma.forall
 
@@ -136,9 +137,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u_1}} {β : α -> Type.{u_2}} {p : (Sigma.{u_1 u_2} α (fun (a : α) => β a)) -> Prop}, Iff (Exists.{(max (succ u_1) (succ u_2))} (Sigma.{u_1 u_2} α (fun (a : α) => β a)) (fun (x : Sigma.{u_1 u_2} α (fun (a : α) => β a)) => p x)) (Exists.{succ u_1} α (fun (a : α) => Exists.{succ u_2} (β a) (fun (b : β a) => p (Sigma.mk.{u_1 u_2} α (fun (a : α) => β a) a b))))
 Case conversion may be inaccurate. Consider using '#align sigma.exists Sigma.existsₓ'. -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 @[simp]
-theorem exists {p : (Σ a, β a) → Prop} : (∃ x, p x) ↔ ∃ (a) (b), p ⟨a, b⟩ :=
+theorem exists {p : (Σa, β a) → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b⟩ :=
   ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
 #align sigma.exists Sigma.exists
 
@@ -181,7 +181,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.injective.of_sigma_map Function.Injective.of_sigma_mapₓ'. -/
 theorem Function.Injective.of_sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)}
     (h : Function.Injective (Sigma.map f₁ f₂)) (a : α₁) : Function.Injective (f₂ a) := fun x y hxy =>
-  sigma_mk_injective $ @h ⟨a, x⟩ ⟨a, y⟩ (Sigma.ext rfl (heq_iff_eq.2 hxy))
+  sigma_mk_injective <| @h ⟨a, x⟩ ⟨a, y⟩ (Sigma.ext rfl (heq_iff_eq.2 hxy))
 #align function.injective.of_sigma_map Function.Injective.of_sigma_map
 
 /- warning: function.injective.sigma_map_iff -> Function.Injective.sigma_map_iff is a dubious translation:
@@ -234,7 +234,7 @@ Case conversion may be inaccurate. Consider using '#align sigma.uncurry_curry Si
 @[simp]
 theorem Sigma.uncurry_curry {γ : ∀ a, β a → Type _} (f : ∀ x : Sigma β, γ x.1 x.2) :
     Sigma.uncurry (Sigma.curry f) = f :=
-  funext $ fun ⟨i, j⟩ => rfl
+  funext fun ⟨i, j⟩ => rfl
 #align sigma.uncurry_curry Sigma.uncurry_curry
 
 /- warning: sigma.curry_uncurry -> Sigma.curry_uncurry is a dubious translation:
@@ -250,7 +250,7 @@ theorem Sigma.curry_uncurry {γ : ∀ a, β a → Type _} (f : ∀ (x) (y : β x
 
 #print Prod.toSigma /-
 /-- Convert a product type to a Σ-type. -/
-def Prod.toSigma {α β} (p : α × β) : Σ _ : α, β :=
+def Prod.toSigma {α β} (p : α × β) : Σ_ : α, β :=
   ⟨p.1, p.2⟩
 #align prod.to_sigma Prod.toSigma
 -/
@@ -303,7 +303,7 @@ theorem Prod.to_sigma_mk {α β} (x : α) (y : β) : (x, y).toSigma = ⟨x, y⟩
 -- we generate this manually as `@[derive has_reflect]` fails
 @[instance]
 protected unsafe def sigma.reflect.{u, v} [reflected_univ.{u}] [reflected_univ.{v}] {α : Type u} (β : α → Type v)
-    [reflected _ α] [reflected _ β] [hα : has_reflect α] [hβ : ∀ i, has_reflect (β i)] : has_reflect (Σ a, β a) :=
+    [reflected _ α] [reflected _ β] [hα : has_reflect α] [hβ : ∀ i, has_reflect (β i)] : has_reflect (Σa, β a) :=
   fun ⟨a, b⟩ =>
   (by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
         reflected _ @Sigma.mk.{u, v}).subst₄
@@ -345,7 +345,7 @@ instance [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableE
     | _, b₁, _, b₂, is_true (Eq.refl a) =>
       match b₁, b₂, h₂ a b₁ b₂ with
       | _, _, is_true (Eq.refl b) => isTrue rfl
-      | b₁, b₂, is_false n => isFalse fun h => PSigma.noConfusion h fun e₁ e₂ => n $ eq_of_heq e₂
+      | b₁, b₂, is_false n => isFalse fun h => PSigma.noConfusion h fun e₁ e₂ => n <| eq_of_heq e₂
     | a₁, _, a₂, _, is_false n => isFalse fun h => PSigma.noConfusion h fun e₁ e₂ => n e₁
 
 /- warning: psigma.mk.inj_iff -> PSigma.mk.inj_iff is a dubious translation:
@@ -355,8 +355,8 @@ but is expected to have type
   forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {a₁ : α} {a₂ : α} {b₁ : β a₁} {b₂ : β a₂}, Iff (Eq.{(max (max 1 u_1) u_2)} (PSigma.{u_1 u_2} α β) (PSigma.mk.{u_1 u_2} α β a₁ b₁) (PSigma.mk.{u_1 u_2} α β a₂ b₂)) (And (Eq.{u_1} α a₁ a₂) (HEq.{u_2} (β a₁) b₁ (β a₂) b₂))
 Case conversion may be inaccurate. Consider using '#align psigma.mk.inj_iff PSigma.mk.inj_iffₓ'. -/
 theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} :
-    @PSigma.mk α β a₁ b₁ = @PSigma.mk α β a₂ b₂ ↔ a₁ = a₂ ∧ b₁ == b₂ :=
-  Iff.intro PSigma.mk.inj $ fun ⟨h₁, h₂⟩ =>
+    @PSigma.mk α β a₁ b₁ = @PSigma.mk α β a₂ b₂ ↔ a₁ = a₂ ∧ HEq b₁ b₂ :=
+  (Iff.intro PSigma.mk.inj) fun ⟨h₁, h₂⟩ =>
     match a₁, a₂, b₁, b₂, h₁, h₂ with
     | _, _, _, _, Eq.refl a, HEq.refl b => rfl
 #align psigma.mk.inj_iff PSigma.mk.inj_iff
@@ -368,7 +368,7 @@ but is expected to have type
   forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {x₀ : PSigma.{u_1 u_2} α β} {x₁ : PSigma.{u_1 u_2} α β}, (Eq.{u_1} α (PSigma.fst.{u_1 u_2} α β x₀) (PSigma.fst.{u_1 u_2} α β x₁)) -> (HEq.{u_2} (β (PSigma.fst.{u_1 u_2} α β x₀)) (PSigma.snd.{u_1 u_2} α β x₀) (β (PSigma.fst.{u_1 u_2} α β x₁)) (PSigma.snd.{u_1 u_2} α β x₁)) -> (Eq.{(max (max 1 u_1) u_2)} (PSigma.{u_1 u_2} α β) x₀ x₁)
 Case conversion may be inaccurate. Consider using '#align psigma.ext PSigma.extₓ'. -/
 @[ext.1]
-theorem ext {x₀ x₁ : PSigma β} (h₀ : x₀.1 = x₁.1) (h₁ : x₀.2 == x₁.2) : x₀ = x₁ := by
+theorem ext {x₀ x₁ : PSigma β} (h₀ : x₀.1 = x₁.1) (h₁ : HEq x₀.2 x₁.2) : x₀ = x₁ := by
   cases x₀
   cases x₁
   cases h₀
@@ -382,7 +382,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {x₀ : PSigma.{u_1 u_2} α β} {x₁ : PSigma.{u_1 u_2} α β}, Iff (Eq.{(max (max 1 u_1) u_2)} (PSigma.{u_1 u_2} α β) x₀ x₁) (And (Eq.{u_1} α (PSigma.fst.{u_1 u_2} α β x₀) (PSigma.fst.{u_1 u_2} α β x₁)) (HEq.{u_2} (β (PSigma.fst.{u_1 u_2} α β x₀)) (PSigma.snd.{u_1 u_2} α β x₀) (β (PSigma.fst.{u_1 u_2} α β x₁)) (PSigma.snd.{u_1 u_2} α β x₁)))
 Case conversion may be inaccurate. Consider using '#align psigma.ext_iff PSigma.ext_iffₓ'. -/
-theorem ext_iff {x₀ x₁ : PSigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ x₀.2 == x₁.2 := by
+theorem ext_iff {x₀ x₁ : PSigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq x₀.2 x₁.2 := by
   cases x₀
   cases x₁
   exact PSigma.mk.inj_iff
@@ -395,7 +395,7 @@ but is expected to have type
   forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {p : (PSigma.{u_1 u_2} α (fun (a : α) => β a)) -> Prop}, Iff (forall (x : PSigma.{u_1 u_2} α (fun (a : α) => β a)), p x) (forall (a : α) (b : β a), p (PSigma.mk.{u_1 u_2} α (fun (a : α) => β a) a b))
 Case conversion may be inaccurate. Consider using '#align psigma.forall PSigma.forallₓ'. -/
 @[simp]
-theorem forall {p : (Σ' a, β a) → Prop} : (∀ x, p x) ↔ ∀ a b, p ⟨a, b⟩ :=
+theorem forall {p : (Σ'a, β a) → Prop} : (∀ x, p x) ↔ ∀ a b, p ⟨a, b⟩ :=
   ⟨fun h a b => h ⟨a, b⟩, fun h ⟨a, b⟩ => h a b⟩
 #align psigma.forall PSigma.forall
 
@@ -405,9 +405,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Sort.{u_1}} {β : α -> Sort.{u_2}} {p : (PSigma.{u_1 u_2} α (fun (a : α) => β a)) -> Prop}, Iff (Exists.{(max (max 1 u_1) u_2)} (PSigma.{u_1 u_2} α (fun (a : α) => β a)) (fun (x : PSigma.{u_1 u_2} α (fun (a : α) => β a)) => p x)) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} (β a) (fun (b : β a) => p (PSigma.mk.{u_1 u_2} α (fun (a : α) => β a) a b))))
 Case conversion may be inaccurate. Consider using '#align psigma.exists PSigma.existsₓ'. -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 @[simp]
-theorem exists {p : (Σ' a, β a) → Prop} : (∃ x, p x) ↔ ∃ (a) (b), p ⟨a, b⟩ :=
+theorem exists {p : (Σ'a, β a) → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b⟩ :=
   ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
 #align psigma.exists PSigma.exists
 
@@ -415,13 +414,13 @@ theorem exists {p : (Σ' a, β a) → Prop} : (∃ x, p x) ↔ ∃ (a) (b), p �
 /-- A specialized ext lemma for equality of psigma types over an indexed subtype. -/
 @[ext.1]
 theorem subtype_ext {β : Sort _} {p : α → β → Prop} :
-    ∀ {x₀ x₁ : Σ' a, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
+    ∀ {x₀ x₁ : Σ'a, Subtype (p a)}, x₀.fst = x₁.fst → (x₀.snd : β) = x₁.snd → x₀ = x₁
   | ⟨a₀, b₀, hb₀⟩, ⟨a₁, b₁, hb₁⟩, rfl, rfl => rfl
 #align psigma.subtype_ext PSigma.subtype_ext
 -/
 
 #print PSigma.subtype_ext_iff /-
-theorem subtype_ext_iff {β : Sort _} {p : α → β → Prop} {x₀ x₁ : Σ' a, Subtype (p a)} :
+theorem subtype_ext_iff {β : Sort _} {p : α → β → Prop} {x₀ x₁ : Σ'a, Subtype (p a)} :
     x₀ = x₁ ↔ x₀.fst = x₁.fst ∧ (x₀.snd : β) = x₁.snd :=
   ⟨fun h => h ▸ ⟨rfl, rfl⟩, fun ⟨h₁, h₂⟩ => subtype_ext h₁ h₂⟩
 #align psigma.subtype_ext_iff PSigma.subtype_ext_iff

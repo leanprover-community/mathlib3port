@@ -289,12 +289,12 @@ theorem contMdiffAtFinsetProd' (h : ∀ i ∈ t, ContMdiffAt I' I n (f i) x) : C
 
 @[to_additive]
 theorem contMdiffOnFinsetProd' (h : ∀ i ∈ t, ContMdiffOn I' I n (f i) s) : ContMdiffOn I' I n (∏ i in t, f i) s :=
-  fun x hx => contMdiffWithinAtFinsetProd' $ fun i hi => h i hi x hx
+  fun x hx => contMdiffWithinAtFinsetProd' fun i hi => h i hi x hx
 #align cont_mdiff_on_finset_prod' contMdiffOnFinsetProd'
 
 @[to_additive]
 theorem contMdiffFinsetProd' (h : ∀ i ∈ t, ContMdiff I' I n (f i)) : ContMdiff I' I n (∏ i in t, f i) := fun x =>
-  contMdiffAtFinsetProd' $ fun i hi => h i hi x
+  contMdiffAtFinsetProd' fun i hi => h i hi x
 #align cont_mdiff_finset_prod' contMdiffFinsetProd'
 
 @[to_additive]
@@ -312,12 +312,12 @@ theorem contMdiffAtFinsetProd (h : ∀ i ∈ t, ContMdiffAt I' I n (f i) x) :
 
 @[to_additive]
 theorem contMdiffOnFinsetProd (h : ∀ i ∈ t, ContMdiffOn I' I n (f i) s) :
-    ContMdiffOn I' I n (fun x => ∏ i in t, f i x) s := fun x hx => contMdiffWithinAtFinsetProd $ fun i hi => h i hi x hx
+    ContMdiffOn I' I n (fun x => ∏ i in t, f i x) s := fun x hx => contMdiffWithinAtFinsetProd fun i hi => h i hi x hx
 #align cont_mdiff_on_finset_prod contMdiffOnFinsetProd
 
 @[to_additive]
 theorem contMdiffFinsetProd (h : ∀ i ∈ t, ContMdiff I' I n (f i)) : ContMdiff I' I n fun x => ∏ i in t, f i x :=
-  fun x => contMdiffAtFinsetProd $ fun i hi => h i hi x
+  fun x => contMdiffAtFinsetProd fun i hi => h i hi x
 #align cont_mdiff_finset_prod contMdiffFinsetProd
 
 @[to_additive]

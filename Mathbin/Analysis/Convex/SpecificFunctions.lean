@@ -51,7 +51,7 @@ theorem Even.convex_on_pow {n : ℕ} (hn : Even n) : ConvexOn ℝ Set.univ fun x
   · simp only [deriv_pow', Differentiable.mul, differentiableConst, differentiablePow]
     
   · intro x
-    obtain ⟨k, hk⟩ := (hn.tsub $ even_bit0 _).exists_two_nsmul _
+    obtain ⟨k, hk⟩ := (hn.tsub <| even_bit0 _).exists_two_nsmul _
     rw [iter_deriv_pow, Finset.prod_range_cast_nat_sub, hk, nsmul_eq_mul, pow_mul']
     exact mul_nonneg (Nat.cast_nonneg _) (pow_two_nonneg _)
     
@@ -62,7 +62,7 @@ theorem Even.strict_convex_on_pow {n : ℕ} (hn : Even n) (h : n ≠ 0) : Strict
   apply StrictMono.strict_convex_on_univ_of_deriv (continuous_pow n)
   rw [deriv_pow']
   replace h := Nat.pos_of_ne_zero h
-  exact StrictMono.const_mul (Odd.strict_mono_pow $ Nat.Even.sub_odd h hn $ Nat.odd_iff.2 rfl) (Nat.cast_pos.2 h)
+  exact StrictMono.const_mul (Odd.strict_mono_pow <| Nat.Even.sub_odd h hn <| Nat.odd_iff.2 rfl) (Nat.cast_pos.2 h)
 #align even.strict_convex_on_pow Even.strict_convex_on_pow
 
 /-- `x^n`, `n : ℕ` is convex on `[0, +∞)` for all `n` -/
@@ -82,14 +82,14 @@ theorem strict_convex_on_pow {n : ℕ} (hn : 2 ≤ n) : StrictConvexOn ℝ (ici 
   apply StrictMonoOn.strict_convex_on_of_deriv (convex_Ici _) (continuous_on_pow _)
   rw [deriv_pow', interior_Ici]
   exact fun x (hx : 0 < x) y hy hxy =>
-    mul_lt_mul_of_pos_left (pow_lt_pow_of_lt_left hxy hx.le $ Nat.sub_pos_of_lt hn)
-      (Nat.cast_pos.2 $ zero_lt_two.trans_le hn)
+    mul_lt_mul_of_pos_left (pow_lt_pow_of_lt_left hxy hx.le <| Nat.sub_pos_of_lt hn)
+      (Nat.cast_pos.2 <| zero_lt_two.trans_le hn)
 #align strict_convex_on_pow strict_convex_on_pow
 
 /-- Specific case of Jensen's inequality for sums of powers -/
 theorem Real.pow_sum_div_card_le_sum_pow {α : Type _} {s : Finset α} {f : α → ℝ} (n : ℕ) (hf : ∀ a ∈ s, 0 ≤ f a) :
     (∑ x in s, f x) ^ (n + 1) / s.card ^ n ≤ ∑ x in s, f x ^ (n + 1) := by
-  by_cases hs0:s = ∅
+  by_cases hs0 : s = ∅
   · simp_rw [hs0, Finset.sum_empty, zero_pow' _ (Nat.succ_ne_zero n), zero_div]
     
   · have hs : s.card ≠ 0 := hs0 ∘ Finset.card_eq_zero.1
@@ -157,13 +157,13 @@ theorem int_prod_range_pos {m : ℤ} {n : ℕ} (hn : Even n) (hm : m ∉ ico (0 
   rw [eq_comm, Finset.prod_eq_zero_iff] at h
   obtain ⟨a, ha, h⟩ := h
   rw [sub_eq_zero.1 h]
-  exact ⟨Int.ofNat_zero_le _, Int.coe_nat_lt.2 $ Finset.mem_range.1 ha⟩
+  exact ⟨Int.ofNat_zero_le _, Int.coe_nat_lt.2 <| Finset.mem_range.1 ha⟩
 #align int_prod_range_pos int_prod_range_pos
 
 /-- `x^m`, `m : ℤ` is convex on `(0, +∞)` for all `m` -/
 theorem convex_on_zpow (m : ℤ) : ConvexOn ℝ (ioi 0) fun x : ℝ => x ^ m := by
   have : ∀ n : ℤ, DifferentiableOn ℝ (fun x => x ^ n) (Ioi (0 : ℝ)) := fun n =>
-    differentiableOnZpow _ _ (Or.inl $ lt_irrefl _)
+    differentiableOnZpow _ _ (Or.inl <| lt_irrefl _)
   apply convex_on_of_deriv2_nonneg (convex_Ioi 0) <;> try simp only [interior_Ioi, deriv_zpow']
   · exact (this _).ContinuousOn
     
@@ -238,7 +238,7 @@ theorem strict_concave_on_log_Ioi : StrictConcaveOn ℝ (ioi 0) log := by
   rw [Function.iterate_succ, Function.iterate_one]
   change (deriv (deriv log)) x < 0
   rw [deriv_log', deriv_inv]
-  exact neg_neg_of_pos (inv_pos.2 $ sq_pos_of_ne_zero _ hx.ne')
+  exact neg_neg_of_pos (inv_pos.2 <| sq_pos_of_ne_zero _ hx.ne')
 #align strict_concave_on_log_Ioi strict_concave_on_log_Ioi
 
 theorem strict_concave_on_log_Iio : StrictConcaveOn ℝ (iio 0) log := by
@@ -247,7 +247,7 @@ theorem strict_concave_on_log_Iio : StrictConcaveOn ℝ (iio 0) log := by
   rw [Function.iterate_succ, Function.iterate_one]
   change (deriv (deriv log)) x < 0
   rw [deriv_log', deriv_inv]
-  exact neg_neg_of_pos (inv_pos.2 $ sq_pos_of_ne_zero _ hx.ne)
+  exact neg_neg_of_pos (inv_pos.2 <| sq_pos_of_ne_zero _ hx.ne)
 #align strict_concave_on_log_Iio strict_concave_on_log_Iio
 
 section SqrtMulLog
@@ -284,7 +284,7 @@ theorem deriv2_sqrt_mul_log (x : ℝ) : (deriv^[2]) (fun x => sqrt x * log x) x 
     
   · have h₀ : sqrt x ≠ 0 := sqrt_ne_zero'.2 hx
     convert
-      (((has_deriv_at_log hx.ne').const_add 2).div ((has_deriv_at_sqrt hx.ne').const_mul 2) $
+      (((has_deriv_at_log hx.ne').const_add 2).div ((has_deriv_at_sqrt hx.ne').const_mul 2) <|
           mul_ne_zero two_ne_zero h₀).deriv using
       1
     nth_rw 2 [← mul_self_sqrt hx.le]

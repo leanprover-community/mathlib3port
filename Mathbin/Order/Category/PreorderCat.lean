@@ -76,8 +76,8 @@ def dual : PreorderCat ⥤ PreorderCat where
 /-- The equivalence between `Preorder` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : PreorderCat ≌ PreorderCat :=
-  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk $ OrderIso.dualDual X) $ fun X Y f => rfl)
-    ((NatIso.ofComponents fun X => iso.mk $ OrderIso.dualDual X) $ fun X Y f => rfl)
+  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align Preorder.dual_equiv PreorderCat.dualEquiv
 
 end PreorderCat

@@ -42,7 +42,7 @@ def PosSemidef (M : Matrix n n 𝕜) :=
 theorem PosDef.posSemidef {M : Matrix n n 𝕜} (hM : M.PosDef) : M.PosSemidef := by
   refine' ⟨hM.1, _⟩
   intro x
-  by_cases hx:x = 0
+  by_cases hx : x = 0
   · simp only [hx, zero_dot_product, star_zero, IsROrC.zero_re']
     
   · exact le_of_lt (hM.2 x hx)
@@ -137,7 +137,7 @@ noncomputable def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDe
       conj_sym := fun x y => by
         rw [star_dot_product, star_ring_end_apply, star_star, star_mul_vec, dot_product_mul_vec, hM.is_hermitian.eq],
       nonneg_re := fun x => by
-        by_cases h:x = 0
+        by_cases h : x = 0
         · simp [h]
           
         · exact le_of_lt (hM.2 x h)

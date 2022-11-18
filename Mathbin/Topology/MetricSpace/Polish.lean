@@ -3,10 +3,10 @@ Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Topology.MetricSpace.PiNat
 import Mathbin.Topology.MetricSpace.Isometry
 import Mathbin.Topology.MetricSpace.Gluing
+import Mathbin.Analysis.Normed.Field.Basic
 
 /-!
 # Polish spaces
@@ -55,7 +55,7 @@ variable {α : Type _} {β : Type _}
 /-! ### Basic properties of Polish spaces -/
 
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`second_countable] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`second_countable] [] -/
 /-- A Polish space is a topological space with second countable topology, that can be endowed
 with a metric for which it is complete.
 We register an instance from complete second countable metric space to polish space, and not the
@@ -120,18 +120,18 @@ instance natFun [TopologicalSpace α] [PolishSpace α] : PolishSpace (ℕ → α
 
 /-- A countable disjoint union of Polish spaces is Polish. -/
 instance sigma {ι : Type _} [Countable ι] {E : ι → Type _} [∀ n, TopologicalSpace (E n)] [∀ n, PolishSpace (E n)] :
-    PolishSpace (Σ n, E n) := by
+    PolishSpace (Σn, E n) := by
   letI := fun n => upgradePolishSpace (E n)
-  letI : MetricSpace (Σ n, E n) := sigma.metric_space
-  haveI : CompleteSpace (Σ n, E n) := sigma.complete_space
+  letI : MetricSpace (Σn, E n) := sigma.metric_space
+  haveI : CompleteSpace (Σn, E n) := sigma.complete_space
   infer_instance
 #align polish_space.sigma PolishSpace.sigma
 
 /-- The disjoint union of two Polish spaces is Polish. -/
-instance sum [TopologicalSpace α] [PolishSpace α] [TopologicalSpace β] [PolishSpace β] : PolishSpace (α ⊕ β) := by
+instance sum [TopologicalSpace α] [PolishSpace α] [TopologicalSpace β] [PolishSpace β] : PolishSpace (Sum α β) := by
   letI := upgradePolishSpace α
   letI := upgradePolishSpace β
-  letI : MetricSpace (α ⊕ β) := metric_space_sum
+  letI : MetricSpace (Sum α β) := metric_space_sum
   infer_instance
 #align polish_space.sum PolishSpace.sum
 
@@ -439,13 +439,13 @@ theorem _root_.is_closed.is_clopenable [TopologicalSpace α] [PolishSpace α] {s
   haveI : PolishSpace s := hs.polish_space
   let t : Set α := sᶜ
   haveI : PolishSpace t := hs.is_open_compl.polish_space
-  let f : α ≃ s ⊕ t := (Equiv.Set.sumCompl s).symm
-  letI T : TopologicalSpace (s ⊕ t) := by infer_instance
+  let f : α ≃ Sum s t := (Equiv.Set.sumCompl s).symm
+  letI T : TopologicalSpace (Sum s t) := by infer_instance
   let t' : TopologicalSpace α := T.induced f
   let g := @Equiv.toHomeomorphOfInducing _ _ t' T f { induced := rfl }
-  have A : g ⁻¹' range (Sum.inl : s → s ⊕ t) = s := by
+  have A : g ⁻¹' range (Sum.inl : s → Sum s t) = s := by
     ext x
-    by_cases h:x ∈ s
+    by_cases h : x ∈ s
     · simp only [Equiv.Set.sum_compl_symm_apply_of_mem, h, mem_preimage, Equiv.to_fun_as_coe, mem_range_self,
         Equiv.to_homeomorph_of_inducing_apply]
       
@@ -454,7 +454,7 @@ theorem _root_.is_closed.is_clopenable [TopologicalSpace α] [PolishSpace α] {s
       
   refine' ⟨t', _, f.polish_space_induced, _, _⟩
   · intro u hu
-    change ∃ s' : Set (↥s ⊕ ↥t), T.is_open s' ∧ f ⁻¹' s' = u
+    change ∃ s' : Set (Sum (↥s) ↥t), T.is_open s' ∧ f ⁻¹' s' = u
     refine' ⟨f.symm ⁻¹' u, _, by simp only [Equiv.symm_symm, Equiv.symm_preimage_preimage]⟩
     refine' is_open_sum_iff.2 ⟨_, _⟩
     · have : IsOpen ((coe : s → α) ⁻¹' u) := IsOpen.preimage continuous_subtype_coe hu
@@ -470,7 +470,7 @@ theorem _root_.is_closed.is_clopenable [TopologicalSpace α] [PolishSpace α] {s
       rwa [this]
       
     
-  · have : @IsClosed α t' (g ⁻¹' range (Sum.inl : s → s ⊕ t)) := by
+  · have : @IsClosed α t' (g ⁻¹' range (Sum.inl : s → Sum s t)) := by
       apply IsClosed.preimage
       · exact @Homeomorph.continuous _ _ t' _ g
         
@@ -479,7 +479,7 @@ theorem _root_.is_closed.is_clopenable [TopologicalSpace α] [PolishSpace α] {s
     convert this
     exact A.symm
     
-  · have : @IsOpen α t' (g ⁻¹' range (Sum.inl : s → s ⊕ t)) := by
+  · have : @IsOpen α t' (g ⁻¹' range (Sum.inl : s → Sum s t)) := by
       apply IsOpen.preimage
       · exact @Homeomorph.continuous _ _ t' _ g
         

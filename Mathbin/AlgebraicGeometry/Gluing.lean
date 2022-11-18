@@ -157,7 +157,7 @@ instance ι_is_open_immersion (i : D.J) : IsOpenImmersion (𝖣.ι i) := by
   infer_instance
 #align algebraic_geometry.Scheme.glue_data.ι_is_open_immersion AlgebraicGeometry.SchemeCat.GlueData.ι_is_open_immersion
 
-theorem ι_jointly_surjective (x : 𝖣.glued.carrier) : ∃ (i : D.J) (y : (D.U i).carrier), (D.ι i).1.base y = x :=
+theorem ι_jointly_surjective (x : 𝖣.glued.carrier) : ∃ (i : D.J)(y : (D.U i).carrier), (D.ι i).1.base y = x :=
   𝖣.ι_jointly_surjective (forget_to_Top ⋙ forget TopCat) x
 #align
   algebraic_geometry.Scheme.glue_data.ι_jointly_surjective AlgebraicGeometry.SchemeCat.GlueData.ι_jointly_surjective
@@ -216,7 +216,7 @@ theorem ι_iso_carrier_inv (i : D.J) :
 
 /-- An equivalence relation on `Σ i, D.U i` that holds iff `𝖣 .ι i x = 𝖣 .ι j y`.
 See `Scheme.gluing_data.ι_eq_iff`. -/
-def Rel (a b : Σ i, ((D.U i).carrier : Type _)) : Prop :=
+def Rel (a b : Σi, ((D.U i).carrier : Type _)) : Prop :=
   a = b ∨ ∃ x : (D.V (a.1, b.1)).carrier, (D.f _ _).1.base x = a.2 ∧ (D.t _ _ ≫ D.f _ _).1.base x = b.2
 #align algebraic_geometry.Scheme.glue_data.rel AlgebraicGeometry.SchemeCat.GlueData.Rel
 
@@ -379,7 +379,7 @@ theorem from_glued_injective : Function.Injective 𝒰.fromGlued.1.base := by
 instance from_glued_stalk_iso (x : 𝒰.gluedCover.glued.carrier) :
     IsIso (PresheafedSpaceCat.stalkMap 𝒰.fromGlued.val x) := by
   obtain ⟨i, x, rfl⟩ := 𝒰.glued_cover.ι_jointly_surjective x
-  have := PresheafedSpace.stalk_map.congr_hom _ _ (congr_arg LocallyRingedSpace.hom.val $ 𝒰.ι_from_glued i) x
+  have := PresheafedSpace.stalk_map.congr_hom _ _ (congr_arg LocallyRingedSpace.hom.val <| 𝒰.ι_from_glued i) x
   erw [PresheafedSpace.stalk_map.comp] at this
   rw [← is_iso.eq_comp_inv] at this
   rw [this]

@@ -49,7 +49,7 @@ initialize
 `true`.
 -/
 unsafe def trace_eliminate_hyp {α} [has_to_format α] (msg : Thunk' α) : tactic Unit :=
-  when_tracing `eliminate_hyp $ trace $ to_fmt "eliminate_hyp: " ++ to_fmt (msg ())
+  when_tracing `eliminate_hyp <| trace <| to_fmt "eliminate_hyp: " ++ to_fmt (msg ())
 #align tactic.eliminate.trace_eliminate_hyp tactic.eliminate.trace_eliminate_hyp
 
 /-- `trace_state_eliminate_hyp msg` traces `msg` followed by the tactic state if the
@@ -57,7 +57,7 @@ option `trace.eliminate_hyp` is `true`.
 -/
 unsafe def trace_state_eliminate_hyp {α} [has_to_format α] (msg : Thunk' α) : tactic Unit := do
   let state ← read
-  trace_eliminate_hyp $ format.join [to_fmt (msg ()), "\n-----\n", to_fmt State, "\n-----"]
+  trace_eliminate_hyp <| format.join [to_fmt (msg ()), "\n-----\n", to_fmt State, "\n-----"]
 #align tactic.eliminate.trace_state_eliminate_hyp tactic.eliminate.trace_state_eliminate_hyp
 
 /-!
@@ -197,7 +197,7 @@ unsafe structure major_premise_info where
 equal.
 -/
 unsafe def index_occurrence_type_match (t s : expr) : tactic Bool :=
-  succeeds $ is_def_eq t s
+  succeeds <| is_def_eq t s
 #align tactic.eliminate.index_occurrence_type_match tactic.eliminate.index_occurrence_type_match
 
 /-- From the return type of a constructor `C` of an inductive type `I`, determine
@@ -219,10 +219,10 @@ unsafe def get_index_occurrences (num_params : ℕ) (ret_type : expr) : tactic (
         if i < num_params then pure occ_map
           else do
             let ret_arg_consts := ret_arg
-            ret_arg_consts occ_map $ fun c occ_map => do
+            (ret_arg_consts occ_map) fun c occ_map => do
                 let ret_arg_type ← infer_type ret_arg
                 let eq ← index_occurrence_type_match c ret_arg_type
-                pure $ if Eq then occ_map c i else occ_map)
+                pure <| if Eq then occ_map c i else occ_map)
       mk_rb_map
 #align tactic.eliminate.get_index_occurrences tactic.eliminate.get_index_occurrences
 
@@ -236,7 +236,7 @@ WHNF with semireducible transparency.
 unsafe def match_recursive_constructor_arg (I : Name) (T : expr) : tactic (Option ℕ) := do
   let (pis, base) ← open_pis_whnf T
   let base ← get_app_fn_whnf base
-  pure $
+  pure <|
       match base with
       | const c _ => if c = I then some pis else none
       | _ => none
@@ -257,8 +257,8 @@ unsafe def get_constructor_argument_info (inductive_name : Name) (num_params : �
     tactic (List constructor_argument_info) := do
   let ⟨args, ret⟩ ← open_pis_whnf_dep T
   let index_occs ← get_index_occurrences num_params ret
-  args $ fun ⟨c, dep⟩ => do
-      let occs := rb_set.of_list $ index_occs c
+  args fun ⟨c, dep⟩ => do
+      let occs := rb_set.of_list <| index_occs c
       let type := c
       let recursive_leading_pis ← match_recursive_constructor_arg inductive_name type
       pure ⟨c, type, dep, occs, recursive_leading_pis⟩
@@ -278,11 +278,11 @@ A `constructor_info` structure for `C`.
 -/
 unsafe def get_constructor_info (iname : Name) (num_params : ℕ) (c : Name) : tactic constructor_info := do
   let env ← get_env
-  when (¬env c) $ throwError "Expected {← c} to be a constructor."
+  when ¬env c <| throwError "Expected {← c} to be a constructor."
   let decl ← env.get c
   let args ← get_constructor_argument_info iname num_params decl.type
   let non_param_args := args.drop num_params
-  let rec_args := non_param_args.filter $ fun ainfo => ainfo.is_recursive
+  let rec_args := non_param_args.filter fun ainfo => ainfo.is_recursive
   pure { cname := decl, non_param_args, num_non_param_args := non_param_args, rec_args, num_rec_args := rec_args }
 #align tactic.eliminate.get_constructor_info tactic.eliminate.get_constructor_info
 
@@ -290,7 +290,7 @@ unsafe def get_constructor_info (iname : Name) (num_params : ℕ) (c : Name) : t
 -/
 unsafe def get_inductive_info (I : Name) : tactic inductive_info := do
   let env ← get_env
-  when (¬env I) $ throwError "Expected {← I} to be an inductive type."
+  when ¬env I <| throwError "Expected {← I} to be an inductive type."
   let decl ← env.get I
   let type := decl.type
   let num_params := env.inductive_num_params I
@@ -338,7 +338,7 @@ unsafe def constructor_argument_naming_rule : Type :=
 /-- Naming rule for recursive constructor arguments.
 -/
 unsafe def constructor_argument_naming_rule_rec : constructor_argument_naming_rule := fun i =>
-  pure $ if i.ainfo.is_recursive then [i.mpinfo.mpname] else []
+  pure <| if i.ainfo.is_recursive then [i.mpinfo.mpname] else []
 #align tactic.eliminate.constructor_argument_naming_rule_rec tactic.eliminate.constructor_argument_naming_rule_rec
 
 /-- Naming rule for constructor arguments associated with an index.
@@ -357,7 +357,7 @@ unsafe def constructor_argument_naming_rule_index : constructor_argument_naming_
     arg can be an arbitrary term as long as that term *contains* only a single local
     const.
     -/
-    pure $
+    pure <|
     match local_index_instantiations with
     | none => []
     | some [] => []
@@ -370,7 +370,7 @@ declaration.
 unsafe def constructor_argument_naming_rule_named : constructor_argument_naming_rule := fun i =>
   let arg_name := i.ainfo.aname
   let arg_dep := i.ainfo.dependent
-  pure $ if !arg_dep && arg_name.is_likely_generated_binder_name then [] else [arg_name]
+  pure <| if !arg_dep && arg_name.is_likely_generated_binder_name then [] else [arg_name]
 #align tactic.eliminate.constructor_argument_naming_rule_named tactic.eliminate.constructor_argument_naming_rule_named
 
 /-- Naming rule for constructor arguments whose type is associated with a list of
@@ -401,7 +401,7 @@ Returns the result of the first applicable rule. Fails if no rule is applicable.
 unsafe def apply_constructor_argument_naming_rules (info : constructor_argument_naming_info)
     (rules : List constructor_argument_naming_rule) : tactic (List Name) := do
   let names ←
-    try_core $
+    try_core <|
         rules.mfirst fun r => do
           let names ← r info
           match names with
@@ -459,7 +459,7 @@ unsafe def constructor_intros (generate_induction_hyps : Bool) (cinfo : construc
   let args := (arg_hyps.map expr.local_pp_name).zip args
   let tt ← pure generate_induction_hyps |
     pure (args, [])
-  let rec_args := args.filter $ fun x => x.2.is_recursive
+  let rec_args := args.filter fun x => x.2.is_recursive
   let ih_hyps ← intron_fresh cinfo.num_rec_args
   let ihs := (ih_hyps.map expr.local_pp_name).zip rec_args
   pure (args, ihs)
@@ -511,10 +511,10 @@ If `p = auto`, the `auto_candidates` tactic is run to determine candidate names
 for the hypothesis (from which the first fresh one is later chosen).
 `auto_candidates` must return a nonempty list.
 -/
-unsafe def to_name_spec (auto_candidates : tactic (List Name)) : with_pattern → tactic (Option (Name ⊕ List Name))
+unsafe def to_name_spec (auto_candidates : tactic (List Name)) : with_pattern → tactic (Option (Sum Name (List Name)))
   | auto => (some ∘ Sum.inr) <$> auto_candidates
   | clear => pure none
-  | exact n => pure $ some $ Sum.inl n
+  | exact n => pure <| some <| Sum.inl n
 #align tactic.eliminate.with_pattern.to_name_spec tactic.eliminate.with_pattern.to_name_spec
 
 end WithPattern
@@ -523,7 +523,7 @@ end WithPattern
 hypotheses which depend on it. Otherwise, the tactic does nothing.
 -/
 unsafe def clear_dependent_if_exists (h : Name) : tactic Unit := do
-  let some h ← try_core $ get_local h |
+  let some h ← try_core <| get_local h |
     pure ()
   clear' tt [h]
 #align tactic.eliminate.clear_dependent_if_exists tactic.eliminate.clear_dependent_if_exists
@@ -553,51 +553,51 @@ unsafe def constructor_renames (generate_induction_hyps : Bool) (mpinfo : major_
     (cinfo : constructor_info) (with_patterns : List with_pattern) (args : List (Name × constructor_argument_info))
     (ihs : List (Name × Name × constructor_argument_info)) : tactic (List expr × List expr) := do
   let-- Rename constructor arguments
-  arg_pp_name_set := name_set.of_list $ args.map Prod.fst
+  arg_pp_name_set := name_set.of_list <| args.map Prod.fst
   let iname := iinfo.iname
   let ⟨args, with_patterns⟩ := args.map₂Left' (fun arg p => (arg, p.getOrElse with_pattern.auto)) with_patterns
   let arg_renames ←
-    args.mmapFilter $ fun ⟨⟨old_ppname, ainfo⟩, with_pat⟩ => do
+    args.mmapFilter fun ⟨⟨old_ppname, ainfo⟩, with_pat⟩ => do
         let some new ← with_pat.to_name_spec (constructor_argument_names ⟨mpinfo, iinfo, cinfo, ainfo⟩) |
           clear_dependent_if_exists old_ppname >> pure none
         let-- Some of the arg hyps may have been cleared by earlier simplification
             -- steps, so get_local may fail.
             some
             old
-          ← try_core $ get_local old_ppname |
+          ← try_core <| get_local old_ppname |
           pure none
-        pure $ some (old, new)
+        pure <| some (old, new)
   let arg_renames := rb_map.of_list arg_renames
   let arg_hyp_map ← rename_fresh arg_renames mk_name_set
   let new_arg_hyps :=
-    arg_hyp_map.filterMap $ fun ⟨old, new⟩ => if arg_pp_name_set.contains old.local_pp_name then some new else none
-  let arg_hyp_map : name_map expr := rb_map.of_list $ arg_hyp_map.map $ fun ⟨old, new⟩ => (old.local_pp_name, new)
+    arg_hyp_map.filterMap fun ⟨old, new⟩ => if arg_pp_name_set.contains old.local_pp_name then some new else none
+  let arg_hyp_map : name_map expr := rb_map.of_list <| arg_hyp_map.map fun ⟨old, new⟩ => (old.local_pp_name, new)
   let-- Rename induction hypotheses (if we generated them)
     tt
     ← pure generate_induction_hyps |
     pure (new_arg_hyps, [])
-  let ih_pp_name_set := name_set.of_list $ ihs.map Prod.fst
+  let ih_pp_name_set := name_set.of_list <| ihs.map Prod.fst
   let ihs := ihs.map₂Left (fun ih p => (ih, p.getOrElse with_pattern.auto)) with_patterns
   let single_ih := ihs.length = 1
   let ih_renames ←
-    ihs.mmapFilter $ fun ⟨⟨ih_hyp_ppname, arg_hyp_ppname, _⟩, with_pat⟩ => do
-        let some arg_hyp ← pure $ arg_hyp_map.find arg_hyp_ppname |
+    ihs.mmapFilter fun ⟨⟨ih_hyp_ppname, arg_hyp_ppname, _⟩, with_pat⟩ => do
+        let some arg_hyp ← pure <| arg_hyp_map.find arg_hyp_ppname |
           throwError "internal error in constructor_renames: {← arg_hyp_ppname} not found in arg_hyp_map"
         let some new ←
           with_pat.to_name_spec
-              (pure $
+              (pure <|
                 if single_ih then [`ih, ih_name arg_hyp.local_pp_name]
                 else-- If we have only a single IH which hasn't been named explicitly in a
                   -- `with` clause, the preferred name is "ih". If that is taken, we fall
                   -- back to the name the IH would ordinarily receive.
                   [ih_name arg_hyp.local_pp_name]) |
           clear_dependent_if_exists ih_hyp_ppname >> pure none
-        let some ih_hyp ← try_core $ get_local ih_hyp_ppname |
+        let some ih_hyp ← try_core <| get_local ih_hyp_ppname |
           pure none
-        pure $ some (ih_hyp, new)
+        pure <| some (ih_hyp, new)
   let ih_hyp_map ← rename_fresh (rb_map.of_list ih_renames) mk_name_set
   let new_ih_hyps :=
-    ih_hyp_map.filterMap $ fun ⟨old, new⟩ => if ih_pp_name_set.contains old.local_pp_name then some new else none
+    ih_hyp_map.filterMap fun ⟨old, new⟩ => if ih_pp_name_set.contains old.local_pp_name then some new else none
   pure (new_arg_hyps, new_ih_hyps)
 #align tactic.eliminate.constructor_renames tactic.eliminate.constructor_renames
 
@@ -646,9 +646,9 @@ unique names of the hypotheses that should be generalized. See
 unsafe def to_generalize (major_premise : expr) : GeneralizationMode → tactic name_set
   | generalize_only ns => do
     let major_premise_rev_deps ← reverse_dependencies_of_hyps [major_premise]
-    let major_premise_rev_deps := name_set.of_list $ major_premise_rev_deps.map local_uniq_name
+    let major_premise_rev_deps := name_set.of_list <| major_premise_rev_deps.map local_uniq_name
     let ns ← ns.mmap (Functor.map local_uniq_name ∘ get_local)
-    pure $ major_premise_rev_deps ns
+    pure <| major_premise_rev_deps ns
   | generalize_all_except fixed => do
     let fixed ← fixed.mmap get_local
     let tgt ← target
@@ -660,7 +660,7 @@ unsafe def to_generalize (major_premise : expr) : GeneralizationMode → tactic 
     let fixed_dependencies := fixed_dependencies.foldl name_set.union mk_name_set
     let ctx ← local_context
     let to_revert ←
-      ctx.mmapFilter $ fun h => do
+      ctx.mmapFilter fun h => do
           let h_depends_on_major_premise_deps
             ←-- TODO `hyp_depends_on_local_name_set` is somewhat expensive
                 hyp_depends_on_local_name_set
@@ -674,9 +674,9 @@ unsafe def to_generalize (major_premise : expr) : GeneralizationMode → tactic 
                   of the major_premise's index args. (But the overapproximation seems to work
                   okay in practice as well.)
                   -/
-              pure $
+              pure <|
               if rev then some h_name else none
-    pure $ name_set.of_list to_revert
+    pure <| name_set.of_list to_revert
 #align tactic.eliminate.generalization_mode.to_generalize tactic.eliminate.generalization_mode.to_generalize
 
 end GeneralizationMode
@@ -733,7 +733,7 @@ Output:
 -/
 unsafe def generalize_complex_index_args (major_premise : expr) (num_params : ℕ) (generate_induction_hyps : Bool) :
     tactic (expr × ℕ × List Name × ℕ) :=
-  focus1 $ do
+  focus1 <| do
     let major_premise_type ← infer_type major_premise
     let (major_premise_head, major_premise_args) ← get_app_fn_args_whnf major_premise_type
     let ⟨major_premise_param_args, major_premise_index_args⟩ := major_premise_args.splitAt num_params
@@ -747,17 +747,17 @@ unsafe def generalize_complex_index_args (major_premise : expr) (num_params : �
       ←-- Revert the hypotheses which depend on the index args or the major_premise.
             -- We exclude dependencies of the major premise because we can't replace their
             -- index occurrences anyway when we apply the recursor.
-            ctx.mfilter $
+            ctx.mfilter
           fun h => do
           let dep_of_major_premise := major_premise_deps.contains h.local_uniq_name
           let dep_on_major_premise ← hyp_depends_on_locals h [major_premise]
           let H ← infer_type h
-          let dep_of_index ← js.many $ fun j => kdepends_on H j
+          let dep_of_index ← js.many fun j => kdepends_on H j
           -- TODO We need a variant of `kdepends_on` that takes local defs into account.
-              pure $
+              pure <|
               dep_on_major_premise ∧ h ≠ major_premise ∨ dep_of_index ∧ ¬dep_of_major_premise
     let ⟨relevant_ctx_size, relevant_ctx⟩ ←
-      unfreezing $ do
+      unfreezing <| do
           let r ← revert_lst' relevant_ctx
           revert major_premise
           pure r
@@ -766,13 +766,13 @@ unsafe def generalize_complex_index_args (major_premise : expr) (num_params : �
     go : expr → List expr → tactic (List expr) := fun j ks => do
       let J ← infer_type j
       let k ← mk_local' `index BinderInfo.default J
-      let ks ← ks.mmap $ fun k' => kreplace k' j k
-      pure $ k :: ks
+      let ks ← ks.mmap fun k' => kreplace k' j k
+      pure <| k :: ks
     let ks ← js.mfoldr go []
     let js_ks := js.zip ks
     let new_ctx
       ←-- Replace the index args in the relevant context.
-            relevant_ctx.mmap $
+            relevant_ctx.mmap
           fun h => js_ks.mfoldr (fun ⟨j, k⟩ h => kreplace h j k) h
     let-- Replace the index args in the major premise.
     new_major_premise_type := major_premise_head.mk_app (major_premise_param_args ++ ks)
@@ -786,7 +786,7 @@ unsafe def generalize_complex_index_args (major_premise : expr) (num_params : �
     let new_tgt := new_tgt.pis (new_major_premise :: new_ctx)
     let-- Generate the index equations and their proofs.
     eq_name := if generate_induction_hyps then `induction_eq else `cases_eq
-    let step2_input := js_ks.map $ fun ⟨j, k⟩ => (eq_name, j, k)
+    let step2_input := js_ks.map fun ⟨j, k⟩ => (eq_name, j, k)
     let eqs_and_proofs ← generalizes.step2 reducible step2_input
     let eqs := eqs_and_proofs.map Prod.fst
     let eq_proofs := eqs_and_proofs.map Prod.snd
@@ -835,7 +835,7 @@ metavariables.
 -/
 unsafe def process_index_equation : expr → tactic (expr × Option expr)
   | h@(local_const _ ppname binfo T@(app (app (app (const `eq [u]) type) lhs) rhs)) => do
-    let rhs_eq_lhs ← succeeds $ unify rhs lhs
+    let rhs_eq_lhs ← succeeds <| unify rhs lhs
     -- Note: It is important that we `unify rhs lhs` rather than `unify lhs rhs`.
         -- This is because `lhs` and `rhs` may be metavariables which represent
         -- Π-bound variables, so if they unify, we want to assign `rhs := lhs`.
@@ -845,15 +845,15 @@ unsafe def process_index_equation : expr → tactic (expr × Option expr)
       else do
         pure (h, some h)
   | h@(local_const uname ppname binfo T@(app (app (app (app (const `heq [u]) lhs_type) lhs) rhs_type) rhs)) => do
-    let lhs_type_eq_rhs_type ← succeeds $ is_def_eq lhs_type rhs_type
+    let lhs_type_eq_rhs_type ← succeeds <| is_def_eq lhs_type rhs_type
     if ¬lhs_type_eq_rhs_type then do
         pure (h, some h)
       else do
-        let lhs_eq_rhs ← succeeds $ unify rhs lhs
+        let lhs_eq_rhs ← succeeds <| unify rhs lhs
         -- See note above about `unify rhs lhs`.
             if lhs_eq_rhs then pure ((const `heq.refl [u]) lhs_type lhs, none)
           else do
-            let c ← mk_local' ppname binfo $ (const `eq [u]) lhs_type lhs rhs
+            let c ← mk_local' ppname binfo <| (const `eq [u]) lhs_type lhs rhs
             let arg := (const `heq_of_eq [u]) lhs_type lhs rhs c
             pure (arg, some c)
   | local_const _ _ _ T =>
@@ -886,7 +886,7 @@ unsafe def assign_local_to_unassigned_mvar (mv : expr) (pp_name : Name) (binfo :
 newly created local constants.
 -/
 unsafe def assign_locals_to_unassigned_mvars (mvars : List (expr × Name × BinderInfo)) : tactic (List expr) :=
-  mvars.mmapFilter $ fun ⟨mv, pp_name, binfo⟩ => assign_local_to_unassigned_mvar mv pp_name binfo
+  mvars.mmapFilter fun ⟨mv, pp_name, binfo⟩ => assign_local_to_unassigned_mvar mv pp_name binfo
 #align tactic.eliminate.assign_locals_to_unassigned_mvars tactic.eliminate.assign_locals_to_unassigned_mvars
 
 /-
@@ -960,7 +960,7 @@ unsafe def simplify_ih (num_leading_pis : ℕ) (num_generalized : ℕ) (num_inde
     ←-- Construct a proof of the new induction hypothesis by applying `ih` to the
         -- `xᵢ` metavariables and the `new_args`, then abstracting over the
         -- `new_index_eq_lcs` and the `new_generalized_arg_lcs`.
-        instantiate_mvars $
+        instantiate_mvars <|
         ih.mk_app (generalized_arg_mvars.map Prod.fst ++ new_args)
   let new_ih ← lambdas (new_generalized_arg_lcs ++ new_index_eq_lcs) b
   -- Type-check the new induction hypothesis as a sanity check.
@@ -998,8 +998,8 @@ unsafe def set_cases_tags (in_tag : Tag) (rs : List (Name × List expr)) : tacti
       set_tag g in_tag
     | _ =>
       let tgs : List (Name × List expr × expr) := rs (fun ⟨n, new_hyps⟩ g => ⟨n, new_hyps, g⟩) gs
-      tgs $ fun ⟨n, new_hyps, g⟩ =>
-        with_enable_tags $ set_tag g $ (case_tag.from_tag_hyps (n :: in_tag) (new_hyps expr.local_uniq_name)).render
+      tgs fun ⟨n, new_hyps, g⟩ =>
+        with_enable_tags <| set_tag g <| (case_tag.from_tag_hyps (n :: in_tag) (new_hyps expr.local_uniq_name)).render
 #align tactic.eliminate.set_cases_tags tactic.eliminate.set_cases_tags
 
 end Eliminate
@@ -1062,7 +1062,7 @@ set_option trace.eliminate_hyp true
 -/
 unsafe def eliminate_hyp (generate_ihs : Bool) (major_premise : expr)
     (gm := GeneralizationMode.generalize_all_except []) (with_patterns : List with_pattern := []) : tactic Unit :=
-  focus1 $ do
+  focus1 <| do
     let mpinfo ← get_major_premise_info major_premise
     let major_premise_type := mpinfo.type
     let major_premise_args := mpinfo.args.values.reverse
@@ -1112,17 +1112,18 @@ unsafe def eliminate_hyp (generate_ihs : Bool) (major_premise : expr)
         interactive.apply (rec_app drec_suffix) <|>
           throwError "Failed to apply the (dependent) recursor for {(← iname)} on {← major_premise}."
     let-- Prepare the "with" names for each constructor case.
-    with_patterns := Prod.fst $ with_patterns.takeList (iinfo.constructors.map constructor_info.num_nameable_hypotheses)
+    with_patterns :=
+      Prod.fst <| with_patterns.takeList (iinfo.constructors.map constructor_info.num_nameable_hypotheses)
     let constrs := iinfo.constructors.zip with_patterns
     let
       cases :-- For each case (constructor):
         List
         (Option (Name × List expr))
       ←
-      focus $
-          constrs.map $ fun ⟨cinfo, with_patterns⟩ => do
+      focus <|
+          constrs.map fun ⟨cinfo, with_patterns⟩ => do
             trace_eliminate_hyp "============"
-            trace_eliminate_hyp $ f! "Case {cinfo}"
+            trace_eliminate_hyp <| f! "Case {cinfo}"
             trace_state_eliminate_hyp "Initial state:"
             let major_premise_type
               ←-- Get the major premise's arguments. (Some of these may have changed due
@@ -1131,7 +1132,7 @@ unsafe def eliminate_hyp (generate_ihs : Bool) (major_premise : expr)
                   major_premise
             let major_premise_args ← get_app_args_whnf major_premise_type
             -- Clear the eliminated hypothesis (if possible)
-                try $
+                try <|
                 clear major_premise
             -- Clear the index args (unless other stuff in the goal depends on them)
                 major_premise_args
@@ -1164,7 +1165,7 @@ unsafe def eliminate_hyp (generate_ihs : Bool) (major_premise : expr)
                 -- NOTE: The previous step may have changed the unique names of the
                 -- induction hypotheses, so we have to locate them again. Their pretty
                 -- names should be unique in the context, so we can use these.
-                ihs $
+                ihs
                 fun ⟨ih, _, arg_info⟩ => do
                 let ih ← get_local ih
                 let some num_leading_pis ← pure arg_info |
@@ -1173,7 +1174,7 @@ unsafe def eliminate_hyp (generate_ihs : Bool) (major_premise : expr)
             trace_state_eliminate_hyp "State after simplifying IHs and before clearing index variables:"
             -- Try to clear the index variables. These often become unused during
                 -- the index equation simplification step.
-                index_var_names $
+                index_var_names
                 fun h => try (get_local h >>= clear)
             trace_state_eliminate_hyp "State after clearing index variables and before renaming:"
             let-- Rename the constructor names and IHs. We do this here (rather than
@@ -1188,7 +1189,7 @@ unsafe def eliminate_hyp (generate_ihs : Bool) (major_premise : expr)
                 -- that index variables and index equations are not renamable. This may be
                 -- counterintuitive in some cases, but it's surprisingly difficult to
                 -- catch exactly the relevant hyps here.
-                pure $
+                pure <|
                 some (cinfo, constructor_arg_hyps ++ ih_hyps)
     set_cases_tags in_tag cases
     pure ()

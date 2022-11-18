@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.Tactic.Elementwise
+import Mathbin.CategoryTheory.ConcreteCategory.Basic
 
 /-!
 # Use the `elementwise` attribute to create applied versions of lemmas.

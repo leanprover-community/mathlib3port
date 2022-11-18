@@ -3,9 +3,6 @@ Copyright (c) 2022 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 -/
-import Mathbin.Analysis.Complex.CauchyIntegral
-import Mathbin.Analysis.Analytic.Basic
-import Mathbin.Analysis.Calculus.ParametricIntervalIntegral
 import Mathbin.Data.Complex.Basic
 import Mathbin.MeasureTheory.Integral.CircleIntegral
 
@@ -73,7 +70,7 @@ theorem integral_circle_transform [CompleteSpace E] (f : ℂ → E) :
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr continuous.smul, ",", expr continuous_const, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr continuous.mul, ",", expr continuous_circle_map 0 R, ",", expr continuous_const, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-theorem continuous_circle_transform {R : ℝ} (hR : 0 < R) {f : ℂ → E} {z w : ℂ} (hf : ContinuousOn f $ sphere z R)
+theorem continuous_circle_transform {R : ℝ} (hR : 0 < R) {f : ℂ → E} {z w : ℂ} (hf : ContinuousOn f <| sphere z R)
     (hw : w ∈ ball z R) : Continuous (circleTransform R z w f) := by
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr continuous.smul, \",\", expr continuous_const, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
@@ -165,12 +162,10 @@ theorem abs_circle_transform_bounding_function_le {R r : ℝ} (hr : r < R) (hr' 
   simpa only [SetCoe.forall, Subtype.coe_mk, SetCoe.exists]
 #align complex.abs_circle_transform_bounding_function_le Complex.abs_circle_transform_bounding_function_le
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (B ε) -/
 /-- The derivative of a `circle_transform` is locally bounded. -/
 theorem circle_transform_deriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ → ℂ} (hx : x ∈ ball z R)
     (hf : ContinuousOn f (sphere z R)) :
-    ∃ (B : ℝ) (ε : ℝ), 0 < ε ∧ ball x ε ⊆ ball z R ∧ ∀ (t : ℝ), ∀ y ∈ ball x ε, ∥circleTransformDeriv R z y f t∥ ≤ B :=
-  by
+    ∃ B ε : ℝ, 0 < ε ∧ ball x ε ⊆ ball z R ∧ ∀ (t : ℝ), ∀ y ∈ ball x ε, ‖circleTransformDeriv R z y f t‖ ≤ B := by
   obtain ⟨r, hr, hrx⟩ := exists_lt_mem_ball_of_mem_ball hx
   obtain ⟨ε', hε', H⟩ := exists_ball_subset_ball hrx
   obtain ⟨⟨⟨a, b⟩, ⟨ha, hb⟩⟩, hab⟩ := abs_circle_transform_bounding_function_le hr (pos_of_mem_ball hrx).le z

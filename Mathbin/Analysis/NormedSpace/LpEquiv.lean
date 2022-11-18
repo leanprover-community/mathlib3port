@@ -47,7 +47,7 @@ theorem Memℓp.all [Finite α] (f : ∀ i, E i) : Memℓp f p := by
   rcases p.trichotomy with (rfl | rfl | h)
   · exact mem_ℓp_zero_iff.mpr { i : α | f i ≠ 0 }.to_finite
     
-  · exact mem_ℓp_infty_iff.mpr (Set.Finite.bdd_above (Set.range fun i : α => ∥f i∥).to_finite)
+  · exact mem_ℓp_infty_iff.mpr (Set.Finite.bdd_above (Set.range fun i : α => ‖f i‖).to_finite)
     
   · cases nonempty_fintype α
     exact memℓpGen ⟨finset.univ.sum _, has_sum_fintype _⟩
@@ -60,8 +60,8 @@ variable [Fintype α]
 def Equiv.lpPiLp : lp E p ≃ PiLp p E where
   toFun f := f
   invFun f := ⟨f, Memℓp.all f⟩
-  left_inv f := lp.ext $ funext $ fun x => rfl
-  right_inv f := funext $ fun x => rfl
+  left_inv f := lp.ext <| funext fun x => rfl
+  right_inv f := funext fun x => rfl
 #align equiv.lp_pi_Lp Equiv.lpPiLp
 
 theorem coe_equiv_lp_pi_Lp (f : lp E p) : Equiv.lpPiLp f = f :=
@@ -72,7 +72,7 @@ theorem coe_equiv_lp_pi_Lp_symm (f : PiLp p E) : (Equiv.lpPiLp.symm f : ∀ i, E
   rfl
 #align coe_equiv_lp_pi_Lp_symm coe_equiv_lp_pi_Lp_symm
 
-theorem equiv_lp_pi_Lp_norm (f : lp E p) : ∥Equiv.lpPiLp f∥ = ∥f∥ := by
+theorem equiv_lp_pi_Lp_norm (f : lp E p) : ‖Equiv.lpPiLp f‖ = ‖f‖ := by
   rcases p.trichotomy with (rfl | rfl | h)
   · rw [PiLp.norm_eq_card, lp.norm_eq_card_dsupport]
     rfl
@@ -140,11 +140,11 @@ section NormedAddCommGroup
 
 /-- The canonical map between `lp (λ (_ : α), E) ∞` and `α →ᵇ E` as an `add_equiv`. -/
 noncomputable def AddEquiv.lpBcf : lp (fun _ : α => E) ∞ ≃+ (α →ᵇ E) where
-  toFun f := ofNormedAddCommGroupDiscrete f ∥f∥ $ le_csupr (mem_ℓp_infty_iff.mp f.Prop)
+  toFun f := ofNormedAddCommGroupDiscrete f ‖f‖ <| le_csupr (mem_ℓp_infty_iff.mp f.Prop)
   invFun f := ⟨f, f.bdd_above_range_norm_comp⟩
   left_inv f := lp.ext rfl
-  right_inv f := ext $ fun x => rfl
-  map_add' f g := ext $ fun x => rfl
+  right_inv f := ext fun x => rfl
+  map_add' f g := ext fun x => rfl
 #align add_equiv.lp_bcf AddEquiv.lpBcf
 
 theorem coe_add_equiv_lp_bcf (f : lp (fun _ : α => E) ∞) : (AddEquiv.lpBcf f : α → E) = f :=
@@ -179,7 +179,7 @@ section RingAlgebra
 
 /-- The canonical map between `lp (λ (_ : α), R) ∞` and `α →ᵇ R` as a `ring_equiv`. -/
 noncomputable def RingEquiv.lpBcf : lp (fun _ : α => R) ∞ ≃+* (α →ᵇ R) :=
-  { @AddEquiv.lpBcf _ R _ _ _ with map_mul' := fun f g => ext $ fun x => rfl }
+  { @AddEquiv.lpBcf _ R _ _ _ with map_mul' := fun f g => ext fun x => rfl }
 #align ring_equiv.lp_bcf RingEquiv.lpBcf
 
 variable {R}

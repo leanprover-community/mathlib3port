@@ -71,10 +71,10 @@ open MeasureTheory
 /-- Auxiliary lemma for the divergence theorem. -/
 theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ → E} {f' : ℝⁿ⁺¹ →L[ℝ] E}
     (hfc : ContinuousOn f I.icc) {x : ℝⁿ⁺¹} (hxI : x ∈ I.icc) {a : E} {ε : ℝ} (h0 : 0 < ε)
-    (hε : ∀ y ∈ I.icc, ∥f y - a - f' (y - x)∥ ≤ ε * ∥y - x∥) {c : ℝ≥0} (hc : I.distortion ≤ c) :
-    ∥(∏ j, I.upper j - I.lower j) • f' (Pi.single i 1) -
+    (hε : ∀ y ∈ I.icc, ‖f y - a - f' (y - x)‖ ≤ ε * ‖y - x‖) {c : ℝ≥0} (hc : I.distortion ≤ c) :
+    ‖(∏ j, I.upper j - I.lower j) • f' (Pi.single i 1) -
           (integral (I.face i) ⊥ (f ∘ i.insertNth (I.upper i)) BoxAdditiveMap.volume -
-            integral (I.face i) ⊥ (f ∘ i.insertNth (I.lower i)) BoxAdditiveMap.volume)∥ ≤
+            integral (I.face i) ⊥ (f ∘ i.insertNth (I.lower i)) BoxAdditiveMap.volume)‖ ≤
       2 * ε * c * ∏ j, I.upper j - I.lower j :=
   by
   /- **Plan of the proof**. The difference of the integrals of the affine function
@@ -95,15 +95,15 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
     is the length of `i`-th edge of `I` and `eᵢ = pi.single i 1` is the `i`-th unit vector. -/
   have :
     ∀ y ∈ (I.face i).icc,
-      ∥f' (Pi.single i (I.upper i - I.lower i)) - (f (i.insert_nth (I.upper i) y) - f (i.insert_nth (I.lower i) y))∥ ≤
+      ‖f' (Pi.single i (I.upper i - I.lower i)) - (f (i.insert_nth (I.upper i) y) - f (i.insert_nth (I.lower i) y))‖ ≤
         2 * ε * diam I.Icc :=
     by
     intro y hy
     set g := fun y => f y - a - f' (y - x) with hg
-    change ∀ y ∈ I.Icc, ∥g y∥ ≤ ε * ∥y - x∥ at hε
+    change ∀ y ∈ I.Icc, ‖g y‖ ≤ ε * ‖y - x‖ at hε
     clear_value g
     obtain rfl : f = fun y => a + f' (y - x) + g y := by simp [hg]
-    convert_to ∥g (i.insert_nth (I.lower i) y) - g (i.insert_nth (I.upper i) y)∥ ≤ _
+    convert_to ‖g (i.insert_nth (I.lower i) y) - g (i.insert_nth (I.upper i) y)‖ ≤ _
     · congr 1
       have := Fin.insert_nth_sub_same i (I.upper i) (I.lower i) y
       simp only [← this, f'.map_sub]
@@ -111,7 +111,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       
     · have : ∀ z ∈ Icc (I.lower i) (I.upper i), i.insert_nth z y ∈ I.Icc := fun z hz =>
         I.maps_to_insert_nth_face_Icc hz hy
-      replace hε : ∀ y ∈ I.Icc, ∥g y∥ ≤ ε * diam I.Icc
+      replace hε : ∀ y ∈ I.Icc, ‖g y‖ ≤ ε * diam I.Icc
       · intro y hy
         refine' (hε y hy).trans (mul_le_mul_of_nonneg_left _ h0.le)
         rw [← dist_eq_norm]
@@ -121,14 +121,14 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       exact norm_sub_le_of_le (hε _ (this _ Hl)) (hε _ (this _ Hu))
       
   calc
-    ∥(∏ j, I.upper j - I.lower j) • f' (Pi.single i 1) -
+    ‖(∏ j, I.upper j - I.lower j) • f' (Pi.single i 1) -
             (integral (I.face i) ⊥ (f ∘ i.insert_nth (I.upper i)) box_additive_map.volume -
-              integral (I.face i) ⊥ (f ∘ i.insert_nth (I.lower i)) box_additive_map.volume)∥ =
-        ∥integral.{0, u, u} (I.face i) ⊥
+              integral (I.face i) ⊥ (f ∘ i.insert_nth (I.lower i)) box_additive_map.volume)‖ =
+        ‖integral.{0, u, u} (I.face i) ⊥
             (fun x : Fin n → ℝ =>
               f' (Pi.single i (I.upper i - I.lower i)) -
                 (f (i.insert_nth (I.upper i) x) - f (i.insert_nth (I.lower i) x)))
-            box_additive_map.volume∥ :=
+            box_additive_map.volume‖ :=
       by
       rw [← integral_sub (Hi _ Hu) (Hi _ Hl), ← box.volume_face_mul i, mul_smul, ← box.volume_apply, ←
         box_additive_map.to_smul_apply, ← integral_const, ← box_additive_map.volume, ←
@@ -170,7 +170,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
     box-additive function of `J ≤ I`. -/
   have Hc : ContinuousOn f I.Icc := by
     intro x hx
-    by_cases hxs:x ∈ s
+    by_cases hxs : x ∈ s
     exacts[Hs x hxs, (Hd x ⟨hx, hxs⟩).ContinuousWithinAt]
   set fI : ℝ → box (Fin n) → E := fun y J =>
     integral.{0, u, u} J GP (fun x => f (i.insert_nth y x)) box_additive_map.volume
@@ -193,14 +193,14 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
     have :
       ∀ᶠ δ in 𝓝[>] (0 : ℝ),
         δ ∈ Ioc (0 : ℝ) (1 / 2) ∧
-          (∀ (y₁ y₂) (_ : y₁ ∈ closed_ball x δ ∩ I.Icc) (_ : y₂ ∈ closed_ball x δ ∩ I.Icc), ∥f y₁ - f y₂∥ ≤ ε / 2) ∧
-            (2 * δ) ^ (n + 1) * ∥f' x (Pi.single i 1)∥ ≤ ε / 2 :=
+          (∀ (y₁ y₂) (_ : y₁ ∈ closed_ball x δ ∩ I.Icc) (_ : y₂ ∈ closed_ball x δ ∩ I.Icc), ‖f y₁ - f y₂‖ ≤ ε / 2) ∧
+            (2 * δ) ^ (n + 1) * ‖f' x (Pi.single i 1)‖ ≤ ε / 2 :=
       by
       refine' eventually.and _ (eventually.and _ _)
       · exact Ioc_mem_nhds_within_Ioi ⟨le_rfl, one_half_pos⟩
         
       · rcases((nhds_within_has_basis nhds_basis_closed_ball _).tendsto_iff nhds_basis_closed_ball).1 (Hs x hx.2) _
-            (half_pos $ half_pos ε0) with
+            (half_pos <| half_pos ε0) with
           ⟨δ₁, δ₁0, hδ₁⟩
         filter_upwards [Ioc_mem_nhds_within_Ioi ⟨le_rfl, δ₁0⟩] with δ hδ y₁ hy₁ y₂ hy₂
         have : closed_ball x δ ∩ I.Icc ⊆ closed_ball x δ₁ ∩ I.Icc :=
@@ -208,11 +208,11 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
         rw [← dist_eq_norm]
         calc
           dist (f y₁) (f y₂) ≤ dist (f y₁) (f x) + dist (f y₂) (f x) := dist_triangle_right _ _ _
-          _ ≤ ε / 2 / 2 + ε / 2 / 2 := add_le_add (hδ₁ _ $ this hy₁) (hδ₁ _ $ this hy₂)
+          _ ≤ ε / 2 / 2 + ε / 2 / 2 := add_le_add (hδ₁ _ <| this hy₁) (hδ₁ _ <| this hy₂)
           _ = ε / 2 := add_halves _
           
         
-      · have : ContinuousWithinAt (fun δ => (2 * δ) ^ (n + 1) * ∥f' x (Pi.single i 1)∥) (Ioi (0 : ℝ)) 0 :=
+      · have : ContinuousWithinAt (fun δ => (2 * δ) ^ (n + 1) * ‖f' x (Pi.single i 1)‖) (Ioi (0 : ℝ)) 0 :=
           ((continuous_within_at_id.const_mul _).pow _).mul_const _
         refine' this.eventually (ge_mem_nhds _)
         simpa using half_pos ε0
@@ -224,7 +224,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
     have Hi :
       ∀ x ∈ Icc (J.lower i) (J.upper i),
         Integrable.{0, u, u} (J.face i) GP (fun y => f (i.insert_nth x y)) box_additive_map.volume :=
-      fun x hx => integrable_of_continuous_on _ (box.continuous_on_face_Icc (Hc.mono $ box.le_iff_Icc.1 hJI) hx) volume
+      fun x hx => integrable_of_continuous_on _ (box.continuous_on_face_Icc (Hc.mono <| box.le_iff_Icc.1 hJI) hx) volume
     have hJδ' : J.Icc ⊆ closed_ball x δ ∩ I.Icc := subset_inter hJδ (box.le_iff_Icc.1 hJI)
     have Hmaps : ∀ z ∈ Icc (J.lower i) (J.upper i), maps_to (i.insert_nth z) (J.face i).icc (closed_ball x δ ∩ I.Icc) :=
       fun z hz => (J.maps_to_insert_nth_face_Icc hz).mono subset.rfl hJδ'
@@ -233,7 +233,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
     rw [← integral_sub (Hi _ Hu) (Hi _ Hl)]
     refine' (norm_sub_le _ _).trans (add_le_add _ _)
     · simp_rw [box_additive_map.volume_apply, norm_smul, Real.norm_eq_abs, abs_prod]
-      refine' (mul_le_mul_of_nonneg_right _ $ norm_nonneg _).trans hδ
+      refine' (mul_le_mul_of_nonneg_right _ <| norm_nonneg _).trans hδ
       have : ∀ j, |J.upper j - J.lower j| ≤ 2 * δ := by
         intro j
         calc
@@ -251,7 +251,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
     · refine' (norm_integral_le_of_le_const (fun y hy => hdfδ _ (Hmaps _ Hu hy) _ (Hmaps _ Hl hy)) _).trans _
       refine' (mul_le_mul_of_nonneg_right _ (half_pos ε0).le).trans_eq (one_mul _)
       rw [box.coe_eq_pi, Real.volume_pi_Ioc_to_real (box.lower_le_upper _)]
-      refine' prod_le_one (fun _ _ => sub_nonneg.2 $ box.lower_le_upper _ _) fun j hj => _
+      refine' prod_le_one (fun _ _ => sub_nonneg.2 <| box.lower_le_upper _ _) fun j hj => _
       calc
         J.upper (i.succ_above j) - J.lower (i.succ_above j) ≤
             dist (J.upper (i.succ_above j)) (J.lower (i.succ_above j)) :=
@@ -272,7 +272,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
     refine' ⟨δ, δ0, fun J hle hJδ hxJ hJc => _⟩
     simp only [box_additive_map.volume_apply, box.volume_apply, dist_eq_norm]
     refine'
-      (norm_volume_sub_integral_face_upper_sub_lower_smul_le _ (Hc.mono $ box.le_iff_Icc.1 hle) hxJ ε'0
+      (norm_volume_sub_integral_face_upper_sub_lower_smul_le _ (Hc.mono <| box.le_iff_Icc.1 hle) hxJ ε'0
             (fun y hy => Hδ _) (hJc rfl)).trans
         _
     · exact ⟨hJδ hy, box.le_iff_Icc.1 hle hy⟩

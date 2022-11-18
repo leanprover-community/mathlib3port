@@ -193,8 +193,8 @@ theorem IsRadical.squarefree {x : R} (h0 : x ≠ 0) (h : IsRadical x) : Squarefr
 variable [GcdMonoid R]
 
 theorem Squarefree.is_radical {x : R} (hx : Squarefree x) : IsRadical x :=
-  (is_radical_iff_pow_one_lt 2 one_lt_two).2 $ fun y hy =>
-    And.right $
+  (is_radical_iff_pow_one_lt 2 one_lt_two).2 fun y hy =>
+    And.right <|
       (dvd_gcd_iff x x y).1
         (by
           by_cases gcd x y = 0
@@ -210,8 +210,8 @@ theorem Squarefree.is_radical {x : R} (hx : Squarefree x) : IsRadical x :=
 #align squarefree.is_radical Squarefree.is_radical
 
 theorem is_radical_iff_squarefree_or_zero {x : R} : IsRadical x ↔ Squarefree x ∨ x = 0 :=
-  ⟨fun hx => (em $ x = 0).elim Or.inr fun h => Or.inl $ hx.Squarefree h,
-    Or.ndrec Squarefree.is_radical $ by
+  ⟨fun hx => (em <| x = 0).elim Or.inr fun h => Or.inl <| hx.Squarefree h,
+    Or.ndrec Squarefree.is_radical <| by
       rintro rfl
       rw [zero_is_radical_iff]
       infer_instance⟩
@@ -234,7 +234,7 @@ theorem squarefree_iff_nodup_normalized_factors [NormalizationMonoid R] [Decidab
   rw [multiplicity.squarefree_iff_multiplicity_le_one, Multiset.nodup_iff_count_le_one]
   haveI := nontrivial_of_ne x 0 x0
   constructor <;> intro h a
-  · by_cases hmem:a ∈ normalized_factors x
+  · by_cases hmem : a ∈ normalized_factors x
     · have ha := irreducible_of_normalized_factor _ hmem
       rcases h a with (h | h)
       · rw [← normalize_normalized_factor _ hmem]
@@ -250,7 +250,7 @@ theorem squarefree_iff_nodup_normalized_factors [NormalizationMonoid R] [Decidab
     
   · rw [or_iff_not_imp_right]
     intro hu
-    by_cases h0:a = 0
+    by_cases h0 : a = 0
     · simp [h0, x0]
       
     rcases WfDvdMonoid.exists_irreducible_factor hu h0 with ⟨b, hib, hdvd⟩

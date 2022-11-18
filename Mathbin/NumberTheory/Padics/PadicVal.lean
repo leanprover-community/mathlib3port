@@ -3,7 +3,6 @@ Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
-import Mathbin.Algebra.Order.AbsoluteValue
 import Mathbin.NumberTheory.Divisors
 import Mathbin.RingTheory.Int.Basic
 import Mathbin.Tactic.RingExp
@@ -274,8 +273,8 @@ theorem finite_int_prime_iff {a : ℤ} : Finite (p : ℤ) a ↔ a ≠ 0 := by
 /-- A rewrite lemma for `padic_val_rat p q` when `q` is expressed in terms of `rat.mk`. -/
 protected theorem defn (p : ℕ) [hp : Fact p.Prime] {q : ℚ} {n d : ℤ} (hqz : q ≠ 0) (qdf : q = n /. d) :
     padicValRat p q =
-      (multiplicity (p : ℤ) n).get (finite_int_iff.2 ⟨Ne.symm $ ne_of_lt hp.1.one_lt, fun hn => by simp_all⟩) -
-        (multiplicity (p : ℤ) d).get (finite_int_iff.2 ⟨Ne.symm $ ne_of_lt hp.1.one_lt, fun hd => by simp_all⟩) :=
+      (multiplicity (p : ℤ) n).get (finite_int_iff.2 ⟨Ne.symm <| ne_of_lt hp.1.one_lt, fun hn => by simp_all⟩) -
+        (multiplicity (p : ℤ) d).get (finite_int_iff.2 ⟨Ne.symm <| ne_of_lt hp.1.one_lt, fun hd => by simp_all⟩) :=
   by
   have hd : d ≠ 0 := Rat.mk_denom_ne_zero_of_ne_zero hqz qdf
   let ⟨c, hc1, hc2⟩ := Rat.num_denom_mk hd qdf
@@ -303,7 +302,7 @@ protected theorem pow {q : ℚ} (hq : q ≠ 0) {k : ℕ} : padicValRat p (q ^ k)
 
 /-- A rewrite lemma for `padic_val_rat p (q⁻¹)` with condition `q ≠ 0`. -/
 protected theorem inv (q : ℚ) : padicValRat p q⁻¹ = -padicValRat p q := by
-  by_cases hq:q = 0
+  by_cases hq : q = 0
   · simp [hq]
     
   · rw [eq_neg_iff_add_eq_zero, ← padicValRat.mul (inv_ne_zero hq) hq, inv_mul_cancel hq, padicValRat.one]
@@ -382,7 +381,7 @@ theorem sum_pos_of_pos {n : ℕ} {F : ℕ → ℚ} (hF : ∀ i, i < n → 0 < pa
   · exact False.elim (hn0 rfl)
     
   · rw [Finset.sum_range_succ] at hn0⊢
-    by_cases h:(∑ x : ℕ in Finset.range d, F x) = 0
+    by_cases h : (∑ x : ℕ in Finset.range d, F x) = 0
     · rw [h, zero_add]
       exact hF d (lt_add_one _)
       
@@ -498,7 +497,7 @@ theorem padic_val_nat_dvd_iff (n : ℕ) [hp : Fact p.Prime] (a : ℕ) : p ^ n �
 #align padic_val_nat_dvd_iff padic_val_nat_dvd_iff
 
 theorem padic_val_nat_primes {q : ℕ} [hp : Fact p.Prime] [hq : Fact q.Prime] (neq : p ≠ q) : padicValNat p q = 0 :=
-  @padicValNat.eq_zero_of_not_dvd p q $ (not_congr (Iff.symm (prime_dvd_prime_iff_eq hp.1 hq.1))).mp neq
+  @padicValNat.eq_zero_of_not_dvd p q <| (not_congr (Iff.symm (prime_dvd_prime_iff_eq hp.1 hq.1))).mp neq
 #align padic_val_nat_primes padic_val_nat_primes
 
 protected theorem padicValNat.div' [hp : Fact p.Prime] :
@@ -509,7 +508,7 @@ protected theorem padicValNat.div' [hp : Fact p.Prime] :
   | n + 1 => fun cpm b dvd => by
     rcases dvd with ⟨c, rfl⟩
     rw [mul_div_right c (Nat.succ_pos _)]
-    by_cases hc:c = 0
+    by_cases hc : c = 0
     · rw [hc, mul_zero]
       
     · rw [padicValNat.mul]
@@ -532,7 +531,7 @@ theorem range_pow_padic_val_nat_subset_divisors {n : ℕ} (hn : n ≠ 0) :
   simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht
   obtain ⟨k, hk, rfl⟩ := ht
   rw [Nat.mem_divisors]
-  exact ⟨(pow_dvd_pow p $ by linarith).trans pow_padic_val_nat_dvd, hn⟩
+  exact ⟨(pow_dvd_pow p <| by linarith).trans pow_padic_val_nat_dvd, hn⟩
 #align range_pow_padic_val_nat_subset_divisors range_pow_padic_val_nat_subset_divisors
 
 theorem range_pow_padic_val_nat_subset_divisors' {n : ℕ} [hp : Fact p.Prime] :
@@ -544,7 +543,7 @@ theorem range_pow_padic_val_nat_subset_divisors' {n : ℕ} [hp : Fact p.Prime] :
   simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht
   obtain ⟨k, hk, rfl⟩ := ht
   rw [Finset.mem_erase, Nat.mem_divisors]
-  refine' ⟨_, (pow_dvd_pow p $ succ_le_iff.2 hk).trans pow_padic_val_nat_dvd, hn⟩
+  refine' ⟨_, (pow_dvd_pow p <| succ_le_iff.2 hk).trans pow_padic_val_nat_dvd, hn⟩
   exact (Nat.one_lt_pow _ _ k.succ_pos hp.out.one_lt).ne'
 #align range_pow_padic_val_nat_subset_divisors' range_pow_padic_val_nat_subset_divisors'
 

@@ -3,8 +3,10 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
-import Mathbin.Algebra.Order.Monoid.WithZero
 import Mathbin.Algebra.Order.Monoid.OrderDual
+import Mathbin.Algebra.Hom.Group
+import Mathbin.Algebra.Order.Monoid.Canonical.Defs
+import Mathbin.Data.Nat.Cast.Defs
 
 /-! # Adjoining top/bottom elements to ordered monoids. -/
 
@@ -65,7 +67,7 @@ section Add
 variable [Add α] {a b c d : WithTop α} {x y : α}
 
 instance : Add (WithTop α) :=
-  ⟨fun o₁ o₂ => o₁.bind $ fun a => o₂.map $ (· + ·) a⟩
+  ⟨fun o₁ o₂ => o₁.bind fun a => o₂.map <| (· + ·) a⟩
 
 @[norm_cast]
 theorem coe_add : ((x + y : α) : WithTop α) = x + y :=
@@ -93,7 +95,7 @@ theorem add_top (a : WithTop α) : a + ⊤ = ⊤ := by cases a <;> rfl
 
 @[simp]
 theorem add_eq_top : a + b = ⊤ ↔ a = ⊤ ∨ b = ⊤ := by
-  cases a <;> cases b <;> simp [none_eq_top, some_eq_coe, ← WithTop.coe_add, ← WithZero.coe_add]
+  cases a <;> cases b <;> simp [none_eq_top, some_eq_coe, ← WithTop.coe_add]
 #align with_top.add_eq_top WithTop.add_eq_top
 
 theorem add_ne_top : a + b ≠ ⊤ ↔ a ≠ ⊤ ∧ b ≠ ⊤ :=
@@ -104,8 +106,7 @@ theorem add_lt_top [PartialOrder α] {a b : WithTop α} : a + b < ⊤ ↔ a < �
   simp_rw [lt_top_iff_ne_top, add_ne_top]
 #align with_top.add_lt_top WithTop.add_lt_top
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a' b') -/
-theorem add_eq_coe : ∀ {a b : WithTop α} {c : α}, a + b = c ↔ ∃ (a' : α) (b' : α), ↑a' = a ∧ ↑b' = b ∧ a' + b' = c
+theorem add_eq_coe : ∀ {a b : WithTop α} {c : α}, a + b = c ↔ ∃ a' b' : α, ↑a' = a ∧ ↑b' = b ∧ a' + b' = c
   | none, b, c => by simp [none_eq_top]
   | some a, none, c => by simp [none_eq_top]
   | some a, some b, c => by simp only [some_eq_coe, ← coe_add, coe_eq_coe, exists_and_left, exists_eq_left]
@@ -113,12 +114,12 @@ theorem add_eq_coe : ∀ {a b : WithTop α} {c : α}, a + b = c ↔ ∃ (a' : α
 
 @[simp]
 theorem add_coe_eq_top_iff {x : WithTop α} {y : α} : x + y = ⊤ ↔ x = ⊤ := by
-  induction x using WithTop.recTopCoe <;> simp [← coe_add, -WithZero.coe_add]
+  induction x using WithTop.recTopCoe <;> simp [← coe_add]
 #align with_top.add_coe_eq_top_iff WithTop.add_coe_eq_top_iff
 
 @[simp]
 theorem coe_add_eq_top_iff {y : WithTop α} : ↑x + y = ⊤ ↔ y = ⊤ := by
-  induction y using WithTop.recTopCoe <;> simp [← coe_add, -WithZero.coe_add]
+  induction y using WithTop.recTopCoe <;> simp [← coe_add]
 #align with_top.coe_add_eq_top_iff WithTop.coe_add_eq_top_iff
 
 instance covariant_class_add_le [LE α] [CovariantClass α α (· + ·) (· ≤ ·)] :
@@ -149,7 +150,7 @@ instance contravariant_class_add_lt [LT α] [ContravariantClass α α (· + ·) 
     induction c using WithTop.recTopCoe
     · exact coe_lt_top _
       
-    · exact coe_lt_coe.2 (lt_of_add_lt_add_left $ coe_lt_coe.1 h)
+    · exact coe_lt_coe.2 (lt_of_add_lt_add_left <| coe_lt_coe.1 h)
       ⟩
 #align with_top.contravariant_class_add_lt WithTop.contravariant_class_add_lt
 
@@ -160,7 +161,7 @@ instance contravariant_class_swap_add_lt [LT α] [ContravariantClass α α (swap
     cases c
     · exact coe_lt_top _
       
-    · exact coe_lt_coe.2 (lt_of_add_lt_add_right $ coe_lt_coe.1 h)
+    · exact coe_lt_coe.2 (lt_of_add_lt_add_right <| coe_lt_coe.1 h)
       ⟩
 #align with_top.contravariant_class_swap_add_lt WithTop.contravariant_class_swap_add_lt
 
@@ -186,7 +187,7 @@ protected theorem le_of_add_le_add_right [LE α] [ContravariantClass α α (swap
   cases b
   · exact (not_top_le_coe _ h).elim
     
-  · exact coe_le_coe.2 (le_of_add_le_add_right $ coe_le_coe.1 h)
+  · exact coe_le_coe.2 (le_of_add_le_add_right <| coe_le_coe.1 h)
     
 #align with_top.le_of_add_le_add_right WithTop.le_of_add_le_add_right
 
@@ -234,12 +235,12 @@ protected theorem add_lt_add_iff_right [LT α] [CovariantClass α α (swap (· +
 
 protected theorem add_lt_add_of_le_of_lt [Preorder α] [CovariantClass α α (· + ·) (· < ·)]
     [CovariantClass α α (swap (· + ·)) (· ≤ ·)] (ha : a ≠ ⊤) (hab : a ≤ b) (hcd : c < d) : a + c < b + d :=
-  (WithTop.add_lt_add_left ha hcd).trans_le $ add_le_add_right hab _
+  (WithTop.add_lt_add_left ha hcd).trans_le <| add_le_add_right hab _
 #align with_top.add_lt_add_of_le_of_lt WithTop.add_lt_add_of_le_of_lt
 
 protected theorem add_lt_add_of_lt_of_le [Preorder α] [CovariantClass α α (· + ·) (· ≤ ·)]
     [CovariantClass α α (swap (· + ·)) (· < ·)] (hc : c ≠ ⊤) (hab : a < b) (hcd : c ≤ d) : a + c < b + d :=
-  (WithTop.add_lt_add_right hc hab).trans_le $ add_le_add_left hcd _
+  (WithTop.add_lt_add_right hc hab).trans_le <| add_le_add_left hcd _
 #align with_top.add_lt_add_of_lt_of_le WithTop.add_lt_add_of_lt_of_le
 
 --  There is no `with_top.map_mul_of_mul_hom`, since `with_top` does not have a multiplication.
@@ -502,8 +503,7 @@ theorem bot_lt_add [PartialOrder α] {a b : WithBot α} : ⊥ < a + b ↔ ⊥ < 
   @WithTop.add_lt_top αᵒᵈ _ _ _ _
 #align with_bot.bot_lt_add WithBot.bot_lt_add
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a' b') -/
-theorem add_eq_coe : a + b = x ↔ ∃ (a' : α) (b' : α), ↑a' = a ∧ ↑b' = b ∧ a' + b' = x :=
+theorem add_eq_coe : a + b = x ↔ ∃ a' b' : α, ↑a' = a ∧ ↑b' = b ∧ a' + b' = x :=
   WithTop.add_eq_coe
 #align with_bot.add_eq_coe WithBot.add_eq_coe
 

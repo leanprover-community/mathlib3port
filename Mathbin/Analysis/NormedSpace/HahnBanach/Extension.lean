@@ -23,7 +23,7 @@ In order to state and prove the corollaries uniformly, we prove the statements f
 satisfying `is_R_or_C 𝕜`.
 
 In this setting, `exists_dual_vector` states that, for any nonzero `x`, there exists a continuous
-linear form `g` of norm `1` with `g x = ∥x∥` (where the norm has to be interpreted as an element
+linear form `g` of norm `1` with `g x = ‖x‖` (where the norm has to be interpreted as an element
 of `𝕜`).
 
 -/
@@ -37,12 +37,12 @@ variable {E : Type _} [SeminormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Hahn-Banach theorem for continuous linear functions over `ℝ`. -/
 theorem exists_extension_norm_eq (p : Subspace ℝ E) (f : p →L[ℝ] ℝ) :
-    ∃ g : E →L[ℝ] ℝ, (∀ x : p, g x = f x) ∧ ∥g∥ = ∥f∥ := by
-  rcases exists_extension_of_le_sublinear ⟨p, f⟩ (fun x => ∥f∥ * ∥x∥)
+    ∃ g : E →L[ℝ] ℝ, (∀ x : p, g x = f x) ∧ ‖g‖ = ‖f‖ := by
+  rcases exists_extension_of_le_sublinear ⟨p, f⟩ (fun x => ‖f‖ * ‖x‖)
       (fun c hc x => by simp only [norm_smul c x, Real.norm_eq_abs, abs_of_pos hc, mul_left_comm]) (fun x y => _)
       fun x => le_trans (le_abs_self _) (f.le_op_norm _) with
     ⟨g, g_eq, g_le⟩
-  set g' := g.mk_continuous ∥f∥ fun x => abs_le.2 ⟨neg_le.1 $ g.map_neg x ▸ norm_neg x ▸ g_le (-x), g_le x⟩
+  set g' := g.mk_continuous ‖f‖ fun x => abs_le.2 ⟨neg_le.1 <| g.map_neg x ▸ norm_neg x ▸ g_le (-x), g_le x⟩
   · refine' ⟨g', g_eq, _⟩
     · apply le_antisymm (g.mk_continuous_norm_le (norm_nonneg f) _)
       refine' f.op_norm_le_bound (norm_nonneg _) fun x => _
@@ -66,7 +66,7 @@ variable {𝕜 : Type _} [IsROrC 𝕜] {F : Type _} [SeminormedAddCommGroup F] [
 
 /-- Hahn-Banach theorem for continuous linear functions over `𝕜` satisyfing `is_R_or_C 𝕜`. -/
 theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
-    ∃ g : F →L[𝕜] 𝕜, (∀ x : p, g x = f x) ∧ ∥g∥ = ∥f∥ := by
+    ∃ g : F →L[𝕜] 𝕜, (∀ x : p, g x = f x) ∧ ‖g‖ = ‖f‖ := by
   letI : Module ℝ F := RestrictScalars.module ℝ 𝕜 F
   letI : IsScalarTower ℝ 𝕜 F := RestrictScalars.is_scalar_tower _ _ _
   letI : NormedSpace ℝ F := NormedSpace.restrictScalars _ 𝕜 _
@@ -97,10 +97,10 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
   -- And we derive the equality of the norms by bounding on both sides.
   refine' ⟨h, le_antisymm _ _⟩
   · calc
-      ∥g.extend_to_𝕜∥ ≤ ∥g∥ := g.extend_to_𝕜.op_norm_le_bound g.op_norm_nonneg (norm_bound _)
-      _ = ∥fr∥ := hnormeq
-      _ ≤ ∥re_clm∥ * ∥f∥ := ContinuousLinearMap.op_norm_comp_le _ _
-      _ = ∥f∥ := by rw [re_clm_norm, one_mul]
+      ‖g.extend_to_𝕜‖ ≤ ‖g‖ := g.extend_to_𝕜.op_norm_le_bound g.op_norm_nonneg (norm_bound _)
+      _ = ‖fr‖ := hnormeq
+      _ ≤ ‖re_clm‖ * ‖f‖ := ContinuousLinearMap.op_norm_comp_le _ _
+      _ = ‖f‖ := by rw [re_clm_norm, one_mul]
       
     
   · exact f.op_norm_le_bound g.extend_to_𝕜.op_norm_nonneg fun x => h x ▸ g.extend_to_𝕜.le_op_norm x
@@ -119,33 +119,33 @@ open ContinuousLinearEquiv Submodule
 
 open Classical
 
-theorem coord_norm' {x : E} (h : x ≠ 0) : ∥(∥x∥ : 𝕜) • coord 𝕜 x h∥ = 1 := by
+theorem coord_norm' {x : E} (h : x ≠ 0) : ‖(‖x‖ : 𝕜) • coord 𝕜 x h‖ = 1 := by
   rw [norm_smul, IsROrC.norm_coe_norm, coord_norm, mul_inv_cancel (mt norm_eq_zero.mp h)]
 #align coord_norm' coord_norm'
 
 /-- Corollary of Hahn-Banach.  Given a nonzero element `x` of a normed space, there exists an
-    element of the dual space, of norm `1`, whose value on `x` is `∥x∥`. -/
-theorem exists_dual_vector (x : E) (h : x ≠ 0) : ∃ g : E →L[𝕜] 𝕜, ∥g∥ = 1 ∧ g x = ∥x∥ := by
+    element of the dual space, of norm `1`, whose value on `x` is `‖x‖`. -/
+theorem exists_dual_vector (x : E) (h : x ≠ 0) : ∃ g : E →L[𝕜] 𝕜, ‖g‖ = 1 ∧ g x = ‖x‖ := by
   let p : Submodule 𝕜 E := 𝕜 ∙ x
-  let f := (∥x∥ : 𝕜) • coord 𝕜 x h
+  let f := (‖x‖ : 𝕜) • coord 𝕜 x h
   obtain ⟨g, hg⟩ := exists_extension_norm_eq p f
   refine' ⟨g, _, _⟩
   · rw [hg.2, coord_norm']
     
   · calc
       g x = g (⟨x, mem_span_singleton_self x⟩ : 𝕜 ∙ x) := by rw [coe_mk]
-      _ = ((∥x∥ : 𝕜) • coord 𝕜 x h) (⟨x, mem_span_singleton_self x⟩ : 𝕜 ∙ x) := by rw [← hg.1]
-      _ = ∥x∥ := by simp
+      _ = ((‖x‖ : 𝕜) • coord 𝕜 x h) (⟨x, mem_span_singleton_self x⟩ : 𝕜 ∙ x) := by rw [← hg.1]
+      _ = ‖x‖ := by simp
       
     
 #align exists_dual_vector exists_dual_vector
 
 /-- Variant of Hahn-Banach, eliminating the hypothesis that `x` be nonzero, and choosing
     the dual element arbitrarily when `x = 0`. -/
-theorem exists_dual_vector' [Nontrivial E] (x : E) : ∃ g : E →L[𝕜] 𝕜, ∥g∥ = 1 ∧ g x = ∥x∥ := by
-  by_cases hx:x = 0
+theorem exists_dual_vector' [Nontrivial E] (x : E) : ∃ g : E →L[𝕜] 𝕜, ‖g‖ = 1 ∧ g x = ‖x‖ := by
+  by_cases hx : x = 0
   · obtain ⟨y, hy⟩ := exists_ne (0 : E)
-    obtain ⟨g, hg⟩ : ∃ g : E →L[𝕜] 𝕜, ∥g∥ = 1 ∧ g y = ∥y∥ := exists_dual_vector 𝕜 y hy
+    obtain ⟨g, hg⟩ : ∃ g : E →L[𝕜] 𝕜, ‖g‖ = 1 ∧ g y = ‖y‖ := exists_dual_vector 𝕜 y hy
     refine' ⟨g, hg.left, _⟩
     simp [hx]
     
@@ -156,8 +156,8 @@ theorem exists_dual_vector' [Nontrivial E] (x : E) : ∃ g : E →L[𝕜] 𝕜, 
 /-- Variant of Hahn-Banach, eliminating the hypothesis that `x` be nonzero, but only ensuring that
     the dual element has norm at most `1` (this can not be improved for the trivial
     vector space). -/
-theorem exists_dual_vector'' (x : E) : ∃ g : E →L[𝕜] 𝕜, ∥g∥ ≤ 1 ∧ g x = ∥x∥ := by
-  by_cases hx:x = 0
+theorem exists_dual_vector'' (x : E) : ∃ g : E →L[𝕜] 𝕜, ‖g‖ ≤ 1 ∧ g x = ‖x‖ := by
+  by_cases hx : x = 0
   · refine' ⟨0, by simp, _⟩
     symm
     simp [hx]

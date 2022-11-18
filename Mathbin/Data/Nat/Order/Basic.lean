@@ -75,7 +75,7 @@ instance : LinearOrderedCancelAddCommMonoid ℕ :=
 
 instance : CanonicallyOrderedCommSemiring ℕ :=
   { Nat.nontrivial, Nat.orderBot, (inferInstance : OrderedAddCommMonoid ℕ), (inferInstance : LinearOrderedSemiring ℕ),
-    (inferInstance : CommSemiring ℕ) with exists_add_of_le := fun a b h => (Nat.le.dest h).imp $ fun _ => Eq.symm,
+    (inferInstance : CommSemiring ℕ) with exists_add_of_le := fun a b h => (Nat.le.dest h).imp fun _ => Eq.symm,
     le_self_add := Nat.le_add_right, eq_zero_or_eq_zero_of_mul_eq_zero := fun a b => Nat.eq_zero_of_mul_eq_zero }
 
 instance : CanonicallyLinearOrderedAddMonoid ℕ :=
@@ -93,9 +93,9 @@ theorem one_le_iff_ne_zero {n : ℕ} : 1 ≤ n ↔ n ≠ 0 :=
 #align nat.one_le_iff_ne_zero Nat.one_le_iff_ne_zero
 
 theorem one_lt_iff_ne_zero_and_ne_one : ∀ {n : ℕ}, 1 < n ↔ n ≠ 0 ∧ n ≠ 1
-  | 0 => dec_trivial
-  | 1 => dec_trivial
-  | n + 2 => dec_trivial
+  | 0 => by decide
+  | 1 => by decide
+  | n + 2 => by decide
 #align nat.one_lt_iff_ne_zero_and_ne_one Nat.one_lt_iff_ne_zero_and_ne_one
 
 protected theorem mul_ne_zero {n m : ℕ} (n0 : n ≠ 0) (m0 : m ≠ 0) : n * m ≠ 0
@@ -114,11 +114,11 @@ protected theorem zero_eq_mul {a b : ℕ} : 0 = a * b ↔ a = 0 ∨ b = 0 := by 
 #align nat.zero_eq_mul Nat.zero_eq_mul
 
 theorem eq_zero_of_double_le {a : ℕ} (h : 2 * a ≤ a) : a = 0 :=
-  add_right_eq_self.mp $ le_antisymm ((two_mul a).symm.trans_le h) le_add_self
+  add_right_eq_self.mp <| le_antisymm ((two_mul a).symm.trans_le h) le_add_self
 #align nat.eq_zero_of_double_le Nat.eq_zero_of_double_le
 
 theorem eq_zero_of_mul_le {a b : ℕ} (hb : 2 ≤ b) (h : b * a ≤ a) : a = 0 :=
-  eq_zero_of_double_le $ le_trans (Nat.mul_le_mul_right _ hb) h
+  eq_zero_of_double_le <| le_trans (Nat.mul_le_mul_right _ hb) h
 #align nat.eq_zero_of_mul_le Nat.eq_zero_of_mul_le
 
 theorem zero_max {m : ℕ} : max 0 m = m :=
@@ -221,9 +221,9 @@ theorem add_pos_iff_pos_or_pos (m n : ℕ) : 0 < m + n ↔ 0 < m ∨ 0 < n :=
 #align nat.add_pos_iff_pos_or_pos Nat.add_pos_iff_pos_or_pos
 
 theorem add_eq_one_iff : ∀ {a b : ℕ}, a + b = 1 ↔ a = 0 ∧ b = 1 ∨ a = 1 ∧ b = 0
-  | 0, 0 => dec_trivial
-  | 1, 0 => dec_trivial
-  | a + 2, _ => by rw [add_right_comm] <;> exact dec_trivial
+  | 0, 0 => by decide
+  | 1, 0 => by decide
+  | a + 2, _ => by rw [add_right_comm] <;> exact by decide
   | _, b + 1 => by rw [← add_assoc] <;> simp only [Nat.succ_inj', Nat.succ_ne_zero] <;> simp
 #align nat.add_eq_one_iff Nat.add_eq_one_iff
 
@@ -231,8 +231,8 @@ theorem le_add_one_iff {i j : ℕ} : i ≤ j + 1 ↔ i ≤ j ∨ i = j + 1 :=
   ⟨fun h =>
     match Nat.eq_or_lt_of_le h with
     | Or.inl h => Or.inr h
-    | Or.inr h => Or.inl $ Nat.le_of_succ_le_succ h,
-    Or.ndrec (fun h => le_trans h $ Nat.le_add_right _ _) le_of_eq⟩
+    | Or.inr h => Or.inl <| Nat.le_of_succ_le_succ h,
+    Or.ndrec (fun h => le_trans h <| Nat.le_add_right _ _) le_of_eq⟩
 #align nat.le_add_one_iff Nat.le_add_one_iff
 
 theorem le_and_le_add_one_iff {x a : ℕ} : a ≤ x ∧ x ≤ a + 1 ↔ x = a ∨ x = a + 1 := by
@@ -303,9 +303,9 @@ theorem sub_succ' (a b : ℕ) : a - b.succ = a - b - 1 :=
 
 
 theorem mul_eq_one_iff : ∀ {a b : ℕ}, a * b = 1 ↔ a = 1 ∧ b = 1
-  | 0, 0 => dec_trivial
-  | 0, 1 => dec_trivial
-  | 1, 0 => dec_trivial
+  | 0, 0 => by decide
+  | 0, 1 => by decide
+  | 1, 0 => by decide
   | a + 2, 0 => by simp
   | 0, b + 2 => by simp
   | a + 1, b + 1 =>
@@ -346,14 +346,14 @@ theorem le_mul_of_pos_left {m n : ℕ} (h : 0 < n) : m ≤ n * m := by
   conv =>
   lhs
   rw [← one_mul m]
-  exact mul_le_mul_of_nonneg_right h.nat_succ_le dec_trivial
+  exact mul_le_mul_of_nonneg_right h.nat_succ_le (by decide)
 #align nat.le_mul_of_pos_left Nat.le_mul_of_pos_left
 
 theorem le_mul_of_pos_right {m n : ℕ} (h : 0 < n) : m ≤ m * n := by
   conv =>
   lhs
   rw [← mul_one m]
-  exact mul_le_mul_of_nonneg_left h.nat_succ_le dec_trivial
+  exact mul_le_mul_of_nonneg_left h.nat_succ_le (by decide)
 #align nat.le_mul_of_pos_right Nat.le_mul_of_pos_right
 
 theorem mul_self_inj {n m : ℕ} : n * n = m * m ↔ n = m :=
@@ -412,7 +412,7 @@ theorem set_eq_univ {S : Set ℕ} : S = Set.univ ↔ 0 ∈ S ∧ ∀ k : ℕ, k 
 
 protected theorem div_le_of_le_mul' {m n : ℕ} {k} (h : m ≤ k * n) : m / k ≤ n :=
   (Nat.eq_zero_or_pos k).elim (fun k0 => by rw [k0, Nat.div_zero] <;> apply zero_le) fun k0 =>
-    (mul_le_mul_left k0).1 $
+    (mul_le_mul_left k0).1 <|
       calc
         k * (m / k) ≤ m % k + k * (m / k) := Nat.le_add_left _ _
         _ = m := mod_add_div _ _
@@ -422,7 +422,7 @@ protected theorem div_le_of_le_mul' {m n : ℕ} {k} (h : m ≤ k * n) : m / k �
 
 protected theorem div_le_self' (m n : ℕ) : m / n ≤ m :=
   (Nat.eq_zero_or_pos n).elim (fun n0 => by rw [n0, Nat.div_zero] <;> apply zero_le) fun n0 =>
-    Nat.div_le_of_le_mul' $
+    Nat.div_le_of_le_mul' <|
       calc
         m = 1 * m := (one_mul _).symm
         _ ≤ n * m := Nat.mul_le_mul_right _ n0
@@ -440,7 +440,7 @@ protected theorem div_lt_of_lt_mul {m n k : ℕ} (h : m < n * k) : m / n < k :=
 #align nat.div_lt_of_lt_mul Nat.div_lt_of_lt_mul
 
 theorem eq_zero_of_le_div {a b : ℕ} (hb : 2 ≤ b) (h : a ≤ a / b) : a = 0 :=
-  eq_zero_of_mul_le hb $ by rw [mul_comm] <;> exact (Nat.le_div_iff_mul_le' (lt_of_lt_of_le dec_trivial hb)).1 h
+  eq_zero_of_mul_le hb <| by rw [mul_comm] <;> exact (Nat.le_div_iff_mul_le' (lt_of_lt_of_le (by decide) hb)).1 h
 #align nat.eq_zero_of_le_div Nat.eq_zero_of_le_div
 
 theorem div_mul_div_le_div (a b c : ℕ) : a / c * b / a ≤ b / c :=
@@ -569,7 +569,7 @@ theorem div_eq_self {a b : ℕ} : a / b = a ↔ a = 0 ∨ b = 1 := by
         rfl
         
       · left
-        have : a / (b + 2) ≤ a / 2 := div_le_div_left (by simp) dec_trivial
+        have : a / (b + 2) ≤ a / 2 := div_le_div_left (by simp) (by decide)
         refine' eq_zero_of_le_half _
         simp_all
         
@@ -579,9 +579,9 @@ theorem div_eq_self {a b : ℕ} : a / b = a ↔ a = 0 ∨ b = 1 := by
     
 #align nat.div_eq_self Nat.div_eq_self
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:130:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
 theorem div_eq_sub_mod_div {m n : ℕ} : m / n = (m - m % n) / n := by
-  by_cases n0:n = 0
+  by_cases n0 : n = 0
   · rw [n0, Nat.div_zero, Nat.div_zero]
     
   · rw [← mod_add_div m n]
@@ -635,7 +635,7 @@ theorem find_greatest_eq_iff : Nat.findGreatest P b = m ↔ m ≤ b ∧ (m ≠ 0
     rintro rfl
     exact ⟨fun h => (h rfl).elim, fun n hlt heq => (hlt.Ne HEq.symm).elim⟩
     
-  · by_cases hb:P (b + 1)
+  · by_cases hb : P (b + 1)
     · rw [find_greatest_eq hb]
       constructor
       · rintro rfl
@@ -651,7 +651,7 @@ theorem find_greatest_eq_iff : Nat.findGreatest P b = m ↔ m ≤ b ∧ (m ≠ 0
       · rintro ⟨hle, hP, hm⟩
         refine' ⟨hle.trans b.le_succ, hP, fun n hlt hle => _⟩
         rcases Decidable.eq_or_lt_of_le hle with (rfl | hlt')
-        exacts[hb, hm hlt $ lt_succ_iff.1 hlt']
+        exacts[hb, hm hlt <| lt_succ_iff.1 hlt']
         
       · rintro ⟨hle, hP, hm⟩
         refine' ⟨lt_succ_iff.1 (hle.lt_of_ne _), hP, fun n hlt hle => hm hlt (hle.trans b.le_succ)⟩
@@ -667,7 +667,7 @@ theorem find_greatest_eq_zero_iff : Nat.findGreatest P b = 0 ↔ ∀ ⦃n⦄, 0 
 #align nat.find_greatest_eq_zero_iff Nat.find_greatest_eq_zero_iff
 
 theorem find_greatest_spec (hmb : m ≤ b) (hm : P m) : P (Nat.findGreatest P b) := by
-  by_cases h:Nat.findGreatest P b = 0
+  by_cases h : Nat.findGreatest P b = 0
   · cases m
     · rwa [h]
       
@@ -682,7 +682,7 @@ theorem find_greatest_le (n : ℕ) : Nat.findGreatest P n ≤ n :=
 #align nat.find_greatest_le Nat.find_greatest_le
 
 theorem le_find_greatest (hmb : m ≤ b) (hm : P m) : m ≤ Nat.findGreatest P b :=
-  le_of_not_lt $ fun hlt => (find_greatest_eq_iff.1 rfl).2.2 hlt hmb hm
+  le_of_not_lt fun hlt => (find_greatest_eq_iff.1 rfl).2.2 hlt hmb hm
 #align nat.le_find_greatest Nat.le_find_greatest
 
 theorem find_greatest_mono_right (P : ℕ → Prop) [DecidablePred P] : Monotone (Nat.findGreatest P) := by
@@ -704,13 +704,13 @@ theorem find_greatest_mono_left [DecidablePred Q] (hPQ : P ≤ Q) : Nat.findGrea
   · rw [find_greatest_eq h, find_greatest_eq (hPQ _ h)]
     
   · rw [find_greatest_of_not h]
-    exact hn.trans (Nat.find_greatest_mono_right _ $ le_succ _)
+    exact hn.trans (Nat.find_greatest_mono_right _ <| le_succ _)
     
 #align nat.find_greatest_mono_left Nat.find_greatest_mono_left
 
 theorem find_greatest_mono {a b : ℕ} [DecidablePred Q] (hPQ : P ≤ Q) (hab : a ≤ b) :
     Nat.findGreatest P a ≤ Nat.findGreatest Q b :=
-  (Nat.find_greatest_mono_right _ hab).trans $ find_greatest_mono_left hPQ _
+  (Nat.find_greatest_mono_right _ hab).trans <| find_greatest_mono_left hPQ _
 #align nat.find_greatest_mono Nat.find_greatest_mono
 
 theorem find_greatest_is_greatest (hk : Nat.findGreatest P b < k) (hkb : k ≤ b) : ¬P k :=
@@ -740,12 +740,12 @@ theorem bit_le : ∀ (b : Bool) {n m : ℕ}, n ≤ m → bit b n ≤ bit b m
 #align nat.bit_le Nat.bit_le
 
 theorem bit0_le_bit : ∀ (b) {m n : ℕ}, m ≤ n → bit0 m ≤ bit b n
-  | tt, m, n, h => le_of_lt $ Nat.bit0_lt_bit1 h
+  | tt, m, n, h => le_of_lt <| Nat.bit0_lt_bit1 h
   | ff, m, n, h => Nat.bit0_le h
 #align nat.bit0_le_bit Nat.bit0_le_bit
 
 theorem bit_le_bit1 : ∀ (b) {m n : ℕ}, m ≤ n → bit b m ≤ bit1 n
-  | ff, m, n, h => le_of_lt $ Nat.bit0_lt_bit1 h
+  | ff, m, n, h => le_of_lt <| Nat.bit0_lt_bit1 h
   | tt, m, n, h => Nat.bit1_le h
 #align nat.bit_le_bit1 Nat.bit_le_bit1
 
@@ -820,7 +820,7 @@ instance decidableLoHi (lo hi : ℕ) (P : ℕ → Prop) [H : DecidablePred P] : 
 #align nat.decidable_lo_hi Nat.decidableLoHi
 
 instance decidableLoHiLe (lo hi : ℕ) (P : ℕ → Prop) [H : DecidablePred P] : Decidable (∀ x, lo ≤ x → x ≤ hi → P x) :=
-  decidable_of_iff (∀ x, lo ≤ x → x < hi + 1 → P x) $ ball_congr $ fun x hl => imp_congr lt_succ_iff Iff.rfl
+  decidable_of_iff (∀ x, lo ≤ x → x < hi + 1 → P x) <| ball_congr fun x hl => imp_congr lt_succ_iff Iff.rfl
 #align nat.decidable_lo_hi_le Nat.decidableLoHiLe
 
 end Nat

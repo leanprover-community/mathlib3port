@@ -3,7 +3,6 @@ Copyright (c) 2021 Mark Lavrentyev. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mark Lavrentyev
 -/
-import Mathbin.CategoryTheory.Category.GroupoidCat
 import Mathbin.CategoryTheory.Groupoid
 import Mathbin.Topology.Category.TopCat.Basic
 import Mathbin.Topology.PathConnected

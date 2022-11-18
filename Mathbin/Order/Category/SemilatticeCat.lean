@@ -182,8 +182,8 @@ end SemilatticeInfCat
 @[simps Functor inverse]
 def semilatticeSupEquivSemilatticeInf : SemilatticeSupCat ≌ SemilatticeInfCat :=
   Equivalence.mk SemilatticeSupCat.dual SemilatticeInfCat.dual
-    ((NatIso.ofComponents fun X => SemilatticeSupCat.Iso.mk $ OrderIso.dualDual X) $ fun X Y f => rfl)
-    ((NatIso.ofComponents fun X => SemilatticeInfCat.Iso.mk $ OrderIso.dualDual X) $ fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => SemilatticeSupCat.Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => SemilatticeInfCat.Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align SemilatticeSup_equiv_SemilatticeInf semilatticeSupEquivSemilatticeInf
 
 theorem SemilatticeSup_dual_comp_forget_to_PartialOrder :

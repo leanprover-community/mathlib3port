@@ -43,7 +43,7 @@ private unsafe def join_proofs (r : Name) (o₁ o₂ : Option expr) : tactic (Op
     match env r with
       | some trans => do
         let pr ← mk_app trans [p₁, p₂]
-        return $ some pr
+        return <| some pr
       | none => fail f! "converter failed, relation '{r}' is not transitive"
 #align old_conv.join_proofs old_conv.join_proofs
 
@@ -166,7 +166,7 @@ unsafe def repeat : old_conv Unit → old_conv Unit
   | c, r, lhs =>
     (do
         let ⟨_, rhs₁, pr₁⟩ ← c r lhs
-        guard (¬lhs =ₐ rhs₁)
+        guard ¬lhs == rhs₁
         let ⟨_, rhs₂, pr₂⟩ ← repeat c r rhs₁
         let pr ← join_proofs r pr₁ pr₂
         return ⟨(), rhs₂, pr⟩) <|>
@@ -196,7 +196,7 @@ unsafe def funext (c : old_conv Unit) : old_conv Unit := fun r lhs => do
   let expr.lam n bi d b ← return lhs
   let aux_type := expr.pi n bi d (expr.const `true [])
   let (result, _) ←
-    solve_aux aux_type $ do
+    solve_aux aux_type <| do
         let x ← intro1
         let c_result ← c r (b.instantiate_var x)
         let rhs := expr.lam n bi d (c_result.rhs.abstract x)
@@ -217,7 +217,7 @@ unsafe def congr_core (c_f c_a : old_conv Unit) : old_conv Unit := fun r lhs => 
   guard (f_type f_type.is_arrow)
   let ⟨(), new_f, of⟩ ← mtry c_f r f
   let ⟨(), new_a, oa⟩ ← mtry c_a r a
-  let rhs ← return $ new_f new_a
+  let rhs ← return <| new_f new_a
   match of, oa with
     | none, none => return ⟨(), rhs, none⟩
     | none, some pr_a => do

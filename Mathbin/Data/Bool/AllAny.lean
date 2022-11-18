@@ -31,7 +31,7 @@ but is expected to have type
   forall {α._@.Std.Data.List.Init.Lemmas._hyg.1046 : Type.{u_1}} {a : α._@.Std.Data.List.Init.Lemmas._hyg.1046} {l : List.{u_1} α._@.Std.Data.List.Init.Lemmas._hyg.1046} {f : α._@.Std.Data.List.Init.Lemmas._hyg.1046 -> Bool}, Eq.{1} Bool (List.all.{u_1} α._@.Std.Data.List.Init.Lemmas._hyg.1046 (List.cons.{u_1} α._@.Std.Data.List.Init.Lemmas._hyg.1046 a l) f) (and (f a) (List.all.{u_1} α._@.Std.Data.List.Init.Lemmas._hyg.1046 l f))
 Case conversion may be inaccurate. Consider using '#align list.all_cons List.all_consₓ'. -/
 @[simp]
-theorem all_cons (p : α → Bool) (a : α) (l : List α) : all (a :: l) p = p a && all l p :=
+theorem all_cons (p : α → Bool) (a : α) (l : List α) : all (a :: l) p = (p a && all l p) :=
   rfl
 #align list.all_cons List.all_cons
 
@@ -59,7 +59,7 @@ but is expected to have type
   forall {α._@.Std.Data.List.Init.Lemmas._hyg.970 : Type.{u_1}} {a : α._@.Std.Data.List.Init.Lemmas._hyg.970} {l : List.{u_1} α._@.Std.Data.List.Init.Lemmas._hyg.970} {f : α._@.Std.Data.List.Init.Lemmas._hyg.970 -> Bool}, Eq.{1} Bool (List.any.{u_1} α._@.Std.Data.List.Init.Lemmas._hyg.970 (List.cons.{u_1} α._@.Std.Data.List.Init.Lemmas._hyg.970 a l) f) (or (f a) (List.any.{u_1} α._@.Std.Data.List.Init.Lemmas._hyg.970 l f))
 Case conversion may be inaccurate. Consider using '#align list.any_cons List.any_consₓ'. -/
 @[simp]
-theorem any_cons (p : α → Bool) (a : α) (l : List α) : any (a :: l) p = p a || any l p :=
+theorem any_cons (p : α → Bool) (a : α) (l : List α) : any (a :: l) p = (p a || any l p) :=
   rfl
 #align list.any_cons List.any_cons
 

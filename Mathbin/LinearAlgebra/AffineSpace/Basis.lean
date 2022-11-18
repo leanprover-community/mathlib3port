@@ -71,8 +71,7 @@ instance : Inhabited (AffineBasis PUnit k PUnit) :=
 include b
 
 protected theorem nonempty : Nonempty ι :=
-  not_isEmpty_iff.mp $ fun hι => by
-    simpa only [@range_eq_empty _ _ hι, AffineSubspace.span_empty, bot_ne_top] using b.tot
+  not_isEmpty_iff.mp fun hι => by simpa only [@range_eq_empty _ _ hι, AffineSubspace.span_empty, bot_ne_top] using b.tot
 #align affine_basis.nonempty AffineBasis.nonempty
 
 /-- Composition of an affine basis and an equivalence of index types. -/
@@ -202,7 +201,7 @@ theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.Coord i
   rw [Pi.one_apply, hq, b.coord_apply_combination_of_mem hi hw]
 #align affine_basis.coe_coord_of_subsingleton_eq_one AffineBasis.coe_coord_of_subsingleton_eq_one
 
-theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective $ b.Coord i := by classical
+theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective <| b.Coord i := by classical
   intro x
   obtain ⟨j, hij⟩ := exists_ne i
   let s : Finset ι := {i, j}
@@ -405,7 +404,7 @@ theorem card_eq_finrank_add_one [Fintype ι] (b : AffineBasis ι k P) :
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (s «expr ⊆ » t) -/
 theorem exists_affine_subbasis {t : Set P} (ht : affineSpan k t = ⊤) :
-    ∃ (s) (_ : s ⊆ t) (b : AffineBasis (↥s) k P), b.points = coe := by
+    ∃ (s : _)(_ : s ⊆ t)(b : AffineBasis (↥s) k P), b.points = coe := by
   obtain ⟨s, hst, h_tot, h_ind⟩ := exists_affine_independent k V t
   refine' ⟨s, hst, ⟨coe, h_ind, _⟩, rfl⟩
   rw [Subtype.range_coe, h_tot, ht]
@@ -413,7 +412,7 @@ theorem exists_affine_subbasis {t : Set P} (ht : affineSpan k t = ⊤) :
 
 variable (k V P)
 
-theorem exists_affine_basis : ∃ (s : Set P) (b : AffineBasis (↥s) k P), b.points = coe :=
+theorem exists_affine_basis : ∃ (s : Set P)(b : AffineBasis (↥s) k P), b.points = coe :=
   let ⟨s, _, hs⟩ := exists_affine_subbasis (AffineSubspace.span_univ k V P)
   ⟨s, hs⟩
 #align affine_basis.exists_affine_basis AffineBasis.exists_affine_basis
@@ -424,7 +423,7 @@ theorem exists_affine_basis_of_finite_dimensional [Fintype ι] [FiniteDimensiona
     (h : Fintype.card ι = FiniteDimensional.finrank k V + 1) : Nonempty (AffineBasis ι k P) := by
   obtain ⟨s, b, hb⟩ := AffineBasis.exists_affine_basis k V P
   lift s to Finset P using b.finite_set
-  refine' ⟨b.comp_equiv $ Fintype.equivOfCardEq _⟩
+  refine' ⟨b.comp_equiv <| Fintype.equivOfCardEq _⟩
   rw [h, ← b.card_eq_finrank_add_one]
 #align affine_basis.exists_affine_basis_of_finite_dimensional AffineBasis.exists_affine_basis_of_finite_dimensional
 

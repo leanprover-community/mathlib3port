@@ -70,7 +70,7 @@ unsafe def unify_heterogeneous : unification_step := fun equ lhs_type rhs_type l
       let t ← to_expr ``(@Eq $(lhs_type) $(lhs) $(rhs))
       let equ' ← note equ.local_pp_name t p
       clear equ
-      pure $ simplified [equ']) <|>
+      pure <| simplified [equ']) <|>
     pure not_simplified
 #align tactic.unify_equations.unify_heterogeneous tactic.unify_equations.unify_heterogeneous
 
@@ -80,7 +80,7 @@ unsafe def unify_defeq : unification_step := fun equ lhs_type _ _ _ lhs_whnf rhs
   (do
       is_def_eq lhs_whnf rhs_whnf
       clear equ
-      pure $ simplified []) <|>
+      pure <| simplified []) <|>
     pure not_simplified
 #align tactic.unify_equations.unify_defeq tactic.unify_equations.unify_defeq
 
@@ -91,12 +91,12 @@ unsafe def unify_var : unification_step := fun equ type _ lhs rhs lhs_whnf rhs_w
   (do
       let lhs_is_local := lhs_whnf.is_local_constant
       let rhs_is_local := rhs_whnf.is_local_constant
-      guard $ lhs_is_local ∨ rhs_is_local
+      guard <| lhs_is_local ∨ rhs_is_local
       let t := if lhs_is_local then (const `eq [u]) type lhs_whnf rhs else (const `eq [u]) type lhs rhs_whnf
       change_core t (some equ)
       let equ ← get_local equ.local_pp_name
       subst_core equ
-      pure $ simplified []) <|>
+      pure <| simplified []) <|>
     pure not_simplified
 #align tactic.unify_equations.unify_var tactic.unify_equations.unify_var
 
@@ -111,7 +111,7 @@ private unsafe def injection_with' (h : expr) (ns : List Name) (base := `h) (off
           let (lhs, rhs) ← match_eq H
           let constructor_left ← get_app_fn_const_whnf lhs semireducible false
           let constructor_right ← get_app_fn_const_whnf rhs semireducible false
-          let inj_name ← resolve_constant $ constructor_left ++ "inj_arrow"
+          let inj_name ← resolve_constant <| constructor_left ++ "inj_arrow"
           pure (lhs, rhs, constructor_left, constructor_right, inj_name)) <|>
         fail
           ("injection tactic failed, argument must be an equality proof where lhs and rhs " ++
@@ -141,7 +141,7 @@ private unsafe def injection_with' (h : expr) (ns : List Name) (base := `h) (off
       let next
         ←-- The following filters out 'next' hypotheses of type `true`. The
             -- `inj_arrow` lemmas introduce these for nullary constructors.
-            next $
+            next
             fun h => do
             let q(True) ← infer_type h |
               pure tt
@@ -173,11 +173,11 @@ same datatype `I`:
 unsafe def unify_constructor_headed : unification_step := fun equ _ _ _ _ _ _ _ =>
   (do
       let (next, _) ← injection_with' equ [] `_ none
-      try $ clear equ
-      pure $
+      try <| clear equ
+      pure <|
           match next with
           | none => goal_solved
-          | some next => simplified $ next expr.local_pp_name) <|>
+          | some next => simplified <| next expr.local_pp_name) <|>
     pure not_simplified
 #align tactic.unify_equations.unify_constructor_headed tactic.unify_equations.unify_constructor_headed
 
@@ -187,7 +187,7 @@ such constant exists.
 -/
 unsafe def get_sizeof (type : expr) : tactic pexpr := do
   let n ← get_app_fn_const_whnf type semireducible false
-  resolve_name $ n ++ `sizeof
+  resolve_name <| n ++ `sizeof
 #align tactic.unify_equations.get_sizeof tactic.unify_equations.get_sizeof
 
 theorem add_add_one_ne (n m : ℕ) : n + (m + 1) ≠ n := by
@@ -349,7 +349,7 @@ unsafe def unify_equations : List Name → tactic Bool
   | h :: hs => do
     let res ← unify_equation_once h
     match res with
-      | simplified hs' => unify_equations $ hs' ++ hs
+      | simplified hs' => unify_equations <| hs' ++ hs
       | not_simplified => unify_equations hs
       | goal_solved => pure tt
 #align tactic.unify_equations tactic.unify_equations

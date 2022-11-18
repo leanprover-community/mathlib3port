@@ -3,7 +3,7 @@ Copyright (c) 2022 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 -/
-import Mathbin.Analysis.InnerProductSpace.Spectrum
+import Mathbin.Analysis.InnerProductSpace.PiL2
 
 /-! # Hermitian matrices
 
@@ -91,7 +91,7 @@ theorem is_hermitian_zero : (0 : Matrix n n α).IsHermitian :=
 @[simp]
 theorem IsHermitian.map {A : Matrix n n α} (h : A.IsHermitian) (f : α → β) (hf : Function.Semiconj f star star) :
     (A.map f).IsHermitian :=
-  (conj_transpose_map f hf).symm.trans $ h.Eq.symm ▸ rfl
+  (conj_transpose_map f hf).symm.trans <| h.Eq.symm ▸ rfl
 #align matrix.is_hermitian.map Matrix.IsHermitian.map
 
 theorem IsHermitian.transpose {A : Matrix n n α} (h : A.IsHermitian) : Aᵀ.IsHermitian := by
@@ -109,7 +109,7 @@ theorem is_hermitian_transpose_iff (A : Matrix n n α) : Aᵀ.IsHermitian ↔ A.
 #align matrix.is_hermitian_transpose_iff Matrix.is_hermitian_transpose_iff
 
 theorem IsHermitian.conj_transpose {A : Matrix n n α} (h : A.IsHermitian) : Aᴴ.IsHermitian :=
-  h.transpose.map _ $ fun _ => rfl
+  (h.transpose.map _) fun _ => rfl
 #align matrix.is_hermitian.conj_transpose Matrix.IsHermitian.conj_transpose
 
 @[simp]

@@ -29,12 +29,11 @@ open AbsoluteValue Real
 
 variable {Fq : Type _} [Fintype Fq]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i₀ i₁) -/
 /-- If `A` is a family of enough low-degree polynomials over a finite semiring, there is a
 pair of equal elements in `A`. -/
 theorem exists_eq_polynomial [Semiring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m) (b : Fq[X])
     (hb : natDegree b ≤ d) (A : Fin m.succ → Fq[X]) (hA : ∀ i, degree (A i) < degree b) :
-    ∃ (i₀) (i₁), i₀ ≠ i₁ ∧ A i₁ = A i₀ := by
+    ∃ i₀ i₁, i₀ ≠ i₁ ∧ A i₁ = A i₀ := by
   -- Since there are > q^d elements of A, and only q^d choices for the highest `d` coefficients,
   -- there must be two elements of A with the same coefficients at
   -- `0`, ... `degree b - 1` ≤ `d - 1`.
@@ -46,7 +45,7 @@ theorem exists_eq_polynomial [Semiring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.car
   use i₀, i₁, i_ne
   ext j
   -- The coefficients higher than `deg b` are the same because they are equal to 0.
-  by_cases hbj:degree b ≤ j
+  by_cases hbj : degree b ≤ j
   · rw [coeff_eq_zero_of_degree_lt (lt_of_lt_of_le (hA _) hbj), coeff_eq_zero_of_degree_lt (lt_of_lt_of_le (hA _) hbj)]
     
   -- So we only need to look for the coefficients between `0` and `deg b`.
@@ -55,13 +54,12 @@ theorem exists_eq_polynomial [Semiring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.car
   exact lt_of_lt_of_le (coe_lt_degree.mp hbj) hb
 #align polynomial.exists_eq_polynomial Polynomial.exists_eq_polynomial
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i₀ i₁) -/
 /-- If `A` is a family of enough low-degree polynomials over a finite ring,
 there is a pair of elements in `A` (with different indices but not necessarily
 distinct), such that their difference has small degree. -/
 theorem exists_approx_polynomial_aux [Ring Fq] {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m) (b : Fq[X])
     (A : Fin m.succ → Fq[X]) (hA : ∀ i, degree (A i) < degree b) :
-    ∃ (i₀) (i₁), i₀ ≠ i₁ ∧ degree (A i₁ - A i₀) < ↑(natDegree b - d) := by
+    ∃ i₀ i₁, i₀ ≠ i₁ ∧ degree (A i₁ - A i₀) < ↑(natDegree b - d) := by
   have hb : b ≠ 0 := by
     rintro rfl
     specialize hA 0
@@ -78,7 +76,7 @@ theorem exists_approx_polynomial_aux [Ring Fq] {d : ℕ} {m : ℕ} (hm : Fintype
   use i₀, i₁, i_ne
   refine' (degree_lt_iff_coeff_zero _ _).mpr fun j hj => _
   -- The coefficients higher than `deg b` are the same because they are equal to 0.
-  by_cases hbj:degree b ≤ j
+  by_cases hbj : degree b ≤ j
   · refine' coeff_eq_zero_of_degree_lt (lt_of_lt_of_le _ hbj)
     exact lt_of_le_of_lt (degree_sub_le _ _) (max_lt (hA _) (hA _))
     
@@ -86,7 +84,7 @@ theorem exists_approx_polynomial_aux [Ring Fq] {d : ℕ} {m : ℕ} (hm : Fintype
   rw [coeff_sub, sub_eq_zero]
   rw [not_le, degree_eq_nat_degree hb, WithBot.coe_lt_coe] at hbj
   have hj : nat_degree b - j.succ < d := by
-    by_cases hd:nat_degree b < d
+    by_cases hd : nat_degree b < d
     · exact lt_of_le_of_lt tsub_le_self hd
       
     · rw [not_lt] at hd
@@ -100,13 +98,12 @@ theorem exists_approx_polynomial_aux [Ring Fq] {d : ℕ} {m : ℕ} (hm : Fintype
 
 variable [Field Fq]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i₀ i₁) -/
 /-- If `A` is a family of enough low-degree polynomials over a finite field,
 there is a pair of elements in `A` (with different indices but not necessarily
 distinct), such that the difference of their remainders is close together. -/
 theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 < ε)
     (A : Fin (Fintype.card Fq ^ ⌈-log ε / log (Fintype.card Fq)⌉₊).succ → Fq[X]) :
-    ∃ (i₀) (i₁), i₀ ≠ i₁ ∧ (cardPowDegree (A i₁ % b - A i₀ % b) : ℝ) < cardPowDegree b • ε := by
+    ∃ i₀ i₁, i₀ ≠ i₁ ∧ (cardPowDegree (A i₁ % b - A i₀ % b) : ℝ) < cardPowDegree b • ε := by
   have hbε : 0 < card_pow_degree b • ε := by
     rw [Algebra.smul_def, eq_int_cast]
     exact mul_pos (int.cast_pos.mpr (AbsoluteValue.pos _ hb)) hε
@@ -115,7 +112,7 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
   have q_pos : 0 < Fintype.card Fq := by linarith
   have q_pos' : (0 : ℝ) < Fintype.card Fq := by assumption_mod_cast
   -- If `b` is already small enough, then the remainders are equal and we are done.
-  by_cases le_b:b.nat_degree ≤ ⌈-log ε / log (Fintype.card Fq)⌉₊
+  by_cases le_b : b.nat_degree ≤ ⌈-log ε / log (Fintype.card Fq)⌉₊
   · obtain ⟨i₀, i₁, i_ne, mod_eq⟩ :=
       exists_eq_polynomial le_rfl b le_b (fun i => A i % b) fun i => EuclideanDomain.modLt (A i) hb
     refine' ⟨i₀, i₁, i_ne, _⟩
@@ -129,7 +126,7 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
   simp only at deg_lt
   use i₀, i₁, i_ne
   -- Again, if the remainders are equal we are done.
-  by_cases h:A i₁ % b = A i₀ % b
+  by_cases h : A i₁ % b = A i₀ % b
   · rwa [h, sub_self, AbsoluteValue.map_zero, Int.cast_zero]
     
   have h' : A i₁ % b - A i₀ % b ≠ 0 := mt sub_eq_zero.mp h
@@ -157,13 +154,13 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
 theorem card_pow_degree_anti_archimedean {x y z : Fq[X]} {a : ℤ} (hxy : cardPowDegree (x - y) < a)
     (hyz : cardPowDegree (y - z) < a) : cardPowDegree (x - z) < a := by
   have ha : 0 < a := lt_of_le_of_lt (AbsoluteValue.nonneg _ _) hxy
-  by_cases hxy':x = y
+  by_cases hxy' : x = y
   · rwa [hxy']
     
-  by_cases hyz':y = z
+  by_cases hyz' : y = z
   · rwa [← hyz']
     
-  by_cases hxz':x = z
+  by_cases hxz' : x = z
   · rwa [hxz', sub_self, AbsoluteValue.map_zero]
     
   rw [← Ne.def, ← sub_ne_zero] at hxy' hyz' hxz'
@@ -247,8 +244,8 @@ theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b :
       contradiction
       
   -- However, if one of those partitions `j` is inhabited by some `i`, then this `j` works.
-  by_cases exists_nonempty_j:∃ j,
-      (∃ i, t' i = j) ∧ ∀ i, t' i = j → (card_pow_degree (A 0 % b - A i.succ % b) : ℝ) < card_pow_degree b • ε
+  by_cases exists_nonempty_j :
+    ∃ j, (∃ i, t' i = j) ∧ ∀ i, t' i = j → (card_pow_degree (A 0 % b - A i.succ % b) : ℝ) < card_pow_degree b • ε
   · obtain ⟨j, ⟨i, hi⟩, hj⟩ := exists_nonempty_j
     refine' ⟨j, fun i' => ⟨hj i', fun hi' => trans ((ht' _ _).mpr _) hi⟩⟩
     apply anti_archim' _ hi'

@@ -22,22 +22,22 @@ variable [OrderedCommGroup α] {a b c d : α}
 
 @[to_additive]
 theorem inv_mem_Icc_iff : a⁻¹ ∈ Set.icc c d ↔ a ∈ Set.icc d⁻¹ c⁻¹ :=
-  (and_comm' _ _).trans $ and_congr inv_le' le_inv'
+  (and_comm' _ _).trans <| and_congr inv_le' le_inv'
 #align set.inv_mem_Icc_iff Set.inv_mem_Icc_iff
 
 @[to_additive]
 theorem inv_mem_Ico_iff : a⁻¹ ∈ Set.ico c d ↔ a ∈ Set.ioc d⁻¹ c⁻¹ :=
-  (and_comm' _ _).trans $ and_congr inv_lt' le_inv'
+  (and_comm' _ _).trans <| and_congr inv_lt' le_inv'
 #align set.inv_mem_Ico_iff Set.inv_mem_Ico_iff
 
 @[to_additive]
 theorem inv_mem_Ioc_iff : a⁻¹ ∈ Set.ioc c d ↔ a ∈ Set.ico d⁻¹ c⁻¹ :=
-  (and_comm' _ _).trans $ and_congr inv_le' lt_inv'
+  (and_comm' _ _).trans <| and_congr inv_le' lt_inv'
 #align set.inv_mem_Ioc_iff Set.inv_mem_Ioc_iff
 
 @[to_additive]
 theorem inv_mem_Ioo_iff : a⁻¹ ∈ Set.ioo c d ↔ a ∈ Set.ioo d⁻¹ c⁻¹ :=
-  (and_comm' _ _).trans $ and_congr inv_lt' lt_inv'
+  (and_comm' _ _).trans <| and_congr inv_lt' lt_inv'
 #align set.inv_mem_Ioo_iff Set.inv_mem_Ioo_iff
 
 end OrderedCommGroup
@@ -107,26 +107,26 @@ theorem sub_mem_Ioo_iff_left : a - b ∈ Set.ioo c d ↔ a ∈ Set.ioo (c + b) (
 
 
 theorem sub_mem_Icc_iff_right : a - b ∈ Set.icc c d ↔ b ∈ Set.icc (a - d) (a - c) :=
-  (and_comm' _ _).trans $ and_congr sub_le_comm le_sub_comm
+  (and_comm' _ _).trans <| and_congr sub_le_comm le_sub_comm
 #align set.sub_mem_Icc_iff_right Set.sub_mem_Icc_iff_right
 
 theorem sub_mem_Ico_iff_right : a - b ∈ Set.ico c d ↔ b ∈ Set.ioc (a - d) (a - c) :=
-  (and_comm' _ _).trans $ and_congr sub_lt_comm le_sub_comm
+  (and_comm' _ _).trans <| and_congr sub_lt_comm le_sub_comm
 #align set.sub_mem_Ico_iff_right Set.sub_mem_Ico_iff_right
 
 theorem sub_mem_Ioc_iff_right : a - b ∈ Set.ioc c d ↔ b ∈ Set.ico (a - d) (a - c) :=
-  (and_comm' _ _).trans $ and_congr sub_le_comm lt_sub_comm
+  (and_comm' _ _).trans <| and_congr sub_le_comm lt_sub_comm
 #align set.sub_mem_Ioc_iff_right Set.sub_mem_Ioc_iff_right
 
 theorem sub_mem_Ioo_iff_right : a - b ∈ Set.ioo c d ↔ b ∈ Set.ioo (a - d) (a - c) :=
-  (and_comm' _ _).trans $ and_congr sub_lt_comm lt_sub_comm
+  (and_comm' _ _).trans <| and_congr sub_lt_comm lt_sub_comm
 #align set.sub_mem_Ioo_iff_right Set.sub_mem_Ioo_iff_right
 
 -- I think that symmetric intervals deserve attention and API: they arise all the time,
 -- for instance when considering metric balls in `ℝ`.
 theorem mem_Icc_iff_abs_le {R : Type _} [LinearOrderedAddCommGroup R] {x y z : R} :
     |x - y| ≤ z ↔ y ∈ icc (x - z) (x + z) :=
-  abs_le.trans $ (and_comm' _ _).trans $ and_congr sub_le_comm neg_le_sub_iff_le_add
+  abs_le.trans <| (and_comm' _ _).trans <| and_congr sub_le_comm neg_le_sub_iff_le_add
 #align set.mem_Icc_iff_abs_le Set.mem_Icc_iff_abs_le
 
 end OrderedAddCommGroup

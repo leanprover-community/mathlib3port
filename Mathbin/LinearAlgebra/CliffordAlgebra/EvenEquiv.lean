@@ -46,7 +46,7 @@ namespace EquivEven
 /-- The quadratic form on the augmented vector space `M × R` sending `v + r•e0` to `Q v - r^2`. -/
 @[reducible]
 def q' : QuadraticForm R (M × R) :=
-  Q.Prod $ -@QuadraticForm.sq R _
+  Q.Prod <| -@QuadraticForm.sq R _
 #align clifford_algebra.equiv_even.Q' CliffordAlgebra.EquivEven.q'
 
 theorem Q'_apply (m : M × R) : q' Q m = Q m.1 - m.2 * m.2 :=
@@ -69,11 +69,11 @@ theorem ι_eq_v_add_smul_e0 (m : M) (r : R) : ι (q' Q) (m, r) = v Q m + r • e
 #align clifford_algebra.equiv_even.ι_eq_v_add_smul_e0 CliffordAlgebra.EquivEven.ι_eq_v_add_smul_e0
 
 theorem e0_mul_e0 : e0 Q * e0 Q = -1 :=
-  (ι_sq_scalar _ _).trans $ by simp
+  (ι_sq_scalar _ _).trans <| by simp
 #align clifford_algebra.equiv_even.e0_mul_e0 CliffordAlgebra.EquivEven.e0_mul_e0
 
 theorem v_sq_scalar (m : M) : v Q m * v Q m = algebraMap _ _ (Q m) :=
-  (ι_sq_scalar _ _).trans $ by simp
+  (ι_sq_scalar _ _).trans <| by simp
 #align clifford_algebra.equiv_even.v_sq_scalar CliffordAlgebra.EquivEven.v_sq_scalar
 
 theorem neg_e0_mul_v (m : M) : -(e0 Q * v Q m) = v Q m * e0 Q := by
@@ -121,7 +121,7 @@ open EquivEven
 def toEven : CliffordAlgebra Q →ₐ[R] CliffordAlgebra.even (q' Q) := by
   refine' CliffordAlgebra.lift Q ⟨_, fun m => _⟩
   · refine' LinearMap.codRestrict _ _ fun m => Submodule.mem_supr_of_mem ⟨2, rfl⟩ _
-    exact (LinearMap.mulLeft R $ e0 Q).comp (v Q)
+    exact (LinearMap.mulLeft R <| e0 Q).comp (v Q)
     rw [Subtype.coe_mk, pow_two]
     exact Submodule.mul_mem_mul (LinearMap.mem_range_self _ _) (LinearMap.mem_range_self _ _)
     
@@ -148,7 +148,7 @@ def ofEven : CliffordAlgebra.even (q' Q) →ₐ[R] CliffordAlgebra Q := by
      * `f ⟨0,1⟩ ⟨0,1⟩ = -1`
     -/
   let f : M × R →ₗ[R] M × R →ₗ[R] CliffordAlgebra Q :=
-    ((Algebra.lmul R (CliffordAlgebra Q)).toLinearMap.comp $
+    ((Algebra.lmul R (CliffordAlgebra Q)).toLinearMap.comp <|
           (ι Q).comp (LinearMap.fst _ _ _) + (Algebra.linearMap R _).comp (LinearMap.snd _ _ _)).compl₂
       ((ι Q).comp (LinearMap.fst _ _ _) - (Algebra.linearMap R _).comp (LinearMap.snd _ _ _))
   have f_apply : ∀ x y, f x y = (ι Q x.1 + algebraMap R _ x.2) * (ι Q y.1 - algebraMap R _ y.2) := fun x y => rfl
@@ -172,11 +172,11 @@ theorem of_even_ι (x y : M × R) :
 #align clifford_algebra.of_even_ι CliffordAlgebra.of_even_ι
 
 theorem to_even_comp_of_even : (toEven Q).comp (ofEven Q) = AlgHom.id R _ :=
-  even.alg_hom_ext (q' Q) $
-    EvenHom.ext _ _ $
-      LinearMap.ext $ fun m₁ =>
-        LinearMap.ext $ fun m₂ =>
-          Subtype.ext $
+  even.alg_hom_ext (q' Q) <|
+    EvenHom.ext _ _ <|
+      LinearMap.ext fun m₁ =>
+        LinearMap.ext fun m₂ =>
+          Subtype.ext <|
             let ⟨m₁, r₁⟩ := m₁
             let ⟨m₂, r₂⟩ := m₂
             calc
@@ -205,8 +205,8 @@ theorem to_even_comp_of_even : (toEven Q).comp (ofEven Q) = AlgHom.id R _ :=
 #align clifford_algebra.to_even_comp_of_even CliffordAlgebra.to_even_comp_of_even
 
 theorem of_even_comp_to_even : (ofEven Q).comp (toEven Q) = AlgHom.id R _ :=
-  CliffordAlgebra.hom_ext $
-    LinearMap.ext $ fun m =>
+  CliffordAlgebra.hom_ext <|
+    LinearMap.ext fun m =>
       calc
         ofEven Q (toEven Q (ι Q m)) = ofEven Q ⟨_, (toEven Q (ι Q m)).Prop⟩ := by rw [Subtype.coe_eta]
         _ = (ι Q 0 + algebraMap R _ 1) * (ι Q m - algebraMap R _ 0) := by

@@ -110,7 +110,7 @@ variable [LinearOrderedRing k] [OrderedAddCommGroup E] [Module k E] [OrderedSmul
   {a a' b b' : E} {r r' : k}
 
 theorem midpoint_le_midpoint (ha : a ≤ a') (hb : b ≤ b') : midpoint k a b ≤ midpoint k a' b' :=
-  line_map_mono_endpoints ha hb (inv_of_nonneg.2 zero_le_two) $ inv_of_le_one one_le_two
+  line_map_mono_endpoints ha hb (inv_of_nonneg.2 zero_le_two) <| inv_of_le_one one_le_two
 #align midpoint_le_midpoint midpoint_le_midpoint
 
 end LinearOrderedRing
@@ -138,7 +138,7 @@ theorem left_le_line_map_iff_le (h : 0 < r) : a ≤ lineMap a b r ↔ a ≤ b :=
 
 @[simp]
 theorem left_le_midpoint : a ≤ midpoint k a b ↔ a ≤ b :=
-  left_le_line_map_iff_le $ inv_pos.2 zero_lt_two
+  left_le_line_map_iff_le <| inv_pos.2 zero_lt_two
 #align left_le_midpoint left_le_midpoint
 
 theorem line_map_le_left_iff_le (h : 0 < r) : lineMap a b r ≤ a ↔ b ≤ a :=
@@ -147,7 +147,7 @@ theorem line_map_le_left_iff_le (h : 0 < r) : lineMap a b r ≤ a ↔ b ≤ a :=
 
 @[simp]
 theorem midpoint_le_left : midpoint k a b ≤ a ↔ b ≤ a :=
-  line_map_le_left_iff_le $ inv_pos.2 zero_lt_two
+  line_map_le_left_iff_le <| inv_pos.2 zero_lt_two
 #align midpoint_le_left midpoint_le_left
 
 theorem line_map_le_right_iff_le (h : r < 1) : lineMap a b r ≤ b ↔ a ≤ b :=
@@ -156,7 +156,7 @@ theorem line_map_le_right_iff_le (h : r < 1) : lineMap a b r ≤ b ↔ a ≤ b :
 
 @[simp]
 theorem midpoint_le_right : midpoint k a b ≤ b ↔ a ≤ b :=
-  line_map_le_right_iff_le $ inv_lt_one one_lt_two
+  line_map_le_right_iff_le <| inv_lt_one one_lt_two
 #align midpoint_le_right midpoint_le_right
 
 theorem right_le_line_map_iff_le (h : r < 1) : b ≤ lineMap a b r ↔ b ≤ a :=
@@ -165,7 +165,7 @@ theorem right_le_line_map_iff_le (h : r < 1) : b ≤ lineMap a b r ↔ b ≤ a :
 
 @[simp]
 theorem right_le_midpoint : b ≤ midpoint k a b ↔ b ≤ a :=
-  right_le_line_map_iff_le $ inv_lt_one one_lt_two
+  right_le_line_map_iff_le <| inv_lt_one one_lt_two
 #align right_le_midpoint right_le_midpoint
 
 end

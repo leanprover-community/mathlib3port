@@ -61,7 +61,7 @@ theorem lt_pow_self {p : ℕ} (h : 1 < p) : ∀ n : ℕ, n < p ^ n
 #align nat.lt_pow_self Nat.lt_pow_self
 
 theorem lt_two_pow (n : ℕ) : n < 2 ^ n :=
-  lt_pow_self dec_trivial n
+  lt_pow_self (by decide) n
 #align nat.lt_two_pow Nat.lt_two_pow
 
 theorem one_le_pow (n m : ℕ) (h : 0 < m) : 1 ≤ m ^ n := by
@@ -74,7 +74,7 @@ theorem one_le_pow' (n m : ℕ) : 1 ≤ (m + 1) ^ n :=
 #align nat.one_le_pow' Nat.one_le_pow'
 
 theorem one_le_two_pow (n : ℕ) : 1 ≤ 2 ^ n :=
-  one_le_pow n 2 dec_trivial
+  one_le_pow n 2 (by decide)
 #align nat.one_le_two_pow Nat.one_le_two_pow
 
 theorem one_lt_pow (n m : ℕ) (h₀ : 0 < n) (h₁ : 1 < m) : 1 < m ^ n := by
@@ -105,11 +105,11 @@ theorem one_lt_pow_iff {k n : ℕ} (h : 0 ≠ k) : 1 < n ^ k ↔ 1 < n := by
 #align nat.one_lt_pow_iff Nat.one_lt_pow_iff
 
 theorem one_lt_two_pow (n : ℕ) (h₀ : 0 < n) : 1 < 2 ^ n :=
-  one_lt_pow n 2 h₀ dec_trivial
+  one_lt_pow n 2 h₀ (by decide)
 #align nat.one_lt_two_pow Nat.one_lt_two_pow
 
 theorem one_lt_two_pow' (n : ℕ) : 1 < 2 ^ (n + 1) :=
-  one_lt_pow (n + 1) 2 (succ_pos n) dec_trivial
+  one_lt_pow (n + 1) 2 (succ_pos n) (by decide)
 #align nat.one_lt_two_pow' Nat.one_lt_two_pow'
 
 theorem pow_right_strict_mono {x : ℕ} (k : 2 ≤ x) : StrictMono fun n : ℕ => x ^ n := fun _ _ => pow_lt_pow_of_lt_right k
@@ -173,7 +173,7 @@ theorem pow_mod (a b n : ℕ) : a ^ b % n = (a % n) ^ b % n := by
 #align nat.pow_mod Nat.pow_mod
 
 theorem mod_pow_succ {b : ℕ} (w m : ℕ) : m % b ^ succ w = b * (m / b % b ^ w) + m % b := by
-  by_cases b_h:b = 0
+  by_cases b_h : b = 0
   · simp [b_h, pow_succ]
     
   have b_pos := Nat.pos_of_ne_zero b_h
@@ -239,9 +239,9 @@ theorem not_pos_pow_dvd : ∀ {p k : ℕ} (hp : 1 < p) (hk : 1 < k), ¬p ^ k ∣
     have he : succ p ^ k = 1 := eq_one_of_dvd_one this
     have : k < succ p ^ k := lt_pow_self hp k
     have : k < 1 := by rwa [he] at this
-    have : k = 0 := Nat.eq_zero_of_le_zero $ le_of_lt_succ this
+    have : k = 0 := Nat.eq_zero_of_le_zero <| le_of_lt_succ this
     have : 1 < 1 := by rwa [this] at hk
-    absurd this dec_trivial
+    absurd this (by decide)
 #align nat.not_pos_pow_dvd Nat.not_pos_pow_dvd
 
 theorem pow_dvd_of_le_of_pow_dvd {p m n k : ℕ} (hmn : m ≤ n) (hdiv : p ^ n ∣ k) : p ^ m ∣ k :=
@@ -289,7 +289,7 @@ theorem zero_shiftl (n) : shiftl 0 n = 0 :=
 
 theorem shiftr_eq_div_pow (m) : ∀ n, shiftr m n = m / 2 ^ n
   | 0 => (Nat.div_one _).symm
-  | k + 1 => (congr_arg div2 (shiftr_eq_div_pow k)).trans $ by rw [div2_val, Nat.div_div_eq_div_mul, mul_comm] <;> rfl
+  | k + 1 => (congr_arg div2 (shiftr_eq_div_pow k)).trans <| by rw [div2_val, Nat.div_div_eq_div_mul, mul_comm] <;> rfl
 #align nat.shiftr_eq_div_pow Nat.shiftr_eq_div_pow
 
 @[simp]
@@ -342,7 +342,7 @@ theorem size_one : size 1 = 1 :=
 theorem size_shiftl' {b m n} (h : shiftl' b m n ≠ 0) : size (shiftl' b m n) = size m + n := by
   induction' n with n IH <;> simp [shiftl'] at h⊢
   rw [size_bit h, Nat.add_succ]
-  by_cases s0:shiftl' b m n = 0 <;> [skip, rw [IH s0]]
+  by_cases s0 : shiftl' b m n = 0 <;> [skip, rw [IH s0]]
   rw [s0] at h⊢
   cases b
   · exact absurd rfl h
@@ -352,7 +352,7 @@ theorem size_shiftl' {b m n} (h : shiftl' b m n ≠ 0) : size (shiftl' b m n) = 
   obtain rfl := succ.inj (eq_one_of_dvd_one ⟨_, this.symm⟩)
   rw [one_mul] at this
   obtain rfl : n = 0 :=
-    Nat.eq_zero_of_le_zero (le_of_not_gt $ fun hn => ne_of_gt (pow_lt_pow_of_lt_right dec_trivial hn) this)
+    Nat.eq_zero_of_le_zero (le_of_not_gt fun hn => ne_of_gt (pow_lt_pow_of_lt_right (by decide) hn) this)
   rfl
 #align nat.size_shiftl' Nat.size_shiftl'
 
@@ -376,7 +376,7 @@ theorem lt_size_self (n : ℕ) : n < 2 ^ size n := by
 #align nat.lt_size_self Nat.lt_size_self
 
 theorem size_le {m n : ℕ} : size m ≤ n ↔ m < 2 ^ n :=
-  ⟨fun h => lt_of_lt_of_le (lt_size_self _) (pow_le_pow_of_le_right dec_trivial h), by
+  ⟨fun h => lt_of_lt_of_le (lt_size_self _) (pow_le_pow_of_le_right (by decide) h), by
     rw [← one_shiftl]
     revert n
     apply binary_rec _ _ m
@@ -384,7 +384,7 @@ theorem size_le {m n : ℕ} : size m ≤ n ↔ m < 2 ^ n :=
       simp
       
     · intro b m IH n h
-      by_cases e:bit b m = 0
+      by_cases e : bit b m = 0
       · simp [e]
         
       rw [size_bit e]
@@ -408,11 +408,11 @@ theorem size_eq_zero {n : ℕ} : size n = 0 ↔ n = 0 := by
 #align nat.size_eq_zero Nat.size_eq_zero
 
 theorem size_pow {n : ℕ} : size (2 ^ n) = n + 1 :=
-  le_antisymm (size_le.2 $ pow_lt_pow_of_lt_right dec_trivial (lt_succ_self _)) (lt_size.2 $ le_rfl)
+  le_antisymm (size_le.2 <| pow_lt_pow_of_lt_right (by decide) (lt_succ_self _)) (lt_size.2 <| le_rfl)
 #align nat.size_pow Nat.size_pow
 
 theorem size_le_size {m n : ℕ} (h : m ≤ n) : size m ≤ size n :=
-  size_le.2 $ lt_of_le_of_lt h (lt_size_self _)
+  size_le.2 <| lt_of_le_of_lt h (lt_size_self _)
 #align nat.size_le_size Nat.size_le_size
 
 end Nat

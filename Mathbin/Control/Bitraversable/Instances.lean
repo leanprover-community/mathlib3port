@@ -60,7 +60,7 @@ but is expected to have type
   forall {F : Type.{u} -> Type.{u}} [_inst_2 : Applicative.{u u} F] {α : Type.{_aux_param_0}} {α' : Type.{u}} {β : Type.{_aux_param_1}} {β' : Type.{u}}, (α -> (F α')) -> (β -> (F β')) -> (Sum.{_aux_param_0 _aux_param_1} α β) -> (F (Sum.{u u} α' β'))
 Case conversion may be inaccurate. Consider using '#align sum.bitraverse Sum.bitraverseₓ'. -/
 /-- The bitraverse function for `α ⊕ β`. -/
-def Sum.bitraverse {α α' β β'} (f : α → F α') (f' : β → F β') : α ⊕ β → F (α' ⊕ β')
+def Sum.bitraverse {α α' β β'} (f : α → F α') (f' : β → F β') : Sum α β → F (Sum α' β')
   | Sum.inl x => Sum.inl <$> f x
   | Sum.inr x => Sum.inr <$> f' x
 #align sum.bitraverse Sum.bitraverse

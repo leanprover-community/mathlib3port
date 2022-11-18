@@ -49,8 +49,7 @@ variable (X : RingedSpaceCat.{v})
 neighborhood around `x`.
 -/
 theorem is_unit_res_of_is_unit_germ (U : Opens X) (f : X.Presheaf.obj (op U)) (x : U)
-    (h : IsUnit (X.Presheaf.germ x f)) : ∃ (V : Opens X) (i : V ⟶ U) (hxV : x.1 ∈ V), IsUnit (X.Presheaf.map i.op f) :=
-  by
+    (h : IsUnit (X.Presheaf.germ x f)) : ∃ (V : Opens X)(i : V ⟶ U)(hxV : x.1 ∈ V), IsUnit (X.Presheaf.map i.op f) := by
   obtain ⟨g', heq⟩ := h.exists_right_inv
   obtain ⟨V, hxV, g, rfl⟩ := X.presheaf.germ_exist x.1 g'
   let W := U ⊓ V

@@ -35,11 +35,11 @@ variable {X : TopCat.{w}}
 /-- Given a presieve `R` on `U`, we obtain a covering family of open sets in `X`, by taking as index
 type the type of dependent pairs `(V, f)`, where `f : V ⟶ U` is in `R`.
 -/
-def coveringOfPresieve (U : Opens X) (R : Presieve U) : (Σ V, { f : V ⟶ U // R f }) → Opens X := fun f => f.1
+def coveringOfPresieve (U : Opens X) (R : Presieve U) : (ΣV, { f : V ⟶ U // R f }) → Opens X := fun f => f.1
 #align Top.presheaf.covering_of_presieve TopCat.Presheaf.coveringOfPresieve
 
 @[simp]
-theorem covering_of_presieve_apply (U : Opens X) (R : Presieve U) (f : Σ V, { f : V ⟶ U // R f }) :
+theorem covering_of_presieve_apply (U : Opens X) (R : Presieve U) (f : ΣV, { f : V ⟶ U // R f }) :
     coveringOfPresieve U R f = f.1 :=
   rfl
 #align Top.presheaf.covering_of_presieve_apply TopCat.Presheaf.covering_of_presieve_apply
@@ -106,18 +106,18 @@ theorem mem_grothendieck_topology : Sieve.generate (presieveOfCovering U) ∈ Op
 /-- An index `i : ι` can be turned into a dependent pair `(V, f)`, where `V` is an open set and
 `f : V ⟶ supr U` is a member of `presieve_of_covering U f`.
 -/
-def homOfIndex (i : ι) : Σ V, { f : V ⟶ supr U // presieveOfCovering U f } :=
+def homOfIndex (i : ι) : ΣV, { f : V ⟶ supr U // presieveOfCovering U f } :=
   ⟨U i, Opens.leSupr U i, i, rfl⟩
 #align Top.presheaf.presieve_of_covering.hom_of_index TopCat.Presheaf.presieveOfCovering.homOfIndex
 
 /-- By using the axiom of choice, a dependent pair `(V, f)` where `f : V ⟶ supr U` is a member of
 `presieve_of_covering U f` can be turned into an index `i : ι`, such that `V = U i`.
 -/
-def indexOfHom (f : Σ V, { f : V ⟶ supr U // presieveOfCovering U f }) : ι :=
+def indexOfHom (f : ΣV, { f : V ⟶ supr U // presieveOfCovering U f }) : ι :=
   f.2.2.some
 #align Top.presheaf.presieve_of_covering.index_of_hom TopCat.Presheaf.presieveOfCovering.indexOfHom
 
-theorem index_of_hom_spec (f : Σ V, { f : V ⟶ supr U // presieveOfCovering U f }) : f.1 = U (indexOfHom U f) :=
+theorem index_of_hom_spec (f : ΣV, { f : V ⟶ supr U // presieveOfCovering U f }) : f.1 = U (indexOfHom U f) :=
   f.2.2.some_spec
 #align Top.presheaf.presieve_of_covering.index_of_hom_spec TopCat.Presheaf.presieveOfCovering.index_of_hom_spec
 
@@ -163,7 +163,7 @@ theorem OpenEmbedding.compatiblePreserving (hf : OpenEmbedding f) :
   haveI : mono f := (TopCat.mono_iff_injective f).mpr hf.inj
   apply compatible_preserving_of_downwards_closed
   intro U V i
-  refine' ⟨(opens.map f).obj V, eq_to_iso $ opens.ext $ Set.image_preimage_eq_of_subset $ fun x h => _⟩
+  refine' ⟨(opens.map f).obj V, eq_to_iso <| opens.ext <| Set.image_preimage_eq_of_subset fun x h => _⟩
   obtain ⟨_, _, rfl⟩ := i.le h
   exact ⟨_, rfl⟩
 #align open_embedding.compatible_preserving OpenEmbedding.compatiblePreserving

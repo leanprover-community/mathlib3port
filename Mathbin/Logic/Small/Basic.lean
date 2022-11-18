@@ -46,7 +46,7 @@ noncomputable def equivShrink (α : Type v) [Small.{w} α] : α ≃ Shrink α :=
 #align equiv_shrink equivShrink
 
 instance (priority := 100) small_self (α : Type v) : Small.{v} α :=
-  Small.mk' $ Equiv.refl α
+  Small.mk' <| Equiv.refl α
 #align small_self small_self
 
 theorem small_map {α : Type _} {β : Type _} [hβ : Small.{w} β] (e : α ≃ β) : Small.{w} α :=
@@ -56,7 +56,7 @@ theorem small_map {α : Type _} {β : Type _} [hβ : Small.{w} β] (e : α ≃ �
 
 theorem small_lift (α : Type u) [hα : Small.{v} α] : Small.{max v w} α :=
   let ⟨⟨γ, ⟨f⟩⟩⟩ := hα
-  Small.mk' $ f.trans Equiv.ulift.symm
+  Small.mk' <| f.trans Equiv.ulift.symm
 #align small_lift small_lift
 
 instance (priority := 100) small_max (α : Type v) : Small.{max w v} α :=
@@ -100,7 +100,7 @@ theorem small_subset {α : Type v} {s t : Set α} (hts : t ⊆ s) [Small.{u} s] 
 
 instance (priority := 100) small_subsingleton (α : Type v) [Subsingleton α] : Small.{w} α := by
   rcases isEmpty_or_nonempty α with ⟨⟩ <;> skip
-  · apply small_map (Equiv.equivPempty α)
+  · apply small_map (Equiv.equivPEmpty α)
     
   · apply small_map Equiv.punitOfNonemptyOfSubsingleton
     assumption'
@@ -118,8 +118,8 @@ instance small_Pi {α} (β : α → Type _) [Small.{w} α] [∀ a, Small.{w} (β
       ⟨Equiv.piCongr (equivShrink α) fun a => by simpa using equivShrink (β a)⟩⟩⟩
 #align small_Pi small_Pi
 
-instance small_sigma {α} (β : α → Type _) [Small.{w} α] [∀ a, Small.{w} (β a)] : Small.{w} (Σ a, β a) :=
-  ⟨⟨Σ a' : Shrink α, Shrink (β ((equivShrink α).symm a')),
+instance small_sigma {α} (β : α → Type _) [Small.{w} α] [∀ a, Small.{w} (β a)] : Small.{w} (Σa, β a) :=
+  ⟨⟨Σa' : Shrink α, Shrink (β ((equivShrink α).symm a')),
       ⟨Equiv.sigmaCongr (equivShrink α) fun a => by simpa using equivShrink (β a)⟩⟩⟩
 #align small_sigma small_sigma
 
@@ -127,8 +127,8 @@ instance small_prod {α β} [Small.{w} α] [Small.{w} β] : Small.{w} (α × β)
   ⟨⟨Shrink α × Shrink β, ⟨Equiv.prodCongr (equivShrink α) (equivShrink β)⟩⟩⟩
 #align small_prod small_prod
 
-instance small_sum {α β} [Small.{w} α] [Small.{w} β] : Small.{w} (α ⊕ β) :=
-  ⟨⟨Shrink α ⊕ Shrink β, ⟨Equiv.sumCongr (equivShrink α) (equivShrink β)⟩⟩⟩
+instance small_sum {α β} [Small.{w} α] [Small.{w} β] : Small.{w} (Sum α β) :=
+  ⟨⟨Sum (Shrink α) (Shrink β), ⟨Equiv.sumCongr (equivShrink α) (equivShrink β)⟩⟩⟩
 #align small_sum small_sum
 
 instance small_set {α} [Small.{w} α] : Small.{w} (Set α) :=
@@ -145,8 +145,8 @@ instance small_image {α : Type v} {β : Type w} (f : α → β) (S : Set α) [S
 
 theorem not_small_type : ¬Small.{u} (Type max u v)
   | ⟨⟨S, ⟨e⟩⟩⟩ =>
-    @Function.cantor_injective (Σ α, e.symm α) (fun a => ⟨_, cast (e.3 _).symm a⟩) fun a b e =>
-      (cast_inj _).1 $ eq_of_heq (Sigma.mk.inj e).2
+    @Function.cantor_injective (Σα, e.symm α) (fun a => ⟨_, cast (e.3 _).symm a⟩) fun a b e =>
+      (cast_inj _).1 <| eq_of_heq (Sigma.mk.inj e).2
 #align not_small_type not_small_type
 
 end

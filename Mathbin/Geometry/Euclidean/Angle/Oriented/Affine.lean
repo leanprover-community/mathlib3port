@@ -293,10 +293,10 @@ theorem _root_.sbtw.oangle₃₂₁_eq_pi {p₁ p₂ p₃ : P} (h : Sbtw ℝ p�
 /-- If the second of three points is weakly between the other two, the oriented angle at the
 first point is zero. -/
 theorem _root_.wbtw.oangle₂₁₃_eq_zero {p₁ p₂ p₃ : P} (h : Wbtw ℝ p₁ p₂ p₃) : ∡ p₂ p₁ p₃ = 0 := by
-  by_cases hp₂p₁:p₂ = p₁
+  by_cases hp₂p₁ : p₂ = p₁
   · simp [hp₂p₁]
     
-  by_cases hp₃p₁:p₃ = p₁
+  by_cases hp₃p₁ : p₃ = p₁
   · simp [hp₃p₁]
     
   rw [oangle_eq_zero_iff_angle_eq_zero hp₂p₁ hp₃p₁]
@@ -348,10 +348,10 @@ theorem _root_.sbtw.oangle₁₃₂_eq_zero {p₁ p₂ p₃ : P} (h : Sbtw ℝ p
 /-- The oriented angle between three points is zero if and only if one of the first and third
 points is weakly between the other two. -/
 theorem oangle_eq_zero_iff_wbtw {p₁ p₂ p₃ : P} : ∡ p₁ p₂ p₃ = 0 ↔ Wbtw ℝ p₂ p₁ p₃ ∨ Wbtw ℝ p₂ p₃ p₁ := by
-  by_cases hp₁p₂:p₁ = p₂
+  by_cases hp₁p₂ : p₁ = p₂
   · simp [hp₁p₂]
     
-  by_cases hp₃p₂:p₃ = p₂
+  by_cases hp₃p₂ : p₃ = p₂
   · simp [hp₃p₂]
     
   rw [oangle_eq_zero_iff_angle_eq_zero hp₁p₂ hp₃p₂, angle_eq_zero_iff_ne_and_wbtw]
@@ -362,10 +362,10 @@ theorem oangle_eq_zero_iff_wbtw {p₁ p₂ p₃ : P} : ∡ p₁ p₂ p₃ = 0 �
 same ray. -/
 theorem _root_.wbtw.oangle_eq_left {p₁ p₁' p₂ p₃ : P} (h : Wbtw ℝ p₂ p₁ p₁') (hp₁p₂ : p₁ ≠ p₂) :
     ∡ p₁ p₂ p₃ = ∡ p₁' p₂ p₃ := by
-  by_cases hp₃p₂:p₃ = p₂
+  by_cases hp₃p₂ : p₃ = p₂
   · simp [hp₃p₂]
     
-  by_cases hp₁'p₂:p₁' = p₂
+  by_cases hp₁'p₂ : p₁' = p₂
   · rw [hp₁'p₂, wbtw_self_iff] at h
     exact False.elim (hp₁p₂ h)
     
@@ -394,7 +394,7 @@ theorem _root_.sbtw.oangle_eq_right {p₁ p₂ p₃ p₃' : P} (h : Sbtw ℝ p�
 between it and the second point. -/
 @[simp]
 theorem oangle_midpoint_left (p₁ p₂ p₃ : P) : ∡ (midpoint ℝ p₁ p₂) p₂ p₃ = ∡ p₁ p₂ p₃ := by
-  by_cases h:p₁ = p₂
+  by_cases h : p₁ = p₂
   · simp [h]
     
   exact (sbtw_midpoint_of_ne ℝ h).symm.oangle_eq_left
@@ -411,7 +411,7 @@ theorem oangle_midpoint_rev_left (p₁ p₂ p₃ : P) : ∡ (midpoint ℝ p₂ p
 between it and the second point. -/
 @[simp]
 theorem oangle_midpoint_right (p₁ p₂ p₃ : P) : ∡ p₁ p₂ (midpoint ℝ p₃ p₂) = ∡ p₁ p₂ p₃ := by
-  by_cases h:p₃ = p₂
+  by_cases h : p₃ = p₂
   · simp [h]
     
   exact (sbtw_midpoint_of_ne ℝ h).symm.oangle_eq_right
@@ -447,7 +447,7 @@ theorem _root_.sbtw.oangle_eq_left_right {p₁ p₁' p₂ p₃ p₃' : P} (h₁ 
 /-- Replacing the first point by one on the same line does not change twice the oriented angle. -/
 theorem _root_.collinear.two_zsmul_oangle_eq_left {p₁ p₁' p₂ p₃ : P} (h : Collinear ℝ ({p₁, p₂, p₁'} : Set P))
     (hp₁p₂ : p₁ ≠ p₂) (hp₁'p₂ : p₁' ≠ p₂) : (2 : ℤ) • ∡ p₁ p₂ p₃ = (2 : ℤ) • ∡ p₁' p₂ p₃ := by
-  by_cases hp₃p₂:p₃ = p₂
+  by_cases hp₃p₂ : p₃ = p₂
   · simp [hp₃p₂]
     
   rcases h.wbtw_or_wbtw_or_wbtw with (hw | hw | hw)
@@ -478,7 +478,7 @@ sign. -/
 theorem _root_.collinear.oangle_sign_of_same_ray_vsub {p₁ p₂ p₃ p₄ : P} (p₅ : P) (hp₁p₂ : p₁ ≠ p₂) (hp₃p₄ : p₃ ≠ p₄)
     (hc : Collinear ℝ ({p₁, p₂, p₃, p₄} : Set P)) (hr : SameRay ℝ (p₂ -ᵥ p₁) (p₄ -ᵥ p₃)) :
     (∡ p₁ p₅ p₂).sign = (∡ p₃ p₅ p₄).sign := by
-  by_cases hc₅₁₂:Collinear ℝ ({p₅, p₁, p₂} : Set P)
+  by_cases hc₅₁₂ : Collinear ℝ ({p₅, p₁, p₂} : Set P)
   · have hc₅₁₂₃₄ : Collinear ℝ ({p₅, p₁, p₂, p₃, p₄} : Set P) :=
       (hc.collinear_insert_iff_of_ne (Set.mem_insert _ _) (Set.mem_insert_of_mem _ (Set.mem_insert _ _)) hp₁p₂).2 hc₅₁₂
     have hc₅₃₄ : Collinear ℝ ({p₅, p₃, p₄} : Set P) :=
@@ -600,7 +600,7 @@ theorem _root_.sbtw.oangle_sign_eq_right {p₁ p₂ p₃ : P} (p₄ : P) (h : Sb
 points on the same side of that subspace have the same sign. -/
 theorem _root_.affine_subspace.s_same_side.oangle_sign_eq {s : AffineSubspace ℝ P} {p₁ p₂ p₃ p₄ : P} (hp₁ : p₁ ∈ s)
     (hp₂ : p₂ ∈ s) (hp₃p₄ : s.SSameSide p₃ p₄) : (∡ p₁ p₄ p₂).sign = (∡ p₁ p₃ p₂).sign := by
-  by_cases h:p₁ = p₂
+  by_cases h : p₁ = p₂
   · simp [h]
     
   let sp : Set (P × P × P) := (fun p : P => (p₁, p, p₂)) '' { p | s.s_same_side p₃ p }

@@ -50,7 +50,7 @@ protected abbrev image.ι : Abelian.image f ⟶ Q :=
 
 /-- There is a canonical epimorphism `p : P ⟶ image f` for every `f`. -/
 protected abbrev factorThruImage : P ⟶ Abelian.image f :=
-  kernel.lift (cokernel.π f) f $ cokernel.condition f
+  kernel.lift (cokernel.π f) f <| cokernel.condition f
 #align category_theory.abelian.factor_thru_image CategoryTheory.Abelian.factorThruImage
 
 /-- `f` factors through its image via the canonical morphism `p`. -/
@@ -60,7 +60,7 @@ protected theorem image.fac : Abelian.factorThruImage f ≫ image.ι f = f :=
 #align category_theory.abelian.image.fac CategoryTheory.Abelian.image.fac
 
 instance mono_factor_thru_image [Mono f] : Mono (Abelian.factorThruImage f) :=
-  mono_of_mono_fac $ image.fac f
+  mono_of_mono_fac <| image.fac f
 #align category_theory.abelian.mono_factor_thru_image CategoryTheory.Abelian.mono_factor_thru_image
 
 end Image
@@ -79,7 +79,7 @@ protected abbrev coimage.π : P ⟶ Abelian.coimage f :=
 
 /-- There is a canonical monomorphism `i : coimage f ⟶ Q`. -/
 protected abbrev factorThruCoimage : Abelian.coimage f ⟶ Q :=
-  cokernel.desc (kernel.ι f) f $ kernel.condition f
+  cokernel.desc (kernel.ι f) f <| kernel.condition f
 #align category_theory.abelian.factor_thru_coimage CategoryTheory.Abelian.factorThruCoimage
 
 /-- `f` factors through its coimage via the canonical morphism `p`. -/
@@ -88,7 +88,7 @@ protected theorem coimage.fac : coimage.π f ≫ Abelian.factorThruCoimage f = f
 #align category_theory.abelian.coimage.fac CategoryTheory.Abelian.coimage.fac
 
 instance epi_factor_thru_coimage [Epi f] : Epi (Abelian.factorThruCoimage f) :=
-  epi_of_epi_fac $ coimage.fac f
+  epi_of_epi_fac <| coimage.fac f
 #align category_theory.abelian.epi_factor_thru_coimage CategoryTheory.Abelian.epi_factor_thru_coimage
 
 end Coimage
@@ -102,7 +102,7 @@ in which this is always an isomorphism, is abelian.
 See <https://stacks.math.columbia.edu/tag/0107>
 -/
 def coimageImageComparison : Abelian.coimage f ⟶ Abelian.image f :=
-  cokernel.desc (kernel.ι f) (kernel.lift (cokernel.π f) f (by simp)) $ by
+  cokernel.desc (kernel.ι f) (kernel.lift (cokernel.π f) f (by simp)) <| by
     ext
     simp
 #align category_theory.abelian.coimage_image_comparison CategoryTheory.Abelian.coimageImageComparison

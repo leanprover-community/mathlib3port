@@ -122,7 +122,7 @@ theorem continuous_of_continuous_eval [TopologicalSpace α] {g : α → WeakBili
 
 /-- The coercion `(λ x y, B x y) : E → (F → 𝕜)` is an embedding. -/
 theorem embedding {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜} (hB : Function.Injective B) : Embedding fun (x : WeakBilin B) y => B x y :=
-  Function.Injective.embedding_induced $ LinearMap.coe_injective.comp hB
+  Function.Injective.embedding_induced <| LinearMap.coe_injective.comp hB
 #align weak_bilin.embedding WeakBilin.embedding
 
 theorem tendsto_iff_forall_eval_tendsto {l : Filter α} {f : α → WeakBilin B} {x : WeakBilin B}
@@ -236,13 +236,13 @@ instance module' (R) [Semiring R] [Module R 𝕜] [SmulCommClass 𝕜 R 𝕜] [H
 
 instance (M) [Monoid M] [DistribMulAction M 𝕜] [SmulCommClass 𝕜 M 𝕜] [HasContinuousConstSmul M 𝕜] :
     HasContinuousConstSmul M (WeakDual 𝕜 E) :=
-  ⟨fun m => continuous_induced_rng.2 $ (WeakBilin.coe_fn_continuous (topDualPairing 𝕜 E)).const_smul m⟩
+  ⟨fun m => continuous_induced_rng.2 <| (WeakBilin.coe_fn_continuous (topDualPairing 𝕜 E)).const_smul m⟩
 
 /-- If a monoid `M` distributively continuously acts on `𝕜` and this action commutes with
 multiplication on `𝕜`, then it continuously acts on `weak_dual 𝕜 E`. -/
 instance (M) [Monoid M] [DistribMulAction M 𝕜] [SmulCommClass 𝕜 M 𝕜] [TopologicalSpace M] [HasContinuousSmul M 𝕜] :
     HasContinuousSmul M (WeakDual 𝕜 E) :=
-  ⟨continuous_induced_rng.2 $
+  ⟨continuous_induced_rng.2 <|
       continuous_fst.smul ((WeakBilin.coe_fn_continuous (topDualPairing 𝕜 E)).comp continuous_snd)⟩
 
 theorem coe_fn_continuous : Continuous fun (x : WeakDual 𝕜 E) y => x y :=
@@ -259,8 +259,8 @@ theorem continuous_of_continuous_eval [TopologicalSpace α] {g : α → WeakDual
 #align weak_dual.continuous_of_continuous_eval WeakDual.continuous_of_continuous_eval
 
 instance [T2Space 𝕜] : T2Space (WeakDual 𝕜 E) :=
-  Embedding.t2Space $
-    WeakBilin.embedding $ show Function.Injective (topDualPairing 𝕜 E) from ContinuousLinearMap.coe_injective
+  Embedding.t2Space <|
+    WeakBilin.embedding <| show Function.Injective (topDualPairing 𝕜 E) from ContinuousLinearMap.coe_injective
 
 end WeakDual
 

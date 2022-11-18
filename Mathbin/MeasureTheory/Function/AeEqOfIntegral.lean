@@ -73,31 +73,31 @@ theorem ae_eq_zero_of_forall_dual_of_is_separable [NormedAddCommGroup E] [Normed
     (h't : ∀ᵐ x ∂μ, f x ∈ t) : f =ᵐ[μ] 0 := by
   rcases ht with ⟨d, d_count, hd⟩
   haveI : Encodable d := d_count.to_encodable
-  have : ∀ x : d, ∃ g : E →L[𝕜] 𝕜, ∥g∥ ≤ 1 ∧ g x = ∥(x : E)∥ := fun x => exists_dual_vector'' 𝕜 x
+  have : ∀ x : d, ∃ g : E →L[𝕜] 𝕜, ‖g‖ ≤ 1 ∧ g x = ‖(x : E)‖ := fun x => exists_dual_vector'' 𝕜 x
   choose s hs using this
   have A : ∀ a : E, a ∈ t → (∀ x, ⟪a, s x⟫ = (0 : 𝕜)) → a = 0 := by
     intro a hat ha
     contrapose! ha
-    have a_pos : 0 < ∥a∥ := by simp only [ha, norm_pos_iff, Ne.def, not_false_iff]
+    have a_pos : 0 < ‖a‖ := by simp only [ha, norm_pos_iff, Ne.def, not_false_iff]
     have a_mem : a ∈ closure d := hd hat
-    obtain ⟨x, hx⟩ : ∃ x : d, dist a x < ∥a∥ / 2 := by
-      rcases Metric.mem_closure_iff.1 a_mem (∥a∥ / 2) (half_pos a_pos) with ⟨x, h'x, hx⟩
+    obtain ⟨x, hx⟩ : ∃ x : d, dist a x < ‖a‖ / 2 := by
+      rcases Metric.mem_closure_iff.1 a_mem (‖a‖ / 2) (half_pos a_pos) with ⟨x, h'x, hx⟩
       exact ⟨⟨x, h'x⟩, hx⟩
     use x
-    have I : ∥a∥ / 2 < ∥(x : E)∥ := by
-      have : ∥a∥ ≤ ∥(x : E)∥ + ∥a - x∥ := norm_le_insert' _ _
-      have : ∥a - x∥ < ∥a∥ / 2 := by rwa [dist_eq_norm] at hx
+    have I : ‖a‖ / 2 < ‖(x : E)‖ := by
+      have : ‖a‖ ≤ ‖(x : E)‖ + ‖a - x‖ := norm_le_insert' _ _
+      have : ‖a - x‖ < ‖a‖ / 2 := by rwa [dist_eq_norm] at hx
       linarith
     intro h
-    apply lt_irrefl ∥s x x∥
+    apply lt_irrefl ‖s x x‖
     calc
-      ∥s x x∥ = ∥s x (x - a)∥ := by simp only [h, sub_zero, ContinuousLinearMap.map_sub]
-      _ ≤ 1 * ∥(x : E) - a∥ := ContinuousLinearMap.le_of_op_norm_le _ (hs x).1 _
-      _ < ∥a∥ / 2 := by
+      ‖s x x‖ = ‖s x (x - a)‖ := by simp only [h, sub_zero, ContinuousLinearMap.map_sub]
+      _ ≤ 1 * ‖(x : E) - a‖ := ContinuousLinearMap.le_of_op_norm_le _ (hs x).1 _
+      _ < ‖a‖ / 2 := by
         rw [one_mul]
         rwa [dist_eq_norm'] at hx
-      _ < ∥(x : E)∥ := I
-      _ = ∥s x x∥ := by rw [(hs x).2, IsROrC.norm_coe_norm]
+      _ < ‖(x : E)‖ := I
+      _ = ‖s x x‖ := by rw [(hs x).2, IsROrC.norm_coe_norm]
       
   have hfs : ∀ y : d, ∀ᵐ x ∂μ, ⟪f x, s y⟫ = (0 : 𝕜) := fun y => hf (s y)
   have hf' : ∀ᵐ x ∂μ, ∀ y : d, ⟪f x, s y⟫ = (0 : 𝕜) := by rwa [ae_all_iff]
@@ -129,13 +129,13 @@ theorem ae_const_le_iff_forall_lt_measure_zero {β} [LinearOrder β] [Topologica
     exact measure_mono_null (fun y hy => (lt_of_le_of_lt hy hb : _)) h
     
   intro hc
-  by_cases h:∀ b, c ≤ b
+  by_cases h : ∀ b, c ≤ b
   · have : { a : α | f a < c } = ∅ := by
       apply Set.eq_empty_iff_forall_not_mem.2 fun x hx => _
       exact (lt_irrefl _ (lt_of_lt_of_le hx (h (f x)))).elim
     simp [this]
     
-  by_cases H:¬IsLub (Set.iio c) c
+  by_cases H : ¬IsLub (Set.iio c) c
   · have : c ∈ upperBounds (Set.iio c) := fun y hy => le_of_lt hy
     obtain ⟨b, b_up, bc⟩ : ∃ b : β, b ∈ upperBounds (Set.iio c) ∧ b < c := by
       simpa [IsLub, IsLeast, this, lowerBounds] using H
@@ -249,13 +249,13 @@ theorem ae_nonneg_of_forall_set_integral_nonneg_of_strongly_measurable (hfm : St
     let c : ℝ≥0 := ⟨|b|, abs_nonneg _⟩
     have c_pos : (c : ℝ≥0∞) ≠ 0 := by simpa using hb_neg.ne
     calc
-      μ s ≤ μ { x | (c : ℝ≥0∞) ≤ ∥f x∥₊ } := by
+      μ s ≤ μ { x | (c : ℝ≥0∞) ≤ ‖f x‖₊ } := by
         apply measure_mono
         intro x hx
         simp only [Set.mem_set_of_eq] at hx
         simpa only [nnnorm, abs_of_neg hb_neg, abs_of_neg (hx.trans_lt hb_neg), Real.norm_eq_abs, Subtype.mk_le_mk,
           neg_le_neg_iff, Set.mem_set_of_eq, Ennreal.coe_le_coe] using hx
-      _ ≤ (∫⁻ x, ∥f x∥₊ ∂μ) / c := meas_ge_le_lintegral_div hfm.ae_measurable.ennnorm c_pos Ennreal.coe_ne_top
+      _ ≤ (∫⁻ x, ‖f x‖₊ ∂μ) / c := meas_ge_le_lintegral_div hfm.ae_measurable.ennnorm c_pos Ennreal.coe_ne_top
       _ < ∞ := Ennreal.div_lt_top (ne_of_lt hf.2) c_pos
       
   have h_int_gt : (∫ x in s, f x ∂μ) ≤ b * (μ s).toReal := by

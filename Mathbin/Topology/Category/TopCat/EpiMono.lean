@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
 -/
 import Mathbin.Topology.Category.TopCat.Adjunctions
-import Mathbin.CategoryTheory.EpiMono
 
 /-!
 # Epi- and monomorphisms in `Top`

@@ -3,7 +3,7 @@ Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Sébastien Gouëzel
 -/
-import Mathbin.Analysis.NormedSpace.Basic
+import Mathbin.Analysis.Normed.Field.Basic
 
 /-!
 # Completeness in terms of `cauchy` filters vs `is_cau_seq` sequences

@@ -3,8 +3,9 @@ Copyright (c) 2022 Eric Rodriguez. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 -/
-import Mathbin.Data.Int.Modeq
 import Mathbin.Algebra.NeZero
+import Mathbin.Data.Nat.Modeq
+import Mathbin.Data.Fintype.Lattice
 
 /-!
 # Definition of `zmod n` + basic results.

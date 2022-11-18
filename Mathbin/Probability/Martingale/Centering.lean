@@ -156,8 +156,8 @@ theorem martingale_part_add_ae_eq [SigmaFiniteFiltration μ ℱ] {f g : ℕ → 
     exact adapted_predictable_part.sub hg
   have hhmgle : martingale h ℱ μ :=
     hf.sub
-      (martingale_martingale_part (hf.adapted.add $ predictable.adapted hg $ hg0.symm ▸ strongly_measurable_zero) $
-        fun n => (hf.integrable n).add $ hgint n)
+      ((martingale_martingale_part (hf.adapted.add <| predictable.adapted hg <| hg0.symm ▸ strongly_measurable_zero))
+        fun n => (hf.integrable n).add <| hgint n)
   refine' (eventually_eq_iff_sub.2 _).symm
   filter_upwards [hhmgle.eq_zero_of_predictable hhpred n] with ω hω
   rw [hhdef, Pi.sub_apply] at hω
@@ -180,7 +180,7 @@ theorem predictable_part_bdd_difference {R : ℝ≥0} {f : ℕ → Ω → ℝ} (
     (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
     ∀ᵐ ω ∂μ, ∀ i, |predictablePart f ℱ μ (i + 1) ω - predictablePart f ℱ μ i ω| ≤ R := by
   simp_rw [predictable_part, Finset.sum_apply, Finset.sum_range_succ_sub_sum]
-  exact ae_all_iff.2 fun i => ae_bdd_condexp_of_ae_bdd $ ae_all_iff.1 hbdd i
+  exact ae_all_iff.2 fun i => ae_bdd_condexp_of_ae_bdd <| ae_all_iff.1 hbdd i
 #align measure_theory.predictable_part_bdd_difference MeasureTheory.predictable_part_bdd_difference
 
 theorem martingale_part_bdd_difference {R : ℝ≥0} {f : ℕ → Ω → ℝ} (ℱ : Filtration ℕ m0)

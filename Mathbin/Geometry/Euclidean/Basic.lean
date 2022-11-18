@@ -154,7 +154,6 @@ theorem dist_smul_vadd_eq_dist {v : V} (p₁ p₂ : P) (hv : v ≠ 0) (r : ℝ) 
 
 open AffineSubspace FiniteDimensional
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (t₁ t₂) -/
 /-- Distances `r₁` `r₂` of `p` from two different points `c₁` `c₂` determine at
 most two points `p₁` `p₂` in a two-dimensional subspace containing those points
 (two circles intersect in at most two points). -/
@@ -193,7 +192,7 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
       
     · rw [finrank_span_eq_card hb, Fintype.card_fin, hd]
       
-  have hv : ∀ v ∈ s.direction, ∃ (t₁ : ℝ) (t₂ : ℝ), v = t₁ • (c₂ -ᵥ c₁) + t₂ • (p₂ -ᵥ p₁) := by
+  have hv : ∀ v ∈ s.direction, ∃ t₁ t₂ : ℝ, v = t₁ • (c₂ -ᵥ c₁) + t₂ • (p₂ -ᵥ p₁) := by
     intro v hv
     have hr : Set.range b = {c₂ -ᵥ c₁, p₂ -ᵥ p₁} := by
       have hu : (Finset.univ : Finset (Fin 2)) = {0, 1} := by decide
@@ -242,7 +241,7 @@ definition is only intended for use in setting up the bundled version
 `orthogonal_projection` and should not be used once that is
 defined. -/
 def orthogonalProjectionFn (s : AffineSubspace ℝ P) [Nonempty s] [CompleteSpace s.direction] (p : P) : P :=
-  Classical.choose $
+  Classical.choose <|
     inter_eq_singleton_of_nonempty_of_is_compl (nonempty_subtype.mp ‹_›) (mk'_nonempty p s.directionᗮ)
       (by
         rw [direction_mk' p s.directionᗮ]
@@ -256,7 +255,7 @@ setting up the bundled version and should not be used once that is
 defined. -/
 theorem inter_eq_singleton_orthogonal_projection_fn {s : AffineSubspace ℝ P} [Nonempty s] [CompleteSpace s.direction]
     (p : P) : (s : Set P) ∩ mk' p s.directionᗮ = {orthogonalProjectionFn s p} :=
-  Classical.choose_spec $
+  Classical.choose_spec <|
     inter_eq_singleton_of_nonempty_of_is_compl (nonempty_subtype.mp ‹_›) (mk'_nonempty p s.directionᗮ)
       (by
         rw [direction_mk' p s.directionᗮ]
@@ -509,19 +508,19 @@ subspace. -/
 theorem dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd {s : AffineSubspace ℝ P} {p1 p2 : P} (hp1 : p1 ∈ s)
     (hp2 : p2 ∈ s) (r1 r2 : ℝ) {v : V} (hv : v ∈ s.directionᗮ) :
     dist (r1 • v +ᵥ p1) (r2 • v +ᵥ p2) * dist (r1 • v +ᵥ p1) (r2 • v +ᵥ p2) =
-      dist p1 p2 * dist p1 p2 + (r1 - r2) * (r1 - r2) * (∥v∥ * ∥v∥) :=
+      dist p1 p2 * dist p1 p2 + (r1 - r2) * (r1 - r2) * (‖v‖ * ‖v‖) :=
   calc
     dist (r1 • v +ᵥ p1) (r2 • v +ᵥ p2) * dist (r1 • v +ᵥ p1) (r2 • v +ᵥ p2) =
-        ∥p1 -ᵥ p2 + (r1 - r2) • v∥ * ∥p1 -ᵥ p2 + (r1 - r2) • v∥ :=
+        ‖p1 -ᵥ p2 + (r1 - r2) • v‖ * ‖p1 -ᵥ p2 + (r1 - r2) • v‖ :=
       by
       rw [dist_eq_norm_vsub V (r1 • v +ᵥ p1), vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, sub_smul, add_comm, add_sub_assoc]
-    _ = ∥p1 -ᵥ p2∥ * ∥p1 -ᵥ p2∥ + ∥(r1 - r2) • v∥ * ∥(r1 - r2) • v∥ :=
+    _ = ‖p1 -ᵥ p2‖ * ‖p1 -ᵥ p2‖ + ‖(r1 - r2) • v‖ * ‖(r1 - r2) • v‖ :=
       norm_add_sq_eq_norm_sq_add_norm_sq_real
         (Submodule.inner_right_of_mem_orthogonal (vsub_mem_direction hp1 hp2) (Submodule.smul_mem _ _ hv))
-    _ = ∥(p1 -ᵥ p2 : V)∥ * ∥(p1 -ᵥ p2 : V)∥ + |r1 - r2| * |r1 - r2| * ∥v∥ * ∥v∥ := by
+    _ = ‖(p1 -ᵥ p2 : V)‖ * ‖(p1 -ᵥ p2 : V)‖ + |r1 - r2| * |r1 - r2| * ‖v‖ * ‖v‖ := by
       rw [norm_smul, Real.norm_eq_abs]
       ring
-    _ = dist p1 p2 * dist p1 p2 + (r1 - r2) * (r1 - r2) * (∥v∥ * ∥v∥) := by
+    _ = dist p1 p2 * dist p1 p2 + (r1 - r2) * (r1 - r2) * (‖v‖ * ‖v‖) := by
       rw [dist_eq_norm_vsub V p1, abs_mul_abs_self, mul_assoc]
     
 #align
@@ -774,11 +773,11 @@ theorem dist_center_eq_dist_center_of_mem_sphere' {p₁ p₂ : P} {s : Sphere P}
 point.  In two dimensions, this is the same thing as being
 concyclic. -/
 def Cospherical (ps : Set P) : Prop :=
-  ∃ (center : P) (radius : ℝ), ∀ p ∈ ps, dist p center = radius
+  ∃ (center : P)(radius : ℝ), ∀ p ∈ ps, dist p center = radius
 #align euclidean_geometry.cospherical EuclideanGeometry.Cospherical
 
 /-- The definition of `cospherical`. -/
-theorem cospherical_def (ps : Set P) : Cospherical ps ↔ ∃ (center : P) (radius : ℝ), ∀ p ∈ ps, dist p center = radius :=
+theorem cospherical_def (ps : Set P) : Cospherical ps ↔ ∃ (center : P)(radius : ℝ), ∀ p ∈ ps, dist p center = radius :=
   Iff.rfl
 #align euclidean_geometry.cospherical_def EuclideanGeometry.cospherical_def
 
@@ -852,7 +851,7 @@ theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Fin
   have hv0 : v ≠ 0 := by
     intro h
     have he : p 1 = p 0 := by simpa [h] using hv 1
-    exact (dec_trivial : (1 : Fin 3) ≠ 0) (hpi he)
+    exact (by decide : (1 : Fin 3) ≠ 0) (hpi he)
   rcases hs with ⟨c, r, hs⟩
   have hs' := fun i => hs (p i) (Set.mem_of_mem_of_subset (Set.mem_range_self _) hps)
   choose f hf using hv
@@ -875,8 +874,8 @@ theorem Cospherical.affine_independent {s : Set P} (hs : Cospherical s) {p : Fin
     intro i hi
     have hsdi := hsd i
     simpa [hfn0, hi] using hsdi
-  have hf12 : f 1 = f 2 := by rw [hfn0' 1 dec_trivial, hfn0' 2 dec_trivial]
-  exact (dec_trivial : (1 : Fin 3) ≠ 2) (hfi hf12)
+  have hf12 : f 1 = f 2 := by rw [hfn0' 1 (by decide), hfn0' 2 (by decide)]
+  exact (by decide : (1 : Fin 3) ≠ 2) (hfi hf12)
 #align euclidean_geometry.cospherical.affine_independent EuclideanGeometry.Cospherical.affine_independent
 
 /-- Suppose that `p₁` and `p₂` lie in spheres `s₁` and `s₂`.  Then the vector between the centers

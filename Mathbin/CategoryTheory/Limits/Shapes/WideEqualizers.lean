@@ -3,7 +3,6 @@ Copyright (c) 2021 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.CategoryTheory.EpiMono
 import Mathbin.CategoryTheory.Limits.HasLimits
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
 
@@ -144,7 +143,7 @@ theorem parallel_family_map_left {j : J} : (parallelFamily f).map (line j) = f j
     `parallel_family` -/
 @[simps]
 def diagramIsoParallelFamily (F : WalkingParallelFamily J ⥤ C) : F ≅ parallelFamily fun j => F.map (line j) :=
-  (NatIso.ofComponents fun j => eq_to_iso $ by cases j <;> tidy) $ by tidy
+  (NatIso.ofComponents fun j => eq_to_iso <| by cases j <;> tidy) <| by tidy
 #align category_theory.limits.diagram_iso_parallel_family CategoryTheory.Limits.diagramIsoParallelFamily
 
 /-- `walking_parallel_pair` as a category is equivalent to a special case of
@@ -274,12 +273,12 @@ theorem Cotrident.coequalizer_ext [Nonempty J] (s : Cotrident f) {W : C} {k l : 
 
 theorem Trident.IsLimit.hom_ext [Nonempty J] {s : Trident f} (hs : IsLimit s) {W : C} {k l : W ⟶ s.x}
     (h : k ≫ s.ι = l ≫ s.ι) : k = l :=
-  hs.hom_ext $ Trident.equalizer_ext _ h
+  hs.hom_ext <| Trident.equalizer_ext _ h
 #align category_theory.limits.trident.is_limit.hom_ext CategoryTheory.Limits.Trident.IsLimit.hom_ext
 
 theorem Cotrident.IsColimit.hom_ext [Nonempty J] {s : Cotrident f} (hs : IsColimit s) {W : C} {k l : s.x ⟶ W}
     (h : s.π ≫ k = s.π ≫ l) : k = l :=
-  hs.hom_ext $ Cotrident.coequalizer_ext _ h
+  hs.hom_ext <| Cotrident.coequalizer_ext _ h
 #align category_theory.limits.cotrident.is_colimit.hom_ext CategoryTheory.Limits.Cotrident.IsColimit.hom_ext
 
 /-- If `s` is a limit trident over `f`, then a morphism `k : W ⟶ X` satisfying
@@ -287,7 +286,7 @@ theorem Cotrident.IsColimit.hom_ext [Nonempty J] {s : Cotrident f} (hs : IsColim
     `l ≫ trident.ι s = k`. -/
 def Trident.IsLimit.lift' [Nonempty J] {s : Trident f} (hs : IsLimit s) {W : C} (k : W ⟶ X)
     (h : ∀ j₁ j₂, k ≫ f j₁ = k ≫ f j₂) : { l : W ⟶ s.x // l ≫ Trident.ι s = k } :=
-  ⟨hs.lift $ Trident.ofι _ h, hs.fac _ _⟩
+  ⟨hs.lift <| Trident.ofι _ h, hs.fac _ _⟩
 #align category_theory.limits.trident.is_limit.lift' CategoryTheory.Limits.Trident.IsLimit.lift'
 
 /-- If `s` is a colimit cotrident over `f`, then a morphism `k : Y ⟶ W` satisfying
@@ -295,7 +294,7 @@ def Trident.IsLimit.lift' [Nonempty J] {s : Trident f} (hs : IsLimit s) {W : C} 
     `cotrident.π s ≫ l = k`. -/
 def Cotrident.IsColimit.desc' [Nonempty J] {s : Cotrident f} (hs : IsColimit s) {W : C} (k : Y ⟶ W)
     (h : ∀ j₁ j₂, f j₁ ≫ k = f j₂ ≫ k) : { l : s.x ⟶ W // Cotrident.π s ≫ l = k } :=
-  ⟨hs.desc $ Cotrident.ofπ _ h, hs.fac _ _⟩
+  ⟨hs.desc <| Cotrident.ofπ _ h, hs.fac _ _⟩
 #align category_theory.limits.cotrident.is_colimit.desc' CategoryTheory.Limits.Cotrident.IsColimit.desc'
 
 /-- This is a slightly more convenient method to verify that a trident is a limit cone. It
@@ -543,7 +542,7 @@ theorem wideEqualizer.trident_π_app_zero : (wideEqualizer.trident f).π.app zer
 
 @[reassoc]
 theorem wideEqualizer.condition (j₁ j₂ : J) : wideEqualizer.ι f ≫ f j₁ = wideEqualizer.ι f ≫ f j₂ :=
-  Trident.condition j₁ j₂ $ limit.cone $ parallelFamily f
+  Trident.condition j₁ j₂ <| limit.cone <| parallelFamily f
 #align category_theory.limits.wide_equalizer.condition CategoryTheory.Limits.wideEqualizer.condition
 
 /-- The wide_equalizer built from `wide_equalizer.ι f` is limiting. -/
@@ -641,7 +640,7 @@ theorem wideCoequalizer.cotrident_ι_app_one : (wideCoequalizer.cotrident f).ι.
 
 @[reassoc]
 theorem wideCoequalizer.condition (j₁ j₂ : J) : f j₁ ≫ wideCoequalizer.π f = f j₂ ≫ wideCoequalizer.π f :=
-  Cotrident.condition j₁ j₂ $ colimit.cocone $ parallelFamily f
+  Cotrident.condition j₁ j₂ <| colimit.cocone <| parallelFamily f
 #align category_theory.limits.wide_coequalizer.condition CategoryTheory.Limits.wideCoequalizer.condition
 
 /-- The cotrident built from `wide_coequalizer.π f` is colimiting. -/

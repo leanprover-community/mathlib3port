@@ -156,10 +156,10 @@ theorem increasing_cantor_function (h1 : 0 < c) (h2 : c < 1 / 2) {n : ℕ} {f g 
       
     
   rw [cantor_function_succ f (le_of_lt h1) h3, cantor_function_succ g (le_of_lt h1) h3]
-  rw [hn 0 $ zero_lt_succ n]
+  rw [hn 0 <| zero_lt_succ n]
   apply add_lt_add_left
   rw [mul_lt_mul_left h1]
-  exact ih (fun k hk => hn _ $ Nat.succ_lt_succ hk) fn gn
+  exact ih (fun k hk => hn _ <| Nat.succ_lt_succ hk) fn gn
 #align cardinal.increasing_cantor_function Cardinal.increasing_cantor_function
 
 /-- `cantor_function c` is injective if `0 < c < 1/2`. -/

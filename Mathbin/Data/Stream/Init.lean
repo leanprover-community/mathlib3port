@@ -5,6 +5,7 @@ Authors: Leonardo de Moura
 -/
 import Mathbin.Data.Stream.Defs
 import Mathbin.Tactic.Ext
+import Mathbin.Logic.Function.Basic
 
 /-!
 # Streams a.k.a. infinite lists a.k.a. infinite sequences

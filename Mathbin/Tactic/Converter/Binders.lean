@@ -45,8 +45,8 @@ unsafe def congr_rule (congr : expr) (cs : List (List expr → old_conv Unit)) :
   let ((), meta_pr) ←
     solve_aux t do
         apply congr
-        focus $
-            cs $ fun c => do
+        focus <|
+            cs fun c => do
               let xs ← intros
               conversion (head_beta >> c xs)
         done
@@ -134,9 +134,9 @@ unsafe def binder_eq_elim.check_eq (b : binder_eq_elim) (x : expr) : expr → ta
 
 unsafe def binder_eq_elim.pull (b : binder_eq_elim) (x : expr) : old_conv Unit := do
   let (β, f) ← lhs >>= lift_tactic ∘ b.match_binder
-  guard (¬x β) <|>
+  guard ¬x β <|>
       b x β <|> do
-        b $ fun x => binder_eq_elim.pull
+        b fun x => binder_eq_elim.pull
         b
 #align binder_eq_elim.pull binder_eq_elim.pull
 
@@ -144,9 +144,9 @@ unsafe def binder_eq_elim.push (b : binder_eq_elim) : old_conv Unit :=
   b.apply_elim_eq <|>
     (do
         b
-        b $ fun x => binder_eq_elim.push) <|>
+        b fun x => binder_eq_elim.push) <|>
       do
-      b $ b
+      b <| b
       binder_eq_elim.push
 #align binder_eq_elim.push binder_eq_elim.push
 
@@ -156,7 +156,7 @@ unsafe def binder_eq_elim.check (b : binder_eq_elim) (x : expr) : expr → tacti
     b x β <|> do
         let lam n bi d bd ← return f
         let x ← mk_local' n bi d
-        binder_eq_elim.check $ bd x
+        binder_eq_elim.check <| bd x
 #align binder_eq_elim.check binder_eq_elim.check
 
 unsafe def binder_eq_elim.old_conv (b : binder_eq_elim) : old_conv Unit := do
@@ -168,7 +168,7 @@ unsafe def binder_eq_elim.old_conv (b : binder_eq_elim) : old_conv Unit := do
 #align binder_eq_elim.old_conv binder_eq_elim.old_conv
 
 theorem exists_elim_eq_left.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a' = a → Prop) :
-    (∃ (a' : α) (h : a' = a), p a' h) ↔ p a rfl :=
+    (∃ (a' : α)(h : a' = a), p a' h) ↔ p a rfl :=
   ⟨fun ⟨a', ⟨h, p_h⟩⟩ =>
     match a', h, p_h with
     | _, rfl, h => h,
@@ -176,7 +176,7 @@ theorem exists_elim_eq_left.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a' =
 #align exists_elim_eq_left exists_elim_eq_left
 
 theorem exists_elim_eq_right.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a = a' → Prop) :
-    (∃ (a' : α) (h : a = a'), p a' h) ↔ p a rfl :=
+    (∃ (a' : α)(h : a = a'), p a' h) ↔ p a rfl :=
   ⟨fun ⟨a', ⟨h, p_h⟩⟩ =>
     match a', h, p_h with
     | _, rfl, h => h,

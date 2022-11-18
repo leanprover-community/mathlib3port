@@ -96,7 +96,7 @@ variable (R)
 private theorem pentagon_aux (W X Y Z : Type _) [AddCommMonoid W] [AddCommMonoid X] [AddCommMonoid Y] [AddCommMonoid Z]
     [Module R W] [Module R X] [Module R Y] [Module R Z] :
     ((map (1 : W →ₗ[R] W) (assoc R X Y Z).toLinearMap).comp (assoc R W (X ⊗[R] Y) Z).toLinearMap).comp
-        (map (↑(assoc R W X Y)) (1 : Z →ₗ[R] Z)) =
+        (map ↑(assoc R W X Y) (1 : Z →ₗ[R] Z)) =
       (assoc R W X (Y ⊗[R] Z)).toLinearMap.comp (assoc R (W ⊗[R] X) Y Z).toLinearMap :=
   by
   apply TensorProduct.ext_fourfold
@@ -317,7 +317,7 @@ instance : MonoidalPreadditive (ModuleCat.{u} R) := by
   refine' ⟨_, _, _, _⟩ <;>
     dsimp only [autoParam'] <;>
       intros <;>
-        refine' TensorProduct.ext (LinearMap.ext $ fun x => LinearMap.ext $ fun y => _) <;>
+        refine' TensorProduct.ext (LinearMap.ext fun x => LinearMap.ext fun y => _) <;>
           simp only [LinearMap.compr₂_apply, TensorProduct.mk_apply, monoidal_category.hom_apply, LinearMap.zero_apply,
             TensorProduct.tmul_zero, TensorProduct.zero_tmul, LinearMap.add_apply, TensorProduct.tmul_add,
             TensorProduct.add_tmul]
@@ -326,7 +326,7 @@ instance : MonoidalLinear R (ModuleCat.{u} R) := by
   refine' ⟨_, _⟩ <;>
     dsimp only [autoParam'] <;>
       intros <;>
-        refine' TensorProduct.ext (LinearMap.ext $ fun x => LinearMap.ext $ fun y => _) <;>
+        refine' TensorProduct.ext (LinearMap.ext fun x => LinearMap.ext fun y => _) <;>
           simp only [LinearMap.compr₂_apply, TensorProduct.mk_apply, monoidal_category.hom_apply, LinearMap.smul_apply,
             TensorProduct.tmul_smul, TensorProduct.smul_tmul]
 

@@ -15,28 +15,28 @@ import Mathbin.RingTheory.Ideal.LocalRing
 open CategoryTheory
 
 instance localization_unit_is_iso (R : CommRingCat) :
-    IsIso (CommRingCat.ofHom $ algebraMap R (Localization.Away (1 : R))) :=
+    IsIso (CommRingCat.ofHom <| algebraMap R (Localization.Away (1 : R))) :=
   IsIso.of_iso (IsLocalization.atOne R (Localization.Away (1 : R))).toRingEquiv.toCommRingIso
 #align localization_unit_is_iso localization_unit_is_iso
 
 instance localization_unit_is_iso' (R : CommRingCat) :
-    @IsIso CommRingCat _ R _ (CommRingCat.ofHom $ algebraMap R (Localization.Away (1 : R))) := by
+    @IsIso CommRingCat _ R _ (CommRingCat.ofHom <| algebraMap R (Localization.Away (1 : R))) := by
   cases R
   exact localization_unit_is_iso _
 #align localization_unit_is_iso' localization_unit_is_iso'
 
 theorem IsLocalization.epi {R : Type _} [CommRing R] (M : Submonoid R) (S : Type _) [CommRing S] [Algebra R S]
-    [IsLocalization M S] : Epi (CommRingCat.ofHom $ algebraMap R S) :=
+    [IsLocalization M S] : Epi (CommRingCat.ofHom <| algebraMap R S) :=
   ⟨fun T f₁ f₂ => @IsLocalization.ring_hom_ext R _ M S _ _ T _ _ _ _⟩
 #align is_localization.epi IsLocalization.epi
 
 instance Localization.epi {R : Type _} [CommRing R] (M : Submonoid R) :
-    Epi (CommRingCat.ofHom $ algebraMap R $ Localization M) :=
+    Epi (CommRingCat.ofHom <| algebraMap R <| Localization M) :=
   IsLocalization.epi M _
 #align localization.epi Localization.epi
 
 instance Localization.epi' {R : CommRingCat} (M : Submonoid R) :
-    @Epi CommRingCat _ R _ (CommRingCat.ofHom $ algebraMap R $ Localization M : _) := by
+    @Epi CommRingCat _ R _ (CommRingCat.ofHom <| algebraMap R <| Localization M : _) := by
   cases R
   exact IsLocalization.epi M _
 #align localization.epi' Localization.epi'

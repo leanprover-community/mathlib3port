@@ -53,7 +53,7 @@ open Tactic
 to each declaration named in the list `to`. -/
 unsafe def tactic.copy_doc_string (fr : Name) (to : List Name) : tactic Unit := do
   let fr_ds ← doc_string fr
-  to $ fun tgt => add_doc_string tgt fr_ds
+  to fun tgt => add_doc_string tgt fr_ds
 #align tactic.copy_doc_string tactic.copy_doc_string
 
 open Lean Lean.Parser Interactive
@@ -67,7 +67,7 @@ unsafe def copy_doc_string_cmd (_ : parse (tk "copy_doc_string")) : parser Unit 
   tk "->"
   let to ← parser.many parser.ident
   let expr.const fr _ ← resolve_name fr
-  let to ← parser.of_tactic (to.mmap $ fun n => expr.const_name <$> resolve_name n)
+  let to ← parser.of_tactic (to.mmap fun n => expr.const_name <$> resolve_name n)
   tactic.copy_doc_string fr to
 #align copy_doc_string_cmd copy_doc_string_cmd
 
@@ -98,8 +98,8 @@ unsafe def mk_reflected_definition (decl_name : Name) {type} [reflected _ type] 
 attribute.
 -/
 unsafe def tactic.add_library_note (note_name note : String) : tactic Unit := do
-  let decl_name := `library_note <.> note_name
-  add_decl $ mk_reflected_definition decl_name ()
+  let decl_name := .str `library_note note_name
+  add_decl <| mk_reflected_definition decl_name ()
   add_doc_string decl_name note
   library_note_attr decl_name () tt none
 #align tactic.add_library_note tactic.add_library_note
@@ -204,8 +204,8 @@ unsafe def tactic.add_tactic_doc (tde : TacticDocEntry) (doc : Option String) : 
               fail
                 "A tactic doc entry must either:\n 1. have a description written as a doc-string for the `add_tactic_doc` invocation, or\n 2. have a single declaration in the `decl_names` field, to inherit a description from, or\n 3. explicitly indicate the declaration to inherit the description from using\n    `inherit_description_from`."
         doc_string inh_id <|> fail (toString inh_id ++ " has no doc string")
-  let decl_name := `tactic_doc <.> tde.category.toString <.> tde.Name
-  add_decl $ mk_definition decl_name [] q(TacticDocEntry) (reflect tde)
+  let decl_name := .str (.str `tactic_doc tde.category.toString) tde.Name
+  add_decl <| mk_definition decl_name [] q(TacticDocEntry) (reflect tde)
   add_doc_string decl_name desc
   tactic_doc_entry_attr decl_name () tt none
 #align tactic.add_tactic_doc tactic.add_tactic_doc
@@ -251,7 +251,7 @@ messages.
 
 -/
 @[user_command]
-unsafe def add_tactic_doc_command (mi : interactive.decl_meta_info) (_ : parse $ tk "add_tactic_doc") : parser Unit :=
+unsafe def add_tactic_doc_command (mi : interactive.decl_meta_info) (_ : parse <| tk "add_tactic_doc") : parser Unit :=
   do
   let pe ← parser.pexpr
   let e ← eval_pexpr TacticDocEntry pe
@@ -448,7 +448,7 @@ add_decl_doc foo
 ```
 -/
 @[user_command]
-unsafe def add_decl_doc_command (mi : interactive.decl_meta_info) (_ : parse $ tk "add_decl_doc") : parser Unit := do
+unsafe def add_decl_doc_command (mi : interactive.decl_meta_info) (_ : parse <| tk "add_decl_doc") : parser Unit := do
   let n ← parser.ident
   let n ← resolve_constant n
   let some doc ← pure mi.doc_string |

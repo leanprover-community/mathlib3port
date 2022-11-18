@@ -50,7 +50,7 @@ theorem left_minus_right {α} [h : AddGroup α] {x y : α} (h1 : x = y) : x - y 
   sub_eq_zero.mpr h1
 #align linear_combo.left_minus_right LinearCombo.left_minus_right
 
-theorem all_on_left_equiv {α} [h : AddGroup α] (x y : α) : x = y = (x - y = 0) :=
+theorem all_on_left_equiv {α} [h : AddGroup α] (x y : α) : (x = y) = (x - y = 0) :=
   propext ⟨left_minus_right, sub_eq_zero.mp⟩
 #align linear_combo.all_on_left_equiv LinearCombo.all_on_left_equiv
 
@@ -139,10 +139,6 @@ unsafe def sum_two_hyps_one_mul_helper (h_equality1 h_equality2 : expr) (coeff_f
   mul_equality_expr h_equality2 coeff_for_eq2 >>= sum_equalities h_equality1
 #align linear_combo.sum_two_hyps_one_mul_helper linear_combo.sum_two_hyps_one_mul_helper
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given that `l_sum1 = r_sum1`, `l_h1 = r_h1`, ..., `l_hn = r_hn`, and given
   coefficients `c_1`, ..., `c_n`, this tactic returns an `expr` proving that
     `l_sum1 + (c_1 * l_h1) + ... + (c_n * l_hn)`
@@ -163,7 +159,7 @@ unsafe def make_sum_of_hyps_helper (expected_tp : expr) : Option (tactic expr) �
   | none, [], [] => to_expr ``((rfl : (0 : $(expected_tp)) = 0))
   | some tactic_hcombo, [], [] => do
     tactic_hcombo
-  | none, h_equality::h_eqs_names, coeff::coeffs => do
+  | none, h_equality :: h_eqs_names, coeff :: coeffs => do
     let-- This is the first equality, and we do not have anything to add to it
       -- h_equality ← get_local h_equality_nam,
       q(@Eq $(eqtp) _ _)
@@ -175,7 +171,7 @@ unsafe def make_sum_of_hyps_helper (expected_tp : expr) : Option (tactic expr) �
             h_equality)} is an equality between terms of type {(←
             eqtp)}, but is expected to be between terms of type {← expected_tp}"
     make_sum_of_hyps_helper (some (mul_equality_expr h_equality coeff)) h_eqs_names coeffs
-  | some tactic_hcombo, h_equality::h_eqs_names, coeff::coeffs => do
+  | some tactic_hcombo, h_equality :: h_eqs_names, coeff :: coeffs => do
     let hcombo
       ←-- h_equality ← get_local h_equality_nam,
         tactic_hcombo
@@ -325,14 +321,11 @@ unsafe def linear_combination (h_eqs_names : List pexpr) (coeffs : List pexpr)
   normalize_if_desired config
 #align linear_combo.linear_combination linear_combo.linear_combination
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- `mk_mul [p₀, p₁, ..., pₙ]` produces the pexpr `p₀ * p₁ * ... * pₙ`. -/ unsafe
   def mk_mul : List pexpr → pexpr | [ ] => ` `( 1 ) | [ e ] => e | e :: es => ` `( $ ( e ) * $ ( mk_mul es ) )
 #align linear_combo.mk_mul linear_combo.mk_mul
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `as_linear_combo neg ms e` is used to parse the argument to `linear_combination`.

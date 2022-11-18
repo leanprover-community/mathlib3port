@@ -31,7 +31,7 @@ instance (X : LocaleCat) : Frame X :=
 
 /-- Construct a bundled `Locale` from a `frame`. -/
 def of (α : Type _) [Frame α] : LocaleCat :=
-  op $ FrameCat.of α
+  op <| FrameCat.of α
 #align Locale.of LocaleCat.of
 
 @[simp]

@@ -44,7 +44,6 @@ open Real
 
 namespace Bertrand
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x1 x2) -/
 /-- A reified version of the `bertrand.main_inequality` below.
 This is not best possible: it actually holds for 464 ≤ x.
 -/
@@ -70,7 +69,7 @@ theorem real_main_inequality {x : ℝ} (n_large : (512 : ℝ) ≤ x) : x * (2 * 
                 (fun a ha => lt_of_eq_of_lt _ ((mul_lt_mul_left two_pos).mpr ha)) (convex_Ioi 0.5))).sub
           ((convex_on_id (convex_Ioi (0.5 : ℝ))).smul (div_nonneg (log_nonneg _) _)) <;>
       norm_num1
-  suffices ∃ (x1) (x2), 0.5 < x1 ∧ x1 < x2 ∧ x2 ≤ x ∧ 0 ≤ f x1 ∧ f x2 ≤ 0 by
+  suffices ∃ x1 x2, 0.5 < x1 ∧ x1 < x2 ∧ x2 ≤ x ∧ 0 ≤ f x1 ∧ f x2 ≤ 0 by
     obtain ⟨x1, x2, h1, h2, h0, h3, h4⟩ := this
     exact (h.right_le_of_le_left'' h1 ((h1.trans h2).trans_le h0) h2 h0 (h4.trans h3)).trans h4
   refine' ⟨18, 512, by norm_num1, by norm_num1, le_trans (by norm_num1) n_large, _, _⟩
@@ -98,8 +97,8 @@ theorem bertrand_main_inequality {n : ℕ} (n_large : 512 ≤ n) : n * (2 * n) ^
   by
   rw [← @cast_le ℝ]
   simp only [cast_bit0, cast_add, cast_one, cast_mul, cast_pow, ← Real.rpow_nat_cast]
-  have n_pos : 0 < n := (dec_trivial : 0 < 512).trans_le n_large
-  have n2_pos : 1 ≤ 2 * n := mul_pos dec_trivial n_pos
+  have n_pos : 0 < n := (by decide : 0 < 512).trans_le n_large
+  have n2_pos : 1 ≤ 2 * n := mul_pos (by decide) n_pos
   refine' trans (mul_le_mul _ _ _ _) (Bertrand.real_main_inequality (by exact_mod_cast n_large))
   · refine' mul_le_mul_of_nonneg_left _ (Nat.cast_nonneg _)
     refine' Real.rpow_le_rpow_of_exponent_le (by exact_mod_cast n2_pos) _
@@ -171,7 +170,7 @@ theorem central_binom_le_of_no_bertrand_prime (n : ℕ) (n_big : 2 < n)
     refine' (Finset.prod_le_prod' fun p hp => (_ : f p ≤ p)).trans _
     · obtain ⟨h1, h2⟩ := Finset.mem_filter.1 hp
       refine' (pow_le_pow (Finset.mem_filter.1 h1).2.one_lt.le _).trans (pow_one p).le
-      exact Nat.factorization_choose_le_one (sqrt_lt'.mp $ not_le.1 h2)
+      exact Nat.factorization_choose_le_one (sqrt_lt'.mp <| not_le.1 h2)
       
     refine' Finset.prod_le_prod_of_subset_of_one_le' (Finset.filter_subset _ _) _
     exact fun p hp _ => (Finset.mem_filter.1 hp).2.one_lt.le
@@ -223,7 +222,7 @@ theorem exists_prime_lt_and_le_two_mul (n : ℕ) (hn0 : n ≠ 0) : ∃ p, Nat.Pr
   revert h
   -- For small `n`, supply a list of primes to cover the initial cases.
   run_tac
-    [317, 163, 83, 43, 23, 13, 7, 5, 3, 2].mmap' $ fun n => sorry
+    [317, 163, 83, 43, 23, 13, 7, 5, 3, 2].mmap' fun n => sorry
   exact fun h2 => ⟨2, prime_two, h2, Nat.mul_le_mul_left 2 (Nat.pos_of_ne_zero hn0)⟩
 #align nat.exists_prime_lt_and_le_two_mul Nat.exists_prime_lt_and_le_two_mul
 

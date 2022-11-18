@@ -35,12 +35,12 @@ variable {V : Type _} [InnerProductSpace ℝ V]
 this is π/2. See `orientation.oangle` for the corresponding oriented angle
 definition. -/
 def angle (x y : V) : ℝ :=
-  Real.arccos (⟪x, y⟫ / (∥x∥ * ∥y∥))
+  Real.arccos (⟪x, y⟫ / (‖x‖ * ‖y‖))
 #align inner_product_geometry.angle InnerProductGeometry.angle
 
 theorem continuous_at_angle {x : V × V} (hx1 : x.1 ≠ 0) (hx2 : x.2 ≠ 0) :
     ContinuousAt (fun y : V × V => angle y.1 y.2) x :=
-  Real.continuous_arccos.ContinuousAt.comp $
+  Real.continuous_arccos.ContinuousAt.comp <|
     continuous_inner.ContinuousAt.div
       ((continuous_norm.comp continuous_fst).mul (continuous_norm.comp continuous_snd)).ContinuousAt
       (by simp [hx1, hx2])
@@ -49,7 +49,7 @@ theorem continuous_at_angle {x : V × V} (hx1 : x.1 ≠ 0) (hx2 : x.2 ≠ 0) :
 theorem angle_smul_smul {c : ℝ} (hc : c ≠ 0) (x y : V) : angle (c • x) (c • y) = angle x y := by
   have : c * c ≠ 0 := mul_ne_zero hc hc
   rw [angle, angle, real_inner_smul_left, inner_smul_right, norm_smul, norm_smul, Real.norm_eq_abs,
-    mul_mul_mul_comm _ ∥x∥, abs_mul_abs_self, ← mul_assoc c c, mul_div_mul_left _ _ this]
+    mul_mul_mul_comm _ ‖x‖, abs_mul_abs_self, ← mul_assoc c c, mul_div_mul_left _ _ this]
 #align inner_product_geometry.angle_smul_smul InnerProductGeometry.angle_smul_smul
 
 @[simp]
@@ -77,7 +77,7 @@ theorem ConformalAt.preserves_angle {E F : Type _} [InnerProductSpace ℝ E] [In
 #align inner_product_geometry.conformal_at.preserves_angle InnerProductGeometry.ConformalAt.preserves_angle
 
 /-- The cosine of the angle between two vectors. -/
-theorem cos_angle (x y : V) : Real.cos (angle x y) = ⟪x, y⟫ / (∥x∥ * ∥y∥) :=
+theorem cos_angle (x y : V) : Real.cos (angle x y) = ⟪x, y⟫ / (‖x‖ * ‖y‖) :=
   Real.cos_arccos (abs_le.mp (abs_real_inner_div_norm_mul_norm_le_one x y)).1
     (abs_le.mp (abs_real_inner_div_norm_mul_norm_le_one x y)).2
 #align inner_product_geometry.cos_angle InnerProductGeometry.cos_angle
@@ -177,7 +177,7 @@ theorem angle_smul_left_of_neg (x y : V) {r : ℝ} (hr : r < 0) : angle (r • x
 
 /-- The cosine of the angle between two vectors, multiplied by the
 product of their norms. -/
-theorem cos_angle_mul_norm_mul_norm (x y : V) : Real.cos (angle x y) * (∥x∥ * ∥y∥) = ⟪x, y⟫ := by
+theorem cos_angle_mul_norm_mul_norm (x y : V) : Real.cos (angle x y) * (‖x‖ * ‖y‖) = ⟪x, y⟫ := by
   rw [cos_angle, div_mul_cancel_of_imp]
   simp (config := { contextual := true }) [or_imp]
 #align inner_product_geometry.cos_angle_mul_norm_mul_norm InnerProductGeometry.cos_angle_mul_norm_mul_norm
@@ -185,13 +185,13 @@ theorem cos_angle_mul_norm_mul_norm (x y : V) : Real.cos (angle x y) * (∥x∥ 
 /-- The sine of the angle between two vectors, multiplied by the
 product of their norms. -/
 theorem sin_angle_mul_norm_mul_norm (x y : V) :
-    Real.sin (angle x y) * (∥x∥ * ∥y∥) = Real.sqrt (⟪x, x⟫ * ⟪y, y⟫ - ⟪x, y⟫ * ⟪x, y⟫) := by
+    Real.sin (angle x y) * (‖x‖ * ‖y‖) = Real.sqrt (⟪x, x⟫ * ⟪y, y⟫ - ⟪x, y⟫ * ⟪x, y⟫) := by
   unfold angle
   rw [Real.sin_arccos, ← Real.sqrt_mul_self (mul_nonneg (norm_nonneg x) (norm_nonneg y)), ←
     Real.sqrt_mul' _ (mul_self_nonneg _), sq, Real.sqrt_mul_self (mul_nonneg (norm_nonneg x) (norm_nonneg y)),
     real_inner_self_eq_norm_mul_norm, real_inner_self_eq_norm_mul_norm]
-  by_cases h:∥x∥ * ∥y∥ = 0
-  · rw [show ∥x∥ * ∥x∥ * (∥y∥ * ∥y∥) = ∥x∥ * ∥y∥ * (∥x∥ * ∥y∥) by ring, h, mul_zero, mul_zero, zero_sub]
+  by_cases h : ‖x‖ * ‖y‖ = 0
+  · rw [show ‖x‖ * ‖x‖ * (‖y‖ * ‖y‖) = ‖x‖ * ‖y‖ * (‖x‖ * ‖y‖) by ring, h, mul_zero, mul_zero, zero_sub]
     cases' eq_zero_or_eq_zero_of_mul_eq_zero h with hx hy
     · rw [norm_eq_zero] at hx
       rw [hx, inner_zero_left, zero_mul, neg_zero]
@@ -230,45 +230,45 @@ theorem angle_add_angle_eq_pi_of_angle_eq_pi {x y : V} (z : V) (h : angle x y = 
 /-- Two vectors have inner product 0 if and only if the angle between
 them is π/2. -/
 theorem inner_eq_zero_iff_angle_eq_pi_div_two (x y : V) : ⟪x, y⟫ = 0 ↔ angle x y = π / 2 :=
-  Iff.symm $ by simp (config := { contextual := true }) [angle, or_imp]
+  Iff.symm <| by simp (config := { contextual := true }) [angle, or_imp]
 #align
   inner_product_geometry.inner_eq_zero_iff_angle_eq_pi_div_two InnerProductGeometry.inner_eq_zero_iff_angle_eq_pi_div_two
 
 /-- If the angle between two vectors is π, the inner product equals the negative product
 of the norms. -/
-theorem inner_eq_neg_mul_norm_of_angle_eq_pi {x y : V} (h : angle x y = π) : ⟪x, y⟫ = -(∥x∥ * ∥y∥) := by
+theorem inner_eq_neg_mul_norm_of_angle_eq_pi {x y : V} (h : angle x y = π) : ⟪x, y⟫ = -(‖x‖ * ‖y‖) := by
   simp [← cos_angle_mul_norm_mul_norm, h]
 #align
   inner_product_geometry.inner_eq_neg_mul_norm_of_angle_eq_pi InnerProductGeometry.inner_eq_neg_mul_norm_of_angle_eq_pi
 
 /-- If the angle between two vectors is 0, the inner product equals the product of the norms. -/
-theorem inner_eq_mul_norm_of_angle_eq_zero {x y : V} (h : angle x y = 0) : ⟪x, y⟫ = ∥x∥ * ∥y∥ := by
+theorem inner_eq_mul_norm_of_angle_eq_zero {x y : V} (h : angle x y = 0) : ⟪x, y⟫ = ‖x‖ * ‖y‖ := by
   simp [← cos_angle_mul_norm_mul_norm, h]
 #align inner_product_geometry.inner_eq_mul_norm_of_angle_eq_zero InnerProductGeometry.inner_eq_mul_norm_of_angle_eq_zero
 
 /-- The inner product of two non-zero vectors equals the negative product of their norms
 if and only if the angle between the two vectors is π. -/
 theorem inner_eq_neg_mul_norm_iff_angle_eq_pi {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
-    ⟪x, y⟫ = -(∥x∥ * ∥y∥) ↔ angle x y = π := by
+    ⟪x, y⟫ = -(‖x‖ * ‖y‖) ↔ angle x y = π := by
   refine' ⟨fun h => _, inner_eq_neg_mul_norm_of_angle_eq_pi⟩
-  have h₁ : ∥x∥ * ∥y∥ ≠ 0 := (mul_pos (norm_pos_iff.mpr hx) (norm_pos_iff.mpr hy)).ne'
+  have h₁ : ‖x‖ * ‖y‖ ≠ 0 := (mul_pos (norm_pos_iff.mpr hx) (norm_pos_iff.mpr hy)).ne'
   rw [angle, h, neg_div, div_self h₁, Real.arccos_neg_one]
 #align
   inner_product_geometry.inner_eq_neg_mul_norm_iff_angle_eq_pi InnerProductGeometry.inner_eq_neg_mul_norm_iff_angle_eq_pi
 
 /-- The inner product of two non-zero vectors equals the product of their norms
 if and only if the angle between the two vectors is 0. -/
-theorem inner_eq_mul_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) : ⟪x, y⟫ = ∥x∥ * ∥y∥ ↔ angle x y = 0 :=
+theorem inner_eq_mul_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) : ⟪x, y⟫ = ‖x‖ * ‖y‖ ↔ angle x y = 0 :=
   by
   refine' ⟨fun h => _, inner_eq_mul_norm_of_angle_eq_zero⟩
-  have h₁ : ∥x∥ * ∥y∥ ≠ 0 := (mul_pos (norm_pos_iff.mpr hx) (norm_pos_iff.mpr hy)).ne'
+  have h₁ : ‖x‖ * ‖y‖ ≠ 0 := (mul_pos (norm_pos_iff.mpr hx) (norm_pos_iff.mpr hy)).ne'
   rw [angle, h, div_self h₁, Real.arccos_one]
 #align
   inner_product_geometry.inner_eq_mul_norm_iff_angle_eq_zero InnerProductGeometry.inner_eq_mul_norm_iff_angle_eq_zero
 
 /-- If the angle between two vectors is π, the norm of their difference equals
 the sum of their norms. -/
-theorem norm_sub_eq_add_norm_of_angle_eq_pi {x y : V} (h : angle x y = π) : ∥x - y∥ = ∥x∥ + ∥y∥ := by
+theorem norm_sub_eq_add_norm_of_angle_eq_pi {x y : V} (h : angle x y = π) : ‖x - y‖ = ‖x‖ + ‖y‖ := by
   rw [← sq_eq_sq (norm_nonneg (x - y)) (add_nonneg (norm_nonneg x) (norm_nonneg y))]
   rw [norm_sub_pow_two_real, inner_eq_neg_mul_norm_of_angle_eq_pi h]
   ring
@@ -277,7 +277,7 @@ theorem norm_sub_eq_add_norm_of_angle_eq_pi {x y : V} (h : angle x y = π) : ∥
 
 /-- If the angle between two vectors is 0, the norm of their sum equals
 the sum of their norms. -/
-theorem norm_add_eq_add_norm_of_angle_eq_zero {x y : V} (h : angle x y = 0) : ∥x + y∥ = ∥x∥ + ∥y∥ := by
+theorem norm_add_eq_add_norm_of_angle_eq_zero {x y : V} (h : angle x y = 0) : ‖x + y‖ = ‖x‖ + ‖y‖ := by
   rw [← sq_eq_sq (norm_nonneg (x + y)) (add_nonneg (norm_nonneg x) (norm_nonneg y))]
   rw [norm_add_pow_two_real, inner_eq_mul_norm_of_angle_eq_zero h]
   ring
@@ -286,9 +286,9 @@ theorem norm_add_eq_add_norm_of_angle_eq_zero {x y : V} (h : angle x y = 0) : �
 
 /-- If the angle between two vectors is 0, the norm of their difference equals
 the absolute value of the difference of their norms. -/
-theorem norm_sub_eq_abs_sub_norm_of_angle_eq_zero {x y : V} (h : angle x y = 0) : ∥x - y∥ = |∥x∥ - ∥y∥| := by
-  rw [← sq_eq_sq (norm_nonneg (x - y)) (abs_nonneg (∥x∥ - ∥y∥)), norm_sub_pow_two_real,
-    inner_eq_mul_norm_of_angle_eq_zero h, sq_abs (∥x∥ - ∥y∥)]
+theorem norm_sub_eq_abs_sub_norm_of_angle_eq_zero {x y : V} (h : angle x y = 0) : ‖x - y‖ = |‖x‖ - ‖y‖| := by
+  rw [← sq_eq_sq (norm_nonneg (x - y)) (abs_nonneg (‖x‖ - ‖y‖)), norm_sub_pow_two_real,
+    inner_eq_mul_norm_of_angle_eq_zero h, sq_abs (‖x‖ - ‖y‖)]
   ring
 #align
   inner_product_geometry.norm_sub_eq_abs_sub_norm_of_angle_eq_zero InnerProductGeometry.norm_sub_eq_abs_sub_norm_of_angle_eq_zero
@@ -296,14 +296,14 @@ theorem norm_sub_eq_abs_sub_norm_of_angle_eq_zero {x y : V} (h : angle x y = 0) 
 /-- The norm of the difference of two non-zero vectors equals the sum of their norms
 if and only the angle between the two vectors is π. -/
 theorem norm_sub_eq_add_norm_iff_angle_eq_pi {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
-    ∥x - y∥ = ∥x∥ + ∥y∥ ↔ angle x y = π := by
+    ‖x - y‖ = ‖x‖ + ‖y‖ ↔ angle x y = π := by
   refine' ⟨fun h => _, norm_sub_eq_add_norm_of_angle_eq_pi⟩
   rw [← inner_eq_neg_mul_norm_iff_angle_eq_pi hx hy]
   obtain ⟨hxy₁, hxy₂⟩ := norm_nonneg (x - y), add_nonneg (norm_nonneg x) (norm_nonneg y)
   rw [← sq_eq_sq hxy₁ hxy₂, norm_sub_pow_two_real] at h
   calc
-    ⟪x, y⟫ = (∥x∥ ^ 2 + ∥y∥ ^ 2 - (∥x∥ + ∥y∥) ^ 2) / 2 := by linarith
-    _ = -(∥x∥ * ∥y∥) := by ring
+    ⟪x, y⟫ = (‖x‖ ^ 2 + ‖y‖ ^ 2 - (‖x‖ + ‖y‖) ^ 2) / 2 := by linarith
+    _ = -(‖x‖ * ‖y‖) := by ring
     
 #align
   inner_product_geometry.norm_sub_eq_add_norm_iff_angle_eq_pi InnerProductGeometry.norm_sub_eq_add_norm_iff_angle_eq_pi
@@ -311,14 +311,14 @@ theorem norm_sub_eq_add_norm_iff_angle_eq_pi {x y : V} (hx : x ≠ 0) (hy : y �
 /-- The norm of the sum of two non-zero vectors equals the sum of their norms
 if and only the angle between the two vectors is 0. -/
 theorem norm_add_eq_add_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
-    ∥x + y∥ = ∥x∥ + ∥y∥ ↔ angle x y = 0 := by
+    ‖x + y‖ = ‖x‖ + ‖y‖ ↔ angle x y = 0 := by
   refine' ⟨fun h => _, norm_add_eq_add_norm_of_angle_eq_zero⟩
   rw [← inner_eq_mul_norm_iff_angle_eq_zero hx hy]
   obtain ⟨hxy₁, hxy₂⟩ := norm_nonneg (x + y), add_nonneg (norm_nonneg x) (norm_nonneg y)
   rw [← sq_eq_sq hxy₁ hxy₂, norm_add_pow_two_real] at h
   calc
-    ⟪x, y⟫ = ((∥x∥ + ∥y∥) ^ 2 - ∥x∥ ^ 2 - ∥y∥ ^ 2) / 2 := by linarith
-    _ = ∥x∥ * ∥y∥ := by ring
+    ⟪x, y⟫ = ((‖x‖ + ‖y‖) ^ 2 - ‖x‖ ^ 2 - ‖y‖ ^ 2) / 2 := by linarith
+    _ = ‖x‖ * ‖y‖ := by ring
     
 #align
   inner_product_geometry.norm_add_eq_add_norm_iff_angle_eq_zero InnerProductGeometry.norm_add_eq_add_norm_iff_angle_eq_zero
@@ -326,23 +326,23 @@ theorem norm_add_eq_add_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y 
 /-- The norm of the difference of two non-zero vectors equals the absolute value
 of the difference of their norms if and only the angle between the two vectors is 0. -/
 theorem norm_sub_eq_abs_sub_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
-    ∥x - y∥ = |∥x∥ - ∥y∥| ↔ angle x y = 0 := by
+    ‖x - y‖ = |‖x‖ - ‖y‖| ↔ angle x y = 0 := by
   refine' ⟨fun h => _, norm_sub_eq_abs_sub_norm_of_angle_eq_zero⟩
   rw [← inner_eq_mul_norm_iff_angle_eq_zero hx hy]
-  have h1 : ∥x - y∥ ^ 2 = (∥x∥ - ∥y∥) ^ 2 := by
+  have h1 : ‖x - y‖ ^ 2 = (‖x‖ - ‖y‖) ^ 2 := by
     rw [h]
-    exact sq_abs (∥x∥ - ∥y∥)
+    exact sq_abs (‖x‖ - ‖y‖)
   rw [norm_sub_pow_two_real] at h1
   calc
-    ⟪x, y⟫ = ((∥x∥ + ∥y∥) ^ 2 - ∥x∥ ^ 2 - ∥y∥ ^ 2) / 2 := by linarith
-    _ = ∥x∥ * ∥y∥ := by ring
+    ⟪x, y⟫ = ((‖x‖ + ‖y‖) ^ 2 - ‖x‖ ^ 2 - ‖y‖ ^ 2) / 2 := by linarith
+    _ = ‖x‖ * ‖y‖ := by ring
     
 #align
   inner_product_geometry.norm_sub_eq_abs_sub_norm_iff_angle_eq_zero InnerProductGeometry.norm_sub_eq_abs_sub_norm_iff_angle_eq_zero
 
 /-- The norm of the sum of two vectors equals the norm of their difference if and only if
 the angle between them is π/2. -/
-theorem norm_add_eq_norm_sub_iff_angle_eq_pi_div_two (x y : V) : ∥x + y∥ = ∥x - y∥ ↔ angle x y = π / 2 := by
+theorem norm_add_eq_norm_sub_iff_angle_eq_pi_div_two (x y : V) : ‖x + y‖ = ‖x - y‖ ↔ angle x y = π / 2 := by
   rw [← sq_eq_sq (norm_nonneg (x + y)) (norm_nonneg (x - y)), ← inner_eq_zero_iff_angle_eq_pi_div_two x y,
     norm_add_pow_two_real, norm_sub_pow_two_real]
   constructor <;> intro h <;> linarith

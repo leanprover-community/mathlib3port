@@ -14,6 +14,7 @@ collection of theorems is to show the equivalence of the different approaches.
 -/
 
 
+#print PosNum /-
 /-- The type of positive binary numbers.
 
      13 = 1101(base 2) = bit1 (bit0 (bit1 one)) -/
@@ -23,6 +24,7 @@ inductive PosNum : Type
   | bit0 : PosNum → PosNum
   deriving has_reflect, DecidableEq
 #align pos_num PosNum
+-/
 
 instance : One PosNum :=
   ⟨PosNum.one⟩
@@ -30,6 +32,7 @@ instance : One PosNum :=
 instance : Inhabited PosNum :=
   ⟨1⟩
 
+#print Num /-
 /-- The type of nonnegative binary numbers, using `pos_num`.
 
      13 = 1101(base 2) = pos (bit1 (bit0 (bit1 one))) -/
@@ -38,6 +41,7 @@ inductive Num : Type
   | Pos : PosNum → Num
   deriving has_reflect, DecidableEq
 #align num Num
+-/
 
 instance : Zero Num :=
   ⟨Num.zero⟩
@@ -48,34 +52,39 @@ instance : One Num :=
 instance : Inhabited Num :=
   ⟨0⟩
 
+#print ZNum /-
 /-- Representation of integers using trichotomy around zero.
 
      13 = 1101(base 2) = pos (bit1 (bit0 (bit1 one)))
      -13 = -1101(base 2) = neg (bit1 (bit0 (bit1 one))) -/
-inductive Znum : Type
-  | zero : Znum
-  | Pos : PosNum → Znum
-  | neg : PosNum → Znum
+inductive ZNum : Type
+  | zero : ZNum
+  | Pos : PosNum → ZNum
+  | neg : PosNum → ZNum
   deriving has_reflect, DecidableEq
-#align znum Znum
+#align znum ZNum
+-/
 
-instance : Zero Znum :=
-  ⟨Znum.zero⟩
+instance : Zero ZNum :=
+  ⟨ZNum.zero⟩
 
-instance : One Znum :=
-  ⟨Znum.pos 1⟩
+instance : One ZNum :=
+  ⟨ZNum.pos 1⟩
 
-instance : Inhabited Znum :=
+instance : Inhabited ZNum :=
   ⟨0⟩
 
 namespace PosNum
 
+#print PosNum.bit /-
 /-- `bit b n` appends the bit `b` to the end of `n`, where `bit tt x = x1` and `bit ff x = x0`.
   -/
 def bit (b : Bool) : PosNum → PosNum :=
   cond b bit1 bit0
 #align pos_num.bit PosNum.bit
+-/
 
+#print PosNum.succ /-
 /-- The successor of a `pos_num`.
   -/
 def succ : PosNum → PosNum
@@ -83,14 +92,18 @@ def succ : PosNum → PosNum
   | bit1 n => bit0 (succ n)
   | bit0 n => bit1 n
 #align pos_num.succ PosNum.succ
+-/
 
+#print PosNum.isOne /-
 /-- Returns a boolean for whether the `pos_num` is `one`.
   -/
 def isOne : PosNum → Bool
   | 1 => true
   | _ => false
 #align pos_num.is_one PosNum.isOne
+-/
 
+#print PosNum.add /-
 /-- Addition of two `pos_num`s.
   -/
 protected def add : PosNum → PosNum → PosNum
@@ -101,10 +114,12 @@ protected def add : PosNum → PosNum → PosNum
   | bit0 a, bit1 b => bit1 (add a b)
   | bit1 a, bit0 b => bit1 (add a b)
 #align pos_num.add PosNum.add
+-/
 
 instance : Add PosNum :=
   ⟨PosNum.add⟩
 
+#print PosNum.pred' /-
 /-- The predecessor of a `pos_num` as a `num`.
   -/
 def pred' : PosNum → Num
@@ -112,13 +127,17 @@ def pred' : PosNum → Num
   | bit0 n => Num.pos (Num.casesOn (pred' n) 1 bit1)
   | bit1 n => Num.pos (bit0 n)
 #align pos_num.pred' PosNum.pred'
+-/
 
+#print PosNum.pred /-
 /-- The predecessor of a `pos_num` as a `pos_num`. This means that `pred 1 = 1`.
   -/
 def pred (a : PosNum) : PosNum :=
   Num.casesOn (pred' a) 1 id
 #align pos_num.pred PosNum.pred
+-/
 
+#print PosNum.size /-
 /-- The number of bits of a `pos_num`, as a `pos_num`.
   -/
 def size : PosNum → PosNum
@@ -126,7 +145,9 @@ def size : PosNum → PosNum
   | bit0 n => succ (size n)
   | bit1 n => succ (size n)
 #align pos_num.size PosNum.size
+-/
 
+#print PosNum.natSize /-
 /-- The number of bits of a `pos_num`, as a `nat`.
   -/
 def natSize : PosNum → Nat
@@ -134,7 +155,9 @@ def natSize : PosNum → Nat
   | bit0 n => Nat.succ (nat_size n)
   | bit1 n => Nat.succ (nat_size n)
 #align pos_num.nat_size PosNum.natSize
+-/
 
+#print PosNum.mul /-
 /-- Multiplication of two `pos_num`s.
   -/
 protected def mul (a : PosNum) : PosNum → PosNum
@@ -142,25 +165,31 @@ protected def mul (a : PosNum) : PosNum → PosNum
   | bit0 b => bit0 (mul b)
   | bit1 b => bit0 (mul b) + a
 #align pos_num.mul PosNum.mul
+-/
 
 instance : Mul PosNum :=
   ⟨PosNum.mul⟩
 
+#print PosNum.ofNatSucc /-
 /-- `of_nat_succ n` is the `pos_num` corresponding to `n + 1`.
   -/
 def ofNatSucc : ℕ → PosNum
   | 0 => 1
   | Nat.succ n => succ (of_nat_succ n)
 #align pos_num.of_nat_succ PosNum.ofNatSucc
+-/
 
+#print PosNum.ofNat /-
 /-- `of_nat n` is the `pos_num` corresponding to `n`, except for `of_nat 0 = 1`.
   -/
 def ofNat (n : ℕ) : PosNum :=
   ofNatSucc (Nat.pred n)
 #align pos_num.of_nat PosNum.ofNat
+-/
 
 open Ordering
 
+#print PosNum.cmp /-
 /-- Ordering of `pos_num`s.
   -/
 def cmp : PosNum → PosNum → Ordering
@@ -172,6 +201,7 @@ def cmp : PosNum → PosNum → Ordering
   | bit1 a, bit0 b => Ordering.casesOn (cmp a b) lt GT.gt GT.gt
   | bit1 a, bit1 b => cmp a b
 #align pos_num.cmp PosNum.cmp
+-/
 
 instance : LT PosNum :=
   ⟨fun a b => cmp a b = Ordering.lt⟩
@@ -179,13 +209,17 @@ instance : LT PosNum :=
 instance : LE PosNum :=
   ⟨fun a b => ¬b < a⟩
 
+#print PosNum.decidableLt /-
 instance decidableLt : @DecidableRel PosNum (· < ·)
   | a, b => by dsimp [(· < ·)] <;> infer_instance
 #align pos_num.decidable_lt PosNum.decidableLt
+-/
 
+#print PosNum.decidableLe /-
 instance decidableLe : @DecidableRel PosNum (· ≤ ·)
   | a, b => by dsimp [(· ≤ ·)] <;> infer_instance
 #align pos_num.decidable_le PosNum.decidableLe
+-/
 
 end PosNum
 
@@ -193,6 +227,7 @@ section
 
 variable {α : Type _} [One α] [Add α]
 
+#print castPosNum /-
 /-- `cast_pos_num` casts a `pos_num` into any type which has `1` and `+`.
   -/
 def castPosNum : PosNum → α
@@ -200,19 +235,34 @@ def castPosNum : PosNum → α
   | PosNum.bit0 a => bit0 (castPosNum a)
   | PosNum.bit1 a => bit1 (castPosNum a)
 #align cast_pos_num castPosNum
+-/
 
+#print castNum /-
 /-- `cast_num` casts a `num` into any type which has `0`, `1` and `+`.
   -/
 def castNum [z : Zero α] : Num → α
   | 0 => 0
   | Num.pos p => castPosNum p
 #align cast_num castNum
+-/
 
+/- warning: pos_num_coe -> posNumCoe is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : One.{u_1} α] [_inst_2 : Add.{u_1} α], CoeTCₓ.{1 succ u_1} PosNum α
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Data.Num.Basic._hyg.1794 : One.{u_1} α] [inst._@.Mathlib.Data.Num.Basic._hyg.1797 : Add.{u_1} α], CoeTC.{1 succ u_1} PosNum α
+Case conversion may be inaccurate. Consider using '#align pos_num_coe posNumCoeₓ'. -/
 -- see Note [coercion into rings]
 instance (priority := 900) posNumCoe : CoeTC PosNum α :=
   ⟨castPosNum⟩
 #align pos_num_coe posNumCoe
 
+/- warning: num_nat_coe -> numNatCoe is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : One.{u_1} α] [_inst_2 : Add.{u_1} α] [z : Zero.{u_1} α], CoeTCₓ.{1 succ u_1} Num α
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Data.Num.Basic._hyg.1809 : One.{u_1} α] [inst._@.Mathlib.Data.Num.Basic._hyg.1812 : Add.{u_1} α] [inst._@.Mathlib.Data.Num.Basic._hyg.1815 : Zero.{u_1} α], CoeTC.{1 succ u_1} Num α
+Case conversion may be inaccurate. Consider using '#align num_nat_coe numNatCoeₓ'. -/
 -- see Note [coercion into rings]
 instance (priority := 900) numNatCoe [z : Zero α] : CoeTC Num α :=
   ⟨castNum⟩
@@ -230,19 +280,24 @@ namespace Num
 
 open PosNum
 
+#print Num.succ' /-
 /-- The successor of a `num` as a `pos_num`.
   -/
 def succ' : Num → PosNum
   | 0 => 1
   | Pos p => succ p
 #align num.succ' Num.succ'
+-/
 
+#print Num.succ /-
 /-- The successor of a `num` as a `num`.
   -/
 def succ (n : Num) : Num :=
   pos (succ' n)
 #align num.succ Num.succ
+-/
 
+#print Num.add /-
 /-- Addition of two `num`s.
   -/
 protected def add : Num → Num → Num
@@ -250,44 +305,56 @@ protected def add : Num → Num → Num
   | b, 0 => b
   | Pos a, Pos b => pos (a + b)
 #align num.add Num.add
+-/
 
 instance : Add Num :=
   ⟨Num.add⟩
 
+#print Num.bit0 /-
 /-- `bit0 n` appends a `0` to the end of `n`, where `bit0 n = n0`.
   -/
 protected def bit0 : Num → Num
   | 0 => 0
   | Pos n => pos (PosNum.bit0 n)
 #align num.bit0 Num.bit0
+-/
 
+#print Num.bit1 /-
 /-- `bit1 n` appends a `1` to the end of `n`, where `bit1 n = n1`.
   -/
 protected def bit1 : Num → Num
   | 0 => 1
   | Pos n => pos (PosNum.bit1 n)
 #align num.bit1 Num.bit1
+-/
 
+#print Num.bit /-
 /-- `bit b n` appends the bit `b` to the end of `n`, where `bit tt x = x1` and `bit ff x = x0`.
   -/
 def bit (b : Bool) : Num → Num :=
   cond b Num.bit1 Num.bit0
 #align num.bit Num.bit
+-/
 
+#print Num.size /-
 /-- The number of bits required to represent a `num`, as a `num`. `size 0` is defined to be `0`.
   -/
 def size : Num → Num
   | 0 => 0
   | Pos n => pos (PosNum.size n)
 #align num.size Num.size
+-/
 
+#print Num.natSize /-
 /-- The number of bits required to represent a `num`, as a `nat`. `size 0` is defined to be `0`.
   -/
 def natSize : Num → Nat
   | 0 => 0
   | Pos n => PosNum.natSize n
 #align num.nat_size Num.natSize
+-/
 
+#print Num.mul /-
 /-- Multiplication of two `num`s.
   -/
 protected def mul : Num → Num → Num
@@ -295,12 +362,14 @@ protected def mul : Num → Num → Num
   | _, 0 => 0
   | Pos a, Pos b => pos (a * b)
 #align num.mul Num.mul
+-/
 
 instance : Mul Num :=
   ⟨Num.mul⟩
 
 open Ordering
 
+#print Num.cmp /-
 /-- Ordering of `num`s.
   -/
 def cmp : Num → Num → Ordering
@@ -309,6 +378,7 @@ def cmp : Num → Num → Ordering
   | 0, _ => lt
   | Pos a, Pos b => PosNum.cmp a b
 #align num.cmp Num.cmp
+-/
 
 instance : LT Num :=
   ⟨fun a b => cmp a b = Ordering.lt⟩
@@ -316,115 +386,142 @@ instance : LT Num :=
 instance : LE Num :=
   ⟨fun a b => ¬b < a⟩
 
+#print Num.decidableLt /-
 instance decidableLt : @DecidableRel Num (· < ·)
   | a, b => by dsimp [(· < ·)] <;> infer_instance
 #align num.decidable_lt Num.decidableLt
+-/
 
+#print Num.decidableLe /-
 instance decidableLe : @DecidableRel Num (· ≤ ·)
   | a, b => by dsimp [(· ≤ ·)] <;> infer_instance
 #align num.decidable_le Num.decidableLe
+-/
 
+#print Num.toZNum /-
 /-- Converts a `num` to a `znum`.
   -/
-def toZnum : Num → Znum
+def toZNum : Num → ZNum
   | 0 => 0
-  | Pos a => Znum.pos a
-#align num.to_znum Num.toZnum
+  | Pos a => ZNum.pos a
+#align num.to_znum Num.toZNum
+-/
 
+#print Num.toZNumNeg /-
 /-- Converts `x : num` to `-x : znum`.
   -/
-def toZnumNeg : Num → Znum
+def toZNumNeg : Num → ZNum
   | 0 => 0
-  | Pos a => Znum.neg a
-#align num.to_znum_neg Num.toZnumNeg
+  | Pos a => ZNum.neg a
+#align num.to_znum_neg Num.toZNumNeg
+-/
 
+#print Num.ofNat' /-
 /-- Converts a `nat` to a `num`.
   -/
 def ofNat' : ℕ → Num :=
   Nat.binaryRec 0 fun b n => cond b Num.bit1 Num.bit0
 #align num.of_nat' Num.ofNat'
+-/
 
 end Num
 
-namespace Znum
+namespace ZNum
 
 open PosNum
 
+#print ZNum.zNeg /-
 /-- The negation of a `znum`.
   -/
-def zneg : Znum → Znum
+def zNeg : ZNum → ZNum
   | 0 => 0
   | Pos a => neg a
   | neg a => pos a
-#align znum.zneg Znum.zneg
+#align znum.zneg ZNum.zNeg
+-/
 
-instance : Neg Znum :=
-  ⟨zneg⟩
+instance : Neg ZNum :=
+  ⟨zNeg⟩
 
+#print ZNum.abs /-
 /-- The absolute value of a `znum` as a `num`.
   -/
-def abs : Znum → Num
+def abs : ZNum → Num
   | 0 => 0
   | Pos a => Num.pos a
   | neg a => Num.pos a
-#align znum.abs Znum.abs
+#align znum.abs ZNum.abs
+-/
 
+#print ZNum.succ /-
 /-- The successor of a `znum`.
   -/
-def succ : Znum → Znum
+def succ : ZNum → ZNum
   | 0 => 1
   | Pos a => pos (PosNum.succ a)
   | neg a => (PosNum.pred' a).toZnumNeg
-#align znum.succ Znum.succ
+#align znum.succ ZNum.succ
+-/
 
+#print ZNum.pred /-
 /-- The predecessor of a `znum`.
   -/
-def pred : Znum → Znum
+def pred : ZNum → ZNum
   | 0 => neg 1
   | Pos a => (PosNum.pred' a).toZnum
   | neg a => neg (PosNum.succ a)
-#align znum.pred Znum.pred
+#align znum.pred ZNum.pred
+-/
 
+#print ZNum.bit0 /-
 /-- `bit0 n` appends a `0` to the end of `n`, where `bit0 n = n0`.
   -/
-protected def bit0 : Znum → Znum
+protected def bit0 : ZNum → ZNum
   | 0 => 0
   | Pos n => pos (PosNum.bit0 n)
   | neg n => neg (PosNum.bit0 n)
-#align znum.bit0 Znum.bit0
+#align znum.bit0 ZNum.bit0
+-/
 
+#print ZNum.bit1 /-
 /-- `bit1 x` appends a `1` to the end of `x`, mapping `x` to `2 * x + 1`.
   -/
-protected def bit1 : Znum → Znum
+protected def bit1 : ZNum → ZNum
   | 0 => 1
   | Pos n => pos (PosNum.bit1 n)
   | neg n => neg (Num.casesOn (pred' n) 1 PosNum.bit1)
-#align znum.bit1 Znum.bit1
+#align znum.bit1 ZNum.bit1
+-/
 
+#print ZNum.bitm1 /-
 /-- `bitm1 x` appends a `1` to the end of `x`, mapping `x` to `2 * x - 1`.
   -/
-protected def bitm1 : Znum → Znum
+protected def bitm1 : ZNum → ZNum
   | 0 => neg 1
   | Pos n => pos (Num.casesOn (pred' n) 1 PosNum.bit1)
   | neg n => neg (PosNum.bit1 n)
-#align znum.bitm1 Znum.bitm1
+#align znum.bitm1 ZNum.bitm1
+-/
 
+#print ZNum.ofInt' /-
 /-- Converts an `int` to a `znum`.
   -/
-def ofInt' : ℤ → Znum
-  | (n : ℕ) => Num.toZnum (Num.ofNat' n)
-  | -[1+ n] => Num.toZnumNeg (Num.ofNat' (n + 1))
-#align znum.of_int' Znum.ofInt'
+def ofInt' : ℤ → ZNum
+  | (n : ℕ) => Num.toZNum (Num.ofNat' n)
+  | -[n+1] => Num.toZNumNeg (Num.ofNat' (n + 1))
+#align znum.of_int' ZNum.ofInt'
+-/
 
-end Znum
+end ZNum
 
 namespace PosNum
 
-open Znum
+open ZNum
 
+#print PosNum.sub' /-
 /-- Subtraction of two `pos_num`s, producing a `znum`.
   -/
-def sub' : PosNum → PosNum → Znum
+def sub' : PosNum → PosNum → ZNum
   | a, 1 => (pred' a).toZnum
   | 1, b => (pred' b).toZnumNeg
   | bit0 a, bit0 b => (sub' a b).bit0
@@ -432,29 +529,36 @@ def sub' : PosNum → PosNum → Znum
   | bit1 a, bit0 b => (sub' a b).bit1
   | bit1 a, bit1 b => (sub' a b).bit0
 #align pos_num.sub' PosNum.sub'
+-/
 
+#print PosNum.ofZNum' /-
 /-- Converts a `znum` to `option pos_num`, where it is `some` if the `znum` was positive and `none`
   otherwise.
   -/
-def ofZnum' : Znum → Option PosNum
-  | Znum.pos p => some p
+def ofZNum' : ZNum → Option PosNum
+  | ZNum.pos p => some p
   | _ => none
-#align pos_num.of_znum' PosNum.ofZnum'
+#align pos_num.of_znum' PosNum.ofZNum'
+-/
 
+#print PosNum.ofZNum /-
 /-- Converts a `znum` to a `pos_num`, mapping all out of range values to `1`.
   -/
-def ofZnum : Znum → PosNum
-  | Znum.pos p => p
+def ofZNum : ZNum → PosNum
+  | ZNum.pos p => p
   | _ => 1
-#align pos_num.of_znum PosNum.ofZnum
+#align pos_num.of_znum PosNum.ofZNum
+-/
 
+#print PosNum.sub /-
 /-- Subtraction of `pos_num`s, where if `a < b`, then `a - b = 1`.
   -/
 protected def sub (a b : PosNum) : PosNum :=
   match sub' a b with
-  | Znum.pos p => p
+  | ZNum.pos p => p
   | _ => 1
 #align pos_num.sub PosNum.sub
+-/
 
 instance : Sub PosNum :=
   ⟨PosNum.sub⟩
@@ -463,20 +567,25 @@ end PosNum
 
 namespace Num
 
+#print Num.ppred /-
 /-- The predecessor of a `num` as an `option num`, where `ppred 0 = none`
   -/
 def ppred : Num → Option Num
   | 0 => none
   | Pos p => some p.pred'
 #align num.ppred Num.ppred
+-/
 
+#print Num.pred /-
 /-- The predecessor of a `num` as a `num`, where `pred 0 = 0`.
   -/
 def pred : Num → Num
   | 0 => 0
   | Pos p => p.pred'
 #align num.pred Num.pred
+-/
 
+#print Num.div2 /-
 /-- Divides a `num` by `2`
   -/
 def div2 : Num → Num
@@ -485,85 +594,101 @@ def div2 : Num → Num
   | Pos (PosNum.bit0 p) => pos p
   | Pos (PosNum.bit1 p) => pos p
 #align num.div2 Num.div2
+-/
 
+#print Num.ofZNum' /-
 /-- Converts a `znum` to an `option num`, where `of_znum' p = none` if `p < 0`.
   -/
-def ofZnum' : Znum → Option Num
+def ofZNum' : ZNum → Option Num
   | 0 => some 0
-  | Znum.pos p => some (pos p)
-  | Znum.neg p => none
-#align num.of_znum' Num.ofZnum'
+  | ZNum.pos p => some (pos p)
+  | ZNum.neg p => none
+#align num.of_znum' Num.ofZNum'
+-/
 
+#print Num.ofZNum /-
 /-- Converts a `znum` to an `option num`, where `of_znum p = 0` if `p < 0`.
   -/
-def ofZnum : Znum → Num
-  | Znum.pos p => pos p
+def ofZNum : ZNum → Num
+  | ZNum.pos p => pos p
   | _ => 0
-#align num.of_znum Num.ofZnum
+#align num.of_znum Num.ofZNum
+-/
 
+#print Num.sub' /-
 /-- Subtraction of two `num`s, producing a `znum`.
   -/
-def sub' : Num → Num → Znum
+def sub' : Num → Num → ZNum
   | 0, 0 => 0
-  | Pos a, 0 => Znum.pos a
-  | 0, Pos b => Znum.neg b
+  | Pos a, 0 => ZNum.pos a
+  | 0, Pos b => ZNum.neg b
   | Pos a, Pos b => a.sub' b
 #align num.sub' Num.sub'
+-/
 
+#print Num.psub /-
 /-- Subtraction of two `num`s, producing an `option num`.
   -/
 def psub (a b : Num) : Option Num :=
-  ofZnum' (sub' a b)
+  ofZNum' (sub' a b)
 #align num.psub Num.psub
+-/
 
+#print Num.sub /-
 /-- Subtraction of two `num`s, where if `a < b`, `a - b = 0`.
   -/
 protected def sub (a b : Num) : Num :=
-  ofZnum (sub' a b)
+  ofZNum (sub' a b)
 #align num.sub Num.sub
+-/
 
 instance : Sub Num :=
   ⟨Num.sub⟩
 
 end Num
 
-namespace Znum
+namespace ZNum
 
 open PosNum
 
+#print ZNum.add /-
 /-- Addition of `znum`s.
   -/
-protected def add : Znum → Znum → Znum
+protected def add : ZNum → ZNum → ZNum
   | 0, a => a
   | b, 0 => b
   | Pos a, Pos b => pos (a + b)
   | Pos a, neg b => sub' a b
   | neg a, Pos b => sub' b a
   | neg a, neg b => neg (a + b)
-#align znum.add Znum.add
+#align znum.add ZNum.add
+-/
 
-instance : Add Znum :=
-  ⟨Znum.add⟩
+instance : Add ZNum :=
+  ⟨ZNum.add⟩
 
+#print ZNum.mul /-
 /-- Multiplication of `znum`s.
   -/
-protected def mul : Znum → Znum → Znum
+protected def mul : ZNum → ZNum → ZNum
   | 0, a => 0
   | b, 0 => 0
   | Pos a, Pos b => pos (a * b)
   | Pos a, neg b => neg (a * b)
   | neg a, Pos b => neg (a * b)
   | neg a, neg b => pos (a * b)
-#align znum.mul Znum.mul
+#align znum.mul ZNum.mul
+-/
 
-instance : Mul Znum :=
-  ⟨Znum.mul⟩
+instance : Mul ZNum :=
+  ⟨ZNum.mul⟩
 
 open Ordering
 
+#print ZNum.cmp /-
 /-- Ordering on `znum`s.
   -/
-def cmp : Znum → Znum → Ordering
+def cmp : ZNum → ZNum → Ordering
   | 0, 0 => Eq
   | Pos a, Pos b => PosNum.cmp a b
   | neg a, neg b => PosNum.cmp b a
@@ -571,56 +696,69 @@ def cmp : Znum → Znum → Ordering
   | neg _, _ => lt
   | _, Pos _ => lt
   | _, neg _ => GT.gt
-#align znum.cmp Znum.cmp
+#align znum.cmp ZNum.cmp
+-/
 
-instance : LT Znum :=
+instance : LT ZNum :=
   ⟨fun a b => cmp a b = Ordering.lt⟩
 
-instance : LE Znum :=
+instance : LE ZNum :=
   ⟨fun a b => ¬b < a⟩
 
-instance decidableLt : @DecidableRel Znum (· < ·)
+#print ZNum.decidableLt /-
+instance decidableLt : @DecidableRel ZNum (· < ·)
   | a, b => by dsimp [(· < ·)] <;> infer_instance
-#align znum.decidable_lt Znum.decidableLt
+#align znum.decidable_lt ZNum.decidableLt
+-/
 
-instance decidableLe : @DecidableRel Znum (· ≤ ·)
+#print ZNum.decidableLe /-
+instance decidableLe : @DecidableRel ZNum (· ≤ ·)
   | a, b => by dsimp [(· ≤ ·)] <;> infer_instance
-#align znum.decidable_le Znum.decidableLe
+#align znum.decidable_le ZNum.decidableLe
+-/
 
-end Znum
+end ZNum
 
 namespace PosNum
 
+#print PosNum.divModAux /-
 /-- Auxiliary definition for `pos_num.divmod`. -/
-def divmodAux (d : PosNum) (q r : Num) : Num × Num :=
-  match Num.ofZnum' (Num.sub' r (Num.pos d)) with
+def divModAux (d : PosNum) (q r : Num) : Num × Num :=
+  match Num.ofZNum' (Num.sub' r (Num.pos d)) with
   | some r' => (Num.bit1 q, r')
   | none => (Num.bit0 q, r)
-#align pos_num.divmod_aux PosNum.divmodAux
+#align pos_num.divmod_aux PosNum.divModAux
+-/
 
+#print PosNum.divMod /-
 /-- `divmod x y = (y / x, y % x)`.
   -/
-def divmod (d : PosNum) : PosNum → Num × Num
+def divMod (d : PosNum) : PosNum → Num × Num
   | bit0 n =>
     let (q, r₁) := divmod n
-    divmodAux d q (Num.bit0 r₁)
+    divModAux d q (Num.bit0 r₁)
   | bit1 n =>
     let (q, r₁) := divmod n
-    divmodAux d q (Num.bit1 r₁)
-  | 1 => divmodAux d 0 1
-#align pos_num.divmod PosNum.divmod
+    divModAux d q (Num.bit1 r₁)
+  | 1 => divModAux d 0 1
+#align pos_num.divmod PosNum.divMod
+-/
 
+#print PosNum.div' /-
 /-- Division of `pos_num`,
   -/
 def div' (n d : PosNum) : Num :=
-  (divmod d n).1
+  (divMod d n).1
 #align pos_num.div' PosNum.div'
+-/
 
+#print PosNum.mod' /-
 /-- Modulus of `pos_num`s.
   -/
 def mod' (n d : PosNum) : Num :=
-  (divmod d n).2
+  (divMod d n).2
 #align pos_num.mod' PosNum.mod'
+-/
 
 /-
   private def sqrt_aux1 (b : pos_num) (r n : num) : num × num :=
@@ -657,6 +795,7 @@ end PosNum
 
 namespace Num
 
+#print Num.div /-
 /-- Division of `num`s, where `x / 0 = 0`.
   -/
 def div : Num → Num → Num
@@ -664,7 +803,9 @@ def div : Num → Num → Num
   | _, 0 => 0
   | Pos n, Pos d => PosNum.div' n d
 #align num.div Num.div
+-/
 
+#print Num.mod /-
 /-- Modulus of `num`s.
   -/
 def mod : Num → Num → Num
@@ -672,6 +813,7 @@ def mod : Num → Num → Num
   | n, 0 => n
   | Pos n, Pos d => PosNum.mod' n d
 #align num.mod Num.mod
+-/
 
 instance : Div Num :=
   ⟨Num.div⟩
@@ -679,74 +821,92 @@ instance : Div Num :=
 instance : Mod Num :=
   ⟨Num.mod⟩
 
+#print Num.gcdAux /-
 /-- Auxiliary definition for `num.gcd`. -/
 def gcdAux : Nat → Num → Num → Num
   | 0, a, b => b
   | Nat.succ n, 0, b => b
   | Nat.succ n, a, b => gcd_aux n (b % a) a
 #align num.gcd_aux Num.gcdAux
+-/
 
+#print Num.gcd /-
 /-- Greatest Common Divisor (GCD) of two `num`s.
   -/
 def gcd (a b : Num) : Num :=
   if a ≤ b then gcdAux (a.natSize + b.natSize) a b else gcdAux (b.natSize + a.natSize) b a
 #align num.gcd Num.gcd
+-/
 
 end Num
 
-namespace Znum
+namespace ZNum
 
+#print ZNum.div /-
 /-- Division of `znum`, where `x / 0 = 0`.
   -/
-def div : Znum → Znum → Znum
+def div : ZNum → ZNum → ZNum
   | 0, _ => 0
   | _, 0 => 0
-  | Pos n, Pos d => Num.toZnum (PosNum.div' n d)
-  | Pos n, neg d => Num.toZnumNeg (PosNum.div' n d)
+  | Pos n, Pos d => Num.toZNum (PosNum.div' n d)
+  | Pos n, neg d => Num.toZNumNeg (PosNum.div' n d)
   | neg n, Pos d => neg (PosNum.pred' n / Num.pos d).succ'
   | neg n, neg d => pos (PosNum.pred' n / Num.pos d).succ'
-#align znum.div Znum.div
+#align znum.div ZNum.div
+-/
 
+#print ZNum.mod /-
 /-- Modulus of `znum`s.
   -/
-def mod : Znum → Znum → Znum
+def mod : ZNum → ZNum → ZNum
   | 0, d => 0
-  | Pos n, d => Num.toZnum (Num.pos n % d.abs)
+  | Pos n, d => Num.toZNum (Num.pos n % d.abs)
   | neg n, d => d.abs.sub' (PosNum.pred' n % d.abs).succ
-#align znum.mod Znum.mod
+#align znum.mod ZNum.mod
+-/
 
-instance : Div Znum :=
-  ⟨Znum.div⟩
+instance : Div ZNum :=
+  ⟨ZNum.div⟩
 
-instance : Mod Znum :=
-  ⟨Znum.mod⟩
+instance : Mod ZNum :=
+  ⟨ZNum.mod⟩
 
+#print ZNum.gcd /-
 /-- Greatest Common Divisor (GCD) of two `znum`s.
   -/
-def gcd (a b : Znum) : Num :=
+def gcd (a b : ZNum) : Num :=
   a.abs.gcd b.abs
-#align znum.gcd Znum.gcd
+#align znum.gcd ZNum.gcd
+-/
 
-end Znum
+end ZNum
 
 section
 
 variable {α : Type _} [Zero α] [One α] [Add α] [Neg α]
 
+#print castZNum /-
 /-- `cast_znum` casts a `znum` into any type which has `0`, `1`, `+` and `neg`
   -/
-def castZnum : Znum → α
+def castZNum : ZNum → α
   | 0 => 0
-  | Znum.pos p => p
-  | Znum.neg p => -p
-#align cast_znum castZnum
+  | ZNum.pos p => p
+  | ZNum.neg p => -p
+#align cast_znum castZNum
+-/
 
+/- warning: znum_coe -> znumCoe is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} [_inst_1 : Zero.{u_1} α] [_inst_2 : One.{u_1} α] [_inst_3 : Add.{u_1} α] [_inst_4 : Neg.{u_1} α], CoeTCₓ.{1 succ u_1} ZNum α
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Data.Num.Basic._hyg.5220 : Zero.{u_1} α] [inst._@.Mathlib.Data.Num.Basic._hyg.5223 : One.{u_1} α] [inst._@.Mathlib.Data.Num.Basic._hyg.5226 : Add.{u_1} α] [inst._@.Mathlib.Data.Num.Basic._hyg.5229 : Neg.{u_1} α], CoeTC.{1 succ u_1} ZNum α
+Case conversion may be inaccurate. Consider using '#align znum_coe znumCoeₓ'. -/
 -- see Note [coercion into rings]
-instance (priority := 900) znumCoe : CoeTC Znum α :=
-  ⟨castZnum⟩
+instance (priority := 900) znumCoe : CoeTC ZNum α :=
+  ⟨castZNum⟩
 #align znum_coe znumCoe
 
-instance : Repr Znum :=
+instance : Repr ZNum :=
   ⟨fun n => repr (n : ℤ)⟩
 
 end

@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Amelia Livingston, 
 Neil Strickland, Aaron Anderson
 -/
 import Mathbin.Algebra.Divisibility.Basic
-import Mathbin.Algebra.Hom.Units
+import Mathbin.Algebra.Group.Units
 
 /-!
 # Lemmas about divisibility and units
@@ -132,7 +132,7 @@ theorem is_unit_iff_forall_dvd {x : α} : IsUnit x ↔ ∀ y, x ∣ y :=
 #align is_unit_iff_forall_dvd is_unit_iff_forall_dvd
 
 theorem is_unit_of_dvd_unit {x y : α} (xy : x ∣ y) (hu : IsUnit y) : IsUnit x :=
-  is_unit_iff_dvd_one.2 $ xy.trans $ is_unit_iff_dvd_one.1 hu
+  is_unit_iff_dvd_one.2 <| xy.trans <| is_unit_iff_dvd_one.1 hu
 #align is_unit_of_dvd_unit is_unit_of_dvd_unit
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a «expr ∣ » 1) -/

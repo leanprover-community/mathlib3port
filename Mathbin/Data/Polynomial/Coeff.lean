@@ -215,7 +215,7 @@ theorem coeff_mul_X_pow' (p : R[X]) (n d : ℕ) : (p * X ^ n).coeff d = ite (n �
     
   · refine' (coeff_mul _ _ _).trans (Finset.sum_eq_zero fun x hx => _)
     rw [coeff_X_pow, if_neg, mul_zero]
-    exact ((le_of_add_le_right (finset.nat.mem_antidiagonal.mp hx).le).trans_lt $ not_le.mp h).Ne
+    exact ((le_of_add_le_right (finset.nat.mem_antidiagonal.mp hx).le).trans_lt <| not_le.mp h).Ne
     
 #align polynomial.coeff_mul_X_pow' Polynomial.coeff_mul_X_pow'
 
@@ -251,7 +251,7 @@ theorem coeff_monomial_zero_mul (p : R[X]) (d : ℕ) (r : R) : coeff (monomial 0
 #align polynomial.coeff_monomial_zero_mul Polynomial.coeff_monomial_zero_mul
 
 theorem mul_X_pow_eq_zero {p : R[X]} {n : ℕ} (H : p * X ^ n = 0) : p = 0 :=
-  ext $ fun k => (coeff_mul_X_pow p n k).symm.trans $ ext_iff.1 H (k + n)
+  ext fun k => (coeff_mul_X_pow p n k).symm.trans <| ext_iff.1 H (k + n)
 #align polynomial.mul_X_pow_eq_zero Polynomial.mul_X_pow_eq_zero
 
 theorem mul_X_pow_injective (n : ℕ) : Function.Injective fun P : R[X] => X ^ n * P := by

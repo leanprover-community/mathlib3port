@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Jujian Zhang
 -/
 import Mathbin.CategoryTheory.Abelian.FunctorCategory
+import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 import Mathbin.CategoryTheory.Preadditive.FunctorCategory
 import Mathbin.CategoryTheory.Abelian.Transfer
 import Mathbin.CategoryTheory.Sites.LeftExact

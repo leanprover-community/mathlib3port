@@ -5,7 +5,6 @@ Authors: Yakov Pechersky
 -/
 import Mathbin.Data.Polynomial.Taylor
 import Mathbin.FieldTheory.Ratfunc
-import Mathbin.RingTheory.LaurentSeries
 
 /-!
 # Laurent expansions of rational functions

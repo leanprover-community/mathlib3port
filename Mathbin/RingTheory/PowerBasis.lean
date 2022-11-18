@@ -107,7 +107,7 @@ theorem mem_span_pow {x y : S} {d : ℕ} (hd : d ≠ 0) :
   constructor <;>
     · rintro ⟨f, h, hy⟩
       refine' ⟨f, _, hy⟩
-      by_cases hf:f = 0
+      by_cases hf : f = 0
       · simp only [hf, nat_degree_zero, degree_zero] at h⊢
         first |exact lt_of_le_of_ne (Nat.zero_le d) hd.symm|exact WithBot.bot_lt_coe d
         
@@ -170,7 +170,7 @@ theorem dim_le_nat_degree_of_root (h : PowerBasis A S) {p : A[X]} (ne_zero : p �
   let p_coeff : Fin h.dim → A := fun i => p.coeff i
   suffices ∀ i, p_coeff i = 0 by
     ext i
-    by_cases hi:i < h.dim
+    by_cases hi : i < h.dim
     · exact this ⟨i, hi⟩
       
     exact coeff_eq_zero_of_nat_degree_lt (lt_of_lt_of_le hlt (le_of_not_gt hi))
@@ -239,7 +239,7 @@ section Equiv
 variable [Algebra A S] {S' : Type _} [CommRing S'] [Algebra A S']
 
 theorem nat_degree_lt_nat_degree {p q : R[X]} (hp : p ≠ 0) (hpq : p.degree < q.degree) : p.natDegree < q.natDegree := by
-  by_cases hq:q = 0
+  by_cases hq : q = 0
   · rw [hq, degree_zero] at hpq
     have := not_lt_bot hpq
     contradiction
@@ -253,7 +253,7 @@ theorem constr_pow_aeval (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A
     pb.Basis.constr A (fun i => y ^ (i : ℕ)) (aeval pb.gen f) = aeval y f := by
   rw [← aeval_mod_by_monic_eq_self_of_root (minpoly.monic pb.is_integral_gen) (minpoly.aeval _ _), ←
     @aeval_mod_by_monic_eq_self_of_root _ _ _ _ _ f _ (minpoly.monic pb.is_integral_gen) y hy]
-  by_cases hf:f %ₘ minpoly A pb.gen = 0
+  by_cases hf : f %ₘ minpoly A pb.gen = 0
   · simp only [hf, AlgHom.map_zero, LinearMap.map_zero]
     
   have : (f %ₘ minpoly A pb.gen).natDegree < pb.dim := by
@@ -320,8 +320,8 @@ see `lift_equiv'` for the corresponding statement.
 noncomputable def liftEquiv (pb : PowerBasis A S) : (S →ₐ[A] S') ≃ { y : S' // aeval y (minpoly A pb.gen) = 0 } where
   toFun f := ⟨f pb.gen, by rw [aeval_alg_hom_apply, minpoly.aeval, f.map_zero]⟩
   invFun y := pb.lift y y.2
-  left_inv f := pb.alg_hom_ext $ lift_gen _ _ _
-  right_inv y := Subtype.ext $ lift_gen _ _ y.Prop
+  left_inv f := pb.alg_hom_ext <| lift_gen _ _ _
+  right_inv y := Subtype.ext <| lift_gen _ _ y.Prop
 #align power_basis.lift_equiv PowerBasis.liftEquiv
 
 /-- `pb.lift_equiv'` states that elements of the root set of the minimal

@@ -3,10 +3,11 @@ Copyright (c) 2021 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash, Eric Wieser
 -/
-import Mathbin.LinearAlgebra.Determinant
 import Mathbin.Topology.Algebra.InfiniteSum
 import Mathbin.Topology.Algebra.Ring
 import Mathbin.Topology.Algebra.Star
+import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
+import Mathbin.LinearAlgebra.Matrix.Trace
 
 /-!
 # Topological properties of matrices
@@ -69,7 +70,7 @@ resulting matrix are continuous -/
 @[continuity]
 theorem continuous_matrix [TopologicalSpace α] {f : α → Matrix m n R} (h : ∀ i j, Continuous fun a => f a i j) :
     Continuous f :=
-  continuous_pi $ fun _ => continuous_pi $ fun j => h _ _
+  continuous_pi fun _ => continuous_pi fun j => h _ _
 #align continuous_matrix continuous_matrix
 
 theorem Continuous.matrix_elem {A : X → Matrix m n R} (hA : Continuous A) (i : m) (j : n) :
@@ -80,12 +81,12 @@ theorem Continuous.matrix_elem {A : X → Matrix m n R} (hA : Continuous A) (i :
 @[continuity]
 theorem Continuous.matrix_map [TopologicalSpace S] {A : X → Matrix m n S} {f : S → R} (hA : Continuous A)
     (hf : Continuous f) : Continuous fun x => (A x).map f :=
-  continuous_matrix $ fun i j => hf.comp $ hA.matrix_elem _ _
+  continuous_matrix fun i j => hf.comp <| hA.matrix_elem _ _
 #align continuous.matrix_map Continuous.matrix_map
 
 @[continuity]
 theorem Continuous.matrix_transpose {A : X → Matrix m n R} (hA : Continuous A) : Continuous fun x => (A x)ᵀ :=
-  continuous_matrix $ fun i j => hA.matrix_elem j i
+  continuous_matrix fun i j => hA.matrix_elem j i
 #align continuous.matrix_transpose Continuous.matrix_transpose
 
 theorem Continuous.matrix_conj_transpose [HasStar R] [HasContinuousStar R] {A : X → Matrix m n R} (hA : Continuous A) :
@@ -98,25 +99,25 @@ instance [HasStar R] [HasContinuousStar R] : HasContinuousStar (Matrix m m R) :=
 
 @[continuity]
 theorem Continuous.matrix_col {A : X → n → R} (hA : Continuous A) : Continuous fun x => col (A x) :=
-  continuous_matrix $ fun i j => (continuous_apply _).comp hA
+  continuous_matrix fun i j => (continuous_apply _).comp hA
 #align continuous.matrix_col Continuous.matrix_col
 
 @[continuity]
 theorem Continuous.matrix_row {A : X → n → R} (hA : Continuous A) : Continuous fun x => row (A x) :=
-  continuous_matrix $ fun i j => (continuous_apply _).comp hA
+  continuous_matrix fun i j => (continuous_apply _).comp hA
 #align continuous.matrix_row Continuous.matrix_row
 
 @[continuity]
 theorem Continuous.matrix_diagonal [Zero R] [DecidableEq n] {A : X → n → R} (hA : Continuous A) :
     Continuous fun x => diagonal (A x) :=
-  continuous_matrix $ fun i j => ((continuous_apply i).comp hA).if_const _ continuous_zero
+  continuous_matrix fun i j => ((continuous_apply i).comp hA).if_const _ continuous_zero
 #align continuous.matrix_diagonal Continuous.matrix_diagonal
 
 @[continuity]
 theorem Continuous.matrix_dot_product [Fintype n] [Mul R] [AddCommMonoid R] [HasContinuousAdd R] [HasContinuousMul R]
     {A : X → n → R} {B : X → n → R} (hA : Continuous A) (hB : Continuous B) :
     Continuous fun x => dotProduct (A x) (B x) :=
-  continuous_finset_sum _ $ fun i _ => ((continuous_apply i).comp hA).mul ((continuous_apply i).comp hB)
+  (continuous_finset_sum _) fun i _ => ((continuous_apply i).comp hA).mul ((continuous_apply i).comp hB)
 #align continuous.matrix_dot_product Continuous.matrix_dot_product
 
 /-- For square matrices the usual `continuous_mul` can be used. -/
@@ -124,7 +125,7 @@ theorem Continuous.matrix_dot_product [Fintype n] [Mul R] [AddCommMonoid R] [Has
 theorem Continuous.matrix_mul [Fintype n] [Mul R] [AddCommMonoid R] [HasContinuousAdd R] [HasContinuousMul R]
     {A : X → Matrix m n R} {B : X → Matrix n p R} (hA : Continuous A) (hB : Continuous B) :
     Continuous fun x => (A x).mul (B x) :=
-  continuous_matrix $ fun i j => continuous_finset_sum _ $ fun k _ => (hA.matrix_elem _ _).mul (hB.matrix_elem _ _)
+  continuous_matrix fun i j => (continuous_finset_sum _) fun k _ => (hA.matrix_elem _ _).mul (hB.matrix_elem _ _)
 #align continuous.matrix_mul Continuous.matrix_mul
 
 instance [Fintype n] [Mul R] [AddCommMonoid R] [HasContinuousAdd R] [HasContinuousMul R] :
@@ -138,27 +139,27 @@ instance [Fintype n] [NonUnitalNonAssocRing R] [TopologicalRing R] : Topological
 @[continuity]
 theorem Continuous.matrix_vec_mul_vec [Mul R] [HasContinuousMul R] {A : X → m → R} {B : X → n → R} (hA : Continuous A)
     (hB : Continuous B) : Continuous fun x => vecMulVec (A x) (B x) :=
-  continuous_matrix $ fun i j => ((continuous_apply _).comp hA).mul ((continuous_apply _).comp hB)
+  continuous_matrix fun i j => ((continuous_apply _).comp hA).mul ((continuous_apply _).comp hB)
 #align continuous.matrix_vec_mul_vec Continuous.matrix_vec_mul_vec
 
 @[continuity]
 theorem Continuous.matrix_mul_vec [NonUnitalNonAssocSemiring R] [HasContinuousAdd R] [HasContinuousMul R] [Fintype n]
     {A : X → Matrix m n R} {B : X → n → R} (hA : Continuous A) (hB : Continuous B) :
     Continuous fun x => (A x).mulVec (B x) :=
-  continuous_pi $ fun i => ((continuous_apply i).comp hA).matrix_dot_product hB
+  continuous_pi fun i => ((continuous_apply i).comp hA).matrix_dot_product hB
 #align continuous.matrix_mul_vec Continuous.matrix_mul_vec
 
 @[continuity]
 theorem Continuous.matrix_vec_mul [NonUnitalNonAssocSemiring R] [HasContinuousAdd R] [HasContinuousMul R] [Fintype m]
     {A : X → m → R} {B : X → Matrix m n R} (hA : Continuous A) (hB : Continuous B) :
     Continuous fun x => vecMul (A x) (B x) :=
-  continuous_pi $ fun i => hA.matrix_dot_product $ continuous_pi $ fun j => hB.matrix_elem _ _
+  continuous_pi fun i => hA.matrix_dot_product <| continuous_pi fun j => hB.matrix_elem _ _
 #align continuous.matrix_vec_mul Continuous.matrix_vec_mul
 
 @[continuity]
 theorem Continuous.matrix_submatrix {A : X → Matrix l n R} (hA : Continuous A) (e₁ : m → l) (e₂ : p → n) :
     Continuous fun x => (A x).submatrix e₁ e₂ :=
-  continuous_matrix $ fun i j => hA.matrix_elem _ _
+  continuous_matrix fun i j => hA.matrix_elem _ _
 #align continuous.matrix_submatrix Continuous.matrix_submatrix
 
 @[continuity]
@@ -169,7 +170,7 @@ theorem Continuous.matrix_reindex {A : X → Matrix l n R} (hA : Continuous A) (
 
 @[continuity]
 theorem Continuous.matrix_diag {A : X → Matrix n n R} (hA : Continuous A) : Continuous fun x => Matrix.diag (A x) :=
-  continuous_pi $ fun _ => hA.matrix_elem _ _
+  continuous_pi fun _ => hA.matrix_elem _ _
 #align continuous.matrix_diag Continuous.matrix_diag
 
 -- note this doesn't elaborate well from the above
@@ -180,7 +181,7 @@ theorem continuous_matrix_diag : Continuous (Matrix.diag : Matrix n n R → n �
 @[continuity]
 theorem Continuous.matrix_trace [Fintype n] [AddCommMonoid R] [HasContinuousAdd R] {A : X → Matrix n n R}
     (hA : Continuous A) : Continuous fun x => trace (A x) :=
-  continuous_finset_sum _ $ fun i hi => hA.matrix_elem _ _
+  (continuous_finset_sum _) fun i hi => hA.matrix_elem _ _
 #align continuous.matrix_trace Continuous.matrix_trace
 
 @[continuity]
@@ -194,8 +195,8 @@ theorem Continuous.matrix_det [Fintype n] [DecidableEq n] [CommRing R] [Topologi
 @[continuity]
 theorem Continuous.matrix_update_column [DecidableEq n] (i : n) {A : X → Matrix m n R} {B : X → m → R}
     (hA : Continuous A) (hB : Continuous B) : Continuous fun x => (A x).updateColumn i (B x) :=
-  continuous_matrix $ fun j k =>
-    (continuous_apply k).comp $ ((continuous_apply _).comp hA).update i ((continuous_apply _).comp hB)
+  continuous_matrix fun j k =>
+    (continuous_apply k).comp <| ((continuous_apply _).comp hA).update i ((continuous_apply _).comp hB)
 #align continuous.matrix_update_column Continuous.matrix_update_column
 
 @[continuity]
@@ -207,13 +208,13 @@ theorem Continuous.matrix_update_row [DecidableEq m] (i : m) {A : X → Matrix m
 @[continuity]
 theorem Continuous.matrix_cramer [Fintype n] [DecidableEq n] [CommRing R] [TopologicalRing R] {A : X → Matrix n n R}
     {B : X → n → R} (hA : Continuous A) (hB : Continuous B) : Continuous fun x => (A x).cramer (B x) :=
-  continuous_pi $ fun i => (hA.matrix_update_column _ hB).matrix_det
+  continuous_pi fun i => (hA.matrix_update_column _ hB).matrix_det
 #align continuous.matrix_cramer Continuous.matrix_cramer
 
 @[continuity]
 theorem Continuous.matrix_adjugate [Fintype n] [DecidableEq n] [CommRing R] [TopologicalRing R] {A : X → Matrix n n R}
     (hA : Continuous A) : Continuous fun x => (A x).adjugate :=
-  continuous_matrix $ fun j k => (hA.matrix_transpose.matrix_update_column k continuous_const).matrix_det
+  continuous_matrix fun j k => (hA.matrix_transpose.matrix_update_column k continuous_const).matrix_det
 #align continuous.matrix_adjugate Continuous.matrix_adjugate
 
 /-- When `ring.inverse` is continuous at the determinant (such as in a `normed_ring`, or a
@@ -230,26 +231,26 @@ section BlockMatrices
 theorem Continuous.matrix_from_blocks {A : X → Matrix n l R} {B : X → Matrix n m R} {C : X → Matrix p l R}
     {D : X → Matrix p m R} (hA : Continuous A) (hB : Continuous B) (hC : Continuous C) (hD : Continuous D) :
     Continuous fun x => Matrix.fromBlocks (A x) (B x) (C x) (D x) :=
-  continuous_matrix $ fun i j => by cases i <;> cases j <;> refine' Continuous.matrix_elem _ i j <;> assumption
+  continuous_matrix fun i j => by cases i <;> cases j <;> refine' Continuous.matrix_elem _ i j <;> assumption
 #align continuous.matrix_from_blocks Continuous.matrix_from_blocks
 
 @[continuity]
 theorem Continuous.matrix_block_diagonal [Zero R] [DecidableEq p] {A : X → p → Matrix m n R} (hA : Continuous A) :
     Continuous fun x => blockDiagonal (A x) :=
-  continuous_matrix $ fun ⟨i₁, i₂⟩ ⟨j₁, j₂⟩ =>
+  continuous_matrix fun ⟨i₁, i₂⟩ ⟨j₁, j₂⟩ =>
     (((continuous_apply i₂).comp hA).matrix_elem i₁ j₁).if_const _ continuous_zero
 #align continuous.matrix_block_diagonal Continuous.matrix_block_diagonal
 
 @[continuity]
 theorem Continuous.matrix_block_diag {A : X → Matrix (m × p) (n × p) R} (hA : Continuous A) :
     Continuous fun x => blockDiag (A x) :=
-  continuous_pi $ fun i => continuous_matrix $ fun j k => hA.matrix_elem _ _
+  continuous_pi fun i => continuous_matrix fun j k => hA.matrix_elem _ _
 #align continuous.matrix_block_diag Continuous.matrix_block_diag
 
 @[continuity]
 theorem Continuous.matrix_block_diagonal' [Zero R] [DecidableEq l] {A : X → ∀ i, Matrix (m' i) (n' i) R}
     (hA : Continuous A) : Continuous fun x => blockDiagonal' (A x) :=
-  continuous_matrix $ fun ⟨i₁, i₂⟩ ⟨j₁, j₂⟩ => by
+  continuous_matrix fun ⟨i₁, i₂⟩ ⟨j₁, j₂⟩ => by
     dsimp only [block_diagonal']
     split_ifs
     · subst h
@@ -260,9 +261,9 @@ theorem Continuous.matrix_block_diagonal' [Zero R] [DecidableEq l] {A : X → �
 #align continuous.matrix_block_diagonal' Continuous.matrix_block_diagonal'
 
 @[continuity]
-theorem Continuous.matrix_block_diag' {A : X → Matrix (Σ i, m' i) (Σ i, n' i) R} (hA : Continuous A) :
+theorem Continuous.matrix_block_diag' {A : X → Matrix (Σi, m' i) (Σi, n' i) R} (hA : Continuous A) :
     Continuous fun x => blockDiag' (A x) :=
-  continuous_pi $ fun i => continuous_matrix $ fun j k => hA.matrix_elem _ _
+  continuous_pi fun i => continuous_matrix fun j k => hA.matrix_elem _ _
 #align continuous.matrix_block_diag' Continuous.matrix_block_diag'
 
 end BlockMatrices
@@ -293,7 +294,7 @@ theorem summable_matrix_transpose {f : X → Matrix m n R} : (Summable fun x => 
 #align summable_matrix_transpose summable_matrix_transpose
 
 theorem Matrix.transpose_tsum [T2Space R] {f : X → Matrix m n R} : (∑' x, f x)ᵀ = ∑' x, (f x)ᵀ := by
-  by_cases hf:Summable f
+  by_cases hf : Summable f
   · exact hf.has_sum.matrix_transpose.tsum_eq.symm
     
   · have hft := summable_matrix_transpose.not.mpr hf
@@ -321,7 +322,7 @@ theorem summable_matrix_conj_transpose [StarAddMonoid R] [HasContinuousStar R] {
 
 theorem Matrix.conj_transpose_tsum [StarAddMonoid R] [HasContinuousStar R] [T2Space R] {f : X → Matrix m n R} :
     (∑' x, f x)ᴴ = ∑' x, (f x)ᴴ := by
-  by_cases hf:Summable f
+  by_cases hf : Summable f
   · exact hf.has_sum.matrix_conj_transpose.tsum_eq.symm
     
   · have hft := summable_matrix_conj_transpose.not.mpr hf
@@ -331,7 +332,7 @@ theorem Matrix.conj_transpose_tsum [StarAddMonoid R] [HasContinuousStar R] [T2Sp
 
 theorem HasSum.matrix_diagonal [DecidableEq n] {f : X → n → R} {a : n → R} (hf : HasSum f a) :
     HasSum (fun x => diagonal (f x)) (diagonal a) :=
-  (hf.map (diagonalAddMonoidHom n R) $ Continuous.matrix_diagonal $ continuous_id : _)
+  (hf.map (diagonalAddMonoidHom n R) <| Continuous.matrix_diagonal <| continuous_id : _)
 #align has_sum.matrix_diagonal HasSum.matrix_diagonal
 
 theorem Summable.matrix_diagonal [DecidableEq n] {f : X → n → R} (hf : Summable f) : Summable fun x => diagonal (f x) :=
@@ -347,7 +348,7 @@ theorem summable_matrix_diagonal [DecidableEq n] {f : X → n → R} : (Summable
 
 theorem Matrix.diagonal_tsum [DecidableEq n] [T2Space R] {f : X → n → R} :
     diagonal (∑' x, f x) = ∑' x, diagonal (f x) := by
-  by_cases hf:Summable f
+  by_cases hf : Summable f
   · exact hf.has_sum.matrix_diagonal.tsum_eq.symm
     
   · have hft := summable_matrix_diagonal.not.mpr hf
@@ -369,7 +370,7 @@ section BlockMatrices
 
 theorem HasSum.matrix_block_diagonal [DecidableEq p] {f : X → p → Matrix m n R} {a : p → Matrix m n R}
     (hf : HasSum f a) : HasSum (fun x => blockDiagonal (f x)) (blockDiagonal a) :=
-  (hf.map (blockDiagonalAddMonoidHom m n p R) $ Continuous.matrix_block_diagonal $ continuous_id : _)
+  (hf.map (blockDiagonalAddMonoidHom m n p R) <| Continuous.matrix_block_diagonal <| continuous_id : _)
 #align has_sum.matrix_block_diagonal HasSum.matrix_block_diagonal
 
 theorem Summable.matrix_block_diagonal [DecidableEq p] {f : X → p → Matrix m n R} (hf : Summable f) :
@@ -387,7 +388,7 @@ theorem summable_matrix_block_diagonal [DecidableEq p] {f : X → p → Matrix m
 
 theorem Matrix.block_diagonal_tsum [DecidableEq p] [T2Space R] {f : X → p → Matrix m n R} :
     blockDiagonal (∑' x, f x) = ∑' x, blockDiagonal (f x) := by
-  by_cases hf:Summable f
+  by_cases hf : Summable f
   · exact hf.has_sum.matrix_block_diagonal.tsum_eq.symm
     
   · have hft := summable_matrix_block_diagonal.not.mpr hf
@@ -398,7 +399,7 @@ theorem Matrix.block_diagonal_tsum [DecidableEq p] [T2Space R] {f : X → p → 
 
 theorem HasSum.matrix_block_diag {f : X → Matrix (m × p) (n × p) R} {a : Matrix (m × p) (n × p) R} (hf : HasSum f a) :
     HasSum (fun x => blockDiag (f x)) (blockDiag a) :=
-  (hf.map (blockDiagAddMonoidHom m n p R) $ Continuous.matrix_block_diag continuous_id : _)
+  (hf.map (blockDiagAddMonoidHom m n p R) <| Continuous.matrix_block_diag continuous_id : _)
 #align has_sum.matrix_block_diag HasSum.matrix_block_diag
 
 theorem Summable.matrix_block_diag {f : X → Matrix (m × p) (n × p) R} (hf : Summable f) :
@@ -408,7 +409,7 @@ theorem Summable.matrix_block_diag {f : X → Matrix (m × p) (n × p) R} (hf : 
 
 theorem HasSum.matrix_block_diagonal' [DecidableEq l] {f : X → ∀ i, Matrix (m' i) (n' i) R}
     {a : ∀ i, Matrix (m' i) (n' i) R} (hf : HasSum f a) : HasSum (fun x => blockDiagonal' (f x)) (blockDiagonal' a) :=
-  (hf.map (blockDiagonal'AddMonoidHom m' n' R) $ Continuous.matrix_block_diagonal' $ continuous_id : _)
+  (hf.map (blockDiagonal'AddMonoidHom m' n' R) <| Continuous.matrix_block_diagonal' <| continuous_id : _)
 #align has_sum.matrix_block_diagonal' HasSum.matrix_block_diagonal'
 
 theorem Summable.matrix_block_diagonal' [DecidableEq l] {f : X → ∀ i, Matrix (m' i) (n' i) R} (hf : Summable f) :
@@ -426,7 +427,7 @@ theorem summable_matrix_block_diagonal' [DecidableEq l] {f : X → ∀ i, Matrix
 
 theorem Matrix.block_diagonal'_tsum [DecidableEq l] [T2Space R] {f : X → ∀ i, Matrix (m' i) (n' i) R} :
     blockDiagonal' (∑' x, f x) = ∑' x, blockDiagonal' (f x) := by
-  by_cases hf:Summable f
+  by_cases hf : Summable f
   · exact hf.has_sum.matrix_block_diagonal'.tsum_eq.symm
     
   · have hft := summable_matrix_block_diagonal'.not.mpr hf
@@ -435,12 +436,12 @@ theorem Matrix.block_diagonal'_tsum [DecidableEq l] [T2Space R] {f : X → ∀ i
     
 #align matrix.block_diagonal'_tsum Matrix.block_diagonal'_tsum
 
-theorem HasSum.matrix_block_diag' {f : X → Matrix (Σ i, m' i) (Σ i, n' i) R} {a : Matrix (Σ i, m' i) (Σ i, n' i) R}
+theorem HasSum.matrix_block_diag' {f : X → Matrix (Σi, m' i) (Σi, n' i) R} {a : Matrix (Σi, m' i) (Σi, n' i) R}
     (hf : HasSum f a) : HasSum (fun x => blockDiag' (f x)) (blockDiag' a) :=
-  (hf.map (blockDiag'AddMonoidHom m' n' R) $ Continuous.matrix_block_diag' continuous_id : _)
+  (hf.map (blockDiag'AddMonoidHom m' n' R) <| Continuous.matrix_block_diag' continuous_id : _)
 #align has_sum.matrix_block_diag' HasSum.matrix_block_diag'
 
-theorem Summable.matrix_block_diag' {f : X → Matrix (Σ i, m' i) (Σ i, n' i) R} (hf : Summable f) :
+theorem Summable.matrix_block_diag' {f : X → Matrix (Σi, m' i) (Σi, n' i) R} (hf : Summable f) :
     Summable fun x => blockDiag' (f x) :=
   hf.HasSum.matrix_block_diag'.Summable
 #align summable.matrix_block_diag' Summable.matrix_block_diag'

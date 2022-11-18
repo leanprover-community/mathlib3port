@@ -80,7 +80,7 @@ attribute [transport_simps]
                               do
                                 try unfold_projs_target
                                   sorry
-                                  try $ under_binders $ to_expr ` `( $ ( e ) . symm . Injective ) >>= apply
+                                  try <| under_binders <| to_expr ` `( $ ( e ) . symm . Injective ) >>= apply
                                   equiv_rw_hyp f e
                                   get_local f >>= exact
                     )
@@ -111,7 +111,7 @@ to finish, rather than solving these goals by hand.
 there are several examples of "transport-by-hand" at the end of `test/equiv_rw.lean`,
 which `transport` is an abstraction of.)
 -/
-unsafe def transport (s : parse texpr ?) (e : parse $ tk "using" *> texpr) : itactic := do
+unsafe def transport (s : parse texpr ?) (e : parse <| tk "using" *> texpr) : itactic := do
   let s ←
     match s with
       | some s => to_expr s

@@ -536,7 +536,7 @@ open SheafConditionPairwiseIntersections
 to the default sheaf condition.
 -/
 theorem is_sheaf_iff_is_sheaf_equalizer_products (F : Presheaf C X) : F.IsSheaf ↔ F.IsSheafEqualizerProducts :=
-  (is_sheaf_iff_is_sheaf_pairwise_intersections F).trans $
+  (is_sheaf_iff_is_sheaf_pairwise_intersections F).trans <|
     Iff.intro (fun h ι U => ⟨isLimitSheafConditionForkOfIsLimitMapCone F U (h U).some⟩) fun h ι U =>
       ⟨isLimitMapConeOfIsLimitSheafConditionFork F U (h U).some⟩
 #align Top.presheaf.is_sheaf_iff_is_sheaf_equalizer_products TopCat.Presheaf.is_sheaf_iff_is_sheaf_equalizer_products

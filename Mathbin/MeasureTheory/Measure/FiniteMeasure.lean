@@ -3,9 +3,9 @@ Copyright (c) 2021 Kalle Kytölä. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 -/
-import Mathbin.MeasureTheory.Integral.SetIntegral
 import Mathbin.Topology.ContinuousFunction.Bounded
 import Mathbin.Topology.Algebra.Module.WeakDual
+import Mathbin.MeasureTheory.Integral.Bochner
 
 /-!
 # Finite measures
@@ -605,7 +605,7 @@ theorem integrableOfBoundedContinuousToNnreal (μ : Measure Ω) [IsFiniteMeasure
 
 theorem integrableOfBoundedContinuousToReal (μ : Measure Ω) [IsFiniteMeasure μ] (f : Ω →ᵇ ℝ) : Integrable (⇑f) μ := by
   refine' ⟨f.continuous.measurable.ae_strongly_measurable, _⟩
-  have aux : (coe : ℝ≥0 → ℝ) ∘ ⇑f.nnnorm = fun x => ∥f x∥ := by
+  have aux : (coe : ℝ≥0 → ℝ) ∘ ⇑f.nnnorm = fun x => ‖f x‖ := by
     ext ω
     simp only [Function.comp_apply, BoundedContinuousFunction.nnnorm_coe_fun_eq, coe_nnnorm]
   apply (has_finite_integral_iff_norm ⇑f).mpr

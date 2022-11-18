@@ -63,19 +63,20 @@ open Expr Polynomial
       |
         q( $ ( a ) + $ ( b ) )
         =>
-        do let [ da , db ] ← [ a , b ] . mmap guess_degree pure $ expr.mk_app q( ( max : ℕ → ℕ → ℕ ) ) [ da , db ]
+        do let [ da , db ] ← [ a , b ] . mmap guess_degree pure <| expr.mk_app q( ( max : ℕ → ℕ → ℕ ) ) [ da , db ]
       |
         q( $ ( a ) - $ ( b ) )
         =>
-        do let [ da , db ] ← [ a , b ] . mmap guess_degree pure $ expr.mk_app q( ( max : ℕ → ℕ → ℕ ) ) [ da , db ]
+        do let [ da , db ] ← [ a , b ] . mmap guess_degree pure <| expr.mk_app q( ( max : ℕ → ℕ → ℕ ) ) [ da , db ]
       |
         q( $ ( a ) * $ ( b ) )
         =>
-        do let [ da , db ] ← [ a , b ] . mmap guess_degree pure $ expr.mk_app q( ( ( · + · ) : ℕ → ℕ → ℕ ) ) [ da , db ]
+        do
+          let [ da , db ] ← [ a , b ] . mmap guess_degree pure <| expr.mk_app q( ( ( · + · ) : ℕ → ℕ → ℕ ) ) [ da , db ]
       |
         q( $ ( a ) ^ $ ( b ) )
         =>
-        do let da ← guess_degree a pure $ expr.mk_app q( ( ( · * · ) : ℕ → ℕ → ℕ ) ) [ da , b ]
+        do let da ← guess_degree a pure <| expr.mk_app q( ( ( · * · ) : ℕ → ℕ → ℕ ) ) [ da , b ]
       | app q( ⇑ ( monomial $ ( n ) ) ) x => pure n
       |
         e
@@ -83,7 +84,7 @@ open Expr Polynomial
         do
           let q( @ Polynomial $ ( R ) $ ( inst ) ) ← infer_type e
             let pe ← to_expr ` `( @ natDegree $ ( R ) $ ( inst ) ) true false
-            pure $ expr.mk_app pe [ e ]
+            pure <| expr.mk_app pe [ e ]
 #align tactic.compute_degree.guess_degree tactic.compute_degree.guess_degree
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -125,7 +126,7 @@ open Expr Polynomial
                     refine
                       `
                         `(
-                          nat_degree_mul_le . trans $ ( add_le_add _ _ ) . trans ( _ : $ ( d1 ) + $ ( d2 ) ≤ $ ( tr ) )
+                          nat_degree_mul_le . trans <| ( add_le_add _ _ ) . trans ( _ : $ ( d1 ) + $ ( d2 ) ≤ $ ( tr ) )
                           )
               | q( - $ ( f ) ) => refine ` `( ( nat_degree_neg _ ) . le . trans _ )
               | q( X ^ $ ( n ) ) => refine ` `( ( nat_degree_X_pow_le $ ( n ) ) . trans _ )
@@ -195,7 +196,7 @@ unsafe def norm_assum : tactic Unit :=
 The difference between the two is that `compute_degree_le_aux` makes no effort to close side-goals,
 nor fails if the goal does not change. -/
 unsafe def compute_degree_le_aux : tactic Unit := do
-  try $ refine ``(degree_le_nat_degree.trans (WithBot.coe_le_coe.mpr _))
+  try <| refine ``(degree_le_nat_degree.trans (WithBot.coe_le_coe.mpr _))
   let q(natDegree $(tl) ≤ $(tr)) ← target |
     fail "Goal is not of the form\n`f.nat_degree ≤ d` or `f.degree ≤ d`"
   let expected_deg ← guess_degree tl >>= eval_guessing 0
@@ -204,7 +205,7 @@ unsafe def compute_degree_le_aux : tactic Unit := do
       fail
         s! "the given polynomial has a term of expected degree
           at least '{expected_deg}'"
-    else repeat $ resolve_sum_step
+    else repeat <| resolve_sum_step
 #align tactic.compute_degree.compute_degree_le_aux tactic.compute_degree.compute_degree_le_aux
 
 end ComputeDegree
@@ -240,9 +241,9 @@ by compute_degree_le
 ```
 -/
 unsafe def compute_degree_le : tactic Unit :=
-  focus1 $ do
+  focus1 <| do
     check_target_changes compute_degree_le_aux
-    try $ any_goals' norm_assum
+    try <| any_goals' norm_assum
 #align tactic.interactive.compute_degree_le tactic.interactive.compute_degree_le
 
 add_tactic_doc

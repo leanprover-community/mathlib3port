@@ -68,7 +68,7 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Fin n) R} (h : ∀ x : F
     · intro φ i hφ
       simp only [*, eval_X, Polynomial.eval_mul, RingHom.map_mul, eval₂_hom_X']
       congr 1
-      by_cases hi:i = 0
+      by_cases hi : i = 0
       · subst hi
         simp only [Polynomial.eval_X, Fin.cases_zero]
         

@@ -5,7 +5,7 @@ Authors: Anne Baanen
 -/
 import Mathbin.Algebra.Group.Units
 import Mathbin.Algebra.GroupWithZero.Units.Lemmas
-import Mathbin.Algebra.Ring.Basic
+import Mathbin.Algebra.Ring.Defs
 
 /-!
 # Invertible elements
@@ -165,7 +165,7 @@ noncomputable def IsUnit.invertible [Monoid α] {a : α} (h : IsUnit a) : Invert
 
 @[simp]
 theorem nonempty_invertible_iff_is_unit [Monoid α] (a : α) : Nonempty (Invertible a) ↔ IsUnit a :=
-  ⟨Nonempty.ndrec $ @is_unit_of_invertible _ _ _, IsUnit.nonempty_invertible⟩
+  ⟨Nonempty.ndrec <| @is_unit_of_invertible _ _ _, IsUnit.nonempty_invertible⟩
 #align nonempty_invertible_iff_is_unit nonempty_invertible_iff_is_unit
 
 /-- Each element of a group is invertible. -/
@@ -200,7 +200,7 @@ theorem inv_of_neg [Monoid α] [HasDistribNeg α] (a : α) [Invertible a] [Inver
 
 @[simp]
 theorem one_sub_inv_of_two [Ring α] [Invertible (2 : α)] : 1 - (⅟ 2 : α) = ⅟ 2 :=
-  (is_unit_of_invertible (2 : α)).mul_right_inj.1 $ by rw [mul_sub, mul_inv_of_self, mul_one, bit0, add_sub_cancel]
+  (is_unit_of_invertible (2 : α)).mul_right_inj.1 <| by rw [mul_sub, mul_inv_of_self, mul_one, bit0, add_sub_cancel]
 #align one_sub_inv_of_two one_sub_inv_of_two
 
 @[simp]
@@ -257,7 +257,7 @@ theorem commute_inv_of {M : Type _} [One M] [Mul M] (m : M) [Invertible m] : Com
 #align commute_inv_of commute_inv_of
 
 theorem nonzero_of_invertible [MulZeroOneClass α] (a : α) [Nontrivial α] [Invertible a] : a ≠ 0 := fun ha =>
-  zero_ne_one $
+  zero_ne_one <|
     calc
       0 = ⅟ a * a := by simp [ha]
       _ = 1 := inv_of_mul_self a

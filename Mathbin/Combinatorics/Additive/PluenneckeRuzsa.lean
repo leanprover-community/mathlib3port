@@ -42,7 +42,7 @@ theorem card_div_mul_le_card_div_mul_card_div (A B C : Finset α) :
   rw [← card_product (A / B), ← mul_one (Finset.product _ _).card]
   refine'
     card_mul_le_card_mul (fun b ac => ac.1 * ac.2 = b) (fun x hx => _) fun x hx =>
-      card_le_one_iff.2 $ fun u v hu hv => ((mem_bipartite_below _).1 hu).2.symm.trans ((mem_bipartite_below _).1 hv).2
+      card_le_one_iff.2 fun u v hu hv => ((mem_bipartite_below _).1 hu).2.symm.trans ((mem_bipartite_below _).1 hv).2
   obtain ⟨a, c, ha, hc, rfl⟩ := mem_div.1 hx
   refine' card_le_card_of_inj_on (fun b => (a / b, b / c)) (fun b hb => _) fun b₁ _ b₂ _ h => _
   · rw [mem_bipartite_above]
@@ -87,19 +87,19 @@ theorem mul_pluennecke_petridis (C : Finset α)
   set A' := A ∩ (A * C / {x}) with hA'
   set C' := insert x C with hC'
   have h₀ : A' * {x} = A * {x} ∩ (A * C) := by rw [hA', inter_mul_singleton, (is_unit_singleton x).div_mul_cancel]
-  have h₁ : A * B * C' = A * B * C ∪ A * B * {x} \ (A' * B * {x}) := by
+  have h₁ : A * B * C' = A * B * C ∪ (A * B * {x}) \ (A' * B * {x}) := by
     rw [hC', insert_eq, union_comm, mul_union]
     refine' (sup_sdiff_eq_sup _).symm
     rw [mul_right_comm, mul_right_comm A, h₀]
     exact mul_subset_mul_right (inter_subset_right _ _)
-  have h₂ : A' * B * {x} ⊆ A * B * {x} := mul_subset_mul_right (mul_subset_mul_right $ inter_subset_left _ _)
+  have h₂ : A' * B * {x} ⊆ A * B * {x} := mul_subset_mul_right (mul_subset_mul_right <| inter_subset_left _ _)
   have h₃ : (A * B * C').card ≤ (A * B * C).card + (A * B).card - (A' * B).card := by
     rw [h₁]
     refine' (card_union_le _ _).trans_eq _
     rw [card_sdiff h₂, ← add_tsub_assoc_of_le (card_le_of_subset h₂), card_mul_singleton, card_mul_singleton]
   refine' (mul_le_mul_right' h₃ _).trans _
   rw [tsub_mul, add_mul]
-  refine' (tsub_le_tsub (add_le_add_right ih _) $ hA _ $ inter_subset_left _ _).trans_eq _
+  refine' (tsub_le_tsub (add_le_add_right ih _) <| hA _ <| inter_subset_left _ _).trans_eq _
   rw [← mul_add, ← mul_tsub, ← hA', insert_eq, mul_union, ← card_mul_singleton A x, ← card_mul_singleton A' x,
     add_comm (card _), h₀, eq_tsub_of_add_eq (card_union_add_card_inter _ _)]
 #align finset.mul_pluennecke_petridis Finset.mul_pluennecke_petridis
@@ -120,7 +120,7 @@ private theorem mul_aux (hA : A.Nonempty) (hAB : A ⊆ B)
   have hA₀ : (0 : ℚ≥0) < A.card := cast_pos.2 hA.card_pos
   have hA₀' : (0 : ℚ≥0) < A'.card := cast_pos.2 hA'.card_pos
   exact_mod_cast
-    (div_le_div_iff hA₀ hA₀').1 (h _ $ mem_erase_of_ne_of_mem hA'.ne_empty $ mem_powerset.2 $ hAA'.trans hAB)
+    (div_le_div_iff hA₀ hA₀').1 (h _ <| mem_erase_of_ne_of_mem hA'.ne_empty <| mem_powerset.2 <| hAA'.trans hAB)
 #align finset.mul_aux finset.mul_aux
 
 /-- **Ruzsa's triangle inequality**. Multiplication version. -/
@@ -135,14 +135,14 @@ theorem card_mul_mul_card_le_card_mul_mul_card_mul (A B C : Finset α) :
   rw [mem_erase, mem_powerset, ← nonempty_iff_ne_empty] at hU
   refine' cast_le.1 (_ : (_ : ℚ≥0) ≤ _)
   push_cast
-  refine' (le_div_iff $ cast_pos.2 hB.card_pos).1 _
+  refine' (le_div_iff <| cast_pos.2 hB.card_pos).1 _
   rw [mul_div_right_comm, mul_comm _ B]
-  refine' (cast_le.2 $ card_le_card_mul_left _ hU.1).trans _
+  refine' (cast_le.2 <| card_le_card_mul_left _ hU.1).trans _
   refine'
     le_trans _
-      (mul_le_mul (hUA _ hB') (cast_le.2 $ card_le_of_subset $ mul_subset_mul_right hU.2) (zero_le _) $ zero_le _)
+      (mul_le_mul (hUA _ hB') (cast_le.2 <| card_le_of_subset <| mul_subset_mul_right hU.2) (zero_le _) <| zero_le _)
   rw [← mul_div_right_comm, ← mul_assoc]
-  refine' (le_div_iff $ cast_pos.2 hU.1.card_pos).2 _
+  refine' (le_div_iff <| cast_pos.2 hU.1.card_pos).2 _
   exact_mod_cast mul_pluennecke_petridis C (mul_aux hU.1 hU.2 hUA)
 #align finset.card_mul_mul_card_le_card_mul_mul_card_mul Finset.card_mul_mul_card_le_card_mul_mul_card_mul
 
@@ -180,7 +180,7 @@ theorem card_add_nsmul_le {α : Type _} [AddCommGroup α] [DecidableEq α] {A B 
   rw [succ_nsmul, ← add_assoc, pow_succ, mul_assoc, ← mul_div_right_comm, le_div_iff, ← cast_mul]
   swap
   exact cast_pos.2 hA.card_pos
-  refine' (cast_le.2 $ add_pluennecke_petridis _ hAB).trans _
+  refine' (cast_le.2 <| add_pluennecke_petridis _ hAB).trans _
   rw [cast_mul]
   exact mul_le_mul_of_nonneg_left ih (zero_le _)
 #align finset.card_add_nsmul_le Finset.card_add_nsmul_le
@@ -198,7 +198,7 @@ theorem card_mul_pow_le (hAB : ∀ (A') (_ : A' ⊆ A), (A * B).card * A'.card �
   rw [pow_succ, ← mul_assoc, pow_succ, @mul_assoc ℚ≥0, ← mul_div_right_comm, le_div_iff, ← cast_mul]
   swap
   exact cast_pos.2 hA.card_pos
-  refine' (cast_le.2 $ mul_pluennecke_petridis _ hAB).trans _
+  refine' (cast_le.2 <| mul_pluennecke_petridis _ hAB).trans _
   rw [cast_mul]
   exact mul_le_mul_of_nonneg_left ih (zero_le _)
 #align finset.card_mul_pow_le Finset.card_mul_pow_le
@@ -212,19 +212,19 @@ theorem card_pow_div_pow_le (hA : A.Nonempty) (B : Finset α) (m n : ℕ) :
   have hA' : A ∈ A.powerset.erase ∅ := mem_erase_of_ne_of_mem hA.ne_empty (mem_powerset_self _)
   obtain ⟨C, hC, hCA⟩ := exists_min_image (A.powerset.erase ∅) (fun C => (C * B).card / C.card : _ → ℚ≥0) ⟨A, hA'⟩
   rw [mem_erase, mem_powerset, ← nonempty_iff_ne_empty] at hC
-  refine' (mul_le_mul_right $ cast_pos.2 hC.1.card_pos).1 _
+  refine' (mul_le_mul_right <| cast_pos.2 hC.1.card_pos).1 _
   norm_cast
-  refine' (cast_le.2 $ card_div_mul_le_card_mul_mul_card_mul _ _ _).trans _
+  refine' (cast_le.2 <| card_div_mul_le_card_mul_mul_card_mul _ _ _).trans _
   push_cast
   rw [mul_comm _ C]
   refine'
-    (mul_le_mul (card_mul_pow_le (mul_aux hC.1 hC.2 hCA) _) (card_mul_pow_le (mul_aux hC.1 hC.2 hCA) _) (zero_le _) $
+    (mul_le_mul (card_mul_pow_le (mul_aux hC.1 hC.2 hCA) _) (card_mul_pow_le (mul_aux hC.1 hC.2 hCA) _) (zero_le _) <|
           zero_le _).trans
       _
   rw [mul_mul_mul_comm, ← pow_add, ← mul_assoc]
   exact
     mul_le_mul_of_nonneg_right
-      (mul_le_mul (pow_le_pow_of_le_left (zero_le _) (hCA _ hA') _) (cast_le.2 $ card_le_of_subset hC.2) (zero_le _) $
+      (mul_le_mul (pow_le_pow_of_le_left (zero_le _) (hCA _ hA') _) (cast_le.2 <| card_le_of_subset hC.2) (zero_le _) <|
         zero_le _)
       (zero_le _)
 #align finset.card_pow_div_pow_le Finset.card_pow_div_pow_le

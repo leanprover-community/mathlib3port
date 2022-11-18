@@ -30,17 +30,16 @@ theorem monomial_one_eq_iff [Nontrivial R] {i j : ℕ} : (monomial i 1 : R[X]) =
 #align polynomial.monomial_one_eq_iff Polynomial.monomial_one_eq_iff
 
 instance [Nontrivial R] : Infinite R[X] :=
-  (Infinite.of_injective fun i => monomial i 1) $ fun m n h => by simpa [monomial_one_eq_iff] using h
+  (Infinite.of_injective fun i => monomial i 1) fun m n h => by simpa [monomial_one_eq_iff] using h
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (n a) -/
-theorem card_support_le_one_iff_monomial {f : R[X]} : Finset.card f.support ≤ 1 ↔ ∃ (n) (a), f = monomial n a := by
+theorem card_support_le_one_iff_monomial {f : R[X]} : Finset.card f.support ≤ 1 ↔ ∃ n a, f = monomial n a := by
   constructor
   · intro H
     rw [Finset.card_le_one_iff_subset_singleton] at H
     rcases H with ⟨n, hn⟩
     refine' ⟨n, f.coeff n, _⟩
     ext i
-    by_cases hi:i = n
+    by_cases hi : i = n
     · simp [hi, coeff_monomial]
       
     · have : f.coeff i = 0 := by

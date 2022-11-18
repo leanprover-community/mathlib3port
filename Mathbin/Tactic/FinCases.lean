@@ -62,8 +62,8 @@ private unsafe def fin_cases_at_aux : ∀ (with_list : List expr) (e : expr), ta
           |-- Otherwise, call `norm_num`. We let `norm_num` unfold `max` and `min`
             -- because it's helpful for the `interval_cases` tactic.
             _ =>
-            try $
-              tactic.interactive.conv (some sn) none $
+            try <|
+              tactic.interactive.conv (some sn) none <|
                 to_rhs >> conv.interactive.norm_num [simp_arg_type.expr ``(max_def'), simp_arg_type.expr ``(min_def)]
         let s ← get_local sn
         try sorry
@@ -91,9 +91,9 @@ private unsafe def fin_cases_at_aux : ∀ (with_list : List expr) (e : expr), ta
       with_list , e
       =>
       focus1
-        $
+        <|
         do
-          let ty ← try_core $ guard_mem_fin e
+          let ty ← try_core <| guard_mem_fin e
             match
               ty
               with

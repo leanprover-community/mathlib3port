@@ -137,7 +137,7 @@ theorem is_succ_limit_of_succ_lt (H : ∀ a < b, succ a < b) : IsSuccLimit b := 
 #align order.is_succ_limit_of_succ_lt Order.is_succ_limit_of_succ_lt
 
 theorem IsSuccLimit.succ_lt (hb : IsSuccLimit b) (ha : a < b) : succ a < b := by
-  by_cases h:IsMax a
+  by_cases h : IsMax a
   · rwa [h.succ_eq]
     
   · rw [lt_iff_le_and_ne, succ_le_iff_of_not_is_max h]
@@ -158,7 +158,7 @@ theorem is_succ_limit_iff_succ_lt : IsSuccLimit b ↔ ∀ a < b, succ a < b :=
 /-- A value can be built by building it on successors and successor limits. -/
 @[elab_as_elim]
 noncomputable def isSuccLimitRecOn (b : α) (hs : ∀ a, ¬IsMax a → C (succ a)) (hl : ∀ a, IsSuccLimit a → C a) : C b := by
-  by_cases hb:is_succ_limit b
+  by_cases hb : is_succ_limit b
   · exact hl b hb
     
   · have H := Classical.choose_spec (not_is_succ_limit_iff.1 hb)

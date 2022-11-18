@@ -101,14 +101,14 @@ theorem part_of_vertex_ne_of_adj {v w : V} (h : G.Adj v w) : P.partOfVertex v �
 /-- Create a coloring using the parts themselves as the colors.
 Each vertex is colored by the part it's contained in. -/
 def toColoring : G.Coloring P.parts :=
-  (Coloring.mk fun v => ⟨P.partOfVertex v, P.part_of_vertex_mem v⟩) $ fun _ _ hvw => by
+  (Coloring.mk fun v => ⟨P.partOfVertex v, P.part_of_vertex_mem v⟩) fun _ _ hvw => by
     rw [Ne.def, Subtype.mk_eq_mk]
     exact P.part_of_vertex_ne_of_adj hvw
 #align simple_graph.partition.to_coloring SimpleGraph.Partition.toColoring
 
 /-- Like `simple_graph.partition.to_coloring` but uses `set V` as the coloring type. -/
 def toColoring' : G.Coloring (Set V) :=
-  Coloring.mk P.partOfVertex $ fun _ _ hvw => P.part_of_vertex_ne_of_adj hvw
+  (Coloring.mk P.partOfVertex) fun _ _ hvw => P.part_of_vertex_ne_of_adj hvw
 #align simple_graph.partition.to_coloring' SimpleGraph.Partition.toColoring'
 
 theorem to_colorable [Fintype P.parts] : G.Colorable (Fintype.card P.parts) :=

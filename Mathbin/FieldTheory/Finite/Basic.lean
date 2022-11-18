@@ -3,11 +3,8 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Joey van Langen, Casper Putz
 -/
-import Mathbin.Algebra.Ring.Equiv
-import Mathbin.Data.Zmod.Algebra
 import Mathbin.FieldTheory.Separable
 import Mathbin.FieldTheory.SplittingField
-import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.RingTheory.IntegralDomain
 import Mathbin.Tactic.ApplyFun
 
@@ -74,10 +71,9 @@ theorem card_image_polynomial_eval [DecidableEq R] [Fintype R] {p : R[X]} (hp : 
       
 #align finite_field.card_image_polynomial_eval FiniteField.card_image_polynomial_eval
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- If `f` and `g` are quadratic polynomials, then the `f.eval a + g.eval b = 0` has a solution. -/
 theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) (hg2 : degree g = 2)
-    (hR : Fintype.card R % 2 = 1) : ∃ (a) (b), f.eval a + g.eval b = 0 :=
+    (hR : Fintype.card R % 2 = 1) : ∃ a b, f.eval a + g.eval b = 0 :=
   letI := Classical.decEq R
   suffices ¬Disjoint (univ.image fun x : R => eval x f) (univ.image fun x : R => eval x (-g)) by
     simp only [disjoint_left, mem_image] at this
@@ -85,7 +81,7 @@ theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) 
     rcases this with ⟨x, ⟨a, _, ha⟩, ⟨b, _, hb⟩⟩
     exact ⟨a, b, by rw [ha, ← hb, eval_neg, neg_add_self]⟩
   fun hd : Disjoint _ _ =>
-  lt_irrefl (2 * ((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card) $
+  lt_irrefl (2 * ((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card) <|
     calc
       2 * ((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card ≤ 2 * Fintype.card R :=
         Nat.mul_le_mul_left _ (Finset.card_le_univ _)
@@ -94,9 +90,9 @@ theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) 
           nat_degree f * (univ.image fun x : R => eval x f).card +
             nat_degree (-g) * (univ.image fun x : R => eval x (-g)).card :=
         add_lt_add_of_lt_of_le
-          (lt_of_le_of_ne (card_image_polynomial_eval (by rw [hf2] <;> exact dec_trivial))
+          (lt_of_le_of_ne (card_image_polynomial_eval (by rw [hf2] <;> exact by decide))
             (mt (congr_arg (· % 2)) (by simp [nat_degree_eq_of_degree_eq_some hf2, hR])))
-          (card_image_polynomial_eval (by rw [degree_neg, hg2] <;> exact dec_trivial))
+          (card_image_polynomial_eval (by rw [degree_neg, hg2] <;> exact by decide))
       _ = 2 * ((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card := by
         rw [card_disjoint_union hd] <;>
           simp [nat_degree_eq_of_degree_eq_some hf2, nat_degree_eq_of_degree_eq_some hg2, bit0, mul_add]
@@ -128,7 +124,7 @@ theorem pow_card_sub_one_eq_one (a : K) (ha : a ≠ 0) : a ^ (q - 1) = 1 :=
 
 theorem pow_card (a : K) : a ^ q = a := by
   have hp : 0 < Fintype.card K := lt_trans zero_lt_one Fintype.one_lt_card
-  by_cases h:a = 0
+  by_cases h : a = 0
   · rw [h]
     apply zero_pow hp
     
@@ -161,7 +157,7 @@ theorem card (p : ℕ) [CharP K p] : ∃ n : ℕ+, Nat.Prime p ∧ q = p ^ (n : 
 #align finite_field.card FiniteField.card
 
 -- this statement doesn't use `q` because we want `K` to be an explicit parameter
-theorem card' : ∃ (p : ℕ) (n : ℕ+), Nat.Prime p ∧ Fintype.card K = p ^ (n : ℕ) :=
+theorem card' : ∃ (p : ℕ)(n : ℕ+), Nat.Prime p ∧ Fintype.card K = p ^ (n : ℕ) :=
   let ⟨p, hc⟩ := CharP.exists K
   ⟨p, @FiniteField.card K _ _ p hc⟩
 #align finite_field.card' FiniteField.card'
@@ -223,7 +219,7 @@ theorem sum_pow_units [Fintype Kˣ] (i : ℕ) : (∑ x : Kˣ, (x ^ i : K)) = if 
 /-- The sum of `x ^ i` as `x` ranges over a finite field of cardinality `q`
 is equal to `0` if `i < q - 1`. -/
 theorem sum_pow_lt_card_sub_one (i : ℕ) (h : i < q - 1) : (∑ x : K, x ^ i) = 0 := by
-  by_cases hi:i = 0
+  by_cases hi : i = 0
   · simp only [hi, nsmul_one, sum_const, pow_zero, card_univ, cast_card_eq_zero]
     
   classical
@@ -263,11 +259,11 @@ theorem X_pow_card_sub_X_nat_degree_eq (hp : 1 < p) : (X ^ p - X : K'[X]).natDeg
 #align finite_field.X_pow_card_sub_X_nat_degree_eq FiniteField.X_pow_card_sub_X_nat_degree_eq
 
 theorem X_pow_card_pow_sub_X_nat_degree_eq (hn : n ≠ 0) (hp : 1 < p) : (X ^ p ^ n - X : K'[X]).natDegree = p ^ n :=
-  X_pow_card_sub_X_nat_degree_eq K' $ Nat.one_lt_pow _ _ (Nat.pos_of_ne_zero hn) hp
+  X_pow_card_sub_X_nat_degree_eq K' <| Nat.one_lt_pow _ _ (Nat.pos_of_ne_zero hn) hp
 #align finite_field.X_pow_card_pow_sub_X_nat_degree_eq FiniteField.X_pow_card_pow_sub_X_nat_degree_eq
 
 theorem X_pow_card_sub_X_ne_zero (hp : 1 < p) : (X ^ p - X : K'[X]) ≠ 0 :=
-  ne_zero_of_nat_degree_gt $
+  ne_zero_of_nat_degree_gt <|
     calc
       1 < _ := hp
       _ = _ := (X_pow_card_sub_X_nat_degree_eq K' hp).symm
@@ -275,7 +271,7 @@ theorem X_pow_card_sub_X_ne_zero (hp : 1 < p) : (X ^ p - X : K'[X]) ≠ 0 :=
 #align finite_field.X_pow_card_sub_X_ne_zero FiniteField.X_pow_card_sub_X_ne_zero
 
 theorem X_pow_card_pow_sub_X_ne_zero (hn : n ≠ 0) (hp : 1 < p) : (X ^ p ^ n - X : K'[X]) ≠ 0 :=
-  X_pow_card_sub_X_ne_zero K' $ Nat.one_lt_pow _ _ (Nat.pos_of_ne_zero hn) hp
+  X_pow_card_sub_X_ne_zero K' <| Nat.one_lt_pow _ _ (Nat.pos_of_ne_zero hn) hp
 #align finite_field.X_pow_card_pow_sub_X_ne_zero FiniteField.X_pow_card_pow_sub_X_ne_zero
 
 end
@@ -340,9 +336,7 @@ namespace Zmod
 
 open FiniteField Polynomial
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
-theorem sq_add_sq (p : ℕ) [hp : Fact p.Prime] (x : Zmod p) : ∃ (a : Zmod p) (b : Zmod p), a ^ 2 + b ^ 2 = x := by
+theorem sq_add_sq (p : ℕ) [hp : Fact p.Prime] (x : Zmod p) : ∃ a b : Zmod p, a ^ 2 + b ^ 2 = x := by
   cases' hp.1.eq_two_or_odd with hp2 hp_odd
   · subst p
     change Fin 2 at x
@@ -356,8 +350,8 @@ theorem sq_add_sq (p : ℕ) [hp : Fact p.Prime] (x : Zmod p) : ∃ (a : Zmod p) 
     
   let f : (Zmod p)[X] := X ^ 2
   let g : (Zmod p)[X] := X ^ 2 - C x
-  obtain ⟨a, b, hab⟩ : ∃ (a) (b), f.eval a + g.eval b = 0 :=
-    @exists_root_sum_quadratic _ _ _ _ f g (degree_X_pow 2) (degree_X_pow_sub_C dec_trivial _)
+  obtain ⟨a, b, hab⟩ : ∃ a b, f.eval a + g.eval b = 0 :=
+    @exists_root_sum_quadratic _ _ _ _ f g (degree_X_pow 2) (degree_X_pow_sub_C (by decide) _)
       (by rw [Zmod.card, hp_odd])
   refine' ⟨a, b, _⟩
   rw [← sub_eq_zero]
@@ -368,9 +362,8 @@ end Zmod
 
 namespace CharP
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem sq_add_sq (R : Type _) [CommRing R] [IsDomain R] (p : ℕ) [NeZero p] [CharP R p] (x : ℤ) :
-    ∃ (a : ℕ) (b : ℕ), (a ^ 2 + b ^ 2 : R) = x := by
+    ∃ a b : ℕ, (a ^ 2 + b ^ 2 : R) = x := by
   haveI := char_is_prime_of_pos R p
   obtain ⟨a, b, hab⟩ := Zmod.sq_add_sq p x
   refine' ⟨a.val, b.val, _⟩
@@ -524,7 +517,7 @@ theorem even_card_iff_char_two : ringChar F = 2 ↔ Fintype.card F % 2 = 0 := by
   constructor
   · intro hF
     rw [hF]
-    simp only [Nat.bit0_mod_two, zero_pow', Ne.def, Pnat.ne_zero, not_false_iff, Nat.zero_mod]
+    simp only [Nat.bit0_mod_two, zero_pow', Ne.def, PNat.ne_zero, not_false_iff, Nat.zero_mod]
     
   · rw [← Nat.even_iff, Nat.even_pow]
     rintro ⟨hev, hnz⟩

@@ -218,7 +218,7 @@ theorem Ico_image_const_sub_eq_Ico (hac : a ≤ c) : ((ico a b).image fun x => c
       exact zero_le _
       
     · rw [← succ_sub_succ c]
-      exact (tsub_le_tsub_iff_left (succ_le_succ $ hx.2.le.trans h)).2 hx.2
+      exact (tsub_le_tsub_iff_left (succ_le_succ <| hx.2.le.trans h)).2 hx.2
       
     
   · rintro ⟨hb, ha⟩
@@ -226,7 +226,7 @@ theorem Ico_image_const_sub_eq_Ico (hac : a ≤ c) : ((ico a b).image fun x => c
     have hx : x ≤ c := (Nat.le_add_left _ _).trans ha
     refine' ⟨c - x, _, tsub_tsub_cancel_of_le hx⟩
     · rw [mem_Ico]
-      exact ⟨le_tsub_of_add_le_right ha, (tsub_lt_iff_left hx).2 $ succ_le_iff.1 $ tsub_le_iff_right.1 hb⟩
+      exact ⟨le_tsub_of_add_le_right ha, (tsub_lt_iff_left hx).2 <| succ_le_iff.1 <| tsub_le_iff_right.1 hb⟩
       
     
 #align nat.Ico_image_const_sub_eq_Ico Nat.Ico_image_const_sub_eq_Ico
@@ -254,7 +254,7 @@ theorem mod_inj_on_Ico (n a : ℕ) : Set.InjOn (· % a) (Finset.ico n (n + a)) :
   · rfl
     
   · rw [add_mod_right] at hkl
-    refine' (hln $ ih hl _ hkl.symm).elim
+    refine' (hln <| ih hl _ hkl.symm).elim
     simp only [lt_add_iff_pos_right, Set.left_mem_Ico, Finset.coe_Ico, ha]
     
   · rw [add_mod_right] at hkl
@@ -310,7 +310,7 @@ open Multiset
 
 theorem multiset_Ico_map_mod (n a : ℕ) : (Multiset.ico n (n + a)).map (· % a) = range a := by
   convert congr_arg Finset.val (image_Ico_mod n a)
-  refine' ((nodup_map_iff_inj_on (Finset.ico _ _).Nodup).2 $ _).dedup.symm
+  refine' ((nodup_map_iff_inj_on (Finset.ico _ _).Nodup).2 <| _).dedup.symm
   exact mod_inj_on_Ico _ _
 #align nat.multiset_Ico_map_mod Nat.multiset_Ico_map_mod
 
@@ -355,7 +355,7 @@ theorem Nat.decreasing_induction_of_infinite (hP : { x | P x }.Infinite) (n : �
 theorem Nat.cauchy_induction' (seed : ℕ) (hs : P seed) (hi : ∀ x, seed ≤ x → P x → ∃ y, x < y ∧ P y) (n : ℕ) : P n := by
   apply Nat.decreasing_induction_of_infinite h fun hf => _
   obtain ⟨m, hP, hm⟩ := hf.exists_maximal_wrt id _ ⟨seed, hs⟩
-  obtain ⟨y, hl, hy⟩ := hi m (le_of_not_lt $ fun hl => hl.Ne $ hm seed hs hl.le) hP
+  obtain ⟨y, hl, hy⟩ := hi m (le_of_not_lt fun hl => hl.Ne <| hm seed hs hl.le) hP
   exact hl.ne (hm y hy hl.le)
 #align nat.cauchy_induction' Nat.cauchy_induction'
 
@@ -367,7 +367,7 @@ theorem Nat.cauchy_induction (seed : ℕ) (hs : P seed) (f : ℕ → ℕ) (hf : 
 theorem Nat.cauchy_induction_mul (k seed : ℕ) (hk : 1 < k) (hs : P seed.succ) (hm : ∀ x, seed < x → P x → P (k * x))
     (n : ℕ) : P n := by
   apply Nat.cauchy_induction h _ hs ((· * ·) k) fun x hl hP => ⟨_, hm x hl hP⟩
-  convert (mul_lt_mul_right $ seed.succ_pos.trans_le hl).2 hk
+  convert (mul_lt_mul_right <| seed.succ_pos.trans_le hl).2 hk
   rw [one_mul]
 #align nat.cauchy_induction_mul Nat.cauchy_induction_mul
 

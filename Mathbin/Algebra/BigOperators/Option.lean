@@ -44,7 +44,7 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
         (Term.explicitBinder "(" [`s] [":" (Term.app `Finset [(Term.app `Option [`α])])] [] ")")]
        (Term.typeSpec
         ":"
-        (Init.Core.«term_=_»
+        («term_=_»
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -52,7 +52,7 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
           (Term.proj `s "." `eraseNone)
           ", "
           (Term.app `f [`x]))
-         " = "
+         "="
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -72,7 +72,7 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
             (calcTactic
              "calc"
              (calcStep
-              (Init.Core.«term_=_»
+              («term_=_»
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -80,7 +80,7 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
                 `s.erase_none
                 ", "
                 (Term.app `f [`x]))
-               " = "
+               "="
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -90,16 +90,16 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
                 (Term.app `Option.elim' [(num "1") `f `x])))
               ":="
               (Term.proj
-               (Init.Core.«term_$_»
+               («term_<|_»
                 (Term.app `Prod_map [`s.erase_none `embedding.some])
-                " $ "
+                "<|"
                 (Term.app `Option.elim' [(num "1") `f]))
                "."
                `symm))
              [(calcStep
-               (Init.Core.«term_=_»
+               («term_=_»
                 (Term.hole "_")
-                " = "
+                "="
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -114,9 +114,9 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
                  (Tactic.tacticSeq1Indented
                   [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `map_some_erase_none)] "]") [])]))))
               (calcStep
-               (Init.Core.«term_=_»
+               («term_=_»
                 (Term.hole "_")
-                " = "
+                "="
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -142,7 +142,7 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
            (calcTactic
             "calc"
             (calcStep
-             (Init.Core.«term_=_»
+             («term_=_»
               (BigOperators.Algebra.BigOperators.Basic.finset.prod
                "∏"
                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -150,7 +150,7 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
                `s.erase_none
                ", "
                (Term.app `f [`x]))
-              " = "
+              "="
               (BigOperators.Algebra.BigOperators.Basic.finset.prod
                "∏"
                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -160,16 +160,16 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
                (Term.app `Option.elim' [(num "1") `f `x])))
              ":="
              (Term.proj
-              (Init.Core.«term_$_»
+              («term_<|_»
                (Term.app `Prod_map [`s.erase_none `embedding.some])
-               " $ "
+               "<|"
                (Term.app `Option.elim' [(num "1") `f]))
               "."
               `symm))
             [(calcStep
-              (Init.Core.«term_=_»
+              («term_=_»
                (Term.hole "_")
-               " = "
+               "="
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -184,9 +184,9 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
                 (Tactic.tacticSeq1Indented
                  [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `map_some_erase_none)] "]") [])]))))
              (calcStep
-              (Init.Core.«term_=_»
+              («term_=_»
                (Term.hole "_")
-               " = "
+               "="
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -204,7 +204,7 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
        (calcTactic
         "calc"
         (calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -212,7 +212,7 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
            `s.erase_none
            ", "
            (Term.app `f [`x]))
-          " = "
+          "="
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -222,16 +222,13 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
            (Term.app `Option.elim' [(num "1") `f `x])))
          ":="
          (Term.proj
-          (Init.Core.«term_$_»
-           (Term.app `Prod_map [`s.erase_none `embedding.some])
-           " $ "
-           (Term.app `Option.elim' [(num "1") `f]))
+          («term_<|_» (Term.app `Prod_map [`s.erase_none `embedding.some]) "<|" (Term.app `Option.elim' [(num "1") `f]))
           "."
           `symm))
         [(calcStep
-          (Init.Core.«term_=_»
+          («term_=_»
            (Term.hole "_")
-           " = "
+           "="
            (BigOperators.Algebra.BigOperators.Basic.finset.prod
             "∏"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -246,9 +243,9 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
             (Tactic.tacticSeq1Indented
              [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `map_some_erase_none)] "]") [])]))))
          (calcStep
-          (Init.Core.«term_=_»
+          («term_=_»
            (Term.hole "_")
-           " = "
+           "="
            (BigOperators.Algebra.BigOperators.Basic.finset.prod
             "∏"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -262,7 +259,7 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
       (calcTactic
        "calc"
        (calcStep
-        (Init.Core.«term_=_»
+        («term_=_»
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -270,7 +267,7 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
           `s.erase_none
           ", "
           (Term.app `f [`x]))
-         " = "
+         "="
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -280,16 +277,13 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
           (Term.app `Option.elim' [(num "1") `f `x])))
         ":="
         (Term.proj
-         (Init.Core.«term_$_»
-          (Term.app `Prod_map [`s.erase_none `embedding.some])
-          " $ "
-          (Term.app `Option.elim' [(num "1") `f]))
+         («term_<|_» (Term.app `Prod_map [`s.erase_none `embedding.some]) "<|" (Term.app `Option.elim' [(num "1") `f]))
          "."
          `symm))
        [(calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (Term.hole "_")
-          " = "
+          "="
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -304,9 +298,9 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
            (Tactic.tacticSeq1Indented
             [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `map_some_erase_none)] "]") [])]))))
         (calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (Term.hole "_")
-          " = "
+          "="
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -333,9 +327,9 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (Term.hole "_")
-       " = "
+       "="
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -378,7 +372,7 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.byTactic
@@ -395,9 +389,9 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (Term.hole "_")
-       " = "
+       "="
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -448,21 +442,15 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.proj
-       (Init.Core.«term_$_»
-        (Term.app `Prod_map [`s.erase_none `embedding.some])
-        " $ "
-        (Term.app `Option.elim' [(num "1") `f]))
+       («term_<|_» (Term.app `Prod_map [`s.erase_none `embedding.some]) "<|" (Term.app `Option.elim' [(num "1") `f]))
        "."
        `symm)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Init.Core.«term_$_»
-       (Term.app `Prod_map [`s.erase_none `embedding.some])
-       " $ "
-       (Term.app `Option.elim' [(num "1") `f]))
+      («term_<|_» (Term.app `Prod_map [`s.erase_none `embedding.some]) "<|" (Term.app `Option.elim' [(num "1") `f]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `Option.elim' [(num "1") `f])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -478,8 +466,8 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.elim'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.app `Prod_map [`s.erase_none `embedding.some])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
@@ -494,18 +482,15 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Prod_map
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     (Init.Core.«term_$_»
-      (Term.app `Prod_map [`s.erase_none `embedding.some])
-      " $ "
-      (Term.app `Option.elim' [(num "1") `f]))
+     («term_<|_» (Term.app `Prod_map [`s.erase_none `embedding.some]) "<|" (Term.app `Option.elim' [(num "1") `f]))
      ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -513,7 +498,7 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
         `s.erase_none
         ", "
         (Term.app `f [`x]))
-       " = "
+       "="
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -584,7 +569,7 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s.erase_none
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 0, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
      (BigOperators.Algebra.BigOperators.Basic.finset.prod
@@ -620,7 +605,7 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
           calc
             ∏ x in s.erase_none , f x = ∏ x in s.erase_none.map embedding.some , Option.elim' 1 f x
               :=
-              Prod_map s.erase_none embedding.some $ Option.elim' 1 f . symm
+              Prod_map s.erase_none embedding.some <| Option.elim' 1 f . symm
             _ = ∏ x in s.erase none , Option.elim' 1 f x := by rw [ map_some_erase_none ]
               _ = ∏ x in s , Option.elim' 1 f x := prod_erase _ rfl
 #align finset.prod_erase_none Finset.prod_erase_none

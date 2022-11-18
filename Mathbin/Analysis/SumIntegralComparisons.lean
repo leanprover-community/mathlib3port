@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin H. Wilson
 -/
 import Mathbin.MeasureTheory.Integral.IntervalIntegral
-import Mathbin.Algebra.Order.Floor
 import Mathbin.Data.Set.Function
 import Mathbin.Analysis.SpecialFunctions.Integrals
 

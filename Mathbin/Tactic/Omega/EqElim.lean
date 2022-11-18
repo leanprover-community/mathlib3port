@@ -35,7 +35,7 @@ theorem symmod_add_one_self {i : Int} : 0 < i → symmod i (i + 1) = -1 := by
 theorem mul_symdiv_eq {i j : Int} : j * symdiv i j = i - symmod i j := by
   unfold symdiv
   unfold symmod
-  by_cases h1:2 * (i % j) < j
+  by_cases h1 : 2 * (i % j) < j
   · repeat' rw [if_pos h1]
     rw [Int.mod_def, sub_sub_cancel]
     
@@ -75,7 +75,7 @@ theorem rhs_correct_aux {v : Nat → Int} {m : Int} {as : List Int} :
     simp only [zero_add, coeffs.val_between, List.map]
     cases' @rhs_correct_aux k with d h1
     rw [← h1]
-    by_cases hk:k < as.length
+    by_cases hk : k < as.length
     · rw [get_map hk, symmod_eq, sub_mul]
       exists d + symdiv (get k as) m * v k
       ring
@@ -306,74 +306,43 @@ unsafe instance has_to_format : has_to_format Ee :=
 
 end Ee
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Apply a given sequence of equality elimination steps to a clause. -/
 def eqElim : List Ee → Clause → Clause
   | [], ([], les) => ([], les)
-  | [], (_::_, les) => ([], [])
-  | _::_, ([], les) => ([], [])
-  | ee.drop::es, (Eq::eqs, les) => eq_elim es (eqs, les)
-  | ee.neg::es, (Eq::eqs, les) => eq_elim es (Eq.neg::eqs, les)
-  | ee.nondiv i::es, ((b, as)::eqs, les) => if ¬i ∣ b ∧ ∀ x ∈ as, i ∣ x then ([], [⟨-1, []⟩]) else ([], [])
-  | ee.factor i::es, ((b, as)::eqs, les) =>
-    if i ∣ b ∧ ∀ x ∈ as, i ∣ x then eq_elim es (Term.div i (b, as)::eqs, les) else ([], [])
-  | ee.reduce n::es, ((b, as)::eqs, les) =>
+  | [], (_ :: _, les) => ([], [])
+  | _ :: _, ([], les) => ([], [])
+  | ee.drop :: es, (Eq :: eqs, les) => eq_elim es (eqs, les)
+  | ee.neg :: es, (Eq :: eqs, les) => eq_elim es (Eq.neg :: eqs, les)
+  | ee.nondiv i :: es, ((b, as) :: eqs, les) => if ¬i ∣ b ∧ ∀ x ∈ as, i ∣ x then ([], [⟨-1, []⟩]) else ([], [])
+  | ee.factor i :: es, ((b, as) :: eqs, les) =>
+    if i ∣ b ∧ ∀ x ∈ as, i ∣ x then eq_elim es (Term.div i (b, as) :: eqs, les) else ([], [])
+  | ee.reduce n :: es, ((b, as) :: eqs, les) =>
     if 0 < get n as then
       let eq' := coeffsReduce n b as
       let r := rhs n b as
       let eqs' := eqs.map (subst n r)
       let les' := les.map (subst n r)
-      eq_elim es (eq'::eqs', les')
+      eq_elim es (eq' :: eqs', les')
     else ([], [])
-  | ee.cancel m::es, (Eq::eqs, les) => eq_elim es (eqs.map (cancel m Eq), les.map (cancel m Eq))
+  | ee.cancel m :: es, (Eq :: eqs, les) => eq_elim es (eqs.map (cancel m Eq), les.map (cancel m Eq))
 #align omega.eq_elim Omega.eqElim
 
 open Tactic
 
 theorem sat_empty : Clause.Sat ([], []) :=
-  ⟨fun _ => 0, ⟨dec_trivial, dec_trivial⟩⟩
+  ⟨fun _ => 0, ⟨by decide, by decide⟩⟩
 #align omega.sat_empty Omega.sat_empty
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic tactic.rotate -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).Sat
   | [], ([], les), h => h
-  | e::_, ([], les), h => by cases e <;> simp only [eq_elim] <;> apply sat_empty
-  | [], (_::_, les), h => sat_empty
-  | ee.drop::es, (Eq::eqs, les), h1 => by
+  | e :: _, ([], les), h => by cases e <;> simp only [eq_elim] <;> apply sat_empty
+  | [], (_ :: _, les), h => sat_empty
+  | ee.drop :: es, (Eq :: eqs, les), h1 => by
     apply @sat_eq_elim es _ _
     rcases h1 with ⟨v, h1, h2⟩
     refine' ⟨v, List.forall_mem_of_forall_mem_cons h1, h2⟩
-  | ee.neg::es, (Eq::eqs, les), h1 => by
+  | ee.neg :: es, (Eq :: eqs, les), h1 => by
     simp only [eq_elim]
     apply sat_eq_elim
     cases' h1 with v h1
@@ -385,9 +354,9 @@ theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).S
     rw [term.val_neg]
     rw [← hl.left]
     rfl
-  | ee.nondiv i::es, ((b, as)::eqs, les), h1 => by
+  | ee.nondiv i :: es, ((b, as) :: eqs, les), h1 => by
     unfold eq_elim
-    by_cases h2:¬i ∣ b ∧ ∀ x : ℤ, x ∈ as → i ∣ x
+    by_cases h2 : ¬i ∣ b ∧ ∀ x : ℤ, x ∈ as → i ∣ x
     · exfalso
       cases' h1 with v h1
       have h3 : 0 = b + coeffs.val v as := h1.left _ (Or.inl rfl)
@@ -400,9 +369,9 @@ theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).S
       
     rw [if_neg h2]
     apply sat_empty
-  | ee.factor i::es, ((b, as)::eqs, les), h1 => by
+  | ee.factor i :: es, ((b, as) :: eqs, les), h1 => by
     simp only [eq_elim]
-    by_cases h2:i ∣ b ∧ ∀ x ∈ as, i ∣ x
+    by_cases h2 : i ∣ b ∧ ∀ x ∈ as, i ∣ x
     · rw [if_pos h2]
       apply sat_eq_elim
       cases' h1 with v h1
@@ -417,9 +386,9 @@ theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).S
     · rw [if_neg h2]
       apply sat_empty
       
-  | ee.reduce n::es, ((b, as)::eqs, les), h1 => by
+  | ee.reduce n :: es, ((b, as) :: eqs, les), h1 => by
     simp only [eq_elim]
-    by_cases h2:0 < get n as
+    by_cases h2 : 0 < get n as
     run_tac
       tactic.rotate 1
     · rw [if_neg h2]
@@ -452,7 +421,7 @@ theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).S
       rw [← h7, ← subst_correct h2 h4]
       apply h3 _ h6
       
-  | ee.cancel m::es, (Eq::eqs, les), h1 => by
+  | ee.cancel m :: es, (Eq :: eqs, les), h1 => by
     unfold eq_elim
     apply sat_eq_elim
     cases' h1 with v h1

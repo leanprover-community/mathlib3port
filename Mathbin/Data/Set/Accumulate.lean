@@ -36,7 +36,7 @@ theorem subset_accumulate [Preorder α] {x : α} : s x ⊆ accumulate s x := fun
 #align set.subset_accumulate Set.subset_accumulate
 
 theorem monotone_accumulate [Preorder α] : Monotone (accumulate s) := fun x y hxy =>
-  bUnion_subset_bUnion_left $ fun z hz => le_trans hz hxy
+  bUnion_subset_bUnion_left fun z hz => le_trans hz hxy
 #align set.monotone_accumulate Set.monotone_accumulate
 
 theorem bUnion_accumulate [Preorder α] (x : α) : (⋃ y ≤ x, accumulate s y) = ⋃ y ≤ x, s y := by

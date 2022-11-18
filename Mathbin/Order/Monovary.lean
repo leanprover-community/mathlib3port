@@ -103,19 +103,19 @@ theorem monovary_on_self (f : ι → α) (s : Set ι) : MonovaryOn f f s := fun 
 #align monovary_on_self monovary_on_self
 
 protected theorem Subsingleton.monovary [Subsingleton ι] (f : ι → α) (g : ι → β) : Monovary f g := fun i j h =>
-  (ne_of_apply_ne _ h.Ne $ Subsingleton.elim _ _).elim
+  (ne_of_apply_ne _ h.Ne <| Subsingleton.elim _ _).elim
 #align subsingleton.monovary Subsingleton.monovary
 
 protected theorem Subsingleton.antivary [Subsingleton ι] (f : ι → α) (g : ι → β) : Antivary f g := fun i j h =>
-  (ne_of_apply_ne _ h.Ne $ Subsingleton.elim _ _).elim
+  (ne_of_apply_ne _ h.Ne <| Subsingleton.elim _ _).elim
 #align subsingleton.antivary Subsingleton.antivary
 
 protected theorem Subsingleton.monovary_on [Subsingleton ι] (f : ι → α) (g : ι → β) (s : Set ι) : MonovaryOn f g s :=
-  fun i _ j _ h => (ne_of_apply_ne _ h.Ne $ Subsingleton.elim _ _).elim
+  fun i _ j _ h => (ne_of_apply_ne _ h.Ne <| Subsingleton.elim _ _).elim
 #align subsingleton.monovary_on Subsingleton.monovary_on
 
 protected theorem Subsingleton.antivary_on [Subsingleton ι] (f : ι → α) (g : ι → β) (s : Set ι) : AntivaryOn f g s :=
-  fun i _ j _ h => (ne_of_apply_ne _ h.Ne $ Subsingleton.elim _ _).elim
+  fun i _ j _ h => (ne_of_apply_ne _ h.Ne <| Subsingleton.elim _ _).elim
 #align subsingleton.antivary_on Subsingleton.antivary_on
 
 theorem monovary_on_const_left (g : ι → β) (a : α) (s : Set ι) : MonovaryOn (const ι a) g s := fun i _ j _ _ => le_rfl
@@ -147,35 +147,35 @@ theorem AntivaryOn.comp_right (h : AntivaryOn f g s) (k : ι' → ι) : Antivary
 #align antivary_on.comp_right AntivaryOn.comp_right
 
 theorem Monovary.comp_monotone_left (h : Monovary f g) (hf : Monotone f') : Monovary (f' ∘ f) g := fun i j hij =>
-  hf $ h hij
+  hf <| h hij
 #align monovary.comp_monotone_left Monovary.comp_monotone_left
 
 theorem Monovary.comp_antitone_left (h : Monovary f g) (hf : Antitone f') : Antivary (f' ∘ f) g := fun i j hij =>
-  hf $ h hij
+  hf <| h hij
 #align monovary.comp_antitone_left Monovary.comp_antitone_left
 
 theorem Antivary.comp_monotone_left (h : Antivary f g) (hf : Monotone f') : Antivary (f' ∘ f) g := fun i j hij =>
-  hf $ h hij
+  hf <| h hij
 #align antivary.comp_monotone_left Antivary.comp_monotone_left
 
 theorem Antivary.comp_antitone_left (h : Antivary f g) (hf : Antitone f') : Monovary (f' ∘ f) g := fun i j hij =>
-  hf $ h hij
+  hf <| h hij
 #align antivary.comp_antitone_left Antivary.comp_antitone_left
 
 theorem MonovaryOn.comp_monotone_on_left (h : MonovaryOn f g s) (hf : Monotone f') : MonovaryOn (f' ∘ f) g s :=
-  fun i hi j hj hij => hf $ h hi hj hij
+  fun i hi j hj hij => hf <| h hi hj hij
 #align monovary_on.comp_monotone_on_left MonovaryOn.comp_monotone_on_left
 
 theorem MonovaryOn.comp_antitone_on_left (h : MonovaryOn f g s) (hf : Antitone f') : AntivaryOn (f' ∘ f) g s :=
-  fun i hi j hj hij => hf $ h hi hj hij
+  fun i hi j hj hij => hf <| h hi hj hij
 #align monovary_on.comp_antitone_on_left MonovaryOn.comp_antitone_on_left
 
 theorem AntivaryOn.comp_monotone_on_left (h : AntivaryOn f g s) (hf : Monotone f') : AntivaryOn (f' ∘ f) g s :=
-  fun i hi j hj hij => hf $ h hi hj hij
+  fun i hi j hj hij => hf <| h hi hj hij
 #align antivary_on.comp_monotone_on_left AntivaryOn.comp_monotone_on_left
 
 theorem AntivaryOn.comp_antitone_on_left (h : AntivaryOn f g s) (hf : Antitone f') : MonovaryOn (f' ∘ f) g s :=
-  fun i hi j hj hij => hf $ h hi hj hij
+  fun i hi j hj hij => hf <| h hi hj hij
 #align antivary_on.comp_antitone_on_left AntivaryOn.comp_antitone_on_left
 
 section OrderDual
@@ -340,38 +340,38 @@ variable [Preorder α] [LinearOrder β] [Preorder γ] {f : ι → α} {f' : α �
 
 theorem MonovaryOn.comp_monotone_on_right (h : MonovaryOn f g s) (hg : MonotoneOn g' (g '' s)) :
     MonovaryOn f (g' ∘ g) s := fun i hi j hj hij =>
-  h hi hj $ hg.reflect_lt (mem_image_of_mem _ hi) (mem_image_of_mem _ hj) hij
+  h hi hj <| hg.reflect_lt (mem_image_of_mem _ hi) (mem_image_of_mem _ hj) hij
 #align monovary_on.comp_monotone_on_right MonovaryOn.comp_monotone_on_right
 
 theorem MonovaryOn.comp_antitone_on_right (h : MonovaryOn f g s) (hg : AntitoneOn g' (g '' s)) :
     AntivaryOn f (g' ∘ g) s := fun i hi j hj hij =>
-  h hj hi $ hg.reflect_lt (mem_image_of_mem _ hi) (mem_image_of_mem _ hj) hij
+  h hj hi <| hg.reflect_lt (mem_image_of_mem _ hi) (mem_image_of_mem _ hj) hij
 #align monovary_on.comp_antitone_on_right MonovaryOn.comp_antitone_on_right
 
 theorem AntivaryOn.comp_monotone_on_right (h : AntivaryOn f g s) (hg : MonotoneOn g' (g '' s)) :
     AntivaryOn f (g' ∘ g) s := fun i hi j hj hij =>
-  h hi hj $ hg.reflect_lt (mem_image_of_mem _ hi) (mem_image_of_mem _ hj) hij
+  h hi hj <| hg.reflect_lt (mem_image_of_mem _ hi) (mem_image_of_mem _ hj) hij
 #align antivary_on.comp_monotone_on_right AntivaryOn.comp_monotone_on_right
 
 theorem AntivaryOn.comp_antitone_on_right (h : AntivaryOn f g s) (hg : AntitoneOn g' (g '' s)) :
     MonovaryOn f (g' ∘ g) s := fun i hi j hj hij =>
-  h hj hi $ hg.reflect_lt (mem_image_of_mem _ hi) (mem_image_of_mem _ hj) hij
+  h hj hi <| hg.reflect_lt (mem_image_of_mem _ hi) (mem_image_of_mem _ hj) hij
 #align antivary_on.comp_antitone_on_right AntivaryOn.comp_antitone_on_right
 
 protected theorem Monovary.symm (h : Monovary f g) : Monovary g f := fun i j hf =>
-  le_of_not_lt $ fun hg => hf.not_le $ h hg
+  le_of_not_lt fun hg => hf.not_le <| h hg
 #align monovary.symm Monovary.symm
 
 protected theorem Antivary.symm (h : Antivary f g) : Antivary g f := fun i j hf =>
-  le_of_not_lt $ fun hg => hf.not_le $ h hg
+  le_of_not_lt fun hg => hf.not_le <| h hg
 #align antivary.symm Antivary.symm
 
 protected theorem MonovaryOn.symm (h : MonovaryOn f g s) : MonovaryOn g f s := fun i hi j hj hf =>
-  le_of_not_lt $ fun hg => hf.not_le $ h hj hi hg
+  le_of_not_lt fun hg => hf.not_le <| h hj hi hg
 #align monovary_on.symm MonovaryOn.symm
 
 protected theorem AntivaryOn.symm (h : AntivaryOn f g s) : AntivaryOn g f s := fun i hi j hj hf =>
-  le_of_not_lt $ fun hg => hf.not_le $ h hi hj hg
+  le_of_not_lt fun hg => hf.not_le <| h hi hj hg
 #align antivary_on.symm AntivaryOn.symm
 
 end LinearOrder

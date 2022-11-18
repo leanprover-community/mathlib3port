@@ -107,7 +107,7 @@ theorem measure_smul_average [IsFiniteMeasure μ] (f : α → E) : ((μ univ).to
   · rw [hμ, integral_zero_measure, average_zero_measure, smul_zero]
     
   · rw [average_eq, smul_inv_smul₀]
-    refine' (Ennreal.to_real_pos _ $ measure_ne_top _ _).ne'
+    refine' (Ennreal.to_real_pos _ <| measure_ne_top _ _).ne'
     rwa [Ne.def, measure_univ_eq_zero]
     
 #align measure_theory.measure_smul_average MeasureTheory.measure_smul_average
@@ -173,7 +173,7 @@ theorem average_union_mem_open_segment {f : α → E} {s t : Set α} (hd : AeDis
 theorem average_union_mem_segment {f : α → E} {s t : Set α} (hd : AeDisjoint μ s t) (ht : NullMeasurableSet t μ)
     (hsμ : μ s ≠ ∞) (htμ : μ t ≠ ∞) (hfs : IntegrableOn f s μ) (hft : IntegrableOn f t μ) :
     (⨍ x in s ∪ t, f x ∂μ) ∈ [⨍ x in s, f x ∂μ -[ℝ] ⨍ x in t, f x ∂μ] := by
-  by_cases hse:μ s = 0
+  by_cases hse : μ s = 0
   · rw [← ae_eq_empty] at hse
     rw [restrict_congr_set (hse.union eventually_eq.rfl), empty_union]
     exact right_mem_segment _ _ _

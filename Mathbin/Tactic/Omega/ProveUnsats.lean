@@ -18,7 +18,7 @@ open Tactic
 /-- Return expr of proof that given int is negative -/
 unsafe def prove_neg : Int → tactic expr
   | Int.ofNat _ => failed
-  | -[1+ m] => return q(Int.negSucc_lt_zero $(q(m)))
+  | -[m+1] => return q(Int.negSucc_lt_zero $(q(m)))
 #align omega.prove_neg omega.prove_neg
 
 theorem forall_mem_repeat_zero_eq_zero (m : Nat) : ∀ x ∈ List.repeat (0 : Int) m, x = (0 : Int) := fun x =>
@@ -40,10 +40,9 @@ unsafe def prove_unsat_lin_comb (ks : List Nat) (ts : List Term) : tactic expr :
   to_expr ``(unsat_lin_comb_of $(q(ks)) $(q(ts)) $(x1) $(x2))
 #align omega.prove_unsat_lin_comb omega.prove_unsat_lin_comb
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given a (([],les) : clause), return the expr of a term (t : clause.unsat ([],les)). -/
 unsafe def prove_unsat_ef : Clause → tactic expr
-  | (_::_, _) => failed
+  | (_ :: _, _) => failed
   | ([], les) => do
     let ks ← find_scalars les
     let x ← prove_unsat_lin_comb ks les
@@ -57,11 +56,10 @@ unsafe def prove_unsat (c : Clause) : tactic expr := do
   return q(unsat_of_unsat_eq_elim $(q(ee)) $(q(c)) $(x))
 #align omega.prove_unsat omega.prove_unsat
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given a (cs : list clause), return the expr of a term (t : clauses.unsat cs)  -/
 unsafe def prove_unsats : List Clause → tactic expr
   | [] => return q(Clauses.unsat_nil)
-  | p::ps => do
+  | p :: ps => do
     let x ← prove_unsat p
     let xs ← prove_unsats ps
     to_expr ``(Clauses.unsat_cons $(q(p)) $(q(ps)) $(x) $(xs))

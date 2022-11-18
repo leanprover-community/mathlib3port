@@ -47,7 +47,7 @@ theorem Real.Inf_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : inf (a • s) = a
 #align real.Inf_smul_of_nonneg Real.Inf_smul_of_nonneg
 
 theorem Real.smul_infi_of_nonneg (ha : 0 ≤ a) (f : ι → ℝ) : (a • ⨅ i, f i) = ⨅ i, a • f i :=
-  (Real.Inf_smul_of_nonneg ha _).symm.trans $ congr_arg inf $ (range_comp _ _).symm
+  (Real.Inf_smul_of_nonneg ha _).symm.trans <| congr_arg inf <| (range_comp _ _).symm
 #align real.smul_infi_of_nonneg Real.smul_infi_of_nonneg
 
 theorem Real.Sup_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : sup (a • s) = a • sup s := by
@@ -66,7 +66,7 @@ theorem Real.Sup_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : sup (a • s) = a
 #align real.Sup_smul_of_nonneg Real.Sup_smul_of_nonneg
 
 theorem Real.smul_supr_of_nonneg (ha : 0 ≤ a) (f : ι → ℝ) : (a • ⨆ i, f i) = ⨆ i, a • f i :=
-  (Real.Sup_smul_of_nonneg ha _).symm.trans $ congr_arg sup $ (range_comp _ _).symm
+  (Real.Sup_smul_of_nonneg ha _).symm.trans <| congr_arg sup <| (range_comp _ _).symm
 #align real.smul_supr_of_nonneg Real.smul_supr_of_nonneg
 
 end MulActionWithZero
@@ -91,7 +91,7 @@ theorem Real.Inf_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : inf (a • s) = a
 #align real.Inf_smul_of_nonpos Real.Inf_smul_of_nonpos
 
 theorem Real.smul_supr_of_nonpos (ha : a ≤ 0) (f : ι → ℝ) : (a • ⨆ i, f i) = ⨅ i, a • f i :=
-  (Real.Inf_smul_of_nonpos ha _).symm.trans $ congr_arg inf $ (range_comp _ _).symm
+  (Real.Inf_smul_of_nonpos ha _).symm.trans <| congr_arg inf <| (range_comp _ _).symm
 #align real.smul_supr_of_nonpos Real.smul_supr_of_nonpos
 
 theorem Real.Sup_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : sup (a • s) = a • inf s := by
@@ -110,7 +110,7 @@ theorem Real.Sup_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : sup (a • s) = a
 #align real.Sup_smul_of_nonpos Real.Sup_smul_of_nonpos
 
 theorem Real.smul_infi_of_nonpos (ha : a ≤ 0) (f : ι → ℝ) : (a • ⨅ i, f i) = ⨆ i, a • f i :=
-  (Real.Sup_smul_of_nonpos ha _).symm.trans $ congr_arg sup $ (range_comp _ _).symm
+  (Real.Sup_smul_of_nonpos ha _).symm.trans <| congr_arg sup <| (range_comp _ _).symm
 #align real.smul_infi_of_nonpos Real.smul_infi_of_nonpos
 
 end Module

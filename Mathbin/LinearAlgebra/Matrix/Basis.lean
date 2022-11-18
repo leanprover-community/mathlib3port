@@ -63,7 +63,7 @@ theorem to_matrix_apply : e.toMatrix v i j = e.repr (v j) i :=
 #align basis.to_matrix_apply Basis.to_matrix_apply
 
 theorem to_matrix_transpose_apply : (e.toMatrix v)ᵀ j = e.repr (v j) :=
-  funext $ fun _ => rfl
+  funext fun _ => rfl
 #align basis.to_matrix_transpose_apply Basis.to_matrix_transpose_apply
 
 theorem to_matrix_eq_to_matrix_constr [Fintype ι] [DecidableEq ι] (v : ι → M) :
@@ -102,7 +102,7 @@ theorem to_matrix_update [DecidableEq ι'] (x : M) :
 theorem to_matrix_units_smul [DecidableEq ι] (e : Basis ι R₂ M₂) (w : ι → R₂ˣ) :
     e.toMatrix (e.units_smul w) = diagonal (coe ∘ w) := by
   ext (i j)
-  by_cases h:i = j
+  by_cases h : i = j
   · simp [h, to_matrix_apply, units_smul_apply, Units.smul_def]
     
   · simp [h, to_matrix_apply, units_smul_apply, Units.smul_def, Ne.symm h]
@@ -122,7 +122,7 @@ theorem sum_to_matrix_smul_self [Fintype ι] : (∑ i : ι, e.toMatrix v i j •
 #align basis.sum_to_matrix_smul_self Basis.sum_to_matrix_smul_self
 
 theorem to_matrix_map_vec_mul {S : Type _} [Ring S] [Algebra R S] [Fintype ι] (b : Basis ι R S) (v : ι' → S) :
-    ((b.toMatrix v).map $ algebraMap R S).vecMul b = v := by
+    ((b.toMatrix v).map <| algebraMap R S).vecMul b = v := by
   ext i
   simp_rw [vec_mul, dot_product, Matrix.map_apply, ← Algebra.commutes, ← Algebra.smul_def, sum_to_matrix_smul_self]
 #align basis.to_matrix_map_vec_mul Basis.to_matrix_map_vec_mul

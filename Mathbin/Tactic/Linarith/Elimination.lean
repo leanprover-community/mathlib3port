@@ -214,7 +214,7 @@ and tracks this in the `comp_source`.
 -/
 unsafe def pelim_var (p1 p2 : pcomp) (a : ℕ) : Option pcomp := do
   let (n1, n2) ← elim_var p1.c p2.c a
-  return $ (p1 n1).add (p2 n2) a
+  return <| (p1 n1).add (p2 n2) a
 #align linarith.pelim_var linarith.pelim_var
 
 /-- A `pcomp` represents a contradiction if its `comp` field represents a contradiction.
@@ -227,7 +227,7 @@ unsafe def pcomp.is_contr (p : pcomp) : Bool :=
 for every `p' ∈ comps`.
 -/
 unsafe def elim_with_set (a : ℕ) (p : pcomp) (comps : rb_set pcomp) : rb_set pcomp :=
-  comps.fold mk_pcomp_set $ fun pc s =>
+  (comps.fold mk_pcomp_set) fun pc s =>
     match pelim_var p pc a with
     | some pc => if pc.maybe_minimal a then s.insert pc else s
     | none => s
@@ -288,7 +288,7 @@ unsafe def update (max_var : ℕ) (comps : rb_set pcomp) : linarith_monad Unit :
 Returns `(pos, neg, not_present)`.
 -/
 unsafe def split_set_by_var_sign (a : ℕ) (comps : rb_set pcomp) : rb_set pcomp × rb_set pcomp × rb_set pcomp :=
-  comps.fold ⟨mk_pcomp_set, mk_pcomp_set, mk_pcomp_set⟩ $ fun pc ⟨Pos, neg, not_present⟩ =>
+  (comps.fold ⟨mk_pcomp_set, mk_pcomp_set, mk_pcomp_set⟩) fun pc ⟨Pos, neg, not_present⟩ =>
     let n := pc.c.coeffOf a
     if n > 0 then ⟨Pos.insert pc, neg, not_present⟩
     else if n < 0 then ⟨Pos, neg.insert pc, not_present⟩ else ⟨Pos, neg, not_present.insert pc⟩
@@ -299,7 +299,7 @@ from the `linarith` state.
 -/
 unsafe def monad.elim_var (a : ℕ) : linarith_monad Unit := do
   let vs ← get_max_var
-  when (a ≤ vs) $ do
+  when (a ≤ vs) <| do
       let ⟨Pos, neg, not_present⟩ ← split_set_by_var_sign a <$> get_comps
       let cs' := Pos not_present fun p s => s (elim_with_set a p neg)
       update (vs - 1) cs'
@@ -310,14 +310,14 @@ ground comparisons. If this succeeds without exception, the original `linarith` 
 -/
 unsafe def elim_all_vars : linarith_monad Unit := do
   let mv ← get_max_var
-  (List.range $ mv + 1).reverse.mmap' monad.elim_var
+  (List.range <| mv + 1).reverse.mmap' monad.elim_var
 #align linarith.elim_all_vars linarith.elim_all_vars
 
 /-- `mk_linarith_structure hyps vars` takes a list of hypotheses and the largest variable present in
 those hypotheses. It produces an initial state for the elimination monad.
 -/
 unsafe def mk_linarith_structure (hyps : List Comp) (max_var : ℕ) : linarith_structure :=
-  let pcomp_list : List pcomp := hyps.enum.map $ fun ⟨n, cmp⟩ => pcomp.assump cmp n
+  let pcomp_list : List pcomp := hyps.enum.map fun ⟨n, cmp⟩ => pcomp.assump cmp n
   let pcomp_set := rb_set.of_list_core mk_pcomp_set pcomp_list
   ⟨max_var, pcomp_set⟩
 #align linarith.mk_linarith_structure linarith.mk_linarith_structure

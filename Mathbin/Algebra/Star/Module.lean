@@ -136,7 +136,7 @@ as a linear equivalence. -/
 def StarModule.decomposeProdAdjoint : A ≃ₗ[R] selfAdjoint A × skewAdjoint A :=
   LinearEquiv.ofLinear ((selfAdjointPart R).Prod (skewAdjointPart R))
     ((selfAdjoint.submodule R A).Subtype.coprod (skewAdjoint.submodule R A).Subtype) (by ext <;> simp)
-    (LinearMap.ext $ StarModule.self_adjoint_part_add_skew_adjoint_part R)
+    (LinearMap.ext <| StarModule.self_adjoint_part_add_skew_adjoint_part R)
 #align star_module.decompose_prod_adjoint StarModule.decomposeProdAdjoint
 
 @[simp]

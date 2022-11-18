@@ -5,7 +5,6 @@ Authors: Eric Wieser
 -/
 import Mathbin.Algebra.Star.Basic
 import Mathbin.Algebra.Ring.Pi
-import Mathbin.Algebra.Module.Pi
 
 /-!
 # `star` on pi types
@@ -37,19 +36,19 @@ theorem star_def [∀ i, HasStar (f i)] (x : ∀ i, f i) : star x = fun i => sta
 #align pi.star_def Pi.star_def
 
 instance [∀ i, HasInvolutiveStar (f i)] :
-    HasInvolutiveStar (∀ i, f i) where star_involutive _ := funext $ fun _ => star_star _
+    HasInvolutiveStar (∀ i, f i) where star_involutive _ := funext fun _ => star_star _
 
 instance [∀ i, Semigroup (f i)] [∀ i, StarSemigroup (f i)] :
-    StarSemigroup (∀ i, f i) where star_mul _ _ := funext $ fun _ => star_mul _ _
+    StarSemigroup (∀ i, f i) where star_mul _ _ := funext fun _ => star_mul _ _
 
 instance [∀ i, AddMonoid (f i)] [∀ i, StarAddMonoid (f i)] :
-    StarAddMonoid (∀ i, f i) where star_add _ _ := funext $ fun _ => star_add _ _
+    StarAddMonoid (∀ i, f i) where star_add _ _ := funext fun _ => star_add _ _
 
 instance [∀ i, NonUnitalSemiring (f i)] [∀ i, StarRing (f i)] : StarRing (∀ i, f i) :=
   { Pi.starAddMonoid, (Pi.starSemigroup : StarSemigroup (∀ i, f i)) with }
 
 instance {R : Type w} [∀ i, HasSmul R (f i)] [HasStar R] [∀ i, HasStar (f i)] [∀ i, StarModule R (f i)] :
-    StarModule R (∀ i, f i) where star_smul r x := funext $ fun i => star_smul r (x i)
+    StarModule R (∀ i, f i) where star_smul r x := funext fun i => star_smul r (x i)
 
 theorem single_star [∀ i, AddMonoid (f i)] [∀ i, StarAddMonoid (f i)] [DecidableEq I] (i : I) (a : f i) :
     Pi.single i (star a) = star (Pi.single i a) :=
@@ -62,7 +61,7 @@ namespace Function
 
 theorem update_star [∀ i, HasStar (f i)] [DecidableEq I] (h : ∀ i : I, f i) (i : I) (a : f i) :
     Function.update (star h) i (star a) = star (Function.update h i a) :=
-  funext $ fun j => (apply_update (fun i => star) h i a j).symm
+  funext fun j => (apply_update (fun i => star) h i a j).symm
 #align function.update_star Function.update_star
 
 theorem star_sum_elim {I J α : Type _} (x : I → α) (y : J → α) [HasStar α] :

@@ -181,7 +181,7 @@ theorem is_coprod_iff_is_pushout {X E Y YE : C} (c : BinaryCofan X E) (hc : IsCo
     fapply limits.binary_cofan.is_colimit_mk
     · exact fun s =>
         H.is_colimit.desc
-          (pushout_cocone.mk s.inr _ $ (hc.fac (binary_cofan.mk (f ≫ s.inr) s.inl) ⟨walking_pair.left⟩).symm)
+          (pushout_cocone.mk s.inr _ <| (hc.fac (binary_cofan.mk (f ≫ s.inr) s.inl) ⟨walking_pair.left⟩).symm)
       
     · intro s
       erw [category.assoc, H.is_colimit.fac _ walking_span.right, hc.fac]

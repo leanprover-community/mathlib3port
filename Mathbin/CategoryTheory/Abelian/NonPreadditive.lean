@@ -107,9 +107,9 @@ instance : Epi (Abelian.factorThruImage f) :=
   let I := Abelian.image f
   let p := Abelian.factorThruImage f
   let i := kernel.ι (cokernel.π f)
-  -- It will suffice to consider some g : I ⟶ R such that p ≫ g = 0 and show that g = 0.
+  (-- It will suffice to consider some g : I ⟶ R such that p ≫ g = 0 and show that g = 0.
       NormalMonoCategory.epi_of_zero_cancel
-      _ $
+      _)
     fun R (g : I ⟶ R) (hpg : p ≫ g = 0) => by
     -- Since C is abelian, u := ker g ≫ i is the kernel of some morphism h.
     let u := kernel.ι g ≫ i
@@ -155,7 +155,7 @@ instance : Mono (Abelian.factorThruCoimage f) :=
   let I := Abelian.coimage f
   let i := Abelian.factorThruCoimage f
   let p := cokernel.π (kernel.ι f)
-  NormalEpiCategory.mono_of_cancel_zero _ $ fun R (g : R ⟶ I) (hgi : g ≫ i = 0) => by
+  (NormalEpiCategory.mono_of_cancel_zero _) fun R (g : R ⟶ I) (hgi : g ≫ i = 0) => by
     -- Since C is abelian, u := p ≫ coker g is the cokernel of some morphism h.
     let u := p ≫ cokernel.π g
     haveI : epi u := epi_comp _ _
@@ -208,8 +208,8 @@ def epiIsCokernelOfKernel [Epi f] (s : Fork f 0) (h : IsLimit s) :
     IsColimit (CokernelCofork.ofπ f (KernelFork.condition s)) :=
   IsCokernel.cokernelIso _ _
     (cokernel.ofIsoComp _ _ (Limits.IsLimit.conePointUniqueUpToIso (limit.isLimit _) h)
-      (ConeMorphism.w (Limits.IsLimit.uniqueUpToIso (limit.isLimit _) h).Hom _))
-    (as_iso $ Abelian.factorThruCoimage f) (Abelian.coimage.fac f)
+      (ConeMorphism.w (Limits.IsLimit.uniqueUpToIso (limit.isLimit _) h).hom _))
+    (as_iso <| Abelian.factorThruCoimage f) (Abelian.coimage.fac f)
 #align
   category_theory.non_preadditive_abelian.epi_is_cokernel_of_kernel CategoryTheory.NonPreadditiveAbelian.epiIsCokernelOfKernel
 
@@ -220,8 +220,8 @@ def monoIsKernelOfCokernel [Mono f] (s : Cofork f 0) (h : IsColimit s) :
     IsLimit (KernelFork.ofι f (CokernelCofork.condition s)) :=
   IsKernel.isoKernel _ _
     (kernel.ofCompIso _ _ (Limits.IsColimit.coconePointUniqueUpToIso h (colimit.isColimit _))
-      (CoconeMorphism.w (Limits.IsColimit.uniqueUpToIso h $ colimit.isColimit _).Hom _))
-    (as_iso $ Abelian.factorThruImage f) (Abelian.image.fac f)
+      (CoconeMorphism.w (Limits.IsColimit.uniqueUpToIso h <| colimit.isColimit _).hom _))
+    (as_iso <| Abelian.factorThruImage f) (Abelian.image.fac f)
 #align
   category_theory.non_preadditive_abelian.mono_is_kernel_of_cokernel CategoryTheory.NonPreadditiveAbelian.monoIsKernelOfCokernel
 
@@ -236,7 +236,7 @@ abbrev r (A : C) : A ⟶ cokernel (diag A) :=
 #align category_theory.non_preadditive_abelian.r CategoryTheory.NonPreadditiveAbelian.r
 
 instance mono_Δ {A : C} : Mono (diag A) :=
-  mono_of_mono_fac $ prod.lift_fst _ _
+  mono_of_mono_fac <| prod.lift_fst _ _
 #align category_theory.non_preadditive_abelian.mono_Δ CategoryTheory.NonPreadditiveAbelian.mono_Δ
 
 instance mono_r {A : C} : Mono (r A) := by

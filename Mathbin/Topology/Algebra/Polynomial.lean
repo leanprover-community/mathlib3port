@@ -3,11 +3,11 @@ Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
-import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Polynomial.Inductions
 import Mathbin.Data.Polynomial.Splits
 import Mathbin.RingTheory.Polynomial.Vieta
+import Mathbin.Analysis.Normed.Field.Basic
 
 /-!
 # Polynomials and limits
@@ -21,8 +21,8 @@ In this file we prove the following lemmas.
 * `polynomial.continuous`:  `polynomial.eval` defines a continuous functions;
   we also prove convenience lemmas `polynomial.continuous_at`, `polynomial.continuous_within_at`,
   `polynomial.continuous_on`.
-* `polynomial.tendsto_norm_at_top`: `λ x, ∥polynomial.eval (z x) p∥` tends to infinity provided that
-  `λ x, ∥z x∥` tends to infinity and `0 < degree p`;
+* `polynomial.tendsto_norm_at_top`: `λ x, ‖polynomial.eval (z x) p‖` tends to infinity provided that
+  `λ x, ‖z x‖` tends to infinity and `0 < degree p`;
 * `polynomial.tendsto_abv_eval₂_at_top`, `polynomial.tendsto_abv_at_top`,
   `polynomial.tendsto_abv_aeval_at_top`: a few versions of the previous statement for
   `is_absolute_value abv` instead of norm.
@@ -116,7 +116,7 @@ theorem tendsto_abv_eval₂_at_top {R S k α : Type _} [Semiring R] [Ring S] [Li
 theorem tendsto_abv_at_top {R k α : Type _} [Ring R] [LinearOrderedField k] (abv : R → k) [IsAbsoluteValue abv]
     (p : R[X]) (h : 0 < degree p) {l : Filter α} {z : α → R} (hz : Tendsto (abv ∘ z) l atTop) :
     Tendsto (fun x => abv (p.eval (z x))) l atTop :=
-  tendsto_abv_eval₂_at_top _ _ _ h (mt leading_coeff_eq_zero.1 $ ne_zero_of_degree_gt h) hz
+  tendsto_abv_eval₂_at_top _ _ _ h (mt leading_coeff_eq_zero.1 <| ne_zero_of_degree_gt h) hz
 #align polynomial.tendsto_abv_at_top Polynomial.tendsto_abv_at_top
 
 theorem tendsto_abv_aeval_at_top {R A k α : Type _} [CommSemiring R] [Ring A] [Algebra R A] [LinearOrderedField k]
@@ -128,13 +128,13 @@ theorem tendsto_abv_aeval_at_top {R A k α : Type _} [CommSemiring R] [Ring A] [
 variable {α R : Type _} [NormedRing R] [IsAbsoluteValue (norm : R → ℝ)]
 
 theorem tendsto_norm_at_top (p : R[X]) (h : 0 < degree p) {l : Filter α} {z : α → R}
-    (hz : Tendsto (fun x => ∥z x∥) l atTop) : Tendsto (fun x => ∥p.eval (z x)∥) l atTop :=
+    (hz : Tendsto (fun x => ‖z x‖) l atTop) : Tendsto (fun x => ‖p.eval (z x)‖) l atTop :=
   p.tendsto_abv_at_top norm h hz
 #align polynomial.tendsto_norm_at_top Polynomial.tendsto_norm_at_top
 
-theorem exists_forall_norm_le [ProperSpace R] (p : R[X]) : ∃ x, ∀ y, ∥p.eval x∥ ≤ ∥p.eval y∥ :=
+theorem exists_forall_norm_le [ProperSpace R] (p : R[X]) : ∃ x, ∀ y, ‖p.eval x‖ ≤ ‖p.eval y‖ :=
   if hp0 : 0 < degree p then
-    p.Continuous.norm.exists_forall_le $ p.tendsto_norm_at_top hp0 tendsto_norm_cocompact_at_top
+    p.Continuous.norm.exists_forall_le <| p.tendsto_norm_at_top hp0 tendsto_norm_cocompact_at_top
   else ⟨p.coeff 0, by rw [eq_C_of_degree_le_zero (le_of_not_gt hp0)] <;> simp⟩
 #align polynomial.exists_forall_norm_le Polynomial.exists_forall_norm_le
 
@@ -147,7 +147,7 @@ variable {F K : Type _} [CommRing F] [NormedField K]
 open Multiset
 
 theorem eq_one_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (hB : B < 0) (h1 : p.Monic) (h2 : Splits f p)
-    (h3 : ∀ z ∈ (map f p).roots, ∥z∥ ≤ B) : p = 1 :=
+    (h3 : ∀ z ∈ (map f p).roots, ‖z‖ ≤ B) : p = 1 :=
   h1.nat_degree_eq_zero_iff_eq_one.mp
     (by
       contrapose! hB
@@ -157,7 +157,7 @@ theorem eq_one_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (hB : B < 0) (h1
 #align polynomial.eq_one_of_roots_le Polynomial.eq_one_of_roots_le
 
 theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 : p.Monic) (h2 : Splits f p)
-    (h3 : ∀ z ∈ (map f p).roots, ∥z∥ ≤ B) : ∥(map f p).coeff i∥ ≤ B ^ (p.natDegree - i) * p.natDegree.choose i := by
+    (h3 : ∀ z ∈ (map f p).roots, ‖z‖ ≤ B) : ‖(map f p).coeff i‖ ≤ B ^ (p.natDegree - i) * p.natDegree.choose i := by
   obtain hB | hB := lt_or_le B 0
   · rw [eq_one_of_roots_le hB h1 h2 h3, Polynomial.map_one, nat_degree_one, zero_tsub, pow_zero, one_mul, coeff_one]
     split_ifs <;> norm_num [h]
@@ -169,7 +169,7 @@ theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 
     
   rw [coeff_eq_esymm_roots_of_splits ((splits_id_iff_splits f).2 h2) hi, (h1.map _).leadingCoeff, one_mul, norm_mul,
     norm_pow, norm_neg, norm_one, one_pow, one_mul]
-  apply ((norm_multiset_sum_le _).trans $ sum_le_card_nsmul _ _ $ fun r hr => _).trans
+  apply ((norm_multiset_sum_le _).trans <| (sum_le_card_nsmul _ _) fun r hr => _).trans
   · rw [Multiset.map_map, card_map, card_powerset_len, ← nat_degree_eq_card_roots' h2, Nat.choose_symm hi, mul_comm,
       nsmul_eq_mul]
     
@@ -179,7 +179,7 @@ theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 
   lift B to ℝ≥0 using hB
   rw [← coe_nnnorm, ← Nnreal.coe_pow, Nnreal.coe_le_coe, ← nnnorm_hom_apply, ← MonoidHom.coe_coe,
     MonoidHom.map_multiset_prod]
-  refine' (prod_le_pow_card _ B $ fun x hx => _).trans_eq (by rw [card_map, hs.2])
+  refine' ((prod_le_pow_card _ B) fun x hx => _).trans_eq (by rw [card_map, hs.2])
   obtain ⟨z, hz, rfl⟩ := Multiset.mem_map.1 hx
   exact h3 z (mem_of_le hs.1 hz)
 #align polynomial.coeff_le_of_roots_le Polynomial.coeff_le_of_roots_le
@@ -187,8 +187,8 @@ theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 
 /-- The coefficients of the monic polynomials of bounded degree with bounded roots are
 uniformely bounded. -/
 theorem coeff_bdd_of_roots_le {B : ℝ} {d : ℕ} (f : F →+* K) {p : F[X]} (h1 : p.Monic) (h2 : Splits f p)
-    (h3 : p.natDegree ≤ d) (h4 : ∀ z ∈ (map f p).roots, ∥z∥ ≤ B) (i : ℕ) :
-    ∥(map f p).coeff i∥ ≤ max B 1 ^ d * d.choose (d / 2) := by
+    (h3 : p.natDegree ≤ d) (h4 : ∀ z ∈ (map f p).roots, ‖z‖ ≤ B) (i : ℕ) :
+    ‖(map f p).coeff i‖ ≤ max B 1 ^ d * d.choose (d / 2) := by
   obtain hB | hB := le_or_lt 0 B
   · apply (coeff_le_of_roots_le i h1 h2 h4).trans
     calc

@@ -31,10 +31,10 @@ variable (m : Type u → Type u) [Monad m] [LawfulMonad m]
 def ofTypeMonad : Monad (Type u) where
   toFunctor := ofTypeFunctor m
   η' := ⟨@pure m _, fun α β f => (LawfulApplicative.map_comp_pure f).symm⟩
-  μ' := ⟨@joinM m _, fun α β (f : α → β) => funext $ fun a => mjoin_map_map f a⟩
-  assoc' α := funext $ fun a => mjoin_map_mjoin a
-  left_unit' α := funext $ fun a => mjoin_pure a
-  right_unit' α := funext $ fun a => mjoin_map_pure a
+  μ' := ⟨@joinM m _, fun α β (f : α → β) => funext fun a => mjoin_map_map f a⟩
+  assoc' α := funext fun a => mjoin_map_mjoin a
+  left_unit' α := funext fun a => mjoin_pure a
+  right_unit' α := funext fun a => mjoin_map_pure a
 #align category_theory.of_type_monad CategoryTheory.ofTypeMonad
 
 /-- The `Kleisli` category of a `control.monad` is equivalent to the `kleisli` category of its

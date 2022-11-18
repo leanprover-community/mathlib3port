@@ -4,8 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.Topology.Sheaves.Presheaf
-import Mathbin.CategoryTheory.FullSubcategory
-import Mathbin.CategoryTheory.Limits.Unit
 import Mathbin.CategoryTheory.Sites.Sheaf
 import Mathbin.CategoryTheory.Sites.Spaces
 

@@ -102,7 +102,7 @@ unsafe def goal_is_not_measurable : tactic Unit := do
 the tactic `apply_assumption` in order to avoid loops in the presence of negated hypotheses in
 the context. -/
 unsafe def measurability_tactics (md : Transparency := semireducible) : List (tactic String) :=
-  [propositional_goal >> tactic.interactive.apply_assumption none { use_exfalso := false } >>
+  [(propositional_goal >> tactic.interactive.apply_assumption none { use_exfalso := false }) >>
       pure "apply_assumption {use_exfalso := ff}",
     goal_is_not_measurable >> intro1 >>= fun ns => pure ("intro " ++ ns.toString),
     apply_rules [] [`` measurability] 50 { md } >> pure "apply_rules with measurability",
@@ -117,7 +117,7 @@ namespace Interactive
 /-- Solve goals of the form `measurable f`, `ae_measurable f μ`, `ae_strongly_measurable f μ` or
 `measurable_set s`. `measurability?` reports back the proof term it found.
 -/
-unsafe def measurability (bang : parse $ optional (tk "!")) (trace : parse $ optional (tk "?"))
+unsafe def measurability (bang : parse <| optional (tk "!")) (trace : parse <| optional (tk "?"))
     (cfg : tidy.cfg := {  }) : tactic Unit :=
   let md := if bang.isSome then semireducible else reducible
   let measurability_core := tactic.tidy { cfg with tactics := measurability_tactics md }

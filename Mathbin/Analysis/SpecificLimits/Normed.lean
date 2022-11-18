@@ -41,18 +41,18 @@ theorem summable_of_absolute_convergence_real {f : ℕ → ℝ} :
 
 
 theorem tendsto_norm_zero' {𝕜 : Type _} [NormedAddCommGroup 𝕜] : Tendsto (norm : 𝕜 → ℝ) (𝓝[≠] 0) (𝓝[>] 0) :=
-  tendsto_norm_zero.inf $ tendsto_principal_principal.2 $ fun x hx => norm_pos_iff.2 hx
+  tendsto_norm_zero.inf <| tendsto_principal_principal.2 fun x hx => norm_pos_iff.2 hx
 #align tendsto_norm_zero' tendsto_norm_zero'
 
 namespace NormedField
 
 theorem tendsto_norm_inverse_nhds_within_0_at_top {𝕜 : Type _} [NormedField 𝕜] :
-    Tendsto (fun x : 𝕜 => ∥x⁻¹∥) (𝓝[≠] 0) atTop :=
-  (tendsto_inv_zero_at_top.comp tendsto_norm_zero').congr $ fun x => (norm_inv x).symm
+    Tendsto (fun x : 𝕜 => ‖x⁻¹‖) (𝓝[≠] 0) atTop :=
+  (tendsto_inv_zero_at_top.comp tendsto_norm_zero').congr fun x => (norm_inv x).symm
 #align normed_field.tendsto_norm_inverse_nhds_within_0_at_top NormedField.tendsto_norm_inverse_nhds_within_0_at_top
 
 theorem tendsto_norm_zpow_nhds_within_0_at_top {𝕜 : Type _} [NormedField 𝕜] {m : ℤ} (hm : m < 0) :
-    Tendsto (fun x : 𝕜 => ∥x ^ m∥) (𝓝[≠] 0) atTop := by
+    Tendsto (fun x : 𝕜 => ‖x ^ m‖) (𝓝[≠] 0) atTop := by
   rcases neg_surjective m with ⟨m, rfl⟩
   rw [neg_lt_zero] at hm
   lift m to ℕ using hm.le
@@ -91,7 +91,7 @@ end NormedField
 theorem is_o_pow_pow_of_lt_left {r₁ r₂ : ℝ} (h₁ : 0 ≤ r₁) (h₂ : r₁ < r₂) :
     (fun n : ℕ => r₁ ^ n) =o[at_top] fun n => r₂ ^ n :=
   have H : 0 < r₂ := h₁.trans_lt h₂
-  (is_o_of_tendsto fun n hn => False.elim $ H.ne' $ pow_eq_zero hn) $
+  (is_o_of_tendsto fun n hn => False.elim <| H.ne' <| pow_eq_zero hn) <|
     (tendsto_pow_at_top_nhds_0_of_lt_1 (div_nonneg h₁ (h₁.trans h₂.le)) ((div_lt_one H).2 h₂)).congr fun n =>
       div_pow _ _ _
 #align is_o_pow_pow_of_lt_left is_o_pow_pow_of_lt_left
@@ -122,149 +122,113 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
       "theorem"
       (Command.declId `tfae_exists_lt_is_o_pow [])
       (Command.declSig
-       [(Term.explicitBinder
-         "("
-         [`f]
-         [":" (Term.arrow (Init.Data.Nat.Basic.termℕ "ℕ") "→" (Data.Real.Basic.termℝ "ℝ"))]
-         []
-         ")")
+       [(Term.explicitBinder "(" [`f] [":" (Term.arrow (termℕ "ℕ") "→" (Data.Real.Basic.termℝ "ℝ"))] [] ")")
         (Term.explicitBinder "(" [`R] [":" (Data.Real.Basic.termℝ "ℝ")] [] ")")]
        (Term.typeSpec
         ":"
         (Term.app
          `Tfae
-         [(Init.Core.«term[_,»
+         [(«term[_]»
            "["
-           [(Init.Logic.«term∃_,_»
+           [(Std.ExtendedBinder.«term∃__,_»
              "∃"
-             (Std.ExtendedBinder.extBinders
-              (Std.ExtendedBinder.extBinder
-               (Lean.binderIdent `a)
-               [(«binderTerm∈_» "∈" (Term.app `ioo [(Init.Core.«term-_» "-" `R) `R]))]))
-             ", "
+             (Lean.binderIdent `a)
+             («binderTerm∈_» "∈" (Term.app `ioo [(«term-_» "-" `R) `R]))
+             ","
              (Asymptotics.Analysis.Asymptotics.Asymptotics.«term_=o[_]_» `f " =o[" `at_top "] " (Term.app `pow [`a])))
             ","
-            (Init.Logic.«term∃_,_»
+            (Std.ExtendedBinder.«term∃__,_»
              "∃"
-             (Std.ExtendedBinder.extBinders
-              (Std.ExtendedBinder.extBinder
-               (Lean.binderIdent `a)
-               [(«binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))]))
-             ", "
+             (Lean.binderIdent `a)
+             («binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))
+             ","
              (Asymptotics.Analysis.Asymptotics.Asymptotics.«term_=o[_]_» `f " =o[" `at_top "] " (Term.app `pow [`a])))
             ","
-            (Init.Logic.«term∃_,_»
+            (Std.ExtendedBinder.«term∃__,_»
              "∃"
-             (Std.ExtendedBinder.extBinders
-              (Std.ExtendedBinder.extBinder
-               (Lean.binderIdent `a)
-               [(«binderTerm∈_» "∈" (Term.app `ioo [(Init.Core.«term-_» "-" `R) `R]))]))
-             ", "
+             (Lean.binderIdent `a)
+             («binderTerm∈_» "∈" (Term.app `ioo [(«term-_» "-" `R) `R]))
+             ","
              (Asymptotics.Analysis.Asymptotics.Asymptotics.«term_=O[_]_» `f " =O[" `at_top "] " (Term.app `pow [`a])))
             ","
-            (Init.Logic.«term∃_,_»
+            (Std.ExtendedBinder.«term∃__,_»
              "∃"
-             (Std.ExtendedBinder.extBinders
-              (Std.ExtendedBinder.extBinder
-               (Lean.binderIdent `a)
-               [(«binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))]))
-             ", "
+             (Lean.binderIdent `a)
+             («binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))
+             ","
              (Asymptotics.Analysis.Asymptotics.Asymptotics.«term_=O[_]_» `f " =O[" `at_top "] " (Term.app `pow [`a])))
             ","
-            (Init.Logic.«term∃_,_»
+            (Std.ExtendedBinder.«term∃__,_»
              "∃"
-             (Std.ExtendedBinder.extBinders
-              (Std.ExtendedBinder.extBinderCollection
-               [(Std.ExtendedBinder.extBinderParenthesized
+             (Lean.binderIdent `a)
+             (Std.ExtendedBinder.«binderTerm<_» "<" `R)
+             ","
+             («term∃_,_»
+              "∃"
+              (Lean.explicitBinders
+               [(Lean.bracketedExplicitBinders "(" [(Lean.binderIdent `C)] ":" (Term.hole "_") ")")
+                (Lean.bracketedExplicitBinders
                  "("
-                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) [(Std.ExtendedBinder.«binderTerm<_» "<" `R)])
-                 ")")
-                (Std.ExtendedBinder.extBinderParenthesized
-                 "("
-                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `C) [])
-                 ")")
-                (Std.ExtendedBinder.extBinderParenthesized
-                 "("
-                 (Std.ExtendedBinder.extBinder
-                  (Lean.binderIdent `h₀)
-                  [(group
-                    ":"
-                    (Init.Logic.«term_∨_»
-                     (Init.Core.«term_<_» (num "0") " < " `C)
-                     " ∨ "
-                     (Init.Core.«term_<_» (num "0") " < " `R)))])
-                 ")")]))
-             ", "
-             (Term.forall
-              "∀"
-              [`n]
-              []
+                 [(Lean.binderIdent `h₀)]
+                 ":"
+                 («term_∨_» («term_<_» (num "0") "<" `C) "∨" («term_<_» (num "0") "<" `R))
+                 ")")])
               ","
-              (Init.Core.«term_≤_»
-               (Algebra.Abs.«term|_|» "|" (Term.app `f [`n]) "|")
-               " ≤ "
-               (Init.Core.«term_*_» `C " * " (Init.Core.«term_^_» `a " ^ " `n)))))
+              (Term.forall
+               "∀"
+               [`n]
+               []
+               ","
+               («term_≤_»
+                («term|___|» (group "|") (Term.app `f [`n]) (group) "|")
+                "≤"
+                («term_*_» `C "*" («term_^_» `a "^" `n))))))
             ","
-            (Init.Logic.«term∃_,_»
+            (Std.ExtendedBinder.«term∃__,_»
              "∃"
-             (Std.ExtendedBinder.extBinders
-              (Std.ExtendedBinder.extBinderCollection
-               [(Std.ExtendedBinder.extBinderParenthesized
-                 "("
-                 (Std.ExtendedBinder.extBinder
-                  (Lean.binderIdent `a)
-                  [(«binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))])
-                 ")")
-                (Std.ExtendedBinder.extBinderParenthesized
-                 "("
-                 (Std.ExtendedBinder.extBinder
-                  (Lean.binderIdent `C)
-                  [(Std.ExtendedBinder.«binderTerm>_» ">" (num "0"))])
-                 ")")]))
-             ", "
-             (Term.forall
-              "∀"
-              [`n]
-              []
+             (Lean.binderIdent `a)
+             («binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))
+             ","
+             (Std.ExtendedBinder.«term∃__,_»
+              "∃"
+              (Lean.binderIdent `C)
+              (Std.ExtendedBinder.«binderTerm>_» ">" (num "0"))
               ","
-              (Init.Core.«term_≤_»
-               (Algebra.Abs.«term|_|» "|" (Term.app `f [`n]) "|")
-               " ≤ "
-               (Init.Core.«term_*_» `C " * " (Init.Core.«term_^_» `a " ^ " `n)))))
+              (Term.forall
+               "∀"
+               [`n]
+               []
+               ","
+               («term_≤_»
+                («term|___|» (group "|") (Term.app `f [`n]) (group) "|")
+                "≤"
+                («term_*_» `C "*" («term_^_» `a "^" `n))))))
             ","
-            (Init.Logic.«term∃_,_»
+            (Std.ExtendedBinder.«term∃__,_»
              "∃"
-             (Std.ExtendedBinder.extBinders
-              (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) [(Std.ExtendedBinder.«binderTerm<_» "<" `R)]))
-             ", "
+             (Lean.binderIdent `a)
+             (Std.ExtendedBinder.«binderTerm<_» "<" `R)
+             ","
              (Filter.Order.Filter.Basic.«term∀ᶠ_in_,_»
               "∀ᶠ"
               (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `n) []))
               " in "
               `at_top
               ", "
-              (Init.Core.«term_≤_»
-               (Algebra.Abs.«term|_|» "|" (Term.app `f [`n]) "|")
-               " ≤ "
-               (Init.Core.«term_^_» `a " ^ " `n))))
+              («term_≤_» («term|___|» (group "|") (Term.app `f [`n]) (group) "|") "≤" («term_^_» `a "^" `n))))
             ","
-            (Init.Logic.«term∃_,_»
+            (Std.ExtendedBinder.«term∃__,_»
              "∃"
-             (Std.ExtendedBinder.extBinders
-              (Std.ExtendedBinder.extBinder
-               (Lean.binderIdent `a)
-               [(«binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))]))
-             ", "
+             (Lean.binderIdent `a)
+             («binderTerm∈_» "∈" (Term.app `ioo [(num "0") `R]))
+             ","
              (Filter.Order.Filter.Basic.«term∀ᶠ_in_,_»
               "∀ᶠ"
               (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `n) []))
               " in "
               `at_top
               ", "
-              (Init.Core.«term_≤_»
-               (Algebra.Abs.«term|_|» "|" (Term.app `f [`n]) "|")
-               " ≤ "
-               (Init.Core.«term_^_» `a " ^ " `n))))]
+              («term_≤_» («term|___|» (group "|") (Term.app `f [`n]) (group) "|") "≤" («term_^_» `a "^" `n))))]
            "]")])))
       (Command.declValSimple
        ":="
@@ -279,10 +243,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
               [`A []]
               [(Term.typeSpec
                 ":"
-                (Init.Core.«term_⊆_»
-                 (Term.app `Ico [(num "0") `R])
-                 " ⊆ "
-                 (Term.app `Ioo [(Init.Core.«term-_» "-" `R) `R])))]
+                («term_⊆_» (Term.app `Ico [(num "0") `R]) "⊆" (Term.app `Ioo [(«term-_» "-" `R) `R])))]
               ":="
               (Term.fun
                "fun"
@@ -313,10 +274,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
               [`B []]
               [(Term.typeSpec
                 ":"
-                (Init.Core.«term_⊆_»
-                 (Term.app `Ioo [(num "0") `R])
-                 " ⊆ "
-                 (Term.app `Ioo [(Init.Core.«term-_» "-" `R) `R])))]
+                («term_⊆_» (Term.app `Ioo [(num "0") `R]) "⊆" (Term.app `Ioo [(«term-_» "-" `R) `R])))]
               ":="
               (Term.app `subset.trans [`Ioo_subset_Ico_self `A]))))
            []
@@ -609,7 +567,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
                  (Std.Tactic.obtain
                   "obtain"
                   [(Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])]
-                  [":" (Init.Core.«term_=_» `f " = " (num "0"))]
+                  [":" («term_=_» `f "=" (num "0"))]
                   [":="
                    [(Term.byTactic
                      "by"
@@ -666,9 +624,9 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
                      [`n]
                      []
                      "=>"
-                     (Init.Core.«term_$_»
+                     («term_<|_»
                       (Term.proj (Term.app `H [`n]) "." `trans)
-                      " $ "
+                      "<|"
                       (Term.app `mul_le_mul_of_nonneg_left [(Term.app `le_abs_self [(Term.hole "_")]) `hC₀.le]))))])]
                 "⟩"))
               [])])
@@ -771,16 +729,19 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
                (Term.haveDecl
                 (Term.haveIdDecl
                  []
-                 [(Term.typeSpec ":" (Init.Core.«term_≤_» (num "0") " ≤ " `a))]
+                 [(Term.typeSpec ":" («term_≤_» (num "0") "≤" `a))]
                  ":="
                  (Term.app
                   `nonneg_of_eventually_pow_nonneg
-                  [(Init.Core.«term_$_»
+                  [(Term.app
                     `H.mono
-                    " $ "
-                    (Term.fun
-                     "fun"
-                     (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans))))]))))
+                    [(Term.fun
+                      "fun"
+                      (Term.basicFun
+                       [`n]
+                       []
+                       "=>"
+                       (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))])]))))
               [])
              (group
               (Tactic.refine'
@@ -832,12 +793,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
            (Term.haveDecl
             (Term.haveIdDecl
              [`A []]
-             [(Term.typeSpec
-               ":"
-               (Init.Core.«term_⊆_»
-                (Term.app `Ico [(num "0") `R])
-                " ⊆ "
-                (Term.app `Ioo [(Init.Core.«term-_» "-" `R) `R])))]
+             [(Term.typeSpec ":" («term_⊆_» (Term.app `Ico [(num "0") `R]) "⊆" (Term.app `Ioo [(«term-_» "-" `R) `R])))]
              ":="
              (Term.fun
               "fun"
@@ -866,12 +822,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
            (Term.haveDecl
             (Term.haveIdDecl
              [`B []]
-             [(Term.typeSpec
-               ":"
-               (Init.Core.«term_⊆_»
-                (Term.app `Ioo [(num "0") `R])
-                " ⊆ "
-                (Term.app `Ioo [(Init.Core.«term-_» "-" `R) `R])))]
+             [(Term.typeSpec ":" («term_⊆_» (Term.app `Ioo [(num "0") `R]) "⊆" (Term.app `Ioo [(«term-_» "-" `R) `R])))]
              ":="
              (Term.app `subset.trans [`Ioo_subset_Ico_self `A]))))
           []
@@ -1162,7 +1113,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
                 (Std.Tactic.obtain
                  "obtain"
                  [(Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])]
-                 [":" (Init.Core.«term_=_» `f " = " (num "0"))]
+                 [":" («term_=_» `f "=" (num "0"))]
                  [":="
                   [(Term.byTactic
                     "by"
@@ -1219,9 +1170,9 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
                     [`n]
                     []
                     "=>"
-                    (Init.Core.«term_$_»
+                    («term_<|_»
                      (Term.proj (Term.app `H [`n]) "." `trans)
-                     " $ "
+                     "<|"
                      (Term.app `mul_le_mul_of_nonneg_left [(Term.app `le_abs_self [(Term.hole "_")]) `hC₀.le]))))])]
                "⟩"))
              [])])
@@ -1324,16 +1275,19 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
               (Term.haveDecl
                (Term.haveIdDecl
                 []
-                [(Term.typeSpec ":" (Init.Core.«term_≤_» (num "0") " ≤ " `a))]
+                [(Term.typeSpec ":" («term_≤_» (num "0") "≤" `a))]
                 ":="
                 (Term.app
                  `nonneg_of_eventually_pow_nonneg
-                 [(Init.Core.«term_$_»
+                 [(Term.app
                    `H.mono
-                   " $ "
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans))))]))))
+                   [(Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`n]
+                      []
+                      "=>"
+                      (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))])]))))
              [])
             (group
              (Tactic.refine'
@@ -1401,16 +1355,15 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
           (Term.haveDecl
            (Term.haveIdDecl
             []
-            [(Term.typeSpec ":" (Init.Core.«term_≤_» (num "0") " ≤ " `a))]
+            [(Term.typeSpec ":" («term_≤_» (num "0") "≤" `a))]
             ":="
             (Term.app
              `nonneg_of_eventually_pow_nonneg
-             [(Init.Core.«term_$_»
+             [(Term.app
                `H.mono
-               " $ "
-               (Term.fun
-                "fun"
-                (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans))))]))))
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))])]))))
          [])
         (group
          (Tactic.refine'
@@ -1558,32 +1511,31 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
        (Term.haveDecl
         (Term.haveIdDecl
          []
-         [(Term.typeSpec ":" (Init.Core.«term_≤_» (num "0") " ≤ " `a))]
+         [(Term.typeSpec ":" («term_≤_» (num "0") "≤" `a))]
          ":="
          (Term.app
           `nonneg_of_eventually_pow_nonneg
-          [(Init.Core.«term_$_»
+          [(Term.app
             `H.mono
-            " $ "
-            (Term.fun
-             "fun"
-             (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans))))]))))
+            [(Term.fun
+              "fun"
+              (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))])]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
        `nonneg_of_eventually_pow_nonneg
-       [(Init.Core.«term_$_»
+       [(Term.app
          `H.mono
-         " $ "
-         (Term.fun
-          "fun"
-          (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans))))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.ellipsis'
+         [(Term.fun
+           "fun"
+           (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      (Term.app
        `H.mono
-       " $ "
-       (Term.fun "fun" (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans))))
+       [(Term.fun "fun" (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun "fun" (Term.basicFun [`n] [] "=>" (Term.proj (Term.app `abs_nonneg [(Term.hole "_")]) "." `trans)))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1607,36 +1559,35 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `n
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `H.mono
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     (Init.Core.«term_$_»
+     (Term.app
       `H.mono
-      " $ "
-      (Term.fun
-       "fun"
-       (Term.basicFun
-        [`n]
-        []
-        "=>"
-        (Term.proj (Term.paren "(" (Term.app `abs_nonneg [(Term.hole "_")]) ")") "." `trans))))
+      [(Term.fun
+        "fun"
+        (Term.basicFun
+         [`n]
+         []
+         "=>"
+         (Term.proj (Term.paren "(" (Term.app `abs_nonneg [(Term.hole "_")]) ")") "." `trans)))])
      ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `nonneg_of_eventually_pow_nonneg
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_≤_» (num "0") " ≤ " `a)
+      («term_≤_» (num "0") "≤" `a)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
@@ -1697,9 +1648,9 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
               ,
               ∃ a ∈ ioo 0 R , f =O[ at_top ] pow a
               ,
-              ∃ ( a < R ) ( C ) ( h₀ : 0 < C ∨ 0 < R ) , ∀ n , | f n | ≤ C * a ^ n
+              ∃ a < R , ∃ ( C : _ ) ( h₀ : 0 < C ∨ 0 < R ) , ∀ n , | f n | ≤ C * a ^ n
               ,
-              ∃ ( a ∈ ioo 0 R ) ( C > 0 ) , ∀ n , | f n | ≤ C * a ^ n
+              ∃ a ∈ ioo 0 R , ∃ C > 0 , ∀ n , | f n | ≤ C * a ^ n
               ,
               ∃ a < R , ∀ᶠ n in at_top , | f n | ≤ a ^ n
               ,
@@ -1755,7 +1706,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
                     ,
                     A ⟨ ha₀ , ha ⟩
                     ,
-                    is_O_of_le' _ fun n => H n . trans $ mul_le_mul_of_nonneg_left le_abs_self _ hC₀.le
+                    is_O_of_le' _ fun n => H n . trans <| mul_le_mul_of_nonneg_left le_abs_self _ hC₀.le
                   ⟩
           tfae_have 2 → 8
           ·
@@ -1767,7 +1718,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
           tfae_have 7 → 3
           ·
             rintro ⟨ a , ha , H ⟩
-              have : 0 ≤ a := nonneg_of_eventually_pow_nonneg H.mono $ fun n => abs_nonneg _ . trans
+              have : 0 ≤ a := nonneg_of_eventually_pow_nonneg H.mono fun n => abs_nonneg _ . trans
               refine' ⟨ a , A ⟨ this , ha ⟩ , is_O.of_bound 1 _ ⟩
               simpa only [ Real.norm_eq_abs , one_mul , abs_pow , abs_of_nonneg this ]
           tfae_finish
@@ -1783,7 +1734,7 @@ theorem is_o_pow_const_const_pow_of_one_lt {R : Type _} [NormedRing R] (k : ℕ)
   suffices : (fun n => n ^ k : ℕ → R) =O[at_top] fun n : ℕ => (r' ^ k) ^ n
   exact this.trans_is_o (is_o_pow_pow_of_lt_left (pow_nonneg h0 _) hr')
   conv in (r' ^ _) ^ _ => rw [← pow_mul, mul_comm, pow_mul]
-  suffices : ∀ n : ℕ, ∥(n : R)∥ ≤ (r' - 1)⁻¹ * ∥(1 : R)∥ * ∥r' ^ n∥
+  suffices : ∀ n : ℕ, ‖(n : R)‖ ≤ (r' - 1)⁻¹ * ‖(1 : R)‖ * ‖r' ^ n‖
   exact (is_O_of_le' _ this).pow _
   intro n
   rw [mul_right_comm]
@@ -1797,17 +1748,17 @@ theorem is_o_coe_const_pow_of_one_lt {R : Type _} [NormedRing R] {r : ℝ} (hr :
   simpa only [pow_one] using @is_o_pow_const_const_pow_of_one_lt R _ 1 _ hr
 #align is_o_coe_const_pow_of_one_lt is_o_coe_const_pow_of_one_lt
 
-/-- If `∥r₁∥ < r₂`, then for any naturak `k` we have `n ^ k r₁ ^ n = o (r₂ ^ n)` as `n → ∞`. -/
+/-- If `‖r₁‖ < r₂`, then for any naturak `k` we have `n ^ k r₁ ^ n = o (r₂ ^ n)` as `n → ∞`. -/
 theorem is_o_pow_const_mul_const_pow_const_pow_of_norm_lt {R : Type _} [NormedRing R] (k : ℕ) {r₁ : R} {r₂ : ℝ}
-    (h : ∥r₁∥ < r₂) : (fun n => n ^ k * r₁ ^ n : ℕ → R) =o[at_top] fun n => r₂ ^ n := by
-  by_cases h0:r₁ = 0
-  · refine' (is_o_zero _ _).congr' (mem_at_top_sets.2 $ ⟨1, fun n hn => _⟩) eventually_eq.rfl
+    (h : ‖r₁‖ < r₂) : (fun n => n ^ k * r₁ ^ n : ℕ → R) =o[at_top] fun n => r₂ ^ n := by
+  by_cases h0 : r₁ = 0
+  · refine' (is_o_zero _ _).congr' (mem_at_top_sets.2 <| ⟨1, fun n hn => _⟩) eventually_eq.rfl
     simp [zero_pow (zero_lt_one.trans_le hn), h0]
     
   rw [← Ne.def, ← norm_pos_iff] at h0
-  have A : (fun n => n ^ k : ℕ → R) =o[at_top] fun n => (r₂ / ∥r₁∥) ^ n :=
+  have A : (fun n => n ^ k : ℕ → R) =o[at_top] fun n => (r₂ / ‖r₁‖) ^ n :=
     is_o_pow_const_const_pow_of_one_lt k ((one_lt_div h0).2 h)
-  suffices (fun n => r₁ ^ n) =O[at_top] fun n => ∥r₁∥ ^ n by
+  suffices (fun n => r₁ ^ n) =O[at_top] fun n => ‖r₁‖ ^ n by
     simpa [div_mul_cancel _ (pow_pos h0 _).ne'] using A.mul_is_O this
   exact is_O.of_bound 1 (by simpa using eventually_norm_pow_le r₁)
 #align is_o_pow_const_mul_const_pow_const_pow_of_norm_lt is_o_pow_const_mul_const_pow_const_pow_of_norm_lt
@@ -1820,10 +1771,10 @@ theorem tendsto_pow_const_div_const_pow_of_one_lt (k : ℕ) {r : ℝ} (hr : 1 < 
 /-- If `|r| < 1`, then `n ^ k r ^ n` tends to zero for any natural `k`. -/
 theorem tendsto_pow_const_mul_const_pow_of_abs_lt_one (k : ℕ) {r : ℝ} (hr : |r| < 1) :
     Tendsto (fun n => n ^ k * r ^ n : ℕ → ℝ) atTop (𝓝 0) := by
-  by_cases h0:r = 0
+  by_cases h0 : r = 0
   · exact tendsto_const_nhds.congr' (mem_at_top_sets.2 ⟨1, fun n hn => by simp [zero_lt_one.trans_le hn, h0]⟩)
     
-  have hr' : 1 < |r|⁻¹ := one_lt_inv (abs_pos.2 h0) hr
+  have hr' : 1 < (|r|)⁻¹ := one_lt_inv (abs_pos.2 h0) hr
   rw [tendsto_zero_iff_norm_tendsto_zero]
   simpa [div_eq_mul_inv] using tendsto_pow_const_div_const_pow_of_one_lt k hr'
 #align tendsto_pow_const_mul_const_pow_of_abs_lt_one tendsto_pow_const_mul_const_pow_of_abs_lt_one
@@ -1849,8 +1800,8 @@ theorem tendsto_self_mul_const_pow_of_lt_one {r : ℝ} (hr : 0 ≤ r) (h'r : r <
   simpa only [pow_one] using tendsto_pow_const_mul_const_pow_of_lt_one 1 hr h'r
 #align tendsto_self_mul_const_pow_of_lt_one tendsto_self_mul_const_pow_of_lt_one
 
-/-- In a normed ring, the powers of an element x with `∥x∥ < 1` tend to zero. -/
-theorem tendsto_pow_at_top_nhds_0_of_norm_lt_1 {R : Type _} [NormedRing R] {x : R} (h : ∥x∥ < 1) :
+/-- In a normed ring, the powers of an element x with `‖x‖ < 1` tend to zero. -/
+theorem tendsto_pow_at_top_nhds_0_of_norm_lt_1 {R : Type _} [NormedRing R] {x : R} (h : ‖x‖ < 1) :
     Tendsto (fun n : ℕ => x ^ n) atTop (𝓝 0) := by
   apply squeeze_zero_norm' (eventually_norm_pow_le x)
   exact tendsto_pow_at_top_nhds_0_of_lt_1 (norm_nonneg _) h
@@ -1867,7 +1818,7 @@ section Geometric
 
 variable {K : Type _} [NormedField K] {ξ : K}
 
-theorem has_sum_geometric_of_norm_lt_1 (h : ∥ξ∥ < 1) : HasSum (fun n : ℕ => ξ ^ n) (1 - ξ)⁻¹ := by
+theorem has_sum_geometric_of_norm_lt_1 (h : ‖ξ‖ < 1) : HasSum (fun n : ℕ => ξ ^ n) (1 - ξ)⁻¹ := by
   have xi_ne_one : ξ ≠ 1 := by
     contrapose! h
     simp [h]
@@ -1880,11 +1831,11 @@ theorem has_sum_geometric_of_norm_lt_1 (h : ∥ξ∥ < 1) : HasSum (fun n : ℕ 
     
 #align has_sum_geometric_of_norm_lt_1 has_sum_geometric_of_norm_lt_1
 
-theorem summable_geometric_of_norm_lt_1 (h : ∥ξ∥ < 1) : Summable fun n : ℕ => ξ ^ n :=
+theorem summable_geometric_of_norm_lt_1 (h : ‖ξ‖ < 1) : Summable fun n : ℕ => ξ ^ n :=
   ⟨_, has_sum_geometric_of_norm_lt_1 h⟩
 #align summable_geometric_of_norm_lt_1 summable_geometric_of_norm_lt_1
 
-theorem tsum_geometric_of_norm_lt_1 (h : ∥ξ∥ < 1) : (∑' n : ℕ, ξ ^ n) = (1 - ξ)⁻¹ :=
+theorem tsum_geometric_of_norm_lt_1 (h : ‖ξ‖ < 1) : (∑' n : ℕ, ξ ^ n) = (1 - ξ)⁻¹ :=
   (has_sum_geometric_of_norm_lt_1 h).tsum_eq
 #align tsum_geometric_of_norm_lt_1 tsum_geometric_of_norm_lt_1
 
@@ -1903,7 +1854,7 @@ theorem tsum_geometric_of_abs_lt_1 {r : ℝ} (h : |r| < 1) : (∑' n : ℕ, r ^ 
 /-- A geometric series in a normed field is summable iff the norm of the common ratio is less than
 one. -/
 @[simp]
-theorem summable_geometric_iff_norm_lt_1 : (Summable fun n : ℕ => ξ ^ n) ↔ ∥ξ∥ < 1 := by
+theorem summable_geometric_iff_norm_lt_1 : (Summable fun n : ℕ => ξ ^ n) ↔ ‖ξ‖ < 1 := by
   refine' ⟨fun h => _, summable_geometric_of_norm_lt_1⟩
   obtain ⟨k : ℕ, hk : dist (ξ ^ k) 0 < 1⟩ := (h.tendsto_cofinite_zero.eventually (ball_mem_nhds _ zero_lt_one)).exists
   simp only [norm_pow, dist_zero_right] at hk
@@ -1915,8 +1866,8 @@ end Geometric
 
 section MulGeometric
 
-theorem summable_norm_pow_mul_geometric_of_norm_lt_1 {R : Type _} [NormedRing R] (k : ℕ) {r : R} (hr : ∥r∥ < 1) :
-    Summable fun n : ℕ => ∥(n ^ k * r ^ n : R)∥ := by
+theorem summable_norm_pow_mul_geometric_of_norm_lt_1 {R : Type _} [NormedRing R] (k : ℕ) {r : R} (hr : ‖r‖ < 1) :
+    Summable fun n : ℕ => ‖(n ^ k * r ^ n : R)‖ := by
   rcases exists_between hr with ⟨r', hrr', h⟩
   exact
     summable_of_is_O_nat (summable_geometric_of_lt_1 ((norm_nonneg _).trans hrr'.le) h)
@@ -1924,12 +1875,12 @@ theorem summable_norm_pow_mul_geometric_of_norm_lt_1 {R : Type _} [NormedRing R]
 #align summable_norm_pow_mul_geometric_of_norm_lt_1 summable_norm_pow_mul_geometric_of_norm_lt_1
 
 theorem summable_pow_mul_geometric_of_norm_lt_1 {R : Type _} [NormedRing R] [CompleteSpace R] (k : ℕ) {r : R}
-    (hr : ∥r∥ < 1) : Summable (fun n => n ^ k * r ^ n : ℕ → R) :=
-  summable_of_summable_norm $ summable_norm_pow_mul_geometric_of_norm_lt_1 _ hr
+    (hr : ‖r‖ < 1) : Summable (fun n => n ^ k * r ^ n : ℕ → R) :=
+  summable_of_summable_norm <| summable_norm_pow_mul_geometric_of_norm_lt_1 _ hr
 #align summable_pow_mul_geometric_of_norm_lt_1 summable_pow_mul_geometric_of_norm_lt_1
 
-/-- If `∥r∥ < 1`, then `∑' n : ℕ, n * r ^ n = r / (1 - r) ^ 2`, `has_sum` version. -/
-theorem has_sum_coe_mul_geometric_of_norm_lt_1 {𝕜 : Type _} [NormedField 𝕜] [CompleteSpace 𝕜] {r : 𝕜} (hr : ∥r∥ < 1) :
+/-- If `‖r‖ < 1`, then `∑' n : ℕ, n * r ^ n = r / (1 - r) ^ 2`, `has_sum` version. -/
+theorem has_sum_coe_mul_geometric_of_norm_lt_1 {𝕜 : Type _} [NormedField 𝕜] [CompleteSpace 𝕜] {r : 𝕜} (hr : ‖r‖ < 1) :
     HasSum (fun n => n * r ^ n : ℕ → 𝕜) (r / (1 - r) ^ 2) := by
   have A : Summable (fun n => n * r ^ n : ℕ → 𝕜) := by simpa using summable_pow_mul_geometric_of_norm_lt_1 1 hr
   have B : HasSum (pow r : ℕ → 𝕜) (1 - r)⁻¹ := has_sum_geometric_of_norm_lt_1 hr
@@ -1947,8 +1898,8 @@ theorem has_sum_coe_mul_geometric_of_norm_lt_1 {𝕜 : Type _} [NormedField 𝕜
     
 #align has_sum_coe_mul_geometric_of_norm_lt_1 has_sum_coe_mul_geometric_of_norm_lt_1
 
-/-- If `∥r∥ < 1`, then `∑' n : ℕ, n * r ^ n = r / (1 - r) ^ 2`. -/
-theorem tsum_coe_mul_geometric_of_norm_lt_1 {𝕜 : Type _} [NormedField 𝕜] [CompleteSpace 𝕜] {r : 𝕜} (hr : ∥r∥ < 1) :
+/-- If `‖r‖ < 1`, then `∑' n : ℕ, n * r ^ n = r / (1 - r) ^ 2`. -/
+theorem tsum_coe_mul_geometric_of_norm_lt_1 {𝕜 : Type _} [NormedField 𝕜] [CompleteSpace 𝕜] {r : 𝕜} (hr : ‖r‖ < 1) :
     (∑' n : ℕ, n * r ^ n : 𝕜) = r / (1 - r) ^ 2 :=
   (has_sum_coe_mul_geometric_of_norm_lt_1 hr).tsum_eq
 #align tsum_coe_mul_geometric_of_norm_lt_1 tsum_coe_mul_geometric_of_norm_lt_1
@@ -1960,57 +1911,57 @@ section SummableLeGeometric
 variable [SeminormedAddCommGroup α] {r C : ℝ} {f : ℕ → α}
 
 theorem SeminormedAddCommGroup.cauchySeqOfLeGeometric {C : ℝ} {r : ℝ} (hr : r < 1) {u : ℕ → α}
-    (h : ∀ n, ∥u n - u (n + 1)∥ ≤ C * r ^ n) : CauchySeq u :=
+    (h : ∀ n, ‖u n - u (n + 1)‖ ≤ C * r ^ n) : CauchySeq u :=
   cauchySeqOfLeGeometric r C hr (by simpa [dist_eq_norm] using h)
 #align seminormed_add_comm_group.cauchy_seq_of_le_geometric SeminormedAddCommGroup.cauchySeqOfLeGeometric
 
-theorem dist_partial_sum_le_of_le_geometric (hf : ∀ n, ∥f n∥ ≤ C * r ^ n) (n : ℕ) :
+theorem dist_partial_sum_le_of_le_geometric (hf : ∀ n, ‖f n‖ ≤ C * r ^ n) (n : ℕ) :
     dist (∑ i in range n, f i) (∑ i in range (n + 1), f i) ≤ C * r ^ n := by
   rw [sum_range_succ, dist_eq_norm, ← norm_neg, neg_sub, add_sub_cancel']
   exact hf n
 #align dist_partial_sum_le_of_le_geometric dist_partial_sum_le_of_le_geometric
 
-/-- If `∥f n∥ ≤ C * r ^ n` for all `n : ℕ` and some `r < 1`, then the partial sums of `f` form a
+/-- If `‖f n‖ ≤ C * r ^ n` for all `n : ℕ` and some `r < 1`, then the partial sums of `f` form a
 Cauchy sequence. This lemma does not assume `0 ≤ r` or `0 ≤ C`. -/
-theorem cauchySeqFinsetOfGeometricBound (hr : r < 1) (hf : ∀ n, ∥f n∥ ≤ C * r ^ n) :
+theorem cauchySeqFinsetOfGeometricBound (hr : r < 1) (hf : ∀ n, ‖f n‖ ≤ C * r ^ n) :
     CauchySeq fun s : Finset ℕ => ∑ x in s, f x :=
   cauchySeqFinsetOfNormBounded _ (aux_has_sum_of_le_geometric hr (dist_partial_sum_le_of_le_geometric hf)).Summable hf
 #align cauchy_seq_finset_of_geometric_bound cauchySeqFinsetOfGeometricBound
 
-/-- If `∥f n∥ ≤ C * r ^ n` for all `n : ℕ` and some `r < 1`, then the partial sums of `f` are within
+/-- If `‖f n‖ ≤ C * r ^ n` for all `n : ℕ` and some `r < 1`, then the partial sums of `f` are within
 distance `C * r ^ n / (1 - r)` of the sum of the series. This lemma does not assume `0 ≤ r` or
 `0 ≤ C`. -/
-theorem norm_sub_le_of_geometric_bound_of_has_sum (hr : r < 1) (hf : ∀ n, ∥f n∥ ≤ C * r ^ n) {a : α} (ha : HasSum f a)
-    (n : ℕ) : ∥(∑ x in Finset.range n, f x) - a∥ ≤ C * r ^ n / (1 - r) := by
+theorem norm_sub_le_of_geometric_bound_of_has_sum (hr : r < 1) (hf : ∀ n, ‖f n‖ ≤ C * r ^ n) {a : α} (ha : HasSum f a)
+    (n : ℕ) : ‖(∑ x in Finset.range n, f x) - a‖ ≤ C * r ^ n / (1 - r) := by
   rw [← dist_eq_norm]
   apply dist_le_of_le_geometric_of_tendsto r C hr (dist_partial_sum_le_of_le_geometric hf)
   exact ha.tendsto_sum_nat
 #align norm_sub_le_of_geometric_bound_of_has_sum norm_sub_le_of_geometric_bound_of_has_sum
 
 @[simp]
-theorem dist_partial_sum (u : ℕ → α) (n : ℕ) : dist (∑ k in range (n + 1), u k) (∑ k in range n, u k) = ∥u n∥ := by
+theorem dist_partial_sum (u : ℕ → α) (n : ℕ) : dist (∑ k in range (n + 1), u k) (∑ k in range n, u k) = ‖u n‖ := by
   simp [dist_eq_norm, sum_range_succ]
 #align dist_partial_sum dist_partial_sum
 
 @[simp]
-theorem dist_partial_sum' (u : ℕ → α) (n : ℕ) : dist (∑ k in range n, u k) (∑ k in range (n + 1), u k) = ∥u n∥ := by
+theorem dist_partial_sum' (u : ℕ → α) (n : ℕ) : dist (∑ k in range n, u k) (∑ k in range (n + 1), u k) = ‖u n‖ := by
   simp [dist_eq_norm', sum_range_succ]
 #align dist_partial_sum' dist_partial_sum'
 
-theorem cauchySeriesOfLeGeometric {C : ℝ} {u : ℕ → α} {r : ℝ} (hr : r < 1) (h : ∀ n, ∥u n∥ ≤ C * r ^ n) :
+theorem cauchySeriesOfLeGeometric {C : ℝ} {u : ℕ → α} {r : ℝ} (hr : r < 1) (h : ∀ n, ‖u n‖ ≤ C * r ^ n) :
     CauchySeq fun n => ∑ k in range n, u k :=
   cauchySeqOfLeGeometric r C hr (by simp [h])
 #align cauchy_series_of_le_geometric cauchySeriesOfLeGeometric
 
 theorem NormedAddCommGroup.cauchySeriesOfLeGeometric' {C : ℝ} {u : ℕ → α} {r : ℝ} (hr : r < 1)
-    (h : ∀ n, ∥u n∥ ≤ C * r ^ n) : CauchySeq fun n => ∑ k in range (n + 1), u k :=
-  (cauchySeriesOfLeGeometric hr h).compTendsto $ tendsto_add_at_top_nat 1
+    (h : ∀ n, ‖u n‖ ≤ C * r ^ n) : CauchySeq fun n => ∑ k in range (n + 1), u k :=
+  (cauchySeriesOfLeGeometric hr h).compTendsto <| tendsto_add_at_top_nat 1
 #align normed_add_comm_group.cauchy_series_of_le_geometric' NormedAddCommGroup.cauchySeriesOfLeGeometric'
 
 theorem NormedAddCommGroup.cauchySeriesOfLeGeometric'' {C : ℝ} {u : ℕ → α} {N : ℕ} {r : ℝ} (hr₀ : 0 < r) (hr₁ : r < 1)
-    (h : ∀ n ≥ N, ∥u n∥ ≤ C * r ^ n) : CauchySeq fun n => ∑ k in range (n + 1), u k := by
+    (h : ∀ n ≥ N, ‖u n‖ ≤ C * r ^ n) : CauchySeq fun n => ∑ k in range (n + 1), u k := by
   set v : ℕ → α := fun n => if n < N then 0 else u n
-  have hC : 0 ≤ C := (zero_le_mul_right $ pow_pos hr₀ N).mp ((norm_nonneg _).trans $ h N $ le_refl N)
+  have hC : 0 ≤ C := (zero_le_mul_right <| pow_pos hr₀ N).mp ((norm_nonneg _).trans <| h N <| le_refl N)
   have : ∀ n ≥ N, u n = v n := by
     intro n hn
     simp [v, hn, if_neg (not_lt.mpr hn)]
@@ -2038,29 +1989,29 @@ open NormedSpace
 
 /-- A geometric series in a complete normed ring is summable.
 Proved above (same name, different namespace) for not-necessarily-complete normed fields. -/
-theorem NormedRing.summable_geometric_of_norm_lt_1 (x : R) (h : ∥x∥ < 1) : Summable fun n : ℕ => x ^ n := by
-  have h1 : Summable fun n : ℕ => ∥x∥ ^ n := summable_geometric_of_lt_1 (norm_nonneg _) h
+theorem NormedRing.summable_geometric_of_norm_lt_1 (x : R) (h : ‖x‖ < 1) : Summable fun n : ℕ => x ^ n := by
+  have h1 : Summable fun n : ℕ => ‖x‖ ^ n := summable_geometric_of_lt_1 (norm_nonneg _) h
   refine' summable_of_norm_bounded_eventually _ h1 _
   rw [Nat.cofinite_eq_at_top]
   exact eventually_norm_pow_le x
 #align normed_ring.summable_geometric_of_norm_lt_1 NormedRing.summable_geometric_of_norm_lt_1
 
 /-- Bound for the sum of a geometric series in a normed ring.  This formula does not assume that the
-normed ring satisfies the axiom `∥1∥ = 1`. -/
-theorem NormedRing.tsum_geometric_of_norm_lt_1 (x : R) (h : ∥x∥ < 1) :
-    ∥∑' n : ℕ, x ^ n∥ ≤ ∥(1 : R)∥ - 1 + (1 - ∥x∥)⁻¹ := by
+normed ring satisfies the axiom `‖1‖ = 1`. -/
+theorem NormedRing.tsum_geometric_of_norm_lt_1 (x : R) (h : ‖x‖ < 1) :
+    ‖∑' n : ℕ, x ^ n‖ ≤ ‖(1 : R)‖ - 1 + (1 - ‖x‖)⁻¹ := by
   rw [tsum_eq_zero_add (NormedRing.summable_geometric_of_norm_lt_1 x h)]
   simp only [pow_zero]
   refine' le_trans (norm_add_le _ _) _
-  have : ∥∑' b : ℕ, (fun n => x ^ (n + 1)) b∥ ≤ (1 - ∥x∥)⁻¹ - 1 := by
+  have : ‖∑' b : ℕ, (fun n => x ^ (n + 1)) b‖ ≤ (1 - ‖x‖)⁻¹ - 1 := by
     refine' tsum_of_norm_bounded _ fun b => norm_pow_le' _ (Nat.succ_pos b)
     convert (has_sum_nat_add_iff' 1).mpr (has_sum_geometric_of_lt_1 (norm_nonneg x) h)
     simp
   linarith
 #align normed_ring.tsum_geometric_of_norm_lt_1 NormedRing.tsum_geometric_of_norm_lt_1
 
-theorem geom_series_mul_neg (x : R) (h : ∥x∥ < 1) : (∑' i : ℕ, x ^ i) * (1 - x) = 1 := by
-  have := (NormedRing.summable_geometric_of_norm_lt_1 x h).HasSum.mulRight (1 - x)
+theorem geom_series_mul_neg (x : R) (h : ‖x‖ < 1) : (∑' i : ℕ, x ^ i) * (1 - x) = 1 := by
+  have := (NormedRing.summable_geometric_of_norm_lt_1 x h).HasSum.mul_right (1 - x)
   refine' tendsto_nhds_unique this.tendsto_sum_nat _
   have : tendsto (fun n : ℕ => 1 - x ^ n) at_top (𝓝 1) := by
     simpa using tendsto_const_nhds.sub (tendsto_pow_at_top_nhds_0_of_norm_lt_1 h)
@@ -2069,8 +2020,8 @@ theorem geom_series_mul_neg (x : R) (h : ∥x∥ < 1) : (∑' i : ℕ, x ^ i) * 
   rw [← geom_sum_mul_neg, Finset.sum_mul]
 #align geom_series_mul_neg geom_series_mul_neg
 
-theorem mul_neg_geom_series (x : R) (h : ∥x∥ < 1) : ((1 - x) * ∑' i : ℕ, x ^ i) = 1 := by
-  have := (NormedRing.summable_geometric_of_norm_lt_1 x h).HasSum.mulLeft (1 - x)
+theorem mul_neg_geom_series (x : R) (h : ‖x‖ < 1) : ((1 - x) * ∑' i : ℕ, x ^ i) = 1 := by
+  have := (NormedRing.summable_geometric_of_norm_lt_1 x h).HasSum.mul_left (1 - x)
   refine' tendsto_nhds_unique this.tendsto_sum_nat _
   have : tendsto (fun n : ℕ => 1 - x ^ n) at_top (nhds 1) := by
     simpa using tendsto_const_nhds.sub (tendsto_pow_at_top_nhds_0_of_norm_lt_1 h)
@@ -2085,13 +2036,13 @@ end NormedRingGeometric
 
 
 theorem summable_of_ratio_norm_eventually_le {α : Type _} [SeminormedAddCommGroup α] [CompleteSpace α] {f : ℕ → α}
-    {r : ℝ} (hr₁ : r < 1) (h : ∀ᶠ n in at_top, ∥f (n + 1)∥ ≤ r * ∥f n∥) : Summable f := by
-  by_cases hr₀:0 ≤ r
+    {r : ℝ} (hr₁ : r < 1) (h : ∀ᶠ n in at_top, ‖f (n + 1)‖ ≤ r * ‖f n‖) : Summable f := by
+  by_cases hr₀ : 0 ≤ r
   · rw [eventually_at_top] at h
     rcases h with ⟨N, hN⟩
     rw [← @summable_nat_add_iff α _ _ _ _ N]
     refine'
-      summable_of_norm_bounded (fun n => ∥f N∥ * r ^ n) (Summable.mul_left _ $ summable_geometric_of_lt_1 hr₀ hr₁)
+      summable_of_norm_bounded (fun n => ‖f N‖ * r ^ n) (Summable.mul_left _ <| summable_geometric_of_lt_1 hr₀ hr₁)
         fun n => _
     conv_rhs => rw [mul_comm, ← zero_add N]
     refine' le_geom hr₀ n fun i _ => _
@@ -2103,12 +2054,12 @@ theorem summable_of_ratio_norm_eventually_le {α : Type _} [SeminormedAddCommGro
     rw [Nat.cofinite_eq_at_top]
     filter_upwards [h] with _ hn
     by_contra' h
-    exact not_lt.mpr (norm_nonneg _) (lt_of_le_of_lt hn $ mul_neg_of_neg_of_pos hr₀ h)
+    exact not_lt.mpr (norm_nonneg _) (lt_of_le_of_lt hn <| mul_neg_of_neg_of_pos hr₀ h)
     
 #align summable_of_ratio_norm_eventually_le summable_of_ratio_norm_eventually_le
 
 theorem summable_of_ratio_test_tendsto_lt_one {α : Type _} [NormedAddCommGroup α] [CompleteSpace α] {f : ℕ → α} {l : ℝ}
-    (hl₁ : l < 1) (hf : ∀ᶠ n in at_top, f n ≠ 0) (h : Tendsto (fun n => ∥f (n + 1)∥ / ∥f n∥) atTop (𝓝 l)) :
+    (hl₁ : l < 1) (hf : ∀ᶠ n in at_top, f n ≠ 0) (h : Tendsto (fun n => ‖f (n + 1)‖ / ‖f n‖) atTop (𝓝 l)) :
     Summable f := by
   rcases exists_between hl₁ with ⟨r, hr₀, hr₁⟩
   refine' summable_of_ratio_norm_eventually_le hr₁ _
@@ -2117,7 +2068,7 @@ theorem summable_of_ratio_test_tendsto_lt_one {α : Type _} [NormedAddCommGroup 
 #align summable_of_ratio_test_tendsto_lt_one summable_of_ratio_test_tendsto_lt_one
 
 theorem not_summable_of_ratio_norm_eventually_ge {α : Type _} [SeminormedAddCommGroup α] {f : ℕ → α} {r : ℝ}
-    (hr : 1 < r) (hf : ∃ᶠ n in at_top, ∥f n∥ ≠ 0) (h : ∀ᶠ n in at_top, r * ∥f n∥ ≤ ∥f (n + 1)∥) : ¬Summable f := by
+    (hr : 1 < r) (hf : ∃ᶠ n in at_top, ‖f n‖ ≠ 0) (h : ∀ᶠ n in at_top, r * ‖f n‖ ≤ ‖f (n + 1)‖) : ¬Summable f := by
   rw [eventually_at_top] at h
   rcases h with ⟨N₀, hN₀⟩
   rw [frequently_at_top] at hf
@@ -2139,8 +2090,8 @@ theorem not_summable_of_ratio_norm_eventually_ge {α : Type _} [SeminormedAddCom
 #align not_summable_of_ratio_norm_eventually_ge not_summable_of_ratio_norm_eventually_ge
 
 theorem not_summable_of_ratio_test_tendsto_gt_one {α : Type _} [SeminormedAddCommGroup α] {f : ℕ → α} {l : ℝ}
-    (hl : 1 < l) (h : Tendsto (fun n => ∥f (n + 1)∥ / ∥f n∥) atTop (𝓝 l)) : ¬Summable f := by
-  have key : ∀ᶠ n in at_top, ∥f n∥ ≠ 0 := by
+    (hl : 1 < l) (h : Tendsto (fun n => ‖f (n + 1)‖ / ‖f n‖) atTop (𝓝 l)) : ¬Summable f := by
+  have key : ∀ᶠ n in at_top, ‖f n‖ ≠ 0 := by
     filter_upwards [eventually_ge_of_tendsto_gt hl h] with _ hn hc
     rw [hc, div_zero] at hn
     linarith
@@ -2161,11 +2112,11 @@ variable {b : ℝ} {f : ℕ → ℝ} {z : ℕ → E}
 
 /-- **Dirichlet's Test** for monotone sequences. -/
 theorem Monotone.cauchySeqSeriesMulOfTendstoZeroOfBounded (hfa : Monotone f) (hf0 : Tendsto f atTop (𝓝 0))
-    (hgb : ∀ n, ∥∑ i in range n, z i∥ ≤ b) : CauchySeq fun n => ∑ i in range (n + 1), f i • z i := by
+    (hgb : ∀ n, ‖∑ i in range n, z i‖ ≤ b) : CauchySeq fun n => ∑ i in range (n + 1), f i • z i := by
   simp_rw [Finset.sum_range_by_parts _ _ (Nat.succ _), sub_eq_add_neg, Nat.succ_sub_succ_eq_sub, tsub_zero]
   apply
     (NormedField.tendsto_zero_smul_of_tendsto_zero_of_bounded hf0
-          ⟨b, eventually_map.mpr $ eventually_of_forall $ fun n => hgb $ n + 1⟩).CauchySeq.add
+          ⟨b, eventually_map.mpr <| eventually_of_forall fun n => hgb <| n + 1⟩).CauchySeq.add
   refine' (cauchySeqRangeOfNormBounded _ _ (fun n => _ : ∀ n, _ ≤ b * |f (n + 1) - f n|)).neg
   · simp_rw [abs_of_nonneg (sub_nonneg_of_le (hfa (Nat.le_succ _))), ← mul_sum]
     apply real.uniform_continuous_const_mul.comp_cauchy_seq
@@ -2179,8 +2130,8 @@ theorem Monotone.cauchySeqSeriesMulOfTendstoZeroOfBounded (hfa : Monotone f) (hf
 
 /-- **Dirichlet's test** for antitone sequences. -/
 theorem Antitone.cauchySeqSeriesMulOfTendstoZeroOfBounded (hfa : Antitone f) (hf0 : Tendsto f atTop (𝓝 0))
-    (hzb : ∀ n, ∥∑ i in range n, z i∥ ≤ b) : CauchySeq fun n => ∑ i in range (n + 1), f i • z i := by
-  have hfa' : Monotone fun n => -f n := fun _ _ hab => neg_le_neg $ hfa hab
+    (hzb : ∀ n, ‖∑ i in range n, z i‖ ≤ b) : CauchySeq fun n => ∑ i in range (n + 1), f i • z i := by
+  have hfa' : Monotone fun n => -f n := fun _ _ hab => neg_le_neg <| hfa hab
   have hf0' : tendsto (fun n => -f n) at_top (𝓝 0) := by
     convert hf0.neg
     norm_num
@@ -2189,7 +2140,7 @@ theorem Antitone.cauchySeqSeriesMulOfTendstoZeroOfBounded (hfa : Antitone f) (hf
   simp
 #align antitone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded Antitone.cauchySeqSeriesMulOfTendstoZeroOfBounded
 
-theorem norm_sum_neg_one_pow_le (n : ℕ) : ∥∑ i in range n, (-1 : ℝ) ^ i∥ ≤ 1 := by
+theorem norm_sum_neg_one_pow_le (n : ℕ) : ‖∑ i in range n, (-1 : ℝ) ^ i‖ ≤ 1 := by
   rw [neg_one_geom_sum]
   split_ifs <;> norm_num
 #align norm_sum_neg_one_pow_le norm_sum_neg_one_pow_le
@@ -2205,7 +2156,7 @@ theorem Monotone.cauchySeqAlternatingSeriesOfTendstoZero (hfa : Monotone f) (hf0
 /-- The **alternating series test** for monotone sequences. -/
 theorem Monotone.tendsto_alternating_series_of_tendsto_zero (hfa : Monotone f) (hf0 : Tendsto f atTop (𝓝 0)) :
     ∃ l, Tendsto (fun n => ∑ i in range (n + 1), (-1) ^ i * f i) atTop (𝓝 l) :=
-  cauchy_seq_tendsto_of_complete $ hfa.cauchySeqAlternatingSeriesOfTendstoZero hf0
+  cauchy_seq_tendsto_of_complete <| hfa.cauchySeqAlternatingSeriesOfTendstoZero hf0
 #align monotone.tendsto_alternating_series_of_tendsto_zero Monotone.tendsto_alternating_series_of_tendsto_zero
 
 /-- The **alternating series test** for antitone sequences.
@@ -2219,7 +2170,7 @@ theorem Antitone.cauchySeqAlternatingSeriesOfTendstoZero (hfa : Antitone f) (hf0
 /-- The **alternating series test** for antitone sequences. -/
 theorem Antitone.tendsto_alternating_series_of_tendsto_zero (hfa : Antitone f) (hf0 : Tendsto f atTop (𝓝 0)) :
     ∃ l, Tendsto (fun n => ∑ i in range (n + 1), (-1) ^ i * f i) atTop (𝓝 l) :=
-  cauchy_seq_tendsto_of_complete $ hfa.cauchySeqAlternatingSeriesOfTendstoZero hf0
+  cauchy_seq_tendsto_of_complete <| hfa.cauchySeqAlternatingSeriesOfTendstoZero hf0
 #align antitone.tendsto_alternating_series_of_tendsto_zero Antitone.tendsto_alternating_series_of_tendsto_zero
 
 end
@@ -2234,18 +2185,18 @@ for a version that also works in `ℂ`, and `exp_series_summable'` for a version
 any normed algebra over `ℝ` or `ℂ`. -/
 theorem Real.summable_pow_div_factorial (x : ℝ) : Summable (fun n => x ^ n / n ! : ℕ → ℝ) := by
   -- We start with trivial extimates
-  have A : (0 : ℝ) < ⌊∥x∥⌋₊ + 1 := zero_lt_one.trans_le (by simp)
-  have B : ∥x∥ / (⌊∥x∥⌋₊ + 1) < 1 := (div_lt_one A).2 (Nat.lt_floor_add_one _)
-  -- Then we apply the ratio test. The estimate works for `n ≥ ⌊∥x∥⌋₊`.
-  suffices : ∀ n ≥ ⌊∥x∥⌋₊, ∥x ^ (n + 1) / (n + 1)!∥ ≤ ∥x∥ / (⌊∥x∥⌋₊ + 1) * ∥x ^ n / ↑n !∥
-  exact summable_of_ratio_norm_eventually_le B (eventually_at_top.2 ⟨⌊∥x∥⌋₊, this⟩)
+  have A : (0 : ℝ) < ⌊‖x‖⌋₊ + 1 := zero_lt_one.trans_le (by simp)
+  have B : ‖x‖ / (⌊‖x‖⌋₊ + 1) < 1 := (div_lt_one A).2 (Nat.lt_floor_add_one _)
+  -- Then we apply the ratio test. The estimate works for `n ≥ ⌊‖x‖⌋₊`.
+  suffices : ∀ n ≥ ⌊‖x‖⌋₊, ‖x ^ (n + 1) / (n + 1)!‖ ≤ ‖x‖ / (⌊‖x‖⌋₊ + 1) * ‖x ^ n / ↑n !‖
+  exact summable_of_ratio_norm_eventually_le B (eventually_at_top.2 ⟨⌊‖x‖⌋₊, this⟩)
   -- Finally, we prove the upper estimate
   intro n hn
   calc
-    ∥x ^ (n + 1) / (n + 1)!∥ = ∥x∥ / (n + 1) * ∥x ^ n / n !∥ := by
+    ‖x ^ (n + 1) / (n + 1)!‖ = ‖x‖ / (n + 1) * ‖x ^ n / n !‖ := by
       rw [pow_succ, Nat.factorial_succ, Nat.cast_mul, ← div_mul_div_comm, norm_mul, norm_div, Real.norm_coe_nat,
         Nat.cast_succ]
-    _ ≤ ∥x∥ / (⌊∥x∥⌋₊ + 1) * ∥x ^ n / n !∥ := by mono* with 0 ≤ ∥x ^ n / n !∥, 0 ≤ ∥x∥ <;> apply norm_nonneg
+    _ ≤ ‖x‖ / (⌊‖x‖⌋₊ + 1) * ‖x ^ n / n !‖ := by mono* with 0 ≤ ‖x ^ n / n !‖, 0 ≤ ‖x‖ <;> apply norm_nonneg
     
 #align real.summable_pow_div_factorial Real.summable_pow_div_factorial
 

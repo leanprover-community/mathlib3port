@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 -/
 import Mathbin.Data.Polynomial.Reverse
-import Mathbin.Algebra.Associated
 import Mathbin.Algebra.Regular.Smul
 
 /-!
@@ -160,7 +159,7 @@ theorem nat_degree_mul {p q : R[X]} (hp : p.Monic) (hq : q.Monic) : (p * q).natD
 #align polynomial.monic.nat_degree_mul Polynomial.Monic.nat_degree_mul
 
 theorem degree_mul_comm {p : R[X]} (hp : p.Monic) (q : R[X]) : (p * q).degree = (q * p).degree := by
-  by_cases h:q = 0
+  by_cases h : q = 0
   · simp [h]
     
   rw [degree_mul', hp.degree_mul]
@@ -176,7 +175,7 @@ theorem nat_degree_mul' {p q : R[X]} (hp : p.Monic) (hq : q ≠ 0) : (p * q).nat
 #align polynomial.monic.nat_degree_mul' Polynomial.Monic.nat_degree_mul'
 
 theorem nat_degree_mul_comm {p : R[X]} (hp : p.Monic) (q : R[X]) : (p * q).natDegree = (q * p).natDegree := by
-  by_cases h:q = 0
+  by_cases h : q = 0
   · simp [h]
     
   rw [hp.nat_degree_mul' h, Polynomial.nat_degree_mul', add_comm]
@@ -308,7 +307,7 @@ theorem Monic.nat_degree_map [Semiring S] [Nontrivial S] {P : R[X]} (hmo : P.Mon
 @[simp]
 theorem Monic.degree_map [Semiring S] [Nontrivial S] {P : R[X]} (hmo : P.Monic) (f : R →+* S) :
     (P.map f).degree = P.degree := by
-  by_cases hP:P = 0
+  by_cases hP : P = 0
   · simp [hP]
     
   · refine' le_antisymm (degree_map_le _ _) _
@@ -424,7 +423,7 @@ section NotZeroDivisor
 variable [Semiring R] {p : R[X]}
 
 theorem Monic.mul_left_ne_zero (hp : Monic p) {q : R[X]} (hq : q ≠ 0) : q * p ≠ 0 := by
-  by_cases h:p = 1
+  by_cases h : p = 1
   · simpa [h]
     
   rw [Ne.def, ← degree_eq_bot, hp.degree_mul, WithBot.add_eq_bot, not_or, degree_eq_bot]
@@ -435,7 +434,7 @@ theorem Monic.mul_left_ne_zero (hp : Monic p) {q : R[X]} (hq : q ≠ 0) : q * p 
 #align polynomial.monic.mul_left_ne_zero Polynomial.Monic.mul_left_ne_zero
 
 theorem Monic.mul_right_ne_zero (hp : Monic p) {q : R[X]} (hq : q ≠ 0) : p * q ≠ 0 := by
-  by_cases h:p = 1
+  by_cases h : p = 1
   · simpa [h]
     
   rw [Ne.def, ← degree_eq_bot, hp.degree_mul_comm, hp.degree_mul, WithBot.add_eq_bot, not_or, degree_eq_bot]
@@ -446,7 +445,7 @@ theorem Monic.mul_right_ne_zero (hp : Monic p) {q : R[X]} (hq : q ≠ 0) : p * q
 #align polynomial.monic.mul_right_ne_zero Polynomial.Monic.mul_right_ne_zero
 
 theorem Monic.mul_nat_degree_lt_iff (h : Monic p) {q : R[X]} : (p * q).natDegree < p.natDegree ↔ p ≠ 1 ∧ q = 0 := by
-  by_cases hq:q = 0
+  by_cases hq : q = 0
   · suffices 0 < p.nat_degree ↔ p.nat_degree ≠ 0 by simpa [hq, ← h.nat_degree_eq_zero_iff_eq_one]
     exact ⟨fun h => h.ne', fun h => lt_of_le_of_ne (Nat.zero_le _) h.symm⟩
     
@@ -455,11 +454,11 @@ theorem Monic.mul_nat_degree_lt_iff (h : Monic p) {q : R[X]} : (p * q).natDegree
 #align polynomial.monic.mul_nat_degree_lt_iff Polynomial.Monic.mul_nat_degree_lt_iff
 
 theorem Monic.mul_right_eq_zero_iff (h : Monic p) {q : R[X]} : p * q = 0 ↔ q = 0 := by
-  by_cases hq:q = 0 <;> simp [h.mul_right_ne_zero, hq]
+  by_cases hq : q = 0 <;> simp [h.mul_right_ne_zero, hq]
 #align polynomial.monic.mul_right_eq_zero_iff Polynomial.Monic.mul_right_eq_zero_iff
 
 theorem Monic.mul_left_eq_zero_iff (h : Monic p) {q : R[X]} : q * p = 0 ↔ q = 0 := by
-  by_cases hq:q = 0 <;> simp [h.mul_left_ne_zero, hq]
+  by_cases hq : q = 0 <;> simp [h.mul_left_ne_zero, hq]
 #align polynomial.monic.mul_left_eq_zero_iff Polynomial.Monic.mul_left_eq_zero_iff
 
 theorem Monic.is_regular {R : Type _} [Ring R] {p : R[X]} (hp : Monic p) : IsRegular p := by
@@ -491,7 +490,7 @@ theorem degree_smul_of_smul_regular {S : Type _} [Monoid S] [DistribMulAction S 
 
 theorem nat_degree_smul_of_smul_regular {S : Type _} [Monoid S] [DistribMulAction S R] {k : S} (p : R[X])
     (h : IsSmulRegular R k) : (k • p).natDegree = p.natDegree := by
-  by_cases hp:p = 0
+  by_cases hp : p = 0
   · simp [hp]
     
   rw [← WithBot.coe_eq_coe, ← degree_eq_nat_degree hp, ← degree_eq_nat_degree, degree_smul_of_smul_regular p h]

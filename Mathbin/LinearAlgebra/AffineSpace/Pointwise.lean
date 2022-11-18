@@ -36,8 +36,8 @@ include V
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseAddAction : AddAction V (AffineSubspace k P) where
   vadd x S := S.map (AffineEquiv.constVadd k P x)
-  zero_vadd p := ((congr_arg fun f => p.map f) $ AffineMap.ext $ zero_vadd _).trans p.map_id
-  add_vadd x y p := ((congr_arg fun f => p.map f) $ AffineMap.ext $ add_vadd _ _).trans (p.map_map _ _).symm
+  zero_vadd p := ((congr_arg fun f => p.map f) <| AffineMap.ext <| zero_vadd _).trans p.map_id
+  add_vadd x y p := ((congr_arg fun f => p.map f) <| AffineMap.ext <| add_vadd _ _).trans (p.map_map _ _).symm
 #align affine_subspace.pointwise_add_action AffineSubspace.pointwiseAddAction
 
 scoped[Pointwise] attribute [instance] AffineSubspace.pointwiseAddAction

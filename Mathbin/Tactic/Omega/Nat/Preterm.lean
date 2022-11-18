@@ -73,7 +73,7 @@ theorem val_const {v : Nat → Nat} {m : Nat} : (&m).val v = m :=
 @[simp]
 theorem val_var {v : Nat → Nat} {m n : Nat} : (m ** n).val v = m * v n := by
   simp only [val]
-  by_cases h1:m = 1
+  by_cases h1 : m = 1
   rw [if_pos h1, h1, one_mul]
   rw [if_neg h1, mul_comm]
 #align omega.nat.preterm.val_var Omega.Nat.Preterm.val_var

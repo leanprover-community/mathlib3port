@@ -101,7 +101,7 @@ theorem monotone_factorial : Monotone factorial := fun n m => factorial_le
 #align nat.monotone_factorial Nat.monotone_factorial
 
 theorem factorial_lt (hn : 0 < n) : n ! < m ! ↔ n < m := by
-  refine' ⟨fun h => not_le.mp $ fun hmn => not_le_of_lt h (factorial_le hmn), fun h => _⟩
+  refine' ⟨fun h => not_le.mp fun hmn => not_le_of_lt h (factorial_le hmn), fun h => _⟩
   have : ∀ {n}, 0 < n → n ! < n.succ ! := by
     intro k hk
     rw [factorial_succ, succ_mul, lt_add_iff_pos_left]
@@ -109,7 +109,7 @@ theorem factorial_lt (hn : 0 < n) : n ! < m ! ↔ n < m := by
   induction' h with k hnk ih generalizing hn
   · exact this hn
     
-  · exact (ih hn).trans (this $ hn.trans $ lt_of_succ_le hnk)
+  · exact (ih hn).trans (this <| hn.trans <| lt_of_succ_le hnk)
     
 #align nat.factorial_lt Nat.factorial_lt
 
@@ -126,7 +126,7 @@ theorem factorial_eq_one : n ! = 1 ↔ n ≤ 1 := by
 theorem factorial_inj (hn : 1 < n !) : n ! = m ! ↔ n = m := by
   refine' ⟨fun h => _, congr_arg _⟩
   obtain hnm | rfl | hnm := lt_trichotomy n m
-  · rw [← factorial_lt $ pos_of_gt $ one_lt_factorial.mp hn, h] at hnm
+  · rw [← factorial_lt <| pos_of_gt <| one_lt_factorial.mp hn, h] at hnm
     cases lt_irrefl _ hnm
     
   · rfl
@@ -138,7 +138,7 @@ theorem factorial_inj (hn : 1 < n !) : n ! = m ! ↔ n = m := by
 
 theorem self_le_factorial : ∀ n : ℕ, n ≤ n !
   | 0 => zero_le_one
-  | k + 1 => le_mul_of_one_le_right k.zero_lt_succ.le (Nat.one_le_of_lt $ Nat.factorial_pos _)
+  | k + 1 => le_mul_of_one_le_right k.zero_lt_succ.le (Nat.one_le_of_lt <| Nat.factorial_pos _)
 #align nat.self_le_factorial Nat.self_le_factorial
 
 theorem lt_factorial_self {n : ℕ} (hi : 3 ≤ n) : n < n ! := by
@@ -244,7 +244,7 @@ theorem factorial_mul_asc_factorial (n : ℕ) : ∀ k, n ! * n.ascFactorial k = 
 theorem asc_factorial_eq_div (n k : ℕ) : n.ascFactorial k = (n + k)! / n ! := by
   apply mul_left_cancel₀ n.factorial_ne_zero
   rw [factorial_mul_asc_factorial]
-  exact (Nat.mul_div_cancel' $ factorial_dvd_factorial $ le.intro rfl).symm
+  exact (Nat.mul_div_cancel' <| factorial_dvd_factorial <| le.intro rfl).symm
 #align nat.asc_factorial_eq_div Nat.asc_factorial_eq_div
 
 theorem asc_factorial_of_sub {n k : ℕ} (h : k < n) :
@@ -376,7 +376,7 @@ theorem factorial_mul_desc_factorial : ∀ {n k : ℕ}, k ≤ n → (n - k)! * n
 theorem desc_factorial_eq_div {n k : ℕ} (h : k ≤ n) : n.descFactorial k = n ! / (n - k)! := by
   apply mul_left_cancel₀ (factorial_ne_zero (n - k))
   rw [factorial_mul_desc_factorial h]
-  exact (Nat.mul_div_cancel' $ factorial_dvd_factorial $ Nat.sub_le n k).symm
+  exact (Nat.mul_div_cancel' <| factorial_dvd_factorial <| Nat.sub_le n k).symm
 #align nat.desc_factorial_eq_div Nat.desc_factorial_eq_div
 
 theorem pow_sub_le_desc_factorial (n : ℕ) : ∀ k : ℕ, (n + 1 - k) ^ k ≤ n.descFactorial k

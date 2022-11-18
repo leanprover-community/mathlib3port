@@ -5,7 +5,6 @@ Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 -/
 import Mathbin.Data.MvPolynomial.Rename
 import Mathbin.Data.Polynomial.AlgebraMap
-import Mathbin.Data.Polynomial.Lifts
 import Mathbin.Data.MvPolynomial.Variables
 import Mathbin.Data.Finsupp.Fin
 import Mathbin.Logic.Equiv.Fin
@@ -154,7 +153,7 @@ with coefficents in multivariable polynomials in the other type.
 
 See `sum_ring_equiv` for the ring isomorphism.
 -/
-def sumToIter : MvPolynomial (S₁ ⊕ S₂) R →+* MvPolynomial S₁ (MvPolynomial S₂ R) :=
+def sumToIter : MvPolynomial (Sum S₁ S₂) R →+* MvPolynomial S₁ (MvPolynomial S₂ R) :=
   eval₂Hom (c.comp c) fun bc => Sum.recOn bc x (C ∘ X)
 #align mv_polynomial.sum_to_iter MvPolynomial.sumToIter
 
@@ -179,7 +178,7 @@ to multivariable polynomials in the sum of the two types.
 
 See `sum_ring_equiv` for the ring isomorphism.
 -/
-def iterToSum : MvPolynomial S₁ (MvPolynomial S₂ R) →+* MvPolynomial (S₁ ⊕ S₂) R :=
+def iterToSum : MvPolynomial S₁ (MvPolynomial S₂ R) →+* MvPolynomial (Sum S₁ S₂) R :=
   eval₂Hom (eval₂Hom c (X ∘ Sum.inr)) (X ∘ Sum.inl)
 #align mv_polynomial.iter_to_sum MvPolynomial.iterToSum
 
@@ -236,8 +235,8 @@ def mvPolynomialEquivMvPolynomial [CommSemiring S₃] (f : MvPolynomial S₁ R �
 and multivariable polynomials in one of the types,
 with coefficents in multivariable polynomials in the other type.
 -/
-def sumRingEquiv : MvPolynomial (S₁ ⊕ S₂) R ≃+* MvPolynomial S₁ (MvPolynomial S₂ R) := by
-  apply @mv_polynomial_equiv_mv_polynomial R (S₁ ⊕ S₂) _ _ _ _ (sum_to_iter R S₁ S₂) (iter_to_sum R S₁ S₂)
+def sumRingEquiv : MvPolynomial (Sum S₁ S₂) R ≃+* MvPolynomial S₁ (MvPolynomial S₂ R) := by
+  apply @mv_polynomial_equiv_mv_polynomial R (Sum S₁ S₂) _ _ _ _ (sum_to_iter R S₁ S₂) (iter_to_sum R S₁ S₂)
   · refine' RingHom.ext fun p => _
     rw [RingHom.comp_apply]
     convert hom_eq_hom ((sum_to_iter R S₁ S₂).comp ((iter_to_sum R S₁ S₂).comp C)) C _ _ p
@@ -269,12 +268,12 @@ def sumRingEquiv : MvPolynomial (S₁ ⊕ S₂) R ≃+* MvPolynomial S₁ (MvPol
 and multivariable polynomials in one of the types,
 with coefficents in multivariable polynomials in the other type.
 -/
-def sumAlgEquiv : MvPolynomial (S₁ ⊕ S₂) R ≃ₐ[R] MvPolynomial S₁ (MvPolynomial S₂ R) :=
+def sumAlgEquiv : MvPolynomial (Sum S₁ S₂) R ≃ₐ[R] MvPolynomial S₁ (MvPolynomial S₂ R) :=
   { sumRingEquiv R S₁ S₂ with
     commutes' := by
       intro r
       have A : algebraMap R (MvPolynomial S₁ (MvPolynomial S₂ R)) r = (C (C r) : _) := by rfl
-      have B : algebraMap R (MvPolynomial (S₁ ⊕ S₂) R) r = C r := by rfl
+      have B : algebraMap R (MvPolynomial (Sum S₁ S₂) R) r = C r := by rfl
       simp only [sum_ring_equiv, sum_to_iter_C, mv_polynomial_equiv_mv_polynomial_apply, RingEquiv.to_fun_eq_coe, A,
         B] }
 #align mv_polynomial.sum_alg_equiv MvPolynomial.sumAlgEquiv
@@ -494,7 +493,7 @@ theorem degree_fin_succ_equiv {f : MvPolynomial (Fin (n + 1)) R} (h : f ≠ 0) :
 
 theorem nat_degree_fin_succ_equiv (f : MvPolynomial (Fin (n + 1)) R) : (finSuccEquiv R n f).natDegree = degreeOf 0 f :=
   by
-  by_cases c:f = 0
+  by_cases c : f = 0
   · rw [c, (finSuccEquiv R n).map_zero, Polynomial.nat_degree_zero, degree_of_zero]
     
   · rw [Polynomial.natDegree, degree_fin_succ_equiv (by simpa only [Ne.def] )]

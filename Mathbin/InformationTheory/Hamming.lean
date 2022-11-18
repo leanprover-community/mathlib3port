@@ -124,18 +124,18 @@ theorem hamming_dist_le_card_fintype {x y : ∀ i, β i} : hammingDist x y ≤ F
 
 theorem hamming_dist_comp_le_hamming_dist (f : ∀ i, γ i → β i) {x y : ∀ i, γ i} :
     (hammingDist (fun i => f i (x i)) fun i => f i (y i)) ≤ hammingDist x y :=
-  card_mono (monotone_filter_right _ $ fun i H1 H2 => H1 $ congr_arg (f i) H2)
+  card_mono ((monotone_filter_right _) fun i H1 H2 => H1 <| congr_arg (f i) H2)
 #align hamming_dist_comp_le_hamming_dist hamming_dist_comp_le_hamming_dist
 
 theorem hamming_dist_comp (f : ∀ i, γ i → β i) {x y : ∀ i, γ i} (hf : ∀ i, Injective (f i)) :
     (hammingDist (fun i => f i (x i)) fun i => f i (y i)) = hammingDist x y := by
   refine' le_antisymm (hamming_dist_comp_le_hamming_dist _) _
-  exact card_mono (monotone_filter_right _ $ fun i H1 H2 => H1 $ hf i H2)
+  exact card_mono ((monotone_filter_right _) fun i H1 H2 => H1 <| hf i H2)
 #align hamming_dist_comp hamming_dist_comp
 
 theorem hamming_dist_smul_le_hamming_dist [∀ i, HasSmul α (β i)] {k : α} {x y : ∀ i, β i} :
     hammingDist (k • x) (k • y) ≤ hammingDist x y :=
-  hamming_dist_comp_le_hamming_dist $ fun i => (· • ·) k
+  hamming_dist_comp_le_hamming_dist fun i => (· • ·) k
 #align hamming_dist_smul_le_hamming_dist hamming_dist_smul_le_hamming_dist
 
 /-- Corresponds to `dist_smul` with the discrete norm on `α`. -/
@@ -162,7 +162,7 @@ theorem hamming_dist_zero_right (x : ∀ i, β i) : hammingDist x 0 = hammingNor
 /-- Corresponds to `dist_zero_left`. -/
 @[simp]
 theorem hamming_dist_zero_left : hammingDist (0 : ∀ i, β i) = hammingNorm :=
-  funext $ fun x => by rw [hamming_dist_comm, hamming_dist_zero_right]
+  funext fun x => by rw [hamming_dist_comm, hamming_dist_zero_right]
 #align hamming_dist_zero_left hamming_dist_zero_left
 
 /-- Corresponds to `norm_nonneg`. -/
@@ -417,7 +417,7 @@ instance : PseudoMetricSpace (Hamming β) :=
       exact_mod_cast hamming_dist_triangle,
     toUniformSpace := ⊥,
     uniformity_dist :=
-      uniformity_dist_of_mem_uniformity _ _ $ fun s => by
+      (uniformity_dist_of_mem_uniformity _ _) fun s => by
         push_cast
         constructor
         · refine' fun hs => ⟨1, zero_lt_one, fun _ _ hab => _⟩
@@ -453,7 +453,7 @@ instance [∀ i, Zero (β i)] : HasNorm (Hamming β) :=
   ⟨fun x => hammingNorm (ofHamming x)⟩
 
 @[simp, push_cast]
-theorem norm_eq_hamming_norm [∀ i, Zero (β i)] (x : Hamming β) : ∥x∥ = hammingNorm (ofHamming x) :=
+theorem norm_eq_hamming_norm [∀ i, Zero (β i)] (x : Hamming β) : ‖x‖ = hammingNorm (ofHamming x) :=
   rfl
 #align hamming.norm_eq_hamming_norm Hamming.norm_eq_hamming_norm
 
@@ -464,7 +464,7 @@ instance [∀ i, AddCommGroup (β i)] : SeminormedAddCommGroup (Hamming β) :=
       exact_mod_cast hamming_dist_eq_hamming_norm }
 
 @[simp, push_cast]
-theorem nnnorm_eq_hamming_norm [∀ i, AddCommGroup (β i)] (x : Hamming β) : ∥x∥₊ = hammingNorm (ofHamming x) :=
+theorem nnnorm_eq_hamming_norm [∀ i, AddCommGroup (β i)] (x : Hamming β) : ‖x‖₊ = hammingNorm (ofHamming x) :=
   rfl
 #align hamming.nnnorm_eq_hamming_norm Hamming.nnnorm_eq_hamming_norm
 

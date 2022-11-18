@@ -44,7 +44,7 @@ theorem _root_.is_open.measure_pos (hU : IsOpen U) (hne : U.Nonempty) : 0 < μ U
 #align measure_theory.measure._root_.is_open.measure_pos measure_theory.measure._root_.is_open.measure_pos
 
 theorem _root_.is_open.measure_pos_iff (hU : IsOpen U) : 0 < μ U ↔ U.Nonempty :=
-  ⟨fun h => ne_empty_iff_nonempty.1 $ fun he => h.ne' $ he.symm ▸ measure_empty, hU.measure_pos μ⟩
+  ⟨fun h => ne_empty_iff_nonempty.1 fun he => h.ne' <| he.symm ▸ measure_empty, hU.measure_pos μ⟩
 #align measure_theory.measure._root_.is_open.measure_pos_iff measure_theory.measure._root_.is_open.measure_pos_iff
 
 theorem _root_.is_open.measure_eq_zero_iff (hU : IsOpen U) : μ U = 0 ↔ U = ∅ := by
@@ -82,7 +82,7 @@ theorem _root_.is_open.eq_empty_of_measure_zero (hU : IsOpen U) (h₀ : μ U = 0
   measure_theory.measure._root_.is_open.eq_empty_of_measure_zero measure_theory.measure._root_.is_open.eq_empty_of_measure_zero
 
 theorem interior_eq_empty_of_null (hs : μ s = 0) : interior s = ∅ :=
-  is_open_interior.eq_empty_of_measure_zero $ measure_mono_null interior_subset hs
+  is_open_interior.eq_empty_of_measure_zero <| measure_mono_null interior_subset hs
 #align measure_theory.measure.interior_eq_empty_of_null MeasureTheory.Measure.interior_eq_empty_of_null
 
 /-- If two functions are a.e. equal on an open set and are continuous on this set, then they are

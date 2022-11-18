@@ -5,7 +5,6 @@ Authors: Kenny Lau, Wrenna Robson
 -/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.LinearAlgebra.Vandermonde
-import Mathbin.Logic.Lemmas
 import Mathbin.RingTheory.Polynomial.Basic
 
 /-!
@@ -312,7 +311,7 @@ theorem degree_interpolate_le (hvs : Set.InjOn v s) : (interpolate s v r).degree
   rw [Finset.sup_le_iff]
   intro i hi
   rw [degree_mul, degree_basis hvs hi]
-  by_cases hr:r i = 0
+  by_cases hr : r i = 0
   · simpa only [hr, map_zero, degree_zero, WithBot.bot_add] using bot_le
     
   · rw [degree_C hr, zero_add, WithBot.coe_le_coe]
@@ -352,7 +351,7 @@ theorem interpolate_eq_iff_values_eq_on (hvs : Set.InjOn v s) :
 
 theorem eq_interpolate {f : F[X]} (hvs : Set.InjOn v s) (degree_f_lt : f.degree < s.card) :
     f = interpolate s v fun i => f.eval (v i) :=
-  eq_of_degrees_lt_of_eval_index_eq _ hvs degree_f_lt (degree_interpolate_lt _ hvs) $ fun i hi =>
+  (eq_of_degrees_lt_of_eval_index_eq _ hvs degree_f_lt (degree_interpolate_lt _ hvs)) fun i hi =>
     (eval_interpolate_at_node _ hvs hi).symm
 #align lagrange.eq_interpolate Lagrange.eq_interpolate
 
@@ -379,10 +378,10 @@ theorem eq_interpolate_iff {f : F[X]} (hvs : Set.InjOn v s) :
 and polynomials of degree less than `fintype.card ι`.-/
 def funEquivDegreeLt (hvs : Set.InjOn v s) : degreeLt F s.card ≃ₗ[F] s → F where
   toFun f i := f.1.eval (v i)
-  map_add' f g := funext $ fun v => eval_add
-  map_smul' c f := funext $ by simp
+  map_add' f g := funext fun v => eval_add
+  map_smul' c f := funext <| by simp
   invFun r :=
-    ⟨interpolate s v fun x => if hx : x ∈ s then r ⟨x, hx⟩ else 0, mem_degree_lt.2 $ degree_interpolate_lt _ hvs⟩
+    ⟨interpolate s v fun x => if hx : x ∈ s then r ⟨x, hx⟩ else 0, mem_degree_lt.2 <| degree_interpolate_lt _ hvs⟩
   left_inv := by
     rintro ⟨f, hf⟩
     simp only [Subtype.mk_eq_mk, Subtype.coe_mk, dite_eq_ite]
@@ -413,7 +412,7 @@ theorem interpolate_eq_sum_interpolate_insert_sdiff (hvt : Set.InjOn v t) (hs : 
     rw [card_insert_of_not_mem (not_mem_sdiff_of_mem_right hi), card_sdiff hst, add_comm]
     
   · simp_rw [eval_finset_sum, eval_mul]
-    by_cases hi':i ∈ s
+    by_cases hi' : i ∈ s
     · rw [← add_sum_erase _ _ hi', eval_basis_self (hvt.mono hst) hi',
         eval_interpolate_at_node _ (hvt.mono (coe_subset.mpr (insert_subset.mpr ⟨hi, sdiff_subset _ _⟩)))
           (mem_insert_self _ _),
@@ -580,7 +579,7 @@ theorem eval_interpolate_not_at_node (hx : ∀ i ∈ s, x ≠ v i) :
 
 theorem sum_nodal_weight_mul_inv_sub_ne_zero (hvs : Set.InjOn v s) (hx : ∀ i ∈ s, x ≠ v i) (hs : s.Nonempty) :
     (∑ i in s, nodalWeight s v i * (x - v i)⁻¹) ≠ 0 :=
-  @right_ne_zero_of_mul_eq_one _ _ _ (eval x (nodal s v)) _ $ by
+  @right_ne_zero_of_mul_eq_one _ _ _ (eval x (nodal s v)) _ <| by
     simpa only [Pi.one_apply, interpolate_one hvs hs, eval_one, mul_one] using (eval_interpolate_not_at_node 1 hx).symm
 #align lagrange.sum_nodal_weight_mul_inv_sub_ne_zero Lagrange.sum_nodal_weight_mul_inv_sub_ne_zero
 

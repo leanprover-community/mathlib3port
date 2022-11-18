@@ -5,7 +5,6 @@ Authors: Johan Commelin, Eric Wieser
 -/
 import Mathbin.Algebra.DirectSum.Internal
 import Mathbin.Algebra.GradedMonoid
-import Mathbin.Data.Fintype.Card
 import Mathbin.Data.MvPolynomial.Variables
 
 /-!
@@ -54,7 +53,7 @@ def homogeneousSubmodule [CommSemiring R] (n : ℕ) : Submodule R (MvPolynomial 
     apply hc
     rw [h]
     exact smul_zero r
-  zero_mem' d hd := False.elim (hd $ coeff_zero _)
+  zero_mem' d hd := False.elim (hd <| coeff_zero _)
   add_mem' a b ha hb c hc := by
     rw [coeff_add] at hc
     obtain h | h : coeff c a ≠ 0 ∨ coeff c b ≠ 0 := by
@@ -95,7 +94,7 @@ theorem homogeneous_submodule_mul [CommSemiring R] (m n : ℕ) :
   obtain ⟨⟨d, e⟩, hde, H⟩ := Finset.exists_ne_zero_of_sum_ne_zero hc
   have aux : coeff d φ ≠ 0 ∧ coeff e ψ ≠ 0 := by
     contrapose! H
-    by_cases h:coeff d φ = 0 <;> simp_all only [Ne.def, not_false_iff, zero_mul, mul_zero]
+    by_cases h : coeff d φ = 0 <;> simp_all only [Ne.def, not_false_iff, zero_mul, mul_zero]
   specialize hφ aux.1
   specialize hψ aux.2
   rw [Finsupp.mem_antidiagonal] at hde
@@ -188,7 +187,7 @@ theorem sum {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : �
 #align mv_polynomial.is_homogeneous.sum MvPolynomial.IsHomogeneous.sum
 
 theorem mul (hφ : IsHomogeneous φ m) (hψ : IsHomogeneous ψ n) : IsHomogeneous (φ * ψ) (m + n) :=
-  homogeneous_submodule_mul m n $ Submodule.mul_mem_mul hφ hψ
+  homogeneous_submodule_mul m n <| Submodule.mul_mem_mul hφ hψ
 #align mv_polynomial.is_homogeneous.mul MvPolynomial.IsHomogeneous.mul
 
 theorem prod {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : ι → ℕ)
@@ -251,7 +250,7 @@ open Finset
 See `sum_homogeneous_component` for the statement that `φ` is equal to the sum
 of all its homogeneous components. -/
 def homogeneousComponent [CommSemiring R] (n : ℕ) : MvPolynomial σ R →ₗ[R] MvPolynomial σ R :=
-  (Submodule.subtype _).comp $ Finsupp.restrictDom _ _ { d | (∑ i in d.support, d i) = n }
+  (Submodule.subtype _).comp <| Finsupp.restrictDom _ _ { d | (∑ i in d.support, d i) = n }
 #align mv_polynomial.homogeneous_component MvPolynomial.homogeneousComponent
 
 section HomogeneousComponent
@@ -324,7 +323,7 @@ theorem homogeneous_component_homogeneous_polynomial (m n : ℕ) (p : MvPolynomi
   simp only [mem_homogeneous_submodule] at h
   ext x
   rw [coeff_homogeneous_component]
-  by_cases zero_coeff:coeff x p = 0
+  by_cases zero_coeff : coeff x p = 0
   · split_ifs
     all_goals simp only [zero_coeff, coeff_zero]
     

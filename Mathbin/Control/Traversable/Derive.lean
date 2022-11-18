@@ -5,6 +5,7 @@ Authors: Simon Hudon
 
 Automation to construct `traversable` instances
 -/
+import Mathbin.Tactic.Basic
 import Mathbin.Control.Traversable.Lemmas
 
 namespace Tactic.Interactive
@@ -21,7 +22,7 @@ unsafe def with_prefix : Option Name → Name → Name
 unsafe def nested_map (f v : expr) : expr → tactic expr
   | t => do
     let t ← instantiate_mvars t
-    condM (succeeds $ is_def_eq t v) (pure f)
+    condM (succeeds <| is_def_eq t v) (pure f)
         (if ¬v (t t.app_fn) then do
           let cl ← mk_app `` Functor [t]
           let _inst ← mk_instance cl
@@ -35,11 +36,11 @@ unsafe def map_field (n : Name) (cl f α β e : expr) : tactic expr := do
   let t ← infer_type e >>= whnf
   if t = n then fail "recursive types not supported"
     else
-      if α =ₐ e then pure β
+      if α == e then pure β
       else
         if α t then do
           let f' ← nested_map f α t
-          pure $ f' e
+          pure <| f' e
         else is_def_eq t cl >> mk_app `` comp.mk [e] <|> pure e
 #align tactic.interactive.map_field tactic.interactive.map_field
 
@@ -65,9 +66,9 @@ unsafe def mk_map (type : Name) := do
   let xs ← tactic.induction x
   xs fun x : Name × List expr × List (Name × expr) => do
       let (c, args, _) := x
-      let (args, rec_call) ← args $ fun e => (not ∘ β) <$> infer_type e
+      let (args, rec_call) ← args fun e => (not ∘ β) <$> infer_type e
       let args₀ ←
-        args $ fun a => do
+        args fun a => do
             let b ← et <$> infer_type a
             pure (b, a)
       map_constructor c type f α β (ls ++ [β]) args₀ rec_call >>= tactic.exact
@@ -90,36 +91,36 @@ unsafe def mk_mapp' (fn : expr) (args : List expr) : tactic expr := do
 /-- derive the equations for a specific `map` definition -/
 unsafe def derive_map_equations (pre : Option Name) (n : Name) (vs : List expr) (tgt : expr) : tactic Unit := do
   let e ← get_env
-  ((e n).enumFrom 1).mmap' $ fun ⟨i, c⟩ => do
+  ((e n).enumFrom 1).mmap' fun ⟨i, c⟩ => do
       mk_meta_var tgt >>= set_goals ∘ pure
-      let vs ← intro_lst $ vs expr.local_pp_name
+      let vs ← intro_lst <| vs expr.local_pp_name
       let [α, β, f] ← tactic.intro_lst [`α, `β, `f] >>= mmap instantiate_mvars
-      let c' ← mk_mapp c $ vs some ++ [α]
+      let c' ← mk_mapp c <| vs some ++ [α]
       let tgt' ← infer_type c' >>= pis vs
       mk_meta_var tgt' >>= set_goals ∘ pure
-      let vs ← tactic.intro_lst $ vs expr.local_pp_name
+      let vs ← tactic.intro_lst <| vs expr.local_pp_name
       let vs' ← tactic.intros
-      let c' ← mk_mapp c $ vs some ++ [α]
+      let c' ← mk_mapp c <| vs some ++ [α]
       let arg ← mk_mapp' c' vs'
-      let n_map ← mk_const (with_prefix pre n <.> "map")
+      let n_map ← mk_const (.str (with_prefix pre n) "map")
       let call_map x := mk_mapp' n_map (vs ++ [α, β, f, x])
       let lhs ← call_map arg
       let args ←
-        vs' $ fun a => do
+        vs' fun a => do
             let t ← infer_type a
             pure ((expr.const_name (expr.get_app_fn t) = n : Bool), a)
-      let rec_call := args $ fun ⟨b, e⟩ => guard b >> pure e
+      let rec_call := args fun ⟨b, e⟩ => guard b >> pure e
       let rec_call ← rec_call call_map
       let rhs ← map_constructor c n f α β (vs ++ [β]) args rec_call
-      Monad.join $ unify <$> infer_type lhs <*> infer_type rhs
+      Monad.join <| unify <$> infer_type lhs <*> infer_type rhs
       let eqn ← mk_app `` Eq [lhs, rhs]
       let ws := eqn
       let eqn ← pis ws eqn
       let eqn ← instantiate_mvars eqn
       let (_, pr) ← solve_aux eqn (tactic.intros >> refine ``(rfl))
-      let eqn_n := (with_prefix pre n <.> "map" <.> "equations" <.> "_eqn").append_after i
+      let eqn_n := (.str (.str (.str (with_prefix pre n) "map") "equations") "_eqn").append_after i
       let pr ← instantiate_mvars pr
-      add_decl $ declaration.thm eqn_n eqn eqn (pure pr)
+      add_decl <| declaration.thm eqn_n eqn eqn (pure pr)
       return ()
   set_goals []
   return ()
@@ -134,8 +135,8 @@ unsafe def derive_functor (pre : Option Name) : tactic Unit := do
   let d ← get_decl n
   refine ``({ map := _.. })
   let tgt ← target
-  extract_def (with_prefix pre n <.> "map") d $ mk_map n
-  when (d d.is_trusted) $ do
+  extract_def (.str (with_prefix pre n) "map") d <| mk_map n
+  when (d d.is_trusted) <| do
       let tgt ← pis vs tgt
       derive_map_equations pre n vs tgt
 #align tactic.interactive.derive_functor tactic.interactive.derive_functor
@@ -144,12 +145,12 @@ unsafe def derive_functor (pre : Option Name) : tactic Unit := do
 /-- `seq_apply_constructor f [x,y,z]` synthesizes `f <*> x <*> y <*> z` -/ private unsafe
   def
     seq_apply_constructor
-    : expr → List ( expr ⊕ expr ) → tactic ( List ( tactic expr ) × expr )
+    : expr → List ( Sum expr expr ) → tactic ( List ( tactic expr ) × expr )
     |
         e , Sum.inr x :: xs
         =>
         Prod.map ( cons intro1 ) id <$> ( to_expr ` `( $ ( e ) <*> $ ( x ) ) >>= flip seq_apply_constructor xs )
-      | e , Sum.inl x :: xs => Prod.map ( cons $ pure x ) id <$> seq_apply_constructor e xs
+      | e , Sum.inl x :: xs => Prod.map ( cons <| pure x ) id <$> seq_apply_constructor e xs
       | e , [ ] => return ( [ ] , e )
 #align tactic.interactive.seq_apply_constructor tactic.interactive.seq_apply_constructor
 
@@ -160,7 +161,7 @@ unsafe def derive_functor (pre : Option Name) : tactic Unit := do
 unsafe def nested_traverse (f v : expr) : expr → tactic expr
   | t => do
     let t ← instantiate_mvars t
-    condM (succeeds $ is_def_eq t v) (pure f)
+    condM (succeeds <| is_def_eq t v) (pure f)
         (if ¬v (t t.app_fn) then do
           let cl ← mk_app `` Traversable [t]
           let _inst ← mk_instance cl
@@ -172,13 +173,13 @@ unsafe def nested_traverse (f v : expr) : expr → tactic expr
 /-- For a sum type `inductive foo (α : Type) | foo1 : list α → ℕ → foo | ...`
 ``traverse_field `foo appl_inst f `α `(x : list α)`` synthesizes
 `traverse f x` as part of traversing `foo1`. -/
-unsafe def traverse_field (n : Name) (appl_inst cl f v e : expr) : tactic (expr ⊕ expr) := do
+unsafe def traverse_field (n : Name) (appl_inst cl f v e : expr) : tactic (Sum expr expr) := do
   let t ← infer_type e >>= whnf
   if t = n then fail "recursive types not supported"
     else
       if v t then do
         let f' ← nested_traverse f v t
-        pure $ Sum.inr $ f' e
+        pure <| Sum.inr <| f' e
       else is_def_eq t cl >> Sum.inr <$> mk_app `` comp.mk [e] <|> pure (Sum.inl e)
 #align tactic.interactive.traverse_field tactic.interactive.traverse_field
 
@@ -240,9 +241,9 @@ unsafe def mk_traverse (type : Name) := do
     let xs ← tactic.induction x
     xs fun x : Name × List expr × List (Name × expr) => do
         let (c, args, _) := x
-        let (args, rec_call) ← args $ fun e => (not ∘ β) <$> infer_type e
+        let (args, rec_call) ← args fun e => (not ∘ β) <$> infer_type e
         let args₀ ←
-          args $ fun a => do
+          args fun a => do
               let b ← et <$> infer_type a
               pure (b, a)
         traverse_constructor c type appl_inst f α β (ls ++ [β]) args₀ rec_call >>= tactic.exact
@@ -253,36 +254,36 @@ open Applicative
 /-- derive the equations for a specific `traverse` definition -/
 unsafe def derive_traverse_equations (pre : Option Name) (n : Name) (vs : List expr) (tgt : expr) : tactic Unit := do
   let e ← get_env
-  ((e n).enumFrom 1).mmap' $ fun ⟨i, c⟩ => do
+  ((e n).enumFrom 1).mmap' fun ⟨i, c⟩ => do
       mk_meta_var tgt >>= set_goals ∘ pure
-      let vs ← intro_lst $ vs expr.local_pp_name
+      let vs ← intro_lst <| vs expr.local_pp_name
       let [m, appl_inst, α, β, f] ← tactic.intro_lst [`m, `appl_inst, `α, `β, `f] >>= mmap instantiate_mvars
-      let c' ← mk_mapp c $ vs some ++ [α]
+      let c' ← mk_mapp c <| vs some ++ [α]
       let tgt' ← infer_type c' >>= pis vs
       mk_meta_var tgt' >>= set_goals ∘ pure
-      let vs ← tactic.intro_lst $ vs expr.local_pp_name
-      let c' ← mk_mapp c $ vs some ++ [α]
+      let vs ← tactic.intro_lst <| vs expr.local_pp_name
+      let c' ← mk_mapp c <| vs some ++ [α]
       let vs' ← tactic.intros
       let arg ← mk_mapp' c' vs'
-      let n_map ← mk_const (with_prefix pre n <.> "traverse")
+      let n_map ← mk_const (.str (with_prefix pre n) "traverse")
       let call_traverse x := mk_mapp' n_map (vs ++ [m, appl_inst, α, β, f, x])
       let lhs ← call_traverse arg
       let args ←
-        vs' $ fun a => do
+        vs' fun a => do
             let t ← infer_type a
             pure ((expr.const_name (expr.get_app_fn t) = n : Bool), a)
-      let rec_call := args $ fun ⟨b, e⟩ => guard b >> pure e
+      let rec_call := args fun ⟨b, e⟩ => guard b >> pure e
       let rec_call ← rec_call call_traverse
       let rhs ← traverse_constructor c n appl_inst f α β (vs ++ [β]) args rec_call
-      Monad.join $ unify <$> infer_type lhs <*> infer_type rhs
+      Monad.join <| unify <$> infer_type lhs <*> infer_type rhs
       let eqn ← mk_app `` Eq [lhs, rhs]
       let ws := eqn
       let eqn ← pis ws eqn
       let eqn ← instantiate_mvars eqn
       let (_, pr) ← solve_aux eqn (tactic.intros >> refine ``(rfl))
-      let eqn_n := (with_prefix pre n <.> "traverse" <.> "equations" <.> "_eqn").append_after i
+      let eqn_n := (.str (.str (.str (with_prefix pre n) "traverse") "equations") "_eqn").append_after i
       let pr ← instantiate_mvars pr
-      add_decl $ declaration.thm eqn_n eqn eqn (pure pr)
+      add_decl <| declaration.thm eqn_n eqn eqn (pure pr)
       return ()
   set_goals []
   return ()
@@ -297,8 +298,8 @@ unsafe def derive_traverse (pre : Option Name) : tactic Unit := do
   let d ← get_decl n
   constructor
   let tgt ← target
-  extract_def (with_prefix pre n <.> "traverse") d $ mk_traverse n
-  when (d d.is_trusted) $ do
+  extract_def (.str (with_prefix pre n) "traverse") d <| mk_traverse n
+  when (d d.is_trusted) <| do
       let tgt ← pis vs tgt
       derive_traverse_equations pre n vs tgt
 #align tactic.interactive.derive_traverse tactic.interactive.derive_traverse
@@ -309,7 +310,7 @@ unsafe def mk_one_instance (n : Name) (cls : Name) (tac : tactic Unit) (namesp :
   let cls_decl ← get_decl cls
   let env ← get_env
   guard (env n) <|> fail f! "failed to derive '{cls }', '{n}' is not an inductive type"
-  let ls := decl.univ_params.map $ fun n => level.param n
+  let ls := decl.univ_params.map fun n => level.param n
   let-- incrementally build up target expression `Π (hp : p) [cls hp] ..., cls (n.{ls} hp ...)`
   -- where `p ...` are the inductive parameter types of `n`
   tgt : expr := expr.const n ls
@@ -323,11 +324,11 @@ unsafe def mk_one_instance (n : Name) (cls : Name) (tac : tactic Unit) (namesp :
           let tgt ←
             (-- add typeclass hypothesis for each inductive parameter
                 do
-                  guard $ i < env n
+                  guard <| i < env n
                   let param_cls ← mk_app cls [param]
-                  pure $ expr.pi `a BinderInfo.inst_implicit param_cls tgt) <|>
+                  pure <| expr.pi `a BinderInfo.inst_implicit param_cls tgt) <|>
                 pure tgt
-          pure $ tgt param)
+          pure <| tgt param)
         tgt
   () <$ mk_instance tgt <|> do
       let (_, val) ←
@@ -344,8 +345,8 @@ open Interactive
 
 unsafe def get_equations_of (n : Name) : tactic (List pexpr) := do
   let e ← get_env
-  let pre := n <.> "equations"
-  let x := e.fold [] $ fun d xs => if pre.isPrefixOf d.to_name then d.to_name :: xs else xs
+  let pre := .str n "equations"
+  let x := (e.fold []) fun d xs => if pre.isPrefixOf d.to_name then d.to_name :: xs else xs
   x resolve_name
 #align tactic.interactive.get_equations_of tactic.interactive.get_equations_of
 
@@ -357,14 +358,14 @@ unsafe def derive_lawful_functor (pre : Option Name) : tactic Unit := do
   let goal := Loc.ns [none]
   solve1 do
       let vs ← tactic.intros
-      try $ dunfold [`` Functor.map] (loc.ns [none])
-      dunfold [with_prefix pre n <.> "map", `` id] (loc.ns [none])
-      () <$ tactic.induction vs; simp none none ff (rules ``(Functor.map_id)) [] goal
+      try <| dunfold [`` Functor.map] (loc.ns [none])
+      dunfold [.str (with_prefix pre n) "map", `` id] (loc.ns [none])
+      andthen (() <$ tactic.induction vs) (simp none none ff (rules ``(Functor.map_id)) [] goal)
   focus1 do
       let vs ← tactic.intros
-      try $ dunfold [`` Functor.map] (loc.ns [none])
-      dunfold [with_prefix pre n <.> "map", `` id] (loc.ns [none])
-      () <$ tactic.induction vs; simp none none ff (rules ``(Functor.map_comp_map)) [] goal
+      try <| dunfold [`` Functor.map] (loc.ns [none])
+      dunfold [.str (with_prefix pre n) "map", `` id] (loc.ns [none])
+      andthen (() <$ tactic.induction vs) (simp none none ff (rules ``(Functor.map_comp_map)) [] goal)
   return ()
 #align tactic.interactive.derive_lawful_functor tactic.interactive.derive_lawful_functor
 
@@ -376,32 +377,33 @@ unsafe def traversable_law_starter (rs : List simp_arg_type) := do
   let vs ← tactic.intros
   resetI
   dunfold [`` Traversable.traverse, `` Functor.map] (loc.ns [none])
-  () <$ tactic.induction vs; simp_functor rs
+  andthen (() <$ tactic.induction vs) (simp_functor rs)
 #align tactic.interactive.traversable_law_starter tactic.interactive.traversable_law_starter
 
 unsafe def derive_lawful_traversable (pre : Option Name) : tactic Unit := do
   let q(@IsLawfulTraversable $(f) $(d)) ← target
   let n := f.get_app_fn.const_name
-  let eqns ← get_equations_of (with_prefix pre n <.> "traverse")
-  let eqns' ← get_equations_of (with_prefix pre n <.> "map")
+  let eqns ← get_equations_of (.str (with_prefix pre n) "traverse")
+  let eqns' ← get_equations_of (.str (with_prefix pre n) "map")
   let def_eqns := eqns.map simp_arg_type.expr ++ eqns'.map simp_arg_type.expr ++ [simp_arg_type.all_hyps]
   let comp_def := [simp_arg_type.expr ``(Function.comp)]
   let tr_map := List.map simp_arg_type.expr [``(Traversable.traverse_eq_map_id')]
   let natur := fun η : expr => [simp_arg_type.expr ``(Traversable.naturality_pf $(η))]
   let goal := Loc.ns [none]
-  constructor;
-        [traversable_law_starter def_eqns; refl,
-          traversable_law_starter def_eqns; refl <|> simp_functor (def_eqns ++ comp_def),
-          traversable_law_starter def_eqns; refl <|> simp none none tt tr_map [] goal,
-          traversable_law_starter def_eqns;
-            refl <|> do
+  andthen
+      (andthen constructor
+        [andthen (traversable_law_starter def_eqns) refl,
+          andthen (traversable_law_starter def_eqns) (refl <|> simp_functor (def_eqns ++ comp_def)),
+          andthen (traversable_law_starter def_eqns) (refl <|> simp none none tt tr_map [] goal),
+          andthen (traversable_law_starter def_eqns)
+            (refl <|> do
               let η ←
                 get_local `η <|> do
                     let t ← mk_const `` IsLawfulTraversable.naturality >>= infer_type >>= pp
                     fail
                         f! "expecting an `applicative_transformation` called `η` in
                           naturality : {t}"
-              simp none none tt (natur η) [] goal];
+              simp none none tt (natur η) [] goal)])
       refl
   return ()
 #align tactic.interactive.derive_lawful_traversable tactic.interactive.derive_lawful_traversable

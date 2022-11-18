@@ -5,9 +5,9 @@ Authors: Julian Kuelshammer
 -/
 import Mathbin.Algebra.CharP.Invertible
 import Mathbin.Data.Zmod.Basic
-import Mathbin.FieldTheory.Finite.Basic
 import Mathbin.RingTheory.Localization.FractionRing
 import Mathbin.RingTheory.Polynomial.Chebyshev
+import Mathbin.RingTheory.Ideal.LocalRing
 
 /-!
 # Dickson polynomials
@@ -191,7 +191,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
   -- Since `X ^ p` also satisfies this property in characteristic `p`,
   -- we can use a variant on `polynomial.funext` to conclude that these polynomials are equal.
   -- For this argument, we need an arbitrary infinite field of characteristic `p`.
-  obtain ⟨K, _, _, H⟩ : ∃ (K : Type) (_ : Field K), ∃ _ : CharP K p, Infinite K := by
+  obtain ⟨K, _, _, H⟩ : ∃ (K : Type)(_ : Field K), ∃ _ : CharP K p, Infinite K := by
     let K := FractionRing (Polynomial (Zmod p))
     let f : Zmod p →+* K := (algebraMap _ (FractionRing _)).comp C
     have : CharP K p := by
@@ -235,7 +235,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
       ext1 y
       simp only [Multiset.mem_to_finset, Set.mem_set_of_eq, Finset.mem_coe, Multiset.mem_union, mem_roots hφ, is_root,
         eval_add, eval_sub, eval_pow, eval_mul, eval_X, eval_C, eval_one, Multiset.mem_singleton]
-      by_cases hy:y = 0
+      by_cases hy : y = 0
       · simp only [hy, eq_self_iff_true, or_true_iff]
         
       apply or_congr _ Iff.rfl
@@ -246,7 +246,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
     · apply (Set.eq_univ_of_forall _).symm
       intro x
       simp only [exists_prop, Set.mem_Union, Set.bind_def, Ne.def, Set.mem_set_of_eq]
-      by_cases hx:x = 0
+      by_cases hx : x = 0
       · simp only [hx, and_true_iff, eq_self_iff_true, inv_zero, or_true_iff]
         exact ⟨_, 1, rfl, one_ne_zero⟩
         

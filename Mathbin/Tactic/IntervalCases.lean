@@ -75,7 +75,7 @@ namespace IntervalCases
                       tn
                       with
                       | q( ℕ ) => to_expr ` `( Nat.lt_add_one_iff . mpr $ ( e ) )
-                        | q( ℕ+ ) => to_expr ` `( Pnat.lt_add_one_iff . mpr $ ( e ) )
+                        | q( ℕ+ ) => to_expr ` `( PNat.lt_add_one_iff . mpr $ ( e ) )
                         | q( ℤ ) => to_expr ` `( Int.lt_add_one_iff . mpr $ ( e ) )
                         | _ => failed
               |
@@ -89,7 +89,7 @@ namespace IntervalCases
                       tn
                       with
                       | q( ℕ ) => to_expr ` `( Nat.lt_add_one_iff . mpr $ ( e ) )
-                        | q( ℕ+ ) => to_expr ` `( Pnat.lt_add_one_iff . mpr $ ( e ) )
+                        | q( ℕ+ ) => to_expr ` `( PNat.lt_add_one_iff . mpr $ ( e ) )
                         | q( ℤ ) => to_expr ` `( Int.lt_add_one_iff . mpr $ ( e ) )
                         | _ => failed
               | _ => failed
@@ -124,7 +124,7 @@ namespace IntervalCases
                       tn
                       with
                       | q( ℕ ) => to_expr ` `( Nat.add_one_le_iff . mpr $ ( e ) )
-                        | q( ℕ+ ) => to_expr ` `( Pnat.add_one_le_iff . mpr $ ( e ) )
+                        | q( ℕ+ ) => to_expr ` `( PNat.add_one_le_iff . mpr $ ( e ) )
                         | q( ℤ ) => to_expr ` `( Int.add_one_le_iff . mpr $ ( e ) )
                         | _ => failed
               |
@@ -138,7 +138,7 @@ namespace IntervalCases
                       tn
                       with
                       | q( ℕ ) => to_expr ` `( Nat.add_one_le_iff . mpr $ ( e ) )
-                        | q( ℕ+ ) => to_expr ` `( Pnat.add_one_le_iff . mpr $ ( e ) )
+                        | q( ℕ+ ) => to_expr ` `( PNat.add_one_le_iff . mpr $ ( e ) )
                         | q( ℤ ) => to_expr ` `( Int.add_one_le_iff . mpr $ ( e ) )
                         | _ => failed
               | _ => failed
@@ -147,17 +147,17 @@ namespace IntervalCases
 /-- Combine two upper bounds. -/
 unsafe def combine_upper_bounds : Option expr → Option expr → tactic (Option expr)
   | none, none => return none
-  | some prf, none => return $ some prf
-  | none, some prf => return $ some prf
+  | some prf, none => return <| some prf
+  | none, some prf => return <| some prf
   | some prf₁, some prf₂ => do
     Option.some <$> to_expr ``(lt_min $(prf₁) $(prf₂))
 #align tactic.interval_cases.combine_upper_bounds tactic.interval_cases.combine_upper_bounds
 
 /-- Combine two lower bounds. -/
 unsafe def combine_lower_bounds : Option expr → Option expr → tactic (Option expr)
-  | none, none => return $ none
-  | some prf, none => return $ some prf
-  | none, some prf => return $ some prf
+  | none, none => return <| none
+  | some prf, none => return <| some prf
+  | none, some prf => return <| some prf
   | some prf₁, some prf₂ => do
     Option.some <$> to_expr ``(max_le $(prf₂) $(prf₁))
 #align tactic.interval_cases.combine_lower_bounds tactic.interval_cases.combine_lower_bounds
@@ -165,8 +165,8 @@ unsafe def combine_lower_bounds : Option expr → Option expr → tactic (Option
 /-- Inspect a given expression, using it to update a set of upper and lower bounds on `n`. -/
 unsafe def update_bounds (n : expr) (bounds : Option expr × Option expr) (e : expr) :
     tactic (Option expr × Option expr) := do
-  let nlb ← try_core $ gives_lower_bound n e
-  let nub ← try_core $ gives_upper_bound n e
+  let nlb ← try_core <| gives_lower_bound n e
+  let nub ← try_core <| gives_upper_bound n e
   let clb ← combine_lower_bounds bounds.1 nlb
   let cub ← combine_upper_bounds bounds.2 nub
   return (clb, cub)
@@ -213,7 +213,7 @@ unsafe def update_bounds (n : expr) (bounds : Option expr × Option expr) (e : e
                           tn
                           with
                           | q( ℕ ) => to_expr ` `( Nat.add_one_le_iff . mpr $ ( e ) )
-                            | q( ℕ+ ) => to_expr ` `( Pnat.add_one_le_iff . mpr $ ( e ) )
+                            | q( ℕ+ ) => to_expr ` `( PNat.add_one_le_iff . mpr $ ( e ) )
                             | q( ℤ ) => to_expr ` `( Int.add_one_le_iff . mpr $ ( e ) )
                             | _ => failed
                     return e

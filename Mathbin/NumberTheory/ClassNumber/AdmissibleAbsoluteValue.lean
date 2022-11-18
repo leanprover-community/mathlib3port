@@ -3,7 +3,6 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Data.Fin.Tuple.Default
 import Mathbin.Data.Real.Basic
 import Mathbin.Combinatorics.Pigeonhole
 import Mathbin.Algebra.Order.EuclideanAbsoluteValue
@@ -65,12 +64,11 @@ theorem exists_partition {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b
   convert ht (e i₀) (e i₁) h <;> simp only [e.symm_apply_apply]
 #align absolute_value.is_admissible.exists_partition AbsoluteValue.IsAdmissible.exists_partition
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i₀ i₁) -/
 /-- Any large enough family of vectors in `R^n` has a pair of elements
 whose remainders are close together, pointwise. -/
 theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
     ∀ {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0) (A : Fin (h.card ε ^ n).succ → Fin n → R),
-      ∃ (i₀) (i₁), i₀ ≠ i₁ ∧ ∀ k, (abv (A i₁ k % b - A i₀ k % b) : ℝ) < abv b • ε :=
+      ∃ i₀ i₁, i₀ ≠ i₁ ∧ ∀ k, (abv (A i₁ k % b - A i₀ k % b) : ℝ) < abv b • ε :=
   by
   haveI := Classical.decEq R
   induction' n with n ih
@@ -122,12 +120,11 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
     
 #align absolute_value.is_admissible.exists_approx_aux AbsoluteValue.IsAdmissible.exists_approx_aux
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i₀ i₁) -/
 /-- Any large enough family of vectors in `R^ι` has a pair of elements
 whose remainders are close together, pointwise. -/
 theorem exists_approx {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0) (h : abv.IsAdmissible)
     (A : Fin (h.card ε ^ Fintype.card ι).succ → ι → R) :
-    ∃ (i₀) (i₁), i₀ ≠ i₁ ∧ ∀ k, (abv (A i₁ k % b - A i₀ k % b) : ℝ) < abv b • ε := by
+    ∃ i₀ i₁, i₀ ≠ i₁ ∧ ∀ k, (abv (A i₁ k % b - A i₀ k % b) : ℝ) < abv b • ε := by
   let e := Fintype.equivFin ι
   obtain ⟨i₀, i₁, ne, h⟩ := h.exists_approx_aux (Fintype.card ι) hε hb fun x y => A x (e.symm y)
   refine' ⟨i₀, i₁, Ne, fun k => _⟩

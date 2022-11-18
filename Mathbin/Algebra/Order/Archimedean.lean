@@ -62,7 +62,7 @@ theorem exists_unique_zsmul_near_of_pos {a : α} (ha : 0 < a) (g : α) : ∃! k 
   have hm'' : g < (m + 1) • a := by
     contrapose! hm'
     exact ⟨m + 1, hm', lt_add_one _⟩
-  refine' ⟨m, ⟨hm, hm''⟩, fun n hn => (hm' n hn.1).antisymm $ Int.le_of_lt_add_one _⟩
+  refine' ⟨m, ⟨hm, hm''⟩, fun n hn => (hm' n hn.1).antisymm <| Int.le_of_lt_add_one _⟩
   rw [← zsmul_lt_zsmul_iff ha]
   exact lt_of_le_of_lt hm hn.2
 #align exists_unique_zsmul_near_of_pos exists_unique_zsmul_near_of_pos
@@ -72,13 +72,13 @@ theorem exists_unique_zsmul_near_of_pos' {a : α} (ha : 0 < a) (g : α) : ∃! k
 #align exists_unique_zsmul_near_of_pos' exists_unique_zsmul_near_of_pos'
 
 theorem exists_unique_add_zsmul_mem_Ico {a : α} (ha : 0 < a) (b c : α) : ∃! m : ℤ, b + m • a ∈ Set.ico c (c + a) :=
-  (Equiv.neg ℤ).Bijective.exists_unique_iff.2 $ by
+  (Equiv.neg ℤ).Bijective.exists_unique_iff.2 <| by
     simpa only [Equiv.neg_apply, mem_Ico, neg_zsmul, ← sub_eq_add_neg, le_sub_iff_add_le, zero_add, add_comm c,
       sub_lt_iff_lt_add', add_assoc] using exists_unique_zsmul_near_of_pos' ha (b - c)
 #align exists_unique_add_zsmul_mem_Ico exists_unique_add_zsmul_mem_Ico
 
 theorem exists_unique_add_zsmul_mem_Ioc {a : α} (ha : 0 < a) (b c : α) : ∃! m : ℤ, b + m • a ∈ Set.ioc c (c + a) :=
-  (Equiv.addRight (1 : ℤ)).Bijective.exists_unique_iff.2 $ by
+  (Equiv.addRight (1 : ℤ)).Bijective.exists_unique_iff.2 <| by
     simpa only [add_zsmul, sub_lt_iff_lt_add', le_sub_iff_add_le', ← add_assoc, and_comm, mem_Ioc, Equiv.coe_add_right,
       one_zsmul, add_le_add_iff_right] using exists_unique_zsmul_near_of_pos ha (c - b)
 #align exists_unique_add_zsmul_mem_Ioc exists_unique_add_zsmul_mem_Ioc
@@ -133,7 +133,7 @@ theorem exists_floor (x : α) : ∃ fl : ℤ, ∀ z : ℤ, z ≤ fl ↔ (z : α)
   have : ∃ ub : ℤ, (ub : α) ≤ x ∧ ∀ z : ℤ, (z : α) ≤ x → z ≤ ub :=
     Int.exists_greatest_of_bdd
       (let ⟨n, hn⟩ := exists_int_gt x
-      ⟨n, fun z h' => Int.cast_le.1 $ le_trans h' $ le_of_lt hn⟩)
+      ⟨n, fun z h' => Int.cast_le.1 <| le_trans h' <| le_of_lt hn⟩)
       (let ⟨n, hn⟩ := exists_int_lt x
       ⟨n, le_of_lt hn⟩)
   refine' this.imp fun fl h z => _
@@ -164,19 +164,18 @@ variable [LinearOrderedRing α] [Archimedean α]
       (Command.declSig
        [(Term.implicitBinder "{" [`x] [":" `α] "}")
         (Term.implicitBinder "{" [`y] [":" `α] "}")
-        (Term.explicitBinder "(" [`hx] [":" (Init.Core.«term_≤_» (num "1") " ≤ " `x)] [] ")")
-        (Term.explicitBinder "(" [`hy] [":" (Init.Core.«term_<_» (num "1") " < " `y)] [] ")")]
+        (Term.explicitBinder "(" [`hx] [":" («term_≤_» (num "1") "≤" `x)] [] ")")
+        (Term.explicitBinder "(" [`hy] [":" («term_<_» (num "1") "<" `y)] [] ")")]
        (Term.typeSpec
         ":"
-        (Init.Logic.«term∃_,_»
+        («term∃_,_»
          "∃"
-         (Std.ExtendedBinder.extBinders
-          (Std.ExtendedBinder.extBinder (Lean.binderIdent `n) [(group ":" (Init.Data.Nat.Basic.termℕ "ℕ"))]))
-         ", "
-         (Init.Logic.«term_∧_»
-          (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `n) " ≤ " `x)
-          " ∧ "
-          (Init.Core.«term_<_» `x " < " (Init.Core.«term_^_» `y " ^ " (Init.Core.«term_+_» `n " + " (num "1"))))))))
+         (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] [":" (termℕ "ℕ")]))
+         ","
+         («term_∧_»
+          («term_≤_» («term_^_» `y "^" `n) "≤" `x)
+          "∧"
+          («term_<_» `x "<" («term_^_» `y "^" («term_+_» `n "+" (num "1"))))))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -190,12 +189,11 @@ variable [LinearOrderedRing α] [Archimedean α]
               [`h []]
               [(Term.typeSpec
                 ":"
-                (Init.Logic.«term∃_,_»
+                («term∃_,_»
                  "∃"
-                 (Std.ExtendedBinder.extBinders
-                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `n) [(group ":" (Init.Data.Nat.Basic.termℕ "ℕ"))]))
-                 ", "
-                 (Init.Core.«term_<_» `x " < " (Init.Core.«term_^_» `y " ^ " `n))))]
+                 (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] [":" (termℕ "ℕ")]))
+                 ","
+                 («term_<_» `x "<" («term_^_» `y "^" `n))))]
               ":="
               (Term.app `pow_unbounded_of_one_lt [(Term.hole "_") `hy]))))
            []
@@ -213,7 +211,7 @@ variable [LinearOrderedRing α] [Archimedean α]
                (Term.haveDecl
                 (Term.haveIdDecl
                  [`hn []]
-                 [(Term.typeSpec ":" (Init.Core.«term_<_» `x " < " (Init.Core.«term_^_» `y " ^ " `n)))]
+                 [(Term.typeSpec ":" («term_<_» `x "<" («term_^_» `y "^" `n)))]
                  ":="
                  (Term.app `Nat.find_spec [`h])))
                []
@@ -222,7 +220,7 @@ variable [LinearOrderedRing α] [Archimedean α]
                 (Term.haveDecl
                  (Term.haveIdDecl
                   [`hnp []]
-                  [(Term.typeSpec ":" (Init.Core.«term_<_» (num "0") " < " `n))]
+                  [(Term.typeSpec ":" («term_<_» (num "0") "<" `n))]
                   ":="
                   (Term.app
                    (Term.proj `pos_iff_ne_zero "." (fieldIdx "2"))
@@ -250,9 +248,7 @@ variable [LinearOrderedRing α] [Archimedean α]
                  (Term.haveDecl
                   (Term.haveIdDecl
                    [`hnsp []]
-                   [(Term.typeSpec
-                     ":"
-                     (Init.Core.«term_=_» (Init.Core.«term_+_» (Term.app `Nat.pred [`n]) " + " (num "1")) " = " `n))]
+                   [(Term.typeSpec ":" («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
                    ":="
                    (Term.app `Nat.succ_pred_eq_of_pos [`hnp])))
                  []
@@ -261,7 +257,7 @@ variable [LinearOrderedRing α] [Archimedean α]
                   (Term.haveDecl
                    (Term.haveIdDecl
                     [`hltn []]
-                    [(Term.typeSpec ":" (Init.Core.«term_<_» (Term.app `Nat.pred [`n]) " < " `n))]
+                    [(Term.typeSpec ":" («term_<_» (Term.app `Nat.pred [`n]) "<" `n))]
                     ":="
                     (Term.app `Nat.pred_lt [(Term.app `ne_of_gt [`hnp])])))
                   []
@@ -294,12 +290,11 @@ variable [LinearOrderedRing α] [Archimedean α]
              [`h []]
              [(Term.typeSpec
                ":"
-               (Init.Logic.«term∃_,_»
+               («term∃_,_»
                 "∃"
-                (Std.ExtendedBinder.extBinders
-                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `n) [(group ":" (Init.Data.Nat.Basic.termℕ "ℕ"))]))
-                ", "
-                (Init.Core.«term_<_» `x " < " (Init.Core.«term_^_» `y " ^ " `n))))]
+                (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] [":" (termℕ "ℕ")]))
+                ","
+                («term_<_» `x "<" («term_^_» `y "^" `n))))]
              ":="
              (Term.app `pow_unbounded_of_one_lt [(Term.hole "_") `hy]))))
           []
@@ -317,7 +312,7 @@ variable [LinearOrderedRing α] [Archimedean α]
               (Term.haveDecl
                (Term.haveIdDecl
                 [`hn []]
-                [(Term.typeSpec ":" (Init.Core.«term_<_» `x " < " (Init.Core.«term_^_» `y " ^ " `n)))]
+                [(Term.typeSpec ":" («term_<_» `x "<" («term_^_» `y "^" `n)))]
                 ":="
                 (Term.app `Nat.find_spec [`h])))
               []
@@ -326,7 +321,7 @@ variable [LinearOrderedRing α] [Archimedean α]
                (Term.haveDecl
                 (Term.haveIdDecl
                  [`hnp []]
-                 [(Term.typeSpec ":" (Init.Core.«term_<_» (num "0") " < " `n))]
+                 [(Term.typeSpec ":" («term_<_» (num "0") "<" `n))]
                  ":="
                  (Term.app
                   (Term.proj `pos_iff_ne_zero "." (fieldIdx "2"))
@@ -354,9 +349,7 @@ variable [LinearOrderedRing α] [Archimedean α]
                 (Term.haveDecl
                  (Term.haveIdDecl
                   [`hnsp []]
-                  [(Term.typeSpec
-                    ":"
-                    (Init.Core.«term_=_» (Init.Core.«term_+_» (Term.app `Nat.pred [`n]) " + " (num "1")) " = " `n))]
+                  [(Term.typeSpec ":" («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
                   ":="
                   (Term.app `Nat.succ_pred_eq_of_pos [`hnp])))
                 []
@@ -365,7 +358,7 @@ variable [LinearOrderedRing α] [Archimedean α]
                  (Term.haveDecl
                   (Term.haveIdDecl
                    [`hltn []]
-                   [(Term.typeSpec ":" (Init.Core.«term_<_» (Term.app `Nat.pred [`n]) " < " `n))]
+                   [(Term.typeSpec ":" («term_<_» (Term.app `Nat.pred [`n]) "<" `n))]
                    ":="
                    (Term.app `Nat.pred_lt [(Term.app `ne_of_gt [`hnp])])))
                  []
@@ -397,7 +390,7 @@ variable [LinearOrderedRing α] [Archimedean α]
           (Term.haveDecl
            (Term.haveIdDecl
             [`hn []]
-            [(Term.typeSpec ":" (Init.Core.«term_<_» `x " < " (Init.Core.«term_^_» `y " ^ " `n)))]
+            [(Term.typeSpec ":" («term_<_» `x "<" («term_^_» `y "^" `n)))]
             ":="
             (Term.app `Nat.find_spec [`h])))
           []
@@ -406,7 +399,7 @@ variable [LinearOrderedRing α] [Archimedean α]
            (Term.haveDecl
             (Term.haveIdDecl
              [`hnp []]
-             [(Term.typeSpec ":" (Init.Core.«term_<_» (num "0") " < " `n))]
+             [(Term.typeSpec ":" («term_<_» (num "0") "<" `n))]
              ":="
              (Term.app
               (Term.proj `pos_iff_ne_zero "." (fieldIdx "2"))
@@ -434,9 +427,7 @@ variable [LinearOrderedRing α] [Archimedean α]
             (Term.haveDecl
              (Term.haveIdDecl
               [`hnsp []]
-              [(Term.typeSpec
-                ":"
-                (Init.Core.«term_=_» (Init.Core.«term_+_» (Term.app `Nat.pred [`n]) " + " (num "1")) " = " `n))]
+              [(Term.typeSpec ":" («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
               ":="
               (Term.app `Nat.succ_pred_eq_of_pos [`hnp])))
             []
@@ -445,7 +436,7 @@ variable [LinearOrderedRing α] [Archimedean α]
              (Term.haveDecl
               (Term.haveIdDecl
                [`hltn []]
-               [(Term.typeSpec ":" (Init.Core.«term_<_» (Term.app `Nat.pred [`n]) " < " `n))]
+               [(Term.typeSpec ":" («term_<_» (Term.app `Nat.pred [`n]) "<" `n))]
                ":="
                (Term.app `Nat.pred_lt [(Term.app `ne_of_gt [`hnp])])))
              []
@@ -473,7 +464,7 @@ variable [LinearOrderedRing α] [Archimedean α]
          (Term.haveDecl
           (Term.haveIdDecl
            [`hn []]
-           [(Term.typeSpec ":" (Init.Core.«term_<_» `x " < " (Init.Core.«term_^_» `y " ^ " `n)))]
+           [(Term.typeSpec ":" («term_<_» `x "<" («term_^_» `y "^" `n)))]
            ":="
            (Term.app `Nat.find_spec [`h])))
          []
@@ -482,7 +473,7 @@ variable [LinearOrderedRing α] [Archimedean α]
           (Term.haveDecl
            (Term.haveIdDecl
             [`hnp []]
-            [(Term.typeSpec ":" (Init.Core.«term_<_» (num "0") " < " `n))]
+            [(Term.typeSpec ":" («term_<_» (num "0") "<" `n))]
             ":="
             (Term.app
              (Term.proj `pos_iff_ne_zero "." (fieldIdx "2"))
@@ -510,9 +501,7 @@ variable [LinearOrderedRing α] [Archimedean α]
            (Term.haveDecl
             (Term.haveIdDecl
              [`hnsp []]
-             [(Term.typeSpec
-               ":"
-               (Init.Core.«term_=_» (Init.Core.«term_+_» (Term.app `Nat.pred [`n]) " + " (num "1")) " = " `n))]
+             [(Term.typeSpec ":" («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
              ":="
              (Term.app `Nat.succ_pred_eq_of_pos [`hnp])))
            []
@@ -521,7 +510,7 @@ variable [LinearOrderedRing α] [Archimedean α]
             (Term.haveDecl
              (Term.haveIdDecl
               [`hltn []]
-              [(Term.typeSpec ":" (Init.Core.«term_<_» (Term.app `Nat.pred [`n]) " < " `n))]
+              [(Term.typeSpec ":" («term_<_» (Term.app `Nat.pred [`n]) "<" `n))]
               ":="
               (Term.app `Nat.pred_lt [(Term.app `ne_of_gt [`hnp])])))
             []
@@ -547,7 +536,7 @@ variable [LinearOrderedRing α] [Archimedean α]
         (Term.haveDecl
          (Term.haveIdDecl
           [`hn []]
-          [(Term.typeSpec ":" (Init.Core.«term_<_» `x " < " (Init.Core.«term_^_» `y " ^ " `n)))]
+          [(Term.typeSpec ":" («term_<_» `x "<" («term_^_» `y "^" `n)))]
           ":="
           (Term.app `Nat.find_spec [`h])))
         []
@@ -556,7 +545,7 @@ variable [LinearOrderedRing α] [Archimedean α]
          (Term.haveDecl
           (Term.haveIdDecl
            [`hnp []]
-           [(Term.typeSpec ":" (Init.Core.«term_<_» (num "0") " < " `n))]
+           [(Term.typeSpec ":" («term_<_» (num "0") "<" `n))]
            ":="
            (Term.app
             (Term.proj `pos_iff_ne_zero "." (fieldIdx "2"))
@@ -584,9 +573,7 @@ variable [LinearOrderedRing α] [Archimedean α]
           (Term.haveDecl
            (Term.haveIdDecl
             [`hnsp []]
-            [(Term.typeSpec
-              ":"
-              (Init.Core.«term_=_» (Init.Core.«term_+_» (Term.app `Nat.pred [`n]) " + " (num "1")) " = " `n))]
+            [(Term.typeSpec ":" («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
             ":="
             (Term.app `Nat.succ_pred_eq_of_pos [`hnp])))
           []
@@ -595,7 +582,7 @@ variable [LinearOrderedRing α] [Archimedean α]
            (Term.haveDecl
             (Term.haveIdDecl
              [`hltn []]
-             [(Term.typeSpec ":" (Init.Core.«term_<_» (Term.app `Nat.pred [`n]) " < " `n))]
+             [(Term.typeSpec ":" («term_<_» (Term.app `Nat.pred [`n]) "<" `n))]
              ":="
              (Term.app `Nat.pred_lt [(Term.app `ne_of_gt [`hnp])])))
            []
@@ -617,7 +604,7 @@ variable [LinearOrderedRing α] [Archimedean α]
        (Term.haveDecl
         (Term.haveIdDecl
          [`hn []]
-         [(Term.typeSpec ":" (Init.Core.«term_<_» `x " < " (Init.Core.«term_^_» `y " ^ " `n)))]
+         [(Term.typeSpec ":" («term_<_» `x "<" («term_^_» `y "^" `n)))]
          ":="
          (Term.app `Nat.find_spec [`h])))
        []
@@ -626,7 +613,7 @@ variable [LinearOrderedRing α] [Archimedean α]
         (Term.haveDecl
          (Term.haveIdDecl
           [`hnp []]
-          [(Term.typeSpec ":" (Init.Core.«term_<_» (num "0") " < " `n))]
+          [(Term.typeSpec ":" («term_<_» (num "0") "<" `n))]
           ":="
           (Term.app
            (Term.proj `pos_iff_ne_zero "." (fieldIdx "2"))
@@ -654,9 +641,7 @@ variable [LinearOrderedRing α] [Archimedean α]
          (Term.haveDecl
           (Term.haveIdDecl
            [`hnsp []]
-           [(Term.typeSpec
-             ":"
-             (Init.Core.«term_=_» (Init.Core.«term_+_» (Term.app `Nat.pred [`n]) " + " (num "1")) " = " `n))]
+           [(Term.typeSpec ":" («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
            ":="
            (Term.app `Nat.succ_pred_eq_of_pos [`hnp])))
          []
@@ -665,7 +650,7 @@ variable [LinearOrderedRing α] [Archimedean α]
           (Term.haveDecl
            (Term.haveIdDecl
             [`hltn []]
-            [(Term.typeSpec ":" (Init.Core.«term_<_» (Term.app `Nat.pred [`n]) " < " `n))]
+            [(Term.typeSpec ":" («term_<_» (Term.app `Nat.pred [`n]) "<" `n))]
             ":="
             (Term.app `Nat.pred_lt [(Term.app `ne_of_gt [`hnp])])))
           []
@@ -687,7 +672,7 @@ variable [LinearOrderedRing α] [Archimedean α]
        (Term.haveDecl
         (Term.haveIdDecl
          [`hnp []]
-         [(Term.typeSpec ":" (Init.Core.«term_<_» (num "0") " < " `n))]
+         [(Term.typeSpec ":" («term_<_» (num "0") "<" `n))]
          ":="
          (Term.app
           (Term.proj `pos_iff_ne_zero "." (fieldIdx "2"))
@@ -715,9 +700,7 @@ variable [LinearOrderedRing α] [Archimedean α]
         (Term.haveDecl
          (Term.haveIdDecl
           [`hnsp []]
-          [(Term.typeSpec
-            ":"
-            (Init.Core.«term_=_» (Init.Core.«term_+_» (Term.app `Nat.pred [`n]) " + " (num "1")) " = " `n))]
+          [(Term.typeSpec ":" («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
           ":="
           (Term.app `Nat.succ_pred_eq_of_pos [`hnp])))
         []
@@ -726,7 +709,7 @@ variable [LinearOrderedRing α] [Archimedean α]
          (Term.haveDecl
           (Term.haveIdDecl
            [`hltn []]
-           [(Term.typeSpec ":" (Init.Core.«term_<_» (Term.app `Nat.pred [`n]) " < " `n))]
+           [(Term.typeSpec ":" («term_<_» (Term.app `Nat.pred [`n]) "<" `n))]
            ":="
            (Term.app `Nat.pred_lt [(Term.app `ne_of_gt [`hnp])])))
          []
@@ -748,9 +731,7 @@ variable [LinearOrderedRing α] [Archimedean α]
        (Term.haveDecl
         (Term.haveIdDecl
          [`hnsp []]
-         [(Term.typeSpec
-           ":"
-           (Init.Core.«term_=_» (Init.Core.«term_+_» (Term.app `Nat.pred [`n]) " + " (num "1")) " = " `n))]
+         [(Term.typeSpec ":" («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n))]
          ":="
          (Term.app `Nat.succ_pred_eq_of_pos [`hnp])))
        []
@@ -759,7 +740,7 @@ variable [LinearOrderedRing α] [Archimedean α]
         (Term.haveDecl
          (Term.haveIdDecl
           [`hltn []]
-          [(Term.typeSpec ":" (Init.Core.«term_<_» (Term.app `Nat.pred [`n]) " < " `n))]
+          [(Term.typeSpec ":" («term_<_» (Term.app `Nat.pred [`n]) "<" `n))]
           ":="
           (Term.app `Nat.pred_lt [(Term.app `ne_of_gt [`hnp])])))
         []
@@ -781,7 +762,7 @@ variable [LinearOrderedRing α] [Archimedean α]
        (Term.haveDecl
         (Term.haveIdDecl
          [`hltn []]
-         [(Term.typeSpec ":" (Init.Core.«term_<_» (Term.app `Nat.pred [`n]) " < " `n))]
+         [(Term.typeSpec ":" («term_<_» (Term.app `Nat.pred [`n]) "<" `n))]
          ":="
          (Term.app `Nat.pred_lt [(Term.app `ne_of_gt [`hnp])])))
        []
@@ -879,7 +860,7 @@ variable [LinearOrderedRing α] [Archimedean α]
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_<_» (Term.app `Nat.pred [`n]) " < " `n)
+      («term_<_» (Term.app `Nat.pred [`n]) "<" `n)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `n
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -893,7 +874,7 @@ variable [LinearOrderedRing α] [Archimedean α]
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Nat.pred
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -908,12 +889,12 @@ variable [LinearOrderedRing α] [Archimedean α]
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_» (Init.Core.«term_+_» (Term.app `Nat.pred [`n]) " + " (num "1")) " = " `n)
+      («term_=_» («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1")) "=" `n)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `n
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (Init.Core.«term_+_» (Term.app `Nat.pred [`n]) " + " (num "1"))
+      («term_+_» (Term.app `Nat.pred [`n]) "+" (num "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "1")
 [PrettyPrinter.parenthesize] ...precedences are 66 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -928,7 +909,7 @@ variable [LinearOrderedRing α] [Archimedean α]
       `Nat.pred
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 65 >? 1022, (some 1023, term) <=? (some 65, term)
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 65, (some 66, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 65, (some 66, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1049,13 +1030,13 @@ variable [LinearOrderedRing α] [Archimedean α]
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_<_» (num "0") " < " `n)
+      («term_<_» (num "0") "<" `n)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `n
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (num "0")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1070,9 +1051,9 @@ variable [LinearOrderedRing α] [Archimedean α]
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_<_» `x " < " (Init.Core.«term_^_» `y " ^ " `n))
+      («term_<_» `x "<" («term_^_» `y "^" `n))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_^_» `y " ^ " `n)
+      («term_^_» `y "^" `n)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `n
 [PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -1082,7 +1063,7 @@ variable [LinearOrderedRing α] [Archimedean α]
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 80, (some 80, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1159,22 +1140,15 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
       "theorem"
       (Command.declId `exists_mem_Ico_zpow [])
       (Command.declSig
-       [(Term.explicitBinder "(" [`hx] [":" (Init.Core.«term_<_» (num "0") " < " `x)] [] ")")
-        (Term.explicitBinder "(" [`hy] [":" (Init.Core.«term_<_» (num "1") " < " `y)] [] ")")]
+       [(Term.explicitBinder "(" [`hx] [":" («term_<_» (num "0") "<" `x)] [] ")")
+        (Term.explicitBinder "(" [`hy] [":" («term_<_» (num "1") "<" `y)] [] ")")]
        (Term.typeSpec
         ":"
-        (Init.Logic.«term∃_,_»
+        («term∃_,_»
          "∃"
-         (Std.ExtendedBinder.extBinders
-          (Std.ExtendedBinder.extBinder (Lean.binderIdent `n) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-         ", "
-         (Init.Core.«term_∈_»
-          `x
-          " ∈ "
-          (Term.app
-           `ico
-           [(Init.Core.«term_^_» `y " ^ " `n)
-            (Init.Core.«term_^_» `y " ^ " (Init.Core.«term_+_» `n " + " (num "1")))])))))
+         (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `n)] [":" (termℤ "ℤ")]))
+         ","
+         («term_∈_» `x "∈" (Term.app `ico [(«term_^_» `y "^" `n) («term_^_» `y "^" («term_+_» `n "+" (num "1")))])))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -1194,7 +1168,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                 []
                 []
                 ":="
-                (Term.app `pow_unbounded_of_one_lt [(Init.Core.«term_⁻¹» `x "⁻¹") `hy])))
+                (Term.app `pow_unbounded_of_one_lt [(«term_⁻¹_1» `x "⁻¹") `hy])))
               []
               (Term.have
                "have"
@@ -1203,16 +1177,15 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                  [`he []]
                  [(Term.typeSpec
                    ":"
-                   (Init.Logic.«term∃_,_»
+                   («term∃_,_»
                     "∃"
-                    (Std.ExtendedBinder.extBinders
-                     (Std.ExtendedBinder.extBinder (Lean.binderIdent `m) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-                    ", "
-                    (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)))]
+                    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
+                    ","
+                    («term_≤_» («term_^_» `y "^" `m) "≤" `x)))]
                  ":="
                  (Term.anonymousCtor
                   "⟨"
-                  [(Init.Core.«term-_» "-" `N)
+                  [(«term-_» "-" `N)
                    ","
                    (Term.app
                     `le_of_lt
@@ -1225,7 +1198,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                           []
                           (Tactic.rwRuleSeq
                            "["
-                           [(Tactic.rwRule [] (Term.app `zpow_neg [`y (Init.Coe.«term↑_» "↑" `N)]))
+                           [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)]))
                             ","
                             (Tactic.rwRule [] `zpow_coe_nat)]
                            "]")
@@ -1260,22 +1233,16 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                    [`hb []]
                    [(Term.typeSpec
                      ":"
-                     (Init.Logic.«term∃_,_»
+                     («term∃_,_»
                       "∃"
-                      (Std.ExtendedBinder.extBinders
-                       (Std.ExtendedBinder.extBinder
-                        (Lean.binderIdent `b)
-                        [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-                      ", "
+                      (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+                      ","
                       (Term.forall
                        "∀"
                        [`m]
                        []
                        ","
-                       (Term.arrow
-                        (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)
-                        "→"
-                        (Init.Core.«term_≤_» `m " ≤ " `b)))))]
+                       (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b)))))]
                    ":="
                    (Term.anonymousCtor
                     "⟨"
@@ -1365,7 +1332,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                []
                []
                ":="
-               (Term.app `pow_unbounded_of_one_lt [(Init.Core.«term_⁻¹» `x "⁻¹") `hy])))
+               (Term.app `pow_unbounded_of_one_lt [(«term_⁻¹_1» `x "⁻¹") `hy])))
              []
              (Term.have
               "have"
@@ -1374,16 +1341,15 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                 [`he []]
                 [(Term.typeSpec
                   ":"
-                  (Init.Logic.«term∃_,_»
+                  («term∃_,_»
                    "∃"
-                   (Std.ExtendedBinder.extBinders
-                    (Std.ExtendedBinder.extBinder (Lean.binderIdent `m) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-                   ", "
-                   (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)))]
+                   (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
+                   ","
+                   («term_≤_» («term_^_» `y "^" `m) "≤" `x)))]
                 ":="
                 (Term.anonymousCtor
                  "⟨"
-                 [(Init.Core.«term-_» "-" `N)
+                 [(«term-_» "-" `N)
                   ","
                   (Term.app
                    `le_of_lt
@@ -1396,7 +1362,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                          []
                          (Tactic.rwRuleSeq
                           "["
-                          [(Tactic.rwRule [] (Term.app `zpow_neg [`y (Init.Coe.«term↑_» "↑" `N)]))
+                          [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)]))
                            ","
                            (Tactic.rwRule [] `zpow_coe_nat)]
                           "]")
@@ -1431,22 +1397,16 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                   [`hb []]
                   [(Term.typeSpec
                     ":"
-                    (Init.Logic.«term∃_,_»
+                    («term∃_,_»
                      "∃"
-                     (Std.ExtendedBinder.extBinders
-                      (Std.ExtendedBinder.extBinder
-                       (Lean.binderIdent `b)
-                       [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-                     ", "
+                     (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+                     ","
                      (Term.forall
                       "∀"
                       [`m]
                       []
                       ","
-                      (Term.arrow
-                       (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)
-                       "→"
-                       (Init.Core.«term_≤_» `m " ≤ " `b)))))]
+                      (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b)))))]
                   ":="
                   (Term.anonymousCtor
                    "⟨"
@@ -1528,7 +1488,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
            []
            []
            ":="
-           (Term.app `pow_unbounded_of_one_lt [(Init.Core.«term_⁻¹» `x "⁻¹") `hy])))
+           (Term.app `pow_unbounded_of_one_lt [(«term_⁻¹_1» `x "⁻¹") `hy])))
          []
          (Term.have
           "have"
@@ -1537,16 +1497,15 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
             [`he []]
             [(Term.typeSpec
               ":"
-              (Init.Logic.«term∃_,_»
+              («term∃_,_»
                "∃"
-               (Std.ExtendedBinder.extBinders
-                (Std.ExtendedBinder.extBinder (Lean.binderIdent `m) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-               ", "
-               (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)))]
+               (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
+               ","
+               («term_≤_» («term_^_» `y "^" `m) "≤" `x)))]
             ":="
             (Term.anonymousCtor
              "⟨"
-             [(Init.Core.«term-_» "-" `N)
+             [(«term-_» "-" `N)
               ","
               (Term.app
                `le_of_lt
@@ -1559,7 +1518,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                      []
                      (Tactic.rwRuleSeq
                       "["
-                      [(Tactic.rwRule [] (Term.app `zpow_neg [`y (Init.Coe.«term↑_» "↑" `N)]))
+                      [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)]))
                        ","
                        (Tactic.rwRule [] `zpow_coe_nat)]
                       "]")
@@ -1594,20 +1553,16 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
               [`hb []]
               [(Term.typeSpec
                 ":"
-                (Init.Logic.«term∃_,_»
+                («term∃_,_»
                  "∃"
-                 (Std.ExtendedBinder.extBinders
-                  (Std.ExtendedBinder.extBinder (Lean.binderIdent `b) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-                 ", "
+                 (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+                 ","
                  (Term.forall
                   "∀"
                   [`m]
                   []
                   ","
-                  (Term.arrow
-                   (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)
-                   "→"
-                   (Init.Core.«term_≤_» `m " ≤ " `b)))))]
+                  (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b)))))]
               ":="
               (Term.anonymousCtor
                "⟨"
@@ -1685,7 +1640,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
           []
           []
           ":="
-          (Term.app `pow_unbounded_of_one_lt [(Init.Core.«term_⁻¹» `x "⁻¹") `hy])))
+          (Term.app `pow_unbounded_of_one_lt [(«term_⁻¹_1» `x "⁻¹") `hy])))
         []
         (Term.have
          "have"
@@ -1694,16 +1649,15 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
            [`he []]
            [(Term.typeSpec
              ":"
-             (Init.Logic.«term∃_,_»
+             («term∃_,_»
               "∃"
-              (Std.ExtendedBinder.extBinders
-               (Std.ExtendedBinder.extBinder (Lean.binderIdent `m) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-              ", "
-              (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)))]
+              (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
+              ","
+              («term_≤_» («term_^_» `y "^" `m) "≤" `x)))]
            ":="
            (Term.anonymousCtor
             "⟨"
-            [(Init.Core.«term-_» "-" `N)
+            [(«term-_» "-" `N)
              ","
              (Term.app
               `le_of_lt
@@ -1716,7 +1670,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                     []
                     (Tactic.rwRuleSeq
                      "["
-                     [(Tactic.rwRule [] (Term.app `zpow_neg [`y (Init.Coe.«term↑_» "↑" `N)]))
+                     [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)]))
                       ","
                       (Tactic.rwRule [] `zpow_coe_nat)]
                      "]")
@@ -1751,20 +1705,16 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
              [`hb []]
              [(Term.typeSpec
                ":"
-               (Init.Logic.«term∃_,_»
+               («term∃_,_»
                 "∃"
-                (Std.ExtendedBinder.extBinders
-                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `b) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-                ", "
+                (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+                ","
                 (Term.forall
                  "∀"
                  [`m]
                  []
                  ","
-                 (Term.arrow
-                  (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)
-                  "→"
-                  (Init.Core.«term_≤_» `m " ≤ " `b)))))]
+                 (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b)))))]
              ":="
              (Term.anonymousCtor
               "⟨"
@@ -1840,7 +1790,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
          []
          []
          ":="
-         (Term.app `pow_unbounded_of_one_lt [(Init.Core.«term_⁻¹» `x "⁻¹") `hy])))
+         (Term.app `pow_unbounded_of_one_lt [(«term_⁻¹_1» `x "⁻¹") `hy])))
        []
        (Term.have
         "have"
@@ -1849,16 +1799,15 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
           [`he []]
           [(Term.typeSpec
             ":"
-            (Init.Logic.«term∃_,_»
+            («term∃_,_»
              "∃"
-             (Std.ExtendedBinder.extBinders
-              (Std.ExtendedBinder.extBinder (Lean.binderIdent `m) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-             ", "
-             (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)))]
+             (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
+             ","
+             («term_≤_» («term_^_» `y "^" `m) "≤" `x)))]
           ":="
           (Term.anonymousCtor
            "⟨"
-           [(Init.Core.«term-_» "-" `N)
+           [(«term-_» "-" `N)
             ","
             (Term.app
              `le_of_lt
@@ -1871,7 +1820,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                    []
                    (Tactic.rwRuleSeq
                     "["
-                    [(Tactic.rwRule [] (Term.app `zpow_neg [`y (Init.Coe.«term↑_» "↑" `N)]))
+                    [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)]))
                      ","
                      (Tactic.rwRule [] `zpow_coe_nat)]
                     "]")
@@ -1906,20 +1855,16 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
             [`hb []]
             [(Term.typeSpec
               ":"
-              (Init.Logic.«term∃_,_»
+              («term∃_,_»
                "∃"
-               (Std.ExtendedBinder.extBinders
-                (Std.ExtendedBinder.extBinder (Lean.binderIdent `b) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-               ", "
+               (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+               ","
                (Term.forall
                 "∀"
                 [`m]
                 []
                 ","
-                (Term.arrow
-                 (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)
-                 "→"
-                 (Init.Core.«term_≤_» `m " ≤ " `b)))))]
+                (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b)))))]
             ":="
             (Term.anonymousCtor
              "⟨"
@@ -1994,16 +1939,15 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
          [`he []]
          [(Term.typeSpec
            ":"
-           (Init.Logic.«term∃_,_»
+           («term∃_,_»
             "∃"
-            (Std.ExtendedBinder.extBinders
-             (Std.ExtendedBinder.extBinder (Lean.binderIdent `m) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-            ", "
-            (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)))]
+            (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
+            ","
+            («term_≤_» («term_^_» `y "^" `m) "≤" `x)))]
          ":="
          (Term.anonymousCtor
           "⟨"
-          [(Init.Core.«term-_» "-" `N)
+          [(«term-_» "-" `N)
            ","
            (Term.app
             `le_of_lt
@@ -2016,7 +1960,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                   []
                   (Tactic.rwRuleSeq
                    "["
-                   [(Tactic.rwRule [] (Term.app `zpow_neg [`y (Init.Coe.«term↑_» "↑" `N)]))
+                   [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)]))
                     ","
                     (Tactic.rwRule [] `zpow_coe_nat)]
                    "]")
@@ -2051,20 +1995,16 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
            [`hb []]
            [(Term.typeSpec
              ":"
-             (Init.Logic.«term∃_,_»
+             («term∃_,_»
               "∃"
-              (Std.ExtendedBinder.extBinders
-               (Std.ExtendedBinder.extBinder (Lean.binderIdent `b) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-              ", "
+              (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+              ","
               (Term.forall
                "∀"
                [`m]
                []
                ","
-               (Term.arrow
-                (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)
-                "→"
-                (Init.Core.«term_≤_» `m " ≤ " `b)))))]
+               (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b)))))]
            ":="
            (Term.anonymousCtor
             "⟨"
@@ -2149,20 +2089,16 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
           [`hb []]
           [(Term.typeSpec
             ":"
-            (Init.Logic.«term∃_,_»
+            («term∃_,_»
              "∃"
-             (Std.ExtendedBinder.extBinders
-              (Std.ExtendedBinder.extBinder (Lean.binderIdent `b) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-             ", "
+             (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+             ","
              (Term.forall
               "∀"
               [`m]
               []
               ","
-              (Term.arrow
-               (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)
-               "→"
-               (Init.Core.«term_≤_» `m " ≤ " `b)))))]
+              (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b)))))]
           ":="
           (Term.anonymousCtor
            "⟨"
@@ -2234,20 +2170,16 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
          [`hb []]
          [(Term.typeSpec
            ":"
-           (Init.Logic.«term∃_,_»
+           («term∃_,_»
             "∃"
-            (Std.ExtendedBinder.extBinders
-             (Std.ExtendedBinder.extBinder (Lean.binderIdent `b) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-            ", "
+            (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+            ","
             (Term.forall
              "∀"
              [`m]
              []
              ","
-             (Term.arrow
-              (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)
-              "→"
-              (Init.Core.«term_≤_» `m " ≤ " `b)))))]
+             (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b)))))]
          ":="
          (Term.anonymousCtor
           "⟨"
@@ -2727,63 +2659,44 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Logic.«term∃_,_»
+      («term∃_,_»
        "∃"
-       (Std.ExtendedBinder.extBinders
-        (Std.ExtendedBinder.extBinder (Lean.binderIdent `b) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-       ", "
-       (Term.forall
-        "∀"
-        [`m]
-        []
-        ","
-        (Term.arrow
-         (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)
-         "→"
-         (Init.Core.«term_≤_» `m " ≤ " `b))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.forall
-       "∀"
-       [`m]
-       []
+       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
        ","
-       (Term.arrow
-        (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)
-        "→"
-        (Init.Core.«term_≤_» `m " ≤ " `b)))
+       (Term.forall "∀" [`m] [] "," (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.arrow
-       (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)
-       "→"
-       (Init.Core.«term_≤_» `m " ≤ " `b))
+      (Term.forall "∀" [`m] [] "," (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b)))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_≤_» `m " ≤ " `b)
+      (Term.arrow («term_≤_» («term_^_» `y "^" `m) "≤" `x) "→" («term_≤_» `m "≤" `b))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_≤_» `m "≤" `b)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `b
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `m
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 25 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
-      (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)
+      («term_≤_» («term_^_» `y "^" `m) "≤" `x)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (Init.Core.«term_^_» `y " ^ " `m)
+      («term_^_» `y "^" `m)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `m
 [PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
       `y
 [PrettyPrinter.parenthesize] ...precedences are 81 >? 1024, (none, [anonymous]) <=? (some 80, term)
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 80, (some 80, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 80, (some 80, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (some 25, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 25, (some 25, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'Lean.bracketedExplicitBinders'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Data.Int.Basic.termℤ "ℤ")
+      (termℤ "ℤ")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
@@ -2817,7 +2730,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor
        "⟨"
-       [(Init.Core.«term-_» "-" `N)
+       [(«term-_» "-" `N)
         ","
         (Term.app
          `le_of_lt
@@ -2830,9 +2743,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                []
                (Tactic.rwRuleSeq
                 "["
-                [(Tactic.rwRule [] (Term.app `zpow_neg [`y (Init.Coe.«term↑_» "↑" `N)]))
-                 ","
-                 (Tactic.rwRule [] `zpow_coe_nat)]
+                [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)])) "," (Tactic.rwRule [] `zpow_coe_nat)]
                 "]")
                [])
               []
@@ -2859,9 +2770,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
              []
              (Tactic.rwRuleSeq
               "["
-              [(Tactic.rwRule [] (Term.app `zpow_neg [`y (Init.Coe.«term↑_» "↑" `N)]))
-               ","
-               (Tactic.rwRule [] `zpow_coe_nat)]
+              [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)])) "," (Tactic.rwRule [] `zpow_coe_nat)]
               "]")
              [])
             []
@@ -2887,9 +2796,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
            []
            (Tactic.rwRuleSeq
             "["
-            [(Tactic.rwRule [] (Term.app `zpow_neg [`y (Init.Coe.«term↑_» "↑" `N)]))
-             ","
-             (Tactic.rwRule [] `zpow_coe_nat)]
+            [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)])) "," (Tactic.rwRule [] `zpow_coe_nat)]
             "]")
            [])
           []
@@ -2997,22 +2904,22 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
        []
        (Tactic.rwRuleSeq
         "["
-        [(Tactic.rwRule [] (Term.app `zpow_neg [`y (Init.Coe.«term↑_» "↑" `N)])) "," (Tactic.rwRule [] `zpow_coe_nat)]
+        [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)])) "," (Tactic.rwRule [] `zpow_coe_nat)]
         "]")
        [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `zpow_coe_nat
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `zpow_neg [`y (Init.Coe.«term↑_» "↑" `N)])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Coe.«term↑_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Coe.«term↑_»', expected 'Lean.Parser.Term.ellipsis'
+      (Term.app `zpow_neg [`y (coeNotation "↑" `N)])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'coeNotation', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'coeNotation', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Coe.«term↑_» "↑" `N)
+      (coeNotation "↑" `N)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `N
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1023, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 1024, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
@@ -3035,9 +2942,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
           []
           (Tactic.rwRuleSeq
            "["
-           [(Tactic.rwRule [] (Term.app `zpow_neg [`y (Init.Coe.«term↑_» "↑" `N)]))
-            ","
-            (Tactic.rwRule [] `zpow_coe_nat)]
+           [(Tactic.rwRule [] (Term.app `zpow_neg [`y (coeNotation "↑" `N)])) "," (Tactic.rwRule [] `zpow_coe_nat)]
            "]")
           [])
          []
@@ -3064,51 +2969,51 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term-_» "-" `N)
+      («term-_» "-" `N)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `N
 [PrettyPrinter.parenthesize] ...precedences are 75 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 75, (some 75, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Logic.«term∃_,_»
+      («term∃_,_»
        "∃"
-       (Std.ExtendedBinder.extBinders
-        (Std.ExtendedBinder.extBinder (Lean.binderIdent `m) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-       ", "
-       (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x))
+       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `m)] [":" (termℤ "ℤ")]))
+       ","
+       («term_≤_» («term_^_» `y "^" `m) "≤" `x))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_≤_» (Init.Core.«term_^_» `y " ^ " `m) " ≤ " `x)
+      («term_≤_» («term_^_» `y "^" `m) "≤" `x)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-      (Init.Core.«term_^_» `y " ^ " `m)
+      («term_^_» `y "^" `m)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `m
 [PrettyPrinter.parenthesize] ...precedences are 80 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
       `y
 [PrettyPrinter.parenthesize] ...precedences are 81 >? 1024, (none, [anonymous]) <=? (some 80, term)
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 80, (some 80, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 80, (some 80, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'Lean.bracketedExplicitBinders'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Data.Int.Basic.termℤ "ℤ")
+      (termℤ "ℤ")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `pow_unbounded_of_one_lt [(Init.Core.«term_⁻¹» `x "⁻¹") `hy])
+      (Term.app `pow_unbounded_of_one_lt [(«term_⁻¹_1» `x "⁻¹") `hy])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hy
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_⁻¹»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_⁻¹»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_⁻¹_1»', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_⁻¹_1»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Init.Core.«term_⁻¹» `x "⁻¹")
+      («term_⁻¹_1» `x "⁻¹")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `x
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
@@ -3199,7 +3104,7 @@ theorem exists_mem_Ioc_zpow (hx : 0 < x) (hy : 1 < y) : ∃ n : ℤ, x ∈ ioc (
 
 /-- For any `y < 1` and any positive `x`, there exists `n : ℕ` with `y ^ n < x`. -/
 theorem exists_pow_lt_of_lt_one (hx : 0 < x) (hy : y < 1) : ∃ n : ℕ, y ^ n < x := by
-  by_cases y_pos:y ≤ 0
+  by_cases y_pos : y ≤ 0
   · use 1
     simp only [pow_one]
     linarith
@@ -3238,7 +3143,7 @@ theorem exists_rat_btwn {x y : α} (h : x < y) : ∃ q : ℚ, x < q ∧ (q : α)
   have n0' := (inv_pos.2 (sub_pos.2 h)).trans nh
   have n0 := Nat.cast_pos.1 n0'
   rw [Rat.cast_div_of_ne_zero, Rat.cast_coe_nat, Rat.cast_coe_int, div_lt_iff n0']
-  refine' ⟨(lt_div_iff n0').2 $ (lt_iff_lt_of_le_iff_le (zh _)).1 (lt_add_one _), _⟩
+  refine' ⟨(lt_div_iff n0').2 <| (lt_iff_lt_of_le_iff_le (zh _)).1 (lt_add_one _), _⟩
   rw [Int.cast_add, Int.cast_one]
   refine' lt_of_le_of_lt (add_le_add_right ((zh _).1 le_rfl) _) _
   rwa [← lt_sub_iff_add_lt', ← sub_mul, ← div_lt_iff' (sub_pos.2 h), one_div]
@@ -3256,25 +3161,25 @@ theorem exists_rat_btwn {x y : α} (h : x < y) : ∃ q : ℚ, x < q ∧ (q : α)
 #align exists_rat_btwn exists_rat_btwn
 
 theorem le_of_forall_rat_lt_imp_le (h : ∀ q : ℚ, (q : α) < x → (q : α) ≤ y) : x ≤ y :=
-  le_of_not_lt $ fun hyx =>
+  le_of_not_lt fun hyx =>
     let ⟨q, hy, hx⟩ := exists_rat_btwn hyx
-    hy.not_le $ h _ hx
+    hy.not_le <| h _ hx
 #align le_of_forall_rat_lt_imp_le le_of_forall_rat_lt_imp_le
 
 theorem le_of_forall_lt_rat_imp_le (h : ∀ q : ℚ, y < q → x ≤ q) : x ≤ y :=
-  le_of_not_lt $ fun hyx =>
+  le_of_not_lt fun hyx =>
     let ⟨q, hy, hx⟩ := exists_rat_btwn hyx
-    hx.not_le $ h _ hy
+    hx.not_le <| h _ hy
 #align le_of_forall_lt_rat_imp_le le_of_forall_lt_rat_imp_le
 
 theorem eq_of_forall_rat_lt_iff_lt (h : ∀ q : ℚ, (q : α) < x ↔ (q : α) < y) : x = y :=
-  (le_of_forall_rat_lt_imp_le $ fun q hq => ((h q).1 hq).le).antisymm $
-    le_of_forall_rat_lt_imp_le $ fun q hq => ((h q).2 hq).le
+  (le_of_forall_rat_lt_imp_le fun q hq => ((h q).1 hq).le).antisymm <|
+    le_of_forall_rat_lt_imp_le fun q hq => ((h q).2 hq).le
 #align eq_of_forall_rat_lt_iff_lt eq_of_forall_rat_lt_iff_lt
 
 theorem eq_of_forall_lt_rat_iff_lt (h : ∀ q : ℚ, x < q ↔ y < q) : x = y :=
-  (le_of_forall_lt_rat_imp_le $ fun q hq => ((h q).2 hq).le).antisymm $
-    le_of_forall_lt_rat_imp_le $ fun q hq => ((h q).1 hq).le
+  (le_of_forall_lt_rat_imp_le fun q hq => ((h q).2 hq).le).antisymm <|
+    le_of_forall_lt_rat_imp_le fun q hq => ((h q).1 hq).le
 #align eq_of_forall_lt_rat_iff_lt eq_of_forall_lt_rat_iff_lt
 
 theorem exists_nat_one_div_lt {ε : α} (hε : 0 < ε) : ∃ n : ℕ, 1 / (n + 1 : α) < ε := by
@@ -3293,7 +3198,7 @@ theorem exists_pos_rat_lt {x : α} (x0 : 0 < x) : ∃ q : ℚ, 0 < q ∧ (q : α
 #align exists_pos_rat_lt exists_pos_rat_lt
 
 theorem exists_rat_near (x : α) (ε0 : 0 < ε) : ∃ q : ℚ, |x - q| < ε :=
-  let ⟨q, h₁, h₂⟩ := exists_rat_btwn $ ((sub_lt_self_iff x).2 ε0).trans ((lt_add_iff_pos_left x).2 ε0)
+  let ⟨q, h₁, h₂⟩ := exists_rat_btwn <| ((sub_lt_self_iff x).2 ε0).trans ((lt_add_iff_pos_left x).2 ε0)
   ⟨q, abs_sub_lt_iff.2 ⟨sub_lt_comm.1 h₁, sub_lt_iff_lt_add.2 h₂⟩⟩
 #align exists_rat_near exists_rat_near
 
@@ -3305,12 +3210,12 @@ variable [LinearOrderedField α]
 
 theorem archimedean_iff_nat_lt : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x < n :=
   ⟨@exists_nat_gt α _, fun H =>
-    ⟨fun x y y0 => (H (x / y)).imp $ fun n h => le_of_lt $ by rwa [div_lt_iff y0, ← nsmul_eq_mul] at h⟩⟩
+    ⟨fun x y y0 => (H (x / y)).imp fun n h => le_of_lt <| by rwa [div_lt_iff y0, ← nsmul_eq_mul] at h⟩⟩
 #align archimedean_iff_nat_lt archimedean_iff_nat_lt
 
 theorem archimedean_iff_nat_le : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x ≤ n :=
   archimedean_iff_nat_lt.trans
-    ⟨fun H x => (H x).imp $ fun _ => le_of_lt, fun H x =>
+    ⟨fun H x => (H x).imp fun _ => le_of_lt, fun H x =>
       let ⟨n, h⟩ := H x
       ⟨n + 1, lt_of_le_of_lt h (Nat.cast_lt.2 (lt_add_one _))⟩⟩
 #align archimedean_iff_nat_le archimedean_iff_nat_le
@@ -3326,21 +3231,21 @@ theorem archimedean_iff_int_lt : Archimedean α ↔ ∀ x : α, ∃ n : ℤ, x <
 
 theorem archimedean_iff_int_le : Archimedean α ↔ ∀ x : α, ∃ n : ℤ, x ≤ n :=
   archimedean_iff_int_lt.trans
-    ⟨fun H x => (H x).imp $ fun _ => le_of_lt, fun H x =>
+    ⟨fun H x => (H x).imp fun _ => le_of_lt, fun H x =>
       let ⟨n, h⟩ := H x
       ⟨n + 1, lt_of_le_of_lt h (Int.cast_lt.2 (lt_add_one _))⟩⟩
 #align archimedean_iff_int_le archimedean_iff_int_le
 
 theorem archimedean_iff_rat_lt : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x < q :=
   ⟨@exists_rat_gt α _, fun H =>
-    archimedean_iff_nat_lt.2 $ fun x =>
+    archimedean_iff_nat_lt.2 fun x =>
       let ⟨q, h⟩ := H x
-      ⟨⌈q⌉₊, lt_of_lt_of_le h $ by simpa only [Rat.cast_coe_nat] using (@Rat.cast_le α _ _ _).2 (Nat.le_ceil _)⟩⟩
+      ⟨⌈q⌉₊, lt_of_lt_of_le h <| by simpa only [Rat.cast_coe_nat] using (@Rat.cast_le α _ _ _).2 (Nat.le_ceil _)⟩⟩
 #align archimedean_iff_rat_lt archimedean_iff_rat_lt
 
 theorem archimedean_iff_rat_le : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x ≤ q :=
   archimedean_iff_rat_lt.trans
-    ⟨fun H x => (H x).imp $ fun _ => le_of_lt, fun H x =>
+    ⟨fun H x => (H x).imp fun _ => le_of_lt, fun H x =>
       let ⟨n, h⟩ := H x
       ⟨n + 1, lt_of_le_of_lt h (Rat.cast_lt.2 (lt_add_one _))⟩⟩
 #align archimedean_iff_rat_le archimedean_iff_rat_le
@@ -3353,12 +3258,12 @@ instance : Archimedean ℕ :=
 instance : Archimedean ℤ :=
   ⟨fun n m m0 =>
     ⟨n.toNat,
-      le_trans (Int.self_le_toNat _) $ by
+      le_trans (Int.self_le_toNat _) <| by
         simpa only [nsmul_eq_mul, zero_add, mul_one] using
           mul_le_mul_of_nonneg_left (Int.add_one_le_iff.2 m0) (Int.ofNat_zero_le n.to_nat)⟩⟩
 
 instance : Archimedean ℚ :=
-  archimedean_iff_rat_le.2 $ fun q => ⟨q, by rw [Rat.cast_id]⟩
+  archimedean_iff_rat_le.2 fun q => ⟨q, by rw [Rat.cast_id]⟩
 
 /-- A linear ordered archimedean ring is a floor ring. This is not an `instance` because in some
 cases we have a computable `floor` function. -/

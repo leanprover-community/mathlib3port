@@ -5,7 +5,6 @@ Authors: Scott Morrison
 -/
 import Mathbin.Algebra.MonoidAlgebra.Basic
 import Mathbin.Algebra.CharP.Invertible
-import Mathbin.Algebra.Regular.Basic
 import Mathbin.LinearAlgebra.Basis
 
 /-!
@@ -197,7 +196,7 @@ namespace Submodule
 
 theorem exists_is_compl (p : Submodule (MonoidAlgebra k G) V) : ∃ q : Submodule (MonoidAlgebra k G) V, IsCompl p q :=
   let ⟨f, hf⟩ := MonoidAlgebra.exists_left_inverse_of_injective p.Subtype p.ker_subtype
-  ⟨f.ker, LinearMap.is_compl_of_proj $ LinearMap.ext_iff.1 hf⟩
+  ⟨f.ker, LinearMap.is_compl_of_proj <| LinearMap.ext_iff.1 hf⟩
 #align monoid_algebra.submodule.exists_is_compl MonoidAlgebra.Submodule.exists_is_compl
 
 /-- This also implies an instance `is_semisimple_module (monoid_algebra k G) V`. -/

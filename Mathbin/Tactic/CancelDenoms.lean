@@ -41,7 +41,7 @@ theorem div_subst {α} [Field α] {n1 n2 k e1 e2 t1 : α} (h1 : n1 * e1 = t1) (h
 #align cancel_factors.div_subst CancelFactors.div_subst
 
 theorem cancel_factors_eq_div {α} [Field α] {n e e' : α} (h : n * e = e') (h2 : n ≠ 0) : e = e' / n :=
-  eq_div_of_mul_eq h2 $ by rwa [mul_comm] at h
+  eq_div_of_mul_eq h2 <| by rwa [mul_comm] at h
 #align cancel_factors.cancel_factors_eq_div CancelFactors.cancel_factors_eq_div
 
 theorem add_subst {α} [Ring α] {n e1 e2 t1 t2 : α} (h1 : n * e1 = t1) (h2 : n * e2 = t2) : n * (e1 + e2) = t1 + t2 := by
@@ -56,21 +56,21 @@ theorem neg_subst {α} [Ring α] {n e t : α} (h1 : n * e = t) : n * -e = -t := 
 #align cancel_factors.neg_subst CancelFactors.neg_subst
 
 theorem cancel_factors_lt {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a') (hb : bd * b = b')
-    (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : a < b = (1 / gcd * (bd * a') < 1 / gcd * (ad * b')) := by
+    (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a < b) = (1 / gcd * (bd * a') < 1 / gcd * (ad * b')) := by
   rw [mul_lt_mul_left, ← ha, ← hb, ← mul_assoc, ← mul_assoc, mul_comm bd, mul_lt_mul_left]
   exact mul_pos had hbd
   exact one_div_pos.2 hgcd
 #align cancel_factors.cancel_factors_lt CancelFactors.cancel_factors_lt
 
 theorem cancel_factors_le {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a') (hb : bd * b = b')
-    (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : a ≤ b = (1 / gcd * (bd * a') ≤ 1 / gcd * (ad * b')) := by
+    (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a ≤ b) = (1 / gcd * (bd * a') ≤ 1 / gcd * (ad * b')) := by
   rw [mul_le_mul_left, ← ha, ← hb, ← mul_assoc, ← mul_assoc, mul_comm bd, mul_le_mul_left]
   exact mul_pos had hbd
   exact one_div_pos.2 hgcd
 #align cancel_factors.cancel_factors_le CancelFactors.cancel_factors_le
 
 theorem cancel_factors_eq {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a') (hb : bd * b = b')
-    (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : a = b = (1 / gcd * (bd * a') = 1 / gcd * (ad * b')) := by
+    (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) : (a = b) = (1 / gcd * (bd * a') = 1 / gcd * (ad * b')) := by
   rw [← ha, ← hb, ← mul_assoc bd, ← mul_assoc ad, mul_comm bd]
   ext
   constructor
@@ -248,7 +248,7 @@ It produces an expression `h'` of the form `lhs' R rhs'` and a proof that `h = h
 Numeric denominators have been canceled in `lhs'` and `rhs'`.
 -/
 unsafe def cancel_denominators_in_type (h : expr) : tactic (expr × expr) := do
-  let some (lhs, rhs, lem) ← return $ find_comp_lemma h |
+  let some (lhs, rhs, lem) ← return <| find_comp_lemma h |
     fail "cannot kill factors"
   let (al, lhs_p) ← derive lhs
   let (ar, rhs_p) ← derive rhs

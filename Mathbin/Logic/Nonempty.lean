@@ -57,7 +57,7 @@ theorem not_nonempty_iff_imp_false {α : Sort _} : ¬Nonempty α ↔ α → Fals
 
 #print nonempty_sigma /-
 @[simp]
-theorem nonempty_sigma : Nonempty (Σ a : α, γ a) ↔ ∃ a : α, Nonempty (γ a) :=
+theorem nonempty_sigma : Nonempty (Σa : α, γ a) ↔ ∃ a : α, Nonempty (γ a) :=
   Iff.intro (fun ⟨⟨a, c⟩⟩ => ⟨a, ⟨c⟩⟩) fun ⟨a, ⟨c⟩⟩ => ⟨⟨a, c⟩⟩
 #align nonempty_sigma nonempty_sigma
 -/
@@ -100,7 +100,7 @@ theorem nonempty_pprod {α β} : Nonempty (PProd α β) ↔ Nonempty α ∧ None
 
 #print nonempty_sum /-
 @[simp]
-theorem nonempty_sum : Nonempty (α ⊕ β) ↔ Nonempty α ∨ Nonempty β :=
+theorem nonempty_sum : Nonempty (Sum α β) ↔ Nonempty α ∨ Nonempty β :=
   Iff.intro
     (fun ⟨h⟩ =>
       match h with
@@ -226,12 +226,12 @@ protected theorem Nonempty.congr {α β} (f : α → β) (g : β → α) : Nonem
 
 #print Nonempty.elim_to_inhabited /-
 theorem Nonempty.elim_to_inhabited {α : Sort _} [h : Nonempty α] {p : Prop} (f : Inhabited α → p) : p :=
-  h.elim $ f ∘ Inhabited.mk
+  h.elim <| f ∘ Inhabited.mk
 #align nonempty.elim_to_inhabited Nonempty.elim_to_inhabited
 -/
 
 instance {α β} [h : Nonempty α] [h2 : Nonempty β] : Nonempty (α × β) :=
-  h.elim $ fun g => h2.elim $ fun g2 => ⟨⟨g, g2⟩⟩
+  h.elim fun g => h2.elim fun g2 => ⟨⟨g, g2⟩⟩
 
 instance {ι : Sort _} {α : ι → Sort _} [∀ i, Nonempty (α i)] : Nonempty (∀ i, α i) :=
   ⟨fun _ => Classical.arbitrary _⟩
@@ -248,7 +248,7 @@ theorem Classical.nonempty_pi {ι} {α : ι → Sort _} : Nonempty (∀ i, α i)
 
 #print subsingleton_of_not_nonempty /-
 theorem subsingleton_of_not_nonempty {α : Sort _} (h : ¬Nonempty α) : Subsingleton α :=
-  ⟨fun x => False.elim $ not_nonempty_iff_imp_false.mp h x⟩
+  ⟨fun x => False.elim <| not_nonempty_iff_imp_false.mp h x⟩
 #align subsingleton_of_not_nonempty subsingleton_of_not_nonempty
 -/
 

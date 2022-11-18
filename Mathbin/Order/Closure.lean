@@ -7,7 +7,6 @@ import Mathbin.Data.Set.Lattice
 import Mathbin.Data.SetLike.Basic
 import Mathbin.Order.GaloisConnection
 import Mathbin.Order.Hom.Basic
-import Mathbin.Tactic.Monotonicity.Default
 
 /-!
 # Closure operators between preorders
@@ -182,7 +181,7 @@ theorem closure_is_closed (x : α) : c x ∈ c.closed :=
 
 /-- The set of closed elements for `c` is exactly its range. -/
 theorem closed_eq_range_close : c.closed = Set.range c :=
-  Set.ext $ fun x =>
+  Set.ext fun x =>
     ⟨fun h => ⟨x, h⟩, by
       rintro ⟨y, rfl⟩
       apply c.idempotent⟩
@@ -264,16 +263,16 @@ variable [CompleteLattice α] (c : ClosureOperator α)
 
 @[simp]
 theorem closure_supr_closure (f : ι → α) : c (⨆ i, c (f i)) = c (⨆ i, f i) :=
-  le_antisymm ((c.le_closure_iff _ _).1 $ supr_le $ fun i => c.Monotone $ le_supr f i) $
-    c.Monotone $ supr_mono $ fun i => c.le_closure _
+  le_antisymm ((c.le_closure_iff _ _).1 <| supr_le fun i => c.Monotone <| le_supr f i) <|
+    c.Monotone <| supr_mono fun i => c.le_closure _
 #align closure_operator.closure_supr_closure ClosureOperator.closure_supr_closure
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem closure_supr₂_closure (f : ∀ i, κ i → α) : c (⨆ (i) (j), c (f i j)) = c (⨆ (i) (j), f i j) :=
-  le_antisymm ((c.le_closure_iff _ _).1 $ supr₂_le $ fun i j => c.Monotone $ le_supr₂ i j) $
-    c.Monotone $ supr₂_mono $ fun i j => c.le_closure _
+  le_antisymm ((c.le_closure_iff _ _).1 <| supr₂_le fun i j => c.Monotone <| le_supr₂ i j) <|
+    c.Monotone <| supr₂_mono fun i j => c.le_closure _
 #align closure_operator.closure_supr₂_closure ClosureOperator.closure_supr₂_closure
 
 end CompleteLattice
@@ -457,7 +456,7 @@ theorem closure_supr_closure (f : ι → α) : u (l (⨆ i, u (l (f i)))) = u (l
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-theorem closure_supr₂_closure (f : ∀ i, κ i → α) : u (l $ ⨆ (i) (j), u (l $ f i j)) = u (l $ ⨆ (i) (j), f i j) :=
+theorem closure_supr₂_closure (f : ∀ i, κ i → α) : u (l <| ⨆ (i) (j), u (l <| f i j)) = u (l <| ⨆ (i) (j), f i j) :=
   l.ClosureOperator.closure_supr₂_closure _
 #align lower_adjoint.closure_supr₂_closure LowerAdjoint.closure_supr₂_closure
 
@@ -509,14 +508,14 @@ theorem closure_union_closure (x y : α) : l (l x ∪ l y) = l (x ∪ y) :=
 
 @[simp]
 theorem closure_Union_closure (f : ι → α) : l (⋃ i, l (f i)) = l (⋃ i, f i) :=
-  SetLike.coe_injective $ l.closure_supr_closure _
+  SetLike.coe_injective <| l.closure_supr_closure _
 #align lower_adjoint.closure_Union_closure LowerAdjoint.closure_Union_closure
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem closure_Union₂_closure (f : ∀ i, κ i → α) : l (⋃ (i) (j), l (f i j)) = l (⋃ (i) (j), f i j) :=
-  SetLike.coe_injective $ l.closure_supr₂_closure _
+  SetLike.coe_injective <| l.closure_supr₂_closure _
 #align lower_adjoint.closure_Union₂_closure LowerAdjoint.closure_Union₂_closure
 
 end CoeToSet

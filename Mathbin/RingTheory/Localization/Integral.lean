@@ -3,16 +3,14 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 -/
-import Mathbin.Algebra.Ring.Equiv
+import Mathbin.Data.Polynomial.Lifts
 import Mathbin.GroupTheory.MonoidLocalization
 import Mathbin.RingTheory.Algebraic
 import Mathbin.RingTheory.Ideal.LocalRing
-import Mathbin.RingTheory.Ideal.Quotient
 import Mathbin.RingTheory.IntegralClosure
 import Mathbin.RingTheory.Localization.FractionRing
 import Mathbin.RingTheory.Localization.Integer
 import Mathbin.RingTheory.NonZeroDivisors
-import Mathbin.GroupTheory.Submonoid.Inverses
 import Mathbin.Tactic.RingExp
 
 /-!
@@ -202,7 +200,7 @@ theorem RingHom.isIntegralElemLocalizationAtLeadingCoeff {R S : Type _} [CommRin
     (p : R[X]) (hf : p.eval₂ f x = 0) (M : Submonoid R) (hM : p.leadingCoeff ∈ M) {Rₘ Sₘ : Type _} [CommRing Rₘ]
     [CommRing Sₘ] [Algebra R Rₘ] [IsLocalization M Rₘ] [Algebra S Sₘ] [IsLocalization (M.map f : Submonoid S) Sₘ] :
     (map Sₘ f M.le_comap_map : Rₘ →+* _).IsIntegralElem (algebraMap S Sₘ x) := by
-  by_cases triv:(1 : Rₘ) = 0
+  by_cases triv : (1 : Rₘ) = 0
   · exact ⟨0, ⟨trans leading_coeff_zero triv.symm, eval₂_zero _ _⟩⟩
     
   haveI : Nontrivial Rₘ := nontrivial_of_ne 1 0 triv
@@ -261,14 +259,14 @@ theorem isIntegralLocalization' {R S : Type _} [CommRing R] [CommRing S] {f : R 
 variable (M)
 
 theorem IsLocalization.scale_roots_common_denom_mem_lifts (p : Rₘ[X]) (hp : p.leadingCoeff ∈ (algebraMap R Rₘ).range) :
-    p.scaleRoots (algebraMap R Rₘ $ IsLocalization.commonDenom M p.support p.coeff) ∈
+    p.scaleRoots (algebraMap R Rₘ <| IsLocalization.commonDenom M p.support p.coeff) ∈
       Polynomial.lifts (algebraMap R Rₘ) :=
   by
   rw [Polynomial.lifts_iff_coeff_lifts]
   intro n
   rw [Polynomial.coeff_scale_roots]
-  by_cases h₁:n ∈ p.support
-  by_cases h₂:n = p.nat_degree
+  by_cases h₁ : n ∈ p.support
+  by_cases h₂ : n = p.nat_degree
   · rwa [h₂, Polynomial.coeff_nat_degree, tsub_self, pow_zero, _root_.mul_one]
     
   · have : n + 1 ≤ p.nat_degree := lt_of_le_of_ne (Polynomial.le_nat_degree_of_mem_supp _ h₁) h₂
@@ -350,7 +348,7 @@ theorem isFractionRingOfFiniteExtension [Algebra K L] [IsScalarTower A K L] [Fin
     IsFractionRing C L :=
   isFractionRingOfAlgebraic A C (IsFractionRing.comap_is_algebraic_iff.mpr (isAlgebraicOfFinite K L)) fun x hx =>
     IsFractionRing.to_map_eq_zero_iff.mp
-      ((map_eq_zero $ algebraMap K L).mp $ (IsScalarTower.algebra_map_apply _ _ _ _).symm.trans hx)
+      ((map_eq_zero <| algebraMap K L).mp <| (IsScalarTower.algebra_map_apply _ _ _ _).symm.trans hx)
 #align is_integral_closure.is_fraction_ring_of_finite_extension IsIntegralClosure.isFractionRingOfFiniteExtension
 
 end IsIntegralClosure

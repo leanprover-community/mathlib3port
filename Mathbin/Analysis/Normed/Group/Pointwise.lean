@@ -26,8 +26,8 @@ variable [SeminormedGroup E] {ε δ : ℝ} {s t : Set E} {x y : E}
 
 @[to_additive]
 theorem Metric.Bounded.mul (hs : Bounded s) (ht : Bounded t) : Bounded (s * t) := by
-  obtain ⟨Rs, hRs⟩ : ∃ R, ∀ x ∈ s, ∥x∥ ≤ R := hs.exists_norm_le'
-  obtain ⟨Rt, hRt⟩ : ∃ R, ∀ x ∈ t, ∥x∥ ≤ R := ht.exists_norm_le'
+  obtain ⟨Rs, hRs⟩ : ∃ R, ∀ x ∈ s, ‖x‖ ≤ R := hs.exists_norm_le'
+  obtain ⟨Rt, hRt⟩ : ∃ R, ∀ x ∈ t, ‖x‖ ≤ R := ht.exists_norm_le'
   refine' bounded_iff_forall_norm_le'.2 ⟨Rs + Rt, _⟩
   rintro z ⟨x, y, hx, hy, rfl⟩
   exact norm_mul_le_of_le (hRs x hx) (hRt y hy)
@@ -41,7 +41,7 @@ theorem Metric.Bounded.inv : Bounded s → Bounded s⁻¹ := by
 
 @[to_additive]
 theorem Metric.Bounded.div (hs : Bounded s) (ht : Bounded t) : Bounded (s / t) :=
-  (div_eq_mul_inv _ _).symm.subst $ hs.mul ht.inv
+  (div_eq_mul_inv _ _).symm.subst <| hs.mul ht.inv
 #align metric.bounded.div Metric.Bounded.div
 
 end SeminormedGroup
@@ -56,7 +56,7 @@ open Emetric
 
 @[to_additive]
 theorem inf_edist_inv (x : E) (s : Set E) : infEdist x⁻¹ s = infEdist x s⁻¹ :=
-  eq_of_forall_le_iff $ fun r => by simp_rw [le_inf_edist, ← image_inv, ball_image_iff, edist_inv]
+  eq_of_forall_le_iff fun r => by simp_rw [le_inf_edist, ← image_inv, ball_image_iff, edist_inv]
 #align inf_edist_inv inf_edist_inv
 
 @[simp, to_additive]

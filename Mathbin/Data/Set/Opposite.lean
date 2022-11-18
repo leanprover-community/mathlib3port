@@ -71,12 +71,12 @@ def opEquiv : Set α ≃ Set αᵒᵖ :=
 
 @[simp]
 theorem singleton_op (x : α) : ({x} : Set α).op = {op x} :=
-  ext $ fun y => by simpa only [mem_op, mem_singleton_iff] using unop_eq_iff_eq_op
+  ext fun y => by simpa only [mem_op, mem_singleton_iff] using unop_eq_iff_eq_op
 #align set.singleton_op Set.singleton_op
 
 @[simp]
 theorem singleton_unop (x : αᵒᵖ) : ({x} : Set αᵒᵖ).unop = {unop x} :=
-  ext $ fun y => by simpa only [mem_unop, mem_singleton_iff] using op_eq_iff_eq_unop
+  ext fun y => by simpa only [mem_unop, mem_singleton_iff] using op_eq_iff_eq_unop
 #align set.singleton_unop Set.singleton_unop
 
 @[simp]

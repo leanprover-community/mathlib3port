@@ -141,7 +141,7 @@ private theorem add_rpow_le_one_of_add_le_one {p : ℝ} (a b : ℝ≥0) (hab : a
 
 theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0) (hp1 : 1 ≤ p) : a ^ p + b ^ p ≤ (a + b) ^ p := by
   have hp_pos : 0 < p := by positivity
-  by_cases h_zero:a + b = 0
+  by_cases h_zero : a + b = 0
   · simp [add_eq_zero_iff.mp h_zero, hp_pos.ne']
     
   have h_nonzero : ¬(a = 0 ∧ b = 0) := by rwa [add_eq_zero_iff] at h_zero
@@ -255,7 +255,7 @@ namespace Ennreal
 
 theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0∞) (hp1 : 1 ≤ p) : a ^ p + b ^ p ≤ (a + b) ^ p := by
   have hp_pos : 0 < p := by positivity
-  by_cases h_top:a + b = ⊤
+  by_cases h_top : a + b = ⊤
   · rw [← @Ennreal.rpow_eq_top_iff_of_pos (a + b) p hp_pos] at h_top
     rw [h_top]
     exact le_top

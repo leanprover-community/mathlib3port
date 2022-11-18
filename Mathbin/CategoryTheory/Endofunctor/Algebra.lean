@@ -3,8 +3,8 @@ Copyright (c) 2022 Joseph Hua. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta, Johan Commelin, Reid Barton, Rob Lewis, Joseph Hua
 -/
-import Mathbin.CategoryTheory.Limits.Final
 import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
+import Mathbin.CategoryTheory.Limits.Shapes.Terminal
 
 /-!
 
@@ -34,7 +34,7 @@ variable {C : Type u} [Category.{v} C]
 
 /-- An algebra of an endofunctor; `str` stands for "structure morphism" -/
 structure Algebra (F : C ⥤ C) where
-  A : C
+  a : C
   str : F.obj A ⟶ A
 #align category_theory.endofunctor.algebra CategoryTheory.Endofunctor.Algebra
 
@@ -162,7 +162,7 @@ algebras of `F` to algebras of `G`.
 -/
 @[simps]
 def functorOfNatTrans {F G : C ⥤ C} (α : G ⟶ F) : Algebra F ⥤ Algebra G where
-  obj A := { A := A.1, str := α.app A.1 ≫ A.str }
+  obj A := { a := A.1, str := α.app A.1 ≫ A.str }
   map A₀ A₁ f := { f := f.1 }
 #align category_theory.endofunctor.algebra.functor_of_nat_trans CategoryTheory.Endofunctor.Algebra.functorOfNatTrans
 
@@ -473,7 +473,7 @@ namespace Adjunction
 variable {F : C ⥤ C} {G : C ⥤ C}
 
 theorem Algebra.hom_equiv_naturality_str (adj : F ⊣ G) (A₁ A₂ : Algebra F) (f : A₁ ⟶ A₂) :
-    (adj.homEquiv A₁.A A₁.A) A₁.str ≫ G.map f.f = f.f ≫ (adj.homEquiv A₂.A A₂.A) A₂.str := by
+    (adj.homEquiv A₁.a A₁.a) A₁.str ≫ G.map f.f = f.f ≫ (adj.homEquiv A₂.a A₂.a) A₂.str := by
   rw [← adjunction.hom_equiv_naturality_right, ← adjunction.hom_equiv_naturality_left, f.h]
 #align
   category_theory.endofunctor.adjunction.algebra.hom_equiv_naturality_str CategoryTheory.Endofunctor.Adjunction.Algebra.hom_equiv_naturality_str
@@ -495,7 +495,7 @@ def Algebra.toCoalgebraOf (adj : F ⊣ G) : Algebra F ⥤ Coalgebra G where
 /-- Given an adjunction `F ⊣ G`, the functor that associates to a coalgebra over `G` an algebra over
 `F` defined via adjunction applied to the structure map. -/
 def Coalgebra.toAlgebraOf (adj : F ⊣ G) : Coalgebra G ⥤ Algebra F where
-  obj V := { A := V.1, str := (adj.homEquiv V.1 V.1).invFun V.2 }
+  obj V := { a := V.1, str := (adj.homEquiv V.1 V.1).invFun V.2 }
   map V₁ V₂ f := { f := f.1, h' := Coalgebra.hom_equiv_naturality_str_symm adj V₁ V₂ f }
 #align
   category_theory.endofunctor.adjunction.coalgebra.to_algebra_of CategoryTheory.Endofunctor.Adjunction.Coalgebra.toAlgebraOf

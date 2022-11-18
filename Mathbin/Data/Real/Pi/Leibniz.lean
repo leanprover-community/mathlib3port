@@ -77,7 +77,7 @@ theorem tendsto_sum_pi_div_four :
     
   -- We show that `U` is indeed in [0,1]
   have hU1 : (U : ℝ) ≤ 1 := by
-    by_cases hk:k = 0
+    by_cases hk : k = 0
     · simp [u, U, hk]
       
     · exact

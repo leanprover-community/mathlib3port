@@ -62,7 +62,7 @@ namespace Tactic
                   | _ => throwError "failed to apply { ( ← e ) } at { ← hyp }"
           clear hyp
           let hyp ← note hyp . local_pp_name none prf
-          try $ tactic.dsimp_hyp hyp simp_lemmas.mk [ ] { eta := False , beta := True }
+          try <| tactic.dsimp_hyp hyp simp_lemmas.mk [ ] { eta := False , beta := True }
 #align tactic.apply_fun_to_hyp tactic.apply_fun_to_hyp
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -86,10 +86,10 @@ namespace Tactic
           match
             t
             with
-            | q( $ ( l ) ≠ $ ( r ) ) => to_expr ` `( ne_of_apply_ne $ ( e ) ) >>= apply >> skip
-              | q( ¬ $ ( l ) = $ ( r ) ) => to_expr ` `( ne_of_apply_ne $ ( e ) ) >>= apply >> skip
-              | q( $ ( l ) ≤ $ ( r ) ) => to_expr ` `( ( OrderIso.le_iff_le $ ( e ) ) . mp ) >>= apply >> skip
-              | q( $ ( l ) < $ ( r ) ) => to_expr ` `( ( OrderIso.lt_iff_lt $ ( e ) ) . mp ) >>= apply >> skip
+            | q( $ ( l ) ≠ $ ( r ) ) => ( to_expr ` `( ne_of_apply_ne $ ( e ) ) >>= apply ) >> skip
+              | q( ¬ $ ( l ) = $ ( r ) ) => ( to_expr ` `( ne_of_apply_ne $ ( e ) ) >>= apply ) >> skip
+              | q( $ ( l ) ≤ $ ( r ) ) => ( to_expr ` `( ( OrderIso.le_iff_le $ ( e ) ) . mp ) >>= apply ) >> skip
+              | q( $ ( l ) < $ ( r ) ) => ( to_expr ` `( ( OrderIso.lt_iff_lt $ ( e ) ) . mp ) >>= apply ) >> skip
               |
                 q( $ ( l ) = $ ( r ) )
                 =>
@@ -100,10 +100,10 @@ namespace Tactic
                       to_expr ` `( Function.Injective $ ( e ) ) >>= assert n
                       (
                           focus1
-                            $
+                            <|
                             assumption
                               <|>
-                              to_expr ` `( Equiv.injective ) >>= apply >> done
+                              ( to_expr ` `( Equiv.injective ) >>= apply ) >> done
                                 <|>
                                 ( lem fun l => to_expr l >>= apply ) >> done
                           )

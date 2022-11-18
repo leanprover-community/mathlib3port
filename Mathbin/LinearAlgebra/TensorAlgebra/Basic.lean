@@ -96,11 +96,11 @@ def lift {A : Type _} [Semiring A] [Algebra R A] : (M →ₗ[R] A) ≃ (TensorAl
       ⟨FreeAlgebra.lift R ⇑f, fun x y (h : Rel R M x y) => by induction h <;> simp [Algebra.smul_def]⟩
   invFun F := F.toLinearMap.comp (ι R)
   left_inv f :=
-    LinearMap.ext $ fun x => (RingQuot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans (FreeAlgebra.lift_ι_apply f x)
+    LinearMap.ext fun x => (RingQuot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans (FreeAlgebra.lift_ι_apply f x)
   right_inv F :=
-    RingQuot.ring_quot_ext' _ _ _ $
-      FreeAlgebra.hom_ext $
-        funext $ fun x => (RingQuot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans (FreeAlgebra.lift_ι_apply _ _)
+    RingQuot.ring_quot_ext' _ _ _ <|
+      FreeAlgebra.hom_ext <|
+        funext fun x => (RingQuot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans (FreeAlgebra.lift_ι_apply _ _)
 #align tensor_algebra.lift TensorAlgebra.lift
 
 variable {R}
@@ -168,7 +168,7 @@ def algebraMapInv : TensorAlgebra R M →ₐ[R] R :=
 
 variable (M)
 
-theorem algebra_map_left_inverse : Function.LeftInverse algebraMapInv (algebraMap R $ TensorAlgebra R M) := fun x => by
+theorem algebra_map_left_inverse : Function.LeftInverse algebraMapInv (algebraMap R <| TensorAlgebra R M) := fun x => by
   simp [algebra_map_inv]
 #align tensor_algebra.algebra_map_left_inverse TensorAlgebra.algebra_map_left_inverse
 
@@ -258,7 +258,7 @@ variable (R M)
 
 See also `pi_tensor_product.tprod`. -/
 def tprod (n : ℕ) : MultilinearMap R (fun i : Fin n => M) (TensorAlgebra R M) :=
-  (MultilinearMap.mkPiAlgebraFin R n (TensorAlgebra R M)).compLinearMap $ fun _ => ι R
+  (MultilinearMap.mkPiAlgebraFin R n (TensorAlgebra R M)).compLinearMap fun _ => ι R
 #align tensor_algebra.tprod TensorAlgebra.tprod
 
 @[simp]

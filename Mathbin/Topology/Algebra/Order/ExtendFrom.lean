@@ -28,9 +28,9 @@ theorem continuous_on_Icc_extend_from_Ioo [TopologicalSpace α] [LinearOrder α]
     
   · intro x x_in
     rcases eq_endpoints_or_mem_Ioo_of_mem_Icc x_in with (rfl | rfl | h)
-    · exact ⟨la, ha.mono_left $ nhds_within_mono _ Ioo_subset_Ioi_self⟩
+    · exact ⟨la, ha.mono_left <| nhds_within_mono _ Ioo_subset_Ioi_self⟩
       
-    · exact ⟨lb, hb.mono_left $ nhds_within_mono _ Ioo_subset_Iio_self⟩
+    · exact ⟨lb, hb.mono_left <| nhds_within_mono _ Ioo_subset_Iio_self⟩
       
     · use f x, hf x h
       

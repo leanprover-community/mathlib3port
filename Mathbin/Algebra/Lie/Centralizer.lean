@@ -171,7 +171,7 @@ theorem exists_nested_lie_ideal_of_le_normalizer {K : LieSubalgebra R L} (h₁ :
 
 variable (H)
 
-theorem normalizer_eq_self_iff : H.normalizer = H ↔ (LieModule.maxTrivSubmodule R H $ L ⧸ H.toLieSubmodule) = ⊥ := by
+theorem normalizer_eq_self_iff : H.normalizer = H ↔ (LieModule.maxTrivSubmodule R H <| L ⧸ H.toLieSubmodule) = ⊥ := by
   rw [LieSubmodule.eq_bot_iff]
   refine' ⟨fun h => _, fun h => le_antisymm (fun x hx => _) H.le_normalizer⟩
   · rintro ⟨x⟩ hx

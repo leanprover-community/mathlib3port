@@ -77,7 +77,7 @@ slower check whether the occurrences of `≥` and `>` are allowed.
 Currently it checks only the conclusion of the declaration, to eliminate false positive from
 binders such as `∀ ε > 0, ...` -/
 private unsafe def ge_or_gt_in_statement (d : declaration) : tactic (Option String) :=
-  return $
+  return <|
     if (d.type.contains_constant fun n => n ∈ illegal_ge_gt) && contains_illegal_ge_gt d.type then
       some "the type contains ≥/>. Use ≤/< instead."
     else none
@@ -129,12 +129,12 @@ flag this as illegal, but it is also allowed. In this case, add the line
 /-- Checks whether a declaration has a namespace twice consecutively in its name -/
 private unsafe def dup_namespace (d : declaration) : tactic (Option String) :=
   is_instance d.to_name >>= fun is_inst =>
-    return $
+    return <|
       let nm := d.to_name.components
       if nm.Chain' (· ≠ ·) ∨ is_inst then none
       else
-        let s := (nm.find $ fun n => nm.count n ≥ 2).iget.toString
-        some $ "The namespace `" ++ s ++ "` is duplicated in the name"
+        let s := (nm.find fun n => nm.count n ≥ 2).iget.toString
+        some <| "The namespace `" ++ s ++ "` is duplicated in the name"
 #align dup_namespace dup_namespace
 
 /-- A linter for checking whether a declaration has a namespace twice consecutively in its name. -/
@@ -178,7 +178,7 @@ unsafe def check_unused_arguments (d : declaration) : Option (List ℕ) :=
   if l = [] then none
   else
     let l2 := check_unused_arguments_aux [] 1 d.type.pi_arity d.type
-    (l.filter $ fun n => n ∈ l2).reverse
+    (l.filter fun n => n ∈ l2).reverse
 #align check_unused_arguments check_unused_arguments
 
 /-- Check for unused arguments, and print them with their position, variable name, type and whether
@@ -194,7 +194,7 @@ private unsafe def unused_arguments (d : declaration) : tactic (Option String) :
     return none
   let ns := ns.iget
   let (ds, _) ← get_pi_binders d.type
-  let ns := ns.map fun n => (n, (ds.nth $ n - 1).iget)
+  let ns := ns.map fun n => (n, (ds.nth <| n - 1).iget)
   let ns := ns.filter fun x => x.2.type.get_app_fn ≠ const `interactive.parse []
   let ff ← return ns.Empty |
     return none
@@ -205,7 +205,7 @@ private unsafe def unused_arguments (d : declaration) : tactic (Option String) :
             to_fmt "argument " ++ to_fmt n ++ ": " ++ s ++
               if (ds.countp fun b' => b.type = b'.type) ≥ 2 then " (duplicate)" else "") <$>
           pp b
-  return $ some $ ns tt
+  return <| some <| ns tt
 #align unused_arguments unused_arguments
 
 /-- A linter object for checking for unused arguments. This is in the default linter set. -/
@@ -277,7 +277,7 @@ private unsafe def incorrect_def_lemma (d : declaration) : tactic (Option String
             n
           ← infer_type d
         let is_pattern ← has_attribute' `pattern d
-        return $
+        return <|
             if d ↔ n = level.zero then none
             else
               if d then "is a lemma/theorem, should be a def"
@@ -335,12 +335,12 @@ open Native
   It will ignore `nm₀._proof_i` declarations.
 -/
 unsafe def expr.univ_params_grouped (e : expr) (nm₀ : Name) : rb_set (List Name) :=
-  e.fold mk_rb_set $ fun e n l =>
+  (e.fold mk_rb_set) fun e n l =>
     match e with
     | e@(sort u) => l.insert u.params.toList
     | e@(const nm us) =>
       if nm.getPrefix = nm₀ ∧ nm.last.startsWith "_proof_" then l
-      else l.union $ rb_set.of_list $ us.map $ fun u : level => u.params.toList
+      else l.union <| rb_set.of_list <| us.map fun u : level => u.params.toList
     | _ => l
 #align expr.univ_params_grouped expr.univ_params_grouped
 
@@ -351,9 +351,9 @@ unsafe def expr.univ_params_grouped (e : expr) (nm₀ : Name) : rb_set (List Nam
 unsafe def bad_params : rb_set (List Name) → List Name
   | l =>
     let good_levels : name_set :=
-      l.fold mk_name_set $ fun us prev => if us.length = 1 then prev.insert us.head else prev
+      (l.fold mk_name_set) fun us prev => if us.length = 1 then prev.insert us.head else prev
     if good_levels.Empty then l.fold [] List.union
-    else bad_params $ rb_set.of_list $ l.toList.map $ fun us => us.filter $ fun nm => !good_levels.contains nm
+    else bad_params <| rb_set.of_list <| l.toList.map fun us => us.filter fun nm => !good_levels.contains nm
 #align bad_params bad_params
 
 /-- Checks whether all universe levels `u` in the type of `d` are "good".
@@ -367,7 +367,7 @@ a higher universe level than `α`.
 unsafe def check_univs (d : declaration) : tactic (Option String) := do
   let l := d.type.univ_params_grouped d.to_name
   let bad := bad_params l
-  if bad then return none else return $ some $ "universes " ++ toString bad ++ " only occur together."
+  if bad then return none else return <| some <| "universes " ++ toString bad ++ " only occur together."
 #align check_univs check_univs
 
 /-- A linter for checking that there are no bad `max u v` universe levels. -/
@@ -402,8 +402,8 @@ with rfl when elaboration results in a different term than the user intended.
 unsafe def syn_taut (d : declaration) : tactic (Option String) :=
   (do
       let (el, er) ← d.type.pi_codomain.is_eq
-      guardb (el =ₐ er)
-      return $ some "LHS equals RHS syntactically") <|>
+      guardb (el == er)
+      return <| some "LHS equals RHS syntactically") <|>
     return none
 #align syn_taut syn_taut
 
@@ -434,7 +434,7 @@ attribute [nolint syn_taut] rfl
 /-- Check if an expression contains `var 0` by folding over the expression and matching the binder depth
 -/
 unsafe def expr.has_zero_var (e : expr) : Bool :=
-  e.fold false $ fun e' d res =>
+  (e.fold false) fun e' d res =>
     res ||
       match e' with
       | var k => k = d
@@ -514,11 +514,11 @@ unsafe def unprintable_interactive (d : declaration) : tactic (Option String) :=
   match d.to_name with
   | Name.mk_string _ (Name.mk_string "interactive" (Name.mk_string _ Name.anonymous)) => do
     let (ds, _) ← mk_local_pis d.type
-    let ds ← ds.mfilter $ fun d => not <$> succeeds (interactive.param_desc d.local_type)
+    let ds ← ds.mfilter fun d => not <$> succeeds (interactive.param_desc d.local_type)
     let ff ← return ds.Empty |
       return none
     let ds ← ds.mmap (pp ∘ to_binder)
-    return $ some $ ds tt
+    return <| some <| ds tt
   | _ => return none
 #align unprintable_interactive unprintable_interactive
 
@@ -573,9 +573,9 @@ unsafe def explicit_vars_of_iff (d : declaration) : tactic (Option String) := do
       l := (ln li).filter fun t => el t.2 && er t.2
       if l = [] then return none
         else
-          return $
-            "The following variables are used on both sides of an iff and ".append $
-              "should be made implicit: ".append $ ", ".intercalate (l fun t => toString t.1)
+          return <|
+            "The following variables are used on both sides of an iff and ".append <|
+              "should be made implicit: ".append <| ", ".intercalate (l fun t => toString t.1)
 #align explicit_vars_of_iff explicit_vars_of_iff
 
 /-- A linter for checking if variables appearing on both sides of an iff are explicit. Ideally, such

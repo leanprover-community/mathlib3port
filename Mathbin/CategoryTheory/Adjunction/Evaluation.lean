@@ -33,7 +33,7 @@ variable [∀ a b : C, HasCoproductsOfShape (a ⟶ b) D]
 @[simps]
 def evaluationLeftAdjoint (c : C) : D ⥤ C ⥤ D where
   obj d :=
-    { obj := fun t => ∐ fun i : c ⟶ t => d, map := fun u v f => sigma.desc $ fun g => (Sigma.ι fun _ => d) $ g ≫ f,
+    { obj := fun t => ∐ fun i : c ⟶ t => d, map := fun u v f => sigma.desc fun g => (Sigma.ι fun _ => d) <| g ≫ f,
       map_id' := by
         intros
         ext ⟨j⟩
@@ -47,7 +47,7 @@ def evaluationLeftAdjoint (c : C) : D ⥤ C ⥤ D where
         congr 1
         rw [category.assoc] }
   map d₁ d₂ f :=
-    { app := fun e => sigma.desc $ fun h => f ≫ Sigma.ι (fun _ => d₂) h,
+    { app := fun e => sigma.desc fun h => f ≫ Sigma.ι (fun _ => d₂) h,
       naturality' := by
         intros
         ext
@@ -72,7 +72,7 @@ def evaluationAdjunctionRight (c : C) : evaluationLeftAdjoint D c ⊣ (evaluatio
     { homEquiv := fun d F =>
         { toFun := fun f => Sigma.ι (fun _ => d) (𝟙 _) ≫ f.app c,
           invFun := fun f =>
-            { app := fun e => sigma.desc $ fun h => f ≫ F.map h,
+            { app := fun e => sigma.desc fun h => f ≫ F.map h,
               naturality' := by
                 intros
                 ext
@@ -124,7 +124,7 @@ variable [∀ a b : C, HasProductsOfShape (a ⟶ b) D]
 @[simps]
 def evaluationRightAdjoint (c : C) : D ⥤ C ⥤ D where
   obj d :=
-    { obj := fun t => ∏ fun i : t ⟶ c => d, map := fun u v f => pi.lift $ fun g => Pi.π _ $ f ≫ g,
+    { obj := fun t => ∏ fun i : t ⟶ c => d, map := fun u v f => pi.lift fun g => Pi.π _ <| f ≫ g,
       map_id' := by
         intros
         ext ⟨j⟩
@@ -140,7 +140,7 @@ def evaluationRightAdjoint (c : C) : D ⥤ C ⥤ D where
         congr 1
         simp }
   map d₁ d₂ f :=
-    { app := fun t => pi.lift $ fun g => Pi.π _ g ≫ f,
+    { app := fun t => pi.lift fun g => Pi.π _ g ≫ f,
       naturality' := by
         intros
         ext
@@ -164,7 +164,7 @@ def evaluationAdjunctionLeft (c : C) : (evaluation _ _).obj c ⊣ evaluationRigh
   Adjunction.mkOfHomEquiv
     { homEquiv := fun F d =>
         { toFun := fun f =>
-            { app := fun t => pi.lift $ fun g => F.map g ≫ f,
+            { app := fun t => pi.lift fun g => F.map g ≫ f,
               naturality' := by
                 intros
                 ext

@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.Data.Finset.Lattice
-import Mathbin.Data.Set.Pairwise
 import Mathbin.Order.Hom.Basic
 
 /-!
@@ -159,7 +158,7 @@ theorem partial_sups_eq_bsupr (f : ℕ → α) (n : ℕ) : partialSups f n = ⨆
 
 @[simp]
 theorem supr_partial_sups_eq (f : ℕ → α) : (⨆ n, partialSups f n) = ⨆ n, f n := by
-  refine' (supr_le $ fun n => _).antisymm (supr_mono $ le_partial_sups f)
+  refine' (supr_le fun n => _).antisymm (supr_mono <| le_partial_sups f)
   rw [partial_sups_eq_bsupr]
   exact supr₂_le_supr _ _
 #align supr_partial_sups_eq supr_partial_sups_eq

@@ -5,7 +5,6 @@ Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
 -/
 import Mathbin.Analysis.Complex.UpperHalfPlane.Basic
 import Mathbin.LinearAlgebra.GeneralLinearGroup
-import Mathbin.Analysis.Matrix
 
 /-!
 # The action of the modular group SL(2, ℤ) on the upper half-plane
@@ -115,8 +114,6 @@ end BottomRow
 section TendstoLemmas
 
 open Filter ContinuousLinearMap
-
-attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 attribute [local simp] coe_smul
 
@@ -627,7 +624,7 @@ theorem c_eq_zero (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : ↑ₘg 1 0 
     replace hg : -g • z ∈ 𝒟ᵒ := (SL_neg_smul g z).symm ▸ hg
     exact hp hg hc
   specialize hp hg
-  rcases int.abs_le_one_iff.mp $ abs_c_le_one hz hg with ⟨⟩ <;> tauto
+  rcases int.abs_le_one_iff.mp <| abs_c_le_one hz hg with ⟨⟩ <;> tauto
 #align modular_group.c_eq_zero ModularGroup.c_eq_zero
 
 /-- Second Main Fundamental Domain Lemma: if both `z` and `g • z` are in the open domain `𝒟ᵒ`,

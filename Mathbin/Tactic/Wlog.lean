@@ -44,7 +44,7 @@ private unsafe
 private unsafe
   def
     match_perms
-    ( pat : pattern ) : expr → tactic ( List $ List expr )
+    ( pat : pattern ) : expr → tactic ( List <| List expr )
     |
       t
       =>
@@ -64,8 +64,8 @@ unsafe def wlog (vars' : List expr) (h_cases fst_case : expr) (perms : List (Lis
   let cases ← infer_type h_cases
   let h_fst_case ←
     mk_local_def h_cases.local_pp_name
-        (fst_case.instantiate_locals $ (vars'.zip vars).map $ fun ⟨o, n⟩ => (o.local_uniq_name, n))
-  let ((), pr) ← solve_aux cases (repeat $ exact h_fst_case <|> left >> skip)
+        (fst_case.instantiate_locals <| (vars'.zip vars).map fun ⟨o, n⟩ => (o.local_uniq_name, n))
+  let ((), pr) ← solve_aux cases (repeat <| exact h_fst_case <|> left >> skip)
   let t ← target
   let fixed_vars ← vars.mmap update_type
   let t' := (instantiate_local h_cases.local_uniq_name pr t).pis (fixed_vars ++ [h_fst_case])
@@ -76,12 +76,12 @@ unsafe def wlog (vars' : List expr) (h_cases fst_case : expr) (perms : List (Lis
         intron nr
   let h₀ :: hs ← elim_or perms.length h_cases
   solve1 do
-      exact (h $ vars ++ [h₀])
+      exact (h <| vars ++ [h₀])
   focus
-      ((hs perms).map $ fun ⟨h_case, perm⟩ => do
+      ((hs perms).map fun ⟨h_case, perm⟩ => do
         let p_v := (vars' vars).map fun ⟨p, v⟩ => (p, v)
         let p := perm fun p => p p_v
-        note `this none (h $ p ++ [h_case])
+        note `this none (h <| p ++ [h_case])
         clear h
         return ())
   let gs ← get_goals
@@ -97,7 +97,7 @@ private unsafe def parse_permutations : Option (List (List Name)) → tactic (Li
   | some [] => return []
   | some perms@(p₀ :: ps) => do
     guard p₀ <|> fail "No permutation `xs_i` in `using [xs_1, …, xs_n]` should contain the same variable twice."
-    guard (perms $ fun p => p p₀) <|>
+    guard (perms fun p => p p₀) <|>
         fail ("The permutations `xs_i` in `using [xs_1, …, xs_n]` must be permutations of the same" ++ " variables.")
     perms fun p => p get_local
 #align tactic.interactive.parse_permutations tactic.interactive.parse_permutations
@@ -187,7 +187,7 @@ private unsafe def parse_permutations : Option (List (List Name)) → tactic (Li
                             if
                               cases_pr . is_local_constant
                               then
-                              return $ match h with | some n => update_pp_name cases_pr n | none => cases_pr
+                              return <| match h with | some n => update_pp_name cases_pr n | none => cases_pr
                               else
                               do note ( h `case ) none cases_pr
                         let cases ← infer_type cases_pr
@@ -202,7 +202,7 @@ private unsafe def parse_permutations : Option (List (List Name)) → tactic (Li
                                   =>
                                   do
                                     let pat ← to_expr pat
-                                      let vars' := vars . filter $ fun v => v . occurs pat
+                                      let vars' := vars . filter fun v => v . occurs pat
                                       let case_pat ← tactic.mk_pattern [ ] vars' pat [ ] vars'
                                       let perms' ← match_perms case_pat cases
                                       return ( pat , perms' )
@@ -211,7 +211,7 @@ private unsafe def parse_permutations : Option (List (List Name)) → tactic (Li
                                   =>
                                   do
                                     let p :: ps ← dest_or cases
-                                      let vars' := vars . filter $ fun v => v . occurs p
+                                      let vars' := vars . filter fun v => v . occurs p
                                       let case_pat ← tactic.mk_pattern [ ] vars' p [ ] vars'
                                       let
                                         perms'
@@ -219,7 +219,7 @@ private unsafe def parse_permutations : Option (List (List Name)) → tactic (Li
                                           ( p :: ps ) . mmap fun p => do let m ← match_pattern case_pat p return m . 2
                                       return ( p , perms' )
                         let vars_name := vars . map local_uniq_name
-                        guard ( perms' $ fun p => p $ fun v => v ∧ v ∈ vars_name )
+                        guard ( perms' fun p => p fun v => v ∧ v ∈ vars_name )
                           <|>
                           fail "Cases contains variables not declared in `using x y z`"
                         let
@@ -228,7 +228,7 @@ private unsafe def parse_permutations : Option (List (List Name)) → tactic (Li
                             if
                               perms . length = 1
                               then
-                              do return ( perms' $ fun p => p ++ vars fun v => p fun v' => v' ≠ v )
+                              do return ( perms' fun p => p ++ vars fun v => p fun v' => v' ≠ v )
                               else
                               do
                                 guard ( perms = perms' )
@@ -286,9 +286,9 @@ private unsafe def parse_permutations : Option (List (List Name)) → tactic (Li
                 else
                 fun i => mkSimpleName ( "invariant_" ++ toString ( i + 1 ) )
           with_enable_tags
-            $
+            <|
             tactic.focus1
-              $
+              <|
               do
                 let t ← get_main_tag
                   tactic.wlog vars cases_pr pat perms

@@ -36,7 +36,7 @@ theorem exists_null_pairwise_disjoint_diff [Countable ι] {s : ι → Set α} (h
     ⟨fun i => to_measurable μ (s i ∩ ⋃ j ∈ ({i}ᶜ : Set ι), s j), fun i => measurable_set_to_measurable _ _, fun i => _,
       _⟩
   · simp only [measure_to_measurable, inter_Union]
-    exact (measure_bUnion_null_iff $ to_countable _).2 fun j hj => hd (Ne.symm hj)
+    exact (measure_bUnion_null_iff <| to_countable _).2 fun j hj => hd (Ne.symm hj)
     
   · simp only [Pairwise, disjoint_left, on_fun, mem_diff, not_and, and_imp, not_not]
     intro i j hne x hi hU hj
@@ -69,12 +69,12 @@ protected theorem _root_.disjoint.ae_disjoint (h : Disjoint s t) : AeDisjoint μ
 
 protected theorem _root_.pairwise.ae_disjoint {f : ι → Set α} (hf : Pairwise (Disjoint on f)) :
     Pairwise (AeDisjoint μ on f) :=
-  hf.mono $ fun i j h => h.AeDisjoint
+  hf.mono fun i j h => h.AeDisjoint
 #align measure_theory.ae_disjoint._root_.pairwise.ae_disjoint measure_theory.ae_disjoint._root_.pairwise.ae_disjoint
 
 protected theorem _root_.set.pairwise_disjoint.ae_disjoint {f : ι → Set α} {s : Set ι} (hf : s.PairwiseDisjoint f) :
     s.Pairwise (AeDisjoint μ on f) :=
-  hf.mono' $ fun i j h => h.AeDisjoint
+  hf.mono' fun i j h => h.AeDisjoint
 #align
   measure_theory.ae_disjoint._root_.set.pairwise_disjoint.ae_disjoint measure_theory.ae_disjoint._root_.set.pairwise_disjoint.ae_disjoint
 
@@ -134,7 +134,7 @@ theorem measure_diff_right (h : AeDisjoint μ s t) : μ (t \ s) = μ t :=
 set `u`. -/
 theorem exists_disjoint_diff (h : AeDisjoint μ s t) : ∃ u, MeasurableSet u ∧ μ u = 0 ∧ Disjoint (s \ u) t :=
   ⟨toMeasurable μ (s ∩ t), measurableSetToMeasurable _ _, (measure_to_measurable _).trans h,
-    disjoint_diff.symm.mono_left fun x hx => ⟨hx.1, fun hxt => hx.2 $ subset_to_measurable _ _ ⟨hx.1, hxt⟩⟩⟩
+    disjoint_diff.symm.mono_left fun x hx => ⟨hx.1, fun hxt => hx.2 <| subset_to_measurable _ _ ⟨hx.1, hxt⟩⟩⟩
 #align measure_theory.ae_disjoint.exists_disjoint_diff MeasureTheory.AeDisjoint.exists_disjoint_diff
 
 theorem ofNullRight (h : μ t = 0) : AeDisjoint μ s t :=

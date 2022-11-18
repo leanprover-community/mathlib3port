@@ -82,7 +82,7 @@ theorem mem_supported : p ∈ supported R s ↔ ↑p.vars ⊆ s := by
 #align mv_polynomial.mem_supported MvPolynomial.mem_supported
 
 theorem supported_eq_vars_subset : (supported R s : Set (MvPolynomial σ R)) = { p | ↑p.vars ⊆ s } :=
-  Set.ext $ fun _ => mem_supported
+  Set.ext fun _ => mem_supported
 #align mv_polynomial.supported_eq_vars_subset MvPolynomial.supported_eq_vars_subset
 
 @[simp]

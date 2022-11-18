@@ -743,7 +743,7 @@ theorem span_empty : lieSpan R L (∅ : Set L) = ⊥ :=
 
 @[simp]
 theorem span_univ : lieSpan R L (Set.univ : Set L) = ⊤ :=
-  eq_top_iff.2 $ SetLike.le_def.2 $ subset_lie_span
+  eq_top_iff.2 <| SetLike.le_def.2 <| subset_lie_span
 #align lie_subalgebra.span_univ LieSubalgebra.span_univ
 
 variable {L}
@@ -770,7 +770,7 @@ variable [CommRing R] [LieRing L₁] [LieRing L₂] [LieAlgebra R L₁] [LieAlge
 
 /-- An injective Lie algebra morphism is an equivalence onto its range. -/
 noncomputable def ofInjective (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective f) : L₁ ≃ₗ⁅R⁆ f.range :=
-  { LinearEquiv.ofInjective (f : L₁ →ₗ[R] L₂) $ by rwa [LieHom.coe_to_linear_map] with
+  { LinearEquiv.ofInjective (f : L₁ →ₗ[R] L₂) <| by rwa [LieHom.coe_to_linear_map] with
     map_lie' := fun x y => by
       apply SetCoe.ext
       simpa }
@@ -808,7 +808,7 @@ def lieSubalgebraMap : L₁'' ≃ₗ⁅R⁆ (L₁''.map e : LieSubalgebra R L₂
   { LinearEquiv.submoduleMap (e : L₁ ≃ₗ[R] L₂) ↑L₁'' with
     map_lie' := fun x y => by
       apply SetCoe.ext
-      exact LieHom.map_lie (↑e : L₁ →ₗ⁅R⁆ L₂) (↑x) ↑y }
+      exact LieHom.map_lie (↑e : L₁ →ₗ⁅R⁆ L₂) ↑x ↑y }
 #align lie_equiv.lie_subalgebra_map LieEquiv.lieSubalgebraMap
 
 @[simp]
@@ -825,7 +825,7 @@ def ofSubalgebras (h : L₁'.map ↑e = L₂') : L₁' ≃ₗ⁅R⁆ L₂' :=
         rfl) with
     map_lie' := fun x y => by
       apply SetCoe.ext
-      exact LieHom.map_lie (↑e : L₁ →ₗ⁅R⁆ L₂) (↑x) ↑y }
+      exact LieHom.map_lie (↑e : L₁ →ₗ⁅R⁆ L₂) ↑x ↑y }
 #align lie_equiv.of_subalgebras LieEquiv.ofSubalgebras
 
 @[simp]

@@ -3,6 +3,7 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Aaron Anderson
 -/
+import Mathbin.Algebra.EuclideanDomain.Basic
 import Mathbin.Data.Nat.Prime
 import Mathbin.RingTheory.Coprime.Basic
 import Mathbin.RingTheory.PrincipalIdealDomain
@@ -34,7 +35,7 @@ instance : WfDvdMonoid ℕ :=
   ⟨by
     refine'
       RelHomClass.well_founded (⟨fun x : ℕ => if x = 0 then (⊤ : ℕ∞) else x, _⟩ : DvdNotUnit →r (· < ·))
-        (WithTop.well_founded_lt Nat.lt_wf)
+        (WithTop.well_founded_lt Nat.lt_wfRel.wf)
     intro a b h
     cases a
     · exfalso
@@ -89,7 +90,7 @@ instance : NormalizationMonoid ℤ where
       cases' hnb.lt_or_lt with hb hb <;> simp [mul_nonneg_iff, ha.le, ha.not_le, hb.le, hb.not_le]
   norm_unit_coe_units u :=
     (units_eq_one_or u).elim (fun eq => Eq.symm ▸ if_pos zero_le_one) fun eq =>
-      Eq.symm ▸ if_neg (not_le_of_gt $ show (-1 : ℤ) < 0 by decide)
+      Eq.symm ▸ if_neg (not_le_of_gt <| show (-1 : ℤ) < 0 by decide)
 
 theorem normalize_of_nonneg {z : ℤ} (h : 0 ≤ z) : normalize z = z :=
   show z * ↑(ite _ _ _) = z by rw [if_pos h, Units.coe_one, mul_one]
@@ -100,7 +101,7 @@ theorem normalize_of_neg {z : ℤ} (h : z < 0) : normalize z = -z :=
 #align int.normalize_of_neg Int.normalize_of_neg
 
 theorem normalize_coe_nat (n : ℕ) : normalize (n : ℤ) = n :=
-  normalize_of_nonneg (coe_nat_le_coe_nat_of_le $ Nat.zero_le n)
+  normalize_of_nonneg (coe_nat_le_coe_nat_of_le <| Nat.zero_le n)
 #align int.normalize_coe_nat Int.normalize_coe_nat
 
 theorem coe_nat_abs_eq_normalize (z : ℤ) : (z.natAbs : ℤ) = normalize z := by
@@ -140,8 +141,8 @@ instance : GcdMonoid ℤ where
   gcd_mul_lcm a b := by
     rw [← Int.ofNat_mul, gcd_mul_lcm, coe_nat_abs_eq_normalize]
     exact normalize_associated (a * b)
-  lcm_zero_left a := coe_nat_eq_zero.2 $ Nat.lcm_zero_left _
-  lcm_zero_right a := coe_nat_eq_zero.2 $ Nat.lcm_zero_right _
+  lcm_zero_left a := coe_nat_eq_zero.2 <| Nat.lcm_zero_left _
+  lcm_zero_right a := coe_nat_eq_zero.2 <| Nat.lcm_zero_right _
 
 instance : NormalizedGcdMonoid ℤ :=
   { Int.normalizationMonoid, (inferInstance : GcdMonoid ℤ) with normalize_gcd := fun a b => normalize_coe_nat _,
@@ -165,7 +166,7 @@ theorem nat_abs_lcm (i j : ℤ) : natAbs (GcdMonoid.lcm i j) = Int.lcm i j :=
 
 end GcdMonoid
 
-theorem exists_unit_of_abs (a : ℤ) : ∃ (u : ℤ) (h : IsUnit u), (Int.natAbs a : ℤ) = u * a := by
+theorem exists_unit_of_abs (a : ℤ) : ∃ (u : ℤ)(h : IsUnit u), (Int.natAbs a : ℤ) = u * a := by
   cases' nat_abs_eq a with h
   · use 1, is_unit_one
     rw [← h, one_mul]
@@ -209,12 +210,12 @@ theorem gcd_ne_one_iff_gcd_mul_right_ne_one {a : ℤ} {m n : ℕ} : a.gcd (m * n
 
 /-- If `gcd a (m * n) = 1`, then `gcd a m = 1`. -/
 theorem gcd_eq_one_of_gcd_mul_right_eq_one_left {a : ℤ} {m n : ℕ} (h : a.gcd (m * n) = 1) : a.gcd m = 1 :=
-  Nat.dvd_one.mp $ trans_rel_left _ (gcd_dvd_gcd_mul_right_right a m n) h
+  Nat.dvd_one.mp <| trans_rel_left _ (gcd_dvd_gcd_mul_right_right a m n) h
 #align int.gcd_eq_one_of_gcd_mul_right_eq_one_left Int.gcd_eq_one_of_gcd_mul_right_eq_one_left
 
 /-- If `gcd a (m * n) = 1`, then `gcd a n = 1`. -/
 theorem gcd_eq_one_of_gcd_mul_right_eq_one_right {a : ℤ} {m n : ℕ} (h : a.gcd (m * n) = 1) : a.gcd n = 1 :=
-  Nat.dvd_one.mp $ trans_rel_left _ (gcd_dvd_gcd_mul_left_right a n m) h
+  Nat.dvd_one.mp <| trans_rel_left _ (gcd_dvd_gcd_mul_left_right a n m) h
 #align int.gcd_eq_one_of_gcd_mul_right_eq_one_right Int.gcd_eq_one_of_gcd_mul_right_eq_one_right
 
 theorem sq_of_gcd_eq_one {a b c : ℤ} (h : Int.gcd a b = 1) (heq : a * b = c ^ 2) : ∃ a0 : ℤ, a = a0 ^ 2 ∨ a = -a0 ^ 2 :=
@@ -251,7 +252,7 @@ end Int
 def associatesIntEquivNat : Associates ℤ ≃ ℕ := by
   refine' ⟨fun z => z.out.nat_abs, fun n => Associates.mk n, _, _⟩
   · refine' fun a =>
-      Quotient.inductionOn' a $ fun a => Associates.mk_eq_mk_iff_associated.2 $ Associated.symm $ ⟨norm_unit a, _⟩
+      (Quotient.inductionOn' a) fun a => Associates.mk_eq_mk_iff_associated.2 <| Associated.symm <| ⟨norm_unit a, _⟩
     show normalize a = Int.natAbs (normalize a)
     rw [Int.coe_nat_abs_eq_normalize, normalize_idem]
     

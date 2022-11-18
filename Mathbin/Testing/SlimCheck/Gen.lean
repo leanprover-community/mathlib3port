@@ -100,7 +100,7 @@ instance : Uliftable Gen.{u} Gen.{v} :=
 
 instance : HasOrelse Gen.{u} :=
   ⟨fun α x y => do
-    let b ← Uliftable.up $ chooseAny Bool
+    let b ← Uliftable.up <| chooseAny Bool
     if b then x else y⟩
 
 variable {α}
@@ -134,9 +134,9 @@ Case conversion may be inaccurate. Consider using '#align slim_check.gen.list_of
 /-- Create a list of examples using `cmd`. The size is controlled
 by the size parameter of `gen`. -/
 def listOf (cmd : Gen α) : Gen (List α) :=
-  sized $ fun sz => do
+  sized fun sz => do
     do
-      let ⟨n⟩ ← Uliftable.up $ choose_nat 0 (sz + 1) dec_trivial
+      let ⟨n⟩ ← Uliftable.up <| choose_nat 0 (sz + 1) (by decide)
       let v ← vector_of n cmd
       return v
 #align slim_check.gen.list_of SlimCheck.Gen.listOf
@@ -151,7 +151,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align slim_check.gen.one_of SlimCheck.Gen.oneOfₓ'. -/
 /-- Given a list of example generators, choose one to create an example. -/
 def oneOf (xs : List (Gen α)) (pos : 0 < xs.length) : Gen α := do
-  let ⟨⟨n, h, h'⟩⟩ ← Uliftable.up $ chooseNat' 0 xs.length Pos
+  let ⟨⟨n, h, h'⟩⟩ ← Uliftable.up <| chooseNat' 0 xs.length Pos
   List.nthLe xs n h'
 #align slim_check.gen.one_of SlimCheck.Gen.oneOf
 
@@ -163,8 +163,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align slim_check.gen.elements SlimCheck.Gen.elementsₓ'. -/
 /-- Given a list of example generators, choose one to create an example. -/
 def elements (xs : List α) (pos : 0 < xs.length) : Gen α := do
-  let ⟨⟨n, h₀, h₁⟩⟩ ← Uliftable.up $ chooseNat' 0 xs.length Pos
-  pure $ List.nthLe xs n h₁
+  let ⟨⟨n, h₀, h₁⟩⟩ ← Uliftable.up <| chooseNat' 0 xs.length Pos
+  pure <| List.nthLe xs n h₁
 #align slim_check.gen.elements SlimCheck.Gen.elements
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -194,14 +194,14 @@ and `genc` with probability 5/9.
 def freq (xs : List (ℕ+ × Gen α)) (pos : 0 < xs.length) : Gen α :=
   let s := (xs.map (Subtype.val ∘ Prod.fst)).Sum
   have ha : 1 ≤ s :=
-    le_trans Pos $
+    le_trans Pos <|
       List.length_map (Subtype.val ∘ Prod.fst) xs ▸
         List.length_le_sum_of_one_le _ fun i => by
           simp
           intros
           assumption
   have : 0 ≤ s - 1 := le_tsub_of_add_le_right ha
-  Uliftable.adaptUp Gen.{0} Gen.{u} (chooseNat 0 (s - 1) this) $ fun i =>
+  (Uliftable.adaptUp Gen.{0} Gen.{u} (chooseNat 0 (s - 1) this)) fun i =>
     freqAux xs i.1 (by rcases i with ⟨i, h₀, h₁⟩ <;> rwa [le_tsub_iff_right] at h₁ <;> exact ha)
 #align slim_check.gen.freq SlimCheck.Gen.freq
 
@@ -213,11 +213,11 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align slim_check.gen.permutation_of SlimCheck.Gen.permutationOfₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Generate a random permutation of a given list. -/
-def permutationOf {α : Type u} : ∀ xs : List α, Gen (Subtype $ List.Perm xs)
+def permutationOf {α : Type u} : ∀ xs : List α, Gen (Subtype <| List.Perm xs)
   | [] => pure ⟨[], List.Perm.nil⟩
   | x::xs => do
     let ⟨xs', h⟩ ← permutation_of xs
-    let ⟨⟨n, _, h'⟩⟩ ← Uliftable.up $ chooseNat 0 xs'.length dec_trivial
+    let ⟨⟨n, _, h'⟩⟩ ← Uliftable.up <| chooseNat 0 xs'.length (by decide)
     pure ⟨List.insertNth n x xs', List.Perm.trans (List.Perm.cons _ h) (List.perm_insert_nth _ _ h').symm⟩
 #align slim_check.gen.permutation_of SlimCheck.Gen.permutationOf
 

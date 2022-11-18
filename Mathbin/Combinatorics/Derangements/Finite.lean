@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Henry Swanson
 -/
 import Mathbin.Combinatorics.Derangements.Basic
-import Mathbin.Data.Fintype.Card
+import Mathbin.Data.Fintype.BigOperators
 import Mathbin.Tactic.DeltaInstance
 import Mathbin.Tactic.Ring
 
@@ -38,7 +38,7 @@ instance : Fintype (derangements α) := by delta_instance derangements
 
 theorem card_derangements_invariant {α β : Type _} [Fintype α] [DecidableEq α] [Fintype β] [DecidableEq β]
     (h : card α = card β) : card (derangements α) = card (derangements β) :=
-  Fintype.card_congr (Equiv.derangementsCongr $ equivOfCardEq h)
+  Fintype.card_congr (Equiv.derangementsCongr <| equivOfCardEq h)
 #align card_derangements_invariant card_derangements_invariant
 
 theorem card_derangements_fin_add_two (n : ℕ) :

@@ -76,11 +76,11 @@ theorem succ_nth_stream_eq_none_iff :
   case none => simp [stream_nth_eq, int_fract_pair.stream]
   case some =>
   cases' ifp with _ fr
-  by_cases h:fr = 0
+  by_cases h : fr = 0
   -- `finish [int_fract_pair.stream]` closes both goals
   · simp [int_fract_pair.stream, h, stream_nth_eq]
     
-  · suffices ¬(int_fract_pair.of fr⁻¹ : Option $ int_fract_pair K) = none by
+  · suffices ¬(int_fract_pair.of fr⁻¹ : Option <| int_fract_pair K) = none by
       simp [int_fract_pair.stream, h, stream_nth_eq, this]
     exact fun h => Option.noConfusion h
     
@@ -241,29 +241,23 @@ Now let's show how the values of the sequences correspond to one another.
          "("
          [`s_nth_eq]
          [":"
-          (Init.Core.«term_=_»
+          («term_=_»
            (Term.app (Term.proj (Term.proj (Term.app `of [`v]) "." `s) "." `nth) [`n])
-           " = "
+           "="
            (Term.app `some [`gp_n]))]
          []
          ")")]
        (Term.typeSpec
         ":"
-        (Init.Logic.«term∃_,_»
+        («term∃_,_»
          "∃"
-         (Std.ExtendedBinder.extBinders
-          (Std.ExtendedBinder.extBinder (Lean.binderIdent `ifp) [(group ":" (Term.app `IntFractPair [`K]))]))
-         ", "
-         (Init.Logic.«term_∧_»
-          (Init.Core.«term_=_»
-           (Term.app `IntFractPair.stream [`v (Init.Core.«term_+_» `n " + " (num "1"))])
-           " = "
-           (Term.app `some [`ifp]))
-          " ∧ "
-          (Init.Core.«term_=_»
-           (Term.typeAscription "(" (Term.proj `ifp "." `b) ":" [`K] ")")
-           " = "
-           (Term.proj `gp_n "." `b))))))
+         (Lean.explicitBinders
+          (Lean.unbracketedExplicitBinders [(Lean.binderIdent `ifp)] [":" (Term.app `IntFractPair [`K])]))
+         ","
+         («term_∧_»
+          («term_=_» (Term.app `IntFractPair.stream [`v («term_+_» `n "+" (num "1"))]) "=" (Term.app `some [`ifp]))
+          "∧"
+          («term_=_» (Term.typeAscription "(" (Term.proj `ifp "." `b) ":" [`K] ")") "=" (Term.proj `gp_n "." `b))))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -288,19 +282,19 @@ Now let's show how the values of the sequences correspond to one another.
                   [])]
                 "⟩")])]
             [":"
-             (Init.Logic.«term∃_,_»
+             («term∃_,_»
               "∃"
-              (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `ifp) []))
-              ", "
-              (Init.Logic.«term_∧_»
-               (Init.Core.«term_=_»
-                (Term.app `int_fract_pair.stream [`v (Init.Core.«term_+_» `n " + " (num "1"))])
-                " = "
+              (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `ifp)] []))
+              ","
+              («term_∧_»
+               («term_=_»
+                (Term.app `int_fract_pair.stream [`v («term_+_» `n "+" (num "1"))])
+                "="
                 (Term.app `some [`ifp]))
-               " ∧ "
-               (Init.Core.«term_=_»
+               "∧"
+               («term_=_»
                 (Term.app `pair.mk [(num "1") (Term.typeAscription "(" (Term.proj `ifp "." `b) ":" [`K] ")")])
-                " = "
+                "="
                 `gp_n)))]
             [":="
              [(Term.byTactic
@@ -361,19 +355,19 @@ Now let's show how the values of the sequences correspond to one another.
                  [])]
                "⟩")])]
            [":"
-            (Init.Logic.«term∃_,_»
+            («term∃_,_»
              "∃"
-             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `ifp) []))
-             ", "
-             (Init.Logic.«term_∧_»
-              (Init.Core.«term_=_»
-               (Term.app `int_fract_pair.stream [`v (Init.Core.«term_+_» `n " + " (num "1"))])
-               " = "
+             (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `ifp)] []))
+             ","
+             («term_∧_»
+              («term_=_»
+               (Term.app `int_fract_pair.stream [`v («term_+_» `n "+" (num "1"))])
+               "="
                (Term.app `some [`ifp]))
-              " ∧ "
-              (Init.Core.«term_=_»
+              "∧"
+              («term_=_»
                (Term.app `pair.mk [(num "1") (Term.typeAscription "(" (Term.proj `ifp "." `b) ":" [`K] ")")])
-               " = "
+               "="
                `gp_n)))]
            [":="
             [(Term.byTactic

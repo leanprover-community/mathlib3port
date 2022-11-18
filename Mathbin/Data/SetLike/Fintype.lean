@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
 import Mathbin.Data.SetLike.Basic
-import Mathbin.Data.Fintype.Basic
+import Mathbin.Data.Fintype.Powerset
 
 /-!
 # Set-like fintype

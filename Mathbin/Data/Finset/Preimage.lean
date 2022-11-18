@@ -72,12 +72,12 @@ theorem preimage_compl [DecidableEq α] [DecidableEq β] [Fintype α] [Fintype �
 #align finset.preimage_compl Finset.preimage_compl
 
 theorem monotone_preimage {f : α → β} (h : Injective f) : Monotone fun s => preimage s f (h.InjOn _) :=
-  fun s t hst x hx => mem_preimage.2 (hst $ mem_preimage.1 hx)
+  fun s t hst x hx => mem_preimage.2 (hst <| mem_preimage.1 hx)
 #align finset.monotone_preimage Finset.monotone_preimage
 
 theorem image_subset_iff_subset_preimage [DecidableEq β] {f : α → β} {s : Finset α} {t : Finset β}
     (hf : Set.InjOn f (f ⁻¹' ↑t)) : s.image f ⊆ t ↔ s ⊆ t.Preimage f hf :=
-  image_subset_iff.trans $ by simp only [subset_iff, mem_preimage]
+  image_subset_iff.trans <| by simp only [subset_iff, mem_preimage]
 #align finset.image_subset_iff_subset_preimage Finset.image_subset_iff_subset_preimage
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -92,12 +92,12 @@ theorem image_subset_iff_subset_preimage [DecidableEq β] {f : α → β} {s : F
         (Term.implicitBinder "{" [`t] [":" (Term.app `Finset [`β])] "}")]
        (Term.typeSpec
         ":"
-        (Init.Logic.«term_↔_»
-         (Init.Core.«term_⊆_» (Term.app (Term.proj `s "." `map) [`f]) " ⊆ " `t)
-         " ↔ "
-         (Init.Core.«term_⊆_»
+        («term_↔_»
+         («term_⊆_» (Term.app (Term.proj `s "." `map) [`f]) "⊆" `t)
+         "↔"
+         («term_⊆_»
           `s
-          " ⊆ "
+          "⊆"
           (Term.app
            (Term.proj `t "." `Preimage)
            [`f (Term.app (Term.proj (Term.proj `f "." `Injective) "." `InjOn) [(Term.hole "_")])])))))
@@ -188,13 +188,13 @@ theorem
 
 theorem image_preimage [DecidableEq β] (f : α → β) (s : Finset β) [∀ x, Decidable (x ∈ Set.range f)]
     (hf : Set.InjOn f (f ⁻¹' ↑s)) : image f (preimage s f hf) = s.filter fun x => x ∈ Set.range f :=
-  Finset.coe_inj.1 $ by
+  Finset.coe_inj.1 <| by
     simp only [coe_image, coe_preimage, coe_filter, Set.image_preimage_eq_inter_range, Set.sep_mem_eq]
 #align finset.image_preimage Finset.image_preimage
 
 theorem image_preimage_of_bij [DecidableEq β] (f : α → β) (s : Finset β) (hf : Set.BijOn f (f ⁻¹' ↑s) ↑s) :
     image f (preimage s f hf.InjOn) = s :=
-  Finset.coe_inj.1 $ by simpa using hf.image_eq
+  Finset.coe_inj.1 <| by simpa using hf.image_eq
 #align finset.image_preimage_of_bij Finset.image_preimage_of_bij
 
 theorem preimage_subset {f : α ↪ β} {s : Finset β} {t : Finset α} (hs : s ⊆ t.map f) :
@@ -202,7 +202,7 @@ theorem preimage_subset {f : α ↪ β} {s : Finset β} {t : Finset α} (hs : s 
 #align finset.preimage_subset Finset.preimage_subset
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (u «expr ⊆ » t) -/
-theorem subset_map_iff {f : α ↪ β} {s : Finset β} {t : Finset α} : s ⊆ t.map f ↔ ∃ (u) (_ : u ⊆ t), s = u.map f := by
+theorem subset_map_iff {f : α ↪ β} {s : Finset β} {t : Finset α} : s ⊆ t.map f ↔ ∃ (u : _)(_ : u ⊆ t), s = u.map f := by
   classical
   refine' ⟨fun h => ⟨_, preimage_subset h, _⟩, _⟩
   · rw [map_eq_image, image_preimage, filter_true_of_mem fun x hx => _]
@@ -213,32 +213,32 @@ theorem subset_map_iff {f : α ↪ β} {s : Finset β} {t : Finset α} : s ⊆ t
     
 #align finset.subset_map_iff Finset.subset_map_iff
 
-theorem sigma_preimage_mk {β : α → Type _} [DecidableEq α] (s : Finset (Σ a, β a)) (t : Finset α) :
-    (t.Sigma fun a => s.Preimage (Sigma.mk a) $ sigma_mk_injective.InjOn _) = s.filter fun a => a.1 ∈ t := by
+theorem sigma_preimage_mk {β : α → Type _} [DecidableEq α] (s : Finset (Σa, β a)) (t : Finset α) :
+    (t.Sigma fun a => s.Preimage (Sigma.mk a) <| sigma_mk_injective.InjOn _) = s.filter fun a => a.1 ∈ t := by
   ext x
   simp [and_comm']
 #align finset.sigma_preimage_mk Finset.sigma_preimage_mk
 
-theorem sigma_preimage_mk_of_subset {β : α → Type _} [DecidableEq α] (s : Finset (Σ a, β a)) {t : Finset α}
-    (ht : s.image Sigma.fst ⊆ t) : (t.Sigma fun a => s.Preimage (Sigma.mk a) $ sigma_mk_injective.InjOn _) = s := by
-  rw [sigma_preimage_mk, filter_true_of_mem $ image_subset_iff.1 ht]
+theorem sigma_preimage_mk_of_subset {β : α → Type _} [DecidableEq α] (s : Finset (Σa, β a)) {t : Finset α}
+    (ht : s.image Sigma.fst ⊆ t) : (t.Sigma fun a => s.Preimage (Sigma.mk a) <| sigma_mk_injective.InjOn _) = s := by
+  rw [sigma_preimage_mk, filter_true_of_mem <| image_subset_iff.1 ht]
 #align finset.sigma_preimage_mk_of_subset Finset.sigma_preimage_mk_of_subset
 
-theorem sigma_image_fst_preimage_mk {β : α → Type _} [DecidableEq α] (s : Finset (Σ a, β a)) :
-    ((s.image Sigma.fst).Sigma fun a => s.Preimage (Sigma.mk a) $ sigma_mk_injective.InjOn _) = s :=
+theorem sigma_image_fst_preimage_mk {β : α → Type _} [DecidableEq α] (s : Finset (Σa, β a)) :
+    ((s.image Sigma.fst).Sigma fun a => s.Preimage (Sigma.mk a) <| sigma_mk_injective.InjOn _) = s :=
   s.sigma_preimage_mk_of_subset (Subset.refl _)
 #align finset.sigma_image_fst_preimage_mk Finset.sigma_image_fst_preimage_mk
 
 end Preimage
 
 @[to_additive]
-theorem prod_preimage' [CommMonoid β] (f : α → γ) [DecidablePred $ fun x => x ∈ Set.range f] (s : Finset γ)
+theorem prod_preimage' [CommMonoid β] (f : α → γ) [DecidablePred fun x => x ∈ Set.range f] (s : Finset γ)
     (hf : Set.InjOn f (f ⁻¹' ↑s)) (g : γ → β) :
     (∏ x in s.Preimage f hf, g (f x)) = ∏ x in s.filter fun x => x ∈ Set.range f, g x := by
   haveI := Classical.decEq γ <;>
     calc
       (∏ x in preimage s f hf, g (f x)) = ∏ x in image f (preimage s f hf), g x :=
-        Eq.symm $ prod_image $ by simpa only [mem_preimage, inj_on] using hf
+        Eq.symm <| prod_image <| by simpa only [mem_preimage, inj_on] using hf
       _ = ∏ x in s.filter fun x => x ∈ Set.range f, g x := by rw [image_preimage]
       
 #align finset.prod_preimage' Finset.prod_preimage'
@@ -253,7 +253,7 @@ theorem prod_preimage [CommMonoid β] (f : α → γ) (s : Finset γ) (hf : Set.
 @[to_additive]
 theorem prod_preimage_of_bij [CommMonoid β] (f : α → γ) (s : Finset γ) (hf : Set.BijOn f (f ⁻¹' ↑s) ↑s) (g : γ → β) :
     (∏ x in s.Preimage f hf.InjOn, g (f x)) = ∏ x in s, g x :=
-  prod_preimage _ _ hf.InjOn g $ fun x hxs hxf => (hxf $ hf.subset_range hxs).elim
+  (prod_preimage _ _ hf.InjOn g) fun x hxs hxf => (hxf <| hf.subset_range hxs).elim
 #align finset.prod_preimage_of_bij Finset.prod_preimage_of_bij
 
 end Finset

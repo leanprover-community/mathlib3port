@@ -38,9 +38,8 @@ theorem is_prime_pow_iff_min_fac_pow_factorization_eq {n : ℕ} (hn : n ≠ 1) :
   ⟨fun h => h.min_fac_pow_factorization_eq, fun h => isPrimePowOfMinFacPowFactorizationEq h hn⟩
 #align is_prime_pow_iff_min_fac_pow_factorization_eq is_prime_pow_iff_min_fac_pow_factorization_eq
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (p k) -/
 theorem is_prime_pow_iff_factorization_eq_single {n : ℕ} :
-    IsPrimePow n ↔ ∃ (p : ℕ) (k : ℕ), 0 < k ∧ n.factorization = Finsupp.single p k := by
+    IsPrimePow n ↔ ∃ p k : ℕ, 0 < k ∧ n.factorization = Finsupp.single p k := by
   rw [is_prime_pow_nat_iff]
   refine' exists₂_congr fun p k => _
   constructor

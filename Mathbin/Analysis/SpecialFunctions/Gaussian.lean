@@ -90,7 +90,7 @@ theorem integrableExpNegMulSq {b : ℝ} (hb : 0 < b) : Integrable fun x : ℝ =>
 theorem integrable_exp_neg_mul_sq_iff {b : ℝ} : (Integrable fun x : ℝ => exp (-b * x ^ 2)) ↔ 0 < b := by
   refine' ⟨fun h => _, integrableExpNegMulSq⟩
   by_contra' hb
-  have : (∫⁻ x : ℝ, 1) ≤ ∫⁻ x : ℝ, ∥exp (-b * x ^ 2)∥₊ := by
+  have : (∫⁻ x : ℝ, 1) ≤ ∫⁻ x : ℝ, ‖exp (-b * x ^ 2)‖₊ := by
     apply lintegral_mono fun x => _
     simp only [neg_mul, Ennreal.one_le_coe_iff, ← to_nnreal_one, to_nnreal_le_iff_le_coe,
       Real.norm_of_nonneg (exp_pos _).le, coe_nnnorm, one_le_exp_iff, Right.nonneg_neg_iff]

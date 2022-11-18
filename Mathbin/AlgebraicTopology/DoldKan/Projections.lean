@@ -116,7 +116,7 @@ theorem comp_P_eq_self {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFa
   · unfold P
     simp only [comp_add, HomologicalComplex.comp_f, HomologicalComplex.add_f_apply, comp_id, ← assoc, hq v.of_succ,
       add_right_eq_self]
-    by_cases hqn:n < q
+    by_cases hqn : n < q
     · exact v.of_succ.comp_Hσ_eq_zero hqn
       
     · cases' Nat.le.dest (not_lt.mp hqn) with a ha

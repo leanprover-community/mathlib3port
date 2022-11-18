@@ -34,7 +34,7 @@ We only deal with the `L^p` distance on a product of finitely many metric spaces
 distinct. A closely related construction is `lp`, the `L^p` norm on a product of (possibly
 infinitely many) normed spaces, where the norm is
 $$
-\left(\sum ∥f (x)∥^p \right)^{1/p}.
+\left(\sum ‖f (x)‖^p \right)^{1/p}.
 $$
 However, the topology induced by this construction is not the product topology, and some functions
 have infinite `L^p` norm. These subtleties are not present in the case of finitely many metric
@@ -43,7 +43,7 @@ spaces, hence it is worth devoting a file to this specific case which is particu
 Another related construction is `measure_theory.Lp`, the `L^p` norm on the space of functions from
 a measure space to a normed space, where the norm is
 $$
-\left(\int ∥f (x)∥^p dμ\right)^{1/p}.
+\left(\int ‖f (x)‖^p dμ\right)^{1/p}.
 $$
 This has all the same subtleties as `lp`, and the further subtlety that this only
 defines a seminorm (as almost everywhere zero functions have zero `L^p` norm).
@@ -163,7 +163,7 @@ protected theorem edist_self (f : PiLp p β) : edist f f = 0 := by
     
   · simp [edist_eq_supr]
     
-  · simp [edist_eq_sum h, Ennreal.zero_rpow_of_pos h, Ennreal.zero_rpow_of_pos (inv_pos.2 $ h)]
+  · simp [edist_eq_sum h, Ennreal.zero_rpow_of_pos h, Ennreal.zero_rpow_of_pos (inv_pos.2 <| h)]
     
 #align pi_Lp.edist_self PiLp.edist_self
 
@@ -233,21 +233,21 @@ instance hasNorm :
       (PiLp p
         β) where norm f :=
     if hp : p = 0 then { i | f i ≠ 0 }.to_finite.toFinset.card
-    else if p = ∞ then ⨆ i, ∥f i∥ else (∑ i, ∥f i∥ ^ p.toReal) ^ (1 / p.toReal)
+    else if p = ∞ then ⨆ i, ‖f i‖ else (∑ i, ‖f i‖ ^ p.toReal) ^ (1 / p.toReal)
 #align pi_Lp.has_norm PiLp.hasNorm
 
 variable {p β}
 
-theorem norm_eq_card (f : PiLp 0 β) : ∥f∥ = { i | f i ≠ 0 }.to_finite.toFinset.card :=
+theorem norm_eq_card (f : PiLp 0 β) : ‖f‖ = { i | f i ≠ 0 }.to_finite.toFinset.card :=
   if_pos rfl
 #align pi_Lp.norm_eq_card PiLp.norm_eq_card
 
-theorem norm_eq_csupr (f : PiLp ∞ β) : ∥f∥ = ⨆ i, ∥f i∥ := by
+theorem norm_eq_csupr (f : PiLp ∞ β) : ‖f‖ = ⨆ i, ‖f i‖ := by
   dsimp [norm]
   exact if_neg Ennreal.top_ne_zero
 #align pi_Lp.norm_eq_csupr PiLp.norm_eq_csupr
 
-theorem norm_eq_sum (hp : 0 < p.toReal) (f : PiLp p β) : ∥f∥ = (∑ i, ∥f i∥ ^ p.toReal) ^ (1 / p.toReal) :=
+theorem norm_eq_sum (hp : 0 < p.toReal) (f : PiLp p β) : ‖f‖ = (∑ i, ‖f i‖ ^ p.toReal) ^ (1 / p.toReal) :=
   let hp' := Ennreal.to_real_pos_iff.mp hp
   (if_neg hp'.1.ne').trans (if_neg hp'.2.Ne)
 #align pi_Lp.norm_eq_sum PiLp.norm_eq_sum
@@ -292,14 +292,14 @@ def pseudoEmetricAux : PseudoEmetricSpace (PiLp p β) where
       cases isEmpty_or_nonempty ι
       · simp only [csupr_of_empty, Ennreal.bot_eq_zero, add_zero, nonpos_iff_eq_zero]
         
-      exact supr_le fun i => (edist_triangle _ (g i) _).trans $ add_le_add (le_supr _ i) (le_supr _ i)
+      exact supr_le fun i => (edist_triangle _ (g i) _).trans <| add_le_add (le_supr _ i) (le_supr _ i)
       
     · simp only [edist_eq_sum (zero_lt_one.trans_le hp)]
       calc
         (∑ i, edist (f i) (h i) ^ p.to_real) ^ (1 / p.to_real) ≤
             (∑ i, (edist (f i) (g i) + edist (g i) (h i)) ^ p.to_real) ^ (1 / p.to_real) :=
           by
-          apply Ennreal.rpow_le_rpow _ (one_div_nonneg.2 $ zero_le_one.trans hp)
+          apply Ennreal.rpow_le_rpow _ (one_div_nonneg.2 <| zero_le_one.trans hp)
           refine' Finset.sum_le_sum fun i hi => _
           exact Ennreal.rpow_le_rpow (edist_triangle _ _ _) (zero_le_one.trans hp)
         _ ≤
@@ -318,7 +318,7 @@ theorem supr_edist_ne_top_aux {ι : Type _} [Finite ι] {α : ι → Type _} [�
     (⨆ i, edist (f i) (g i)) ≠ ⊤ := by
   cases nonempty_fintype ι
   obtain ⟨M, hM⟩ := Fintype.exists_le fun i => (⟨dist (f i) (g i), dist_nonneg⟩ : ℝ≥0)
-  refine' ne_of_lt ((supr_le $ fun i => _).trans_lt (@Ennreal.coe_lt_top M))
+  refine' ne_of_lt ((supr_le fun i => _).trans_lt (@Ennreal.coe_lt_top M))
   simp only [edist, PseudoMetricSpace.edist_dist, Ennreal.of_real_eq_coe_nnreal dist_nonneg]
   exact_mod_cast hM i
 #align pi_Lp.supr_edist_ne_top_aux PiLp.supr_edist_ne_top_aux
@@ -342,8 +342,8 @@ def pseudoMetricAux : PseudoMetricSpace (PiLp p α) :=
       · rw [edist_eq_sum (zero_lt_one.trans_le h)]
         exact
           Ennreal.rpow_ne_top_of_nonneg (one_div_nonneg.2 (zero_le_one.trans h))
-            (ne_of_lt $
-              Ennreal.sum_lt_top $ fun i hi => Ennreal.rpow_ne_top_of_nonneg (zero_le_one.trans h) (edist_ne_top _ _))
+            (ne_of_lt <|
+              Ennreal.sum_lt_top fun i hi => Ennreal.rpow_ne_top_of_nonneg (zero_le_one.trans h) (edist_ne_top _ _))
         )
     fun f g => by
     rcases p.dichotomy with (rfl | h)
@@ -351,11 +351,11 @@ def pseudoMetricAux : PseudoMetricSpace (PiLp p α) :=
       · cases isEmpty_or_nonempty ι
         · simp only [Real.csupr_empty, csupr_of_empty, Ennreal.bot_eq_zero, Ennreal.zero_to_real]
           
-        · refine' le_antisymm (csupr_le $ fun i => _) _
+        · refine' le_antisymm (csupr_le fun i => _) _
           · rw [← Ennreal.of_real_le_iff_le_to_real (supr_edist_ne_top_aux f g), ← PseudoMetricSpace.edist_dist]
             exact le_supr _ i
             
-          · refine' Ennreal.to_real_le_of_le_of_real (Real.Sup_nonneg _ _) (supr_le $ fun i => _)
+          · refine' Ennreal.to_real_le_of_le_of_real (Real.Sup_nonneg _ _) (supr_le fun i => _)
             · rintro - ⟨i, rfl⟩
               exact dist_nonneg
               
@@ -390,7 +390,7 @@ theorem lipschitzWithEquivAux : LipschitzWith 1 (PiLp.equiv p β) := by
       edist (x i) (y i) = (edist (x i) (y i) ^ p.to_real) ^ (1 / p.to_real) := by
         simp [← Ennreal.rpow_mul, cancel, -one_div]
       _ ≤ (∑ i, edist (x i) (y i) ^ p.to_real) ^ (1 / p.to_real) := by
-        apply Ennreal.rpow_le_rpow _ (one_div_nonneg.2 $ zero_le_one.trans h)
+        apply Ennreal.rpow_le_rpow _ (one_div_nonneg.2 <| zero_le_one.trans h)
         exact Finset.single_le_sum (fun i hi => (bot_le : (0 : ℝ≥0∞) ≤ _)) (Finset.mem_univ i)
       
     
@@ -472,7 +472,7 @@ instance [∀ i, EmetricSpace (α i)] : EmetricSpace (PiLp p α) :=
 /-- pseudometric space instance on the product of finitely many psuedometric spaces, using the
 `L^p` distance, and having as uniformity the product uniformity. -/
 instance [∀ i, PseudoMetricSpace (β i)] : PseudoMetricSpace (PiLp p β) :=
-  ((pseudoMetricAux p β).replaceUniformity (aux_uniformity_eq p β).symm).replaceBornology $ fun s =>
+  ((pseudoMetricAux p β).replaceUniformity (aux_uniformity_eq p β).symm).replaceBornology fun s =>
     Filter.ext_iff.1 (aux_cobounded_eq p β).symm (sᶜ)
 
 /-- metric space instance on the product of finitely many metric spaces, using the `L^p` distance,
@@ -482,14 +482,14 @@ instance [∀ i, MetricSpace (α i)] : MetricSpace (PiLp p α) :=
 
 theorem nndist_eq_sum {p : ℝ≥0∞} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, PseudoMetricSpace (β i)] (hp : p ≠ ∞)
     (x y : PiLp p β) : nndist x y = (∑ i : ι, nndist (x i) (y i) ^ p.toReal) ^ (1 / p.toReal) :=
-  Subtype.ext $ by
+  Subtype.ext <| by
     push_cast
     exact dist_eq_sum (p.to_real_pos_iff_ne_top.mpr hp) _ _
 #align pi_Lp.nndist_eq_sum PiLp.nndist_eq_sum
 
 theorem nndist_eq_supr {β : ι → Type _} [∀ i, PseudoMetricSpace (β i)] (x y : PiLp ∞ β) :
     nndist x y = ⨆ i, nndist (x i) (y i) :=
-  Subtype.ext $ by
+  Subtype.ext <| by
     push_cast
     exact dist_eq_csupr _ _
 #align pi_Lp.nndist_eq_supr PiLp.nndist_eq_supr
@@ -534,39 +534,39 @@ instance normedAddCommGroup [∀ i, NormedAddCommGroup (α i)] : NormedAddCommGr
 #align pi_Lp.normed_add_comm_group PiLp.normedAddCommGroup
 
 theorem nnnorm_eq_sum {p : ℝ≥0∞} [Fact (1 ≤ p)] {β : ι → Type _} (hp : p ≠ ∞) [∀ i, SeminormedAddCommGroup (β i)]
-    (f : PiLp p β) : ∥f∥₊ = (∑ i, ∥f i∥₊ ^ p.toReal) ^ (1 / p.toReal) := by
+    (f : PiLp p β) : ‖f‖₊ = (∑ i, ‖f i‖₊ ^ p.toReal) ^ (1 / p.toReal) := by
   ext
   simp [Nnreal.coe_sum, norm_eq_sum (p.to_real_pos_iff_ne_top.mpr hp)]
 #align pi_Lp.nnnorm_eq_sum PiLp.nnnorm_eq_sum
 
-theorem nnnorm_eq_csupr {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (f : PiLp ∞ β) : ∥f∥₊ = ⨆ i, ∥f i∥₊ := by
+theorem nnnorm_eq_csupr {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (f : PiLp ∞ β) : ‖f‖₊ = ⨆ i, ‖f i‖₊ := by
   ext
   simp [Nnreal.coe_supr, norm_eq_csupr]
 #align pi_Lp.nnnorm_eq_csupr PiLp.nnnorm_eq_csupr
 
 theorem norm_eq_of_nat {p : ℝ≥0∞} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (n : ℕ)
-    (h : p = n) (f : PiLp p β) : ∥f∥ = (∑ i, ∥f i∥ ^ n) ^ (1 / (n : ℝ)) := by
-  have := p.to_real_pos_iff_ne_top.mpr (ne_of_eq_of_ne h $ Ennreal.nat_ne_top n)
+    (h : p = n) (f : PiLp p β) : ‖f‖ = (∑ i, ‖f i‖ ^ n) ^ (1 / (n : ℝ)) := by
+  have := p.to_real_pos_iff_ne_top.mpr (ne_of_eq_of_ne h <| Ennreal.nat_ne_top n)
   simp only [one_div, h, Real.rpow_nat_cast, Ennreal.to_real_nat, eq_self_iff_true, Finset.sum_congr, norm_eq_sum this]
 #align pi_Lp.norm_eq_of_nat PiLp.norm_eq_of_nat
 
 theorem norm_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x : PiLp 2 β) :
-    ∥x∥ = sqrt (∑ i : ι, ∥x i∥ ^ 2) := by
+    ‖x‖ = sqrt (∑ i : ι, ‖x i‖ ^ 2) := by
   convert norm_eq_of_nat 2 (by norm_cast) _
   rw [sqrt_eq_rpow]
   norm_cast
 #align pi_Lp.norm_eq_of_L2 PiLp.norm_eq_of_L2
 
 theorem nnnorm_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x : PiLp 2 β) :
-    ∥x∥₊ = Nnreal.sqrt (∑ i : ι, ∥x i∥₊ ^ 2) :=
-  Subtype.ext $ by
+    ‖x‖₊ = Nnreal.sqrt (∑ i : ι, ‖x i‖₊ ^ 2) :=
+  Subtype.ext <| by
     push_cast
     exact norm_eq_of_L2 x
 #align pi_Lp.nnnorm_eq_of_L2 PiLp.nnnorm_eq_of_L2
 
 theorem norm_sq_eq_of_L2 (β : ι → Type _) [∀ i, SeminormedAddCommGroup (β i)] (x : PiLp 2 β) :
-    ∥x∥ ^ 2 = ∑ i : ι, ∥x i∥ ^ 2 := by
-  suffices ∥x∥₊ ^ 2 = ∑ i : ι, ∥x i∥₊ ^ 2 by simpa only [Nnreal.coe_sum] using congr_arg (coe : ℝ≥0 → ℝ) this
+    ‖x‖ ^ 2 = ∑ i : ι, ‖x i‖ ^ 2 := by
+  suffices ‖x‖₊ ^ 2 = ∑ i : ι, ‖x i‖₊ ^ 2 by simpa only [Nnreal.coe_sum] using congr_arg (coe : ℝ≥0 → ℝ) this
   rw [nnnorm_eq_of_L2, Nnreal.sq_sqrt]
 #align pi_Lp.norm_sq_eq_of_L2 PiLp.norm_sq_eq_of_L2
 
@@ -576,7 +576,7 @@ theorem dist_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)
 
 theorem nndist_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x y : PiLp 2 β) :
     nndist x y = (∑ i, nndist (x i) (y i) ^ 2).sqrt :=
-  Subtype.ext $ by
+  Subtype.ext <| by
     push_cast
     exact dist_eq_of_L2 _ _
 #align pi_Lp.nndist_eq_of_L2 PiLp.nndist_eq_of_L2
@@ -593,7 +593,7 @@ instance normedSpace [∀ i, SeminormedAddCommGroup (β i)] [∀ i, NormedSpace 
     norm_smul_le := fun c f => by
       rcases p.dichotomy with (rfl | hp)
       · letI : Module 𝕜 (PiLp ∞ β) := Pi.module ι β 𝕜
-        suffices ∥c • f∥₊ = ∥c∥₊ * ∥f∥₊ by exact_mod_cast Nnreal.coe_mono this.le
+        suffices ‖c • f‖₊ = ‖c‖₊ * ‖f‖₊ by exact_mod_cast Nnreal.coe_mono this.le
         simpa only [nnnorm_eq_csupr, Nnreal.mul_supr, ← nnnorm_smul]
         
       · have : p.to_real * (1 / p.to_real) = 1 := mul_div_cancel' 1 (zero_lt_one.trans_le hp).ne'
@@ -645,9 +645,9 @@ equivalence. -/
 def equivₗᵢ : PiLp ∞ β ≃ₗᵢ[𝕜] ∀ i, β i :=
   { PiLp.equiv ∞ β with map_add' := fun f g => rfl, map_smul' := fun c f => rfl,
     norm_map' := fun f => by
-      suffices (finset.univ.sup fun i => ∥f i∥₊) = ⨆ i, ∥f i∥₊ by
+      suffices (finset.univ.sup fun i => ‖f i‖₊) = ⨆ i, ‖f i‖₊ by
         simpa only [Nnreal.coe_supr] using congr_arg (coe : ℝ≥0 → ℝ) this
-      refine' antisymm (Finset.sup_le fun i _ => le_csupr (Fintype.bdd_above_range fun i => ∥f i∥₊) _) _
+      refine' antisymm (Finset.sup_le fun i _ => le_csupr (Fintype.bdd_above_range fun i => ‖f i‖₊) _) _
       cases isEmpty_or_nonempty ι
       · simp only [csupr_of_empty, Finset.univ_eq_empty, Finset.sup_empty]
         
@@ -690,7 +690,7 @@ theorem _root_.linear_isometry_equiv.pi_Lp_congr_left_apply (e : ι ≃ ι') (v 
 @[simp]
 theorem _root_.linear_isometry_equiv.pi_Lp_congr_left_symm (e : ι ≃ ι') :
     (LinearIsometryEquiv.piLpCongrLeft p 𝕜 E e).symm = LinearIsometryEquiv.piLpCongrLeft p 𝕜 E e.symm :=
-  LinearIsometryEquiv.ext $ fun x => rfl
+  LinearIsometryEquiv.ext fun x => rfl
 #align pi_Lp._root_.linear_isometry_equiv.pi_Lp_congr_left_symm pi_Lp._root_.linear_isometry_equiv.pi_Lp_congr_left_symm
 
 @[simp]
@@ -753,11 +753,11 @@ theorem equiv_symm_smul : (PiLp.equiv p β).symm (c • x') = c • (PiLp.equiv 
 #align pi_Lp.equiv_symm_smul PiLp.equiv_symm_smul
 
 /-- When `p = ∞`, this lemma does not hold without the additional assumption `nonempty ι` because
-the left-hand side simplifies to `0`, while the right-hand side simplifies to `∥b∥₊`. See
+the left-hand side simplifies to `0`, while the right-hand side simplifies to `‖b‖₊`. See
 `pi_Lp.nnnorm_equiv_symm_const'` for a version which exchanges the hypothesis `p ≠ ∞` for
 `nonempty ι`. -/
 theorem nnnorm_equiv_symm_const {β} [SeminormedAddCommGroup β] (hp : p ≠ ∞) (b : β) :
-    ∥(PiLp.equiv p fun _ : ι => β).symm (Function.const _ b)∥₊ = Fintype.card ι ^ (1 / p).toReal * ∥b∥₊ := by
+    ‖(PiLp.equiv p fun _ : ι => β).symm (Function.const _ b)‖₊ = Fintype.card ι ^ (1 / p).toReal * ‖b‖₊ := by
   rcases p.dichotomy with (h | h)
   · exact False.elim (hp h)
     
@@ -769,12 +769,12 @@ theorem nnnorm_equiv_symm_const {β} [SeminormedAddCommGroup β] (hp : p ≠ ∞
 #align pi_Lp.nnnorm_equiv_symm_const PiLp.nnnorm_equiv_symm_const
 
 /-- When `is_empty ι`, this lemma does not hold without the additional assumption `p ≠ ∞` because
-the left-hand side simplifies to `0`, while the right-hand side simplifies to `∥b∥₊`. See
+the left-hand side simplifies to `0`, while the right-hand side simplifies to `‖b‖₊`. See
 `pi_Lp.nnnorm_equiv_symm_const` for a version which exchanges the hypothesis `nonempty ι`.
 for `p ≠ ∞`. -/
 theorem nnnorm_equiv_symm_const' {β} [SeminormedAddCommGroup β] [Nonempty ι] (b : β) :
-    ∥(PiLp.equiv p fun _ : ι => β).symm (Function.const _ b)∥₊ = Fintype.card ι ^ (1 / p).toReal * ∥b∥₊ := by
-  rcases em $ p = ∞ with (rfl | hp)
+    ‖(PiLp.equiv p fun _ : ι => β).symm (Function.const _ b)‖₊ = Fintype.card ι ^ (1 / p).toReal * ‖b‖₊ := by
+  rcases em <| p = ∞ with (rfl | hp)
   · simp only [equiv_symm_apply, Ennreal.div_top, Ennreal.zero_to_real, Nnreal.rpow_zero, one_mul, nnnorm_eq_csupr,
       Function.const_apply, csupr_const]
     
@@ -783,30 +783,30 @@ theorem nnnorm_equiv_symm_const' {β} [SeminormedAddCommGroup β] [Nonempty ι] 
 #align pi_Lp.nnnorm_equiv_symm_const' PiLp.nnnorm_equiv_symm_const'
 
 /-- When `p = ∞`, this lemma does not hold without the additional assumption `nonempty ι` because
-the left-hand side simplifies to `0`, while the right-hand side simplifies to `∥b∥₊`. See
+the left-hand side simplifies to `0`, while the right-hand side simplifies to `‖b‖₊`. See
 `pi_Lp.norm_equiv_symm_const'` for a version which exchanges the hypothesis `p ≠ ∞` for
 `nonempty ι`. -/
 theorem norm_equiv_symm_const {β} [SeminormedAddCommGroup β] (hp : p ≠ ∞) (b : β) :
-    ∥(PiLp.equiv p fun _ : ι => β).symm (Function.const _ b)∥ = Fintype.card ι ^ (1 / p).toReal * ∥b∥ :=
-  (congr_arg coe $ nnnorm_equiv_symm_const hp b).trans $ by simp
+    ‖(PiLp.equiv p fun _ : ι => β).symm (Function.const _ b)‖ = Fintype.card ι ^ (1 / p).toReal * ‖b‖ :=
+  (congr_arg coe <| nnnorm_equiv_symm_const hp b).trans <| by simp
 #align pi_Lp.norm_equiv_symm_const PiLp.norm_equiv_symm_const
 
 /-- When `is_empty ι`, this lemma does not hold without the additional assumption `p ≠ ∞` because
-the left-hand side simplifies to `0`, while the right-hand side simplifies to `∥b∥₊`. See
+the left-hand side simplifies to `0`, while the right-hand side simplifies to `‖b‖₊`. See
 `pi_Lp.norm_equiv_symm_const` for a version which exchanges the hypothesis `nonempty ι`.
 for `p ≠ ∞`. -/
 theorem norm_equiv_symm_const' {β} [SeminormedAddCommGroup β] [Nonempty ι] (b : β) :
-    ∥(PiLp.equiv p fun _ : ι => β).symm (Function.const _ b)∥ = Fintype.card ι ^ (1 / p).toReal * ∥b∥ :=
-  (congr_arg coe $ nnnorm_equiv_symm_const' b).trans $ by simp
+    ‖(PiLp.equiv p fun _ : ι => β).symm (Function.const _ b)‖ = Fintype.card ι ^ (1 / p).toReal * ‖b‖ :=
+  (congr_arg coe <| nnnorm_equiv_symm_const' b).trans <| by simp
 #align pi_Lp.norm_equiv_symm_const' PiLp.norm_equiv_symm_const'
 
 theorem nnnorm_equiv_symm_one {β} [SeminormedAddCommGroup β] (hp : p ≠ ∞) [One β] :
-    ∥(PiLp.equiv p fun _ : ι => β).symm 1∥₊ = Fintype.card ι ^ (1 / p).toReal * ∥(1 : β)∥₊ :=
+    ‖(PiLp.equiv p fun _ : ι => β).symm 1‖₊ = Fintype.card ι ^ (1 / p).toReal * ‖(1 : β)‖₊ :=
   (nnnorm_equiv_symm_const hp (1 : β)).trans rfl
 #align pi_Lp.nnnorm_equiv_symm_one PiLp.nnnorm_equiv_symm_one
 
 theorem norm_equiv_symm_one {β} [SeminormedAddCommGroup β] (hp : p ≠ ∞) [One β] :
-    ∥(PiLp.equiv p fun _ : ι => β).symm 1∥ = Fintype.card ι ^ (1 / p).toReal * ∥(1 : β)∥ :=
+    ‖(PiLp.equiv p fun _ : ι => β).symm 1‖ = Fintype.card ι ^ (1 / p).toReal * ‖(1 : β)‖ :=
   (norm_equiv_symm_const hp (1 : β)).trans rfl
 #align pi_Lp.norm_equiv_symm_one PiLp.norm_equiv_symm_one
 

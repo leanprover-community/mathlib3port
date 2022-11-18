@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard
 -/
 import Mathbin.RingTheory.PrincipalIdealDomain
-import Mathbin.Order.ConditionallyCompleteLattice
 import Mathbin.RingTheory.Ideal.LocalRing
 import Mathbin.RingTheory.Multiplicity
 import Mathbin.RingTheory.Valuation.Basic
@@ -93,7 +92,7 @@ theorem irreducible_of_span_eq_maximal_ideal {R : Type _} [CommRing R] [LocalRin
   maximal ideal of R -/
 theorem irreducible_iff_uniformizer (ϖ : R) : Irreducible ϖ ↔ maximalIdeal R = Ideal.span {ϖ} :=
   ⟨fun hϖ => (eq_maximal_ideal (is_maximal_of_irreducible hϖ)).symm, fun h =>
-    irreducible_of_span_eq_maximal_ideal ϖ (fun e => not_a_field R $ by rwa [h, span_singleton_eq_bot]) h⟩
+    irreducible_of_span_eq_maximal_ideal ϖ (fun e => not_a_field R <| by rwa [h, span_singleton_eq_bot]) h⟩
 #align discrete_valuation_ring.irreducible_iff_uniformizer DiscreteValuationRing.irreducible_iff_uniformizer
 
 theorem _root_.irreducible.maximal_ideal_eq {ϖ : R} (h : Irreducible ϖ) : maximalIdeal R = Ideal.span {ϖ} :=
@@ -106,7 +105,7 @@ variable (R)
 /-- Uniformisers exist in a DVR -/
 theorem exists_irreducible : ∃ ϖ : R, Irreducible ϖ := by
   simp_rw [irreducible_iff_uniformizer]
-  exact (IsPrincipalIdealRing.principal $ maximal_ideal R).principal
+  exact (IsPrincipalIdealRing.principal <| maximal_ideal R).principal
 #align discrete_valuation_ring.exists_irreducible DiscreteValuationRing.exists_irreducible
 
 /-- Uniformisers exist in a DVR -/
@@ -187,7 +186,7 @@ theorem unique_irreducible ⦃p q : R⦄ (hp : Irreducible p) (hq : Irreducible 
   · obtain rfl : n = 0 := by
       clear hn this
       revert H n
-      exact dec_trivial
+      exact by decide
     simpa only [not_irreducible_one, pow_zero] using this
     
   · simpa only [pow_one] using hn.symm
@@ -212,7 +211,7 @@ See `discrete_valuation_ring.of_has_unit_mul_pow_irreducible_factorization`. -/
 theorem toUniqueFactorizationMonoid : UniqueFactorizationMonoid R :=
   let p := Classical.choose hR
   let spec := Classical.choose_spec hR
-  UniqueFactorizationMonoid.ofExistsPrimeFactors $ fun x hx => by
+  UniqueFactorizationMonoid.ofExistsPrimeFactors fun x hx => by
     use Multiset.repeat p (Classical.choose (spec.2 hx))
     constructor
     · intro q hq
@@ -220,14 +219,14 @@ theorem toUniqueFactorizationMonoid : UniqueFactorizationMonoid R :=
       rw [hpq]
       refine' ⟨spec.1.NeZero, spec.1.not_unit, _⟩
       intro a b h
-      by_cases ha:a = 0
+      by_cases ha : a = 0
       · rw [ha]
         simp only [true_or_iff, dvd_zero]
         
       obtain ⟨m, u, rfl⟩ := spec.2 ha
       rw [mul_assoc, mul_left_comm, IsUnit.dvd_mul_left _ _ _ (Units.is_unit _)] at h
       rw [IsUnit.dvd_mul_right (Units.is_unit _)]
-      by_cases hm:m = 0
+      by_cases hm : m = 0
       · simp only [hm, one_mul, pow_zero] at h⊢
         right
         exact h
@@ -272,7 +271,7 @@ theorem auxPidOfUfdOfUniqueIrreducible (R : Type u) [CommRing R] [IsDomain R] [U
     IsPrincipalIdealRing R := by
   constructor
   intro I
-  by_cases I0:I = ⊥
+  by_cases I0 : I = ⊥
   · rw [I0]
     use 0
     simp only [Set.singleton_zero, Submodule.span_zero]
@@ -288,7 +287,7 @@ theorem auxPidOfUfdOfUniqueIrreducible (R : Type u) [CommRing R] [IsDomain R] [U
   show I = Ideal.span _
   apply le_antisymm
   · intro r hr
-    by_cases hr0:r = 0
+    by_cases hr0 : r = 0
     · simp only [hr0, Submodule.zero_mem]
       
     obtain ⟨n, u, rfl⟩ := H hr0
@@ -367,7 +366,7 @@ theorem associated_pow_irreducible {x : R} (hx : x ≠ 0) {ϖ : R} (hirr : Irred
 #align discrete_valuation_ring.associated_pow_irreducible DiscreteValuationRing.associated_pow_irreducible
 
 theorem eq_unit_mul_pow_irreducible {x : R} (hx : x ≠ 0) {ϖ : R} (hirr : Irreducible ϖ) :
-    ∃ (n : ℕ) (u : Rˣ), x = u * ϖ ^ n := by
+    ∃ (n : ℕ)(u : Rˣ), x = u * ϖ ^ n := by
   obtain ⟨n, hn⟩ := associated_pow_irreducible hx hirr
   obtain ⟨u, rfl⟩ := hn.symm
   use n, u
@@ -487,7 +486,7 @@ theorem add_val_eq_top_iff {a : R} : addVal R a = ⊤ ↔ a = 0 := by
 theorem add_val_le_iff_dvd {a b : R} : addVal R a ≤ addVal R b ↔ a ∣ b := by
   have hp := Classical.choose_spec (exists_prime R)
   constructor <;> intro h
-  · by_cases ha0:a = 0
+  · by_cases ha0 : a = 0
     · rw [ha0, add_val_zero, top_le_iff, add_val_eq_top_iff] at h
       rw [h]
       apply dvd_zero

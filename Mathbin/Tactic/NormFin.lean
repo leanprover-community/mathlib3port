@@ -54,14 +54,14 @@ theorem normalize_fin_iff {n : ℕ} [NeZero n] {a b} : NormalizeFin n a b ↔ a 
 #align tactic.norm_fin.normalize_fin_iff Tactic.NormFin.normalize_fin_iff
 
 theorem NormalizeFinLt.mk {n a b n'} (hn : n = n') (h : NormalizeFin n a b) (h2 : b < n') : NormalizeFinLt n a b :=
-  h.trans $ Nat.mod_eq_of_lt $ by rw [hn] <;> exact h2
+  h.trans <| Nat.mod_eq_of_lt <| by rw [hn] <;> exact h2
 #align tactic.norm_fin.normalize_fin_lt.mk Tactic.NormFin.NormalizeFinLt.mk
 
 theorem NormalizeFinLt.lt {n a b} (h : NormalizeFinLt n a b) : b < n := by rw [← h.coe] <;> exact a.2
 #align tactic.norm_fin.normalize_fin_lt.lt Tactic.NormFin.NormalizeFinLt.lt
 
 theorem NormalizeFinLt.of {n a b} (h : NormalizeFinLt n a b) : NormalizeFin n a b :=
-  h.trans $ Eq.symm $ Nat.mod_eq_of_lt h.lt
+  h.trans <| Eq.symm <| Nat.mod_eq_of_lt h.lt
 #align tactic.norm_fin.normalize_fin_lt.of Tactic.NormFin.NormalizeFinLt.of
 
 theorem NormalizeFin.zero (n) : NormalizeFin (n + 1) 0 0 := by
@@ -144,7 +144,7 @@ theorem NormalizeFinLt.reduce {n} {a : Fin n} {n' a' b k nk : ℕ} (hn : n = n')
 #align tactic.norm_fin.normalize_fin_lt.reduce Tactic.NormFin.NormalizeFinLt.reduce
 
 theorem NormalizeFin.eq {n} {a b : Fin n} {c : ℕ} (ha : NormalizeFin n a c) (hb : NormalizeFin n b c) : a = b :=
-  Fin.eq_of_veq $ ha.trans hb.symm
+  Fin.eq_of_veq <| ha.trans hb.symm
 #align tactic.norm_fin.normalize_fin.eq Tactic.NormFin.NormalizeFin.eq
 
 theorem NormalizeFin.lt {n} {a b : Fin n} {a' b' : ℕ} (ha : NormalizeFin n a a') (hb : NormalizeFinLt n b b')
@@ -305,7 +305,7 @@ unsafe def reduce_fin' : Bool → expr → expr → expr × expr → eval_fin_m 
       else
         let nb := na % nn
         let nk := (na - nb) / nn
-        eval_fin_m.lift_ic $ fun ic => do
+        eval_fin_m.lift_ic fun ic => do
           let (ic, k) ← ic nk
           let (ic, b) ← ic nb
           let (ic, nk, pe1) ← prove_mul_nat ic n' k
@@ -437,12 +437,12 @@ unsafe def prove_le_fin' : expr → expr → expr → expr × expr → expr × e
 then `prove_eq_fin' n a b a' b'` proves `a = b`. -/
 unsafe def prove_eq_fin' : expr → expr → expr → expr × expr → expr × expr → eval_fin_m expr
   | n, a, b, (a', pa), (b', pb) =>
-    if a' =ₐ b' then do
+    if a' == b' then do
       pure (q(@NormalizeFin.eq).mk_app [n, a, b, a', pa, pb])
     else do
       let (a', pa) ← reduce_fin' false n a (a', pa)
       let (b', pb) ← reduce_fin' false n b (b', pb)
-      guard (a' =ₐ b')
+      guard (a' == b')
       pure (q(@NormalizeFin.eq).mk_app [n, a, b, a', pa, pb])
 #align tactic.norm_fin.prove_eq_fin' tactic.norm_fin.prove_eq_fin'
 
@@ -450,7 +450,7 @@ unsafe def prove_eq_fin' : expr → expr → expr → expr × expr → expr × e
 unsafe def eval_prove_fin (f : expr → expr → expr → expr × expr → expr × expr → eval_fin_m expr) (a b : expr) :
     tactic expr := do
   let n ← get_fin_type a
-  eval_fin_m.run $ eval_fin a >>= fun a' => eval_fin b >>= f n a b a'
+  eval_fin_m.run <| eval_fin a >>= fun a' => eval_fin b >>= f n a b a'
 #align tactic.norm_fin.eval_prove_fin tactic.norm_fin.eval_prove_fin
 
 /-- If `a b : fin n`, then `prove_eq_fin a b` proves `a = b`. -/
@@ -498,7 +498,7 @@ end
 `a' % n` and `b' % n` as natural numbers. -/
 unsafe def eval_rel {α} (a b : expr) (f : expr → expr × expr → expr × expr → ℕ → ℕ → eval_fin_m α) : tactic α := do
   let n ← get_fin_type a
-  eval_fin_m.run $ do
+  eval_fin_m.run <| do
       let (nn, n', pn) ← eval_fin_m.eval_n n
       let (a', pa) ← eval_fin a
       let (b', pb) ← eval_fin b
@@ -511,7 +511,7 @@ unsafe def eval_rel {α} (a b : expr) (f : expr → expr × expr → expr × exp
 `(n, ff, p)` where `p : b ≤ a`. -/
 unsafe def prove_lt_ge_fin : expr → expr → tactic (expr × Bool × expr)
   | a, b =>
-    eval_rel a b $ fun n a' b' na nb =>
+    (eval_rel a b) fun n a' b' na nb =>
       if na < nb then Prod.mk n <$> Prod.mk true <$> prove_lt_fin' n a b a' b'
       else Prod.mk n <$> Prod.mk false <$> prove_le_fin' n b a b' a'
 #align tactic.norm_fin.prove_lt_ge_fin tactic.norm_fin.prove_lt_ge_fin
@@ -520,7 +520,7 @@ unsafe def prove_lt_ge_fin : expr → expr → tactic (expr × Bool × expr)
 `(n, ff, p)` where `p : a ≠ b`. -/
 unsafe def prove_eq_ne_fin : expr → expr → tactic (expr × Bool × expr)
   | a, b =>
-    eval_rel a b $ fun n a' b' na nb =>
+    (eval_rel a b) fun n a' b' na nb =>
       if na = nb then Prod.mk n <$> Prod.mk true <$> prove_eq_fin' n a b a' b'
       else
         if na < nb then do
@@ -580,14 +580,14 @@ unsafe def as_numeral (n e : expr) : eval_fin_m (Option ℕ) :=
   | none => pure none
   | some Ne => do
     let (nn, _) ← eval_fin_m.eval_n n
-    pure $ if Ne < nn then some Ne else none
+    pure <| if Ne < nn then some Ne else none
 #align tactic.norm_fin.as_numeral tactic.norm_fin.as_numeral
 
 /-- Given `a : fin n`, returns `(b, ⊢ a = b)` where `b` is a normalized fin numeral. Fails if `a`
 is already normalized. -/
 unsafe def eval_fin_num (a : expr) : tactic (expr × expr) := do
   let n ← get_fin_type a
-  eval_fin_m.run $ do
+  eval_fin_m.run <| do
       as_numeral n a >>= fun o => guardb o
       let (a', pa) ← eval_fin a
       let (a', pa) ← reduce_fin' ff n a (a', pa) <|> pure (a', pa)

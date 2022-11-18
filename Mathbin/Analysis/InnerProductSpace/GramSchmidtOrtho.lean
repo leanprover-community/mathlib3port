@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiale Miao, Kevin Buzzard, Alexander Bentkamp
 -/
 import Mathbin.Analysis.InnerProductSpace.PiL2
-import Mathbin.Order.WellFoundedSet
 import Mathbin.LinearAlgebra.Matrix.Block
 
 /-!
@@ -68,7 +67,7 @@ theorem gram_schmidt_def' (f : ι → E) (n : ι) :
 #align gram_schmidt_def' gram_schmidt_def'
 
 theorem gram_schmidt_def'' (f : ι → E) (n : ι) :
-    f n = gramSchmidt 𝕜 f n + ∑ i in iio n, (⟪gramSchmidt 𝕜 f i, f n⟫ / ∥gramSchmidt 𝕜 f i∥ ^ 2) • gramSchmidt 𝕜 f i :=
+    f n = gramSchmidt 𝕜 f n + ∑ i in iio n, (⟪gramSchmidt 𝕜 f i, f n⟫ / ‖gramSchmidt 𝕜 f i‖ ^ 2) • gramSchmidt 𝕜 f i :=
   by
   convert gram_schmidt_def' 𝕜 f n
   ext i
@@ -98,7 +97,7 @@ theorem gram_schmidt_orthogonal (f : ι → E) {a b : ι} (h₀ : a ≠ b) : ⟪
   intro b ih a h₀
   simp only [gram_schmidt_def 𝕜 f b, inner_sub_right, inner_sum, orthogonal_projection_singleton, inner_smul_right]
   rw [Finset.sum_eq_single_of_mem a (finset.mem_Iio.mpr h₀)]
-  · by_cases h:gramSchmidt 𝕜 f a = 0
+  · by_cases h : gramSchmidt 𝕜 f a = 0
     · simp only [h, inner_zero_left, zero_div, zero_mul, sub_zero]
       
     · rw [← inner_self_eq_norm_sq_to_K, div_mul_cancel, sub_self]
@@ -141,38 +140,38 @@ theorem mem_span_gram_schmidt (f : ι → E) {i j : ι} (hij : i ≤ j) : f i �
   rw [gram_schmidt_def' 𝕜 f i]
   simp_rw [orthogonal_projection_singleton]
   exact
-    Submodule.add_mem _ (subset_span $ mem_image_of_mem _ hij)
-      (Submodule.sum_mem _ $ fun k hk =>
-        smul_mem (span 𝕜 (gramSchmidt 𝕜 f '' Iic j)) _ $
-          subset_span $ mem_image_of_mem (gramSchmidt 𝕜 f) $ (Finset.mem_Iio.1 hk).le.trans hij)
+    Submodule.add_mem _ (subset_span <| mem_image_of_mem _ hij)
+      ((Submodule.sum_mem _) fun k hk =>
+        smul_mem (span 𝕜 (gramSchmidt 𝕜 f '' Iic j)) _ <|
+          subset_span <| mem_image_of_mem (gramSchmidt 𝕜 f) <| (Finset.mem_Iio.1 hk).le.trans hij)
 #align mem_span_gram_schmidt mem_span_gram_schmidt
 
 theorem gram_schmidt_mem_span (f : ι → E) : ∀ {j i}, i ≤ j → gramSchmidt 𝕜 f i ∈ span 𝕜 (f '' iic j)
   | j => fun i hij => by
     rw [gram_schmidt_def 𝕜 f i]
     simp_rw [orthogonal_projection_singleton]
-    refine' Submodule.sub_mem _ (subset_span (mem_image_of_mem _ hij)) (Submodule.sum_mem _ $ fun k hk => _)
+    refine' Submodule.sub_mem _ (subset_span (mem_image_of_mem _ hij)) ((Submodule.sum_mem _) fun k hk => _)
     let hkj : k < j := (Finset.mem_Iio.1 hk).trans_le hij
-    exact smul_mem _ _ (span_mono (image_subset f $ Iic_subset_Iic.2 hkj.le) $ gram_schmidt_mem_span le_rfl)
+    exact smul_mem _ _ (span_mono (image_subset f <| Iic_subset_Iic.2 hkj.le) <| gram_schmidt_mem_span le_rfl)
 #align gram_schmidt_mem_span gram_schmidt_mem_span
 
 theorem span_gram_schmidt_Iic (f : ι → E) (c : ι) : span 𝕜 (gramSchmidt 𝕜 f '' iic c) = span 𝕜 (f '' iic c) :=
-  span_eq_span (Set.image_subset_iff.2 $ fun i => gram_schmidt_mem_span _ _) $
-    Set.image_subset_iff.2 $ fun i => mem_span_gram_schmidt _ _
+  span_eq_span (Set.image_subset_iff.2 fun i => gram_schmidt_mem_span _ _) <|
+    Set.image_subset_iff.2 fun i => mem_span_gram_schmidt _ _
 #align span_gram_schmidt_Iic span_gram_schmidt_Iic
 
 theorem span_gram_schmidt_Iio (f : ι → E) (c : ι) : span 𝕜 (gramSchmidt 𝕜 f '' iio c) = span 𝕜 (f '' iio c) :=
   span_eq_span
-      (Set.image_subset_iff.2 $ fun i hi =>
-        span_mono (image_subset _ $ Iic_subset_Iio.2 hi) $ gram_schmidt_mem_span _ _ le_rfl) $
-    Set.image_subset_iff.2 $ fun i hi =>
-      span_mono (image_subset _ $ Iic_subset_Iio.2 hi) $ mem_span_gram_schmidt _ _ le_rfl
+      (Set.image_subset_iff.2 fun i hi =>
+        span_mono (image_subset _ <| Iic_subset_Iio.2 hi) <| gram_schmidt_mem_span _ _ le_rfl) <|
+    Set.image_subset_iff.2 fun i hi =>
+      span_mono (image_subset _ <| Iic_subset_Iio.2 hi) <| mem_span_gram_schmidt _ _ le_rfl
 #align span_gram_schmidt_Iio span_gram_schmidt_Iio
 
 /-- `gram_schmidt` preserves span of vectors. -/
 theorem span_gram_schmidt (f : ι → E) : span 𝕜 (range (gramSchmidt 𝕜 f)) = span 𝕜 (range f) :=
-  span_eq_span (range_subset_iff.2 $ fun i => span_mono (image_subset_range _ _) $ gram_schmidt_mem_span _ _ le_rfl) $
-    range_subset_iff.2 $ fun i => span_mono (image_subset_range _ _) $ mem_span_gram_schmidt _ _ le_rfl
+  span_eq_span (range_subset_iff.2 fun i => span_mono (image_subset_range _ _) <| gram_schmidt_mem_span _ _ le_rfl) <|
+    range_subset_iff.2 fun i => span_mono (image_subset_range _ _) <| mem_span_gram_schmidt _ _ le_rfl
 #align span_gram_schmidt span_gram_schmidt
 
 theorem gram_schmidt_of_orthogonal {f : ι → E} (hf : Pairwise fun i j => ⟪f i, f j⟫ = 0) : gramSchmidt 𝕜 f = f := by
@@ -257,23 +256,23 @@ variable (𝕜)
 /-- the normalized `gram_schmidt`
 (i.e each vector in `gram_schmidt_normed` has unit length.) -/
 noncomputable def gramSchmidtNormed (f : ι → E) (n : ι) : E :=
-  (∥gramSchmidt 𝕜 f n∥ : 𝕜)⁻¹ • gramSchmidt 𝕜 f n
+  (‖gramSchmidt 𝕜 f n‖ : 𝕜)⁻¹ • gramSchmidt 𝕜 f n
 #align gram_schmidt_normed gramSchmidtNormed
 
 variable {𝕜}
 
 theorem gram_schmidt_normed_unit_length_coe {f : ι → E} (n : ι) (h₀ : LinearIndependent 𝕜 (f ∘ (coe : Set.iic n → ι))) :
-    ∥gramSchmidtNormed 𝕜 f n∥ = 1 := by
+    ‖gramSchmidtNormed 𝕜 f n‖ = 1 := by
   simp only [gram_schmidt_ne_zero_coe n h₀, gramSchmidtNormed, norm_smul_inv_norm, Ne.def, not_false_iff]
 #align gram_schmidt_normed_unit_length_coe gram_schmidt_normed_unit_length_coe
 
 theorem gram_schmidt_normed_unit_length {f : ι → E} (n : ι) (h₀ : LinearIndependent 𝕜 f) :
-    ∥gramSchmidtNormed 𝕜 f n∥ = 1 :=
+    ‖gramSchmidtNormed 𝕜 f n‖ = 1 :=
   gram_schmidt_normed_unit_length_coe _ (LinearIndependent.comp h₀ _ Subtype.coe_injective)
 #align gram_schmidt_normed_unit_length gram_schmidt_normed_unit_length
 
 theorem gram_schmidt_normed_unit_length' {f : ι → E} {n : ι} (hn : gramSchmidtNormed 𝕜 f n ≠ 0) :
-    ∥gramSchmidtNormed 𝕜 f n∥ = 1 := by
+    ‖gramSchmidtNormed 𝕜 f n‖ = 1 := by
   rw [gramSchmidtNormed] at *
   rw [norm_smul_inv_norm]
   simpa using hn
@@ -309,13 +308,13 @@ theorem gramSchmidtOrthonormal' (f : ι → E) :
 theorem span_gram_schmidt_normed (f : ι → E) (s : Set ι) :
     span 𝕜 (gramSchmidtNormed 𝕜 f '' s) = span 𝕜 (gramSchmidt 𝕜 f '' s) := by
   refine'
-    span_eq_span (Set.image_subset_iff.2 $ fun i hi => smul_mem _ _ $ subset_span $ mem_image_of_mem _ hi)
-      (Set.image_subset_iff.2 $ fun i hi => span_mono (image_subset _ $ singleton_subset_set_iff.2 hi) _)
+    span_eq_span (Set.image_subset_iff.2 fun i hi => smul_mem _ _ <| subset_span <| mem_image_of_mem _ hi)
+      (Set.image_subset_iff.2 fun i hi => span_mono (image_subset _ <| singleton_subset_set_iff.2 hi) _)
   simp only [coe_singleton, Set.image_singleton]
-  by_cases h:gramSchmidt 𝕜 f i = 0
+  by_cases h : gramSchmidt 𝕜 f i = 0
   · simp [h]
     
-  · refine' mem_span_singleton.2 ⟨∥gramSchmidt 𝕜 f i∥, smul_inv_smul₀ _ _⟩
+  · refine' mem_span_singleton.2 ⟨‖gramSchmidt 𝕜 f i‖, smul_inv_smul₀ _ _⟩
     exact_mod_cast norm_ne_zero_iff.2 h
     
 #align span_gram_schmidt_normed span_gram_schmidt_normed
@@ -345,8 +344,8 @@ theorem gram_schmidt_orthonormal_basis_apply {f : ι → E} {i : ι} (hi : gramS
 #align gram_schmidt_orthonormal_basis_apply gram_schmidt_orthonormal_basis_apply
 
 theorem gram_schmidt_orthonormal_basis_apply_of_orthogonal {f : ι → E} (hf : Pairwise fun i j => ⟪f i, f j⟫ = 0) {i : ι}
-    (hi : f i ≠ 0) : gramSchmidtOrthonormalBasis h f i = (∥f i∥⁻¹ : 𝕜) • f i := by
-  have H : gramSchmidtNormed 𝕜 f i = (∥f i∥⁻¹ : 𝕜) • f i := by rw [gramSchmidtNormed, gram_schmidt_of_orthogonal 𝕜 hf]
+    (hi : f i ≠ 0) : gramSchmidtOrthonormalBasis h f i = (‖f i‖⁻¹ : 𝕜) • f i := by
+  have H : gramSchmidtNormed 𝕜 f i = (‖f i‖⁻¹ : 𝕜) • f i := by rw [gramSchmidtNormed, gram_schmidt_of_orthogonal 𝕜 hf]
   rw [gram_schmidt_orthonormal_basis_apply h, H]
   simpa [H] using hi
 #align gram_schmidt_orthonormal_basis_apply_of_orthogonal gram_schmidt_orthonormal_basis_apply_of_orthogonal
@@ -361,7 +360,7 @@ theorem inner_gram_schmidt_orthonormal_basis_eq_zero {f : ι → E} {i : ι} (hi
   rw [span_le]
   rintro - ⟨k, -, rfl⟩
   apply mem_orthogonal_singleton_of_inner_left
-  by_cases hk:gramSchmidtNormed 𝕜 f k = 0
+  by_cases hk : gramSchmidtNormed 𝕜 f k = 0
   · simp [hk]
     
   rw [← gram_schmidt_orthonormal_basis_apply h hk]
@@ -373,7 +372,7 @@ theorem inner_gram_schmidt_orthonormal_basis_eq_zero {f : ι → E} {i : ι} (hi
 
 theorem gram_schmidt_orthonormal_basis_inv_triangular {i j : ι} (hij : i < j) :
     ⟪gramSchmidtOrthonormalBasis h f j, f i⟫ = 0 := by
-  by_cases hi:gramSchmidtNormed 𝕜 f j = 0
+  by_cases hi : gramSchmidtNormed 𝕜 f j = 0
   · rw [inner_gram_schmidt_orthonormal_basis_eq_zero h hi]
     
   · simp [gram_schmidt_orthonormal_basis_apply h hi, gramSchmidtNormed, inner_smul_left,

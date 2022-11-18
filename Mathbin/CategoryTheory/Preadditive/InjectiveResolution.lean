@@ -63,7 +63,7 @@ structure InjectiveResolutionCat (Z : C) where
 
 attribute [instance] InjectiveResolution.injective InjectiveResolution.mono
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- An object admits a injective resolution. -/
 class HasInjectiveResolution (Z : C) : Prop where
   out : Nonempty (InjectiveResolutionCat Z)

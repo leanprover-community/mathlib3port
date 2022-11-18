@@ -234,8 +234,8 @@ theorem monotone_size_up_to : Monotone c.sizeUpTo :=
 a virtual point at the right of the last block, to make for a nice equiv with
 `composition_as_set n`. -/
 def boundary : Fin (c.length + 1) ↪o Fin (n + 1) :=
-  (OrderEmbedding.ofStrictMono fun i => ⟨c.sizeUpTo i, Nat.lt_succ_of_le (c.size_up_to_le i)⟩) $
-    Fin.strict_mono_iff_lt_succ.2 $ fun ⟨i, hi⟩ => c.size_up_to_strict_mono hi
+  (OrderEmbedding.ofStrictMono fun i => ⟨c.sizeUpTo i, Nat.lt_succ_of_le (c.size_up_to_le i)⟩) <|
+    Fin.strict_mono_iff_lt_succ.2 fun ⟨i, hi⟩ => c.size_up_to_strict_mono hi
 #align composition.boundary Composition.boundary
 
 @[simp]
@@ -278,8 +278,8 @@ theorem order_emb_of_fin_boundaries : c.boundaries.orderEmbOfFin c.card_boundari
 /-- Embedding the `i`-th block of a composition (identified with `fin (c.blocks_fun i)`) into
 `fin n` at the relevant position. -/
 def embedding (i : Fin c.length) : Fin (c.blocksFun i) ↪o Fin n :=
-  (Fin.natAdd $ c.sizeUpTo i).trans $
-    Fin.castLe $
+  (Fin.natAdd <| c.sizeUpTo i).trans <|
+    Fin.castLe <|
       calc
         c.sizeUpTo i + c.blocksFun i = c.sizeUpTo (i + 1) := (c.size_up_to_succ _).symm
         _ ≤ c.sizeUpTo c.length := monotone_sum_take _ i.2
@@ -423,7 +423,7 @@ theorem inv_embedding_comp (i : Fin c.length) (j : Fin (c.blocksFun i)) : (c.inv
 
 /-- Equivalence between the disjoint union of the blocks (each of them seen as
 `fin (c.blocks_fun i)`) with `fin n`. -/
-def blocksFinEquiv : (Σ i : Fin c.length, Fin (c.blocksFun i)) ≃ Fin n where
+def blocksFinEquiv : (Σi : Fin c.length, Fin (c.blocksFun i)) ≃ Fin n where
   toFun x := c.Embedding x.1 x.2
   invFun j := ⟨c.index j, c.invEmbedding j⟩
   left_inv x := by
@@ -452,7 +452,7 @@ theorem blocks_fun_congr {n₁ n₂ : ℕ} (c₁ : Composition n₁) (c₂ : Com
 
 /-- Two compositions (possibly of different integers) coincide if and only if they have the
 same sequence of blocks. -/
-theorem sigma_eq_iff_blocks_eq {c : Σ n, Composition n} {c' : Σ n, Composition n} : c = c' ↔ c.2.blocks = c'.2.blocks :=
+theorem sigma_eq_iff_blocks_eq {c : Σn, Composition n} {c' : Σn, Composition n} : c = c' ↔ c.2.blocks = c'.2.blocks :=
   by
   refine' ⟨fun H => by rw [H], fun H => _⟩
   rcases c with ⟨n, c⟩
@@ -766,7 +766,7 @@ def compositionAsSetEquiv (n : ℕ) : CompositionAsSet n ≃ Finset (Fin (n - 1)
           c.boundaries }.toFinset
   invFun s :=
     { boundaries :=
-        { i : Fin n.succ | i = 0 ∨ i = Fin.last n ∨ ∃ (j : Fin (n - 1)) (hj : j ∈ s), (i : ℕ) = j + 1 }.toFinset,
+        { i : Fin n.succ | i = 0 ∨ i = Fin.last n ∨ ∃ (j : Fin (n - 1))(hj : j ∈ s), (i : ℕ) = j + 1 }.toFinset,
       zero_mem := by simp, last_mem := by simp }
   left_inv := by
     intro c

@@ -3,7 +3,6 @@ Copyright (c) 2022 Amelia Livingston. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 -/
-import Mathbin.Algebra.Homology.QuasiIso
 import Mathbin.AlgebraicTopology.ExtraDegeneracy
 import Mathbin.CategoryTheory.Abelian.Homology
 import Mathbin.RepresentationTheory.RepCat
@@ -99,7 +98,7 @@ def toTensorAux : ((Fin (n + 1) → G) →₀ k) →ₗ[k] (G →₀ k) ⊗[k] (
 /-- The `k`-linear map from `k[G] ⊗ₖ k[Gⁿ]` to `k[Gⁿ⁺¹]` sending `g ⊗ (g₁, ..., gₙ)` to
 `(g, gg₁, gg₁g₂, ..., gg₁...gₙ)`. -/
 def ofTensorAux : (G →₀ k) ⊗[k] ((Fin n → G) →₀ k) →ₗ[k] (Fin (n + 1) → G) →₀ k :=
-  TensorProduct.lift (Finsupp.lift _ _ _ $ fun g => Finsupp.lift _ _ _ fun f => single (g • partialProd f) (1 : k))
+  TensorProduct.lift ((Finsupp.lift _ _ _) fun g => Finsupp.lift _ _ _ fun f => single (g • partialProd f) (1 : k))
 #align group_cohomology.resolution.of_tensor_aux GroupCohomology.Resolution.ofTensorAux
 
 variable {k G n}
@@ -269,7 +268,7 @@ end GroupCohomology.resolution
 variable (G)
 
 /-- The simplicial `G`-set sending `[n]` to `Gⁿ⁺¹` equipped with the diagonal action of `G`. -/
-def classifyingSpaceUniversalCover [Monoid G] : SimplicialObject (ActionCat (Type u) $ MonCat.of G) where
+def classifyingSpaceUniversalCover [Monoid G] : SimplicialObject (ActionCat (Type u) <| MonCat.of G) where
   obj n := ActionCat.ofMulAction G (Fin (n.unop.len + 1) → G)
   map m n f := { Hom := fun x => x ∘ f.unop.toOrderHom, comm' := fun g => rfl }
   map_id' n := rfl
@@ -285,7 +284,7 @@ variable [Monoid G]
 /-- When the category is `G`-Set, `cech_nerve_terminal_from` of `G` with the left regular action is
 isomorphic to `EG`, the universal cover of the classifying space of `G` as a simplicial `G`-set. -/
 def cechNerveTerminalFromIso : cechNerveTerminalFrom (ActionCat.ofMulAction G G) ≅ classifyingSpaceUniversalCover G :=
-  (NatIso.ofComponents fun n => limit.isoLimitCone (ActionCat.ofMulActionLimitCone _ _)) $ fun m n f => by
+  (NatIso.ofComponents fun n => limit.isoLimitCone (ActionCat.ofMulActionLimitCone _ _)) fun m n f => by
     refine' is_limit.hom_ext (ActionCat.ofMulActionLimitCone.{u, 0} _ _).2 fun j => _
     dsimp only [cech_nerve_terminal_from, pi.lift]
     dsimp
@@ -297,8 +296,7 @@ def cechNerveTerminalFromIso : cechNerveTerminalFrom (ActionCat.ofMulAction G G)
 /-- As a simplicial set, `cech_nerve_terminal_from` of a monoid `G` is isomorphic to the universal
 cover of the classifying space of `G` as a simplicial set. -/
 def cechNerveTerminalFromIsoCompForget : cechNerveTerminalFrom G ≅ classifyingSpaceUniversalCover G ⋙ forget _ :=
-  (NatIso.ofComponents fun n => Types.productIso _) $ fun m n f =>
-    Matrix.ext $ fun i j => Types.Limit.lift_π_apply _ _ _ _
+  (NatIso.ofComponents fun n => Types.productIso _) fun m n f => Matrix.ext fun i j => Types.Limit.lift_π_apply _ _ _ _
 #align
   classifying_space_universal_cover.cech_nerve_terminal_from_iso_comp_forget classifyingSpaceUniversalCover.cechNerveTerminalFromIsoCompForget
 
@@ -309,14 +307,14 @@ open AlgebraicTopology SimplicialObject.Augmented SimplicialObject CategoryTheor
 /-- The universal cover of the classifying space of `G` as a simplicial set, augmented by the map
 from `fin 1 → G` to the terminal object in `Type u`. -/
 def compForgetAugmented : SimplicialObject.Augmented (Type u) :=
-  SimplicialObject.augment (classifyingSpaceUniversalCover G ⋙ forget _) (terminal _) (terminal.from _) $ fun i g h =>
+  (SimplicialObject.augment (classifyingSpaceUniversalCover G ⋙ forget _) (terminal _) (terminal.from _)) fun i g h =>
     Subsingleton.elim _ _
 #align classifying_space_universal_cover.comp_forget_augmented classifyingSpaceUniversalCover.compForgetAugmented
 
 /-- The augmented Čech nerve of the map from `fin 1 → G` to the terminal object in `Type u` has an
 extra degeneracy. -/
-def extraDegeneracyAugmentedCechNerve : ExtraDegeneracy (arrow.mk $ terminal.from G).augmentedCechNerve :=
-  augmentedCechNerve.extraDegeneracy (arrow.mk $ terminal.from G)
+def extraDegeneracyAugmentedCechNerve : ExtraDegeneracy (arrow.mk <| terminal.from G).augmentedCechNerve :=
+  augmentedCechNerve.extraDegeneracy (arrow.mk <| terminal.from G)
     ⟨fun x => (1 : G), @Subsingleton.elim _ (@Unique.subsingleton _ (Limits.uniqueToTerminal _)) _ _⟩
 #align
   classifying_space_universal_cover.extra_degeneracy_augmented_cech_nerve classifyingSpaceUniversalCover.extraDegeneracyAugmentedCechNerve
@@ -325,7 +323,7 @@ def extraDegeneracyAugmentedCechNerve : ExtraDegeneracy (arrow.mk $ terminal.fro
 from `fin 1 → G` to the terminal object in `Type u`, has an extra degeneracy. -/
 def extraDegeneracyCompForgetAugmented : ExtraDegeneracy (compForgetAugmented G) := by
   refine'
-    extra_degeneracy.of_iso (_ : (arrow.mk $ terminal.from G).augmentedCechNerve ≅ _)
+    extra_degeneracy.of_iso (_ : (arrow.mk <| terminal.from G).augmentedCechNerve ≅ _)
       (extra_degeneracy_augmented_cech_nerve G)
   exact
     comma.iso_mk (cech_nerve_terminal_from.iso G ≪≫ cech_nerve_terminal_from_iso_comp_forget G) (iso.refl _)
@@ -421,10 +419,10 @@ def compForgetAugmentedIso :
 homotopy equivalent to the complex which is `k` at 0 and 0 elsewhere. -/
 def forget₂ToModuleHomotopyEquiv :
     HomotopyEquiv (GroupCohomology.resolution.forget₂ToModule k G)
-      ((ChainComplex.single₀ (ModuleCat k)).obj ((forget₂ (RepCat k G) _).obj $ RepCat.of Representation.trivial)) :=
-  (HomotopyEquiv.ofIso (compForgetAugmentedIso k G).symm).trans $
+      ((ChainComplex.single₀ (ModuleCat k)).obj ((forget₂ (RepCat k G) _).obj <| RepCat.of Representation.trivial)) :=
+  (HomotopyEquiv.ofIso (compForgetAugmentedIso k G).symm).trans <|
     (SimplicialObject.Augmented.ExtraDegeneracy.homotopyEquiv (extraDegeneracyCompForgetAugmentedToModule k G)).trans
-      (HomotopyEquiv.ofIso $
+      (HomotopyEquiv.ofIso <|
         (ChainComplex.single₀ (ModuleCat.{u} k)).mapIso
           (@Finsupp.LinearEquiv.finsuppUnique k k _ _ _ (⊤_ Type u) Types.terminalIso.toEquiv.unique).toModuleIso)
 #align

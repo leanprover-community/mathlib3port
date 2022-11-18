@@ -193,12 +193,12 @@ theorem comp_assoc (f : C →⋆ₙₐ[R] D) (g : B →⋆ₙₐ[R] C) (h : A �
 
 @[simp]
 theorem id_comp (f : A →⋆ₙₐ[R] B) : (NonUnitalStarAlgHom.id _ _).comp f = f :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 #align non_unital_star_alg_hom.id_comp NonUnitalStarAlgHom.id_comp
 
 @[simp]
 theorem comp_id (f : A →⋆ₙₐ[R] B) : f.comp (NonUnitalStarAlgHom.id _ _) = f :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 #align non_unital_star_alg_hom.comp_id NonUnitalStarAlgHom.comp_id
 
 instance : Monoid (A →⋆ₙₐ[R] A) where
@@ -235,8 +235,8 @@ instance : Inhabited (A →⋆ₙₐ[R] B) :=
   ⟨0⟩
 
 instance : MonoidWithZero (A →⋆ₙₐ[R] A) :=
-  { NonUnitalStarAlgHom.monoid, NonUnitalStarAlgHom.hasZero with zero_mul := fun f => ext $ fun x => rfl,
-    mul_zero := fun f => ext $ fun x => map_zero f }
+  { NonUnitalStarAlgHom.monoid, NonUnitalStarAlgHom.hasZero with zero_mul := fun f => ext fun x => rfl,
+    mul_zero := fun f => ext fun x => map_zero f }
 
 @[simp]
 theorem coe_zero : ((0 : A →⋆ₙₐ[R] B) : A → B) = 0 :=
@@ -405,12 +405,12 @@ theorem comp_assoc (f : C →⋆ₐ[R] D) (g : B →⋆ₐ[R] C) (h : A →⋆�
 
 @[simp]
 theorem id_comp (f : A →⋆ₐ[R] B) : (StarAlgHom.id _ _).comp f = f :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 #align star_alg_hom.id_comp StarAlgHom.id_comp
 
 @[simp]
 theorem comp_id (f : A →⋆ₐ[R] B) : f.comp (StarAlgHom.id _ _) = f :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 #align star_alg_hom.comp_id StarAlgHom.comp_id
 
 instance : Monoid (A →⋆ₐ[R] A) where
@@ -743,7 +743,7 @@ theorem symm_bijective : Function.Bijective (symm : (A ≃⋆ₐ[R] B) → B ≃
 
 @[simp]
 theorem mk_coe' (e : A ≃⋆ₐ[R] B) (f h₁ h₂ h₃ h₄ h₅ h₆) : (⟨f, e, h₁, h₂, h₃, h₄, h₅, h₆⟩ : B ≃⋆ₐ[R] A) = e.symm :=
-  symm_bijective.Injective $ ext $ fun x => rfl
+  symm_bijective.Injective <| ext fun x => rfl
 #align star_alg_equiv.mk_coe' StarAlgEquiv.mk_coe'
 
 @[simp]

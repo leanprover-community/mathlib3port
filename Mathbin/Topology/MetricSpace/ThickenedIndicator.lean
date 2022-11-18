@@ -5,6 +5,7 @@ Authors: Kalle Kytölä
 -/
 import Mathbin.Data.Real.Ennreal
 import Mathbin.Topology.ContinuousFunction.Bounded
+import Mathbin.Topology.MetricSpace.HausdorffDistance
 
 /-!
 # Thickened indicators
@@ -127,7 +128,7 @@ theorem thickened_indicator_aux_tendsto_indicator_closure {δseq : ℕ → ℝ} 
     Tendsto (fun n => thickenedIndicatorAux (δseq n) E) atTop (𝓝 (indicator (closure E) fun x => (1 : ℝ≥0∞))) := by
   rw [tendsto_pi_nhds]
   intro x
-  by_cases x_mem_closure:x ∈ closure E
+  by_cases x_mem_closure : x ∈ closure E
   · simp_rw [thickened_indicator_aux_one_of_mem_closure _ E x_mem_closure]
     rw [show (indicator (closure E) fun _ => (1 : ℝ≥0∞)) x = 1 by simp only [x_mem_closure, indicator_of_mem]]
     exact tendsto_const_nhds
@@ -136,7 +137,7 @@ theorem thickened_indicator_aux_tendsto_indicator_closure {δseq : ℕ → ℝ} 
         simp only [x_mem_closure, indicator_of_not_mem, not_false_iff]]
     rw [mem_closure_iff_inf_edist_zero] at x_mem_closure
     obtain ⟨ε, ⟨ε_pos, ε_le⟩⟩ : ∃ ε : ℝ, 0 < ε ∧ Ennreal.ofReal ε ≤ inf_edist x E := by
-      by_cases dist_infty:inf_edist x E = ∞
+      by_cases dist_infty : inf_edist x E = ∞
       · rw [dist_infty]
         use 1, zero_lt_one, le_top
         
@@ -248,7 +249,7 @@ theorem thickened_indicator_tendsto_indicator_closure {δseq : ℕ → ℝ} (δs
   rw [show indicator (closure E) (fun x => (1 : ℝ≥0)) x = (indicator (closure E) (fun x => (1 : ℝ≥0∞)) x).toNnreal by
       refine' (congr_fun (comp_indicator_const 1 Ennreal.toNnreal zero_to_nnreal) x).symm]
   refine' tendsto.comp (tendsto_to_nnreal _) (key x)
-  by_cases x_mem:x ∈ closure E <;> simp [x_mem]
+  by_cases x_mem : x ∈ closure E <;> simp [x_mem]
 #align thickened_indicator_tendsto_indicator_closure thickened_indicator_tendsto_indicator_closure
 
 end thickenedIndicator

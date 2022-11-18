@@ -97,7 +97,7 @@ a `P : local_predicate T` consists of:
 structure LocalPredicate extends PrelocalPredicate T where
   locality :
     ∀ {U : Opens X} (f : ∀ x : U, T x)
-      (w : ∀ x : U, ∃ (V : Opens X) (m : x.1 ∈ V) (i : V ⟶ U), pred fun x : V => f (i x : U)), pred f
+      (w : ∀ x : U, ∃ (V : Opens X)(m : x.1 ∈ V)(i : V ⟶ U), pred fun x : V => f (i x : U)), pred f
 #align Top.local_predicate TopCat.LocalPredicate
 
 variable (X)
@@ -128,7 +128,7 @@ variable {X T}
 by asking that the condition from `P` holds locally near every point.
 -/
 def PrelocalPredicate.sheafify {T : X → Type v} (P : PrelocalPredicate T) : LocalPredicate T where
-  pred U f := ∀ x : U, ∃ (V : Opens X) (m : x.1 ∈ V) (i : V ⟶ U), P.pred fun x : V => f (i x : U)
+  pred U f := ∀ x : U, ∃ (V : Opens X)(m : x.1 ∈ V)(i : V ⟶ U), P.pred fun x : V => f (i x : U)
   res V U i f w x := by
     specialize w (i x)
     rcases w with ⟨V', m', i', p⟩
@@ -173,7 +173,7 @@ open TopCat.Presheaf
 /-- The functions satisfying a local predicate satisfy the sheaf condition.
 -/
 theorem is_sheaf (P : LocalPredicate T) : (subpresheafToTypes P.toPrelocalPredicate).IsSheaf :=
-  Presheaf.is_sheaf_of_is_sheaf_unique_gluing_types _ $ fun ι U sf sf_comp => by
+  (Presheaf.is_sheaf_of_is_sheaf_unique_gluing_types _) fun ι U sf sf_comp => by
     -- We show the sheaf condition in terms of unique gluing.
     -- First we obtain a family of sections for the underlying sheaf of functions,
     -- by forgetting that the prediacte holds
@@ -240,7 +240,7 @@ theorem stalk_to_fiber_germ (P : LocalPredicate T) (U : Opens X) (x : U) (f) :
 every point in the fiber `T x` has an allowed section passing through it.
 -/
 theorem stalk_to_fiber_surjective (P : LocalPredicate T) (x : X)
-    (w : ∀ t : T x, ∃ (U : OpenNhds x) (f : ∀ y : U.1, T y) (h : P.pred f), f ⟨x, U.2⟩ = t) :
+    (w : ∀ t : T x, ∃ (U : OpenNhds x)(f : ∀ y : U.1, T y)(h : P.pred f), f ⟨x, U.2⟩ = t) :
     Function.Surjective (stalkToFiber P x) := fun t => by
   rcases w t with ⟨U, f, h, rfl⟩
   fconstructor
@@ -257,11 +257,11 @@ theorem stalk_to_fiber_injective (P : LocalPredicate T) (x : X)
     (w :
       ∀ (U V : OpenNhds x) (fU : ∀ y : U.1, T y) (hU : P.pred fU) (fV : ∀ y : V.1, T y) (hV : P.pred fV)
         (e : fU ⟨x, U.2⟩ = fV ⟨x, V.2⟩),
-        ∃ (W : OpenNhds x) (iU : W ⟶ U) (iV : W ⟶ V), ∀ w : W.1, fU (iU w : U.1) = fV (iV w : V.1)) :
+        ∃ (W : OpenNhds x)(iU : W ⟶ U)(iV : W ⟶ V), ∀ w : W.1, fU (iU w : U.1) = fV (iV w : V.1)) :
     Function.Injective (stalkToFiber P x) := fun tU tV h => by
   -- We promise to provide all the ingredients of the proof later:
   let Q :
-    ∃ (W : (open_nhds x)ᵒᵖ) (s : ∀ w : (unop W).1, T w) (hW : P.pred s),
+    ∃ (W : (open_nhds x)ᵒᵖ)(s : ∀ w : (unop W).1, T w)(hW : P.pred s),
       tU = (subsheaf_to_Types P).Presheaf.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ ∧
         tV = (subsheaf_to_Types P).Presheaf.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ :=
     _

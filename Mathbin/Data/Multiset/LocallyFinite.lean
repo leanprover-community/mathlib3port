@@ -64,7 +64,7 @@ alias Ioc_eq_zero_iff ↔ _ Ioc_eq_zero
 
 @[simp]
 theorem Ioo_eq_zero (h : ¬a < b) : ioo a b = 0 :=
-  eq_zero_iff_forall_not_mem.2 $ fun x hx => h ((mem_Ioo.1 hx).1.trans (mem_Ioo.1 hx).2)
+  eq_zero_iff_forall_not_mem.2 fun x hx => h ((mem_Ioo.1 hx).1.trans (mem_Ioo.1 hx).2)
 #align multiset.Ioo_eq_zero Multiset.Ioo_eq_zero
 
 @[simp]
@@ -196,7 +196,7 @@ theorem Ico_disjoint_Ico {a b c d : α} (h : b ≤ c) : (ico a b).Disjoint (ico 
 
 @[simp]
 theorem Ico_inter_Ico_of_le [DecidableEq α] {a b c d : α} (h : b ≤ c) : ico a b ∩ ico c d = 0 :=
-  Multiset.inter_eq_zero_iff_disjoint.2 $ Ico_disjoint_Ico h
+  Multiset.inter_eq_zero_iff_disjoint.2 <| Ico_disjoint_Ico h
 #align multiset.Ico_inter_Ico_of_le Multiset.Ico_inter_Ico_of_le
 
 theorem Ico_filter_le_left {a b : α} [DecidablePred (· ≤ a)] (hab : a < b) : ((ico a b).filter fun x => x ≤ a) = {a} :=
@@ -268,22 +268,22 @@ variable [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [LocallyFiniteOrd
 
 theorem map_add_left_Icc (a b c : α) : (icc a b).map ((· + ·) c) = icc (c + a) (c + b) := by
   classical rw [Icc, Icc, ← Finset.image_add_left_Icc, Finset.image_val,
-      ((Finset.nodup _).map $ add_right_injective c).dedup]
+      ((Finset.nodup _).map <| add_right_injective c).dedup]
 #align multiset.map_add_left_Icc Multiset.map_add_left_Icc
 
 theorem map_add_left_Ico (a b c : α) : (ico a b).map ((· + ·) c) = ico (c + a) (c + b) := by
   classical rw [Ico, Ico, ← Finset.image_add_left_Ico, Finset.image_val,
-      ((Finset.nodup _).map $ add_right_injective c).dedup]
+      ((Finset.nodup _).map <| add_right_injective c).dedup]
 #align multiset.map_add_left_Ico Multiset.map_add_left_Ico
 
 theorem map_add_left_Ioc (a b c : α) : (ioc a b).map ((· + ·) c) = ioc (c + a) (c + b) := by
   classical rw [Ioc, Ioc, ← Finset.image_add_left_Ioc, Finset.image_val,
-      ((Finset.nodup _).map $ add_right_injective c).dedup]
+      ((Finset.nodup _).map <| add_right_injective c).dedup]
 #align multiset.map_add_left_Ioc Multiset.map_add_left_Ioc
 
 theorem map_add_left_Ioo (a b c : α) : (ioo a b).map ((· + ·) c) = ioo (c + a) (c + b) := by
   classical rw [Ioo, Ioo, ← Finset.image_add_left_Ioo, Finset.image_val,
-      ((Finset.nodup _).map $ add_right_injective c).dedup]
+      ((Finset.nodup _).map <| add_right_injective c).dedup]
 #align multiset.map_add_left_Ioo Multiset.map_add_left_Ioo
 
 theorem map_add_right_Icc (a b c : α) : ((icc a b).map fun x => x + c) = icc (a + c) (b + c) := by

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import Mathbin.Algebra.Category.RingCat.Constructions
+import Mathbin.Algebra.Category.RingCat.Colimits
 import Mathbin.CategoryTheory.Isomorphism
 import Mathbin.RingTheory.Localization.Away
 

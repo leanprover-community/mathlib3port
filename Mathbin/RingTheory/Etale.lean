@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import Mathbin.RingTheory.Nilpotent
-import Mathbin.LinearAlgebra.Isomorphisms
 import Mathbin.RingTheory.Derivation
 
 /-!
@@ -271,15 +270,15 @@ theorem FormallySmooth.comp [FormallySmooth R A] [FormallySmooth A B] : Formally
   letI := f'.to_ring_hom.to_algebra
   obtain ⟨f'', e'⟩ := formally_smooth.comp_surjective I hI { f.to_ring_hom with commutes' := AlgHom.congr_fun e.symm }
   apply_fun AlgHom.restrictScalars R  at e'
-  exact ⟨f''.restrict_scalars _, e'.trans (AlgHom.ext $ fun _ => rfl)⟩
+  exact ⟨f''.restrict_scalars _, e'.trans (AlgHom.ext fun _ => rfl)⟩
 #align algebra.formally_smooth.comp Algebra.FormallySmooth.comp
 
 theorem FormallyUnramified.comp [FormallyUnramified R A] [FormallyUnramified A B] : FormallyUnramified R B := by
   constructor
   intro C _ _ I hI f₁ f₂ e
   have e' :=
-    formally_unramified.lift_unique I ⟨2, hI⟩ (f₁.comp $ IsScalarTower.toAlgHom R A B)
-      (f₂.comp $ IsScalarTower.toAlgHom R A B) (by rw [← AlgHom.comp_assoc, e, AlgHom.comp_assoc])
+    formally_unramified.lift_unique I ⟨2, hI⟩ (f₁.comp <| IsScalarTower.toAlgHom R A B)
+      (f₂.comp <| IsScalarTower.toAlgHom R A B) (by rw [← AlgHom.comp_assoc, e, AlgHom.comp_assoc])
   letI := (f₁.comp (IsScalarTower.toAlgHom R A B)).toRingHom.toAlgebra
   let F₁ : B →ₐ[A] C := { f₁ with commutes' := fun r => rfl }
   let F₂ : B →ₐ[A] C := { f₂ with commutes' := AlgHom.congr_fun e'.symm }

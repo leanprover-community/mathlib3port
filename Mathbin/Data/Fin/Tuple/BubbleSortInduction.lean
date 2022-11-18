@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
 import Mathbin.Data.Fin.Tuple.Sort
+import Mathbin.Data.Fintype.Perm
 import Mathbin.Order.WellFounded
 
 /-!

@@ -5,7 +5,6 @@ Authors: Antoine Labelle
 -/
 import Mathbin.CategoryTheory.Monoidal.Braided
 import Mathbin.CategoryTheory.Monoidal.Linear
-import Mathbin.CategoryTheory.ConcreteCategory.Basic
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 import Mathbin.CategoryTheory.Linear.LinearFunctor
 import Mathbin.CategoryTheory.Closed.Monoidal

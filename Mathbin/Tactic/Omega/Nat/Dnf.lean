@@ -77,33 +77,26 @@ def Term.vars (t : Term) : List Bool :=
   Term.varsCore t.snd
 #align omega.nat.term.vars Omega.Nat.Term.vars
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 def Bools.or : List Bool → List Bool → List Bool
   | [], bs2 => bs2
   | bs1, [] => bs1
-  | b1::bs1, b2::bs2 => (b1 || b2)::bools.or bs1 bs2
+  | b1 :: bs1, b2 :: bs2 => (b1 || b2) :: bools.or bs1 bs2
 #align omega.nat.bools.or Omega.Nat.Bools.or
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Return a list of bools that encodes which variables have nonzero coefficients in any one of the
 input terms. -/
 def Terms.vars : List Term → List Bool
   | [] => []
-  | t::ts => Bools.or (Term.vars t) (terms.vars ts)
+  | t :: ts => Bools.or (Term.vars t) (terms.vars ts)
 #align omega.nat.terms.vars Omega.Nat.Terms.vars
 
 open List.Func
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- get notation for list.func.set
 def nonnegConstsCore : Nat → List Bool → List Term
   | _, [] => []
-  | k, ff::bs => nonneg_consts_core (k + 1) bs
-  | k, tt::bs => ⟨0, [] {k ↦ 1}⟩::nonneg_consts_core (k + 1) bs
+  | k, ff :: bs => nonneg_consts_core (k + 1) bs
+  | k, tt :: bs => ⟨0, [] {k ↦ 1}⟩ :: nonneg_consts_core (k + 1) bs
 #align omega.nat.nonneg_consts_core Omega.Nat.nonnegConstsCore
 
 def nonnegConsts (bs : List Bool) : List Term :=
@@ -123,13 +116,11 @@ def dnf (p : Preform) : List Clause :=
   (dnfCore p).map nonnegate
 #align omega.nat.dnf Omega.Nat.dnf
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem holds_nonneg_consts_core {v : Nat → Int} (h1 : ∀ x, 0 ≤ v x) :
     ∀ m bs, ∀ t ∈ nonnegConstsCore m bs, 0 ≤ Term.val v t
   | _, [] => fun _ h2 => by cases h2
-  | k, ff::bs => holds_nonneg_consts_core (k + 1) bs
-  | k, tt::bs => by
+  | k, ff :: bs => holds_nonneg_consts_core (k + 1) bs
+  | k, tt :: bs => by
     simp only [nonneg_consts_core]
     rw [List.forall_mem_cons]
     constructor

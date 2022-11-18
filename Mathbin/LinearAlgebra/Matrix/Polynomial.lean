@@ -5,8 +5,6 @@ Authors: Yakov Pechersky
 -/
 import Mathbin.Algebra.Polynomial.BigOperators
 import Mathbin.Data.Polynomial.Degree.Lemmas
-import Mathbin.Data.Polynomial.Eval
-import Mathbin.Data.Polynomial.Monic
 import Mathbin.LinearAlgebra.Matrix.Determinant
 
 /-!

@@ -133,20 +133,19 @@ scoped notation "π" => Real.pi
 
 @[simp]
 theorem cos_pi_div_two : cos (π / 2) = 0 := by
-  rw [Real.pi, mul_div_cancel_left _ (@two_ne_zero' ℝ _ _)] <;> exact (Classical.choose_spec exists_cos_eq_zero).2
+  rw [Real.pi, mul_div_cancel_left _ (two_ne_zero' ℝ)] <;> exact (Classical.choose_spec exists_cos_eq_zero).2
 #align real.cos_pi_div_two Real.cos_pi_div_two
 
 theorem one_le_pi_div_two : (1 : ℝ) ≤ π / 2 := by
-  rw [Real.pi, mul_div_cancel_left _ (@two_ne_zero' ℝ _ _)] <;> exact (Classical.choose_spec exists_cos_eq_zero).1.1
+  rw [Real.pi, mul_div_cancel_left _ (two_ne_zero' ℝ)] <;> exact (Classical.choose_spec exists_cos_eq_zero).1.1
 #align real.one_le_pi_div_two Real.one_le_pi_div_two
 
 theorem pi_div_two_le_two : π / 2 ≤ 2 := by
-  rw [Real.pi, mul_div_cancel_left _ (@two_ne_zero' ℝ _ _)] <;> exact (Classical.choose_spec exists_cos_eq_zero).1.2
+  rw [Real.pi, mul_div_cancel_left _ (two_ne_zero' ℝ)] <;> exact (Classical.choose_spec exists_cos_eq_zero).1.2
 #align real.pi_div_two_le_two Real.pi_div_two_le_two
 
 theorem two_le_pi : (2 : ℝ) ≤ π :=
-  (div_le_div_right (show (0 : ℝ) < 2 by norm_num)).1
-    (by rw [div_self (@two_ne_zero' ℝ _ _)] <;> exact one_le_pi_div_two)
+  (div_le_div_right (show (0 : ℝ) < 2 by norm_num)).1 (by rw [div_self (two_ne_zero' ℝ)] <;> exact one_le_pi_div_two)
 #align real.two_le_pi Real.two_le_pi
 
 theorem pi_le_four : π ≤ 4 :=
@@ -205,12 +204,12 @@ open Real
 
 @[simp]
 theorem sin_pi : sin π = 0 := by
-  rw [← mul_div_cancel_left π (@two_ne_zero ℝ _ _), two_mul, add_div, sin_add, cos_pi_div_two] <;> simp
+  rw [← mul_div_cancel_left π (two_ne_zero' ℝ), two_mul, add_div, sin_add, cos_pi_div_two] <;> simp
 #align real.sin_pi Real.sin_pi
 
 @[simp]
 theorem cos_pi : cos π = -1 := by
-  rw [← mul_div_cancel_left π (@two_ne_zero ℝ _ _), mul_div_assoc, cos_two_mul, cos_pi_div_two] <;> simp [bit0, pow_add]
+  rw [← mul_div_cancel_left π (two_ne_zero' ℝ), mul_div_assoc, cos_two_mul, cos_pi_div_two] <;> simp [bit0, pow_add]
 #align real.cos_pi Real.cos_pi
 
 @[simp]
@@ -417,18 +416,18 @@ theorem sin_nonneg_of_nonneg_of_le_pi {x : ℝ} (h0x : 0 ≤ x) (hxp : x ≤ π)
 #align real.sin_nonneg_of_nonneg_of_le_pi Real.sin_nonneg_of_nonneg_of_le_pi
 
 theorem sin_neg_of_neg_of_neg_pi_lt {x : ℝ} (hx0 : x < 0) (hpx : -π < x) : sin x < 0 :=
-  neg_pos.1 $ sin_neg x ▸ sin_pos_of_pos_of_lt_pi (neg_pos.2 hx0) (neg_lt.1 hpx)
+  neg_pos.1 <| sin_neg x ▸ sin_pos_of_pos_of_lt_pi (neg_pos.2 hx0) (neg_lt.1 hpx)
 #align real.sin_neg_of_neg_of_neg_pi_lt Real.sin_neg_of_neg_of_neg_pi_lt
 
 theorem sin_nonpos_of_nonnpos_of_neg_pi_le {x : ℝ} (hx0 : x ≤ 0) (hpx : -π ≤ x) : sin x ≤ 0 :=
-  neg_nonneg.1 $ sin_neg x ▸ sin_nonneg_of_nonneg_of_le_pi (neg_nonneg.2 hx0) (neg_le.1 hpx)
+  neg_nonneg.1 <| sin_neg x ▸ sin_nonneg_of_nonneg_of_le_pi (neg_nonneg.2 hx0) (neg_le.1 hpx)
 #align real.sin_nonpos_of_nonnpos_of_neg_pi_le Real.sin_nonpos_of_nonnpos_of_neg_pi_le
 
 @[simp]
 theorem sin_pi_div_two : sin (π / 2) = 1 :=
   have : sin (π / 2) = 1 ∨ sin (π / 2) = -1 := by simpa [sq, mul_self_eq_one_iff] using sin_sq_add_cos_sq (π / 2)
   this.resolve_right fun h =>
-    show ¬(0 : ℝ) < -1 by norm_num $ h ▸ sin_pos_of_pos_of_lt_pi pi_div_two_pos (half_lt_self pi_pos)
+    show ¬(0 : ℝ) < -1 by norm_num <| h ▸ sin_pos_of_pos_of_lt_pi pi_div_two_pos (half_lt_self pi_pos)
 #align real.sin_pi_div_two Real.sin_pi_div_two
 
 theorem sin_add_pi_div_two (x : ℝ) : sin (x + π / 2) = cos x := by simp [sin_add]
@@ -462,11 +461,11 @@ theorem cos_nonneg_of_neg_pi_div_two_le_of_le {x : ℝ} (hl : -(π / 2) ≤ x) (
 #align real.cos_nonneg_of_neg_pi_div_two_le_of_le Real.cos_nonneg_of_neg_pi_div_two_le_of_le
 
 theorem cos_neg_of_pi_div_two_lt_of_lt {x : ℝ} (hx₁ : π / 2 < x) (hx₂ : x < π + π / 2) : cos x < 0 :=
-  neg_pos.1 $ cos_pi_sub x ▸ cos_pos_of_mem_Ioo ⟨by linarith, by linarith⟩
+  neg_pos.1 <| cos_pi_sub x ▸ cos_pos_of_mem_Ioo ⟨by linarith, by linarith⟩
 #align real.cos_neg_of_pi_div_two_lt_of_lt Real.cos_neg_of_pi_div_two_lt_of_lt
 
 theorem cos_nonpos_of_pi_div_two_le_of_le {x : ℝ} (hx₁ : π / 2 ≤ x) (hx₂ : x ≤ π + π / 2) : cos x ≤ 0 :=
-  neg_nonneg.1 $ cos_pi_sub x ▸ cos_nonneg_of_mem_Icc ⟨by linarith, by linarith⟩
+  neg_nonneg.1 <| cos_pi_sub x ▸ cos_nonneg_of_mem_Icc ⟨by linarith, by linarith⟩
 #align real.cos_nonpos_of_pi_div_two_le_of_le Real.cos_nonpos_of_pi_div_two_le_of_le
 
 theorem sin_eq_sqrt_one_sub_cos_sq {x : ℝ} (hl : 0 ≤ x) (hu : x ≤ π) : sin x = sqrt (1 - cos x ^ 2) := by
@@ -481,13 +480,13 @@ theorem sin_eq_zero_iff_of_lt_of_lt {x : ℝ} (hx₁ : -π < x) (hx₂ : x < π)
   ⟨fun h =>
     le_antisymm
       (le_of_not_gt fun h0 =>
-        lt_irrefl (0 : ℝ) $
+        lt_irrefl (0 : ℝ) <|
           calc
             0 < sin x := sin_pos_of_pos_of_lt_pi h0 hx₂
             _ = 0 := h
             )
       (le_of_not_gt fun h0 =>
-        lt_irrefl (0 : ℝ) $
+        lt_irrefl (0 : ℝ) <|
           calc
             0 = sin x := h.symm
             _ < 0 := sin_neg_of_neg_of_neg_pi_lt h0 hx₁
@@ -499,8 +498,8 @@ theorem sin_eq_zero_iff {x : ℝ} : sin x = 0 ↔ ∃ n : ℤ, (n : ℝ) * π = 
   ⟨fun h =>
     ⟨⌊x / π⌋,
       le_antisymm (sub_nonneg.1 (Int.sub_floor_div_mul_nonneg _ pi_pos))
-        (sub_nonpos.1 $
-          le_of_not_gt $ fun h₃ =>
+        (sub_nonpos.1 <|
+          le_of_not_gt fun h₃ =>
             (sin_pos_of_pos_of_lt_pi h₃ (Int.sub_floor_div_mul_lt _ pi_pos)).Ne
               (by simp [sub_eq_add_neg, sin_add, h, sin_int_mul_pi]))⟩,
     fun ⟨n, hn⟩ => hn ▸ sin_int_mul_pi _⟩
@@ -932,7 +931,7 @@ end CosDivSq
 
 /-- `real.sin` as an `order_iso` between `[-(π / 2), π / 2]` and `[-1, 1]`. -/
 def sinOrderIso : icc (-(π / 2)) (π / 2) ≃o icc (-1 : ℝ) 1 :=
-  (strict_mono_on_sin.OrderIso _ _).trans $ OrderIso.setCongr _ _ bij_on_sin.image_eq
+  (strict_mono_on_sin.OrderIso _ _).trans <| OrderIso.setCongr _ _ bij_on_sin.image_eq
 #align real.sin_order_iso Real.sinOrderIso
 
 @[simp]
@@ -988,7 +987,7 @@ theorem tan_lt_tan_of_lt_of_lt_pi_div_two {x y : ℝ} (hx₁ : -(π / 2) < x) (h
     tan x < tan y :=
   match le_total x 0, le_total y 0 with
   | Or.inl hx0, Or.inl hy0 =>
-    neg_lt_neg_iff.1 $ by
+    neg_lt_neg_iff.1 <| by
       rw [← tan_neg, ← tan_neg] <;>
         exact tan_lt_tan_of_nonneg_of_lt_pi_div_two (neg_nonneg.2 hy0) (neg_lt.2 hx₁) (neg_lt_neg hxy)
   | Or.inl hx0, Or.inr hy0 =>
@@ -1413,16 +1412,16 @@ belongs to a horizontal strip `|complex.im z| ≤ b`, `b ≤ π / 2`, and `a ≤
 $$\left|exp^{a\left(e^{z}+e^{-z}\right)}\right| \le e^{a\cos b \exp^{|re z|}}.$$
 -/
 theorem abs_exp_mul_exp_add_exp_neg_le_of_abs_im_le {a b : ℝ} (ha : a ≤ 0) {z : ℂ} (hz : |z.im| ≤ b) (hb : b ≤ π / 2) :
-    abs (exp (a * (exp z + exp (-z)))) ≤ Real.exp (a * Real.cos b * Real.exp |z.re|) := by
+    abs (exp (a * (exp z + exp (-z)))) ≤ Real.exp (a * Real.cos b * Real.exp (|z.re|)) := by
   simp only [abs_exp, Real.exp_le_exp, of_real_mul_re, add_re, exp_re, neg_im, Real.cos_neg, ← add_mul, mul_assoc,
     mul_comm (Real.cos b), neg_re, ← Real.cos_abs z.im]
-  have : Real.exp |z.re| ≤ Real.exp z.re + Real.exp (-z.re) :=
+  have : Real.exp (|z.re|) ≤ Real.exp z.re + Real.exp (-z.re) :=
     apply_abs_le_add_of_nonneg (fun x => (Real.exp_pos x).le) z.re
   refine' mul_le_mul_of_nonpos_left (mul_le_mul this _ _ ((Real.exp_pos _).le.trans this)) ha
-  · exact Real.cos_le_cos_of_nonneg_of_le_pi (_root_.abs_nonneg _) (hb.trans $ half_le_self $ real.pi_pos.le) hz
+  · exact Real.cos_le_cos_of_nonneg_of_le_pi (_root_.abs_nonneg _) (hb.trans <| half_le_self <| real.pi_pos.le) hz
     
   · refine' Real.cos_nonneg_of_mem_Icc ⟨_, hb⟩
-    exact (neg_nonpos.2 $ real.pi_div_two_pos.le).trans ((_root_.abs_nonneg _).trans hz)
+    exact (neg_nonpos.2 <| real.pi_div_two_pos.le).trans ((_root_.abs_nonneg _).trans hz)
     
 #align complex.abs_exp_mul_exp_add_exp_neg_le_of_abs_im_le Complex.abs_exp_mul_exp_add_exp_neg_le_of_abs_im_le
 

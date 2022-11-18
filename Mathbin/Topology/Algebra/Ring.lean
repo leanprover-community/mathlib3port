@@ -172,13 +172,13 @@ open MulOpposite
 instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [HasContinuousAdd α] :
     HasContinuousAdd
       αᵐᵒᵖ where continuous_add :=
-    continuous_induced_rng.2 $ (@continuous_add α _ _ _).comp (continuous_unop.prod_map continuous_unop)
+    continuous_induced_rng.2 <| (@continuous_add α _ _ _).comp (continuous_unop.prod_map continuous_unop)
 
 instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [TopologicalSemiring α] : TopologicalSemiring αᵐᵒᵖ where
 
 instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [HasContinuousNeg α] :
     HasContinuousNeg
-      αᵐᵒᵖ where continuous_neg := continuous_induced_rng.2 $ (@continuous_neg α _ _ _).comp continuous_unop
+      αᵐᵒᵖ where continuous_neg := continuous_induced_rng.2 <| (@continuous_neg α _ _ _).comp continuous_unop
 
 instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [TopologicalRing α] : TopologicalRing αᵐᵒᵖ where
 
@@ -191,7 +191,7 @@ open AddOpposite
 instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [HasContinuousMul α] :
     HasContinuousMul
       αᵃᵒᵖ where continuous_mul := by
-    convert continuous_op.comp $ (@continuous_mul α _ _ _).comp $ continuous_unop.prod_map continuous_unop
+    convert continuous_op.comp <| (@continuous_mul α _ _ _).comp <| continuous_unop.prod_map continuous_unop
 
 instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [TopologicalSemiring α] : TopologicalSemiring αᵃᵒᵖ where
 
@@ -204,9 +204,9 @@ section
 variable {R : Type _} [NonUnitalNonAssocRing R] [TopologicalSpace R]
 
 theorem TopologicalRing.ofAddGroupOfNhdsZero [TopologicalAddGroup R]
-    (hmul : Tendsto (uncurry ((· * ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) $ 𝓝 0)
-    (hmul_left : ∀ x₀ : R, Tendsto (fun x : R => x₀ * x) (𝓝 0) $ 𝓝 0)
-    (hmul_right : ∀ x₀ : R, Tendsto (fun x : R => x * x₀) (𝓝 0) $ 𝓝 0) : TopologicalRing R := by
+    (hmul : Tendsto (uncurry ((· * ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
+    (hmul_left : ∀ x₀ : R, Tendsto (fun x : R => x₀ * x) (𝓝 0) <| 𝓝 0)
+    (hmul_right : ∀ x₀ : R, Tendsto (fun x : R => x * x₀) (𝓝 0) <| 𝓝 0) : TopologicalRing R := by
   refine' { ‹TopologicalAddGroup R› with .. }
   have hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀ + x) (𝓝 0) := by simp
   have hadd : tendsto (uncurry ((· + ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) (𝓝 0) := by
@@ -219,7 +219,7 @@ theorem TopologicalRing.ofAddGroupOfNhdsZero [TopologicalAddGroup R]
   suffices
     tendsto
       ((fun x : R => x + x₀ * y₀) ∘ (fun p : R × R => p.1 + p.2) ∘ fun p : R × R => (p.1 * y₀ + x₀ * p.2, p.1 * p.2))
-      (𝓝 0 ×ᶠ 𝓝 0) ((map fun x : R => x + x₀ * y₀) $ 𝓝 0)
+      (𝓝 0 ×ᶠ 𝓝 0) ((map fun x : R => x + x₀ * y₀) <| 𝓝 0)
     by
     convert this using 1
     · ext
@@ -232,11 +232,11 @@ theorem TopologicalRing.ofAddGroupOfNhdsZero [TopologicalAddGroup R]
   exact hadd.comp (((hmul_right y₀).comp tendsto_fst).prod_mk ((hmul_left x₀).comp tendsto_snd))
 #align topological_ring.of_add_group_of_nhds_zero TopologicalRing.ofAddGroupOfNhdsZero
 
-theorem TopologicalRing.ofNhdsZero (hadd : Tendsto (uncurry ((· + ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) $ 𝓝 0)
+theorem TopologicalRing.ofNhdsZero (hadd : Tendsto (uncurry ((· + ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
     (hneg : Tendsto (fun x => -x : R → R) (𝓝 0) (𝓝 0))
-    (hmul : Tendsto (uncurry ((· * ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) $ 𝓝 0)
-    (hmul_left : ∀ x₀ : R, Tendsto (fun x : R => x₀ * x) (𝓝 0) $ 𝓝 0)
-    (hmul_right : ∀ x₀ : R, Tendsto (fun x : R => x * x₀) (𝓝 0) $ 𝓝 0)
+    (hmul : Tendsto (uncurry ((· * ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
+    (hmul_left : ∀ x₀ : R, Tendsto (fun x : R => x₀ * x) (𝓝 0) <| 𝓝 0)
+    (hmul_right : ∀ x₀ : R, Tendsto (fun x : R => x * x₀) (𝓝 0) <| 𝓝 0)
     (hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀ + x) (𝓝 0)) : TopologicalRing R :=
   haveI := TopologicalAddGroup.of_comm_of_nhds_zero hadd hneg hleft
   TopologicalRing.ofAddGroupOfNhdsZero hmul hmul_left hmul_right
@@ -305,7 +305,7 @@ variable {α : Type _} [TopologicalSpace α] [Ring α] [TopologicalRing α]
 /-- The closure of an ideal in a topological ring as an ideal. -/
 def Ideal.closure (S : Ideal α) : Ideal α :=
   { AddSubmonoid.topologicalClosure S.toAddSubmonoid with carrier := closure S,
-    smul_mem' := fun c x hx => map_mem_closure (mul_left_continuous _) hx $ fun a => S.mul_mem_left c }
+    smul_mem' := fun c x hx => (map_mem_closure (mul_left_continuous _) hx) fun a => S.mul_mem_left c }
 #align ideal.closure Ideal.closure
 
 @[simp]
@@ -315,7 +315,7 @@ theorem Ideal.coe_closure (S : Ideal α) : (S.closure : Set α) = closure S :=
 
 @[simp]
 theorem Ideal.closure_eq_of_is_closed (S : Ideal α) [hS : IsClosed (S : Set α)] : S.closure = S :=
-  Ideal.ext $ Set.ext_iff.mp hS.closure_eq
+  Ideal.ext <| Set.ext_iff.mp hS.closure_eq
 #align ideal.closure_eq_of_is_closed Ideal.closure_eq_of_is_closed
 
 end TopologicalRing
@@ -395,7 +395,7 @@ theorem ext' {f g : RingTopology α} (h : f.IsOpen = g.IsOpen) : f = g := by
 /-- The ordering on ring topologies on the ring `α`.
   `t ≤ s` if every set open in `s` is also open in `t` (`t` is finer than `s`). -/
 instance : PartialOrder (RingTopology α) :=
-  PartialOrder.lift RingTopology.toTopologicalSpace $ ext
+  PartialOrder.lift RingTopology.toTopologicalSpace <| ext
 
 -- mathport name: exprcont
 local notation "cont" => @Continuous _ _

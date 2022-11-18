@@ -3,7 +3,7 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Data.Fintype.Basic
+import Mathbin.Data.Fintype.Card
 import Mathbin.CategoryTheory.DiscreteCategory
 import Mathbin.CategoryTheory.Opposites
 import Mathbin.CategoryTheory.Category.Ulift
@@ -94,10 +94,10 @@ noncomputable def objAsTypeToAsType : ObjAsType α ⥤ AsType α where
 /-- The constructed category (`as_type α`) is equivalent to `obj_as_type α`. -/
 noncomputable def asTypeEquivObjAsType : AsType α ≌ ObjAsType α :=
   Equivalence.mk (asTypeToObjAsType α) (objAsTypeToAsType α)
-    (NatIso.ofComponents Iso.refl $ fun _ _ _ => by
+    ((NatIso.ofComponents Iso.refl) fun _ _ _ => by
       dsimp
       simp)
-    (NatIso.ofComponents Iso.refl $ fun _ _ _ => by
+    ((NatIso.ofComponents Iso.refl) fun _ _ _ => by
       dsimp
       simp)
 #align category_theory.fin_category.as_type_equiv_obj_as_type CategoryTheory.FinCategory.asTypeEquivObjAsType

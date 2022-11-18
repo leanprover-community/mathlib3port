@@ -3,8 +3,9 @@ Copyright (c) 2021 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 -/
-import Mathbin.Analysis.NormedSpace.AddTorsor
 import Mathbin.Analysis.NormedSpace.LinearIsometry
+import Mathbin.Analysis.Normed.Group.AddTorsor
+import Mathbin.Analysis.NormedSpace.Basic
 
 /-!
 # Affine isometries
@@ -16,7 +17,7 @@ isometric equivalence between `P` and `P₂`.
 We also prove basic lemmas and provide convenience constructors.  The choice of these lemmas and
 constructors is closely modelled on those for the `linear_isometry` and `affine_map` theories.
 
-Since many elementary properties don't require `∥x∥ = 0 → x = 0` we initially set up the theory for
+Since many elementary properties don't require `‖x‖ = 0 → x = 0` we initially set up the theory for
 `seminormed_add_comm_group` and specialize to `normed_add_comm_group` only when needed.
 
 ## Notation
@@ -44,7 +45,7 @@ include V V₂
 /-- An `𝕜`-affine isometric embedding of one normed add-torsor over a normed `𝕜`-space into
 another. -/
 structure AffineIsometry extends P →ᵃ[𝕜] P₂ where
-  norm_map : ∀ x : V, ∥linear x∥ = ∥x∥
+  norm_map : ∀ x : V, ‖linear x‖ = ‖x‖
 #align affine_isometry AffineIsometry
 
 omit V V₂
@@ -94,7 +95,7 @@ theorem coe_fn_injective : @Injective (P →ᵃⁱ[𝕜] P₂) (P → P₂) coeF
 
 @[ext.1]
 theorem ext {f g : P →ᵃⁱ[𝕜] P₂} (h : ∀ x, f x = g x) : f = g :=
-  coe_fn_injective $ funext h
+  coe_fn_injective <| funext h
 #align affine_isometry.ext AffineIsometry.ext
 
 omit V V₂
@@ -248,12 +249,12 @@ omit V V₂ V₃
 
 @[simp]
 theorem id_comp : (id : P₂ →ᵃⁱ[𝕜] P₂).comp f = f :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 #align affine_isometry.id_comp AffineIsometry.id_comp
 
 @[simp]
 theorem comp_id : f.comp id = f :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 #align affine_isometry.comp_id AffineIsometry.comp_id
 
 include V V₂ V₃ V₄
@@ -320,7 +321,7 @@ include V V₂
 
 /-- A affine isometric equivalence between two normed vector spaces. -/
 structure AffineIsometryEquiv extends P ≃ᵃ[𝕜] P₂ where
-  norm_map : ∀ x, ∥linear x∥ = ∥x∥
+  norm_map : ∀ x, ‖linear x‖ = ‖x‖
 #align affine_isometry_equiv AffineIsometryEquiv
 
 variable {𝕜 P P₂}
@@ -352,7 +353,7 @@ instance : CoeFun (P ≃ᵃⁱ[𝕜] P₂) fun _ => P → P₂ :=
   ⟨fun f => f.toFun⟩
 
 @[simp]
-theorem coe_mk (e : P ≃ᵃ[𝕜] P₂) (he : ∀ x, ∥e.linear x∥ = ∥x∥) : ⇑(mk e he) = e :=
+theorem coe_mk (e : P ≃ᵃ[𝕜] P₂) (he : ∀ x, ‖e.linear x‖ = ‖x‖) : ⇑(mk e he) = e :=
   rfl
 #align affine_isometry_equiv.coe_mk AffineIsometryEquiv.coe_mk
 
@@ -367,7 +368,7 @@ theorem to_affine_equiv_injective : Injective (toAffineEquiv : (P ≃ᵃⁱ[𝕜
 
 @[ext.1]
 theorem ext {e e' : P ≃ᵃⁱ[𝕜] P₂} (h : ∀ x, e x = e' x) : e = e' :=
-  to_affine_equiv_injective $ AffineEquiv.ext h
+  to_affine_equiv_injective <| AffineEquiv.ext h
 #align affine_isometry_equiv.ext AffineIsometryEquiv.ext
 
 omit V V₂
@@ -549,7 +550,7 @@ theorem symm_apply_apply (x : P) : e.symm (e x) = x :=
 
 @[simp]
 theorem symm_symm : e.symm.symm = e :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 #align affine_isometry_equiv.symm_symm AffineIsometryEquiv.symm_symm
 
 @[simp]
@@ -585,12 +586,12 @@ omit V V₂ V₃
 
 @[simp]
 theorem trans_refl : e.trans (refl 𝕜 P₂) = e :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 #align affine_isometry_equiv.trans_refl AffineIsometryEquiv.trans_refl
 
 @[simp]
 theorem refl_trans : (refl 𝕜 P).trans e = e :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 #align affine_isometry_equiv.refl_trans AffineIsometryEquiv.refl_trans
 
 @[simp]
@@ -789,7 +790,7 @@ theorem coe_const_vadd (v : V) : ⇑(constVadd 𝕜 P v : P ≃ᵃⁱ[𝕜] P) =
 
 @[simp]
 theorem const_vadd_zero : constVadd 𝕜 P (0 : V) = refl 𝕜 P :=
-  ext $ zero_vadd V
+  ext <| zero_vadd V
 #align affine_isometry_equiv.const_vadd_zero AffineIsometryEquiv.const_vadd_zero
 
 include 𝕜 V
@@ -834,7 +835,7 @@ theorem point_reflection_involutive (x : P) : Function.Involutive (pointReflecti
 
 @[simp]
 theorem point_reflection_symm (x : P) : (pointReflection 𝕜 x).symm = pointReflection 𝕜 x :=
-  to_affine_equiv_injective $ AffineEquiv.point_reflection_symm 𝕜 x
+  to_affine_equiv_injective <| AffineEquiv.point_reflection_symm 𝕜 x
 #align affine_isometry_equiv.point_reflection_symm AffineIsometryEquiv.point_reflection_symm
 
 @[simp]
@@ -842,11 +843,11 @@ theorem dist_point_reflection_fixed (x y : P) : dist (pointReflection 𝕜 x y) 
   rw [← (point_reflection 𝕜 x).dist_map y x, point_reflection_self]
 #align affine_isometry_equiv.dist_point_reflection_fixed AffineIsometryEquiv.dist_point_reflection_fixed
 
-theorem dist_point_reflection_self' (x y : P) : dist (pointReflection 𝕜 x y) y = ∥bit0 (x -ᵥ y)∥ := by
+theorem dist_point_reflection_self' (x y : P) : dist (pointReflection 𝕜 x y) y = ‖bit0 (x -ᵥ y)‖ := by
   rw [point_reflection_apply, dist_eq_norm_vsub V, vadd_vsub_assoc, bit0]
 #align affine_isometry_equiv.dist_point_reflection_self' AffineIsometryEquiv.dist_point_reflection_self'
 
-theorem dist_point_reflection_self (x y : P) : dist (pointReflection 𝕜 x y) y = ∥(2 : 𝕜)∥ * dist x y := by
+theorem dist_point_reflection_self (x y : P) : dist (pointReflection 𝕜 x y) y = ‖(2 : 𝕜)‖ * dist x y := by
   rw [dist_point_reflection_self', ← two_smul' 𝕜 (x -ᵥ y), norm_smul, ← dist_eq_norm_vsub V]
 #align affine_isometry_equiv.dist_point_reflection_self AffineIsometryEquiv.dist_point_reflection_self
 
@@ -881,7 +882,7 @@ theorem AffineMap.continuous_linear_iff {f : P →ᵃ[𝕜] P₂} : Continuous f
   inhabit P
   have :
     (f.linear : V → V₂) =
-      (AffineIsometryEquiv.vaddConst 𝕜 $ f default).toHomeomorph.symm ∘
+      (AffineIsometryEquiv.vaddConst 𝕜 <| f default).toHomeomorph.symm ∘
         f ∘ (AffineIsometryEquiv.vaddConst 𝕜 default).toHomeomorph :=
     by
     ext v
@@ -895,7 +896,7 @@ theorem AffineMap.is_open_map_linear_iff {f : P →ᵃ[𝕜] P₂} : IsOpenMap f
   inhabit P
   have :
     (f.linear : V → V₂) =
-      (AffineIsometryEquiv.vaddConst 𝕜 $ f default).toHomeomorph.symm ∘
+      (AffineIsometryEquiv.vaddConst 𝕜 <| f default).toHomeomorph.symm ∘
         f ∘ (AffineIsometryEquiv.vaddConst 𝕜 default).toHomeomorph :=
     by
     ext v

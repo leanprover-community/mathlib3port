@@ -3,7 +3,6 @@ Copyright (c) 2022 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Data.Set.Intervals.Monotone
 import Mathbin.MeasureTheory.Measure.Lebesgue
 import Mathbin.Analysis.Calculus.Monotone
 
@@ -222,7 +221,7 @@ one can find another monotone function `v` parameterizing the same points as `u`
 In particular, the variation of a function along `u` is bounded by its variation along `v`. -/
 theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ → α) (hu : Monotone u) (us : ∀ i, u i ∈ s)
     (n : ℕ) :
-    ∃ (v : ℕ → α) (m : ℕ),
+    ∃ (v : ℕ → α)(m : ℕ),
       Monotone v ∧
         (∀ i, v i ∈ s) ∧
           x ∈ v '' iio m ∧
@@ -423,11 +422,11 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
 bounds the sum of the variations along `s` and `t`. -/
 theorem add_le_union (f : α → E) {s t : Set α} (h : ∀ x ∈ s, ∀ y ∈ t, x ≤ y) :
     evariationOn f s + evariationOn f t ≤ evariationOn f (s ∪ t) := by
-  by_cases hs:s = ∅
+  by_cases hs : s = ∅
   · simp [hs]
     
   have : Nonempty { u // Monotone u ∧ ∀ i : ℕ, u i ∈ s } := nonempty_monotone_mem (ne_empty_iff_nonempty.1 hs)
-  by_cases ht:t = ∅
+  by_cases ht : t = ∅
   · simp [ht]
     
   have : Nonempty { u // Monotone u ∧ ∀ i : ℕ, u i ∈ t } := nonempty_monotone_mem (ne_empty_iff_nonempty.1 ht)
@@ -439,7 +438,7 @@ theorem add_le_union (f : α → E) {s t : Set α} (h : ∀ x ∈ s, ∀ y ∈ t
   let w i := if i ≤ n then u i else v (i - (n + 1))
   have wst : ∀ i, w i ∈ s ∪ t := by
     intro i
-    by_cases hi:i ≤ n
+    by_cases hi : i ≤ n
     · simp [w, hi, us]
       
     · simp [w, hi, vt]
@@ -515,7 +514,7 @@ theorem union (f : α → E) {s t : Set α} {x : α} (hs : IsGreatest s x) (ht :
   apply supr_le _
   rintro ⟨n, ⟨u, hu, ust⟩⟩
   obtain ⟨v, m, hv, vst, xv, huv⟩ :
-    ∃ (v : ℕ → α) (m : ℕ),
+    ∃ (v : ℕ → α)(m : ℕ),
       Monotone v ∧
         (∀ i, v i ∈ s ∪ t) ∧
           x ∈ v '' Iio m ∧
@@ -605,12 +604,10 @@ theorem MonotoneOn.hasLocallyBoundedVariationOn {f : α → ℝ} {s : Set α} (h
   ((hf.evariation_on_le as bs).trans_lt Ennreal.of_real_lt_top).Ne
 #align monotone_on.has_locally_bounded_variation_on MonotoneOn.hasLocallyBoundedVariationOn
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (p q) -/
 /-- If a real valued function has bounded variation on a set, then it is a difference of monotone
 functions there. -/
 theorem HasLocallyBoundedVariationOn.exists_monotone_on_sub_monotone_on {f : α → ℝ} {s : Set α}
-    (h : HasLocallyBoundedVariationOn f s) : ∃ (p : α → ℝ) (q : α → ℝ), MonotoneOn p s ∧ MonotoneOn q s ∧ f = p - q :=
-  by
+    (h : HasLocallyBoundedVariationOn f s) : ∃ p q : α → ℝ, MonotoneOn p s ∧ MonotoneOn q s ∧ f = p - q := by
   rcases eq_empty_or_nonempty s with (rfl | hs)
   · exact ⟨f, 0, subsingleton_empty.monotone_on _, subsingleton_empty.monotone_on _, by simp only [tsub_zero]⟩
     
@@ -719,12 +716,11 @@ theorem LipschitzWith.hasLocallyBoundedVariationOn {f : ℝ → E} {C : ℝ≥0}
 
 namespace HasLocallyBoundedVariationOn
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (p q) -/
 /-- A bounded variation function into `ℝ` is differentiable almost everywhere. Superseded by
 `ae_differentiable_within_at_of_mem`. -/
 theorem ae_differentiable_within_at_of_mem_real {f : ℝ → ℝ} {s : Set ℝ} (h : HasLocallyBoundedVariationOn f s) :
     ∀ᵐ x, x ∈ s → DifferentiableWithinAt ℝ f s x := by
-  obtain ⟨p, q, hp, hq, fpq⟩ : ∃ (p) (q), MonotoneOn p s ∧ MonotoneOn q s ∧ f = p - q
+  obtain ⟨p, q, hp, hq, fpq⟩ : ∃ p q, MonotoneOn p s ∧ MonotoneOn q s ∧ f = p - q
   exact h.exists_monotone_on_sub_monotone_on
   filter_upwards [hp.ae_differentiable_within_at_of_mem, hq.ae_differentiable_within_at_of_mem] with x hxp hxq xs
   have fpq : ∀ x, f x = p x - q x := by simp [fpq]

@@ -118,8 +118,8 @@ variable {S : Type _} [HasSmul S R] [HasSmul S M] [IsScalarTower S R M] (P : Sub
 
 instance hasSmul' : HasSmul S (M ⧸ P) :=
   ⟨fun a =>
-    Quotient.map' ((· • ·) a) $ fun x y h =>
-      left_rel_apply.mpr $ by simpa [smul_sub] using P.smul_mem (a • 1 : R) (left_rel_apply.mp h)⟩
+    (Quotient.map' ((· • ·) a)) fun x y h =>
+      left_rel_apply.mpr <| by simpa [smul_sub] using P.smul_mem (a • 1 : R) (left_rel_apply.mp h)⟩
 #align submodule.quotient.has_smul' Submodule.Quotient.hasSmul'
 
 /-- Shortcut to help the elaborator in the common case. -/
@@ -133,16 +133,16 @@ theorem mk_smul (r : S) (x : M) : (mk (r • x) : M ⧸ p) = r • mk x :=
 #align submodule.quotient.mk_smul Submodule.Quotient.mk_smul
 
 instance smul_comm_class (T : Type _) [HasSmul T R] [HasSmul T M] [IsScalarTower T R M] [SmulCommClass S T M] :
-    SmulCommClass S T (M ⧸ P) where smul_comm x y := Quotient.ind' $ fun z => congr_arg mk (smul_comm _ _ _)
+    SmulCommClass S T (M ⧸ P) where smul_comm x y := Quotient.ind' fun z => congr_arg mk (smul_comm _ _ _)
 #align submodule.quotient.smul_comm_class Submodule.Quotient.smul_comm_class
 
 instance is_scalar_tower (T : Type _) [HasSmul T R] [HasSmul T M] [IsScalarTower T R M] [HasSmul S T]
     [IsScalarTower S T M] :
-    IsScalarTower S T (M ⧸ P) where smul_assoc x y := Quotient.ind' $ fun z => congr_arg mk (smul_assoc _ _ _)
+    IsScalarTower S T (M ⧸ P) where smul_assoc x y := Quotient.ind' fun z => congr_arg mk (smul_assoc _ _ _)
 #align submodule.quotient.is_scalar_tower Submodule.Quotient.is_scalar_tower
 
 instance is_central_scalar [HasSmul Sᵐᵒᵖ R] [HasSmul Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] :
-    IsCentralScalar S (M ⧸ P) where op_smul_eq_smul x := Quotient.ind' $ fun z => congr_arg mk $ op_smul_eq_smul _ _
+    IsCentralScalar S (M ⧸ P) where op_smul_eq_smul x := Quotient.ind' fun z => congr_arg mk <| op_smul_eq_smul _ _
 #align submodule.quotient.is_central_scalar Submodule.Quotient.is_central_scalar
 
 end HasSmul
@@ -202,7 +202,7 @@ where `P : submodule R M`.
 -/
 def restrictScalarsEquiv [Ring S] [HasSmul S R] [Module S M] [IsScalarTower S R M] (P : Submodule R M) :
     (M ⧸ P.restrictScalars S) ≃ₗ[S] M ⧸ P :=
-  { Quotient.congrRight $ fun _ _ => Iff.rfl with map_add' := fun x y => Quotient.inductionOn₂' x y fun x' y' => rfl,
+  { Quotient.congrRight fun _ _ => Iff.rfl with map_add' := fun x y => Quotient.inductionOn₂' x y fun x' y' => rfl,
     map_smul' := fun c x => Quotient.inductionOn' x fun x' => rfl }
 #align submodule.quotient.restrict_scalars_equiv Submodule.Quotient.restrictScalarsEquiv
 
@@ -234,12 +234,12 @@ theorem nontrivial_of_lt_top (h : p < ⊤) : Nontrivial (M ⧸ p) := by
 end Quotient
 
 instance QuotientBot.infinite [Infinite M] : Infinite (M ⧸ (⊥ : Submodule R M)) :=
-  Infinite.of_injective Submodule.Quotient.mk $ fun x y h => sub_eq_zero.mp $ (Submodule.Quotient.eq ⊥).mp h
+  (Infinite.of_injective Submodule.Quotient.mk) fun x y h => sub_eq_zero.mp <| (Submodule.Quotient.eq ⊥).mp h
 #align submodule.quotient_bot.infinite Submodule.QuotientBot.infinite
 
 instance QuotientTop.unique : Unique (M ⧸ (⊤ : Submodule R M)) where
   default := 0
-  uniq x := Quotient.inductionOn' x $ fun x => (Submodule.Quotient.eq ⊤).mpr Submodule.mem_top
+  uniq x := (Quotient.inductionOn' x) fun x => (Submodule.Quotient.eq ⊤).mpr Submodule.mem_top
 #align submodule.quotient_top.unique Submodule.QuotientTop.unique
 
 instance QuotientTop.fintype : Fintype (M ⧸ (⊤ : Submodule R M)) :=
@@ -283,7 +283,7 @@ section
 variable {M₂ : Type _} [AddCommGroup M₂] [Module R M₂]
 
 theorem quot_hom_ext ⦃f g : M ⧸ p →ₗ[R] M₂⦄ (h : ∀ x, f (Quotient.mk x) = g (Quotient.mk x)) : f = g :=
-  LinearMap.ext $ fun x => Quotient.inductionOn' x h
+  LinearMap.ext fun x => Quotient.inductionOn' x h
 #align submodule.quot_hom_ext Submodule.quot_hom_ext
 
 /-- The map from a module `M` to the quotient of `M` by a submodule `p` as a linear map. -/
@@ -311,7 +311,7 @@ variable {R₂ M₂ : Type _} [Ring R₂] [AddCommGroup M₂] [Module R₂ M₂]
 See note [partially-applied ext lemmas]. -/
 @[ext.1]
 theorem linear_map_qext ⦃f g : M ⧸ p →ₛₗ[τ₁₂] M₂⦄ (h : f.comp p.mkq = g.comp p.mkq) : f = g :=
-  LinearMap.ext $ fun x => Quotient.inductionOn' x $ (LinearMap.congr_fun h : _)
+  LinearMap.ext fun x => Quotient.inductionOn' x <| (LinearMap.congr_fun h : _)
 #align submodule.linear_map_qext Submodule.linear_map_qext
 
 /-- The map from the quotient of `M` by a submodule `p` to `M₂` induced by a linear map `f : M → M₂`
@@ -333,7 +333,7 @@ theorem liftq_mkq (f : M →ₛₗ[τ₁₂] M₂) (h) : (p.liftq f h).comp p.mk
 /-- Special case of `liftq` when `p` is the span of `x`. In this case, the condition on `f` simply
 becomes vanishing at `x`.-/
 def liftqSpanSingleton (x : M) (f : M →ₛₗ[τ₁₂] M₂) (h : f x = 0) : (M ⧸ R ∙ x) →ₛₗ[τ₁₂] M₂ :=
-  (R ∙ x).liftq f $ by rw [span_singleton_le_iff_mem, LinearMap.mem_ker, h]
+  (R ∙ x).liftq f <| by rw [span_singleton_le_iff_mem, LinearMap.mem_ker, h]
 #align submodule.liftq_span_singleton Submodule.liftqSpanSingleton
 
 @[simp]
@@ -344,7 +344,7 @@ theorem liftq_span_singleton_apply (x : M) (f : M →ₛₗ[τ₁₂] M₂) (h :
 
 @[simp]
 theorem range_mkq : p.mkq.range = ⊤ :=
-  eq_top_iff'.2 $ by rintro ⟨x⟩ <;> exact ⟨x, rfl⟩
+  eq_top_iff'.2 <| by rintro ⟨x⟩ <;> exact ⟨x, rfl⟩
 #align submodule.range_mkq Submodule.range_mkq
 
 @[simp]
@@ -372,7 +372,7 @@ variable (q : Submodule R₂ M₂)
 /-- The map from the quotient of `M` by submodule `p` to the quotient of `M₂` by submodule `q` along
 `f : M → M₂` is linear. -/
 def mapq (f : M →ₛₗ[τ₁₂] M₂) (h : p ≤ comap f q) : M ⧸ p →ₛₗ[τ₁₂] M₂ ⧸ q :=
-  p.liftq (q.mkq.comp f) $ by simpa [ker_comp] using h
+  p.liftq (q.mkq.comp f) <| by simpa [ker_comp] using h
 #align submodule.mapq Submodule.mapq
 
 @[simp]
@@ -448,15 +448,15 @@ quotient of `M` by `p`, and submodules of `M` larger than `p`. -/
 def ComapMkq.relIso : Submodule R (M ⧸ p) ≃o { p' : Submodule R M // p ≤ p' } where
   toFun p' := ⟨comap p.mkq p', le_comap_mkq p _⟩
   invFun q := map p.mkq q
-  left_inv p' := map_comap_eq_self $ by simp
-  right_inv := fun ⟨q, hq⟩ => Subtype.ext_val $ by simpa [comap_map_mkq p]
-  map_rel_iff' p₁ p₂ := comap_le_comap_iff $ range_mkq _
+  left_inv p' := map_comap_eq_self <| by simp
+  right_inv := fun ⟨q, hq⟩ => Subtype.ext_val <| by simpa [comap_map_mkq p]
+  map_rel_iff' p₁ p₂ := comap_le_comap_iff <| range_mkq _
 #align submodule.comap_mkq.rel_iso Submodule.ComapMkq.relIso
 
 /-- The ordering on submodules of the quotient of `M` by `p` embeds into the ordering on submodules
 of `M`. -/
 def ComapMkq.orderEmbedding : Submodule R (M ⧸ p) ↪o Submodule R M :=
-  (RelIso.toRelEmbedding $ ComapMkq.relIso p).trans (Subtype.relEmbedding _ _)
+  (RelIso.toRelEmbedding <| ComapMkq.relIso p).trans (Subtype.relEmbedding _ _)
 #align submodule.comap_mkq.order_embedding Submodule.ComapMkq.orderEmbedding
 
 @[simp]
@@ -535,7 +535,7 @@ variable {τ₁₂ : R →+* R₂} {τ₂₃ : R₂ →+* R₃} {τ₁₃ : R �
 variable [RingHomCompTriple τ₁₂ τ₂₃ τ₁₃] [RingHomSurjective τ₁₂]
 
 theorem range_mkq_comp (f : M →ₛₗ[τ₁₂] M₂) : f.range.mkq.comp f = 0 :=
-  LinearMap.ext $ fun x => by simp
+  LinearMap.ext fun x => by simp
 #align linear_map.range_mkq_comp LinearMap.range_mkq_comp
 
 theorem ker_le_range_iff {f : M →ₛₗ[τ₁₂] M₂} {g : M₂ →ₛₗ[τ₂₃] M₃} :
@@ -565,7 +565,7 @@ variable (p p' : Submodule R M)
 
 /-- If `p = ⊥`, then `M / p ≃ₗ[R] M`. -/
 def quotEquivOfEqBot (hp : p = ⊥) : (M ⧸ p) ≃ₗ[R] M :=
-  LinearEquiv.ofLinear (p.liftq id $ hp.symm ▸ bot_le) p.mkq (liftq_mkq _ _ _) $ p.quot_hom_ext $ fun x => rfl
+  LinearEquiv.ofLinear (p.liftq id <| hp.symm ▸ bot_le) p.mkq (liftq_mkq _ _ _) <| p.quot_hom_ext fun x => rfl
 #align submodule.quot_equiv_of_eq_bot Submodule.quotEquivOfEqBot
 
 @[simp]
@@ -585,7 +585,7 @@ theorem coe_quot_equiv_of_eq_bot_symm (hp : p = ⊥) : ((p.quotEquivOfEqBot hp).
 
 /-- Quotienting by equal submodules gives linearly equivalent quotients. -/
 def quotEquivOfEq (h : p = p') : (M ⧸ p) ≃ₗ[R] M ⧸ p' :=
-  { @Quotient.congr _ _ (quotientRel p) (quotientRel p') (Equiv.refl _) $ fun a b => by
+  { (@Quotient.congr _ _ (quotientRel p) (quotientRel p') (Equiv.refl _)) fun a b => by
       subst h
       rfl with
     map_add' := by

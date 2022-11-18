@@ -3,9 +3,10 @@ Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.Topology.Category.TopCat.Default
 import Mathbin.CategoryTheory.GlueData
 import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
+import Mathbin.Topology.Category.TopCat.Limits
+import Mathbin.Topology.Category.TopCat.Opens
 
 /-!
 # Gluing Topological spaces
@@ -111,14 +112,14 @@ theorem is_open_iff (U : Set 𝖣.glued) : IsOpen U ↔ ∀ i, IsOpen (𝖣.ι i
     
 #align Top.glue_data.is_open_iff TopCat.GlueData.is_open_iff
 
-theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i) (y : D.U i), 𝖣.ι i y = x :=
+theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : _)(y : D.U i), 𝖣.ι i y = x :=
   𝖣.ι_jointly_surjective (forget TopCat) x
 #align Top.glue_data.ι_jointly_surjective TopCat.GlueData.ι_jointly_surjective
 
 /-- An equivalence relation on `Σ i, D.U i` that holds iff `𝖣 .ι i x = 𝖣 .ι j y`.
 See `Top.glue_data.ι_eq_iff_rel`.
 -/
-def Rel (a b : Σ i, ((D.U i : TopCat) : Type _)) : Prop :=
+def Rel (a b : Σi, ((D.U i : TopCat) : Type _)) : Prop :=
   a = b ∨ ∃ x : D.V (a.1, b.1), D.f _ _ x = a.2 ∧ D.f _ _ (D.t _ _ x) = b.2
 #align Top.glue_data.rel TopCat.GlueData.Rel
 
@@ -388,8 +389,8 @@ include U
 @[simps to_glue_data_J to_glue_data_U to_glue_data_V to_glue_data_t to_glue_data_f]
 def ofOpenSubsets : TopCat.GlueData.{u} :=
   mk'.{u}
-    { J, U := fun i => (opens.to_Top $ TopCat.of α).obj (U i),
-      V := fun i j => (opens.map $ Opens.inclusion _).obj (U j),
+    { J, U := fun i => (opens.to_Top <| TopCat.of α).obj (U i),
+      V := fun i j => (opens.map <| Opens.inclusion _).obj (U j),
       t := fun i j => ⟨fun x => ⟨⟨x.1.1, x.2⟩, x.1.2⟩, by continuity⟩,
       V_id := fun i => by
         ext

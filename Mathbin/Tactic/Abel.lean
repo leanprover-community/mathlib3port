@@ -60,7 +60,7 @@ inferred typeclass instance.
 -/
 unsafe def context.mk_app (c : context) (n inst : Name) (l : List expr) : tactic expr := do
   let m ← mk_instance ((expr.const inst [c.univ] : expr) c.α)
-  return $ c n m l
+  return <| c n m l
 #align tactic.abel.context.mk_app tactic.abel.context.mk_app
 
 /-- Add the letter "g" to the end of the name, e.g. turning `term` into `termg`.
@@ -124,16 +124,15 @@ unsafe def normal_expr.zero' (c : context) : normal_expr :=
   normal_expr.zero c.α0
 #align tactic.abel.normal_expr.zero' tactic.abel.normal_expr.zero'
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 unsafe def normal_expr.to_list : normal_expr → List (ℤ × expr)
   | normal_expr.zero _ => []
-  | normal_expr.nterm _ (_, n) x a => (n, x)::a.toList
+  | normal_expr.nterm _ (_, n) x a => (n, x) :: a.toList
 #align tactic.abel.normal_expr.to_list tactic.abel.normal_expr.to_list
 
 open NormalExpr
 
 unsafe def normal_expr.to_string (e : normal_expr) : String :=
-  " + ".intercalate $ (to_list e).map $ fun ⟨n, e⟩ => toString n ++ " • (" ++ toString e ++ ")"
+  " + ".intercalate <| (to_list e).map fun ⟨n, e⟩ => toString n ++ " • (" ++ toString e ++ ")"
 #align tactic.abel.normal_expr.to_string tactic.abel.normal_expr.to_string
 
 unsafe def normal_expr.pp (e : normal_expr) : tactic format := do
@@ -141,7 +140,7 @@ unsafe def normal_expr.pp (e : normal_expr) : tactic format := do
     (to_list e).mmap fun ⟨n, e⟩ => do
         let pe ← pp e
         return (to_fmt n ++ " • (" ++ pe ++ ")")
-  return $ format.join $ l ↑" + "
+  return <| format.join <| l ↑" + "
 #align tactic.abel.normal_expr.pp tactic.abel.normal_expr.pp
 
 unsafe instance : has_to_tactic_format normal_expr :=
@@ -355,14 +354,14 @@ unsafe
         =>
         do
           let n ← if c . is_group then mk_app ` ` Int.ofNat [ e₁ ] else return e₁
-            let ( e' , p ) ← eval $ c . iapp ` ` smul [ n , e₂ ]
+            let ( e' , p ) ← eval <| c . iapp ` ` smul [ n , e₂ ]
             return ( e' , c ` ` unfold_smul [ e₁ , e₂ , e' , p ] )
       |
         q( SubNegMonoid.zsmul $ ( e₁ ) $ ( e₂ ) )
         =>
         do
           guardb c
-            let ( e' , p ) ← eval $ c . iapp ` ` smul [ e₁ , e₂ ]
+            let ( e' , p ) ← eval <| c . iapp ` ` smul [ e₁ , e₂ ]
             return ( e' , c ` ` unfold_zsmul c [ e₁ , e₂ , e' , p ] )
       | e @ q( @ HasSmul.smul Nat _ AddMonoid.hasSmulNat $ ( e₁ ) $ ( e₂ ) ) => eval_smul' c eval false e e₁ e₂
       | e @ q( @ HasSmul.smul Int _ SubNegMonoid.hasSmulInt $ ( e₁ ) $ ( e₂ ) ) => eval_smul' c eval true e e₁ e₂
@@ -410,7 +409,7 @@ unsafe def normalize (red : Transparency) (mode := NormalizeMode.term) (e : expr
                     let (e', prf, _) ← simplify lemmas [] e
                     return (e', prf))
                 e
-          guard (¬new_e =ₐ e)
+          guard ¬new_e == e
           return ((), new_e, some pr, ff))
         (fun _ _ _ _ _ => failed) `eq e
   return (e', pr)
@@ -449,7 +448,7 @@ open Tactic.Abel
 #align tactic.interactive.abel1 tactic.interactive.abel1
 
 unsafe def abel.mode : lean.parser Abel.NormalizeMode :=
-  with_desc "(raw|term)?" $ do
+  with_desc "(raw|term)?" <| do
     let mode ← ident ?
     match mode with
       | none => return abel.normalize_mode.term
@@ -483,7 +482,7 @@ unsafe def abel (red : parse (tk "!")?) (SOP : parse abel.mode) (loc : parse loc
     let red := if red.isSome then semireducible else reducible
     let tt ← tactic.replace_at (normalize red SOP) ns loc.include_goal |
       fail "abel failed to simplify"
-    when loc $ try tactic.reflexivity
+    when loc <| try tactic.reflexivity
 #align tactic.interactive.abel tactic.interactive.abel
 
 add_tactic_doc

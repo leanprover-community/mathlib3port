@@ -78,7 +78,7 @@ an optimal, *canonical* form. -/
 inductive HornerExpr/- (const n) is a constant n in the csring, similarly to the same
 constructor in `csring_expr`. This one, however, can be negative. -/
 
-  | const : Znum → horner_expr/- (horner a x n b) is a*xⁿ + b, where x is the x-th atom
+  | const : ZNum → horner_expr/- (horner a x n b) is a*xⁿ + b, where x is the x-th atom
 in the atom tree. -/
 
   | horner : horner_expr → PosNum → Num → horner_expr → horner_expr
@@ -124,7 +124,7 @@ def horner' (a : HornerExpr) (x : PosNum) (n : Num) (b : HornerExpr) : HornerExp
   | horner a₁ x₁ n₁ b₁ => if x₁ = x ∧ b₁ = 0 then horner a₁ x (n₁ + n) b else horner a x n b
 #align tactic.ring2.horner_expr.horner' Tactic.Ring2.HornerExpr.horner'
 
-def addConst (k : Znum) (e : HornerExpr) : HornerExpr :=
+def addConst (k : ZNum) (e : HornerExpr) : HornerExpr :=
   if k = 0 then e
   else by
     induction' e with n a x n b A B
@@ -144,9 +144,9 @@ def addAux (a₁ : HornerExpr) (A₁ : HornerExpr → HornerExpr) (x₁ : PosNum
     | Ordering.gt => horner a₂ x₂ n₂ (add_aux b₂ n₁ b₁ B₁)
     | Ordering.eq =>
       match Num.sub' n₁ n₂ with
-      | Znum.zero => horner' (A₁ a₂) x₁ n₁ (B₁ b₂)
-      | Znum.pos k => horner (add_aux a₂ k 0 id) x₁ n₂ (B₁ b₂)
-      | Znum.neg k => horner (A₁ (horner a₂ x₁ k 0)) x₁ n₁ (B₁ b₂)
+      | ZNum.zero => horner' (A₁ a₂) x₁ n₁ (B₁ b₂)
+      | ZNum.pos k => horner (add_aux a₂ k 0 id) x₁ n₂ (B₁ b₂)
+      | ZNum.neg k => horner (A₁ (horner a₂ x₁ k 0)) x₁ n₁ (B₁ b₂)
 #align tactic.ring2.horner_expr.add_aux Tactic.Ring2.HornerExpr.addAux
 
 def add : HornerExpr → HornerExpr → HornerExpr
@@ -182,7 +182,7 @@ def neg (e : HornerExpr) : HornerExpr := by
     
 #align tactic.ring2.horner_expr.neg Tactic.Ring2.HornerExpr.neg
 
-def mulConst (k : Znum) (e : HornerExpr) : HornerExpr :=
+def mulConst (k : ZNum) (e : HornerExpr) : HornerExpr :=
   if k = 0 then 0
   else
     if k = 1 then e
@@ -273,7 +273,7 @@ theorem cseval_add_const {α} [CommSemiring α] (t : Tree α) (k : Num) {e : Hor
     (addConst k.toZnum e).IsCs ∧ cseval t (addConst k.toZnum e) = k + cseval t e := by
   simp [add_const]
   cases k <;> simp! [*]
-  simp [show Znum.pos k ≠ 0 from dec_trivial]
+  simp [show ZNum.pos k ≠ 0 by decide]
   induction' e with n a x n b A B <;> simp [*]
   · rcases cs with ⟨n, rfl⟩
     refine' ⟨⟨n + Num.pos k, by simp [add_comm] <;> rfl⟩, _⟩
@@ -330,7 +330,7 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
       fun _ e₂ c => ⟨c, (zero_add _).symm⟩
     cases' e : Num.sub' n₁ n₂ with k k <;> simp!
     · have : n₁ = n₂ := by
-        have := congr_arg (coe : Znum → ℤ) e
+        have := congr_arg (coe : ZNum → ℤ) e
         simp at this
         have := sub_eq_zero.1 this
         rw [← Num.to_nat_to_int, ← Num.to_nat_to_int] at this
@@ -350,7 +350,7 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
       apply Tactic.Ring.horner_add_horner_gt
       · change (_ + k : ℕ) = _
         rw [← Int.coe_nat_inj', Int.ofNat_add, eq_comm, ← sub_eq_iff_eq_add']
-        simpa using congr_arg (coe : Znum → ℤ) e
+        simpa using congr_arg (coe : ZNum → ℤ) e
         
       · rfl
         
@@ -363,7 +363,7 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
       apply Tactic.Ring.horner_add_horner_lt
       · change (_ + k : ℕ) = _
         rw [← Int.coe_nat_inj', Int.ofNat_add, eq_comm, ← sub_eq_iff_eq_add', ← neg_inj, neg_sub]
-        simpa using congr_arg (coe : Znum → ℤ) e
+        simpa using congr_arg (coe : ZNum → ℤ) e
         
       all_goals rfl
       

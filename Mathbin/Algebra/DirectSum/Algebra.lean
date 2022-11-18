@@ -112,11 +112,11 @@ See note [partially-applied ext lemmas]. -/
 @[ext.1]
 theorem alg_hom_ext' ⦃f g : (⨁ i, A i) →ₐ[R] B⦄
     (h : ∀ i, f.toLinearMap.comp (lof _ _ A i) = g.toLinearMap.comp (lof _ _ A i)) : f = g :=
-  AlgHom.to_linear_map_injective $ DirectSum.linear_map_ext _ h
+  AlgHom.to_linear_map_injective <| DirectSum.linear_map_ext _ h
 #align direct_sum.alg_hom_ext' DirectSum.alg_hom_ext'
 
 theorem alg_hom_ext ⦃f g : (⨁ i, A i) →ₐ[R] B⦄ (h : ∀ i x, f (of A i x) = g (of A i x)) : f = g :=
-  alg_hom_ext' R A $ fun i => LinearMap.ext $ h i
+  (alg_hom_ext' R A) fun i => LinearMap.ext <| h i
 #align direct_sum.alg_hom_ext DirectSum.alg_hom_ext
 
 end DirectSum
@@ -132,9 +132,9 @@ instance Algebra.directSumGalgebra {R A : Type _} [DecidableEq ι] [AddMonoid ι
     [Algebra R A] : DirectSum.Galgebra R fun i : ι => A where
   toFun := (algebraMap R A).toAddMonoidHom
   map_one := (algebraMap R A).map_one
-  map_mul a b := Sigma.ext (zero_add _).symm (heq_of_eq $ (algebraMap R A).map_mul a b)
-  commutes := fun r ⟨ai, a⟩ => Sigma.ext ((zero_add _).trans (add_zero _).symm) (heq_of_eq $ Algebra.commutes _ _)
-  smul_def := fun r ⟨ai, a⟩ => Sigma.ext (zero_add _).symm (heq_of_eq $ Algebra.smul_def _ _)
+  map_mul a b := Sigma.ext (zero_add _).symm (heq_of_eq <| (algebraMap R A).map_mul a b)
+  commutes := fun r ⟨ai, a⟩ => Sigma.ext ((zero_add _).trans (add_zero _).symm) (heq_of_eq <| Algebra.commutes _ _)
+  smul_def := fun r ⟨ai, a⟩ => Sigma.ext (zero_add _).symm (heq_of_eq <| Algebra.smul_def _ _)
 #align algebra.direct_sum_galgebra Algebra.directSumGalgebra
 
 namespace Submodule

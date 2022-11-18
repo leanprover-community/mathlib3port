@@ -177,14 +177,14 @@ theorem ext_iff {f g : α →ₙ+* β} : f = g ↔ ∀ x, f x = g x :=
 
 @[simp]
 theorem mk_coe (f : α →ₙ+* β) (h₁ h₂ h₃) : NonUnitalRingHom.mk f h₁ h₂ h₃ = f :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 #align non_unital_ring_hom.mk_coe NonUnitalRingHom.mk_coe
 
 theorem coe_add_monoid_hom_injective : Injective (coe : (α →ₙ+* β) → α →+ β) := fun f g h =>
-  ext $ AddMonoidHom.congr_fun h
+  ext <| AddMonoidHom.congr_fun h
 #align non_unital_ring_hom.coe_add_monoid_hom_injective NonUnitalRingHom.coe_add_monoid_hom_injective
 
-theorem coe_mul_hom_injective : Injective (coe : (α →ₙ+* β) → α →ₙ* β) := fun f g h => ext $ MulHom.congr_fun h
+theorem coe_mul_hom_injective : Injective (coe : (α →ₙ+* β) → α →ₙ* β) := fun f g h => ext <| MulHom.congr_fun h
 #align non_unital_ring_hom.coe_mul_hom_injective NonUnitalRingHom.coe_mul_hom_injective
 
 end
@@ -281,12 +281,12 @@ omit rγ
 
 @[simp]
 theorem comp_id (f : α →ₙ+* β) : f.comp (NonUnitalRingHom.id α) = f :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 #align non_unital_ring_hom.comp_id NonUnitalRingHom.comp_id
 
 @[simp]
 theorem id_comp (f : α →ₙ+* β) : (NonUnitalRingHom.id β).comp f = f :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 #align non_unital_ring_hom.id_comp NonUnitalRingHom.id_comp
 
 omit rβ
@@ -322,11 +322,11 @@ theorem coe_mul (f g : α →ₙ+* α) : ⇑(f * g) = f ∘ g :=
 include rβ rγ
 
 theorem cancel_right {g₁ g₂ : β →ₙ+* γ} {f : α →ₙ+* β} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext $ hf.forall.2 (ext_iff.1 h), fun h => h ▸ rfl⟩
+  ⟨fun h => ext <| hf.forall.2 (ext_iff.1 h), fun h => h ▸ rfl⟩
 #align non_unital_ring_hom.cancel_right NonUnitalRingHom.cancel_right
 
 theorem cancel_left {g : β →ₙ+* γ} {f₁ f₂ : α →ₙ+* β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => ext $ fun x => hg $ by rw [← comp_apply, h, comp_apply], fun h => h ▸ rfl⟩
+  ⟨fun h => ext fun x => hg <| by rw [← comp_apply, h, comp_apply], fun h => h ▸ rfl⟩
 #align non_unital_ring_hom.cancel_left NonUnitalRingHom.cancel_left
 
 omit rα rβ rγ
@@ -512,14 +512,14 @@ theorem ext_iff {f g : α →+* β} : f = g ↔ ∀ x, f x = g x :=
 
 @[simp]
 theorem mk_coe (f : α →+* β) (h₁ h₂ h₃ h₄) : RingHom.mk f h₁ h₂ h₃ h₄ = f :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 #align ring_hom.mk_coe RingHom.mk_coe
 
 theorem coe_add_monoid_hom_injective : Injective (coe : (α →+* β) → α →+ β) := fun f g h =>
-  ext $ AddMonoidHom.congr_fun h
+  ext <| AddMonoidHom.congr_fun h
 #align ring_hom.coe_add_monoid_hom_injective RingHom.coe_add_monoid_hom_injective
 
-theorem coe_monoid_hom_injective : Injective (coe : (α →+* β) → α →* β) := fun f g h => ext $ MonoidHom.congr_fun h
+theorem coe_monoid_hom_injective : Injective (coe : (α →+* β) → α →* β) := fun f g h => ext <| MonoidHom.congr_fun h
 #align ring_hom.coe_monoid_hom_injective RingHom.coe_monoid_hom_injective
 
 /-- Ring homomorphisms map zero to zero. -/
@@ -675,12 +675,12 @@ omit rγ
 
 @[simp]
 theorem comp_id (f : α →+* β) : f.comp (id α) = f :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 #align ring_hom.comp_id RingHom.comp_id
 
 @[simp]
 theorem id_comp (f : α →+* β) : (id β).comp f = f :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 #align ring_hom.id_comp RingHom.id_comp
 
 omit rβ
@@ -713,11 +713,11 @@ theorem coe_mul (f g : α →+* α) : ⇑(f * g) = f ∘ g :=
 include rβ rγ
 
 theorem cancel_right {g₁ g₂ : β →+* γ} {f : α →+* β} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => RingHom.ext $ hf.forall.2 (ext_iff.1 h), fun h => h ▸ rfl⟩
+  ⟨fun h => RingHom.ext <| hf.forall.2 (ext_iff.1 h), fun h => h ▸ rfl⟩
 #align ring_hom.cancel_right RingHom.cancel_right
 
 theorem cancel_left {g : β →+* γ} {f₁ f₂ : α →+* β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => RingHom.ext $ fun x => hg $ by rw [← comp_apply, h, comp_apply], fun h => h ▸ rfl⟩
+  ⟨fun h => RingHom.ext fun x => hg <| by rw [← comp_apply, h, comp_apply], fun h => h ▸ rfl⟩
 #align ring_hom.cancel_left RingHom.cancel_left
 
 end RingHom

@@ -40,7 +40,7 @@ variable {R} [Semiring R]
 /-- Construct a ring involution from a ring homomorphism. -/
 def mk' (f : R →+* Rᵐᵒᵖ) (involution : ∀ r, (f (f r).unop).unop = r) : RingInvo R :=
   { f with invFun := fun r => (f r.unop).unop, left_inv := fun r => involution r,
-    right_inv := fun r => MulOpposite.unop_injective $ involution _, involution' := involution }
+    right_inv := fun r => MulOpposite.unop_injective <| involution _, involution' := involution }
 #align ring_invo.mk' RingInvo.mk'
 
 instance : CoeFun (RingInvo R) fun _ => R → Rᵐᵒᵖ :=

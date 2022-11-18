@@ -51,7 +51,7 @@ theorem le_def {f g : ι →₀ α} : f ≤ g ↔ ∀ i, f i ≤ g i :=
 def orderEmbeddingToFun : (ι →₀ α) ↪o (ι → α) where
   toFun f := f
   inj' f g h :=
-    Finsupp.ext $ fun i => by
+    Finsupp.ext fun i => by
       dsimp at h
       rw [h]
   map_rel_iff' a b := (@le_def _ _ _ _ a b).symm
@@ -77,7 +77,7 @@ theorem monotone_to_fun : Monotone (Finsupp.toFun : (ι →₀ α) → ι → α
 end Preorder
 
 instance [PartialOrder α] : PartialOrder (ι →₀ α) :=
-  { Finsupp.preorder with le_antisymm := fun f g hfg hgf => ext $ fun i => (hfg i).antisymm (hgf i) }
+  { Finsupp.preorder with le_antisymm := fun f g hfg hgf => ext fun i => (hfg i).antisymm (hgf i) }
 
 instance [SemilatticeInf α] : SemilatticeInf (ι →₀ α) :=
   { Finsupp.partialOrder with inf := zipWith (· ⊓ ·) inf_idem, inf_le_left := fun f g i => inf_le_left,
@@ -114,7 +114,7 @@ instance [OrderedCancelAddCommMonoid α] : OrderedCancelAddCommMonoid (ι →₀
 
 instance [OrderedAddCommMonoid α] [ContravariantClass α α (· + ·) (· ≤ ·)] :
     ContravariantClass (ι →₀ α) (ι →₀ α) (· + ·) (· ≤ ·) :=
-  ⟨fun f g h H x => le_of_add_le_add_left $ H x⟩
+  ⟨fun f g h H x => le_of_add_le_add_left <| H x⟩
 
 section CanonicallyOrderedAddMonoid
 
@@ -138,7 +138,7 @@ theorem le_iff' (f g : ι →₀ α) {s : Finset ι} (hf : f.support ⊆ s) : f 
 #align finsupp.le_iff' Finsupp.le_iff'
 
 theorem le_iff (f g : ι →₀ α) : f ≤ g ↔ ∀ i ∈ f.support, f i ≤ g i :=
-  le_iff' f g $ Subset.refl _
+  le_iff' f g <| Subset.refl _
 #align finsupp.le_iff Finsupp.le_iff
 
 instance decidableLe [DecidableRel (@LE.le α _)] : DecidableRel (@LE.le (ι →₀ α) _) := fun f g =>
@@ -147,7 +147,7 @@ instance decidableLe [DecidableRel (@LE.le α _)] : DecidableRel (@LE.le (ι →
 
 @[simp]
 theorem single_le_iff {i : ι} {x : α} {f : ι →₀ α} : single i x ≤ f ↔ x ≤ f i :=
-  (le_iff' _ _ support_single_subset).trans $ by simp
+  (le_iff' _ _ support_single_subset).trans <| by simp
 #align finsupp.single_le_iff Finsupp.single_le_iff
 
 variable [Sub α] [HasOrderedSub α] {f g : ι →₀ α} {i : ι} {a b : α}
@@ -159,11 +159,11 @@ instance tsub : Sub (ι →₀ α) :=
 #align finsupp.tsub Finsupp.tsub
 
 instance : HasOrderedSub (ι →₀ α) :=
-  ⟨fun n m k => forall_congr' $ fun x => tsub_le_iff_right⟩
+  ⟨fun n m k => forall_congr' fun x => tsub_le_iff_right⟩
 
 instance : CanonicallyOrderedAddMonoid (ι →₀ α) :=
   { Finsupp.orderBot, Finsupp.orderedAddCommMonoid with
-    exists_add_of_le := fun f g h => ⟨g - f, ext $ fun x => (add_tsub_cancel_of_le $ h x).symm⟩,
+    exists_add_of_le := fun f g h => ⟨g - f, ext fun x => (add_tsub_cancel_of_le <| h x).symm⟩,
     le_self_add := fun f g x => le_self_add }
 
 @[simp]
@@ -227,11 +227,11 @@ end CanonicallyLinearOrderedAddMonoid
 section Nat
 
 theorem sub_single_one_add {a : ι} {u u' : ι →₀ ℕ} (h : u a ≠ 0) : u - single a 1 + u' = u + u' - single a 1 :=
-  tsub_add_eq_add_tsub $ single_le_iff.mpr $ Nat.one_le_iff_ne_zero.mpr h
+  tsub_add_eq_add_tsub <| single_le_iff.mpr <| Nat.one_le_iff_ne_zero.mpr h
 #align finsupp.sub_single_one_add Finsupp.sub_single_one_add
 
 theorem add_sub_single_one {a : ι} {u u' : ι →₀ ℕ} (h : u' a ≠ 0) : u + (u' - single a 1) = u + u' - single a 1 :=
-  (add_tsub_assoc_of_le (single_le_iff.mpr $ Nat.one_le_iff_ne_zero.mpr h) _).symm
+  (add_tsub_assoc_of_le (single_le_iff.mpr <| Nat.one_le_iff_ne_zero.mpr h) _).symm
 #align finsupp.add_sub_single_one Finsupp.add_sub_single_one
 
 end Nat

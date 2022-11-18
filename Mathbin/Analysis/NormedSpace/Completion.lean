@@ -36,7 +36,7 @@ instance (priority := 100) NormedSpace.to_has_uniform_continuous_const_smul : Ha
 instance : NormedSpace 𝕜 (Completion E) :=
   { Completion.module with smul := (· • ·),
     norm_smul_le := fun c x =>
-      inductionOn x (isClosedLe (continuous_const_smul _).norm (continuous_const.mul continuous_norm)) $ fun y => by
+      (inductionOn x (isClosedLe (continuous_const_smul _).norm (continuous_const.mul continuous_norm))) fun y => by
         simp only [← coe_smul, norm_coe, norm_smul] }
 
 variable {𝕜 E}
@@ -63,7 +63,7 @@ theorem coe_to_complL : ⇑(toComplL : E →L[𝕜] Completion E) = coe :=
 
 @[simp]
 theorem norm_to_complL {𝕜 E : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E]
-    [Nontrivial E] : ∥(toComplL : E →L[𝕜] Completion E)∥ = 1 :=
+    [Nontrivial E] : ‖(toComplL : E →L[𝕜] Completion E)‖ = 1 :=
   (toComplₗᵢ : E →ₗᵢ[𝕜] Completion E).norm_to_continuous_linear_map
 #align uniform_space.completion.norm_to_complL UniformSpace.Completion.norm_to_complL
 

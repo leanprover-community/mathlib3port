@@ -116,7 +116,7 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
         
       · intro x y
         rw [completion.dist_eq]
-        by_cases h:ε ≤ dist x y
+        by_cases h : ε ≤ dist x y
         · exact Or.inl h
           
         · have Z := hε (not_le.1 h)

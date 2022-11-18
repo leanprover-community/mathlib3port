@@ -6,6 +6,7 @@ Authors: Anne Baanen
 import Mathbin.Algebra.Module.Basic
 import Mathbin.GroupTheory.GroupAction.Units
 import Mathbin.Data.Int.Cast.Lemmas
+import Mathbin.Data.Int.Units
 import Mathbin.Algebra.Order.AbsoluteValue
 
 /-!

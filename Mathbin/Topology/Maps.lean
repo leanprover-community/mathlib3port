@@ -81,7 +81,7 @@ theorem inducing_iff_nhds {f : α → β} : Inducing f ↔ ∀ a, 𝓝 a = comap
   (inducing_iff _).trans (induced_iff_nhds_eq f)
 #align inducing_iff_nhds inducing_iff_nhds
 
-theorem Inducing.nhds_eq_comap {f : α → β} (hf : Inducing f) : ∀ a : α, 𝓝 a = comap f (𝓝 $ f a) :=
+theorem Inducing.nhds_eq_comap {f : α → β} (hf : Inducing f) : ∀ a : α, 𝓝 a = comap f (𝓝 <| f a) :=
   inducing_iff_nhds.1 hf
 #align inducing.nhds_eq_comap Inducing.nhds_eq_comap
 
@@ -183,18 +183,18 @@ theorem embedding_id : Embedding (@id α) :=
 #align embedding_id embedding_id
 
 theorem Embedding.comp {g : β → γ} {f : α → β} (hg : Embedding g) (hf : Embedding f) : Embedding (g ∘ f) :=
-  { hg.to_inducing.comp hf.to_inducing with inj := fun a₁ a₂ h => hf.inj $ hg.inj h }
+  { hg.to_inducing.comp hf.to_inducing with inj := fun a₁ a₂ h => hf.inj <| hg.inj h }
 #align embedding.comp Embedding.comp
 
 theorem embedding_of_embedding_compose {f : α → β} {g : β → γ} (hf : Continuous f) (hg : Continuous g)
     (hgf : Embedding (g ∘ f)) : Embedding f :=
   { induced := (inducing_of_inducing_compose hf hg hgf.to_inducing).induced,
-    inj := fun a₁ a₂ h => hgf.inj $ by simp [h, (· ∘ ·)] }
+    inj := fun a₁ a₂ h => hgf.inj <| by simp [h, (· ∘ ·)] }
 #align embedding_of_embedding_compose embedding_of_embedding_compose
 
 protected theorem Function.LeftInverse.embedding {f : α → β} {g : β → α} (h : LeftInverse f g) (hf : Continuous f)
     (hg : Continuous g) : Embedding g :=
-  embedding_of_embedding_compose hg hf $ h.comp_eq_id.symm ▸ embedding_id
+  embedding_of_embedding_compose hg hf <| h.comp_eq_id.symm ▸ embedding_id
 #align function.left_inverse.embedding Function.LeftInverse.embedding
 
 theorem Embedding.map_nhds_eq {f : α → β} (hf : Embedding f) (a : α) : (𝓝 a).map f = 𝓝[range f] f a :=
@@ -260,7 +260,7 @@ protected theorem of_quotient_map_compose (hf : Continuous f) (hg : Continuous g
 #align quotient_map.of_quotient_map_compose QuotientMap.of_quotient_map_compose
 
 theorem of_inverse {g : β → α} (hf : Continuous f) (hg : Continuous g) (h : LeftInverse g f) : QuotientMap g :=
-  QuotientMap.of_quotient_map_compose hf hg $ h.comp_eq_id.symm ▸ QuotientMap.id
+  QuotientMap.of_quotient_map_compose hf hg <| h.comp_eq_id.symm ▸ QuotientMap.id
 #align quotient_map.of_inverse QuotientMap.of_inverse
 
 protected theorem continuous_iff (hf : QuotientMap f) : Continuous g ↔ Continuous (g ∘ f) := by
@@ -313,12 +313,12 @@ theorem image_mem_nhds (hf : IsOpenMap f) {x : α} {s : Set α} (hx : s ∈ 𝓝
 #align is_open_map.image_mem_nhds IsOpenMap.image_mem_nhds
 
 theorem range_mem_nhds (hf : IsOpenMap f) (x : α) : range f ∈ 𝓝 (f x) :=
-  hf.is_open_range.mem_nhds $ mem_range_self _
+  hf.is_open_range.mem_nhds <| mem_range_self _
 #align is_open_map.range_mem_nhds IsOpenMap.range_mem_nhds
 
 theorem maps_to_interior (hf : IsOpenMap f) {s : Set α} {t : Set β} (h : MapsTo f s t) :
     MapsTo f (interior s) (interior t) :=
-  maps_to'.2 $ interior_maximal (h.mono interior_subset Subset.rfl).image_subset (hf _ is_open_interior)
+  maps_to'.2 <| interior_maximal (h.mono interior_subset Subset.rfl).image_subset (hf _ is_open_interior)
 #align is_open_map.maps_to_interior IsOpenMap.maps_to_interior
 
 theorem image_interior_subset (hf : IsOpenMap f) (s : Set α) : f '' interior s ⊆ interior (f '' s) :=
@@ -326,16 +326,16 @@ theorem image_interior_subset (hf : IsOpenMap f) (s : Set α) : f '' interior s 
 #align is_open_map.image_interior_subset IsOpenMap.image_interior_subset
 
 theorem nhds_le (hf : IsOpenMap f) (a : α) : 𝓝 (f a) ≤ (𝓝 a).map f :=
-  le_map $ fun s => hf.image_mem_nhds
+  le_map fun s => hf.image_mem_nhds
 #align is_open_map.nhds_le IsOpenMap.nhds_le
 
 theorem of_nhds_le (hf : ∀ a, 𝓝 (f a) ≤ map f (𝓝 a)) : IsOpenMap f := fun s hs =>
-  is_open_iff_mem_nhds.2 $ fun b ⟨a, has, hab⟩ => hab ▸ hf _ (image_mem_map $ IsOpen.mem_nhds hs has)
+  is_open_iff_mem_nhds.2 fun b ⟨a, has, hab⟩ => hab ▸ hf _ (image_mem_map <| IsOpen.mem_nhds hs has)
 #align is_open_map.of_nhds_le IsOpenMap.of_nhds_le
 
 theorem of_sections {f : α → β} (h : ∀ x, ∃ g : β → α, ContinuousAt g (f x) ∧ g (f x) = x ∧ RightInverse g f) :
     IsOpenMap f :=
-  of_nhds_le $ fun x =>
+  of_nhds_le fun x =>
     let ⟨g, hgc, hgx, hgf⟩ := h x
     calc
       𝓝 (f x) = map f (map g (𝓝 (f x))) := by rw [map_map, hgf.comp_eq_id, map_id]
@@ -346,7 +346,7 @@ theorem of_sections {f : α → β} (h : ∀ x, ∃ g : β → α, ContinuousAt 
 
 theorem of_inverse {f : α → β} {f' : β → α} (h : Continuous f') (l_inv : LeftInverse f f') (r_inv : RightInverse f f') :
     IsOpenMap f :=
-  of_sections $ fun x => ⟨f', h.ContinuousAt, r_inv _, l_inv⟩
+  of_sections fun x => ⟨f', h.ContinuousAt, r_inv _, l_inv⟩
 #align is_open_map.of_inverse IsOpenMap.of_inverse
 
 /-- A continuous surjective open map is a quotient map. -/
@@ -398,7 +398,7 @@ theorem is_open_map_iff_nhds_le [TopologicalSpace α] [TopologicalSpace β] {f :
 theorem is_open_map_iff_interior [TopologicalSpace α] [TopologicalSpace β] {f : α → β} :
     IsOpenMap f ↔ ∀ s, f '' interior s ⊆ interior (f '' s) :=
   ⟨IsOpenMap.image_interior_subset, fun hs u hu =>
-    subset_interior_iff_is_open.mp $
+    subset_interior_iff_is_open.mp <|
       calc
         f '' u = f '' interior u := by rw [hu.interior_eq]
         _ ⊆ interior (f '' u) := hs u
@@ -408,7 +408,7 @@ theorem is_open_map_iff_interior [TopologicalSpace α] [TopologicalSpace β] {f 
 /-- An inducing map with an open range is an open map. -/
 protected theorem Inducing.is_open_map [TopologicalSpace α] [TopologicalSpace β] {f : α → β} (hi : Inducing f)
     (ho : IsOpen (range f)) : IsOpenMap f :=
-  IsOpenMap.of_nhds_le $ fun x => (hi.map_nhds_of_mem _ $ IsOpen.mem_nhds ho $ mem_range_self _).ge
+  IsOpenMap.of_nhds_le fun x => (hi.map_nhds_of_mem _ <| IsOpen.mem_nhds ho <| mem_range_self _).ge
 #align inducing.is_open_map Inducing.is_open_map
 
 section IsClosedMap
@@ -474,7 +474,7 @@ theorem Inducing.is_closed_map [TopologicalSpace α] [TopologicalSpace β] {f : 
 theorem is_closed_map_iff_closure_image [TopologicalSpace α] [TopologicalSpace β] {f : α → β} :
     IsClosedMap f ↔ ∀ s, closure (f '' s) ⊆ f '' closure s :=
   ⟨IsClosedMap.closure_image_subset, fun hs c hc =>
-    isClosedOfClosureSubset $
+    isClosedOfClosureSubset <|
       calc
         closure (f '' c) ⊆ f '' closure c := hs c
         _ = f '' c := by rw [hc.closure_eq]
@@ -488,7 +488,7 @@ variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 /-- An open embedding is an embedding with open image. -/
 @[mk_iff]
 structure OpenEmbedding (f : α → β) extends Embedding f : Prop where
-  open_range : IsOpen $ range f
+  open_range : IsOpen <| range f
 #align open_embedding OpenEmbedding
 
 theorem OpenEmbedding.is_open_map {f : α → β} (hf : OpenEmbedding f) : IsOpenMap f :=
@@ -496,7 +496,7 @@ theorem OpenEmbedding.is_open_map {f : α → β} (hf : OpenEmbedding f) : IsOpe
 #align open_embedding.is_open_map OpenEmbedding.is_open_map
 
 theorem OpenEmbedding.map_nhds_eq {f : α → β} (hf : OpenEmbedding f) (a : α) : map f (𝓝 a) = 𝓝 (f a) :=
-  hf.toEmbedding.map_nhds_of_mem _ $ hf.open_range.mem_nhds $ mem_range_self _
+  hf.toEmbedding.map_nhds_of_mem _ <| hf.open_range.mem_nhds <| mem_range_self _
 #align open_embedding.map_nhds_eq OpenEmbedding.map_nhds_eq
 
 theorem OpenEmbedding.open_iff_image_open {f : α → β} (hf : OpenEmbedding f) {s : Set α} : IsOpen s ↔ IsOpen (f '' s) :=
@@ -573,7 +573,7 @@ variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 /-- A closed embedding is an embedding with closed image. -/
 @[mk_iff]
 structure ClosedEmbedding (f : α → β) extends Embedding f : Prop where
-  closedRange : IsClosed $ range f
+  closedRange : IsClosed <| range f
 #align closed_embedding ClosedEmbedding
 
 variable {f : α → β}

@@ -126,7 +126,7 @@ theorem CNF_fst_le_log {b o : Ordinal.{u}} {x : Ordinal × Ordinal} : x ∈ cNF 
 
 /-- Every exponent in the Cantor normal form `CNF b o` is less or equal to `o`. -/
 theorem CNF_fst_le {b o : Ordinal.{u}} {x : Ordinal × Ordinal} (h : x ∈ cNF b o) : x.1 ≤ o :=
-  (CNF_fst_le_log h).trans $ log_le_self _ _
+  (CNF_fst_le_log h).trans <| log_le_self _ _
 #align ordinal.CNF_fst_le Ordinal.CNF_fst_le
 
 /-- Every coefficient in a Cantor normal form is positive. -/

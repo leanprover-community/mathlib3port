@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Tactic.Ext
+import Mathbin.Logic.Basic
 
 /-!
 # The definition of the Rational Numbers
@@ -52,7 +53,7 @@ structure Rat where mk' ::
   num : ℤ
   denom : ℕ
   Pos : 0 < denom
-  cop : num.natAbs.Coprime denom
+  cop : Num.natAbs.Coprime denom
 #align rat Rat
 -/
 

@@ -46,8 +46,8 @@ variable [Semiring R] [AddCommMonoid M₂] [Module R M₂] [AddCommMonoid M₃] 
 function into a family of modules. -/
 def pi (f : ∀ i, M₂ →ₗ[R] φ i) : M₂ →ₗ[R] ∀ i, φ i where
   toFun c i := f i c
-  map_add' c d := funext $ fun i => (f i).map_add _ _
-  map_smul' c d := funext $ fun i => (f i).map_smul _ _
+  map_add' c d := funext fun i => (f i).map_add _ _
+  map_smul' c d := funext fun i => (f i).map_smul _ _
 #align linear_map.pi LinearMap.pi
 
 @[simp]
@@ -89,14 +89,14 @@ theorem proj_apply (i : ι) (b : ∀ i, φ i) : (proj i : (∀ i, φ i) →ₗ[R
 #align linear_map.proj_apply LinearMap.proj_apply
 
 theorem proj_pi (f : ∀ i, M₂ →ₗ[R] φ i) (i : ι) : (proj i).comp (pi f) = f i :=
-  ext $ fun c => rfl
+  ext fun c => rfl
 #align linear_map.proj_pi LinearMap.proj_pi
 
 theorem infi_ker_proj : (⨅ i, ker (proj i : (∀ i, φ i) →ₗ[R] φ i) : Submodule R (∀ i, φ i)) = ⊥ :=
-  bot_unique $
-    SetLike.le_def.2 $ fun a h => by
+  bot_unique <|
+    SetLike.le_def.2 fun a h => by
       simp only [mem_infi, mem_ker, proj_apply] at h
-      exact (mem_bot _).2 (funext $ fun i => h i)
+      exact (mem_bot _).2 (funext fun i => h i)
 #align linear_map.infi_ker_proj LinearMap.infi_ker_proj
 
 /-- Linear map between the function spaces `I → M₂` and `I → M₃`, induced by a linear map `f`
@@ -157,7 +157,7 @@ section Ext
 variable [Finite ι] [DecidableEq ι] [AddCommMonoid M] [Module R M] {f g : (∀ i, φ i) →ₗ[R] M}
 
 theorem pi_ext (h : ∀ i x, f (Pi.single i x) = g (Pi.single i x)) : f = g :=
-  to_add_monoid_hom_injective $ AddMonoidHom.functions_ext _ _ _ h
+  to_add_monoid_hom_injective <| AddMonoidHom.functions_ext _ _ _ h
 #align linear_map.pi_ext LinearMap.pi_ext
 
 theorem pi_ext_iff : f = g ↔ ∀ i x, f (Pi.single i x) = g (Pi.single i x) :=
@@ -187,8 +187,8 @@ variable (R φ)
 def infiKerProjEquiv {I J : Set ι} [DecidablePred fun i => i ∈ I] (hd : Disjoint I J) (hu : Set.univ ⊆ I ∪ J) :
     (⨅ i ∈ J, ker (proj i : (∀ i, φ i) →ₗ[R] φ i) : Submodule R (∀ i, φ i)) ≃ₗ[R] ∀ i : I, φ i := by
   refine'
-    LinearEquiv.ofLinear (pi $ fun i => (proj (i : ι)).comp (Submodule.subtype _))
-      (cod_restrict _ (pi $ fun i => if h : i ∈ I then proj (⟨i, h⟩ : I) else 0) _) _ _
+    LinearEquiv.ofLinear (pi fun i => (proj (i : ι)).comp (Submodule.subtype _))
+      (cod_restrict _ (pi fun i => if h : i ∈ I then proj (⟨i, h⟩ : I) else 0) _) _ _
   · intro b
     simp only [mem_infi, mem_ker, funext_iff, proj_apply, pi_apply]
     intro j hjJ
@@ -209,7 +209,7 @@ def infiKerProjEquiv {I J : Set ι} [DecidablePred fun i => i ∈ I] (hd : Disjo
     split_ifs
     · rfl
       
-    · exact (hb _ $ (hu trivial).resolve_left h).symm
+    · exact (hb _ <| (hu trivial).resolve_left h).symm
       
     
 #align linear_map.infi_ker_proj_equiv LinearMap.infiKerProjEquiv
@@ -268,12 +268,12 @@ theorem coe_pi : (pi I p : Set (∀ i, φ i)) = Set.pi I fun i => p i :=
 
 @[simp]
 theorem pi_empty (p : ∀ i, Submodule R (φ i)) : pi ∅ p = ⊤ :=
-  SetLike.coe_injective $ Set.empty_pi _
+  SetLike.coe_injective <| Set.empty_pi _
 #align submodule.pi_empty Submodule.pi_empty
 
 @[simp]
 theorem pi_top (s : Set ι) : (pi s fun i : ι => (⊤ : Submodule R (φ i))) = ⊤ :=
-  SetLike.coe_injective $ Set.pi_univ _
+  SetLike.coe_injective <| Set.pi_univ _
 #align submodule.pi_top Submodule.pi_top
 
 theorem pi_mono {s : Set ι} (h : ∀ i ∈ s, p i ≤ q i) : pi s p ≤ pi s q :=
@@ -293,7 +293,7 @@ theorem infi_comap_proj : (⨅ i, comap (proj i : (∀ i, φ i) →ₗ[R] φ i) 
 theorem supr_map_single [DecidableEq ι] [Finite ι] :
     (⨆ i, map (LinearMap.single i : φ i →ₗ[R] ∀ i, φ i) (p i)) = pi Set.univ p := by
   cases nonempty_fintype ι
-  refine' (supr_le $ fun i => _).antisymm _
+  refine' (supr_le fun i => _).antisymm _
   · rintro _ ⟨x, hx : x ∈ p i, rfl⟩ j -
     rcases em (j = i) with (rfl | hj) <;> simp [*]
     
@@ -308,7 +308,7 @@ theorem le_comap_single_pi [DecidableEq ι] (p : ∀ i, Submodule R (φ i)) {i} 
   intro x hx
   rw [Submodule.mem_comap, Submodule.mem_pi]
   rintro j -
-  by_cases h:j = i
+  by_cases h : j = i
   · rwa [h, LinearMap.coe_single, Pi.single_eq_same]
     
   · rw [LinearMap.coe_single, Pi.single_eq_of_ne h]
@@ -344,13 +344,13 @@ theorem Pi_congr_right_refl : (piCongrRight fun j => refl R (φ j)) = refl _ _ :
 #align linear_equiv.Pi_congr_right_refl LinearEquiv.Pi_congr_right_refl
 
 @[simp]
-theorem Pi_congr_right_symm (e : ∀ i, φ i ≃ₗ[R] ψ i) : (piCongrRight e).symm = (Pi_congr_right $ fun i => (e i).symm) :=
+theorem Pi_congr_right_symm (e : ∀ i, φ i ≃ₗ[R] ψ i) : (piCongrRight e).symm = Pi_congr_right fun i => (e i).symm :=
   rfl
 #align linear_equiv.Pi_congr_right_symm LinearEquiv.Pi_congr_right_symm
 
 @[simp]
 theorem Pi_congr_right_trans (e : ∀ i, φ i ≃ₗ[R] ψ i) (f : ∀ i, ψ i ≃ₗ[R] χ i) :
-    (piCongrRight e).trans (piCongrRight f) = (Pi_congr_right $ fun i => (e i).trans (f i)) :=
+    (piCongrRight e).trans (piCongrRight f) = Pi_congr_right fun i => (e i).trans (f i) :=
   rfl
 #align linear_equiv.Pi_congr_right_trans LinearEquiv.Pi_congr_right_trans
 
@@ -360,7 +360,7 @@ variable (R φ)
 
 This is `equiv.Pi_congr_left'` as a `linear_equiv`. -/
 @[simps (config := { simpRhs := true })]
-def piCongrLeft' (e : ι ≃ ι') : (∀ i', φ i') ≃ₗ[R] ∀ i, φ $ e.symm i :=
+def piCongrLeft' (e : ι ≃ ι') : (∀ i', φ i') ≃ₗ[R] ∀ i, φ <| e.symm i :=
   { Equiv.piCongrLeft' φ e with map_add' := fun x y => rfl, map_smul' := fun x y => rfl }
 #align linear_equiv.Pi_congr_left' LinearEquiv.piCongrLeft'
 
@@ -389,7 +389,7 @@ When `R` is commutative, we can take this to be the usual action with `S = R`.
 Otherwise, `S = ℕ` shows that the equivalence is additive.
 See note [bundled maps over different rings]. -/
 def piRing : ((ι → R) →ₗ[R] M) ≃ₗ[S] ι → M :=
-  (LinearMap.lsum R (fun i : ι => R) S).symm.trans (Pi_congr_right $ fun i => LinearMap.ringLmapEquivSelf R S M)
+  (LinearMap.lsum R (fun i : ι => R) S).symm.trans (Pi_congr_right fun i => LinearMap.ringLmapEquivSelf R S M)
 #align linear_equiv.pi_ring LinearEquiv.piRing
 
 variable {ι R M}
@@ -408,7 +408,7 @@ theorem pi_ring_symm_apply (f : ι → M) (g : ι → R) : (piRing R M ι S).sym
 /-- `equiv.sum_arrow_equiv_prod_arrow` as a linear equivalence.
 -/
 def sumArrowLequivProdArrow (α β R M : Type _) [Semiring R] [AddCommMonoid M] [Module R M] :
-    (α ⊕ β → M) ≃ₗ[R] (α → M) × (β → M) :=
+    (Sum α β → M) ≃ₗ[R] (α → M) × (β → M) :=
   { Equiv.sumArrowEquivProdArrow α β M with
     map_add' := by
       intro f g
@@ -419,13 +419,13 @@ def sumArrowLequivProdArrow (α β R M : Type _) [Semiring R] [AddCommMonoid M] 
 #align linear_equiv.sum_arrow_lequiv_prod_arrow LinearEquiv.sumArrowLequivProdArrow
 
 @[simp]
-theorem sum_arrow_lequiv_prod_arrow_apply_fst {α β} (f : α ⊕ β → M) (a : α) :
+theorem sum_arrow_lequiv_prod_arrow_apply_fst {α β} (f : Sum α β → M) (a : α) :
     (sumArrowLequivProdArrow α β R M f).1 a = f (Sum.inl a) :=
   rfl
 #align linear_equiv.sum_arrow_lequiv_prod_arrow_apply_fst LinearEquiv.sum_arrow_lequiv_prod_arrow_apply_fst
 
 @[simp]
-theorem sum_arrow_lequiv_prod_arrow_apply_snd {α β} (f : α ⊕ β → M) (b : β) :
+theorem sum_arrow_lequiv_prod_arrow_apply_snd {α β} (f : Sum α β → M) (b : β) :
     (sumArrowLequivProdArrow α β R M f).2 b = f (Sum.inr b) :=
   rfl
 #align linear_equiv.sum_arrow_lequiv_prod_arrow_apply_snd LinearEquiv.sum_arrow_lequiv_prod_arrow_apply_snd
@@ -537,8 +537,8 @@ variable [Module R M] [Module R M₂] [Module R M₃]
 @[simps]
 def LinearMap.vecEmpty₂ : M →ₗ[R] M₂ →ₗ[R] Fin 0 → M₃ where
   toFun m := LinearMap.vecEmpty
-  map_add' x y := LinearMap.ext $ fun z => Subsingleton.elim _ _
-  map_smul' r x := LinearMap.ext $ fun z => Subsingleton.elim _ _
+  map_add' x y := LinearMap.ext fun z => Subsingleton.elim _ _
+  map_smul' r x := LinearMap.ext fun z => Subsingleton.elim _ _
 #align linear_map.vec_empty₂ LinearMap.vecEmpty₂
 
 /-- A bilinear map into `fin n.succ → M₃` can be built out of a map into `M₃` and a map into
@@ -548,9 +548,9 @@ def LinearMap.vecCons₂ {n} (f : M →ₗ[R] M₂ →ₗ[R] M₃) (g : M →ₗ
     M →ₗ[R] M₂ →ₗ[R] Fin n.succ → M₃ where
   toFun m := LinearMap.vecCons (f m) (g m)
   map_add' x y :=
-    LinearMap.ext $ fun z => by
+    LinearMap.ext fun z => by
       simp only [f.map_add, g.map_add, LinearMap.add_apply, LinearMap.vec_cons_apply, Matrix.cons_add_cons (f x z)]
-  map_smul' r x := LinearMap.ext $ fun z => by simp [Matrix.smul_cons r (f x z)]
+  map_smul' r x := LinearMap.ext fun z => by simp [Matrix.smul_cons r (f x z)]
 #align linear_map.vec_cons₂ LinearMap.vecCons₂
 
 end CommSemiring

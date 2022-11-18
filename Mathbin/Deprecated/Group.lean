@@ -35,13 +35,13 @@ universe u v
 
 variable {α : Type u} {β : Type v}
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`map_add] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`map_add] [] -/
 /-- Predicate for maps which preserve an addition. -/
 structure IsAddHom {α β : Type _} [Add α] [Add β] (f : α → β) : Prop where
   map_add : ∀ x y, f (x + y) = f x + f y
 #align is_add_hom IsAddHom
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`map_mul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`map_mul] [] -/
 /-- Predicate for maps which preserve a multiplication. -/
 @[to_additive]
 structure IsMulHom {α β : Type _} [Mul α] [Mul β] (f : α → β) : Prop where
@@ -81,13 +81,13 @@ theorem inv {α β} [Mul α] [CommGroup β] {f : α → β} (hf : IsMulHom f) : 
 
 end IsMulHom
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`map_zero] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`map_zero] [] -/
 /-- Predicate for add_monoid homomorphisms (deprecated -- use the bundled `monoid_hom` version). -/
 structure IsAddMonoidHom [AddZeroClass α] [AddZeroClass β] (f : α → β) extends IsAddHom f : Prop where
   map_zero : f 0 = 0
 #align is_add_monoid_hom IsAddMonoidHom
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`map_one] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`map_one] [] -/
 /-- Predicate for monoid homomorphisms (deprecated -- use the bundled `monoid_hom` version). -/
 @[to_additive]
 structure IsMonoidHom [MulOneClass α] [MulOneClass β] (f : α → β) extends IsMulHom f : Prop where
@@ -163,7 +163,7 @@ end IsMonoidHom
 /-- A map to a group preserving multiplication is a monoid homomorphism. -/
 @[to_additive "A map to an additive group preserving addition is an additive monoid\nhomomorphism."]
 theorem IsMulHom.to_is_monoid_hom [MulOneClass α] [Group β] {f : α → β} (hf : IsMulHom f) : IsMonoidHom f :=
-  { map_one := mul_right_eq_self.1 $ by rw [← hf.map_mul, one_mul], map_mul := hf.map_mul }
+  { map_one := mul_right_eq_self.1 <| by rw [← hf.map_mul, one_mul], map_mul := hf.map_mul }
 #align is_mul_hom.to_is_monoid_hom IsMulHom.to_is_monoid_hom
 
 namespace IsMonoidHom
@@ -250,7 +250,7 @@ theorem map_one : f 1 = 1 :=
 /-- A group homomorphism sends inverses to inverses. -/
 @[to_additive "An additive group homomorphism sends negations to negations."]
 theorem map_inv (hf : IsGroupHom f) (a : α) : f a⁻¹ = (f a)⁻¹ :=
-  eq_inv_of_mul_eq_one_left $ by rw [← hf.map_mul, inv_mul_self, hf.map_one]
+  eq_inv_of_mul_eq_one_left <| by rw [← hf.map_mul, inv_mul_self, hf.map_one]
 #align is_group_hom.map_inv IsGroupHom.map_inv
 
 @[to_additive]
@@ -274,7 +274,7 @@ theorem comp (hf : IsGroupHom f) {γ} [Group γ] {g : β → γ} (hg : IsGroupHo
 @[to_additive "An additive group homomorphism is injective if its kernel is trivial."]
 theorem injective_iff {f : α → β} (hf : IsGroupHom f) : Function.Injective f ↔ ∀ a, f a = 1 → a = 1 :=
   ⟨fun h _ => by rw [← hf.map_one] <;> exact @h _ _, fun h x y hxy =>
-    eq_of_div_eq_one $ h _ $ by rwa [hf.map_div, div_eq_one]⟩
+    eq_of_div_eq_one <| h _ <| by rwa [hf.map_div, div_eq_one]⟩
 #align is_group_hom.injective_iff IsGroupHom.injective_iff
 
 /-- The product of group homomorphisms is a group homomorphism if the target is commutative. -/

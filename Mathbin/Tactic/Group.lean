@@ -97,7 +97,7 @@ end
 unsafe def group (locat : parse location) : tactic Unit := do
   when locat sorry
   aux_group₁ locat
-  repeat (aux_group₂ locat; aux_group₁ locat)
+  repeat (andthen (aux_group₂ locat) (aux_group₁ locat))
 #align tactic.interactive.group tactic.interactive.group
 
 end Tactic.Interactive

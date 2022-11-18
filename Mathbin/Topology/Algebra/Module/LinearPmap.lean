@@ -120,7 +120,7 @@ theorem IsClosable.graph_closure_eq_closure_graph {f : E →ₗ.[R] F} (hf : f.I
 
 /-- A `linear_pmap` is contained in its closure. -/
 theorem le_closure (f : E →ₗ.[R] F) : f ≤ f.closure := by
-  by_cases hf:f.is_closable
+  by_cases hf : f.is_closable
   · refine' le_of_le_graph _
     rw [← hf.graph_closure_eq_closure_graph]
     exact (graph f).submodule_topological_closure
@@ -147,7 +147,7 @@ theorem IsClosable.closureIsClosable {f : E →ₗ.[R] F} (hf : f.IsClosable) : 
 #align linear_pmap.is_closable.closure_is_closable LinearPmap.IsClosable.closureIsClosable
 
 theorem is_closable_iff_exists_closed_extension {f : E →ₗ.[R] F} :
-    f.IsClosable ↔ ∃ (g : E →ₗ.[R] F) (hg : g.IsClosed), f ≤ g :=
+    f.IsClosable ↔ ∃ (g : E →ₗ.[R] F)(hg : g.IsClosed), f ≤ g :=
   ⟨fun h => ⟨f.closure, h.closureIsClosed, f.le_closure⟩, fun ⟨_, hg, h⟩ => hg.IsClosable.leIsClosable h⟩
 #align linear_pmap.is_closable_iff_exists_closed_extension LinearPmap.is_closable_iff_exists_closed_extension
 

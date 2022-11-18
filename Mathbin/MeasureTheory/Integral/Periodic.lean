@@ -101,7 +101,7 @@ theorem volume_closed_ball {x : AddCircle T} (ε : ℝ) :
   rw [add_haar_closed_ball_center]
   simp only [restrict_apply' measurableSetIoc, (by linarith : -(T / 2) + T = T / 2), h₂, ←
     (AddCircle.measurePreservingMk T (-(T / 2))).measure_preimage measurableSetClosedBall]
-  by_cases hε:ε < T / 2
+  by_cases hε : ε < T / 2
   · simp [hε, min_eq_right (by linarith : 2 * ε ≤ T)]
     
   · simp [hε, min_eq_left (by linarith : T ≤ 2 * ε)]
@@ -109,7 +109,7 @@ theorem volume_closed_ball {x : AddCircle T} (ε : ℝ) :
 #align add_circle.volume_closed_ball AddCircle.volume_closed_ball
 
 instance : IsDoublingMeasure (volume : Measure (AddCircle T)) := by
-  refine' ⟨⟨Real.toNnreal 2, Filter.eventually_of_forall $ fun ε x => _⟩⟩
+  refine' ⟨⟨Real.toNnreal 2, Filter.eventually_of_forall fun ε x => _⟩⟩
   simp only [volume_closed_ball]
   erw [← Ennreal.of_real_mul zero_le_two]
   apply Ennreal.of_real_le_of_real
@@ -312,7 +312,7 @@ theorem integral_le_Sup_add_zsmul_of_pos (hT : 0 < T) (t : ℝ) :
 theorem tendsto_at_top_interval_integral_of_pos (h₀ : 0 < ∫ x in 0 ..T, g x) (hT : 0 < T) :
     Tendsto (fun t => ∫ x in 0 ..t, g x) atTop atTop := by
   apply tendsto_at_top_mono (hg.Inf_add_zsmul_le_integral_of_pos h_int hT)
-  apply at_top.tendsto_at_top_add_const_left (Inf $ (fun t => ∫ x in 0 ..t, g x) '' Icc 0 T)
+  apply at_top.tendsto_at_top_add_const_left (Inf <| (fun t => ∫ x in 0 ..t, g x) '' Icc 0 T)
   apply tendsto.at_top_zsmul_const h₀
   exact tendsto_floor_at_top.comp (tendsto_id.at_top_mul_const (inv_pos.mpr hT))
 #align
@@ -323,7 +323,7 @@ theorem tendsto_at_top_interval_integral_of_pos (h₀ : 0 < ∫ x in 0 ..T, g x)
 theorem tendsto_at_bot_interval_integral_of_pos (h₀ : 0 < ∫ x in 0 ..T, g x) (hT : 0 < T) :
     Tendsto (fun t => ∫ x in 0 ..t, g x) atBot atBot := by
   apply tendsto_at_bot_mono (hg.integral_le_Sup_add_zsmul_of_pos h_int hT)
-  apply at_bot.tendsto_at_bot_add_const_left (Sup $ (fun t => ∫ x in 0 ..t, g x) '' Icc 0 T)
+  apply at_bot.tendsto_at_bot_add_const_left (Sup <| (fun t => ∫ x in 0 ..t, g x) '' Icc 0 T)
   apply tendsto.at_bot_zsmul_const h₀
   exact tendsto_floor_at_bot.comp (tendsto_id.at_bot_mul_const (inv_pos.mpr hT))
 #align

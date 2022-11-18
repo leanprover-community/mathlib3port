@@ -130,7 +130,7 @@ theorem surjective_of_ne_zero [IsSimpleModule R N] {f : M →ₗ[R] N} (h : f �
 /-- **Schur's Lemma** for linear maps between (possibly distinct) simple modules -/
 theorem bijective_or_eq_zero [IsSimpleModule R M] [IsSimpleModule R N] (f : M →ₗ[R] N) : Function.Bijective f ∨ f = 0 :=
   by
-  by_cases h:f = 0
+  by_cases h : f = 0
   · right
     exact h
     

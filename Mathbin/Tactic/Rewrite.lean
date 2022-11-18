@@ -143,7 +143,7 @@ unsafe def assoc_rewrite_intl (assoc h e : expr) : tactic (expr × expr) := do
 -- e.g.: x + f (a + b + c) + y should generate two rewrite candidates
 unsafe def enum_assoc_subexpr' (fn : expr) : expr → tactic (Dlist expr)
   | e =>
-    Dlist.singleton e <$ (match_fn fn e >> guard (¬e.has_var)) <|>
+    Dlist.singleton e <$ (match_fn fn e >> guard ¬e.has_var) <|>
       expr.mfoldl (fun es e' => (· ++ es) <$> enum_assoc_subexpr' e') Dlist.empty e
 #align tactic.enum_assoc_subexpr' tactic.enum_assoc_subexpr'
 
@@ -167,7 +167,7 @@ unsafe def assoc_rewrite (h e : expr) (opt_assoc : Option expr := none) : tactic
     match opt_assoc with
       | none => mk_assoc_instance fn
       | some assoc => pure assoc
-  let (_, p) ← firstM (assoc_rewrite_intl assoc $ h.mk_app vs) es
+  let (_, p) ← firstM (assoc_rewrite_intl assoc <| h.mk_app vs) es
   let (e', p', _) ← tactic.rewrite p e
   pure (e', p', vs)
 #align tactic.assoc_rewrite tactic.assoc_rewrite
@@ -189,21 +189,21 @@ namespace Interactive
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `eq_lemmas -/
 private unsafe def assoc_rw_goal (rs : List rw_rule) : tactic Unit :=
-  rs.mmap' $ fun r => do
+  rs.mmap' fun r => do
     save_info r
     let eq_lemmas ← get_rule_eqn_lemmas r
     orelse'
         (do
           let e ← to_expr' r
           assoc_rewrite_target e)
-        (eq_lemmas $ fun n => do
+        (eq_lemmas fun n => do
           let e ← mk_const n
           assoc_rewrite_target e)
         (eq_lemmas eq_lemmas.empty)
 #align tactic.interactive.assoc_rw_goal tactic.interactive.assoc_rw_goal
 
 private unsafe def uses_hyp (e : expr) (h : expr) : Bool :=
-  e.fold false $ fun t _ r => r || (t = h)
+  (e.fold false) fun t _ r => r || t = h
 #align tactic.interactive.uses_hyp tactic.interactive.uses_hyp
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `eq_lemmas -/
@@ -215,18 +215,18 @@ private unsafe def assoc_rw_hyp : List rw_rule → expr → tactic Unit
     orelse'
         (do
           let e ← to_expr' r
-          when (¬uses_hyp e hyp) $ assoc_rewrite_hyp e hyp >>= assoc_rw_hyp rs)
-        (eq_lemmas $ fun n => do
+          when ¬uses_hyp e hyp <| assoc_rewrite_hyp e hyp >>= assoc_rw_hyp rs)
+        (eq_lemmas fun n => do
           let e ← mk_const n
           assoc_rewrite_hyp e hyp >>= assoc_rw_hyp rs)
         (eq_lemmas eq_lemmas.empty)
 #align tactic.interactive.assoc_rw_hyp tactic.interactive.assoc_rw_hyp
 
 private unsafe def assoc_rw_core (rs : parse rw_rules) (loca : parse location) : tactic Unit :=
-  (match loca with
+  ((match loca with
       | loc.wildcard => loca.try_apply (assoc_rw_hyp rs.rules) (assoc_rw_goal rs.rules)
       | _ => loca.apply (assoc_rw_hyp rs.rules) (assoc_rw_goal rs.rules)) >>
-      try reflexivity >>
+      try reflexivity) >>
     try (returnopt rs.end_pos >>= save_info)
 #align tactic.interactive.assoc_rw_core tactic.interactive.assoc_rw_core
 

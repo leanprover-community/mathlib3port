@@ -127,7 +127,7 @@ theorem matches_mul (P Q : RegularExpression α) : (P * Q).matches = P.matches *
 @[simp]
 theorem matches_pow (P : RegularExpression α) : ∀ n : ℕ, (P ^ n).matches = P.matches ^ n
   | 0 => matches_epsilon
-  | n + 1 => (matches_mul _ _).trans $ Eq.trans (congr_arg _ (matches_pow n)) (pow_succ _ _).symm
+  | n + 1 => (matches_mul _ _).trans <| Eq.trans (congr_arg _ (matches_pow n)) (pow_succ _ _).symm
 #align regular_expression.matches_pow RegularExpression.matches_pow
 
 @[simp]
@@ -226,9 +226,8 @@ theorem add_rmatch_iff (P Q : RegularExpression α) (x : List α) : (P + Q).rmat
     
 #align regular_expression.add_rmatch_iff RegularExpression.add_rmatch_iff
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (t u) -/
 theorem mul_rmatch_iff (P Q : RegularExpression α) (x : List α) :
-    (P * Q).rmatch x ↔ ∃ (t : List α) (u : List α), x = t ++ u ∧ P.rmatch t ∧ Q.rmatch u := by
+    (P * Q).rmatch x ↔ ∃ t u : List α, x = t ++ u ∧ P.rmatch t ∧ Q.rmatch u := by
   induction' x with a x ih generalizing P Q
   · rw [rmatch, match_epsilon]
     constructor
@@ -319,7 +318,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
         · intro t' ht'
           cases' ht' with ht' ht'
           · rw [ht']
-            exact ⟨dec_trivial, ht⟩
+            exact ⟨by decide, ht⟩
             
           · exact helem _ ht'
             

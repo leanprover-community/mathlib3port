@@ -159,7 +159,7 @@ instance [LinearOrder α] : IsTrans (Finset.Colex α) (· < ·) :=
   ⟨fun _ _ _ => Colex.lt_trans⟩
 
 theorem lt_trichotomy [LinearOrder α] (A B : Finset.Colex α) : A < B ∨ A = B ∨ B < A := by
-  by_cases h₁:A = B
+  by_cases h₁ : A = B
   · tauto
     
   rcases exists_max_image (A \ B ∪ B \ A) id _ with ⟨k, hk, z⟩

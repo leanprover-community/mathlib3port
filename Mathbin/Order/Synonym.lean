@@ -48,97 +48,135 @@ namespace OrderDual
 instance [h : Nontrivial α] : Nontrivial αᵒᵈ :=
   h
 
+#print OrderDual.toDual /-
 /-- `to_dual` is the identity function to the `order_dual` of a linear order.  -/
 def toDual : α ≃ αᵒᵈ :=
   Equiv.refl _
 #align order_dual.to_dual OrderDual.toDual
+-/
 
+#print OrderDual.ofDual /-
 /-- `of_dual` is the identity function from the `order_dual` of a linear order.  -/
 def ofDual : αᵒᵈ ≃ α :=
   Equiv.refl _
 #align order_dual.of_dual OrderDual.ofDual
+-/
 
+#print OrderDual.toDual_symm_eq /-
 @[simp]
-theorem to_dual_symm_eq : (@toDual α).symm = of_dual :=
+theorem toDual_symm_eq : (@toDual α).symm = of_dual :=
   rfl
-#align order_dual.to_dual_symm_eq OrderDual.to_dual_symm_eq
+#align order_dual.to_dual_symm_eq OrderDual.toDual_symm_eq
+-/
 
+#print OrderDual.ofDual_symm_eq /-
 @[simp]
-theorem of_dual_symm_eq : (@ofDual α).symm = to_dual :=
+theorem ofDual_symm_eq : (@ofDual α).symm = to_dual :=
   rfl
-#align order_dual.of_dual_symm_eq OrderDual.of_dual_symm_eq
+#align order_dual.of_dual_symm_eq OrderDual.ofDual_symm_eq
+-/
 
+#print OrderDual.toDual_ofDual /-
 @[simp]
-theorem to_dual_of_dual (a : αᵒᵈ) : toDual (ofDual a) = a :=
+theorem toDual_ofDual (a : αᵒᵈ) : toDual (ofDual a) = a :=
   rfl
-#align order_dual.to_dual_of_dual OrderDual.to_dual_of_dual
+#align order_dual.to_dual_of_dual OrderDual.toDual_ofDual
+-/
 
+#print OrderDual.ofDual_toDual /-
 @[simp]
-theorem of_dual_to_dual (a : α) : ofDual (toDual a) = a :=
+theorem ofDual_toDual (a : α) : ofDual (toDual a) = a :=
   rfl
-#align order_dual.of_dual_to_dual OrderDual.of_dual_to_dual
+#align order_dual.of_dual_to_dual OrderDual.ofDual_toDual
+-/
 
+#print OrderDual.toDual_inj /-
 @[simp]
-theorem to_dual_inj {a b : α} : toDual a = toDual b ↔ a = b :=
+theorem toDual_inj {a b : α} : toDual a = toDual b ↔ a = b :=
   Iff.rfl
-#align order_dual.to_dual_inj OrderDual.to_dual_inj
+#align order_dual.to_dual_inj OrderDual.toDual_inj
+-/
 
+#print OrderDual.ofDual_inj /-
 @[simp]
-theorem of_dual_inj {a b : αᵒᵈ} : ofDual a = ofDual b ↔ a = b :=
+theorem ofDual_inj {a b : αᵒᵈ} : ofDual a = ofDual b ↔ a = b :=
   Iff.rfl
-#align order_dual.of_dual_inj OrderDual.of_dual_inj
+#align order_dual.of_dual_inj OrderDual.ofDual_inj
+-/
 
+#print OrderDual.toDual_le_toDual /-
 @[simp]
-theorem to_dual_le_to_dual [LE α] {a b : α} : toDual a ≤ toDual b ↔ b ≤ a :=
+theorem toDual_le_toDual [LE α] {a b : α} : toDual a ≤ toDual b ↔ b ≤ a :=
   Iff.rfl
-#align order_dual.to_dual_le_to_dual OrderDual.to_dual_le_to_dual
+#align order_dual.to_dual_le_to_dual OrderDual.toDual_le_toDual
+-/
 
+#print OrderDual.toDual_lt_toDual /-
 @[simp]
-theorem to_dual_lt_to_dual [LT α] {a b : α} : toDual a < toDual b ↔ b < a :=
+theorem toDual_lt_toDual [LT α] {a b : α} : toDual a < toDual b ↔ b < a :=
   Iff.rfl
-#align order_dual.to_dual_lt_to_dual OrderDual.to_dual_lt_to_dual
+#align order_dual.to_dual_lt_to_dual OrderDual.toDual_lt_toDual
+-/
 
+#print OrderDual.ofDual_le_ofDual /-
 @[simp]
-theorem of_dual_le_of_dual [LE α] {a b : αᵒᵈ} : ofDual a ≤ ofDual b ↔ b ≤ a :=
+theorem ofDual_le_ofDual [LE α] {a b : αᵒᵈ} : ofDual a ≤ ofDual b ↔ b ≤ a :=
   Iff.rfl
-#align order_dual.of_dual_le_of_dual OrderDual.of_dual_le_of_dual
+#align order_dual.of_dual_le_of_dual OrderDual.ofDual_le_ofDual
+-/
 
+#print OrderDual.ofDual_lt_ofDual /-
 @[simp]
-theorem of_dual_lt_of_dual [LT α] {a b : αᵒᵈ} : ofDual a < ofDual b ↔ b < a :=
+theorem ofDual_lt_ofDual [LT α] {a b : αᵒᵈ} : ofDual a < ofDual b ↔ b < a :=
   Iff.rfl
-#align order_dual.of_dual_lt_of_dual OrderDual.of_dual_lt_of_dual
+#align order_dual.of_dual_lt_of_dual OrderDual.ofDual_lt_ofDual
+-/
 
-theorem le_to_dual [LE α] {a : αᵒᵈ} {b : α} : a ≤ toDual b ↔ b ≤ ofDual a :=
+#print OrderDual.le_toDual /-
+theorem le_toDual [LE α] {a : αᵒᵈ} {b : α} : a ≤ toDual b ↔ b ≤ ofDual a :=
   Iff.rfl
-#align order_dual.le_to_dual OrderDual.le_to_dual
+#align order_dual.le_to_dual OrderDual.le_toDual
+-/
 
-theorem lt_to_dual [LT α] {a : αᵒᵈ} {b : α} : a < toDual b ↔ b < ofDual a :=
+#print OrderDual.lt_toDual /-
+theorem lt_toDual [LT α] {a : αᵒᵈ} {b : α} : a < toDual b ↔ b < ofDual a :=
   Iff.rfl
-#align order_dual.lt_to_dual OrderDual.lt_to_dual
+#align order_dual.lt_to_dual OrderDual.lt_toDual
+-/
 
-theorem to_dual_le [LE α] {a : α} {b : αᵒᵈ} : toDual a ≤ b ↔ ofDual b ≤ a :=
+#print OrderDual.toDual_le /-
+theorem toDual_le [LE α] {a : α} {b : αᵒᵈ} : toDual a ≤ b ↔ ofDual b ≤ a :=
   Iff.rfl
-#align order_dual.to_dual_le OrderDual.to_dual_le
+#align order_dual.to_dual_le OrderDual.toDual_le
+-/
 
-theorem to_dual_lt [LT α] {a : α} {b : αᵒᵈ} : toDual a < b ↔ ofDual b < a :=
+#print OrderDual.toDual_lt /-
+theorem toDual_lt [LT α] {a : α} {b : αᵒᵈ} : toDual a < b ↔ ofDual b < a :=
   Iff.rfl
-#align order_dual.to_dual_lt OrderDual.to_dual_lt
+#align order_dual.to_dual_lt OrderDual.toDual_lt
+-/
 
+#print OrderDual.rec /-
 /-- Recursor for `αᵒᵈ`. -/
 @[elab_as_elim]
 protected def rec {C : αᵒᵈ → Sort _} (h₂ : ∀ a : α, C (toDual a)) : ∀ a : αᵒᵈ, C a :=
   h₂
 #align order_dual.rec OrderDual.rec
+-/
 
+#print OrderDual.forall /-
 @[simp]
 protected theorem forall {p : αᵒᵈ → Prop} : (∀ a, p a) ↔ ∀ a, p (toDual a) :=
   Iff.rfl
 #align order_dual.forall OrderDual.forall
+-/
 
+#print OrderDual.exists /-
 @[simp]
 protected theorem exists {p : αᵒᵈ → Prop} : (∃ a, p a) ↔ ∃ a, p (toDual a) :=
   Iff.rfl
 #align order_dual.exists OrderDual.exists
+-/
 
 alias to_dual_le_to_dual ↔ _ _root_.has_le.le.dual
 
@@ -153,54 +191,72 @@ end OrderDual
 /-! ### Lexicographic order -/
 
 
+#print Lex /-
 /-- A type synonym to equip a type with its lexicographic order. -/
 def Lex (α : Type _) :=
   α
 #align lex Lex
+-/
 
+#print toLex /-
 /-- `to_lex` is the identity function to the `lex` of a type.  -/
 @[match_pattern]
 def toLex : α ≃ Lex α :=
   Equiv.refl _
 #align to_lex toLex
+-/
 
+#print ofLex /-
 /-- `of_lex` is the identity function from the `lex` of a type.  -/
 @[match_pattern]
 def ofLex : Lex α ≃ α :=
   Equiv.refl _
 #align of_lex ofLex
+-/
 
+#print toLex_symm_eq /-
 @[simp]
-theorem to_lex_symm_eq : (@toLex α).symm = ofLex :=
+theorem toLex_symm_eq : (@toLex α).symm = ofLex :=
   rfl
-#align to_lex_symm_eq to_lex_symm_eq
+#align to_lex_symm_eq toLex_symm_eq
+-/
 
 @[simp]
-theorem of_lex_symm_eq : (@ofLex α).symm = toLex :=
+theorem ofLex_symm_eq : (@ofLex α).symm = toLex :=
   rfl
-#align of_lex_symm_eq of_lex_symm_eq
+#align of_lex_symm_eq ofLex_symm_eq
 
+#print toLex_ofLex /-
 @[simp]
-theorem to_lex_of_lex (a : Lex α) : toLex (ofLex a) = a :=
+theorem toLex_ofLex (a : Lex α) : toLex (ofLex a) = a :=
   rfl
-#align to_lex_of_lex to_lex_of_lex
+#align to_lex_of_lex toLex_ofLex
+-/
 
+#print ofLex_toLex /-
 @[simp]
-theorem of_lex_to_lex (a : α) : ofLex (toLex a) = a :=
+theorem ofLex_toLex (a : α) : ofLex (toLex a) = a :=
   rfl
-#align of_lex_to_lex of_lex_to_lex
+#align of_lex_to_lex ofLex_toLex
+-/
 
+#print toLex_inj /-
 @[simp]
-theorem to_lex_inj {a b : α} : toLex a = toLex b ↔ a = b :=
+theorem toLex_inj {a b : α} : toLex a = toLex b ↔ a = b :=
   Iff.rfl
-#align to_lex_inj to_lex_inj
+#align to_lex_inj toLex_inj
+-/
 
+#print ofLex_inj /-
 @[simp]
-theorem of_lex_inj {a b : Lex α} : ofLex a = ofLex b ↔ a = b :=
+theorem ofLex_inj {a b : Lex α} : ofLex a = ofLex b ↔ a = b :=
   Iff.rfl
-#align of_lex_inj of_lex_inj
+#align of_lex_inj ofLex_inj
+-/
 
+#print Lex.rec /-
 /-- A recursor for `lex`. Use as `induction x using lex.rec`. -/
 protected def Lex.rec {β : Lex α → Sort _} (h : ∀ a, β (toLex a)) : ∀ a, β a := fun a => h (ofLex a)
 #align lex.rec Lex.rec
+-/
 

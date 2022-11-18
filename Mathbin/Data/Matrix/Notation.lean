@@ -59,7 +59,7 @@ unsafe instance matrix.reflect [reflected_univ.{u}] [reflected_univ.{u_1}] [refl
           reflected _ @id.{max u_1 u_2 u + 1}).subst₂
       ((by trace "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[]" :
             reflected _ @Matrix.{u_1, u_2, u}).subst₃
-        q(_) q(_) q(_)) $
+        q(_) q(_) q(_)) <|
     by
     dsimp only [Matrix]
     exact h m
@@ -76,15 +76,14 @@ open Interactive
 open Interactive.Types
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (m n) -/
 /-- Parse the entries of a matrix -/
-unsafe def entry_parser {α : Type} (p : parser α) : parser (Σ (m) (n), Fin m → Fin n → α) := do
+unsafe def entry_parser {α : Type} (p : parser α) : parser (Σm n, Fin m → Fin n → α) := do
   let-- a list of lists if the matrix has at least one row, or the number of columns if the matrix has
   -- zero rows.
   p :
-    parser (List (List α) ⊕ ℕ) :=-- empty rows
+    parser (Sum (List (List α)) ℕ) :=-- empty rows
         Sum.inl <$>
-        ((pure [] <* tk ";").repeat_at_least 1 <|> (sep_by_trailing (tk ";") $ sep_by_trailing (tk ",") p)) <|>
+        ((pure [] <* tk ";").repeat_at_least 1 <|> (sep_by_trailing (tk ";") <| sep_by_trailing (tk ",") p)) <|>
       Sum.inr <$> List.length <$> many (tk ",")
   let which
     ←-- empty columns
@@ -100,20 +99,19 @@ unsafe def entry_parser {α : Type} (p : parser α) : parser (Σ (m) (n), Fin m 
     | Sum.inr n => pure ⟨0, n, finZeroElim⟩
 #align matrix.entry_parser matrix.entry_parser
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (m n) -/
 -- Lean can't find this instance without some help. We only need it available in `Type 0`, and it is
 -- a massive amount of effort to make it universe-polymorphic.
 @[instance]
 unsafe def sigma_sigma_fin_matrix_has_reflect {α : Type} [has_reflect α] [reflected _ α] :
-    has_reflect (Σ (m : ℕ) (n : ℕ), Fin m → Fin n → α) :=
-  @sigma.reflect.{0, 0} _ _ ℕ (fun m => Σ n, Fin m → Fin n → α) _ _ _ $ fun i =>
+    has_reflect (Σm n : ℕ, Fin m → Fin n → α) :=
+  (@sigma.reflect.{0, 0} _ _ ℕ (fun m => Σn, Fin m → Fin n → α) _ _ _) fun i =>
     @sigma.reflect.{0, 0} _ _ ℕ _ _ _ _ fun j => inferInstance
 #align matrix.sigma_sigma_fin_matrix_has_reflect matrix.sigma_sigma_fin_matrix_has_reflect
 
 /-- `!![a, b; c, d]` notation for matrices indexed by `fin m` and `fin n`. See the module docstring
 for details. -/
 @[user_notation]
-unsafe def notation (_ : parse $ tk "!![") (val : parse (entry_parser (parser.pexpr 1) <* tk "]")) : parser pexpr := do
+unsafe def notation (_ : parse <| tk "!![") (val : parse (entry_parser (parser.pexpr 1) <* tk "]")) : parser pexpr := do
   let ⟨m, n, entries⟩ := val
   let entry_vals := pi_fin.to_pexpr (pi_fin.to_pexpr ∘ entries)
   pure (``(@Matrix.of (Fin $(q(m))) (Fin $(q(n))) _).app entry_vals)
@@ -134,8 +132,8 @@ instance [Repr α] :
       (Matrix (Fin m) (Fin n)
         α) where repr f :=
     "!![" ++
-        (String.intercalate "; " $
-          (List.finRange m).map $ fun i => String.intercalate ", " $ (List.finRange n).map fun j => repr (f i j)) ++
+        (String.intercalate "; " <|
+          (List.finRange m).map fun i => String.intercalate ", " <| (List.finRange n).map fun j => repr (f i j)) ++
       "]"
 
 @[simp]
@@ -293,21 +291,21 @@ theorem vec_mul_empty [Fintype n'] (v : n' → α) (B : Matrix n' (Fin 0) α) : 
 
 @[simp]
 theorem cons_vec_mul (x : α) (v : Fin n → α) (B : Fin n.succ → o' → α) :
-    vecMul (vecCons x v) (of B) = x • vecHead B + vecMul v (of $ vecTail B) := by
+    vecMul (vecCons x v) (of B) = x • vecHead B + vecMul v (of <| vecTail B) := by
   ext i
   simp [vec_mul]
 #align matrix.cons_vec_mul Matrix.cons_vec_mul
 
 @[simp]
 theorem vec_mul_cons (v : Fin n.succ → α) (w : o' → α) (B : Fin n → o' → α) :
-    vecMul v (of $ vecCons w B) = vecHead v • w + vecMul (vecTail v) (of B) := by
+    vecMul v (of <| vecCons w B) = vecHead v • w + vecMul (vecTail v) (of B) := by
   ext i
   simp [vec_mul]
 #align matrix.vec_mul_cons Matrix.vec_mul_cons
 
 @[simp]
 theorem cons_vec_mul_cons (x : α) (v : Fin n → α) (w : o' → α) (B : Fin n → o' → α) :
-    vecMul (vecCons x v) (of $ vecCons w B) = x • w + vecMul v (of B) := by simp
+    vecMul (vecCons x v) (of <| vecCons w B) = x • w + vecMul v (of B) := by simp
 #align matrix.cons_vec_mul_cons Matrix.cons_vec_mul_cons
 
 end VecMul
@@ -328,7 +326,7 @@ theorem mul_vec_empty (A : Matrix m' (Fin 0) α) (v : Fin 0 → α) : mulVec A v
 
 @[simp]
 theorem cons_mul_vec [Fintype n'] (v : n' → α) (A : Fin m → n' → α) (w : n' → α) :
-    mulVec (of $ vecCons v A) w = vecCons (dotProduct v w) (mulVec (of A) w) := by
+    mulVec (of <| vecCons v A) w = vecCons (dotProduct v w) (mulVec (of A) w) := by
   ext i
   refine' Fin.cases _ _ i <;> simp [mul_vec]
 #align matrix.cons_mul_vec Matrix.cons_mul_vec

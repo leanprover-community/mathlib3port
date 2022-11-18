@@ -62,15 +62,15 @@ variable [Add A] [Add B] [Add T] [CovariantClass B B (· + ·) (· ≤ ·)]
 
 theorem sup_support_mul_le {degb : A → B} (degbm : ∀ {a b}, degb (a + b) ≤ degb a + degb b)
     (f g : AddMonoidAlgebra R A) : (f * g).support.sup degb ≤ f.support.sup degb + g.support.sup degb := by
-  refine' (Finset.sup_mono $ support_mul _ _).trans _
+  refine' (Finset.sup_mono <| support_mul _ _).trans _
   simp_rw [Finset.sup_bUnion, Finset.sup_singleton]
-  refine' Finset.sup_le $ fun fd fds => Finset.sup_le $ fun gd gds => degbm.trans $ add_le_add _ _ <;>
+  refine' Finset.sup_le fun fd fds => Finset.sup_le fun gd gds => degbm.trans <| add_le_add _ _ <;>
     exact Finset.le_sup ‹_›
 #align add_monoid_algebra.sup_support_mul_le AddMonoidAlgebra.sup_support_mul_le
 
 theorem le_inf_support_mul {degt : A → T} (degtm : ∀ {a b}, degt a + degt b ≤ degt (a + b))
     (f g : AddMonoidAlgebra R A) : f.support.inf degt + g.support.inf degt ≤ (f * g).support.inf degt :=
-  OrderDual.of_dual_le_of_dual.mpr $ sup_support_mul_le (fun a b => OrderDual.of_dual_le_of_dual.mp degtm) f g
+  OrderDual.ofDual_le_ofDual.mpr <| sup_support_mul_le (fun a b => OrderDual.ofDual_le_ofDual.mp degtm) f g
 #align add_monoid_algebra.le_inf_support_mul AddMonoidAlgebra.le_inf_support_mul
 
 end AddOnly
@@ -96,9 +96,9 @@ theorem sup_support_list_prod_le (degb0 : degb 0 ≤ 0) (degbm : ∀ a b, degb (
 theorem le_inf_support_list_prod (degt0 : 0 ≤ degt 0) (degtm : ∀ a b, degt a + degt b ≤ degt (a + b))
     (l : List (AddMonoidAlgebra R A)) :
     (l.map fun f : AddMonoidAlgebra R A => f.support.inf degt).Sum ≤ l.Prod.support.inf degt :=
-  OrderDual.of_dual_le_of_dual.mpr $
-    sup_support_list_prod_le (OrderDual.of_dual_le_of_dual.mp degt0)
-      (fun a b => OrderDual.of_dual_le_of_dual.mp (degtm _ _)) l
+  OrderDual.ofDual_le_ofDual.mpr <|
+    sup_support_list_prod_le (OrderDual.ofDual_le_ofDual.mp degt0)
+      (fun a b => OrderDual.ofDual_le_ofDual.mp (degtm _ _)) l
 #align add_monoid_algebra.le_inf_support_list_prod AddMonoidAlgebra.le_inf_support_list_prod
 
 theorem sup_support_pow_le (degb0 : degb 0 ≤ 0) (degbm : ∀ a b, degb (a + b) ≤ degb a + degb b) (n : ℕ)
@@ -110,9 +110,8 @@ theorem sup_support_pow_le (degb0 : degb 0 ≤ 0) (degbm : ∀ a b, degb (a + b)
 
 theorem le_inf_support_pow (degt0 : 0 ≤ degt 0) (degtm : ∀ a b, degt a + degt b ≤ degt (a + b)) (n : ℕ)
     (f : AddMonoidAlgebra R A) : n • f.support.inf degt ≤ (f ^ n).support.inf degt :=
-  OrderDual.of_dual_le_of_dual.mpr $
-    sup_support_pow_le (OrderDual.of_dual_le_of_dual.mp degt0) (fun a b => OrderDual.of_dual_le_of_dual.mp (degtm _ _))
-      n f
+  OrderDual.ofDual_le_ofDual.mpr <|
+    sup_support_pow_le (OrderDual.ofDual_le_ofDual.mp degt0) (fun a b => OrderDual.ofDual_le_ofDual.mp (degtm _ _)) n f
 #align add_monoid_algebra.le_inf_support_pow AddMonoidAlgebra.le_inf_support_pow
 
 end AddMonoids
@@ -136,14 +135,14 @@ theorem sup_support_multiset_prod_le (degb0 : degb 0 ≤ 0) (degbm : ∀ a b, de
 theorem le_inf_support_multiset_prod (degt0 : 0 ≤ degt 0) (degtm : ∀ a b, degt a + degt b ≤ degt (a + b))
     (m : Multiset (AddMonoidAlgebra R A)) :
     (m.map fun f : AddMonoidAlgebra R A => f.support.inf degt).Sum ≤ m.Prod.support.inf degt :=
-  OrderDual.of_dual_le_of_dual.mpr $
-    sup_support_multiset_prod_le (OrderDual.of_dual_le_of_dual.mp degt0)
-      (fun a b => OrderDual.of_dual_le_of_dual.mp (degtm _ _)) m
+  OrderDual.ofDual_le_ofDual.mpr <|
+    sup_support_multiset_prod_le (OrderDual.ofDual_le_ofDual.mp degt0)
+      (fun a b => OrderDual.ofDual_le_ofDual.mp (degtm _ _)) m
 #align add_monoid_algebra.le_inf_support_multiset_prod AddMonoidAlgebra.le_inf_support_multiset_prod
 
 theorem sup_support_finset_prod_le (degb0 : degb 0 ≤ 0) (degbm : ∀ a b, degb (a + b) ≤ degb a + degb b) (s : Finset ι)
     (f : ι → AddMonoidAlgebra R A) : (∏ i in s, f i).support.sup degb ≤ ∑ i in s, (f i).support.sup degb :=
-  (sup_support_multiset_prod_le degb0 degbm _).trans_eq $ congr_arg _ $ Multiset.map_map _ _ _
+  (sup_support_multiset_prod_le degb0 degbm _).trans_eq <| congr_arg _ <| Multiset.map_map _ _ _
 #align add_monoid_algebra.sup_support_finset_prod_le AddMonoidAlgebra.sup_support_finset_prod_le
 
 theorem le_inf_support_finset_prod (degt0 : 0 ≤ degt 0) (degtm : ∀ a b, degt a + degt b ≤ degt (a + b)) (s : Finset ι)

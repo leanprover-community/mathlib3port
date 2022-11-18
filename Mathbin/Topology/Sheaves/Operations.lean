@@ -3,12 +3,10 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.CategoryTheory.Sites.CompatibleSheafification
 import Mathbin.Algebra.Category.RingCat.Instances
 import Mathbin.Algebra.Category.RingCat.FilteredColimits
-import Mathbin.Algebra.Category.GroupCat.Limits
 import Mathbin.RingTheory.Localization.Basic
-import Mathbin.Topology.Sheaves.Sheafify
+import Mathbin.Topology.Sheaves.Stalks
 
 /-!
 
@@ -47,8 +45,8 @@ variable {F : X.Presheaf CommRingCat.{w}} (G : F.SubmonoidPresheaf)
 
 /-- The localization of a presheaf of `CommRing`s with respect to a `submonoid_presheaf`. -/
 protected noncomputable def SubmonoidPresheaf.localizationPresheaf : X.Presheaf CommRingCat where
-  obj U := CommRingCat.of $ Localization (G.obj U)
-  map U V i := CommRingCat.ofHom $ IsLocalization.map _ (F.map i) (G.map i)
+  obj U := CommRingCat.of <| Localization (G.obj U)
+  map U V i := CommRingCat.ofHom <| IsLocalization.map _ (F.map i) (G.map i)
   map_id' U := by
     apply IsLocalization.ring_hom_ext (G.obj U)
     any_goals
@@ -68,7 +66,7 @@ protected noncomputable def SubmonoidPresheaf.localizationPresheaf : X.Presheaf 
 
 /-- The map into the localization presheaf. -/
 def SubmonoidPresheaf.toLocalizationPresheaf : F ⟶ G.localizationPresheaf where
-  app U := CommRingCat.ofHom $ algebraMap (F.obj U) (Localization $ G.obj U)
+  app U := CommRingCat.ofHom <| algebraMap (F.obj U) (Localization <| G.obj U)
   naturality' U V i := (IsLocalization.map_comp (G.map i)).symm
 #align Top.presheaf.submonoid_presheaf.to_localization_presheaf TopCat.Presheaf.SubmonoidPresheaf.toLocalizationPresheaf
 

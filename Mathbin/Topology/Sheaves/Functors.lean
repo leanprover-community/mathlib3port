@@ -48,7 +48,7 @@ theorem map_diagram : Pairwise.diagram U ⋙ Opens.map f = Pairwise.diagram ((Op
 #align
   Top.presheaf.sheaf_condition_pairwise_intersections.map_diagram TopCat.Presheaf.SheafConditionPairwiseIntersections.map_diagram
 
-theorem map_cocone : (Opens.map f).mapCocone (Pairwise.cocone U) == Pairwise.cocone ((Opens.map f).obj ∘ U) := by
+theorem map_cocone : HEq ((Opens.map f).mapCocone (Pairwise.cocone U)) (Pairwise.cocone ((Opens.map f).obj ∘ U)) := by
   unfold functor.map_cocone cocones.functoriality
   dsimp
   congr
@@ -66,7 +66,7 @@ theorem pushforward_sheaf_of_sheaf {F : Presheaf C X} (h : F.IsSheafPairwiseInte
   convert h ((opens.map f).obj ∘ U) using 2
   rw [← map_diagram]
   rfl
-  change F.map_cone ((opens.map f).mapCocone _).op == _
+  change HEq (F.map_cone ((opens.map f).mapCocone _).op) _
   congr
   iterate 2 rw [map_diagram]
   apply map_cocone

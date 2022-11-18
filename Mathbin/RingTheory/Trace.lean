@@ -132,7 +132,7 @@ omit b
 -/
 @[simp]
 theorem trace_algebra_map (x : K) : trace K L (algebraMap K L x) = finrank K L • x := by
-  by_cases H:∃ s : Finset L, Nonempty (Basis s K L)
+  by_cases H : ∃ s : Finset L, Nonempty (Basis s K L)
   · rw [trace_algebra_map_of_basis H.some_spec.some, finrank_eq_card_basis H.some_spec.some]
     
   · simp [trace_eq_zero_of_not_exists_basis K H, finrank_eq_zero_of_not_exists_basis_finset H]
@@ -259,7 +259,7 @@ theorem trace_gen_eq_zero {x : L} (hx : ¬IsIntegral K x) : Algebra.trace K K⟮
 theorem trace_gen_eq_sum_roots (x : L) (hf : (minpoly K x).Splits (algebraMap K F)) :
     algebraMap K F (trace K K⟮⟯ (AdjoinSimple.gen K x)) = ((minpoly K x).map (algebraMap K F)).roots.Sum := by
   have injKxL := (algebraMap K⟮⟯ L).Injective
-  by_cases hx:IsIntegral K x
+  by_cases hx : IsIntegral K x
   swap
   · simp [minpoly.eq_zero hx, trace_gen_eq_zero hx]
     
@@ -559,7 +559,7 @@ theorem det_trace_matrix_ne_zero' [IsSeparable K L] : det (traceMatrix K pb.Basi
   refine' mt mul_self_eq_zero.mp _
   · simp only [det_vandermonde, Finset.prod_eq_zero_iff, not_exists, sub_eq_zero]
     intro i _ j hij h
-    exact (finset.mem_Ioi.mp hij).ne' (e.injective $ pb.alg_hom_ext h)
+    exact (finset.mem_Ioi.mp hij).ne' (e.injective <| pb.alg_hom_ext h)
     
   · rw [AlgHom.card, pb.finrank]
     

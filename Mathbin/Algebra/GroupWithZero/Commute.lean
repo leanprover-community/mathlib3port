@@ -22,7 +22,7 @@ namespace Ring
 open Classical
 
 theorem mul_inverse_rev' {a b : M₀} (h : Commute a b) : inverse (a * b) = inverse b * inverse a := by
-  by_cases hab:IsUnit (a * b)
+  by_cases hab : IsUnit (a * b)
   · obtain ⟨⟨a, rfl⟩, b, rfl⟩ := h.is_unit_mul_iff.mp hab
     rw [← Units.coe_mul, inverse_unit, inverse_unit, inverse_unit, ← Units.coe_mul, mul_inv_rev]
     
@@ -40,7 +40,7 @@ theorem mul_inverse_rev {M₀} [CommMonoidWithZero M₀] (a b : M₀) : Ring.inv
 end Ring
 
 theorem Commute.ring_inverse_ring_inverse {a b : M₀} (h : Commute a b) : Commute (Ring.inverse a) (Ring.inverse b) :=
-  (Ring.mul_inverse_rev' h.symm).symm.trans $ (congr_arg _ h.symm.Eq).trans $ Ring.mul_inverse_rev' h
+  (Ring.mul_inverse_rev' h.symm).symm.trans <| (congr_arg _ h.symm.Eq).trans <| Ring.mul_inverse_rev' h
 #align commute.ring_inverse_ring_inverse Commute.ring_inverse_ring_inverse
 
 namespace Commute

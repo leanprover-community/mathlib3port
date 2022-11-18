@@ -128,7 +128,7 @@ variable (ψ : (⨁ i, M i) →ₗ[R] N)
 
 /-- Every linear map from a direct sum agrees with the one obtained by applying
 the universal property to each of its components. -/
-theorem toModule.unique (f : ⨁ i, M i) : ψ f = toModule R ι N (fun i => ψ.comp $ lof R ι M i) f :=
+theorem toModule.unique (f : ⨁ i, M i) : ψ f = toModule R ι N (fun i => ψ.comp <| lof R ι M i) f :=
   toAddMonoid.unique ψ.toAddMonoidHom f
 #align direct_sum.to_module.unique DirectSum.toModule.unique
 
@@ -146,7 +146,7 @@ theorem linear_map_ext ⦃ψ ψ' : (⨁ i, M i) →ₗ[R] N⦄ (H : ∀ i, ψ.co
 into a larger subset of the direct summands, as a linear map.
 -/
 def lsetToSet (S T : Set ι) (H : S ⊆ T) : (⨁ i : S, M i) →ₗ[R] ⨁ i : T, M i :=
-  toModule R _ _ $ fun i => lof R T (fun i : Subtype T => M i) ⟨i, H i.Prop⟩
+  (toModule R _ _) fun i => lof R T (fun i : Subtype T => M i) ⟨i, H i.Prop⟩
 #align direct_sum.lset_to_set DirectSum.lsetToSet
 
 omit dec_ι
@@ -262,18 +262,18 @@ variable [∀ i j, AddCommMonoid (δ i j)] [∀ i j, Module R (δ i j)]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- `curry` as a linear map.-/
-noncomputable def sigmaLcurry : (⨁ i : Σ i, _, δ i.1 i.2) →ₗ[R] ⨁ (i) (j), δ i j :=
+noncomputable def sigmaLcurry : (⨁ i : Σi, _, δ i.1 i.2) →ₗ[R] ⨁ (i) (j), δ i j :=
   { sigmaCurry with map_smul' := fun r => by convert @Dfinsupp.sigma_curry_smul _ _ _ δ _ _ _ r }
 #align direct_sum.sigma_lcurry DirectSum.sigmaLcurry
 
 @[simp]
-theorem sigma_lcurry_apply (f : ⨁ i : Σ i, _, δ i.1 i.2) (i : ι) (j : α i) : sigmaLcurry R f i j = f ⟨i, j⟩ :=
+theorem sigma_lcurry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) : sigmaLcurry R f i j = f ⟨i, j⟩ :=
   sigma_curry_apply f i j
 #align direct_sum.sigma_lcurry_apply DirectSum.sigma_lcurry_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- `uncurry` as a linear map.-/
-noncomputable def sigmaLuncurry : (⨁ (i) (j), δ i j) →ₗ[R] ⨁ i : Σ i, _, δ i.1 i.2 :=
+noncomputable def sigmaLuncurry : (⨁ (i) (j), δ i j) →ₗ[R] ⨁ i : Σi, _, δ i.1 i.2 :=
   { sigmaUncurry with map_smul' := Dfinsupp.sigma_uncurry_smul }
 #align direct_sum.sigma_luncurry DirectSum.sigmaLuncurry
 
@@ -285,7 +285,7 @@ theorem sigma_luncurry_apply (f : ⨁ (i) (j), δ i j) (i : ι) (j : α i) : sig
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- `curry_equiv` as a linear equiv.-/
-noncomputable def sigmaLcurryEquiv : (⨁ i : Σ i, _, δ i.1 i.2) ≃ₗ[R] ⨁ (i) (j), δ i j :=
+noncomputable def sigmaLcurryEquiv : (⨁ i : Σi, _, δ i.1 i.2) ≃ₗ[R] ⨁ (i) (j), δ i j :=
   { sigmaCurryEquiv, sigmaLcurry R with }
 #align direct_sum.sigma_lcurry_equiv DirectSum.sigmaLcurryEquiv
 
@@ -349,7 +349,7 @@ theorem IsInternal.submoduleIndependent (h : IsInternal A) : CompleteLattice.Ind
 /-- Given an internal direct sum decomposition of a module `M`, and a basis for each of the
 components of the direct sum, the disjoint union of these bases is a basis for `M`. -/
 noncomputable def IsInternal.collectedBasis (h : IsInternal A) {α : ι → Type _} (v : ∀ i, Basis (α i) R (A i)) :
-    Basis (Σ i, α i) R
+    Basis (Σi, α i) R
       M where repr :=
     ((LinearEquiv.ofBijective (DirectSum.coeLinearMap A) h.Injective h.Surjective).symm ≪≫ₗ
         Dfinsupp.mapRange.linearEquiv fun i => (v i).repr) ≪≫ₗ
@@ -358,7 +358,7 @@ noncomputable def IsInternal.collectedBasis (h : IsInternal A) {α : ι → Type
 
 @[simp]
 theorem IsInternal.collected_basis_coe (h : IsInternal A) {α : ι → Type _} (v : ∀ i, Basis (α i) R (A i)) :
-    ⇑(h.collectedBasis v) = fun a : Σ i, α i => ↑(v a.1 a.2) := by
+    ⇑(h.collectedBasis v) = fun a : Σi, α i => ↑(v a.1 a.2) := by
   funext a
   simp only [is_internal.collected_basis, to_module, coe_linear_map, AddEquiv.to_fun_eq_coe, Basis.coe_of_repr,
     Basis.repr_symm_apply, Dfinsupp.lsum_apply_apply, Dfinsupp.mapRange.linear_equiv_apply,
@@ -369,7 +369,7 @@ theorem IsInternal.collected_basis_coe (h : IsInternal A) {α : ι → Type _} (
 #align direct_sum.is_internal.collected_basis_coe DirectSum.IsInternal.collected_basis_coe
 
 theorem IsInternal.collected_basis_mem (h : IsInternal A) {α : ι → Type _} (v : ∀ i, Basis (α i) R (A i))
-    (a : Σ i, α i) : h.collectedBasis v a ∈ A a.1 := by simp
+    (a : Σi, α i) : h.collectedBasis v a ∈ A a.1 := by simp
 #align direct_sum.is_internal.collected_basis_mem DirectSum.IsInternal.collected_basis_mem
 
 /-- When indexed by only two distinct elements, `direct_sum.is_internal` implies
@@ -378,9 +378,9 @@ the two submodules are complementary. Over a `ring R`, this is true as an iff, a
 theorem IsInternal.is_compl {A : ι → Submodule R M} {i j : ι} (hij : i ≠ j) (h : (Set.univ : Set ι) = {i, j})
     (hi : IsInternal A) : IsCompl (A i) (A j) :=
   ⟨hi.submoduleIndependent.PairwiseDisjoint hij,
-    codisjoint_iff.mpr $
-      Eq.symm $
-        hi.submodule_supr_eq_top.symm.trans $ by
+    codisjoint_iff.mpr <|
+      Eq.symm <|
+        hi.submodule_supr_eq_top.symm.trans <| by
           rw [← Sup_pair, supr, ← Set.image_univ, h, Set.image_insert_eq, Set.image_singleton]⟩
 #align direct_sum.is_internal.is_compl DirectSum.IsInternal.is_compl
 
@@ -400,7 +400,7 @@ variable {M : Type _} [AddCommGroup M] [Module R M]
 `complete_lattice.independent.dfinsupp_lsum_injective` for details. -/
 theorem is_internal_submodule_of_independent_of_supr_eq_top {A : ι → Submodule R M} (hi : CompleteLattice.Independent A)
     (hs : supr A = ⊤) : IsInternal A :=
-  ⟨hi.dfinsupp_lsum_injective, LinearMap.range_eq_top.1 $ (Submodule.supr_eq_range_dfinsupp_lsum _).symm.trans hs⟩
+  ⟨hi.dfinsupp_lsum_injective, LinearMap.range_eq_top.1 <| (Submodule.supr_eq_range_dfinsupp_lsum _).symm.trans hs⟩
 #align
   direct_sum.is_internal_submodule_of_independent_of_supr_eq_top DirectSum.is_internal_submodule_of_independent_of_supr_eq_top
 

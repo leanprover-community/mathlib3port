@@ -57,7 +57,7 @@ theorem Convex.star_convex (hs : Convex 𝕜 s) (hx : x ∈ s) : StarConvex 𝕜
 #align convex.star_convex Convex.star_convex
 
 theorem convex_iff_segment_subset : Convex 𝕜 s ↔ ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → [x -[𝕜] y] ⊆ s :=
-  forall₂_congr $ fun x hx => star_convex_iff_segment_subset
+  forall₂_congr fun x hx => star_convex_iff_segment_subset
 #align convex_iff_segment_subset convex_iff_segment_subset
 
 theorem Convex.segment_subset (h : Convex 𝕜 s) {x y : E} (hx : x ∈ s) (hy : y ∈ s) : [x -[𝕜] y] ⊆ s :=
@@ -90,17 +90,17 @@ theorem Convex.inter {t : Set E} (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Con
 #align convex.inter Convex.inter
 
 theorem convex_sInter {S : Set (Set E)} (h : ∀ s ∈ S, Convex 𝕜 s) : Convex 𝕜 (⋂₀ S) := fun x hx =>
-  star_convex_sInter $ fun s hs => h _ hs $ hx _ hs
+  star_convex_sInter fun s hs => h _ hs <| hx _ hs
 #align convex_sInter convex_sInter
 
 theorem convex_Inter {ι : Sort _} {s : ι → Set E} (h : ∀ i, Convex 𝕜 (s i)) : Convex 𝕜 (⋂ i, s i) :=
-  sInter_range s ▸ convex_sInter $ forall_range_iff.2 h
+  sInter_range s ▸ convex_sInter <| forall_range_iff.2 h
 #align convex_Inter convex_Inter
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem convex_Inter₂ {ι : Sort _} {κ : ι → Sort _} {s : ∀ i, κ i → Set E} (h : ∀ i j, Convex 𝕜 (s i j)) :
     Convex 𝕜 (⋂ (i) (j), s i j) :=
-  convex_Inter $ fun i => convex_Inter $ h i
+  convex_Inter fun i => convex_Inter <| h i
 #align convex_Inter₂ convex_Inter₂
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -110,7 +110,7 @@ theorem Convex.prod {s : Set E} {t : Set F} (hs : Convex 𝕜 s) (ht : Convex �
 
 theorem convex_pi {ι : Type _} {E : ι → Type _} [∀ i, AddCommMonoid (E i)] [∀ i, HasSmul 𝕜 (E i)] {s : Set ι}
     {t : ∀ i, Set (E i)} (ht : ∀ ⦃i⦄, i ∈ s → Convex 𝕜 (t i)) : Convex 𝕜 (s.pi t) := fun x hx =>
-  star_convex_pi $ fun i hi => ht hi $ hx _ hi
+  star_convex_pi fun i hi => ht hi <| hx _ hi
 #align convex_pi convex_pi
 
 theorem Directed.convex_Union {ι : Sort _} {s : ι → Set E} (hdir : Directed (· ⊆ ·) s)
@@ -124,7 +124,7 @@ theorem Directed.convex_Union {ι : Sort _} {s : ι → Set E} (hdir : Directed 
 #align directed.convex_Union Directed.convex_Union
 
 theorem DirectedOn.convex_sUnion {c : Set (Set E)} (hdir : DirectedOn (· ⊆ ·) c)
-    (hc : ∀ ⦃A : Set E⦄, A ∈ c → Convex 𝕜 A) : Convex 𝕜 (⋃₀ c) := by
+    (hc : ∀ ⦃A : Set E⦄, A ∈ c → Convex 𝕜 A) : Convex 𝕜 (⋃₀c) := by
   rw [sUnion_eq_Union]
   exact (directed_on_iff_directed.1 hdir).convex_Union fun A => hc A.2
 #align directed_on.convex_sUnion DirectedOn.convex_sUnion
@@ -136,12 +136,12 @@ section Module
 variable [Module 𝕜 E] [Module 𝕜 F] {s : Set E} {x : E}
 
 theorem convex_iff_open_segment_subset : Convex 𝕜 s ↔ ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → openSegment 𝕜 x y ⊆ s :=
-  forall₂_congr $ fun x => star_convex_iff_open_segment_subset
+  forall₂_congr fun x => star_convex_iff_open_segment_subset
 #align convex_iff_open_segment_subset convex_iff_open_segment_subset
 
 theorem convex_iff_forall_pos :
     Convex 𝕜 s ↔ ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → a • x + b • y ∈ s :=
-  forall₂_congr $ fun x => star_convex_iff_forall_pos
+  forall₂_congr fun x => star_convex_iff_forall_pos
 #align convex_iff_forall_pos convex_iff_forall_pos
 
 theorem convex_iff_pairwise_pos :
@@ -187,7 +187,7 @@ theorem Convex.linear_image (hs : Convex 𝕜 s) (f : E →ₗ[𝕜] F) : Convex
 #align convex.linear_image Convex.linear_image
 
 theorem Convex.is_linear_image (hs : Convex 𝕜 s) {f : E → F} (hf : IsLinearMap 𝕜 f) : Convex 𝕜 (f '' s) :=
-  hs.linear_image $ hf.mk' f
+  hs.linear_image <| hf.mk' f
 #align convex.is_linear_image Convex.is_linear_image
 
 theorem Convex.linear_preimage {s : Set F} (hs : Convex 𝕜 s) (f : E →ₗ[𝕜] F) : Convex 𝕜 (f ⁻¹' s) := by
@@ -198,7 +198,7 @@ theorem Convex.linear_preimage {s : Set F} (hs : Convex 𝕜 s) (f : E →ₗ[�
 
 theorem Convex.is_linear_preimage {s : Set F} (hs : Convex 𝕜 s) {f : E → F} (hf : IsLinearMap 𝕜 f) :
     Convex 𝕜 (f ⁻¹' s) :=
-  hs.linear_preimage $ hf.mk' f
+  hs.linear_preimage <| hf.mk' f
 #align convex.is_linear_preimage Convex.is_linear_preimage
 
 theorem Convex.add {t : Set E} (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Convex 𝕜 (s + t) := by
@@ -243,7 +243,7 @@ theorem convex_Ici (r : β) : Convex 𝕜 (ici r) :=
 #align convex_Ici convex_Ici
 
 theorem convex_Icc (r s : β) : Convex 𝕜 (icc r s) :=
-  Ici_inter_Iic.subst ((convex_Ici r).inter $ convex_Iic s)
+  Ici_inter_Iic.subst ((convex_Ici r).inter <| convex_Iic s)
 #align convex_Icc convex_Icc
 
 theorem convex_halfspace_le {f : E → β} (h : IsLinearMap 𝕜 f) (r : β) : Convex 𝕜 { w | f w ≤ r } :=
@@ -284,15 +284,15 @@ theorem convex_Ioi (r : β) : Convex 𝕜 (ioi r) :=
 #align convex_Ioi convex_Ioi
 
 theorem convex_Ioo (r s : β) : Convex 𝕜 (ioo r s) :=
-  Ioi_inter_Iio.subst ((convex_Ioi r).inter $ convex_Iio s)
+  Ioi_inter_Iio.subst ((convex_Ioi r).inter <| convex_Iio s)
 #align convex_Ioo convex_Ioo
 
 theorem convex_Ico (r s : β) : Convex 𝕜 (ico r s) :=
-  Ici_inter_Iio.subst ((convex_Ici r).inter $ convex_Iio s)
+  Ici_inter_Iio.subst ((convex_Ici r).inter <| convex_Iio s)
 #align convex_Ico convex_Ico
 
 theorem convex_Ioc (r s : β) : Convex 𝕜 (ioc r s) :=
-  Ioi_inter_Iic.subst ((convex_Ioi r).inter $ convex_Iic s)
+  Ioi_inter_Iic.subst ((convex_Ioi r).inter <| convex_Iic s)
 #align convex_Ioc convex_Ioc
 
 theorem convex_halfspace_lt {f : E → β} (h : IsLinearMap 𝕜 f) (r : β) : Convex 𝕜 { w | f w < r } :=
@@ -507,7 +507,7 @@ theorem convex_iff_div :
     Convex 𝕜 s ↔
       ∀ ⦃x⦄,
         x ∈ s → ∀ ⦃y⦄, y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 ≤ a → 0 ≤ b → 0 < a + b → (a / (a + b)) • x + (b / (a + b)) • y ∈ s :=
-  forall₂_congr $ fun x hx => star_convex_iff_div
+  forall₂_congr fun x hx => star_convex_iff_div
 #align convex_iff_div convex_iff_div
 
 theorem Convex.mem_smul_of_zero_mem (h : Convex 𝕜 s) {x : E} (zero_mem : (0 : E) ∈ s) (hx : x ∈ s) {t : 𝕜}
@@ -566,7 +566,7 @@ theorem Set.OrdConnected.convex_of_chain [OrderedSemiring 𝕜] [OrderedAddCommM
 
 theorem Set.OrdConnected.convex [OrderedSemiring 𝕜] [LinearOrderedAddCommMonoid E] [Module 𝕜 E] [OrderedSmul 𝕜 E]
     {s : Set E} (hs : s.OrdConnected) : Convex 𝕜 s :=
-  hs.convex_of_chain $ is_chain_of_trichotomous s
+  hs.convex_of_chain <| is_chain_of_trichotomous s
 #align set.ord_connected.convex Set.OrdConnected.convex
 
 theorem convex_iff_ord_connected [LinearOrderedField 𝕜] {s : Set 𝕜} : Convex 𝕜 s ↔ s.OrdConnected := by

@@ -35,7 +35,7 @@ We also provide the equivalence of the following notions for a domain `R` in `va
 
 universe u v w
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`cond] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`cond] [] -/
 /-- An integral domain is called a `valuation ring` provided that for any pair
 of elements `a b : A`, either `a` divides `b` or vice versa. -/
 class ValuationRing (A : Type u) [CommRing A] [IsDomain A] : Prop where
@@ -59,7 +59,7 @@ instance : Inhabited (ValueGroup A K) :=
   ⟨Quotient.mk' 0⟩
 
 instance : LE (ValueGroup A K) :=
-  LE.mk $ fun x y =>
+  LE.mk fun x y =>
     Quotient.liftOn₂' x y (fun a b => ∃ c : A, c • b = a)
       (by
         rintro _ _ a b ⟨c, rfl⟩ ⟨d, rfl⟩
@@ -86,8 +86,8 @@ instance : One (ValueGroup A K) :=
   ⟨Quotient.mk' 1⟩
 
 instance : Mul (ValueGroup A K) :=
-  Mul.mk $ fun x y =>
-    Quotient.liftOn₂' x y (fun a b => Quotient.mk' $ a * b)
+  Mul.mk fun x y =>
+    Quotient.liftOn₂' x y (fun a b => Quotient.mk' <| a * b)
       (by
         rintro _ _ a b ⟨c, rfl⟩ ⟨d, rfl⟩
         apply Quotient.sound'
@@ -97,7 +97,7 @@ instance : Mul (ValueGroup A K) :=
         ring)
 
 instance : Inv (ValueGroup A K) :=
-  Inv.mk $ fun x =>
+  Inv.mk fun x =>
     Quotient.liftOn' x (fun a => Quotient.mk' a⁻¹)
       (by
         rintro _ a ⟨b, rfl⟩
@@ -108,13 +108,11 @@ instance : Inv (ValueGroup A K) :=
 
 variable [IsDomain A] [ValuationRing A] [IsFractionRing A K]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 protected theorem le_total (a b : ValueGroup A K) : a ≤ b ∨ b ≤ a := by
   rcases a with ⟨a⟩
   rcases b with ⟨b⟩
-  obtain ⟨xa, ya, hya, rfl⟩ : ∃ (a : A) (b : A), _ := IsFractionRing.div_surjective a
-  obtain ⟨xb, yb, hyb, rfl⟩ : ∃ (a : A) (b : A), _ := IsFractionRing.div_surjective b
+  obtain ⟨xa, ya, hya, rfl⟩ : ∃ a b : A, _ := IsFractionRing.div_surjective a
+  obtain ⟨xb, yb, hyb, rfl⟩ : ∃ a b : A, _ := IsFractionRing.div_surjective b
   have : (algebraMap A K) ya ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors hya
   have : (algebraMap A K) yb ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors hyb
   obtain ⟨c, h | h⟩ := ValuationRing.cond (xa * yb) (xb * ya)
@@ -150,7 +148,7 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
       rw [mul_smul],
     le_antisymm := by
       rintro ⟨a⟩ ⟨b⟩ ⟨e, rfl⟩ ⟨f, hf⟩
-      by_cases hb:b = 0
+      by_cases hb : b = 0
       · simp [hb]
         
       have : IsUnit e := by
@@ -221,8 +219,6 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
       rw [ha]
       rfl }
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- Any valuation ring induces a valuation on its fraction field. -/
 def valuation : Valuation K (ValueGroup A K) where
   toFun := Quotient.mk'
@@ -231,8 +227,8 @@ def valuation : Valuation K (ValueGroup A K) where
   map_mul' _ _ := rfl
   map_add_le_max' := by
     intro a b
-    obtain ⟨xa, ya, hya, rfl⟩ : ∃ (a : A) (b : A), _ := IsFractionRing.div_surjective a
-    obtain ⟨xb, yb, hyb, rfl⟩ : ∃ (a : A) (b : A), _ := IsFractionRing.div_surjective b
+    obtain ⟨xa, ya, hya, rfl⟩ : ∃ a b : A, _ := IsFractionRing.div_surjective a
+    obtain ⟨xb, yb, hyb, rfl⟩ : ∃ a b : A, _ := IsFractionRing.div_surjective b
     have : (algebraMap A K) ya ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors hya
     have : (algebraMap A K) yb ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors hyb
     obtain ⟨c, h | h⟩ := ValuationRing.cond (xa * yb) (xb * ya)
@@ -329,7 +325,7 @@ instance [DecidableRel ((· ≤ ·) : Ideal A → Ideal A → Prop)] : LinearOrd
   { (inferInstance : CompleteLattice (Ideal A)) with
     le_total := by
       intro α β
-      by_cases h:α ≤ β
+      by_cases h : α ≤ β
       · exact Or.inl h
         
       erw [not_forall] at h
@@ -393,7 +389,7 @@ theorem iff_is_integer_or_is_integer :
     any_goals infer_instance
     have := (map_ne_zero_iff _ (IsFractionRing.injective R K)).mpr (nonZeroDivisors.ne_zero hy)
     obtain ⟨s, rfl | rfl⟩ := ValuationRing.cond x y
-    · exact Or.inr ⟨s, eq_inv_of_mul_eq_one_left $ by rwa [mul_div, div_eq_one_iff_eq, map_mul, mul_comm]⟩
+    · exact Or.inr ⟨s, eq_inv_of_mul_eq_one_left <| by rwa [mul_div, div_eq_one_iff_eq, map_mul, mul_comm]⟩
       
     · exact Or.inl ⟨s, by rwa [eq_div_iff, map_mul, mul_comm]⟩
       
@@ -401,13 +397,13 @@ theorem iff_is_integer_or_is_integer :
   · intro H
     constructor
     intro a b
-    by_cases ha:a = 0
+    by_cases ha : a = 0
     · subst ha
-      exact ⟨0, Or.inr $ mul_zero b⟩
+      exact ⟨0, Or.inr <| mul_zero b⟩
       
-    by_cases hb:b = 0
+    by_cases hb : b = 0
     · subst hb
-      exact ⟨0, Or.inl $ mul_zero a⟩
+      exact ⟨0, Or.inl <| mul_zero a⟩
       
     replace ha := (map_ne_zero_iff _ (IsFractionRing.injective R K)).mpr ha
     replace hb := (map_ne_zero_iff _ (IsFractionRing.injective R K)).mpr hb
@@ -491,7 +487,7 @@ theorem iff_local_bezout_domain : ValuationRing R ↔ LocalRing R ∧ IsBezout R
         ":"
         (Term.app
          `Tfae
-         [(Init.Core.«term[_,»
+         [(«term[_]»
            "["
            [(Term.app `ValuationRing [`R])
             ","
@@ -500,18 +496,18 @@ theorem iff_local_bezout_domain : ValuationRing R ↔ LocalRing R ∧ IsBezout R
              [`x]
              [(Term.typeSpec ":" (Term.app `FractionRing [`R]))]
              ","
-             (Init.Logic.«term_∨_»
+             («term_∨_»
               (Term.app `IsLocalization.IsInteger [`R `x])
-              " ∨ "
-              (Term.app `IsLocalization.IsInteger [`R (Init.Core.«term_⁻¹» `x "⁻¹")])))
+              "∨"
+              (Term.app `IsLocalization.IsInteger [`R («term_⁻¹_1» `x "⁻¹")])))
             ","
-            (Term.app `IsTotal [`R (Term.paren "(" (Init.Core.«term_∣_» (Term.cdot "·") " ∣ " (Term.cdot "·")) ")")])
+            (Term.app `IsTotal [`R (Term.paren "(" («term_∣_» (Term.cdot "·") "∣" (Term.cdot "·")) ")")])
             ","
             (Term.app
              `IsTotal
-             [(Term.app `Ideal [`R]) (Term.paren "(" (Init.Core.«term_≤_» (Term.cdot "·") " ≤ " (Term.cdot "·")) ")")])
+             [(Term.app `Ideal [`R]) (Term.paren "(" («term_≤_» (Term.cdot "·") "≤" (Term.cdot "·")) ")")])
             ","
-            (Init.Logic.«term_∧_» (Term.app `LocalRing [`R]) " ∧ " (Term.app `IsBezout [`R]))]
+            («term_∧_» (Term.app `LocalRing [`R]) "∧" (Term.app `IsBezout [`R]))]
            "]")])))
       (Command.declValSimple
        ":="
@@ -637,7 +633,7 @@ theorem _root_.function.surjective.valuation_ring {R S : Type _} [CommRing R] [I
   ⟨fun a b => by
     obtain ⟨⟨a, rfl⟩, ⟨b, rfl⟩⟩ := hf a, hf b
     obtain ⟨c, rfl | rfl⟩ := ValuationRing.cond a b
-    exacts[⟨f c, Or.inl $ (map_mul _ _ _).symm⟩, ⟨f c, Or.inr $ (map_mul _ _ _).symm⟩]⟩
+    exacts[⟨f c, Or.inl <| (map_mul _ _ _).symm⟩, ⟨f c, Or.inr <| (map_mul _ _ _).symm⟩]⟩
 #align valuation_ring._root_.function.surjective.valuation_ring valuation_ring._root_.function.surjective.valuation_ring
 
 section
@@ -695,12 +691,12 @@ variable (A : Type u) [CommRing A] [IsDomain A] [DiscreteValuationRing A]
 instance (priority := 100) ofDiscreteValuationRing : ValuationRing A := by
   constructor
   intro a b
-  by_cases ha:a = 0
+  by_cases ha : a = 0
   · use 0
     right
     simp [ha]
     
-  by_cases hb:b = 0
+  by_cases hb : b = 0
   · use 0
     left
     simp [hb]

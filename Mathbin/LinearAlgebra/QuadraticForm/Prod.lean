@@ -163,7 +163,7 @@ theorem anisotropic_of_pi [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (M�
     
   apply Finset.sum_eq_zero
   intro j _
-  by_cases hji:j = i
+  by_cases hji : j = i
   · subst hji
     rw [Pi.single_eq_same, hx]
     
@@ -197,7 +197,7 @@ theorem pos_def_pi_iff [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i
     exact ⟨hle i, anisotropic_of_pi ha i⟩
     
   · intro h
-    refine' ⟨fun i => (h i).1, fun x hx => funext $ fun i => (h i).2 _ _⟩
+    refine' ⟨fun i => (h i).1, fun x hx => funext fun i => (h i).2 _ _⟩
     rw [pi_apply, Finset.sum_eq_zero_iff_of_nonneg fun j hj => _] at hx
     · exact hx _ (Finset.mem_univ _)
       

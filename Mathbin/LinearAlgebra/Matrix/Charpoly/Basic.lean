@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.LinearAlgebra.Matrix.Adjugate
-import Mathbin.RingTheory.MatrixAlgebra
 import Mathbin.RingTheory.PolynomialAlgebra
 import Mathbin.Tactic.ApplyFun
 import Mathbin.Tactic.Squeeze
@@ -67,7 +66,7 @@ theorem charmatrix_apply_ne (M : Matrix n n R) (i j : n) (h : i ≠ j) : charmat
 theorem mat_poly_equiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M) = X - c M := by
   ext (k i j)
   simp only [mat_poly_equiv_coeff_apply, coeff_sub, Pi.sub_apply]
-  by_cases h:i = j
+  by_cases h : i = j
   · subst h
     rw [charmatrix_apply_eq, coeff_sub]
     simp only [coeff_X, coeff_C]
@@ -81,7 +80,7 @@ theorem mat_poly_equiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix 
 theorem charmatrix_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m) (M : Matrix n n R) :
     charmatrix (reindex e e M) = reindex e e (charmatrix M) := by
   ext (i j x)
-  by_cases h:i = j
+  by_cases h : i = j
   all_goals simp [h]
 #align charmatrix_reindex charmatrix_reindex
 

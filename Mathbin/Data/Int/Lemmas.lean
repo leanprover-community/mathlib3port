@@ -7,6 +7,7 @@ import Mathbin.Data.Set.Function
 import Mathbin.Data.Int.Order.Lemmas
 import Mathbin.Data.Int.Bitwise
 import Mathbin.Data.Nat.Cast.Basic
+import Mathbin.Data.Nat.Order.Lemmas
 
 /-!
 # Miscellaneous lemmas about the integers
@@ -22,7 +23,7 @@ open Nat
 namespace Int
 
 theorem le_coe_nat_sub (m n : ℕ) : (m - n : ℤ) ≤ ↑(m - n : ℕ) := by
-  by_cases h:m ≥ n
+  by_cases h : m ≥ n
   · exact le_of_eq (Int.ofNat_sub h).symm
     
   · simp [le_of_not_ge h, coe_nat_le]
@@ -102,7 +103,7 @@ end Intervals
 theorem to_nat_of_nonpos : ∀ {z : ℤ}, z ≤ 0 → z.toNat = 0
   | 0, _ => rfl
   | (n + 1 : ℕ), h => (h.not_lt (by simp)).elim
-  | -[1+ n], _ => rfl
+  | -[n+1], _ => rfl
 #align int.to_nat_of_nonpos Int.to_nat_of_nonpos
 
 /-! ### bitwise ops

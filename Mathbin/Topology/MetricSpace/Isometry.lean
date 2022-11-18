@@ -72,7 +72,7 @@ theorem edist_eq (hf : Isometry f) (x y : α) : edist (f x) (f y) = edist x y :=
 #align isometry.edist_eq Isometry.edist_eq
 
 theorem lipschitz (h : Isometry f) : LipschitzWith 1 f :=
-  LipschitzWith.ofEdistLe $ fun x y => (h x y).le
+  LipschitzWith.ofEdistLe fun x y => (h x y).le
 #align isometry.lipschitz Isometry.lipschitz
 
 theorem antilipschitz (h : Isometry f) : AntilipschitzWith 1 f := fun x y => by
@@ -131,7 +131,7 @@ theorem preimage_emetric_ball (h : Isometry f) (x : α) (r : ℝ≥0∞) : f ⁻
 
 /-- Isometries preserve the diameter in pseudoemetric spaces. -/
 theorem ediam_image (hf : Isometry f) (s : Set α) : Emetric.diam (f '' s) = Emetric.diam s :=
-  eq_of_forall_ge_iff $ fun d => by simp only [Emetric.diam_le_iff, ball_image_iff, hf.edist_eq]
+  eq_of_forall_ge_iff fun d => by simp only [Emetric.diam_le_iff, ball_image_iff, hf.edist_eq]
 #align isometry.ediam_image Isometry.ediam_image
 
 theorem ediam_range (hf : Isometry f) : Emetric.diam (range f) = Emetric.diam (univ : Set α) := by
@@ -344,7 +344,7 @@ theorem to_equiv_inj : ∀ ⦃h₁ h₂ : α ≃ᵢ β⦄, h₁.toEquiv = h₂.t
 
 @[ext.1]
 theorem ext ⦃h₁ h₂ : α ≃ᵢ β⦄ (H : ∀ x, h₁ x = h₂ x) : h₁ = h₂ :=
-  to_equiv_inj $ Equiv.ext H
+  to_equiv_inj <| Equiv.ext H
 #align isometric.ext Isometric.ext
 
 /-- Alternative constructor for isometric bijections,
@@ -352,7 +352,7 @@ taking as input an isometry, and a right inverse. -/
 def mk' {α : Type u} [EmetricSpace α] (f : α → β) (g : β → α) (hfg : ∀ x, f (g x) = x) (hf : Isometry f) : α ≃ᵢ β where
   toFun := f
   invFun := g
-  left_inv x := hf.Injective $ hfg _
+  left_inv x := hf.Injective <| hfg _
   right_inv := hfg
   isometryToFun := hf
 #align isometric.mk' Isometric.mk'
@@ -415,11 +415,11 @@ theorem eq_symm_apply (h : α ≃ᵢ β) {x : α} {y : β} : x = h.symm y ↔ h 
 #align isometric.eq_symm_apply Isometric.eq_symm_apply
 
 theorem symm_comp_self (h : α ≃ᵢ β) : ⇑h.symm ∘ ⇑h = id :=
-  funext $ fun a => h.toEquiv.left_inv a
+  funext fun a => h.toEquiv.left_inv a
 #align isometric.symm_comp_self Isometric.symm_comp_self
 
 theorem self_comp_symm (h : α ≃ᵢ β) : ⇑h ∘ ⇑h.symm = id :=
-  funext $ fun a => h.toEquiv.right_inv a
+  funext fun a => h.toEquiv.right_inv a
 #align isometric.self_comp_symm Isometric.self_comp_symm
 
 @[simp]
@@ -511,8 +511,8 @@ instance : Group (α ≃ᵢ α) where
   mul e₁ e₂ := e₂.trans e₁
   inv := Isometric.symm
   mul_assoc e₁ e₂ e₃ := rfl
-  one_mul e := ext $ fun _ => rfl
-  mul_one e := ext $ fun _ => rfl
+  one_mul e := ext fun _ => rfl
+  mul_one e := ext fun _ => rfl
   mul_left_inv e := ext e.symm_apply_apply
 
 @[simp]
@@ -540,8 +540,8 @@ theorem apply_inv_self (e : α ≃ᵢ α) (x : α) : e (e⁻¹ x) = x :=
 #align isometric.apply_inv_self Isometric.apply_inv_self
 
 protected theorem complete_space [CompleteSpace β] (e : α ≃ᵢ β) : CompleteSpace α :=
-  complete_space_of_is_complete_univ $
-    is_complete_of_complete_image e.Isometry.UniformInducing $ by
+  complete_space_of_is_complete_univ <|
+    is_complete_of_complete_image e.Isometry.UniformInducing <| by
       rwa [Set.image_univ, Isometric.range_eq_univ, ← complete_space_iff_is_complete_univ]
 #align isometric.complete_space Isometric.complete_space
 

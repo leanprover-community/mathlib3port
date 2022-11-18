@@ -6,7 +6,6 @@ Authors: Thomas Browning, Patrick Lutz
 import Mathbin.FieldTheory.Normal
 import Mathbin.FieldTheory.PrimitiveElement
 import Mathbin.FieldTheory.Fixed
-import Mathbin.RingTheory.PowerBasis
 import Mathbin.GroupTheory.GroupAction.FixingSubgroup
 
 /-!
@@ -397,8 +396,8 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.I
     apply minpoly.dvd
     rw [Polynomial.aeval_def, Polynomial.eval₂_map, ← Polynomial.eval_map, ← IsScalarTower.algebra_map_eq]
     exact (Polynomial.mem_roots (Polynomial.map_ne_zero h1)).mp hx
-  let key_equiv : (K⟮⟯.restrictScalars F →ₐ[F] E) ≃ Σ f : K →ₐ[F] E, @AlgHom K K⟮⟯ E _ _ _ _ (RingHom.toAlgebra f) := by
-    change (K⟮⟯ →ₐ[F] E) ≃ Σ f : K →ₐ[F] E, _
+  let key_equiv : (K⟮⟯.restrictScalars F →ₐ[F] E) ≃ Σf : K →ₐ[F] E, @AlgHom K K⟮⟯ E _ _ _ _ (RingHom.toAlgebra f) := by
+    change (K⟮⟯ →ₐ[F] E) ≃ Σf : K →ₐ[F] E, _
     exact algHomEquivSigma
   haveI : ∀ f : K →ₐ[F] E, Fintype (@AlgHom K K⟮⟯ E _ _ _ _ (RingHom.toAlgebra f)) := fun f => by
     apply Fintype.ofInjective (Sigma.mk f) fun _ _ H => eq_of_heq (Sigma.mk.inj H).2
@@ -469,11 +468,11 @@ theorem ofSeparableSplittingField [sp : p.IsSplittingField F E] (hp : p.Separabl
         ":"
         (Term.app
          `Tfae
-         [(Init.Core.«term[_,»
+         [(«term[_]»
            "["
            [(Term.app `IsGalois [`F `E])
             ","
-            (Init.Core.«term_=_»
+            («term_=_»
              (Term.app
               `IntermediateField.fixedField
               [(Term.typeAscription
@@ -482,25 +481,22 @@ theorem ofSeparableSplittingField [sp : p.IsSplittingField F E] (hp : p.Separabl
                 ":"
                 [(Term.app `Subgroup [(Algebra.Algebra.Basic.«term_≃ₐ[_]_» `E " ≃ₐ[" `F "] " `E)])]
                 ")")])
-             " = "
+             "="
              (Order.BoundedOrder.«term⊥» "⊥"))
             ","
-            (Init.Core.«term_=_»
+            («term_=_»
              (Term.app `Fintype.card [(Algebra.Algebra.Basic.«term_≃ₐ[_]_» `E " ≃ₐ[" `F "] " `E)])
-             " = "
+             "="
              (Term.app `finrank [`F `E]))
             ","
-            (Init.Logic.«term∃_,_»
+            («term∃_,_»
              "∃"
-             (Std.ExtendedBinder.extBinders
-              (Std.ExtendedBinder.extBinder
-               (Lean.binderIdent `p)
-               [(group ":" (Polynomial.Data.Polynomial.Basic.polynomial `F "[X]"))]))
-             ", "
-             (Init.Logic.«term_∧_»
-              (Term.proj `p "." `Separable)
-              " ∧ "
-              (Term.app (Term.proj `p "." `IsSplittingField) [`F `E])))]
+             (Lean.explicitBinders
+              (Lean.unbracketedExplicitBinders
+               [(Lean.binderIdent `p)]
+               [":" (Polynomial.Data.Polynomial.Basic.polynomial `F "[X]")]))
+             ","
+             («term_∧_» (Term.proj `p "." `Separable) "∧" (Term.app (Term.proj `p "." `IsSplittingField) [`F `E])))]
            "]")])))
       (Command.declValSimple
        ":="

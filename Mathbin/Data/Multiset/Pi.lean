@@ -36,7 +36,7 @@ variable [DecidableEq α] {δ : α → Type _}
 function `f` such that `f a' : δ a'` for all `a'` in `m`, `pi.cons m a b f` is a function `g` such
 that `g a'' : δ a''` for all `a''` in `a ::ₘ m`. -/
 def Pi.cons (m : Multiset α) (a : α) (b : δ a) (f : ∀ a ∈ m, δ a) : ∀ a' ∈ a ::ₘ m, δ a' := fun a' ha' =>
-  if h : a' = a then Eq.ndrec b h.symm else f a' $ (mem_cons.1 ha').resolve_left h
+  if h : a' = a then Eq.ndrec b h.symm else f a' <| (mem_cons.1 ha').resolve_left h
 #align multiset.pi.cons Multiset.Pi.cons
 
 theorem Pi.cons_same {m : Multiset α} {a : α} {b : δ a} {f : ∀ a ∈ m, δ a} (h : a ∈ a ::ₘ m) :
@@ -50,7 +50,7 @@ theorem Pi.cons_ne {m : Multiset α} {a a' : α} {b : δ a} {f : ∀ a ∈ m, δ
 #align multiset.pi.cons_ne Multiset.Pi.cons_ne
 
 theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : ∀ a ∈ m, δ a} (h : a ≠ a') :
-    Pi.cons (a' ::ₘ m) a b (Pi.cons m a' b' f) == Pi.cons (a ::ₘ m) a' b' (Pi.cons m a b f) := by
+    HEq (Pi.cons (a' ::ₘ m) a b (Pi.cons m a' b' f)) (Pi.cons (a ::ₘ m) a' b' (Pi.cons m a b f)) := by
   apply hfunext rfl
   rintro a'' _ rfl
   refine' hfunext (by rw [cons_swap]) fun ha₁ ha₂ _ => _
@@ -61,10 +61,10 @@ theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : 
 
 /-- `pi m t` constructs the Cartesian product over `t` indexed by `m`. -/
 def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀ a ∈ m, δ a) :=
-  m.recOn {Pi.empty δ} (fun a m (p : Multiset (∀ a ∈ m, δ a)) => (t a).bind $ fun b => p.map $ Pi.cons m a b)
+  m.recOn {Pi.empty δ} (fun a m (p : Multiset (∀ a ∈ m, δ a)) => (t a).bind fun b => p.map <| Pi.cons m a b)
     (by
       intro a a' m n
-      by_cases eq:a = a'
+      by_cases eq : a = a'
       · subst Eq
         
       · simp [map_bind, bind_bind (t a') (t a)]
@@ -91,15 +91,15 @@ theorem pi_zero (t : ∀ a, Multiset (δ a)) : pi 0 t = {Pi.empty δ} :=
 
 @[simp]
 theorem pi_cons (m : Multiset α) (t : ∀ a, Multiset (δ a)) (a : α) :
-    pi (a ::ₘ m) t = ((t a).bind $ fun b => (pi m t).map $ Pi.cons m a b) :=
+    pi (a ::ₘ m) t = (t a).bind fun b => (pi m t).map <| Pi.cons m a b :=
   rec_on_cons a m
 #align multiset.pi_cons Multiset.pi_cons
 
 theorem pi_cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) : Function.Injective (Pi.cons s a b) :=
   fun f₁ f₂ eq =>
-  funext $ fun a' =>
-    funext $ fun h' =>
-      have ne : a ≠ a' := fun h => hs $ h.symm ▸ h'
+  funext fun a' =>
+    funext fun h' =>
+      have ne : a ≠ a' := fun h => hs <| h.symm ▸ h'
       have : a' ∈ a ::ₘ s := mem_cons_of_mem h'
       calc
         f₁ a' h' = Pi.cons s a b f₁ a' this := by rw [pi.cons_ne this Ne.symm]
@@ -108,7 +108,7 @@ theorem pi_cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) :
         
 #align multiset.pi_cons_injective Multiset.pi_cons_injective
 
-theorem card_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : card (pi m t) = prod (m.map $ fun a => card (t a)) :=
+theorem card_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : card (pi m t) = prod (m.map fun a => card (t a)) :=
   Multiset.induction_on m (by simp) (by simp (config := { contextual := true }) [mul_comm])
 #align multiset.card_pi Multiset.card_pi
 
@@ -120,12 +120,12 @@ protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} :
       have has : a ∉ s := by simp at hs <;> exact hs.1
       have hs : nodup s := by simp at hs <;> exact hs.2
       simp
-      refine' ⟨fun b hb => (ih hs $ fun a' h' => ht a' $ mem_cons_of_mem h').map (pi_cons_injective has), _⟩
-      refine' (ht a $ mem_cons_self _ _).Pairwise _
+      refine' ⟨fun b hb => ((ih hs) fun a' h' => ht a' <| mem_cons_of_mem h').map (pi_cons_injective has), _⟩
+      refine' (ht a <| mem_cons_self _ _).Pairwise _
       exact fun b₁ hb₁ b₂ hb₂ neb =>
         disjoint_map_map.2 fun f hf g hg eq =>
           have : pi.cons s a b₁ f a (mem_cons_self _ _) = pi.cons s a b₂ g a (mem_cons_self _ _) := by rw [Eq]
-          neb $ show b₁ = b₂ by rwa [pi.cons_same, pi.cons_same] at this)
+          neb <| show b₁ = b₂ by rwa [pi.cons_same, pi.cons_same] at this)
 #align multiset.nodup.pi Multiset.Nodup.pi
 
 @[simp]

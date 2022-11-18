@@ -344,7 +344,7 @@ theorem unique_mdiff_within_at_iff {s : Set M} {x : M} :
 #align unique_mdiff_within_at_iff unique_mdiff_within_at_iff
 
 theorem UniqueMdiffWithinAt.mono (h : UniqueMdiffWithinAt I s x) (st : s ⊆ t) : UniqueMdiffWithinAt I t x :=
-  UniqueDiffWithinAt.mono h $ inter_subset_inter (preimage_mono st) (Subset.refl _)
+  UniqueDiffWithinAt.mono h <| inter_subset_inter (preimage_mono st) (Subset.refl _)
 #align unique_mdiff_within_at.mono UniqueMdiffWithinAt.mono
 
 theorem UniqueMdiffWithinAt.inter' (hs : UniqueMdiffWithinAt I s x) (ht : t ∈ 𝓝[s] x) :
@@ -406,7 +406,7 @@ theorem mdifferentiable_within_at_iff {f : M → M'} {s : Set M} {x : M} :
         DifferentiableWithinAt 𝕜 (writtenInExtChartAt I I' x f) ((extChartAt I x).target ∩ (extChartAt I x).symm ⁻¹' s)
           ((extChartAt I x) x) :=
   by
-  refine' and_congr Iff.rfl (exists_congr $ fun f' => _)
+  refine' and_congr Iff.rfl (exists_congr fun f' => _)
   rw [inter_comm]
   simp only [HasFderivWithinAt, nhds_within_inter, nhds_within_ext_chart_target_eq]
 #align mdifferentiable_within_at_iff mdifferentiable_within_at_iff
@@ -616,8 +616,8 @@ theorem mdifferentiable_at_iff_of_mem_source {x' : M} {y : M'} (hx : x' ∈ (Cha
     MdifferentiableAt I I' f x' ↔
       ContinuousAt f x' ∧
         DifferentiableWithinAt 𝕜 (extChartAt I' y ∘ f ∘ (extChartAt I x).symm) (Set.range I) ((extChartAt I x) x') :=
-  mdifferentiable_within_at_univ.symm.trans $
-    (mdifferentiable_within_at_iff_of_mem_source hx hy).trans $ by
+  mdifferentiable_within_at_univ.symm.trans <|
+    (mdifferentiable_within_at_iff_of_mem_source hx hy).trans <| by
       rw [continuous_within_at_univ, Set.preimage_univ, Set.univ_inter]
 #align mdifferentiable_at_iff_of_mem_source mdifferentiable_at_iff_of_mem_source
 
@@ -648,7 +648,7 @@ theorem MdifferentiableOn.continuous_on (h : MdifferentiableOn I I' f s) : Conti
 #align mdifferentiable_on.continuous_on MdifferentiableOn.continuous_on
 
 theorem Mdifferentiable.continuous (h : Mdifferentiable I I' f) : Continuous f :=
-  continuous_iff_continuous_at.2 $ fun x => (h x).ContinuousAt
+  continuous_iff_continuous_at.2 fun x => (h x).ContinuousAt
 #align mdifferentiable.continuous Mdifferentiable.continuous
 
 include Is I's
@@ -775,7 +775,7 @@ theorem MdifferentiableWithinAt.mfderiv_within_congr_mono (h : MdifferentiableWi
 
 theorem Filter.EventuallyEq.mfderiv_within_eq (hs : UniqueMdiffWithinAt I s x) (hL : f₁ =ᶠ[𝓝[s] x] f)
     (hx : f₁ x = f x) : mfderivWithin I I' f₁ s x = (mfderivWithin I I' f s x : _) := by
-  by_cases h:MdifferentiableWithinAt I I' f s x
+  by_cases h : MdifferentiableWithinAt I I' f s x
   · exact (h.has_mfderiv_within_at.congr_of_eventually_eq hL hx).mfderivWithin hs
     
   · unfold mfderivWithin
@@ -1002,7 +1002,7 @@ alias mdifferentiable_iff_differentiable ↔ Mdifferentiable.differentiable Diff
 /-- For maps between vector spaces, `mfderiv_within` and `fderiv_within` coincide -/
 @[simp]
 theorem mfderiv_within_eq_fderiv_within : mfderivWithin 𝓘(𝕜, E) 𝓘(𝕜, E') f s x = fderivWithin 𝕜 f s x := by
-  by_cases h:MdifferentiableWithinAt 𝓘(𝕜, E) 𝓘(𝕜, E') f s x
+  by_cases h : MdifferentiableWithinAt 𝓘(𝕜, E) 𝓘(𝕜, E') f s x
   · simp only [mfderivWithin, h, dif_pos, mfld_simps]
     
   · simp only [mfderivWithin, h, dif_neg, not_false_iff]

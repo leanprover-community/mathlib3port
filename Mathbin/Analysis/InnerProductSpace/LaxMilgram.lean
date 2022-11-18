@@ -16,7 +16,7 @@ We consider an Hilbert space `V` over `ℝ`
 equipped with a bounded bilinear form `B : V →L[ℝ] V →L[ℝ] ℝ`.
 
 Recall that a bilinear form `B : V →L[ℝ] V →L[ℝ] ℝ` is *coercive*
-iff `∃ C, (0 < C) ∧ ∀ u, C * ∥u∥ * ∥u∥ ≤ B u u`.
+iff `∃ C, (0 < C) ∧ ∀ u, C * ‖u‖ * ‖u‖ ≤ B u u`.
 Under the hypothesis that `B` is coercive
 we prove the Lax-Milgram theorem:
 that is, the map `inner_product_space.continuous_linear_map_of_bilin` from
@@ -53,16 +53,16 @@ variable {B : V →L[ℝ] V →L[ℝ] ℝ}
 -- mathport name: «expr ♯»
 local postfix:1024 "♯" => @continuousLinearMapOfBilin ℝ V _ _ _
 
-theorem bounded_below (coercive : IsCoercive B) : ∃ C, 0 < C ∧ ∀ v, C * ∥v∥ ≤ ∥B♯ v∥ := by
+theorem bounded_below (coercive : IsCoercive B) : ∃ C, 0 < C ∧ ∀ v, C * ‖v‖ ≤ ‖B♯ v‖ := by
   rcases coercive with ⟨C, C_ge_0, coercivity⟩
   refine' ⟨C, C_ge_0, _⟩
   intro v
-  by_cases h:0 < ∥v∥
+  by_cases h : 0 < ‖v‖
   · refine' (mul_le_mul_right h).mp _
     calc
-      C * ∥v∥ * ∥v∥ ≤ B v v := coercivity v
+      C * ‖v‖ * ‖v‖ ≤ B v v := coercivity v
       _ = ⟪B♯ v, v⟫_ℝ := (continuous_linear_map_of_bilin_apply ℝ B v v).symm
-      _ ≤ ∥B♯ v∥ * ∥v∥ := real_inner_le_norm (B♯ v) v
+      _ ≤ ‖B♯ v‖ * ‖v‖ := real_inner_le_norm (B♯ v) v
       
     
   · have : v = 0 := by simpa using h
@@ -99,7 +99,7 @@ theorem range_eq_top (coercive : IsCoercive B) : range B♯ = ⊤ := by
     rw [← norm_eq_zero, ← mul_self_eq_zero, ← mul_right_inj' C_pos.ne', mul_zero, ← mul_assoc]
     apply le_antisymm
     · calc
-        C * ∥w∥ * ∥w∥ ≤ B w w := coercivity w
+        C * ‖w‖ * ‖w‖ ≤ B w w := coercivity w
         _ = ⟪B♯ w, w⟫_ℝ := (continuous_linear_map_of_bilin_apply ℝ B w w).symm
         _ = 0 := mem_w_orthogonal _ ⟨w, rfl⟩
         

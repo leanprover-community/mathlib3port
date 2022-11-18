@@ -22,7 +22,7 @@ about this type.
 def Enat : Type :=
   WithTop ℕ deriving Zero, AddCommMonoidWithOne, CanonicallyOrderedCommSemiring, Nontrivial, LinearOrder, OrderBot,
   OrderTop, HasBot, HasTop, CanonicallyLinearOrderedAddMonoid, Sub, HasOrderedSub, CompleteLinearOrder,
-  LinearOrderedAddCommMonoidWithTop, SuccOrder, WellFoundedLt, HasWellFounded, CharZero,
+  LinearOrderedAddCommMonoidWithTop, SuccOrder, WellFoundedLt, WellFoundedRelation, CharZero,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] exprℕ()»
 #align enat Enat
 
@@ -132,7 +132,7 @@ theorem add_one_le_of_lt (h : m < n) : m + 1 ≤ n :=
 #align enat.add_one_le_of_lt Enat.add_one_le_of_lt
 
 theorem add_one_le_iff (hm : m ≠ ⊤) : m + 1 ≤ n ↔ m < n :=
-  m.succ_def ▸ (Order.succ_le_iff_of_not_is_max $ by rwa [is_max_iff_eq_top])
+  m.succ_def ▸ (Order.succ_le_iff_of_not_is_max <| by rwa [is_max_iff_eq_top])
 #align enat.add_one_le_iff Enat.add_one_le_iff
 
 theorem one_le_iff_pos : 1 ≤ n ↔ 0 < n :=
@@ -144,7 +144,7 @@ theorem one_le_iff_ne_zero : 1 ≤ n ↔ n ≠ 0 :=
 #align enat.one_le_iff_ne_zero Enat.one_le_iff_ne_zero
 
 theorem le_of_lt_add_one (h : m < n + 1) : m ≤ n :=
-  Order.le_of_lt_succ $ n.succ_def.symm ▸ h
+  Order.le_of_lt_succ <| n.succ_def.symm ▸ h
 #align enat.le_of_lt_add_one Enat.le_of_lt_add_one
 
 @[elab_as_elim]

@@ -46,7 +46,7 @@ protected theorem le_floor {z : ℤ} : ∀ {r : ℚ}, z ≤ Rat.floor r ↔ (z :
 #align rat.le_floor Rat.le_floor
 
 instance : FloorRing ℚ :=
-  FloorRing.ofFloor ℚ Rat.floor $ fun a z => Rat.le_floor.symm
+  (FloorRing.ofFloor ℚ Rat.floor) fun a z => Rat.le_floor.symm
 
 protected theorem floor_def {q : ℚ} : ⌊q⌋ = q.num / q.denom := by
   cases q
@@ -63,7 +63,7 @@ theorem floor_int_div_nat_eq_div {n : ℤ} {d : ℕ} : ⌊(↑n : ℚ) / (↑d :
     rw [q_eq]
     exact_mod_cast @Rat.exists_eq_mul_div_num_and_eq_mul_div_denom n d (by exact_mod_cast hd.ne')
   rw [n_eq_c_mul_num, d_eq_c_mul_denom]
-  refine' (Int.mul_ediv_mul_of_pos _ _ $ pos_of_mul_pos_left _ $ Int.coe_nat_nonneg q.denom).symm
+  refine' (Int.mul_ediv_mul_of_pos _ _ <| pos_of_mul_pos_left _ <| Int.coe_nat_nonneg q.denom).symm
   rwa [← d_eq_c_mul_denom, Int.coe_nat_pos]
 #align rat.floor_int_div_nat_eq_div Rat.floor_int_div_nat_eq_div
 
@@ -90,7 +90,7 @@ theorem cast_fract (x : ℚ) : (↑(fract x) : α) = fract x := by simp only [fr
 end Rat
 
 theorem Int.mod_nat_eq_sub_mul_floor_rat_div {n : ℤ} {d : ℕ} : n % d = n - d * ⌊(n : ℚ) / d⌋ := by
-  rw [eq_sub_of_add_eq $ Int.mod_add_div n d, Rat.floor_int_div_nat_eq_div]
+  rw [eq_sub_of_add_eq <| Int.mod_add_div n d, Rat.floor_int_div_nat_eq_div]
 #align int.mod_nat_eq_sub_mul_floor_rat_div Int.mod_nat_eq_sub_mul_floor_rat_div
 
 theorem Nat.coprime_sub_mul_floor_rat_div_of_coprime {n d : ℕ} (n_coprime_d : n.Coprime d) :
@@ -106,7 +106,7 @@ namespace Rat
 theorem num_lt_succ_floor_mul_denom (q : ℚ) : q.num < (⌊q⌋ + 1) * q.denom := by
   suffices (q.num : ℚ) < (⌊q⌋ + 1) * q.denom by exact_mod_cast this
   suffices (q.num : ℚ) < (q - fract q + 1) * q.denom by
-    have : (⌊q⌋ : ℚ) = q - fract q := eq_sub_of_add_eq $ floor_add_fract q
+    have : (⌊q⌋ : ℚ) = q - fract q := eq_sub_of_add_eq <| floor_add_fract q
     rwa [this]
   suffices (q.num : ℚ) < q.num + (1 - fract q) * q.denom by
     have : (q - fract q + 1) * q.denom = q.num + (1 - fract q) * q.denom

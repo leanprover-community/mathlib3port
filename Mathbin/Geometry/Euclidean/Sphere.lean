@@ -56,8 +56,8 @@ which are used to deduce corresponding results for Euclidean affine spaces.
 -/
 
 
-theorem mul_norm_eq_abs_sub_sq_norm {x y z : V} (h₁ : ∃ k : ℝ, k ≠ 1 ∧ x + y = k • (x - y)) (h₂ : ∥z - y∥ = ∥z + y∥) :
-    ∥x - y∥ * ∥x + y∥ = |∥z + y∥ ^ 2 - ∥z - x∥ ^ 2| := by
+theorem mul_norm_eq_abs_sub_sq_norm {x y z : V} (h₁ : ∃ k : ℝ, k ≠ 1 ∧ x + y = k • (x - y)) (h₂ : ‖z - y‖ = ‖z + y‖) :
+    ‖x - y‖ * ‖x + y‖ = |‖z + y‖ ^ 2 - ‖z - x‖ ^ 2| := by
   obtain ⟨k, hk_ne_one, hk⟩ := h₁
   let r := (k - 1)⁻¹ * (k + 1)
   have hxy : x = r • y := by
@@ -72,13 +72,13 @@ theorem mul_norm_eq_abs_sub_sq_norm {x y z : V} (h₁ : ∃ k : ℝ, k ≠ 1 ∧
     rwa [inner_eq_zero_iff_angle_eq_pi_div_two, ← norm_add_eq_norm_sub_iff_angle_eq_pi_div_two, eq_comm]
   have hzx : ⟪z, x⟫ = 0 := by rw [hxy, inner_smul_right, hzy, mul_zero]
   calc
-    ∥x - y∥ * ∥x + y∥ = ∥(r - 1) • y∥ * ∥(r + 1) • y∥ := by simp [sub_smul, add_smul, hxy]
-    _ = ∥r - 1∥ * ∥y∥ * (∥r + 1∥ * ∥y∥) := by simp_rw [norm_smul]
-    _ = ∥r - 1∥ * ∥r + 1∥ * ∥y∥ ^ 2 := by ring
-    _ = |(r - 1) * (r + 1) * ∥y∥ ^ 2| := by simp [abs_mul]
-    _ = |r ^ 2 * ∥y∥ ^ 2 - ∥y∥ ^ 2| := by ring_nf
-    _ = |∥x∥ ^ 2 - ∥y∥ ^ 2| := by simp [hxy, norm_smul, mul_pow, sq_abs]
-    _ = |∥z + y∥ ^ 2 - ∥z - x∥ ^ 2| := by simp [norm_add_sq_real, norm_sub_sq_real, hzy, hzx, abs_sub_comm]
+    ‖x - y‖ * ‖x + y‖ = ‖(r - 1) • y‖ * ‖(r + 1) • y‖ := by simp [sub_smul, add_smul, hxy]
+    _ = ‖r - 1‖ * ‖y‖ * (‖r + 1‖ * ‖y‖) := by simp_rw [norm_smul]
+    _ = ‖r - 1‖ * ‖r + 1‖ * ‖y‖ ^ 2 := by ring
+    _ = |(r - 1) * (r + 1) * ‖y‖ ^ 2| := by simp [abs_mul]
+    _ = |r ^ 2 * ‖y‖ ^ 2 - ‖y‖ ^ 2| := by ring_nf
+    _ = |‖x‖ ^ 2 - ‖y‖ ^ 2| := by simp [hxy, norm_smul, mul_pow, sq_abs]
+    _ = |‖z + y‖ ^ 2 - ‖z - x‖ ^ 2| := by simp [norm_add_sq_real, norm_sub_sq_real, hzy, hzx, abs_sub_comm]
     
 #align inner_product_geometry.mul_norm_eq_abs_sub_sq_norm InnerProductGeometry.mul_norm_eq_abs_sub_sq_norm
 

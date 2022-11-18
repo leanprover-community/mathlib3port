@@ -5,7 +5,6 @@ Authors: Scott Morrison
 -/
 import Mathbin.Algebra.Algebra.Subalgebra.Basic
 import Mathbin.Topology.Algebra.Module.Basic
-import Mathbin.Topology.Algebra.Field
 import Mathbin.RingTheory.Adjoin.Basic
 
 /-!
@@ -168,7 +167,7 @@ def Algebra.elementalAlgebra (x : A) : Subalgebra R A :=
 #align algebra.elemental_algebra Algebra.elementalAlgebra
 
 theorem Algebra.self_mem_elemental_algebra (x : A) : x ∈ Algebra.elementalAlgebra R x :=
-  SetLike.le_def.mp (Subalgebra.subalgebra_topological_closure (Algebra.adjoin R ({x} : Set A))) $
+  SetLike.le_def.mp (Subalgebra.subalgebra_topological_closure (Algebra.adjoin R ({x} : Set A))) <|
     Algebra.self_mem_adjoin_singleton R x
 #align algebra.self_mem_elemental_algebra Algebra.self_mem_elemental_algebra
 

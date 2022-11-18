@@ -234,7 +234,7 @@ variable {A : Type _} [Semiring A] [Algebra R A]
 /-- Internal definition used to define `lift` -/
 private def lift_aux (f : X → A) : FreeAlgebra R X →ₐ[R] A where
   toFun a :=
-    Quot.liftOn a (liftFun _ _ f) $ fun a b h => by
+    (Quot.liftOn a (liftFun _ _ f)) fun a b h => by
       induction h
       · exact (algebraMap R A).map_add h_r h_s
         
@@ -412,7 +412,7 @@ def algebraMapInv : FreeAlgebra R X →ₐ[R] R :=
   lift R (0 : X → R)
 #align free_algebra.algebra_map_inv FreeAlgebra.algebraMapInv
 
-theorem algebra_map_left_inverse : Function.LeftInverse algebraMapInv (algebraMap R $ FreeAlgebra R X) := fun x => by
+theorem algebra_map_left_inverse : Function.LeftInverse algebraMapInv (algebraMap R <| FreeAlgebra R X) := fun x => by
   simp [algebra_map_inv]
 #align free_algebra.algebra_map_left_inverse FreeAlgebra.algebra_map_left_inverse
 
@@ -452,14 +452,106 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
          [`x `y `hoxy]
          []
          "=>"
-         (Init.Core.«term_$_»
+         (Term.app
           `Classical.by_contradiction
-          " $ "
-          (Term.fun
+          [(Term.fun
+            "fun"
+            (Term.basicFun
+             [`hxy]
+             [(Term.typeSpec ":" («term_≠_» `x "≠" `y))]
+             "=>"
+             (Term.let
+              "let"
+              (Term.letDecl
+               (Term.letIdDecl
+                `f
+                []
+                [(Term.typeSpec
+                  ":"
+                  (Algebra.Algebra.Basic.«term_→ₐ[_]_» (Term.app `FreeAlgebra [`R `X]) " →ₐ[" `R "] " `R))]
+                ":="
+                (Term.app
+                 `lift
+                 [`R
+                  (Term.fun
+                   "fun"
+                   (Term.basicFun
+                    [`z]
+                    []
+                    "=>"
+                    (Term.byTactic
+                     "by"
+                     (Tactic.tacticSeq
+                      (Tactic.tacticSeq1Indented
+                       [(Tactic.«tactic_<;>_»
+                         (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+                         "<;>"
+                         (Tactic.exact
+                          "exact"
+                          (termIfThenElse
+                           "if"
+                           («term_=_» `x "=" `z)
+                           "then"
+                           (Term.typeAscription "(" (num "1") ":" [`R] ")")
+                           "else"
+                           (num "0"))))])))))])))
+              []
+              (Term.have
+               "have"
+               (Term.haveDecl
+                (Term.haveIdDecl
+                 [`hfx1 []]
+                 [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `x])]) "=" (num "1")))]
+                 ":="
+                 («term_<|_»
+                  (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
+                  "<|"
+                  (Term.app `if_pos [`rfl]))))
+               []
+               (Term.have
+                "have"
+                (Term.haveDecl
+                 (Term.haveIdDecl
+                  [`hfy1 []]
+                  [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `y])]) "=" (num "1")))]
+                  ":="
+                  (Term.subst `hoxy "▸" [`hfx1])))
+                []
+                (Term.have
+                 "have"
+                 (Term.haveDecl
+                  (Term.haveIdDecl
+                   [`hfy0 []]
+                   [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `y])]) "=" (num "0")))]
+                   ":="
+                   («term_<|_»
+                    (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
+                    "<|"
+                    (Term.app `if_neg [`hxy]))))
+                 []
+                 («term_<|_»
+                  `one_ne_zero
+                  "<|"
+                  (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0]))))))))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`x `y `hoxy]
+        []
+        "=>"
+        (Term.app
+         `Classical.by_contradiction
+         [(Term.fun
            "fun"
            (Term.basicFun
             [`hxy]
-            [(Term.typeSpec ":" (Init.Logic.«term_≠_» `x " ≠ " `y))]
+            [(Term.typeSpec ":" («term_≠_» `x "≠" `y))]
             "=>"
             (Term.let
              "let"
@@ -491,7 +583,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
                          "exact"
                          (termIfThenElse
                           "if"
-                          (Init.Core.«term_=_» `x " = " `z)
+                          («term_=_» `x "=" `z)
                           "then"
                           (Term.typeAscription "(" (num "1") ":" [`R] ")")
                           "else"
@@ -502,11 +594,11 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
               (Term.haveDecl
                (Term.haveIdDecl
                 [`hfx1 []]
-                [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `x])]) " = " (num "1")))]
+                [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `x])]) "=" (num "1")))]
                 ":="
-                (Init.Core.«term_$_»
+                («term_<|_»
                  (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
-                 " $ "
+                 "<|"
                  (Term.app `if_pos [`rfl]))))
               []
               (Term.have
@@ -514,209 +606,116 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
                (Term.haveDecl
                 (Term.haveIdDecl
                  [`hfy1 []]
-                 [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `y])]) " = " (num "1")))]
+                 [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `y])]) "=" (num "1")))]
                  ":="
-                 (Init.Core.«term_▸_» `hoxy " ▸ " `hfx1)))
+                 (Term.subst `hoxy "▸" [`hfx1])))
                []
                (Term.have
                 "have"
                 (Term.haveDecl
                  (Term.haveIdDecl
                   [`hfy0 []]
-                  [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `y])]) " = " (num "0")))]
+                  [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `y])]) "=" (num "0")))]
                   ":="
-                  (Init.Core.«term_$_»
+                  («term_<|_»
                    (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
-                   " $ "
+                   "<|"
                    (Term.app `if_neg [`hxy]))))
                 []
-                (Init.Core.«term_$_»
+                («term_<|_»
                  `one_ne_zero
-                 " $ "
-                 (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0])))))))))))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+                 "<|"
+                 (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0]))))))))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun
-       "fun"
-       (Term.basicFun
-        [`x `y `hoxy]
-        []
-        "=>"
-        (Init.Core.«term_$_»
-         `Classical.by_contradiction
-         " $ "
-         (Term.fun
-          "fun"
-          (Term.basicFun
-           [`hxy]
-           [(Term.typeSpec ":" (Init.Logic.«term_≠_» `x " ≠ " `y))]
-           "=>"
-           (Term.let
-            "let"
-            (Term.letDecl
-             (Term.letIdDecl
-              `f
-              []
-              [(Term.typeSpec
-                ":"
-                (Algebra.Algebra.Basic.«term_→ₐ[_]_» (Term.app `FreeAlgebra [`R `X]) " →ₐ[" `R "] " `R))]
-              ":="
-              (Term.app
-               `lift
-               [`R
-                (Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`z]
-                  []
-                  "=>"
-                  (Term.byTactic
-                   "by"
-                   (Tactic.tacticSeq
-                    (Tactic.tacticSeq1Indented
-                     [(Tactic.«tactic_<;>_»
-                       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-                       "<;>"
-                       (Tactic.exact
-                        "exact"
-                        (termIfThenElse
-                         "if"
-                         (Init.Core.«term_=_» `x " = " `z)
-                         "then"
-                         (Term.typeAscription "(" (num "1") ":" [`R] ")")
-                         "else"
-                         (num "0"))))])))))])))
-            []
-            (Term.have
-             "have"
-             (Term.haveDecl
-              (Term.haveIdDecl
-               [`hfx1 []]
-               [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `x])]) " = " (num "1")))]
-               ":="
-               (Init.Core.«term_$_»
-                (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
-                " $ "
-                (Term.app `if_pos [`rfl]))))
-             []
-             (Term.have
-              "have"
-              (Term.haveDecl
-               (Term.haveIdDecl
-                [`hfy1 []]
-                [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `y])]) " = " (num "1")))]
-                ":="
-                (Init.Core.«term_▸_» `hoxy " ▸ " `hfx1)))
-              []
-              (Term.have
-               "have"
-               (Term.haveDecl
-                (Term.haveIdDecl
-                 [`hfy0 []]
-                 [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `y])]) " = " (num "0")))]
-                 ":="
-                 (Init.Core.«term_$_»
-                  (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
-                  " $ "
-                  (Term.app `if_neg [`hxy]))))
-               []
-               (Init.Core.«term_$_»
-                `one_ne_zero
-                " $ "
-                (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0])))))))))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      (Term.app
        `Classical.by_contradiction
-       " $ "
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`hxy]
-         [(Term.typeSpec ":" (Init.Logic.«term_≠_» `x " ≠ " `y))]
-         "=>"
-         (Term.let
-          "let"
-          (Term.letDecl
-           (Term.letIdDecl
-            `f
-            []
-            [(Term.typeSpec
-              ":"
-              (Algebra.Algebra.Basic.«term_→ₐ[_]_» (Term.app `FreeAlgebra [`R `X]) " →ₐ[" `R "] " `R))]
-            ":="
-            (Term.app
-             `lift
-             [`R
-              (Term.fun
-               "fun"
-               (Term.basicFun
-                [`z]
-                []
-                "=>"
-                (Term.byTactic
-                 "by"
-                 (Tactic.tacticSeq
-                  (Tactic.tacticSeq1Indented
-                   [(Tactic.«tactic_<;>_»
-                     (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-                     "<;>"
-                     (Tactic.exact
-                      "exact"
-                      (termIfThenElse
-                       "if"
-                       (Init.Core.«term_=_» `x " = " `z)
-                       "then"
-                       (Term.typeAscription "(" (num "1") ":" [`R] ")")
-                       "else"
-                       (num "0"))))])))))])))
-          []
-          (Term.have
-           "have"
-           (Term.haveDecl
-            (Term.haveIdDecl
-             [`hfx1 []]
-             [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `x])]) " = " (num "1")))]
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`hxy]
+          [(Term.typeSpec ":" («term_≠_» `x "≠" `y))]
+          "=>"
+          (Term.let
+           "let"
+           (Term.letDecl
+            (Term.letIdDecl
+             `f
+             []
+             [(Term.typeSpec
+               ":"
+               (Algebra.Algebra.Basic.«term_→ₐ[_]_» (Term.app `FreeAlgebra [`R `X]) " →ₐ[" `R "] " `R))]
              ":="
-             (Init.Core.«term_$_»
-              (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
-              " $ "
-              (Term.app `if_pos [`rfl]))))
+             (Term.app
+              `lift
+              [`R
+               (Term.fun
+                "fun"
+                (Term.basicFun
+                 [`z]
+                 []
+                 "=>"
+                 (Term.byTactic
+                  "by"
+                  (Tactic.tacticSeq
+                   (Tactic.tacticSeq1Indented
+                    [(Tactic.«tactic_<;>_»
+                      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+                      "<;>"
+                      (Tactic.exact
+                       "exact"
+                       (termIfThenElse
+                        "if"
+                        («term_=_» `x "=" `z)
+                        "then"
+                        (Term.typeAscription "(" (num "1") ":" [`R] ")")
+                        "else"
+                        (num "0"))))])))))])))
            []
            (Term.have
             "have"
             (Term.haveDecl
              (Term.haveIdDecl
-              [`hfy1 []]
-              [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `y])]) " = " (num "1")))]
+              [`hfx1 []]
+              [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `x])]) "=" (num "1")))]
               ":="
-              (Init.Core.«term_▸_» `hoxy " ▸ " `hfx1)))
+              («term_<|_»
+               (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
+               "<|"
+               (Term.app `if_pos [`rfl]))))
             []
             (Term.have
              "have"
              (Term.haveDecl
               (Term.haveIdDecl
-               [`hfy0 []]
-               [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `y])]) " = " (num "0")))]
+               [`hfy1 []]
+               [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `y])]) "=" (num "1")))]
                ":="
-               (Init.Core.«term_$_»
-                (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
-                " $ "
-                (Term.app `if_neg [`hxy]))))
+               (Term.subst `hoxy "▸" [`hfx1])))
              []
-             (Init.Core.«term_$_»
-              `one_ne_zero
-              " $ "
-              (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0])))))))))
+             (Term.have
+              "have"
+              (Term.haveDecl
+               (Term.haveIdDecl
+                [`hfy0 []]
+                [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `y])]) "=" (num "0")))]
+                ":="
+                («term_<|_»
+                 (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
+                 "<|"
+                 (Term.app `if_neg [`hxy]))))
+              []
+              («term_<|_»
+               `one_ne_zero
+               "<|"
+               (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0]))))))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
        (Term.basicFun
         [`hxy]
-        [(Term.typeSpec ":" (Init.Logic.«term_≠_» `x " ≠ " `y))]
+        [(Term.typeSpec ":" («term_≠_» `x "≠" `y))]
         "=>"
         (Term.let
          "let"
@@ -746,7 +745,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
                      "exact"
                      (termIfThenElse
                       "if"
-                      (Init.Core.«term_=_» `x " = " `z)
+                      («term_=_» `x "=" `z)
                       "then"
                       (Term.typeAscription "(" (num "1") ":" [`R] ")")
                       "else"
@@ -757,11 +756,11 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
           (Term.haveDecl
            (Term.haveIdDecl
             [`hfx1 []]
-            [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `x])]) " = " (num "1")))]
+            [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `x])]) "=" (num "1")))]
             ":="
-            (Init.Core.«term_$_»
+            («term_<|_»
              (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
-             " $ "
+             "<|"
              (Term.app `if_pos [`rfl]))))
           []
           (Term.have
@@ -769,26 +768,23 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
            (Term.haveDecl
             (Term.haveIdDecl
              [`hfy1 []]
-             [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `y])]) " = " (num "1")))]
+             [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `y])]) "=" (num "1")))]
              ":="
-             (Init.Core.«term_▸_» `hoxy " ▸ " `hfx1)))
+             (Term.subst `hoxy "▸" [`hfx1])))
            []
            (Term.have
             "have"
             (Term.haveDecl
              (Term.haveIdDecl
               [`hfy0 []]
-              [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `y])]) " = " (num "0")))]
+              [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `y])]) "=" (num "0")))]
               ":="
-              (Init.Core.«term_$_»
+              («term_<|_»
                (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
-               " $ "
+               "<|"
                (Term.app `if_neg [`hxy]))))
             []
-            (Init.Core.«term_$_»
-             `one_ne_zero
-             " $ "
-             (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0]))))))))
+            («term_<|_» `one_ne_zero "<|" (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0]))))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.let
        "let"
@@ -818,7 +814,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
                    "exact"
                    (termIfThenElse
                     "if"
-                    (Init.Core.«term_=_» `x " = " `z)
+                    («term_=_» `x "=" `z)
                     "then"
                     (Term.typeAscription "(" (num "1") ":" [`R] ")")
                     "else"
@@ -829,11 +825,11 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
         (Term.haveDecl
          (Term.haveIdDecl
           [`hfx1 []]
-          [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `x])]) " = " (num "1")))]
+          [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `x])]) "=" (num "1")))]
           ":="
-          (Init.Core.«term_$_»
+          («term_<|_»
            (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
-           " $ "
+           "<|"
            (Term.app `if_pos [`rfl]))))
         []
         (Term.have
@@ -841,37 +837,34 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
          (Term.haveDecl
           (Term.haveIdDecl
            [`hfy1 []]
-           [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `y])]) " = " (num "1")))]
+           [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `y])]) "=" (num "1")))]
            ":="
-           (Init.Core.«term_▸_» `hoxy " ▸ " `hfx1)))
+           (Term.subst `hoxy "▸" [`hfx1])))
          []
          (Term.have
           "have"
           (Term.haveDecl
            (Term.haveIdDecl
             [`hfy0 []]
-            [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `y])]) " = " (num "0")))]
+            [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `y])]) "=" (num "0")))]
             ":="
-            (Init.Core.«term_$_»
+            («term_<|_»
              (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
-             " $ "
+             "<|"
              (Term.app `if_neg [`hxy]))))
           []
-          (Init.Core.«term_$_»
-           `one_ne_zero
-           " $ "
-           (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0]))))))
+          («term_<|_» `one_ne_zero "<|" (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0]))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.have
        "have"
        (Term.haveDecl
         (Term.haveIdDecl
          [`hfx1 []]
-         [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `x])]) " = " (num "1")))]
+         [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `x])]) "=" (num "1")))]
          ":="
-         (Init.Core.«term_$_»
+         («term_<|_»
           (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
-          " $ "
+          "<|"
           (Term.app `if_pos [`rfl]))))
        []
        (Term.have
@@ -879,65 +872,62 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
         (Term.haveDecl
          (Term.haveIdDecl
           [`hfy1 []]
-          [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `y])]) " = " (num "1")))]
+          [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `y])]) "=" (num "1")))]
           ":="
-          (Init.Core.«term_▸_» `hoxy " ▸ " `hfx1)))
+          (Term.subst `hoxy "▸" [`hfx1])))
         []
         (Term.have
          "have"
          (Term.haveDecl
           (Term.haveIdDecl
            [`hfy0 []]
-           [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `y])]) " = " (num "0")))]
+           [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `y])]) "=" (num "0")))]
            ":="
-           (Init.Core.«term_$_»
+           («term_<|_»
             (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
-            " $ "
+            "<|"
             (Term.app `if_neg [`hxy]))))
          []
-         (Init.Core.«term_$_»
-          `one_ne_zero
-          " $ "
-          (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0])))))
+         («term_<|_» `one_ne_zero "<|" (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0])))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.have
        "have"
        (Term.haveDecl
         (Term.haveIdDecl
          [`hfy1 []]
-         [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `y])]) " = " (num "1")))]
+         [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `y])]) "=" (num "1")))]
          ":="
-         (Init.Core.«term_▸_» `hoxy " ▸ " `hfx1)))
+         (Term.subst `hoxy "▸" [`hfx1])))
        []
        (Term.have
         "have"
         (Term.haveDecl
          (Term.haveIdDecl
           [`hfy0 []]
-          [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `y])]) " = " (num "0")))]
+          [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `y])]) "=" (num "0")))]
           ":="
-          (Init.Core.«term_$_»
+          («term_<|_»
            (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
-           " $ "
+           "<|"
            (Term.app `if_neg [`hxy]))))
         []
-        (Init.Core.«term_$_» `one_ne_zero " $ " (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0]))))
+        («term_<|_» `one_ne_zero "<|" (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.have
        "have"
        (Term.haveDecl
         (Term.haveIdDecl
          [`hfy0 []]
-         [(Term.typeSpec ":" (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `y])]) " = " (num "0")))]
+         [(Term.typeSpec ":" («term_=_» (Term.app `f [(Term.app `ι [`R `y])]) "=" (num "0")))]
          ":="
-         (Init.Core.«term_$_»
+         («term_<|_»
           (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
-          " $ "
+          "<|"
           (Term.app `if_neg [`hxy]))))
        []
-       (Init.Core.«term_$_» `one_ne_zero " $ " (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0])))
+       («term_<|_» `one_ne_zero "<|" (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_» `one_ne_zero " $ " (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0]))
+      («term_<|_» `one_ne_zero "<|" (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app (Term.proj (Term.proj `hfy1 "." `symm) "." `trans) [`hfy0])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -954,15 +944,15 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       `one_ne_zero
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      («term_<|_»
        (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
-       " $ "
+       "<|"
        (Term.app `if_neg [`hxy]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `if_neg [`hxy])
@@ -974,8 +964,8 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `if_neg
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")])
@@ -997,10 +987,10 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
      "("
      (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")])
      ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `y])]) " = " (num "0"))
+      («term_=_» (Term.app `f [(Term.app `ι [`R `y])]) "=" (num "0"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "0")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -1028,20 +1018,20 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_▸_» `hoxy " ▸ " `hfx1)
+      (Term.subst `hoxy "▸" [`hfx1])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hfx1
 [PrettyPrinter.parenthesize] ...precedences are 75 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 75, term))
       `hoxy
-[PrettyPrinter.parenthesize] ...precedences are 76 >? 1024, (none, [anonymous]) <=? (some 75, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 75, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 75, (some 75, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `y])]) " = " (num "1"))
+      («term_=_» (Term.app `f [(Term.app `ι [`R `y])]) "=" (num "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "1")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -1069,13 +1059,13 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      («term_<|_»
        (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
-       " $ "
+       "<|"
        (Term.app `if_pos [`rfl]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `if_pos [`rfl])
@@ -1087,8 +1077,8 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `if_pos
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.proj (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")]) "." `trans)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")])
@@ -1110,10 +1100,10 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
      "("
      (Term.app `lift_ι_apply [(Term.hole "_") (Term.hole "_")])
      ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_» (Term.app `f [(Term.app `ι [`R `x])]) " = " (num "1"))
+      («term_=_» (Term.app `f [(Term.app `ι [`R `x])]) "=" (num "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "1")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -1141,7 +1131,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1165,7 +1155,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
                 "exact"
                 (termIfThenElse
                  "if"
-                 (Init.Core.«term_=_» `x " = " `z)
+                 («term_=_» `x "=" `z)
                  "then"
                  (Term.typeAscription "(" (num "1") ":" [`R] ")")
                  "else"
@@ -1190,7 +1180,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
               "exact"
               (termIfThenElse
                "if"
-               (Init.Core.«term_=_» `x " = " `z)
+               («term_=_» `x "=" `z)
                "then"
                (Term.typeAscription "(" (num "1") ":" [`R] ")")
                "else"
@@ -1207,7 +1197,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
             "exact"
             (termIfThenElse
              "if"
-             (Init.Core.«term_=_» `x " = " `z)
+             («term_=_» `x "=" `z)
              "then"
              (Term.typeAscription "(" (num "1") ":" [`R] ")")
              "else"
@@ -1221,7 +1211,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
         "exact"
         (termIfThenElse
          "if"
-         (Init.Core.«term_=_» `x " = " `z)
+         («term_=_» `x "=" `z)
          "then"
          (Term.typeAscription "(" (num "1") ":" [`R] ")")
          "else"
@@ -1231,7 +1221,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
        "exact"
        (termIfThenElse
         "if"
-        (Init.Core.«term_=_» `x " = " `z)
+        («term_=_» `x "=" `z)
         "then"
         (Term.typeAscription "(" (num "1") ":" [`R] ")")
         "else"
@@ -1239,7 +1229,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (termIfThenElse
        "if"
-       (Init.Core.«term_=_» `x " = " `z)
+       («term_=_» `x "=" `z)
        "then"
        (Term.typeAscription "(" (num "1") ":" [`R] ")")
        "else"
@@ -1257,13 +1247,13 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 �
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_» `x " = " `z)
+      («term_=_» `x "=" `z)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `z
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `x
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
@@ -1292,7 +1282,6 @@ theorem
       x y hoxy
         =>
         Classical.by_contradiction
-          $
           fun
             hxy
               : x ≠ y
@@ -1300,12 +1289,12 @@ theorem
               let
                 f : FreeAlgebra R X →ₐ[ R ] R := lift R fun z => by skip <;> exact if x = z then ( 1 : R ) else 0
                 have
-                  hfx1 : f ι R x = 1 := lift_ι_apply _ _ . trans $ if_pos rfl
+                  hfx1 : f ι R x = 1 := lift_ι_apply _ _ . trans <| if_pos rfl
                   have
                     hfy1 : f ι R y = 1 := hoxy ▸ hfx1
                     have
-                      hfy0 : f ι R y = 0 := lift_ι_apply _ _ . trans $ if_neg hxy
-                      one_ne_zero $ hfy1 . symm . trans hfy0
+                      hfy0 : f ι R y = 0 := lift_ι_apply _ _ . trans <| if_neg hxy
+                      one_ne_zero <| hfy1 . symm . trans hfy0
 #align free_algebra.ι_injective FreeAlgebra.ι_injective
 
 @[simp]

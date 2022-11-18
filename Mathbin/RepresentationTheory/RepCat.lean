@@ -31,7 +31,7 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:299:31: unsupported: @[derive] abbrev -/
+/- ./././Mathport/Syntax/Translate/Command.lean:293:31: unsupported: @[derive] abbrev -/
 /-- The category of `k`-linear representations of a monoid `G`. -/
 abbrev RepCat (k G : Type u) [Ring k] [Monoid G] :=
   ActionCat (ModuleCat.{u} k) (MonCat.of G)
@@ -121,7 +121,7 @@ variable (k G)
 /-- Given a `G`-action on `H`, this is `k[H]` bundled with the natural representation
 `G →* End(k[H])` as a term of type `Rep k G`. -/
 noncomputable abbrev ofMulAction (H : Type u) [MulAction G H] : RepCat k G :=
-  of $ Representation.ofMulAction k G H
+  of <| Representation.ofMulAction k G H
 #align Rep.of_mul_action RepCat.ofMulAction
 
 /-- The linearization of a type `H` with a `G`-action is definitionally isomorphic to the

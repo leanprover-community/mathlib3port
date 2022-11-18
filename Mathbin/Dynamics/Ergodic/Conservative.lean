@@ -54,7 +54,7 @@ open Measure
 returns back to `s` under some iteration of `f`. -/
 structure Conservative (f : α → α) (μ : Measure α := by exact MeasureTheory.MeasureSpace.volume) extends
   QuasiMeasurePreserving f μ μ : Prop where
-  exists_mem_image_mem : ∀ ⦃s⦄, MeasurableSet s → μ s ≠ 0 → ∃ (x ∈ s) (m) (_ : m ≠ 0), (f^[m]) x ∈ s
+  exists_mem_image_mem : ∀ ⦃s⦄, MeasurableSet s → μ s ≠ 0 → ∃ x ∈ s, ∃ (m : _)(_ : m ≠ 0), (f^[m]) x ∈ s
 #align measure_theory.conservative MeasureTheory.Conservative
 
 /-- A self-map preserving a finite measure is conservative. -/
@@ -90,14 +90,14 @@ theorem frequently_measure_inter_ne_zero (hf : Conservative f μ) (hs : Measurab
   set T := s ∩ ⋃ n ≥ N + 1, f^[n] ⁻¹' s
   have hT : MeasurableSet T := hs.inter (MeasurableSet.bUnion (to_countable _) fun _ _ => hf.measurable.iterate _ hs)
   have hμT : μ T = 0 := by
-    convert (measure_bUnion_null_iff $ to_countable _).2 hN
+    convert (measure_bUnion_null_iff <| to_countable _).2 hN
     rw [← inter_Union₂]
     rfl
-  have : μ (s ∩ f^[n] ⁻¹' s \ T) ≠ 0 := by rwa [measure_diff_null hμT]
+  have : μ ((s ∩ f^[n] ⁻¹' s) \ T) ≠ 0 := by rwa [measure_diff_null hμT]
   rcases hf.exists_mem_image_mem ((hs.inter (hf.measurable.iterate n hs)).diff hT) this with
     ⟨x, ⟨⟨hxs, hxn⟩, hxT⟩, m, hm0, ⟨hxms, hxm⟩, hxx⟩
   refine' hxT ⟨hxs, mem_Union₂.2 ⟨n + m, _, _⟩⟩
-  · exact add_le_add hn (Nat.one_le_of_lt $ pos_iff_ne_zero.2 hm0)
+  · exact add_le_add hn (Nat.one_le_of_lt <| pos_iff_ne_zero.2 hm0)
     
   · rwa [Set.mem_preimage, ← iterate_add_apply] at hxm
     
@@ -141,7 +141,7 @@ theorem ae_mem_imp_frequently_image_mem (hf : Conservative f μ) (hs : Measurabl
 
 theorem inter_frequently_image_mem_ae_eq (hf : Conservative f μ) (hs : MeasurableSet s) :
     (s ∩ { x | ∃ᶠ n in at_top, (f^[n]) x ∈ s } : Set α) =ᵐ[μ] s :=
-  inter_eventually_eq_left.2 $ hf.ae_mem_imp_frequently_image_mem hs
+  inter_eventually_eq_left.2 <| hf.ae_mem_imp_frequently_image_mem hs
 #align
   measure_theory.conservative.inter_frequently_image_mem_ae_eq MeasureTheory.Conservative.inter_frequently_image_mem_ae_eq
 
@@ -168,7 +168,7 @@ theorem ae_forall_image_mem_imp_frequently_image_mem (hf : Conservative f μ) (h
 `μ.ae`-frequently we have `x ∈ s` and `s` returns to `s` under infinitely many iterations of `f`. -/
 theorem frequently_ae_mem_and_frequently_image_mem (hf : Conservative f μ) (hs : MeasurableSet s) (h0 : μ s ≠ 0) :
     ∃ᵐ x ∂μ, x ∈ s ∧ ∃ᶠ n in at_top, (f^[n]) x ∈ s :=
-  ((frequently_ae_mem_iff.2 h0).and_eventually (hf.ae_mem_imp_frequently_image_mem hs)).mono $ fun x hx =>
+  ((frequently_ae_mem_iff.2 h0).and_eventually (hf.ae_mem_imp_frequently_image_mem hs)).mono fun x hx =>
     ⟨hx.1, hx.2 hx.1⟩
 #align
   measure_theory.conservative.frequently_ae_mem_and_frequently_image_mem MeasureTheory.Conservative.frequently_ae_mem_and_frequently_image_mem
@@ -180,7 +180,7 @@ theorem ae_frequently_mem_of_mem_nhds [TopologicalSpace α] [SecondCountableTopo
     {f : α → α} {μ : Measure α} (h : Conservative f μ) : ∀ᵐ x ∂μ, ∀ s ∈ 𝓝 x, ∃ᶠ n in at_top, (f^[n]) x ∈ s := by
   have : ∀ s ∈ countable_basis α, ∀ᵐ x ∂μ, x ∈ s → ∃ᶠ n in at_top, (f^[n]) x ∈ s := fun s hs =>
     h.ae_mem_imp_frequently_image_mem (is_open_of_mem_countable_basis hs).MeasurableSet
-  refine' ((ae_ball_iff $ countable_countable_basis α).2 this).mono fun x hx s hs => _
+  refine' ((ae_ball_iff <| countable_countable_basis α).2 this).mono fun x hx s hs => _
   rcases(is_basis_countable_basis α).mem_nhds_iff.1 hs with ⟨o, hoS, hxo, hos⟩
   exact (hx o hoS hxo).mono fun n hn => hos hn
 #align

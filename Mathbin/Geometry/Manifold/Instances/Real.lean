@@ -3,7 +3,6 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.Geometry.Manifold.SmoothManifoldWithCorners
 import Mathbin.Analysis.InnerProductSpace.PiL2
 
@@ -107,7 +106,7 @@ def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Fin n)] :
       UniqueDiffOn.pi (Fin n) (fun _ => ℝ) _ _ fun i (_ : i ∈ ({0} : Set (Fin n))) => uniqueDiffOnIci 0
     simpa only [singleton_pi] using this
   continuous_to_fun := continuous_subtype_val
-  continuous_inv_fun := (continuous_id.update 0 $ (continuous_apply 0).max continuous_const).subtype_mk _
+  continuous_inv_fun := (continuous_id.update 0 <| (continuous_apply 0).max continuous_const).subtype_mk _
 #align model_with_corners_euclidean_half_space modelWithCornersEuclideanHalfSpace
 
 /-- Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_quadrant n)`, used as a
@@ -132,7 +131,7 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
     simpa only [pi_univ_Ici] using this
   continuous_to_fun := continuous_subtype_val
   continuous_inv_fun :=
-    Continuous.subtype_mk (continuous_pi $ fun i => (continuous_id.max continuous_const).comp (continuous_apply i)) _
+    Continuous.subtype_mk (continuous_pi fun i => (continuous_id.max continuous_const).comp (continuous_apply i)) _
 #align model_with_corners_euclidean_quadrant modelWithCornersEuclideanQuadrant
 
 -- mathport name: model_with_corners_self.euclidean
@@ -185,7 +184,7 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (icc x y) (Euclide
     apply Continuous.continuous_on
     apply Continuous.subtype_mk
     have : Continuous fun (z : ℝ) (i : Fin 1) => z - x :=
-      Continuous.sub (continuous_pi $ fun i => continuous_id) continuous_const
+      Continuous.sub (continuous_pi fun i => continuous_id) continuous_const
     exact this.comp continuous_subtype_val
   continuous_inv_fun := by
     apply Continuous.continuous_on
@@ -250,7 +249,7 @@ instance iccManifold (x y : ℝ) [Fact (x < y)] : ChartedSpace (EuclideanHalfSpa
   atlas := {iccLeftChart x y, iccRightChart x y}
   chartAt z := if z.val < y then iccLeftChart x y else iccRightChart x y
   mem_chart_source z := by
-    by_cases h':z.val < y
+    by_cases h' : z.val < y
     · simp only [h', if_true]
       exact h'
       
@@ -258,7 +257,7 @@ instance iccManifold (x y : ℝ) [Fact (x < y)] : ChartedSpace (EuclideanHalfSpa
       apply lt_of_lt_of_le (Fact.out (x < y))
       simpa only [not_lt] using h'
       
-  chart_mem_atlas z := by by_cases h':(z : ℝ) < y <;> simp [h']
+  chart_mem_atlas z := by by_cases h' : (z : ℝ) < y <;> simp [h']
 #align Icc_manifold iccManifold
 
 /-- The manifold structure on `[x, y]` is smooth.

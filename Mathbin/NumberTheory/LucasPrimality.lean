@@ -7,7 +7,6 @@ import Mathbin.Data.Fintype.Basic
 import Mathbin.GroupTheory.OrderOfElement
 import Mathbin.Tactic.Zify
 import Mathbin.Data.Nat.Totient
-import Mathbin.Data.Zmod.Basic
 
 /-!
 # The Lucas test for primes.

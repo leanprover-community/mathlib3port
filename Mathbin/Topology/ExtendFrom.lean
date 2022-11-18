@@ -40,7 +40,7 @@ def extendFrom (A : Set X) (f : X → Y) : X → Y := fun x => @lim _ ⟨f x⟩ 
 /-- If `f` converges to some `y` as `x` tends to `x₀` within `A`,
 then `f` tends to `extend_from A f x` as `x` tends to `x₀`. -/
 theorem tendsto_extend_from {A : Set X} {f : X → Y} {x : X} (h : ∃ y, Tendsto f (𝓝[A] x) (𝓝 y)) :
-    Tendsto f (𝓝[A] x) (𝓝 $ extendFrom A f x) :=
+    Tendsto f (𝓝[A] x) (𝓝 <| extendFrom A f x) :=
   tendsto_nhds_lim h
 #align tendsto_extend_from tendsto_extend_from
 
@@ -68,10 +68,10 @@ theorem continuous_on_extend_from [RegularSpace Y] {f : X → Y} {A B : Set X} (
     rcases(nhds_within_basis_open x A).tendsto_left_iff.mp this V' V'_in with ⟨V, ⟨hxV, V_op⟩, hV⟩
     use V, IsOpen.mem_nhds V_op hxV, V_op, hV
   suffices : ∀ y ∈ V ∩ B, φ y ∈ V'
-  exact mem_of_superset (inter_mem_inf V_in $ mem_principal_self B) this
+  exact mem_of_superset (inter_mem_inf V_in <| mem_principal_self B) this
   rintro y ⟨hyV, hyB⟩
   haveI := mem_closure_iff_nhds_within_ne_bot.mp (hB hyB)
-  have limy : tendsto f (𝓝[A] y) (𝓝 $ φ y) := tendsto_extend_from (hf y hyB)
+  have limy : tendsto f (𝓝[A] y) (𝓝 <| φ y) := tendsto_extend_from (hf y hyB)
   have hVy : V ∈ 𝓝 y := IsOpen.mem_nhds V_op hyV
   have : V ∩ A ∈ 𝓝[A] y := by simpa [inter_comm] using inter_mem_nhds_within _ hVy
   exact V'_closed.mem_of_tendsto limy (mem_of_superset this hV)

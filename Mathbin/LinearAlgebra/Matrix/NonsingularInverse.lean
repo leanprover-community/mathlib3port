@@ -3,9 +3,7 @@ Copyright (c) 2019 Tim Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baanen, Lu-Ming Zhang
 -/
-import Mathbin.Algebra.Regular.Smul
 import Mathbin.LinearAlgebra.Matrix.Adjugate
-import Mathbin.LinearAlgebra.Matrix.Polynomial
 
 /-!
 # Nonsingular inverses
@@ -279,7 +277,7 @@ theorem coe_units_inv (A : (Matrix n n α)ˣ) : ↑A⁻¹ = (A⁻¹ : Matrix n n
 
 /-- The nonsingular inverse is the same as the general `ring.inverse`. -/
 theorem nonsing_inv_eq_ring_inverse : A⁻¹ = Ring.inverse A := by
-  by_cases h_det:IsUnit A.det
+  by_cases h_det : IsUnit A.det
   · cases (A.is_unit_iff_is_unit_det.mpr h_det).nonempty_invertible
     rw [← inv_of_eq_nonsing_inv, Ring.inverse_invertible]
     
@@ -377,7 +375,7 @@ theorem mul_inv_eq_iff_eq_mul_of_invertible (A B C : Matrix n n α) [Invertible 
 #align matrix.mul_inv_eq_iff_eq_mul_of_invertible Matrix.mul_inv_eq_iff_eq_mul_of_invertible
 
 theorem nonsing_inv_cancel_or_zero : A⁻¹ ⬝ A = 1 ∧ A ⬝ A⁻¹ = 1 ∨ A⁻¹ = 0 := by
-  by_cases h:IsUnit A.det
+  by_cases h : IsUnit A.det
   · exact Or.inl ⟨nonsing_inv_mul _ h, mul_nonsing_inv _ h⟩
     
   · exact Or.inr (nonsing_inv_apply_not_is_unit _ h)
@@ -390,7 +388,7 @@ theorem det_nonsing_inv_mul_det (h : IsUnit A.det) : A⁻¹.det * A.det = 1 := b
 
 @[simp]
 theorem det_nonsing_inv : A⁻¹.det = Ring.inverse A.det := by
-  by_cases h:IsUnit A.det
+  by_cases h : IsUnit A.det
   · cases h.nonempty_invertible
     letI := invertible_of_det_invertible A
     rw [Ring.inverse_invertible, ← inv_of_eq_nonsing_inv, det_inv_of]
@@ -530,14 +528,14 @@ theorem inv_of_diagonal_eq {α} [Semiring α] (v : n → α) [Invertible v] [Inv
 def invertibleOfDiagonalInvertible (v : n → α) [Invertible (diagonal v)] : Invertible v where
   invOf := diag (⅟ (diagonal v))
   inv_of_mul_self :=
-    funext $ fun i => by
+    funext fun i => by
       letI : Invertible (diagonal v).det := det_invertible_of_invertible _
       rw [inv_of_eq, diag_smul, adjugate_diagonal, diag_diagonal]
       dsimp
       rw [mul_assoc, prod_erase_mul _ _ (Finset.mem_univ _), ← det_diagonal]
       exact mul_inv_of_self _
   mul_inv_of_self :=
-    funext $ fun i => by
+    funext fun i => by
       letI : Invertible (diagonal v).det := det_invertible_of_invertible _
       rw [inv_of_eq, diag_smul, adjugate_diagonal, diag_diagonal]
       dsimp
@@ -563,7 +561,7 @@ theorem is_unit_diagonal {v : n → α} : IsUnit (diagonal v) ↔ IsUnit v := by
 
 theorem inv_diagonal (v : n → α) : (diagonal v)⁻¹ = diagonal (Ring.inverse v) := by
   rw [nonsing_inv_eq_ring_inverse]
-  by_cases h:IsUnit v
+  by_cases h : IsUnit v
   · have := is_unit_diagonal.mpr h
     cases this.nonempty_invertible
     cases h.nonempty_invertible
@@ -576,7 +574,7 @@ theorem inv_diagonal (v : n → α) : (diagonal v)⁻¹ = diagonal (Ring.inverse
 
 @[simp]
 theorem inv_inv_inv (A : Matrix n n α) : A⁻¹⁻¹⁻¹ = A⁻¹ := by
-  by_cases h:IsUnit A.det
+  by_cases h : IsUnit A.det
   · rw [nonsing_inv_nonsing_inv _ h]
     
   · simp [nonsing_inv_apply_not_is_unit _ h]

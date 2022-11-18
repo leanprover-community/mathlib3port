@@ -66,13 +66,12 @@ unsafe def goal_domain_aux (x : expr) : tactic Bool :=
   omega.int.wff x >> return true <|> omega.nat.wff x >> return false
 #align omega.goal_domain_aux omega.goal_domain_aux
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Use the current goal to determine.
     Return tt if the domain is ℤ, and return ff if it is ℕ -/
 unsafe def goal_domain : tactic Bool := do
   let gx ← target
   let hxs ← local_context >>= Monad.mapM infer_type
-  app_first goal_domain_aux (gx::hxs)
+  app_first goal_domain_aux (gx :: hxs)
 #align omega.goal_domain omega.goal_domain
 
 /-- Return tt if the domain is ℤ, and return ff if it is ℕ -/

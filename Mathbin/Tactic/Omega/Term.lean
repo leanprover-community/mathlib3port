@@ -101,11 +101,10 @@ instance : ToString Term :=
 
 end Term
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Fresh de Brujin index not used by any variable ocurring in the list of terms -/
 def Terms.freshIndex : List Term → Nat
   | [] => 0
-  | t::ts => max t.freshIndex (terms.fresh_index ts)
+  | t :: ts => max t.freshIndex (terms.fresh_index ts)
 #align omega.terms.fresh_index Omega.Terms.freshIndex
 
 end Omega

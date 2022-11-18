@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 -/
 import Mathbin.MeasureTheory.Function.StronglyMeasurable.Basic
-import Mathbin.MeasureTheory.Function.SpecialFunctions.Inner
+import Mathbin.Analysis.InnerProductSpace.Basic
 
 /-!
 # Inner products of strongly measurable functions are strongly measurable.

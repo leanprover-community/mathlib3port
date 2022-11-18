@@ -6,7 +6,6 @@ Authors: Scott Morrison
 import Mathbin.AlgebraicGeometry.PresheafedSpace
 import Mathbin.Topology.Category.TopCat.Limits
 import Mathbin.Topology.Sheaves.Limits
-import Mathbin.CategoryTheory.Limits.ConcreteCategory
 
 /-!
 # `PresheafedSpace C` has colimits.

@@ -355,7 +355,7 @@ theorem str_eq_of_le_nhds {X : CompactumCat} (F : Ultrafilter X) (x : X) : ↑F 
 #align Compactum.str_eq_of_le_nhds CompactumCat.str_eq_of_le_nhds
 
 theorem le_nhds_of_str_eq {X : CompactumCat} (F : Ultrafilter X) (x : X) : X.str F = x → ↑F ≤ 𝓝 x := fun h =>
-  le_nhds_iff.mpr fun s hx hs => hs _ $ by rwa [h]
+  le_nhds_iff.mpr fun s hx hs => hs _ <| by rwa [h]
 #align Compactum.le_nhds_of_str_eq CompactumCat.le_nhds_of_str_eq
 
 -- All the hard work above boils down to this t2_space instance.
@@ -393,7 +393,7 @@ theorem continuous_of_hom {X Y : CompactumCat} (f : X ⟶ Y) : Continuous f := b
 
 /-- Given any compact Hausdorff space, we construct a Compactum. -/
 noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactSpace X] [T2Space X] : CompactumCat where
-  A := X
+  a := X
   a := Ultrafilter.lim
   unit' := by
     ext x
@@ -456,13 +456,13 @@ def isoOfTopologicalSpace {D : CompHausCat} : compactumToCompHaus.obj (Compactum
   Hom :=
     { toFun := id,
       continuous_to_fun :=
-        continuous_def.2 $ fun _ h => by
+        continuous_def.2 fun _ h => by
           rw [is_open_iff_ultrafilter'] at h
           exact h }
   inv :=
     { toFun := id,
       continuous_to_fun :=
-        continuous_def.2 $ fun _ h1 => by
+        continuous_def.2 fun _ h1 => by
           rw [is_open_iff_ultrafilter']
           intro _ h2
           exact h1 _ h2 }
@@ -486,7 +486,7 @@ end compactumToCompHaus
 /-- The forgetful functors of `Compactum` and `CompHaus` are compatible via
 `Compactum_to_CompHaus`. -/
 def compactumToCompHausCompForget : compactumToCompHaus ⋙ CategoryTheory.forget CompHausCat ≅ CompactumCat.forget :=
-  (NatIso.ofComponents fun X => eqToIso rfl) $ by
+  (NatIso.ofComponents fun X => eqToIso rfl) <| by
     intro X Y f
     dsimp
     simpa

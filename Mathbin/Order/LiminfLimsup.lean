@@ -97,7 +97,7 @@ theorem IsBoundedUnder.mono {f g : Filter β} {u : β → α} (h : f ≤ g) : g.
 
 theorem IsBoundedUnder.mono_le [Preorder β] {l : Filter α} {u v : α → β} (hu : IsBoundedUnder (· ≤ ·) l u)
     (hv : v ≤ᶠ[l] u) : IsBoundedUnder (· ≤ ·) l v :=
-  hu.imp $ fun b hb => (eventually_map.1 hb).mp $ hv.mono $ fun x => le_trans
+  hu.imp fun b hb => (eventually_map.1 hb).mp <| hv.mono fun x => le_trans
 #align filter.is_bounded_under.mono_le Filter.IsBoundedUnder.mono_le
 
 theorem IsBoundedUnder.mono_ge [Preorder β] {l : Filter α} {u v : α → β} (hu : IsBoundedUnder (· ≥ ·) l u)
@@ -106,7 +106,7 @@ theorem IsBoundedUnder.mono_ge [Preorder β] {l : Filter α} {u v : α → β} (
 #align filter.is_bounded_under.mono_ge Filter.IsBoundedUnder.mono_ge
 
 theorem is_bounded_under_const [IsRefl α r] {l : Filter β} {a : α} : IsBoundedUnder r l fun _ => a :=
-  ⟨a, eventually_map.2 $ eventually_of_forall $ fun _ => refl _⟩
+  ⟨a, eventually_map.2 <| eventually_of_forall fun _ => refl _⟩
 #align filter.is_bounded_under_const Filter.is_bounded_under_const
 
 theorem IsBounded.is_bounded_under {q : β → β → Prop} {u : α → β} (hf : ∀ a₀ a₁, r a₀ a₁ → q (u a₀) (u a₁)) :
@@ -135,7 +135,7 @@ theorem IsBoundedUnder.bdd_above_range_of_cofinite [SemilatticeSup β] {f : α �
   rcases hf with ⟨b, hb⟩
   haveI : Nonempty β := ⟨b⟩
   rw [← image_univ, ← union_compl_self { x | f x ≤ b }, image_union, bdd_above_union]
-  exact ⟨⟨b, ball_image_iff.2 $ fun x => id⟩, (hb.image f).BddAbove⟩
+  exact ⟨⟨b, ball_image_iff.2 fun x => id⟩, (hb.image f).BddAbove⟩
 #align filter.is_bounded_under.bdd_above_range_of_cofinite Filter.IsBoundedUnder.bdd_above_range_of_cofinite
 
 theorem IsBoundedUnder.bdd_below_range_of_cofinite [SemilatticeInf β] {f : α → β}
@@ -228,17 +228,17 @@ theorem is_cobounded_ge_of_top [Preorder α] [OrderTop α] {f : Filter α} : f.I
 #align filter.is_cobounded_ge_of_top Filter.is_cobounded_ge_of_top
 
 theorem is_bounded_le_of_top [Preorder α] [OrderTop α] {f : Filter α} : f.IsBounded (· ≤ ·) :=
-  ⟨⊤, eventually_of_forall $ fun _ => le_top⟩
+  ⟨⊤, eventually_of_forall fun _ => le_top⟩
 #align filter.is_bounded_le_of_top Filter.is_bounded_le_of_top
 
 theorem is_bounded_ge_of_bot [Preorder α] [OrderBot α] {f : Filter α} : f.IsBounded (· ≥ ·) :=
-  ⟨⊥, eventually_of_forall $ fun _ => bot_le⟩
+  ⟨⊥, eventually_of_forall fun _ => bot_le⟩
 #align filter.is_bounded_ge_of_bot Filter.is_bounded_ge_of_bot
 
 @[simp]
 theorem _root_.order_iso.is_bounded_under_le_comp [Preorder α] [Preorder β] (e : α ≃o β) {l : Filter γ} {u : γ → α} :
     (IsBoundedUnder (· ≤ ·) l fun x => e (u x)) ↔ IsBoundedUnder (· ≤ ·) l u :=
-  e.Surjective.exists.trans $ exists_congr $ fun a => by simp only [eventually_map, e.le_iff_le]
+  e.Surjective.exists.trans <| exists_congr fun a => by simp only [eventually_map, e.le_iff_le]
 #align filter._root_.order_iso.is_bounded_under_le_comp filter._root_.order_iso.is_bounded_under_le_comp
 
 @[simp]
@@ -269,7 +269,7 @@ theorem IsBoundedUnder.sup [SemilatticeSup α] {f : Filter β} {u v : β → α}
 theorem is_bounded_under_le_sup [SemilatticeSup α] {f : Filter β} {u v : β → α} :
     (f.IsBoundedUnder (· ≤ ·) fun a => u a ⊔ v a) ↔ f.IsBoundedUnder (· ≤ ·) u ∧ f.IsBoundedUnder (· ≤ ·) v :=
   ⟨fun h =>
-    ⟨h.mono_le $ eventually_of_forall $ fun _ => le_sup_left, h.mono_le $ eventually_of_forall $ fun _ => le_sup_right⟩,
+    ⟨h.mono_le <| eventually_of_forall fun _ => le_sup_left, h.mono_le <| eventually_of_forall fun _ => le_sup_right⟩,
     fun h => h.1.sup h.2⟩
 #align filter.is_bounded_under_le_sup Filter.is_bounded_under_le_sup
 
@@ -286,7 +286,7 @@ theorem is_bounded_under_ge_inf [SemilatticeInf α] {f : Filter β} {u v : β �
 
 theorem is_bounded_under_le_abs [LinearOrderedAddCommGroup α] {f : Filter β} {u : β → α} :
     (f.IsBoundedUnder (· ≤ ·) fun a => |u a|) ↔ f.IsBoundedUnder (· ≤ ·) u ∧ f.IsBoundedUnder (· ≥ ·) u :=
-  is_bounded_under_le_sup.trans $ and_congr Iff.rfl is_bounded_under_le_neg
+  is_bounded_under_le_sup.trans <| and_congr Iff.rfl is_bounded_under_le_neg
 #align filter.is_bounded_under_le_abs Filter.is_bounded_under_le_abs
 
 /-- Filters are automatically bounded or cobounded in complete lattices. To use the same statements
@@ -482,8 +482,8 @@ theorem Liminf_le_Limsup {f : Filter α} [NeBot f]
       run_tac
         is_bounded_default) :
     liminf f ≤ limsup f :=
-  Liminf_le_of_le h₂ $ fun a₀ ha₀ =>
-    le_Limsup_of_le h₁ $ fun a₁ ha₁ =>
+  (Liminf_le_of_le h₂) fun a₀ ha₀ =>
+    (le_Limsup_of_le h₁) fun a₁ ha₁ =>
       show a₀ ≤ a₁ from
         let ⟨b, hb₀, hb₁⟩ := (ha₀.And ha₁).exists
         le_trans hb₀ hb₁
@@ -538,7 +538,7 @@ theorem limsup_le_limsup {α : Type _} [ConditionallyCompleteLattice β] {f : Fi
       run_tac
         is_bounded_default) :
     limsup u f ≤ limsup v f :=
-  Limsup_le_Limsup hu hv $ fun b => h.trans
+  (Limsup_le_Limsup hu hv) fun b => h.trans
 #align filter.limsup_le_limsup Filter.limsup_le_limsup
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic is_bounded_default -/
@@ -619,7 +619,7 @@ theorem limsup_congr {α : Type _} [ConditionallyCompleteLattice β] {f : Filter
     (h : ∀ᶠ a in f, u a = v a) : limsup u f = limsup v f := by
   rw [limsup_eq]
   congr with b
-  exact eventually_congr (h.mono $ fun x hx => by simp [hx])
+  exact eventually_congr (h.mono fun x hx => by simp [hx])
 #align filter.limsup_congr Filter.limsup_congr
 
 theorem liminf_congr {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} {u v : α → β}
@@ -644,22 +644,22 @@ variable [CompleteLattice α]
 
 @[simp]
 theorem Limsup_bot : limsup (⊥ : Filter α) = ⊥ :=
-  bot_unique $ Inf_le $ by simp
+  bot_unique <| Inf_le <| by simp
 #align filter.Limsup_bot Filter.Limsup_bot
 
 @[simp]
 theorem Liminf_bot : liminf (⊥ : Filter α) = ⊤ :=
-  top_unique $ le_Sup $ by simp
+  top_unique <| le_Sup <| by simp
 #align filter.Liminf_bot Filter.Liminf_bot
 
 @[simp]
 theorem Limsup_top : limsup (⊤ : Filter α) = ⊤ :=
-  top_unique $ le_Inf $ by simp [eq_univ_iff_forall] <;> exact fun b hb => top_unique $ hb _
+  top_unique <| le_Inf <| by simp [eq_univ_iff_forall] <;> exact fun b hb => top_unique <| hb _
 #align filter.Limsup_top Filter.Limsup_top
 
 @[simp]
 theorem Liminf_top : liminf (⊤ : Filter α) = ⊥ :=
-  bot_unique $ Sup_le $ by simp [eq_univ_iff_forall] <;> exact fun b hb => bot_unique $ hb _
+  bot_unique <| Sup_le <| by simp [eq_univ_iff_forall] <;> exact fun b hb => bot_unique <| hb _
 #align filter.Liminf_top Filter.Liminf_top
 
 @[simp]
@@ -683,10 +683,10 @@ theorem liminf_const_top {f : Filter β} : liminf (fun x : β => (⊤ : α)) f =
 
 theorem HasBasis.Limsup_eq_infi_Sup {ι} {p : ι → Prop} {s} {f : Filter α} (h : f.HasBasis p s) :
     limsup f = ⨅ (i) (hi : p i), sup (s i) :=
-  le_antisymm (le_infi₂ $ fun i hi => Inf_le $ h.eventually_iff.2 ⟨i, hi, fun x => le_Sup⟩)
-    (le_Inf $ fun a ha =>
+  le_antisymm (le_infi₂ fun i hi => Inf_le <| h.eventually_iff.2 ⟨i, hi, fun x => le_Sup⟩)
+    (le_Inf fun a ha =>
       let ⟨i, hi, ha⟩ := h.eventually_iff.1 ha
-      infi₂_le_of_le _ hi $ Sup_le ha)
+      infi₂_le_of_le _ hi <| Sup_le ha)
 #align filter.has_basis.Limsup_eq_infi_Sup Filter.HasBasis.Limsup_eq_infi_Sup
 
 theorem HasBasis.Liminf_eq_supr_Inf {p : ι → Prop} {s : ι → Set α} {f : Filter α} (h : f.HasBasis p s) :
@@ -723,11 +723,11 @@ theorem infi_le_liminf {f : Filter β} {u : β → α} : (⨅ n, u n) ≤ liminf
 /-- In a complete lattice, the limsup of a function is the infimum over sets `s` in the filter
 of the supremum of the function over `s` -/
 theorem limsup_eq_infi_supr {f : Filter β} {u : β → α} : limsup u f = ⨅ s ∈ f, ⨆ a ∈ s, u a :=
-  (f.basis_sets.map u).Limsup_eq_infi_Sup.trans $ by simp only [Sup_image, id]
+  (f.basis_sets.map u).Limsup_eq_infi_Sup.trans <| by simp only [Sup_image, id]
 #align filter.limsup_eq_infi_supr Filter.limsup_eq_infi_supr
 
 theorem limsup_eq_infi_supr_of_nat {u : ℕ → α} : limsup u atTop = ⨅ n : ℕ, ⨆ i ≥ n, u i :=
-  (at_top_basis.map u).Limsup_eq_infi_Sup.trans $ by simp only [Sup_image, infi_const] <;> rfl
+  (at_top_basis.map u).Limsup_eq_infi_Sup.trans <| by simp only [Sup_image, infi_const] <;> rfl
 #align filter.limsup_eq_infi_supr_of_nat Filter.limsup_eq_infi_supr_of_nat
 
 theorem limsup_eq_infi_supr_of_nat' {u : ℕ → α} : limsup u atTop = ⨅ n : ℕ, ⨆ i : ℕ, u (i + n) := by
@@ -736,12 +736,12 @@ theorem limsup_eq_infi_supr_of_nat' {u : ℕ → α} : limsup u atTop = ⨅ n : 
 
 theorem HasBasis.limsup_eq_infi_supr {p : ι → Prop} {s : ι → Set β} {f : Filter β} {u : β → α} (h : f.HasBasis p s) :
     limsup u f = ⨅ (i) (hi : p i), ⨆ a ∈ s i, u a :=
-  (h.map u).Limsup_eq_infi_Sup.trans $ by simp only [Sup_image, id]
+  (h.map u).Limsup_eq_infi_Sup.trans <| by simp only [Sup_image, id]
 #align filter.has_basis.limsup_eq_infi_supr Filter.HasBasis.limsup_eq_infi_supr
 
 theorem blimsup_eq_infi_bsupr {f : Filter β} {p : β → Prop} {u : β → α} :
     blimsup u f p = ⨅ s ∈ f, ⨆ (b) (hb : p b ∧ b ∈ s), u b := by
-  refine' le_antisymm (Inf_le_Inf _) (infi_le_iff.mpr $ fun a ha => le_Inf_iff.mpr $ fun a' ha' => _)
+  refine' le_antisymm (Inf_le_Inf _) (infi_le_iff.mpr fun a ha => le_Inf_iff.mpr fun a' ha' => _)
   · rintro - ⟨s, rfl⟩
     simp only [mem_set_of_eq, le_infi_iff]
     conv =>
@@ -790,7 +790,7 @@ theorem limsup_eq_Inf_Sup {ι R : Type _} (F : Filter ι) [CompleteLattice R] (a
     filter_upwards [I_mem_F] with i hi
     exact hI ▸ le_Sup (mem_image_of_mem _ hi)
     
-  · refine' le_Inf_iff.mpr fun b hb => Inf_le_of_le (mem_image_of_mem _ $ filter.mem_sets.mpr hb) $ Sup_le _
+  · refine' le_Inf_iff.mpr fun b hb => Inf_le_of_le (mem_image_of_mem _ <| filter.mem_sets.mpr hb) <| Sup_le _
     rintro _ ⟨_, h, rfl⟩
     exact h
     
@@ -852,40 +852,40 @@ theorem CompleteLatticeHom.apply_liminf_iterate (f : CompleteLatticeHom α α) (
 variable {f g : Filter β} {p q : β → Prop} {u v : β → α}
 
 theorem blimsup_mono (h : ∀ x, p x → q x) : blimsup u f p ≤ blimsup u f q :=
-  Inf_le_Inf $ fun a ha => ha.mono $ by tauto
+  Inf_le_Inf fun a ha => ha.mono <| by tauto
 #align filter.blimsup_mono Filter.blimsup_mono
 
 theorem bliminf_antitone (h : ∀ x, p x → q x) : bliminf u f q ≤ bliminf u f p :=
-  Sup_le_Sup $ fun a ha => ha.mono $ by tauto
+  Sup_le_Sup fun a ha => ha.mono <| by tauto
 #align filter.bliminf_antitone Filter.bliminf_antitone
 
 theorem mono_blimsup' (h : ∀ᶠ x in f, u x ≤ v x) : blimsup u f p ≤ blimsup v f p :=
-  Inf_le_Inf $ fun a ha => (ha.And h).mono $ fun x hx hx' => hx.2.trans (hx.1 hx')
+  Inf_le_Inf fun a ha => (ha.And h).mono fun x hx hx' => hx.2.trans (hx.1 hx')
 #align filter.mono_blimsup' Filter.mono_blimsup'
 
 theorem mono_blimsup (h : ∀ x, u x ≤ v x) : blimsup u f p ≤ blimsup v f p :=
-  mono_blimsup' $ eventually_of_forall h
+  mono_blimsup' <| eventually_of_forall h
 #align filter.mono_blimsup Filter.mono_blimsup
 
 theorem mono_bliminf' (h : ∀ᶠ x in f, u x ≤ v x) : bliminf u f p ≤ bliminf v f p :=
-  Sup_le_Sup $ fun a ha => (ha.And h).mono $ fun x hx hx' => (hx.1 hx').trans hx.2
+  Sup_le_Sup fun a ha => (ha.And h).mono fun x hx hx' => (hx.1 hx').trans hx.2
 #align filter.mono_bliminf' Filter.mono_bliminf'
 
 theorem mono_bliminf (h : ∀ x, u x ≤ v x) : bliminf u f p ≤ bliminf v f p :=
-  mono_bliminf' $ eventually_of_forall h
+  mono_bliminf' <| eventually_of_forall h
 #align filter.mono_bliminf Filter.mono_bliminf
 
 theorem bliminf_antitone_filter (h : f ≤ g) : bliminf u g p ≤ bliminf u f p :=
-  Sup_le_Sup $ fun a ha => ha.filter_mono h
+  Sup_le_Sup fun a ha => ha.filter_mono h
 #align filter.bliminf_antitone_filter Filter.bliminf_antitone_filter
 
 theorem blimsup_monotone_filter (h : f ≤ g) : blimsup u f p ≤ blimsup u g p :=
-  Inf_le_Inf $ fun a ha => ha.filter_mono h
+  Inf_le_Inf fun a ha => ha.filter_mono h
 #align filter.blimsup_monotone_filter Filter.blimsup_monotone_filter
 
 @[simp]
 theorem blimsup_and_le_inf : (blimsup u f fun x => p x ∧ q x) ≤ blimsup u f p ⊓ blimsup u f q :=
-  le_inf (blimsup_mono $ by tauto) (blimsup_mono $ by tauto)
+  le_inf (blimsup_mono <| by tauto) (blimsup_mono <| by tauto)
 #align filter.blimsup_and_le_inf Filter.blimsup_and_le_inf
 
 @[simp]
@@ -896,7 +896,7 @@ theorem bliminf_sup_le_and : bliminf u f p ⊔ bliminf u f q ≤ bliminf u f fun
 /-- See also `filter.blimsup_or_eq_sup`. -/
 @[simp]
 theorem blimsup_sup_le_or : blimsup u f p ⊔ blimsup u f q ≤ blimsup u f fun x => p x ∨ q x :=
-  sup_le (blimsup_mono $ by tauto) (blimsup_mono $ by tauto)
+  sup_le (blimsup_mono <| by tauto) (blimsup_mono <| by tauto)
 #align filter.blimsup_sup_le_or Filter.blimsup_sup_le_or
 
 /-- See also `filter.bliminf_or_eq_inf`. -/
@@ -915,8 +915,8 @@ variable [CompleteDistribLattice α] {f : Filter β} {p q : β → Prop} {u : β
 theorem blimsup_or_eq_sup : (blimsup u f fun x => p x ∨ q x) = blimsup u f p ⊔ blimsup u f q := by
   refine' le_antisymm _ blimsup_sup_le_or
   simp only [blimsup_eq, Inf_sup_eq, sup_Inf_eq, le_infi₂_iff, mem_set_of_eq]
-  refine' fun a' ha' a ha => Inf_le ((ha.And ha').mono $ fun b h hb => _)
-  exact Or.elim hb (fun hb => le_sup_of_le_left $ h.1 hb) fun hb => le_sup_of_le_right $ h.2 hb
+  refine' fun a' ha' a ha => Inf_le ((ha.And ha').mono fun b h hb => _)
+  exact Or.elim hb (fun hb => le_sup_of_le_left <| h.1 hb) fun hb => le_sup_of_le_right <| h.2 hb
 #align filter.blimsup_or_eq_sup Filter.blimsup_or_eq_sup
 
 @[simp]
@@ -1047,7 +1047,7 @@ theorem eventually_lt_of_lt_liminf {f : Filter α} [ConditionallyCompleteLinearO
       run_tac
         is_bounded_default) :
     ∀ᶠ a in f, b < u a := by
-  obtain ⟨c, hc, hbc⟩ : ∃ (c : β) (hc : c ∈ { c : β | ∀ᶠ n : α in f, c ≤ u n }), b < c := exists_lt_of_lt_cSup hu h
+  obtain ⟨c, hc, hbc⟩ : ∃ (c : β)(hc : c ∈ { c : β | ∀ᶠ n : α in f, c ≤ u n }), b < c := exists_lt_of_lt_cSup hu h
   exact hc.mono fun x hx => lt_of_lt_of_le hbc hx
 #align filter.eventually_lt_of_lt_liminf Filter.eventually_lt_of_lt_liminf
 
@@ -1119,7 +1119,7 @@ theorem Monotone.is_bounded_under_le_comp [Nonempty β] [LinearOrder β] [Preord
   rintro ⟨c, hc⟩
   rw [eventually_map] at hc
   obtain ⟨b, hb⟩ : ∃ b, ∀ a ≥ b, c < g a := eventually_at_top.1 (hg'.eventually_gt_at_top c)
-  exact ⟨b, hc.mono $ fun x hx => not_lt.1 fun h => (hb _ h.le).not_le hx⟩
+  exact ⟨b, hc.mono fun x hx => not_lt.1 fun h => (hb _ h.le).not_le hx⟩
 #align monotone.is_bounded_under_le_comp Monotone.is_bounded_under_le_comp
 
 theorem Monotone.is_bounded_under_ge_comp [Nonempty β] [LinearOrder β] [Preorder γ] [NoMinOrder γ] {g : β → γ}
@@ -1177,7 +1177,7 @@ theorem OrderIso.limsup_apply {γ} [ConditionallyCompleteLattice β] [Conditiona
         is_bounded_default) :
     g (limsup u f) = limsup (fun x => g (u x)) f := by
   refine' le_antisymm (g.to_galois_connection.l_limsup_le hgu hu_co) _
-  rw [← g.symm.symm_apply_apply $ limsup (fun x => g (u x)) f, g.symm_symm]
+  rw [← g.symm.symm_apply_apply <| limsup (fun x => g (u x)) f, g.symm_symm]
   refine' g.monotone _
   have hf : u = fun i => g.symm (g (u i)) := funext fun i => (g.symm_apply_apply (u i)).symm
   nth_rw 0 [hf]

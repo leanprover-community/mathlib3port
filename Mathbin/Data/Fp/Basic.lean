@@ -13,7 +13,7 @@ import Mathbin.Data.Rat.Floor
 
 def Int.shift2 (a b : ℕ) : ℤ → ℕ × ℕ
   | Int.ofNat e => (a.shiftl e, b)
-  | -[1+ e] => (a, b.shiftl e.succ)
+  | -[e+1] => (a, b.shiftl e.succ)
 #align int.shift2 Int.shift2
 
 namespace Fp
@@ -84,7 +84,7 @@ theorem Float.Zero.valid : ValidFinite emin 0 :=
       simp only [emin, emax] at *
       ring_nf
       assumption
-    le_trans C.prec_max (Nat.le_mul_of_pos_left dec_trivial),
+    le_trans C.prec_max (Nat.le_mul_of_pos_left (by decide)),
     by rw [max_eq_right] <;> simp [sub_eq_add_neg]⟩
 #align fp.float.zero.valid Fp.Float.Zero.valid
 
@@ -126,7 +126,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fp.div_nat_lt_two_pow Fp.divNatLtTwoPowₓ'. -/
 def divNatLtTwoPow (n d : ℕ) : ℤ → Bool
   | Int.ofNat e => n < d.shiftl e
-  | -[1+ e] => n.shiftl e.succ < d
+  | -[e+1] => n.shiftl e.succ < d
 #align fp.div_nat_lt_two_pow Fp.divNatLtTwoPow
 
 -- TODO(Mario): Prove these and drop 'meta'
@@ -159,13 +159,13 @@ unsafe def next_dn_pos (e m) (v : ValidFinite e m) : Float :=
 
 unsafe def next_up : Float → Float
   | float.finite ff e m f => next_up_pos e m f
-  | float.finite tt e m f => float.neg $ next_dn_pos e m f
+  | float.finite tt e m f => float.neg <| next_dn_pos e m f
   | f => f
 #align fp.next_up fp.next_up
 
 unsafe def next_dn : Float → Float
   | float.finite ff e m f => next_dn_pos e m f
-  | float.finite tt e m f => float.neg $ next_up_pos e m f
+  | float.finite tt e m f => float.neg <| next_up_pos e m f
   | f => f
 #align fp.next_dn fp.next_dn
 
@@ -174,11 +174,11 @@ unsafe def of_rat_up : ℚ → Float
   | ⟨Nat.succ n, d, h, _⟩ =>
     let (f, exact) := of_pos_rat_dn n.succPnat ⟨d, h⟩
     if exact then f else next_up f
-  | ⟨-[1+ n], d, h, _⟩ => Float.neg (of_pos_rat_dn n.succPnat ⟨d, h⟩).1
+  | ⟨-[n+1], d, h, _⟩ => Float.neg (of_pos_rat_dn n.succPnat ⟨d, h⟩).1
 #align fp.of_rat_up fp.of_rat_up
 
 unsafe def of_rat_dn (r : ℚ) : Float :=
-  float.neg $ of_rat_up (-r)
+  float.neg <| of_rat_up (-r)
 #align fp.of_rat_dn fp.of_rat_dn
 
 unsafe def of_rat : Rmode → ℚ → Float

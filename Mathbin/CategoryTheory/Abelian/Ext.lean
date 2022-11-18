@@ -3,7 +3,6 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz
 -/
-import Mathbin.Algebra.Category.GroupCat.Basic
 import Mathbin.Algebra.Category.ModuleCat.Abelian
 import Mathbin.CategoryTheory.Functor.LeftDerived
 import Mathbin.CategoryTheory.Linear.Yoneda
@@ -60,7 +59,7 @@ open ZeroObject
 def extSuccOfProjective (X Y : C) [Projective X] (n : ℕ) : ((ext R C (n + 1)).obj (Opposite.op X)).obj Y ≅ 0 :=
   let E := (((linearYoneda R C).obj Y).rightOp.leftDerivedObjProjectiveSucc n X).unop.symm
   E ≪≫
-    { Hom := 0, inv := 0,
+    { hom := 0, inv := 0,
       hom_inv_id' := by
         let Z : (ModuleCat R)ᵒᵖ := 0
         rw [← (0 : 0 ⟶ Z.unop).unop_op, ← (0 : Z.unop ⟶ 0).unop_op, ← unop_id, ← unop_comp]

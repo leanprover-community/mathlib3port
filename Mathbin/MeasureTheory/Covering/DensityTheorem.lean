@@ -74,7 +74,7 @@ theorem closed_ball_mem_vitali_family_of_dist_le_mul {K : ℝ} {x y : α} {r : �
   /- The measure is doubling on scales smaller than `R`. Therefore, we treat differently small
     and large balls. For large balls, this follows directly from the enlargement we used in the
     definition. -/
-  by_cases H:closed_ball y r ⊆ closed_ball x (R / 4)
+  by_cases H : closed_ball y r ⊆ closed_ball x (R / 4)
   swap
   · exact Or.inr H
     
@@ -167,7 +167,7 @@ theorem ae_tendsto_average_norm_sub {f : α → E} (hf : Integrable f μ) (K : �
     ∀ᵐ x ∂μ,
       ∀ {ι : Type _} {l : Filter ι} (w : ι → α) (δ : ι → ℝ) (δlim : Tendsto δ l (𝓝[>] 0))
         (xmem : ∀ᶠ j in l, x ∈ closedBall (w j) (K * δ j)),
-        Tendsto (fun j => ⨍ y in closedBall (w j) (δ j), ∥f y - f x∥ ∂μ) l (𝓝 0) :=
+        Tendsto (fun j => ⨍ y in closedBall (w j) (δ j), ‖f y - f x‖ ∂μ) l (𝓝 0) :=
   by
   filter_upwards [(VitaliFamily μ K).ae_tendsto_average_norm_sub
       hf] with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)

@@ -6,6 +6,8 @@ Authors: Andrew Yang
 import Mathbin.Tactic.Elementwise
 import Mathbin.CategoryTheory.Limits.HasLimits
 import Mathbin.CategoryTheory.Limits.Shapes.Kernels
+import Mathbin.CategoryTheory.ConcreteCategory.Basic
+import Mathbin.Tactic.FreshNames
 
 /-!
 In this file we provide various simp lemmas in its elementwise form via `tactic.elementwise`.

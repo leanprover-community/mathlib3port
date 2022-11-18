@@ -101,7 +101,7 @@ theorem Matrix.to_bilin'_aux_std_basis [Fintype n] [DecidableEq n] (M : Matrix n
 
 This is an auxiliary definition for the equivalence `matrix.to_bilin_form'`. -/
 def BilinForm.toMatrixAux (b : n → M₂) : BilinForm R₂ M₂ →ₗ[R₂] Matrix n n R₂ where
-  toFun B := of $ fun i j => B (b i) (b j)
+  toFun B := of fun i j => B (b i) (b j)
   map_add' f g := rfl
   map_smul' f g := rfl
 #align bilin_form.to_matrix_aux BilinForm.toMatrixAux
@@ -534,12 +534,12 @@ theorem _root_.matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin {M : Ma
 
 -- Lemmas transferring nondegeneracy between a matrix and its associated bilinear form
 theorem _root_.matrix.nondegenerate.to_bilin' {M : Matrix ι ι R₃} (h : M.Nondegenerate) : M.toBilin'.Nondegenerate :=
-  fun x hx => h.eq_zero_of_ortho $ fun y => by simpa only [to_bilin'_apply'] using hx y
+  fun x hx => h.eq_zero_of_ortho fun y => by simpa only [to_bilin'_apply'] using hx y
 #align bilin_form._root_.matrix.nondegenerate.to_bilin' bilin_form._root_.matrix.nondegenerate.to_bilin'
 
 @[simp]
 theorem _root_.matrix.nondegenerate_to_bilin'_iff {M : Matrix ι ι R₃} : M.toBilin'.Nondegenerate ↔ M.Nondegenerate :=
-  ⟨fun h v hv => h v $ fun w => (M.to_bilin'_apply' _ _).trans $ hv w, Matrix.Nondegenerate.to_bilin'⟩
+  ⟨fun h v hv => (h v) fun w => (M.to_bilin'_apply' _ _).trans <| hv w, Matrix.Nondegenerate.to_bilin'⟩
 #align bilin_form._root_.matrix.nondegenerate_to_bilin'_iff bilin_form._root_.matrix.nondegenerate_to_bilin'_iff
 
 theorem _root_.matrix.nondegenerate.to_bilin {M : Matrix ι ι R₃} (h : M.Nondegenerate) (b : Basis ι R₃ M₃) :
@@ -556,7 +556,7 @@ theorem _root_.matrix.nondegenerate_to_bilin_iff {M : Matrix ι ι R₃} (b : Ba
 -- Lemmas transferring nondegeneracy between a bilinear form and its associated matrix
 @[simp]
 theorem nondegenerate_to_matrix'_iff {B : BilinForm R₃ (ι → R₃)} : B.toMatrix'.Nondegenerate ↔ B.Nondegenerate :=
-  Matrix.nondegenerate_to_bilin'_iff.symm.trans $ (Matrix.to_bilin'_to_matrix' B).symm ▸ Iff.rfl
+  Matrix.nondegenerate_to_bilin'_iff.symm.trans <| (Matrix.to_bilin'_to_matrix' B).symm ▸ Iff.rfl
 #align bilin_form.nondegenerate_to_matrix'_iff BilinForm.nondegenerate_to_matrix'_iff
 
 theorem Nondegenerate.to_matrix' {B : BilinForm R₃ (ι → R₃)} (h : B.Nondegenerate) : B.toMatrix'.Nondegenerate :=
@@ -566,7 +566,7 @@ theorem Nondegenerate.to_matrix' {B : BilinForm R₃ (ι → R₃)} (h : B.Nonde
 @[simp]
 theorem nondegenerate_to_matrix_iff {B : BilinForm R₃ M₃} (b : Basis ι R₃ M₃) :
     (toMatrix b B).Nondegenerate ↔ B.Nondegenerate :=
-  (Matrix.nondegenerate_to_bilin_iff b).symm.trans $ (Matrix.to_bilin_to_matrix b B).symm ▸ Iff.rfl
+  (Matrix.nondegenerate_to_bilin_iff b).symm.trans <| (Matrix.to_bilin_to_matrix b B).symm ▸ Iff.rfl
 #align bilin_form.nondegenerate_to_matrix_iff BilinForm.nondegenerate_to_matrix_iff
 
 theorem Nondegenerate.to_matrix {B : BilinForm R₃ M₃} (h : B.Nondegenerate) (b : Basis ι R₃ M₃) :

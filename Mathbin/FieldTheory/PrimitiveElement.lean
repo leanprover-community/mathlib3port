@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 -/
 import Mathbin.FieldTheory.Adjoin
-import Mathbin.FieldTheory.Fixed
 import Mathbin.FieldTheory.IsAlgClosed.Basic
 import Mathbin.FieldTheory.Separable
 import Mathbin.RingTheory.IntegralDomain
@@ -57,7 +56,7 @@ theorem exists_primitive_element_of_finite_top [Finite E] : ∃ α : E, F⟮⟯ 
   use α
   apply eq_top_iff.mpr
   rintro x -
-  by_cases hx:x = 0
+  by_cases hx : x = 0
   · rw [hx]
     exact F⟮⟯.zero_mem
     

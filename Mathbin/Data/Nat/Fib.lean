@@ -9,6 +9,7 @@ import Mathbin.Data.Finset.NatAntidiagonal
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Tactic.Ring
 import Mathbin.Tactic.Zify
+import Mathbin.Tactic.Wlog
 
 /-!
 # The Fibonacci Sequence
@@ -81,12 +82,12 @@ theorem fib_le_fib_succ {n : ℕ} : fib n ≤ fib (n + 1) := by cases n <;> simp
 
 @[mono]
 theorem fib_mono : Monotone fib :=
-  monotone_nat_of_le_succ $ fun _ => fib_le_fib_succ
+  monotone_nat_of_le_succ fun _ => fib_le_fib_succ
 #align nat.fib_mono Nat.fib_mono
 
 theorem fib_pos {n : ℕ} (n_pos : 0 < n) : 0 < fib n :=
   calc
-    0 < fib 1 := dec_trivial
+    0 < fib 1 := by decide
     _ ≤ fib n := fib_mono n_pos
     
 #align nat.fib_pos Nat.fib_pos
@@ -117,7 +118,7 @@ theorem le_fib_self {n : ℕ} (five_le_n : 5 ≤ n) : n ≤ fib n := by
     rw [succ_le_iff]
     calc
       n ≤ fib n := IH
-      _ < fib (n + 1) := fib_lt_fib_succ (le_trans dec_trivial five_le_n)
+      _ < fib (n + 1) := fib_lt_fib_succ (le_trans (by decide) five_le_n)
       
     
 #align nat.le_fib_self Nat.le_fib_self

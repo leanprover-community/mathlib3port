@@ -228,7 +228,7 @@ instance {X : C} [Simple X] :
     rintro ⟨⟨⟨Y : C, ⟨⟨⟩⟩, f : Y ⟶ X⟩, m : mono f⟩⟩
     skip
     change mk f = ⊥ ∨ mk f = ⊤
-    by_cases h:f = 0
+    by_cases h : f = 0
     · exact Or.inl (mk_eq_bot_iff_zero.mpr h)
       
     · refine' Or.inr ((is_iso_iff_mk_eq_top _).mp ((simple.mono_is_iso_iff_nonzero f).mpr h))

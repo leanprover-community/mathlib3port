@@ -78,7 +78,7 @@ theorem central_moment_one' [IsFiniteMeasure μ] (h_int : Integrable X μ) :
 
 @[simp]
 theorem central_moment_one [IsProbabilityMeasure μ] : centralMoment X 1 μ = 0 := by
-  by_cases h_int:integrable X μ
+  by_cases h_int : integrable X μ
   · rw [central_moment_one' h_int]
     simp only [measure_univ, Ennreal.one_to_real, sub_self, zero_mul]
     
@@ -245,7 +245,7 @@ theorem IndepFun.mgf_add' {X Y : Ω → ℝ} (h_indep : IndepFun X Y μ) (hX : A
 
 theorem IndepFun.cgf_add {X Y : Ω → ℝ} (h_indep : IndepFun X Y μ) (h_int_X : Integrable (fun ω => exp (t * X ω)) μ)
     (h_int_Y : Integrable (fun ω => exp (t * Y ω)) μ) : cgf (X + Y) μ t = cgf X μ t + cgf Y μ t := by
-  by_cases hμ:μ = 0
+  by_cases hμ : μ = 0
   · simp [hμ]
     
   simp only [cgf, h_indep.mgf_add h_int_X.ae_strongly_measurable h_int_Y.ae_strongly_measurable]

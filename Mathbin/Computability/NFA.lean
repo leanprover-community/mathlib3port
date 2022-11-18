@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 -/
 import Mathbin.Computability.DFA
-import Mathbin.Data.Set.Functor
+import Mathbin.Data.Fintype.Powerset
 
 /-!
 # Nondeterministic Finite Automata
@@ -117,9 +117,8 @@ theorem to_DFA_correct : M.toDFA.accepts = M.accepts := by
       
 #align NFA.to_DFA_correct NFA.to_DFA_correct
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b c) -/
 theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts) (hlen : Fintype.card (Set σ) ≤ List.length x) :
-    ∃ (a) (b) (c),
+    ∃ a b c,
       x = a ++ b ++ c ∧
         a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
   by
@@ -151,11 +150,10 @@ theorem to_NFA_eval_from_match (M : DFA α σ) (start : σ) (s : List α) :
     
 #align DFA.to_NFA_eval_from_match DFA.to_NFA_eval_from_match
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (S H) -/
 @[simp]
 theorem to_NFA_correct (M : DFA α σ) : M.toNFA.accepts = M.accepts := by
   ext x
-  change (∃ (S) (H), S ∈ M.to_NFA.eval_from {M.start} x) ↔ _
+  change (∃ S H, S ∈ M.to_NFA.eval_from {M.start} x) ↔ _
   rw [to_NFA_eval_from_match]
   constructor
   · rintro ⟨S, hS₁, hS₂⟩

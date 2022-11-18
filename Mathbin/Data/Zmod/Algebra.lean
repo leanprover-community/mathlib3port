@@ -16,7 +16,7 @@ namespace Zmod
 variable (R : Type _) [Ring R]
 
 instance (p : ℕ) : Subsingleton (Algebra (Zmod p) R) :=
-  ⟨fun x y => Algebra.algebra_ext _ _ $ RingHom.congr_fun $ Subsingleton.elim _ _⟩
+  ⟨fun x y => Algebra.algebra_ext _ _ <| RingHom.congr_fun <| Subsingleton.elim _ _⟩
 
 section
 

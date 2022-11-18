@@ -355,7 +355,7 @@ instance mvqpfFix : Mvqpf (Fix F) where
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Dependent recursor for `fix F` -/
-def Fix.drec {β : Fix F α → Type u} (g : ∀ x : F (α ::: Sigma β), β (fix.mk $ (id ::: Sigma.fst) <$$> x))
+def Fix.drec {β : Fix F α → Type u} (g : ∀ x : F (α ::: Sigma β), β (fix.mk <| (id ::: Sigma.fst) <$$> x))
     (x : Fix F α) : β x :=
   let y := @Fix.rec _ F _ _ α (Sigma β) (fun i => ⟨_, g i⟩) x
   have : x = y.1 := by

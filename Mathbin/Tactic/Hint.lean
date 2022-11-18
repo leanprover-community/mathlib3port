@@ -24,7 +24,7 @@ add_tactic_doc
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 private unsafe def add_tactic_hint (n : Name) (t : expr) : tactic Unit := do
-  add_decl $ declaration.defn n [] q(tactic String) t ReducibilityHints.opaque ff
+  add_decl <| declaration.defn n [] q(tactic String) t ReducibilityHints.opaque ff
   hint_tactic_attribute n () tt
 #align tactic.hint.add_tactic_hint tactic.hint.add_tactic_hint
 
@@ -38,8 +38,8 @@ unsafe def add_hint_tactic (_ : parse (tk "add_hint_tactic")) : parser Unit := d
   let s ← eval_expr String e
   let t := "`[" ++ s ++ "]"
   let (t, _) ← with_input parser.pexpr t
-  of_tactic $ do
-      let h := s <.> "_hint"
+  of_tactic <| do
+      let h := .str s "_hint"
       let t ←
         to_expr
             ``(do
@@ -54,7 +54,7 @@ add_tactic_doc
 
 add_hint_tactic rfl
 
-add_hint_tactic exact dec_trivial
+add_hint_tactic exact by decide
 
 add_hint_tactic assumption
 
@@ -62,7 +62,7 @@ add_hint_tactic assumption
 -- perhaps add a wrapper?
 add_hint_tactic intro
 
-add_hint_tactic infer_auto_param
+add_hint_tactic infer_param
 
 add_hint_tactic dsimp at *
 
@@ -86,7 +86,7 @@ and for each such tactic, the number of remaining goals afterwards.
 -/
 unsafe def hint : tactic (List (String × ℕ)) := do
   let names ← attribute.get_instances `hint_tactic
-  focus1 $ try_all_sorted (names name_to_tactic)
+  focus1 <| try_all_sorted (names name_to_tactic)
 #align tactic.hint tactic.hint
 
 namespace Interactive

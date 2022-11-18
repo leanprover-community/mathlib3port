@@ -5,7 +5,6 @@ Authors: Simon Hudon
 
 General utility functions for buffers.
 -/
-import Leanbin.Data.Buffer
 import Mathbin.Data.Array.Lemmas
 import Mathbin.Control.Traversable.Instances
 
@@ -24,7 +23,7 @@ theorem ext : ∀ {b₁ b₂ : Buffer α}, toList b₁ = toList b₂ → b₁ = 
     simp [to_list, to_array] at h
     have e : n₁ = n₂ := by rw [← Array'.to_list_length a₁, ← Array'.to_list_length a₂, h]
     subst e
-    have h : a₁ == a₂.to_list.to_array := h ▸ a₁.to_list_to_array.symm
+    have h : HEq a₁ a₂.to_list.to_array := h ▸ a₁.to_list_to_array.symm
     rw [eq_of_heq (h.trans a₂.to_list_to_array)]
 #align buffer.ext Buffer.ext
 
@@ -261,7 +260,7 @@ instance : IsLawfulTraversable Buffer :=
 /-- A convenience wrapper around `read` that just fails if the index is out of bounds.
 -/
 unsafe def read_t (b : Buffer α) (i : ℕ) : tactic α :=
-  if h : i < b.size then return $ b.read (Fin.mk i h) else tactic.fail "invalid buffer access"
+  if h : i < b.size then return <| b.read (Fin.mk i h) else tactic.fail "invalid buffer access"
 #align buffer.read_t buffer.read_t
 
 end Buffer

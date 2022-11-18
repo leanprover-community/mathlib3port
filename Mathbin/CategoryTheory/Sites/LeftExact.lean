@@ -76,7 +76,7 @@ abbrev liftToDiagramLimitObj {X : C} {K : Type max v u} [SmallCategory K] [HasLi
 
 instance (X : C) (K : Type max v u) [SmallCategory K] [HasLimitsOfShape K D] (F : K ⥤ Cᵒᵖ ⥤ D) :
     PreservesLimit F (J.diagramFunctor D X) :=
-  preservesLimitOfEvaluation _ _ $ fun W =>
+  (preservesLimitOfEvaluation _ _) fun W =>
     preservesLimitOfPreservesLimitCone (limit.isLimit _)
       { lift := fun E => liftToDiagramLimitObj F E,
         fac' := by

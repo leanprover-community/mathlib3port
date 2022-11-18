@@ -32,7 +32,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedAlgebra 𝕜 ℂ]
 theorem hasDerivAtExp (x : ℂ) : HasDerivAt exp (exp x) x := by
   rw [has_deriv_at_iff_is_o_nhds_zero]
   have : (1 : ℕ) < 2 := by norm_num
-  refine' (is_O.of_bound ∥exp x∥ _).trans_is_o (is_o_pow_id this)
+  refine' (is_O.of_bound ‖exp x‖ _).trans_is_o (is_o_pow_id this)
   filter_upwards [Metric.ball_mem_nhds (0 : ℂ) zero_lt_one]
   simp only [Metric.mem_ball, dist_zero_right, norm_pow]
   exact fun z hz => exp_bound_sq x z hz.le
@@ -47,7 +47,7 @@ theorem differentiableAtExp {x : ℂ} : DifferentiableAt 𝕜 exp x :=
 
 @[simp]
 theorem deriv_exp : deriv exp = exp :=
-  funext $ fun x => (hasDerivAtExp x).deriv
+  funext fun x => (hasDerivAtExp x).deriv
 #align complex.deriv_exp Complex.deriv_exp
 
 @[simp]
@@ -131,7 +131,7 @@ theorem HasFderivWithinAt.cexp (hf : HasFderivWithinAt f f' s x) :
 
 theorem HasFderivAt.cexp (hf : HasFderivAt f f' x) :
     HasFderivAt (fun x => Complex.exp (f x)) (Complex.exp (f x) • f') x :=
-  has_fderiv_within_at_univ.1 $ hf.HasFderivWithinAt.cexp
+  has_fderiv_within_at_univ.1 <| hf.HasFderivWithinAt.cexp
 #align has_fderiv_at.cexp HasFderivAt.cexp
 
 theorem DifferentiableWithinAt.cexp (hf : DifferentiableWithinAt 𝕜 f s x) :
@@ -197,7 +197,7 @@ theorem differentiableAtExp : DifferentiableAt ℝ exp x :=
 
 @[simp]
 theorem deriv_exp : deriv exp = exp :=
-  funext $ fun x => (hasDerivAtExp x).deriv
+  funext fun x => (hasDerivAtExp x).deriv
 #align real.deriv_exp Real.deriv_exp
 
 @[simp]

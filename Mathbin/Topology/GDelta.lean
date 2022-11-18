@@ -159,7 +159,7 @@ theorem is_Gδ_singleton (a : α) : IsGδ ({a} : Set α) := by
 #align is_Gδ_singleton is_Gδ_singleton
 
 theorem Set.Finite.is_Gδ {s : Set α} (hs : s.Finite) : IsGδ s :=
-  Finite.induction_on hs is_Gδ_empty $ fun a s _ _ hs => (is_Gδ_singleton a).union hs
+  (Finite.induction_on hs is_Gδ_empty) fun a s _ _ hs => (is_Gδ_singleton a).union hs
 #align set.finite.is_Gδ Set.Finite.is_Gδ
 
 end T1Space
@@ -180,7 +180,7 @@ theorem is_Gδ_set_of_continuous_at [UniformSpace β] [IsCountablyGenerated (�
   obtain ⟨U, hUo, hU⟩ := (@uniformity_has_basis_open_symmetric β _).exists_antitone_subbasis
   simp only [Uniform.continuous_at_iff_prod, nhds_prod_eq]
   simp only [(nhds_basis_opens _).prod_self.tendsto_iff hU.to_has_basis, forall_prop_of_true, set_of_forall, id]
-  refine' is_Gδ_Inter fun k => IsOpen.is_Gδ $ is_open_iff_mem_nhds.2 $ fun x => _
+  refine' is_Gδ_Inter fun k => IsOpen.is_Gδ <| is_open_iff_mem_nhds.2 fun x => _
   rintro ⟨s, ⟨hsx, hso⟩, hsU⟩
   filter_upwards [IsOpen.mem_nhds hso hsx] with _ hy using⟨s, ⟨hy, hso⟩, hsU⟩
 #align is_Gδ_set_of_continuous_at is_Gδ_set_of_continuous_at

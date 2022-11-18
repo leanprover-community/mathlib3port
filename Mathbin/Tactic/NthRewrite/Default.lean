@@ -60,7 +60,7 @@ private unsafe def unpack_rule (p : rw_rule) : tactic (expr × Bool) := do
 /-- Get the `n`th rewrite of rewrite rules `q` in expression `e`,
 or fail if there are not enough such rewrites. -/
 unsafe def get_nth_rewrite (n : ℕ) (q : rw_rules_t) (e : expr) : tactic tracked_rewrite := do
-  let rewrites ← q.rules.mmap $ fun r => unpack_rule r >>= all_rewrites e
+  let rewrites ← q.rules.mmap fun r => unpack_rule r >>= all_rewrites e
   rewrites n <|> fail "failed: not enough rewrites found"
 #align tactic.get_nth_rewrite tactic.get_nth_rewrite
 
@@ -71,7 +71,7 @@ unsafe def get_nth_rewrite_with_zoom (n : ℕ) (q : rw_rules_t) (path : List Exp
   let e ← target_or_hyp_type h
   let (ln, new_e) ← expr_lens.entire.zoom path e
   let rw ← get_nth_rewrite n q new_e
-  return ⟨ln rw, rw >>= ln, rw $ fun l => path ++ l⟩
+  return ⟨ln rw, rw >>= ln, rw fun l => path ++ l⟩
 #align tactic.get_nth_rewrite_with_zoom tactic.get_nth_rewrite_with_zoom
 
 /-- Rewrite the `n`th occurrence of the rewrite rules `q` (optionally on a side)

@@ -90,7 +90,7 @@ theorem ne_one [Nontrivial B] : minpoly A x ≠ 1 := by
 #align minpoly.ne_one minpoly.ne_one
 
 theorem map_ne_one [Nontrivial B] {R : Type _} [Semiring R] [Nontrivial R] (f : A →+* R) : (minpoly A x).map f ≠ 1 := by
-  by_cases hx:IsIntegral A x
+  by_cases hx : IsIntegral A x
   · exact mt ((monic hx).eq_one_of_map_eq_one f) (ne_one A x)
     
   · rw [eq_zero hx, Polynomial.map_zero]
@@ -101,7 +101,7 @@ theorem map_ne_one [Nontrivial B] {R : Type _} [Semiring R] [Nontrivial R] (f : 
 /-- A minimal polynomial is not a unit. -/
 theorem not_is_unit [Nontrivial B] : ¬IsUnit (minpoly A x) := by
   haveI : Nontrivial A := (algebraMap A B).domain_nontrivial
-  by_cases hx:IsIntegral A x
+  by_cases hx : IsIntegral A x
   · exact mt (eq_one_of_is_unit_of_monic (monic hx)) (ne_one A x)
     
   · rw [eq_zero hx]
@@ -294,7 +294,7 @@ theorem degree_le_of_ne_zero {p : A[X]} (pnz : p ≠ 0) (hp : Polynomial.aeval x
 #align minpoly.degree_le_of_ne_zero minpoly.degree_le_of_ne_zero
 
 theorem ne_zero_of_finite_field_extension (e : B) [FiniteDimensional A B] : minpoly A e ≠ 0 :=
-  minpoly.ne_zero $ isIntegralOfNoetherian (IsNoetherian.iff_fg.2 inferInstance) _
+  minpoly.ne_zero <| isIntegralOfNoetherian (IsNoetherian.iff_fg.2 inferInstance) _
 #align minpoly.ne_zero_of_finite_field_extension minpoly.ne_zero_of_finite_field_extension
 
 /-- The minimal polynomial of an element `x` is uniquely characterized by its defining property:
@@ -320,7 +320,7 @@ theorem unique {p : A[X]} (pmonic : p.Monic) (hp : Polynomial.aeval x p = 0)
 See also `minpoly.gcd_domain_dvd` which relaxes the assumptions on `A` in exchange for stronger
 assumptions on `B`. -/
 theorem dvd {p : A[X]} (hp : Polynomial.aeval x p = 0) : minpoly A x ∣ p := by
-  by_cases hp0:p = 0
+  by_cases hp0 : p = 0
   · simp only [hp0, dvd_zero]
     
   have hx : IsIntegral A x := by
@@ -356,9 +356,9 @@ variable {A x}
 theorem eq_of_irreducible_of_monic [Nontrivial B] {p : A[X]} (hp1 : Irreducible p) (hp2 : Polynomial.aeval x p = 0)
     (hp3 : p.Monic) : p = minpoly A x :=
   let ⟨q, hq⟩ := dvd A x hp2
-  eq_of_monic_of_associated hp3 (monic ⟨p, ⟨hp3, hp2⟩⟩) $
-    mul_one (minpoly A x) ▸ hq.symm ▸ Associated.mul_left _ $
-      associated_one_iff_is_unit.2 $ (hp1.is_unit_or_is_unit hq).resolve_left $ not_is_unit A x
+  eq_of_monic_of_associated hp3 (monic ⟨p, ⟨hp3, hp2⟩⟩) <|
+    mul_one (minpoly A x) ▸ hq.symm ▸ Associated.mul_left _ <|
+      associated_one_iff_is_unit.2 <| (hp1.is_unit_or_is_unit hq).resolve_left <| not_is_unit A x
 #align minpoly.eq_of_irreducible_of_monic minpoly.eq_of_irreducible_of_monic
 
 theorem eq_of_irreducible [Nontrivial B] {p : A[X]} (hp1 : Irreducible p) (hp2 : Polynomial.aeval x p = 0) :

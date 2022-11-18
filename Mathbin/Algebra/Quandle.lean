@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
 import Mathbin.Algebra.Hom.Equiv.Basic
-import Mathbin.Data.Zmod.Basic
+import Mathbin.Algebra.Hom.Aut
+import Mathbin.Data.Zmod.Defs
 import Mathbin.Tactic.Group
 
 /-!
@@ -203,14 +204,14 @@ theorem ad_conj {R : Type _} [Rack R] (x y : R) : act (x ◃ y) = act x * act y 
 instance oppositeRack : Rack Rᵐᵒᵖ where
   act x y := op (invAct (unop x) (unop y))
   self_distrib :=
-    MulOpposite.rec $ fun x =>
-      MulOpposite.rec $ fun y =>
-        MulOpposite.rec $ fun z => by
+    MulOpposite.rec fun x =>
+      MulOpposite.rec fun y =>
+        MulOpposite.rec fun z => by
           simp only [unop_op, op_inj]
           exact self_distrib_inv
   invAct x y := op (Shelf.act (unop x) (unop y))
-  left_inv := MulOpposite.rec $ fun x => MulOpposite.rec $ fun y => by simp
-  right_inv := MulOpposite.rec $ fun x => MulOpposite.rec $ fun y => by simp
+  left_inv := MulOpposite.rec fun x => MulOpposite.rec fun y => by simp
+  right_inv := MulOpposite.rec fun x => MulOpposite.rec fun y => by simp
 #align rack.opposite_rack Rack.oppositeRack
 
 @[simp]
@@ -684,8 +685,8 @@ def toEnvelGroup.map {R : Type _} [Rack R] {G : Type _} [Group G] : (R →◃ Qu
     ext
     rfl
   right_inv F :=
-    MonoidHom.ext $ fun x =>
-      Quotient.induction_on x $ fun x => by
+    MonoidHom.ext fun x =>
+      (Quotient.induction_on x) fun x => by
         induction x
         · exact F.map_one.symm
           

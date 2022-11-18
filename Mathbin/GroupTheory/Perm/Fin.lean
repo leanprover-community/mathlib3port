@@ -19,13 +19,13 @@ open Equiv
 `fin (n + 1)` and permuting the remaining with a `perm (fin n)`.
 The fixed `fin (n + 1)` is swapped with `0`. -/
 def Equiv.Perm.decomposeFin {n : ℕ} : Perm (Fin n.succ) ≃ Fin n.succ × Perm (Fin n) :=
-  ((Equiv.permCongr $ finSuccEquiv n).trans Equiv.Perm.decomposeOption).trans
+  ((Equiv.permCongr <| finSuccEquiv n).trans Equiv.Perm.decomposeOption).trans
     (Equiv.prodCongr (finSuccEquiv n).symm (Equiv.refl _))
 #align equiv.perm.decompose_fin Equiv.Perm.decomposeFin
 
 @[simp]
 theorem Equiv.Perm.decompose_fin_symm_of_refl {n : ℕ} (p : Fin (n + 1)) :
-    Equiv.Perm.decomposeFin.symm (p, Equiv.refl _) = swap 0 p := by simp [Equiv.Perm.decomposeFin, Equiv.perm_congr_def]
+    Equiv.Perm.decomposeFin.symm (p, Equiv.refl _) = swap 0 p := by simp [Equiv.Perm.decomposeFin, Equiv.permCongr_def]
 #align equiv.perm.decompose_fin_symm_of_refl Equiv.Perm.decompose_fin_symm_of_refl
 
 @[simp]
@@ -46,7 +46,7 @@ theorem Equiv.Perm.decompose_fin_symm_apply_succ {n : ℕ} (e : Perm (Fin n)) (p
   · simp [Equiv.Perm.decomposeFin, EquivFunctor.map]
     
   · intro i
-    by_cases h:i = e x
+    by_cases h : i = e x
     · simp [h, Equiv.Perm.decomposeFin, EquivFunctor.map]
       
     · have h' : some (e x) ≠ some i := fun H => h (Option.some_injective _ H).symm
@@ -72,8 +72,8 @@ theorem Equiv.Perm.decomposeFin.symm_sign {n : ℕ} (p : Fin (n + 1)) (e : Perm 
 /-- The set of all permutations of `fin (n + 1)` can be constructed by augmenting the set of
 permutations of `fin n` by each element of `fin (n + 1)` in turn. -/
 theorem Finset.univ_perm_fin_succ {n : ℕ} :
-    @Finset.univ (perm $ Fin n.succ) _ =
-      (Finset.univ : Finset $ Fin n.succ × Perm (Fin n)).map Equiv.Perm.decomposeFin.symm.toEmbedding :=
+    @Finset.univ (perm <| Fin n.succ) _ =
+      (Finset.univ : Finset <| Fin n.succ × Perm (Fin n)).map Equiv.Perm.decomposeFin.symm.toEmbedding :=
   (Finset.univ_map_equiv_to_embedding _).symm
 #align finset.univ_perm_fin_succ Finset.univ_perm_fin_succ
 
@@ -126,7 +126,7 @@ theorem support_fin_rotate_of_le {n : ℕ} (h : 2 ≤ n) : support (finRotate n)
 #align support_fin_rotate_of_le support_fin_rotate_of_le
 
 theorem is_cycle_fin_rotate {n : ℕ} : IsCycle (finRotate (n + 2)) := by
-  refine' ⟨0, dec_trivial, fun x hx' => ⟨x, _⟩⟩
+  refine' ⟨0, by decide, fun x hx' => ⟨x, _⟩⟩
   clear hx'
   cases' x with x hx
   rw [coe_coe, zpow_coe_nat, Fin.ext_iff, Fin.coe_mk]

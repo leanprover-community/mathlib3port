@@ -133,7 +133,7 @@ theorem coe_submodule_is_principal {I : Ideal R} (h : M ≤ nonZeroDivisors R) :
 variable {S} (M)
 
 theorem mem_span_iff {N : Type _} [AddCommGroup N] [Module R N] [Module S N] [IsScalarTower R S N] {x : N} {a : Set N} :
-    x ∈ Submodule.span S a ↔ ∃ (y ∈ Submodule.span R a) (z : M), x = mk' S 1 z • y := by
+    x ∈ Submodule.span S a ↔ ∃ y ∈ Submodule.span R a, ∃ z : M, x = mk' S 1 z • y := by
   constructor
   intro h
   · refine' Submodule.span_induction h _ _ _ _
@@ -169,7 +169,7 @@ theorem mem_span_iff {N : Type _} [AddCommGroup N] [Module R N] [Module S N] [Is
 #align is_localization.mem_span_iff IsLocalization.mem_span_iff
 
 theorem mem_span_map {x : S} {a : Set R} :
-    x ∈ Ideal.span (algebraMap R S '' a) ↔ ∃ (y ∈ Ideal.span a) (z : M), x = mk' S y z := by
+    x ∈ Ideal.span (algebraMap R S '' a) ↔ ∃ y ∈ Ideal.span a, ∃ z : M, x = mk' S y z := by
   refine' (mem_span_iff M).trans _
   constructor
   · rw [← coe_submodule_span]

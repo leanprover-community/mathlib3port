@@ -3,7 +3,6 @@ Copyright (c) 2014 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
 -/
-import Mathbin.Algebra.Ring.Basic
 import Mathbin.Algebra.Ring.InjSurj
 import Mathbin.Algebra.Group.Units
 
@@ -98,7 +97,7 @@ theorem IsUnit.neg_iff [Monoid α] [HasDistribNeg α] (a : α) : IsUnit (-a) ↔
 #align is_unit.neg_iff IsUnit.neg_iff
 
 theorem IsUnit.sub_iff [Ring α] {x y : α} : IsUnit (x - y) ↔ IsUnit (y - x) :=
-  (IsUnit.neg_iff _).symm.trans $ neg_sub x y ▸ Iff.rfl
+  (IsUnit.neg_iff _).symm.trans <| neg_sub x y ▸ Iff.rfl
 #align is_unit.sub_iff IsUnit.sub_iff
 
 namespace Units

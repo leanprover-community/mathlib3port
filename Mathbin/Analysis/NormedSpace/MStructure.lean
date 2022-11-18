@@ -3,9 +3,9 @@ Copyright (c) 2022 Christopher Hoskin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 -/
-import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Algebra.Ring.Idempotents
 import Mathbin.Tactic.NoncommRing
+import Mathbin.Analysis.Normed.Group.Basic
 
 /-!
 # M-structure
@@ -70,7 +70,7 @@ Note that we write `P • x` instead of `P x` for reasons described in the modul
 -/
 structure IsLprojection (P : M) : Prop where
   proj : IsIdempotentElem P
-  LnormCat : ∀ x : X, ∥x∥ = ∥P • x∥ + ∥(1 - P) • x∥
+  LnormCat : ∀ x : X, ‖x‖ = ‖P • x‖ + ‖(1 - P) • x‖
 #align is_Lprojection IsLprojection
 
 /-- A projection on a normed space `X` is said to be an M-projection if, for all `x` in `X`,
@@ -80,7 +80,7 @@ Note that we write `P • x` instead of `P x` for reasons described in the modul
 -/
 structure IsMprojection (P : M) : Prop where
   proj : IsIdempotentElem P
-  MnormCat : ∀ x : X, ∥x∥ = max ∥P • x∥ ∥(1 - P) • x∥
+  MnormCat : ∀ x : X, ‖x‖ = max ‖P • x‖ ‖(1 - P) • x‖
 #align is_Mprojection IsMprojection
 
 variable {X}
@@ -101,25 +101,25 @@ theorem commute [HasFaithfulSmul M X] {P Q : M} (h₁ : IsLprojection X P) (h₂
   have PR_eq_RPR : ∀ R : M, IsLprojection X R → P * R = R * P * R := fun R h₃ => by
     refine' @eq_of_smul_eq_smul _ X _ _ _ _ fun x => _
     rw [← norm_sub_eq_zero_iff]
-    have e1 : ∥R • x∥ ≥ ∥R • x∥ + 2 • ∥(P * R) • x - (R * P * R) • x∥ :=
+    have e1 : ‖R • x‖ ≥ ‖R • x‖ + 2 • ‖(P * R) • x - (R * P * R) • x‖ :=
       calc
-        ∥R • x∥ =
-            ∥R • P • R • x∥ + ∥(1 - R) • P • R • x∥ + (∥(R * R) • x - R • P • R • x∥ + ∥(1 - R) • (1 - P) • R • x∥) :=
+        ‖R • x‖ =
+            ‖R • P • R • x‖ + ‖(1 - R) • P • R • x‖ + (‖(R * R) • x - R • P • R • x‖ + ‖(1 - R) • (1 - P) • R • x‖) :=
           by rw [h₁.Lnorm, h₃.Lnorm, h₃.Lnorm ((1 - P) • R • x), sub_smul 1 P, one_smul, smul_sub, mul_smul]
         _ =
-            ∥R • P • R • x∥ + ∥(1 - R) • P • R • x∥ +
-              (∥R • x - R • P • R • x∥ + ∥((1 - R) * R) • x - (1 - R) • P • R • x∥) :=
+            ‖R • P • R • x‖ + ‖(1 - R) • P • R • x‖ +
+              (‖R • x - R • P • R • x‖ + ‖((1 - R) * R) • x - (1 - R) • P • R • x‖) :=
           by rw [h₃.proj.eq, sub_smul 1 P, one_smul, smul_sub, mul_smul]
-        _ = ∥R • P • R • x∥ + ∥(1 - R) • P • R • x∥ + (∥R • x - R • P • R • x∥ + ∥(1 - R) • P • R • x∥) := by
+        _ = ‖R • P • R • x‖ + ‖(1 - R) • P • R • x‖ + (‖R • x - R • P • R • x‖ + ‖(1 - R) • P • R • x‖) := by
           rw [sub_mul, h₃.proj.eq, one_mul, sub_self, zero_smul, zero_sub, norm_neg]
-        _ = ∥R • P • R • x∥ + ∥R • x - R • P • R • x∥ + 2 • ∥(1 - R) • P • R • x∥ := by abel
-        _ ≥ ∥R • x∥ + 2 • ∥(P * R) • x - (R * P * R) • x∥ := by
+        _ = ‖R • P • R • x‖ + ‖R • x - R • P • R • x‖ + 2 • ‖(1 - R) • P • R • x‖ := by abel
+        _ ≥ ‖R • x‖ + 2 • ‖(P * R) • x - (R * P * R) • x‖ := by
           rw [GE.ge]
-          have := add_le_add_right (norm_le_insert' (R • x) (R • P • R • x)) (2 • ∥(1 - R) • P • R • x∥)
+          have := add_le_add_right (norm_le_insert' (R • x) (R • P • R • x)) (2 • ‖(1 - R) • P • R • x‖)
           simpa only [mul_smul, sub_smul, one_smul] using this
         
     rw [GE.ge] at e1
-    nth_rw_rhs 0 [← add_zero ∥R • x∥]  at e1
+    nth_rw_rhs 0 [← add_zero ‖R • x‖]  at e1
     rw [add_le_add_iff_left, two_smul, ← two_mul] at e1
     rw [le_antisymm_iff]
     refine' ⟨_, norm_nonneg _⟩
@@ -142,17 +142,17 @@ theorem mul [HasFaithfulSmul M X] {P Q : M} (h₁ : IsLprojection X P) (h₂ : I
   intro x
   refine' le_antisymm _ _
   · calc
-      ∥x∥ = ∥(P * Q) • x + (x - (P * Q) • x)∥ := by rw [add_sub_cancel'_right ((P * Q) • x) x]
-      _ ≤ ∥(P * Q) • x∥ + ∥x - (P * Q) • x∥ := by apply norm_add_le
-      _ = ∥(P * Q) • x∥ + ∥(1 - P * Q) • x∥ := by rw [sub_smul, one_smul]
+      ‖x‖ = ‖(P * Q) • x + (x - (P * Q) • x)‖ := by rw [add_sub_cancel'_right ((P * Q) • x) x]
+      _ ≤ ‖(P * Q) • x‖ + ‖x - (P * Q) • x‖ := by apply norm_add_le
+      _ = ‖(P * Q) • x‖ + ‖(1 - P * Q) • x‖ := by rw [sub_smul, one_smul]
       
     
   · calc
-      ∥x∥ = ∥P • Q • x∥ + (∥Q • x - P • Q • x∥ + ∥x - Q • x∥) := by
+      ‖x‖ = ‖P • Q • x‖ + (‖Q • x - P • Q • x‖ + ‖x - Q • x‖) := by
         rw [h₂.Lnorm x, h₁.Lnorm (Q • x), sub_smul, one_smul, sub_smul, one_smul, add_assoc]
-      _ ≥ ∥P • Q • x∥ + ∥Q • x - P • Q • x + (x - Q • x)∥ :=
-        (add_le_add_iff_left ∥P • Q • x∥).mpr (norm_add_le (Q • x - P • Q • x) (x - Q • x))
-      _ = ∥(P * Q) • x∥ + ∥(1 - P * Q) • x∥ := by rw [sub_add_sub_cancel', sub_smul, one_smul, mul_smul]
+      _ ≥ ‖P • Q • x‖ + ‖Q • x - P • Q • x + (x - Q • x)‖ :=
+        (add_le_add_iff_left ‖P • Q • x‖).mpr (norm_add_le (Q • x - P • Q • x) (x - Q • x))
+      _ = ‖(P * Q) • x‖ + ‖(1 - P * Q) • x‖ := by rw [sub_add_sub_cancel', sub_smul, one_smul, mul_smul]
       
     
 #align is_Lprojection.mul IsLprojection.mul
@@ -294,7 +294,7 @@ instance [HasFaithfulSmul M X] : BooleanAlgebra { P : M // IsLprojection X P } :
     top_le_sup_compl := fun P =>
       (Subtype.ext
           (by rw [coe_top, coe_sup, coe_compl, add_sub_cancel'_right, ← coe_compl, mul_compl_self, sub_zero])).le,
-    sdiff_eq := fun P Q => Subtype.ext $ by rw [coe_sdiff, ← coe_compl, coe_inf] }
+    sdiff_eq := fun P Q => Subtype.ext <| by rw [coe_sdiff, ← coe_compl, coe_inf] }
 
 end IsLprojection
 

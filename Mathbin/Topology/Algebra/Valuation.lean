@@ -127,7 +127,7 @@ theorem has_basis_uniformity : (𝓤 R).HasBasis (fun _ => True) fun γ : Γ₀�
 #align valued.has_basis_uniformity Valued.has_basis_uniformity
 
 theorem to_uniform_space_eq : to_uniform_space = @TopologicalAddGroup.toUniformSpace R _ v.subgroupsBasis.topology _ :=
-  uniform_space_eq ((has_basis_uniformity R Γ₀).eq_of_same_basis $ v.subgroupsBasis.has_basis_nhds_zero.comap _)
+  uniform_space_eq ((has_basis_uniformity R Γ₀).eq_of_same_basis <| v.subgroupsBasis.has_basis_nhds_zero.comap _)
 #align valued.to_uniform_space_eq Valued.to_uniform_space_eq
 
 variable {R Γ₀}

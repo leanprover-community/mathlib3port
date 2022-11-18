@@ -5,7 +5,6 @@ Authors: Johannes Hölzl
 -/
 import Mathbin.Logic.Function.Basic
 import Mathbin.Tactic.Ext
-import Mathbin.Tactic.Lint.Default
 import Mathbin.Tactic.Simps
 
 /-!
@@ -71,19 +70,17 @@ protected theorem forall' {q : ∀ x, p x → Prop} : (∀ x h, q x h) ↔ ∀ x
 #align subtype.forall' Subtype.forall'
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 #print Subtype.exists /-
 @[simp]
-protected theorem exists {q : { a // p a } → Prop} : (∃ x, q x) ↔ ∃ (a) (b), q ⟨a, b⟩ :=
+protected theorem exists {q : { a // p a } → Prop} : (∃ x, q x) ↔ ∃ a b, q ⟨a, b⟩ :=
   ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
 #align subtype.exists Subtype.exists
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x h) -/
 #print Subtype.exists' /-
 /-- An alternative version of `subtype.exists`. This one is useful if Lean cannot figure out `q`
   when using `subtype.exists` from right to left. -/
-protected theorem exists' {q : ∀ x, p x → Prop} : (∃ (x) (h), q x h) ↔ ∃ x : { a // p a }, q x x.2 :=
+protected theorem exists' {q : ∀ x, p x → Prop} : (∃ x h, q x h) ↔ ∃ x : { a // p a }, q x x.2 :=
   (@Subtype.exists _ _ fun x => q x.1 x.2).symm
 #align subtype.exists' Subtype.exists'
 -/
@@ -102,14 +99,14 @@ theorem ext_iff {a1 a2 : { x // p x }} : a1 = a2 ↔ (a1 : α) = (a2 : α) :=
 -/
 
 #print Subtype.heq_iff_coe_eq /-
-theorem heq_iff_coe_eq (h : ∀ x, p x ↔ q x) {a1 : { x // p x }} {a2 : { x // q x }} : a1 == a2 ↔ (a1 : α) = (a2 : α) :=
-  Eq.ndrec (fun a2' => heq_iff_eq.trans ext_iff) (funext $ fun x => propext (h x)) a2
+theorem heq_iff_coe_eq (h : ∀ x, p x ↔ q x) {a1 : { x // p x }} {a2 : { x // q x }} : HEq a1 a2 ↔ (a1 : α) = (a2 : α) :=
+  Eq.ndrec (fun a2' => heq_iff_eq.trans ext_iff) (funext fun x => propext (h x)) a2
 #align subtype.heq_iff_coe_eq Subtype.heq_iff_coe_eq
 -/
 
 #print Subtype.heq_iff_coe_heq /-
 theorem heq_iff_coe_heq {α β : Sort _} {p : α → Prop} {q : β → Prop} {a : { x // p x }} {b : { y // q y }} (h : α = β)
-    (h' : p == q) : a == b ↔ (a : α) == (b : β) := by
+    (h' : HEq p q) : HEq a b ↔ HEq (a : α) (b : β) := by
   subst h
   subst h'
   rw [heq_iff_eq, heq_iff_eq, ext_iff]
@@ -240,7 +237,7 @@ Case conversion may be inaccurate. Consider using '#align subtype.surjective_res
 theorem surjective_restrict {α} {β : α → Type _} [ne : ∀ a, Nonempty (β a)] (p : α → Prop) :
     Surjective fun f : ∀ x, β x => restrict p f := by
   letI := Classical.decPred p
-  refine' fun f => ⟨fun x => if h : p x then f ⟨x, h⟩ else Nonempty.some (Ne x), funext $ _⟩
+  refine' fun f => ⟨fun x => if h : p x then f ⟨x, h⟩ else Nonempty.some (Ne x), funext <| _⟩
   rintro ⟨x, hx⟩
   exact dif_pos hx
 #align subtype.surjective_restrict Subtype.surjective_restrict
@@ -259,7 +256,7 @@ but is expected to have type
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} {f : α -> β} {p : β -> Prop} (h : forall (a : α), p (f a)), (Function.Injective.{u_1 u_2} α β f) -> (Function.Injective.{u_1 (max 1 u_2)} α (Subtype.{u_2} β p) (Subtype.coind.{u_1 u_2} α β f p h))
 Case conversion may be inaccurate. Consider using '#align subtype.coind_injective Subtype.coind_injectiveₓ'. -/
 theorem coind_injective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Injective f) :
-    Injective (coind f h) := fun x y hxy => hf $ by apply congr_arg Subtype.val hxy
+    Injective (coind f h) := fun x y hxy => hf <| by apply congr_arg Subtype.val hxy
 #align subtype.coind_injective Subtype.coind_injective
 
 /- warning: subtype.coind_surjective -> Subtype.coind_surjective is a dubious translation:
@@ -300,13 +297,13 @@ but is expected to have type
   forall {α : Sort.{u_1}} {β : Sort.{u_3}} {γ : Sort.{u_2}} {p : α -> Prop} {q : β -> Prop} {r : γ -> Prop} {x : Subtype.{u_1} α p} (f : α -> β) (h : forall (a : α), (p a) -> (q (f a))) (g : β -> γ) (l : forall (a : β), (q a) -> (r (g a))), Eq.{(max 1 u_2)} (Subtype.{u_2} γ r) (Subtype.map.{u_3 u_2} β γ (fun (a : β) => q a) r g l (Subtype.map.{u_1 u_3} α β (fun (a : α) => p a) (fun (a : β) => q a) f h x)) (Subtype.map.{u_1 u_2} α γ (fun (a : α) => p a) r (Function.comp.{u_1 u_3 u_2} α β γ g f) (fun (a : α) (ha : p a) => l (f a) (h a ha)) x)
 Case conversion may be inaccurate. Consider using '#align subtype.map_comp Subtype.map_compₓ'. -/
 theorem map_comp {p : α → Prop} {q : β → Prop} {r : γ → Prop} {x : Subtype p} (f : α → β) (h : ∀ a, p a → q (f a))
-    (g : β → γ) (l : ∀ a, q a → r (g a)) : map g l (map f h x) = map (g ∘ f) (fun a ha => l (f a) $ h a ha) x :=
+    (g : β → γ) (l : ∀ a, q a → r (g a)) : map g l (map f h x) = map (g ∘ f) (fun a ha => l (f a) <| h a ha) x :=
   rfl
 #align subtype.map_comp Subtype.map_comp
 
 #print Subtype.map_id /-
 theorem map_id {p : α → Prop} {h : ∀ a, p a → p (id a)} : map (@id α) h = id :=
-  funext $ fun ⟨v, h⟩ => rfl
+  funext fun ⟨v, h⟩ => rfl
 #align subtype.map_id Subtype.map_id
 -/
 
@@ -318,7 +315,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subtype.map_injective Subtype.map_injectiveₓ'. -/
 theorem map_injective {p : α → Prop} {q : β → Prop} {f : α → β} (h : ∀ a, p a → q (f a)) (hf : Injective f) :
     Injective (map f h) :=
-  coind_injective _ $ hf.comp coe_injective
+  coind_injective _ <| hf.comp coe_injective
 #align subtype.map_injective Subtype.map_injective
 
 #print Subtype.map_involutive /-

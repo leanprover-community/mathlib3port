@@ -34,7 +34,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nat.cast_sub Nat.cast_subₓ'. -/
 @[simp, norm_cast]
 theorem cast_sub {m n} (h : m ≤ n) : ((n - m : ℕ) : R) = n - m :=
-  eq_sub_of_add_eq $ by rw [← cast_add, Nat.sub_add_cancel h]
+  eq_sub_of_add_eq <| by rw [← cast_add, Nat.sub_add_cancel h]
 #align nat.cast_sub Nat.cast_sub
 
 @[simp, norm_cast]
@@ -58,7 +58,7 @@ but is expected to have type
   forall {R : Type.{u_1}} {n : Nat} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.811 : AddGroupWithOne.{u_1} R], Eq.{succ u_1} R (Int.cast.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.811 (Int.negSucc n)) (Neg.neg.{u_1} R (AddGroupWithOne.toNeg.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.811) (Nat.cast.{u_1} R (AddGroupWithOne.toAddMonoidWithOne.{u_1} R inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.811) (HAdd.hAdd.{0 0 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))
 Case conversion may be inaccurate. Consider using '#align int.cast_neg_succ_of_nat Int.cast_negSuccₓ'. -/
 @[simp]
-theorem cast_negSucc (n : ℕ) : (-[1+ n] : R) = -(n + 1 : ℕ) :=
+theorem cast_negSucc (n : ℕ) : (-[n+1] : R) = -(n + 1 : ℕ) :=
   AddGroupWithOne.int_cast_neg_succ_of_nat n
 #align int.cast_neg_succ_of_nat Int.cast_negSucc
 
@@ -105,7 +105,7 @@ Case conversion may be inaccurate. Consider using '#align int.cast_neg Int.cast_
 theorem cast_neg : ∀ n, ((-n : ℤ) : R) = -n
   | (0 : ℕ) => by erw [cast_zero, neg_zero]
   | (n + 1 : ℕ) => by erw [cast_of_nat, cast_neg_succ_of_nat] <;> rfl
-  | -[1+ n] => by erw [cast_of_nat, cast_neg_succ_of_nat, neg_neg]
+  | -[n+1] => by erw [cast_of_nat, cast_neg_succ_of_nat, neg_neg]
 #align int.cast_neg Int.cast_neg
 
 /- warning: int.cast_sub_nat_nat -> Int.cast_subNatNat is a dubious translation:
@@ -121,7 +121,7 @@ theorem cast_subNatNat (m n) : ((Int.subNatNat m n : ℤ) : R) = m - n := by
   · simp only [sub_nat_nat, cast_of_nat]
     simp [e, Nat.le_of_sub_eq_zero e]
     
-  · rw [sub_nat_nat, cast_neg_succ_of_nat, Nat.add_one, ← e, Nat.cast_sub $ _root_.le_of_lt $ Nat.lt_of_sub_eq_succ e,
+  · rw [sub_nat_nat, cast_neg_succ_of_nat, Nat.add_one, ← e, Nat.cast_sub <| _root_.le_of_lt <| Nat.lt_of_sub_eq_succ e,
       neg_sub]
     
 #align int.cast_sub_nat_nat Int.cast_subNatNat
@@ -142,12 +142,12 @@ Case conversion may be inaccurate. Consider using '#align int.cast_add Int.cast_
 @[norm_cast]
 theorem cast_add : ∀ m n, ((m + n : ℤ) : R) = m + n
   | (m : ℕ), (n : ℕ) => by simp [← Int.ofNat_add, Nat.cast_add]
-  | (m : ℕ), -[1+ n] => by erw [cast_sub_nat_nat, cast_coe_nat, cast_neg_succ_of_nat, sub_eq_add_neg]
-  | -[1+ m], (n : ℕ) => by
+  | (m : ℕ), -[n+1] => by erw [cast_sub_nat_nat, cast_coe_nat, cast_neg_succ_of_nat, sub_eq_add_neg]
+  | -[m+1], (n : ℕ) => by
     erw [cast_sub_nat_nat, cast_coe_nat, cast_neg_succ_of_nat, sub_eq_iff_eq_add, add_assoc, eq_neg_add_iff_add_eq, ←
       Nat.cast_add, ← Nat.cast_add, Nat.add_comm]
-  | -[1+ m], -[1+ n] =>
-    show (-[1+ m + n + 1] : R) = _ by
+  | -[m+1], -[n+1] =>
+    show (-[m + n + 1+1] : R) = _ by
       rw [cast_neg_succ_of_nat, cast_neg_succ_of_nat, cast_neg_succ_of_nat, ← neg_add_rev, ← Nat.cast_add,
         Nat.add_right_comm m n 1, Nat.add_assoc, Nat.add_comm]
 #align int.cast_add Int.cast_add

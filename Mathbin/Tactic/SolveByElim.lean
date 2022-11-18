@@ -72,7 +72,7 @@ unsafe def mk_assumption_set (no_dflt : Bool) (hs : List simp_arg_type) (attr : 
     tactic (List (tactic expr) × tactic (List expr)) :=
   -- We lock the tactic state so that any spurious goals generated during
     -- elaboration of pre-expressions are discarded
-    lock_tactic_state $
+    lock_tactic_state <|
     do
     let-- `hs` are expressions specified explicitly,
       -- `hex` are exceptions (specified via `solve_by_elim [-h]`) referring to local hypotheses,
@@ -84,22 +84,22 @@ unsafe def mk_assumption_set (no_dflt : Bool) (hs : List simp_arg_type) (attr : 
     -- this is a one-time cost during `mk_assumption_set`, rather than a cost proportional to the
     -- length of the search `solve_by_elim` executes.
     hs := hs.map fun h => i_to_expr_for_apply h
-    let l ← attr.mmap $ fun a => attribute.get_instances a
+    let l ← attr.mmap fun a => attribute.get_instances a
     let l := l.join
     let m := l.map fun h => mk_const h
     let hs ←
       (-- In order to remove the expressions we need to evaluate the thunks.
               hs ++
-              m).mfilter $
+              m).mfilter
           fun h => do
           let h ← h
-          return $ expr.const_name h ∉ gex
+          return <| expr.const_name h ∉ gex
     let hs := if no_dflt then hs else ([`rfl, `trivial, `congr_fun, `congr_arg].map fun n => mk_const n) ++ hs
     let locals : tactic (List expr) :=
       if ¬no_dflt ∨ all_hyps then do
         let ctx ← local_context
         -- Remove local exceptions specified in `hex`:
-            return $
+            return <|
             ctx fun h : expr => h ∉ hex
       else return []
     let hs
@@ -257,7 +257,7 @@ See also the simpler tactic `apply_rules`, which does not perform backtracking.
 unsafe def solve_by_elim (opt : opt := {  }) : tactic Unit := do
   tactic.fail_if_no_goals
   let (lemmas, ctx_lemmas) ← opt.get_lemma_thunks
-  (if opt then id else focus1) $ do
+  (if opt then id else focus1) <| do
       let gs ← get_goals
       solve_by_elim_aux opt gs lemmas ctx_lemmas opt <|>
           fail
@@ -335,7 +335,7 @@ optional arguments passed via a configuration argument as `solve_by_elim { ... }
     or filtering complete results
     (by testing for the absence of metavariables, and then the filtering condition).
 -/
-unsafe def solve_by_elim (all_goals : parse $ parser.optional (tk "*")) (no_dflt : parse only_flag)
+unsafe def solve_by_elim (all_goals : parse <| parser.optional (tk "*")) (no_dflt : parse only_flag)
     (hs : parse simp_arg_list) (attr_names : parse with_ident_list) (opt : solve_by_elim.opt := {  }) : tactic Unit :=
   do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set no_dflt hs attr_names

@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Adam Topaz, Johan Commelin, Jakob von Raumer
 -/
 import Mathbin.CategoryTheory.Abelian.Opposite
-import Mathbin.CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Zero
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Kernels
 import Mathbin.CategoryTheory.Preadditive.LeftExact
@@ -126,22 +125,22 @@ theorem exact_iff' {cg : KernelFork g} (hg : IsLimit cg) {cf : CokernelCofork f}
         ":"
         (Term.app
          `Tfae
-         [(Init.Core.«term[_,»
+         [(«term[_]»
            "["
            [(Term.app `Exact [`f `g])
             ","
-            (Init.Logic.«term_∧_»
-             (Init.Core.«term_=_» (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `f " ≫ " `g) " = " (num "0"))
-             " ∧ "
-             (Init.Core.«term_=_»
+            («term_∧_»
+             («term_=_» (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `f " ≫ " `g) "=" (num "0"))
+             "∧"
+             («term_=_»
               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                (Term.app `kernel.ι [`g])
                " ≫ "
                (Term.app `cokernel.π [`f]))
-              " = "
+              "="
               (num "0")))
             ","
-            (Init.Core.«term_=_» (Term.app `imageSubobject [`f]) " = " (Term.app `kernelSubobject [`g]))]
+            («term_=_» (Term.app `imageSubobject [`f]) "=" (Term.app `kernelSubobject [`g]))]
            "]")])))
       (Command.declValSimple
        ":="
@@ -248,7 +247,7 @@ def isLimitImage (h : Exact f g) :
 
 /-- If `(f, g)` is exact, then `image.ι f` is a kernel of `g`. -/
 def isLimitImage' (h : Exact f g) : IsLimit (KernelFork.ofι (Limits.image.ι f) (Limits.image_ι_comp_eq_zero h.1)) :=
-  IsKernel.isoKernel _ _ (isLimitImage f g h) (imageIsoImage f).symm $ IsImage.lift_fac _ _
+  IsKernel.isoKernel _ _ (isLimitImage f g h) (imageIsoImage f).symm <| IsImage.lift_fac _ _
 #align category_theory.abelian.is_limit_image' CategoryTheory.Abelian.isLimitImage'
 
 /-- If `(f, g)` is exact, then `coimages.coimage.π g` is a cokernel of `f`. -/
@@ -265,8 +264,8 @@ def isColimitCoimage (h : Exact f g) :
 /-- If `(f, g)` is exact, then `factor_thru_image g` is a cokernel of `f`. -/
 def isColimitImage (h : Exact f g) :
     IsColimit (CokernelCofork.ofπ (Limits.factorThruImage g) (comp_factor_thru_image_eq_zero h.1)) :=
-  IsCokernel.cokernelIso _ _ (isColimitCoimage f g h) (coimageIsoImage' g) $
-    (cancel_mono (Limits.image.ι g)).1 $ by simp
+  IsCokernel.cokernelIso _ _ (isColimitCoimage f g h) (coimageIsoImage' g) <|
+    (cancel_mono (Limits.image.ι g)).1 <| by simp
 #align category_theory.abelian.is_colimit_image CategoryTheory.Abelian.isColimitImage
 
 theorem exact_cokernel : Exact f (cokernel.π f) := by
@@ -281,7 +280,7 @@ instance (h : Exact f g) : Mono (cokernel.desc f g h.w) :=
     from by
     rw [h]
     apply mono_comp
-  (cancel_epi (cokernel.π f)).1 $ by simp
+  (cancel_epi (cokernel.π f)).1 <| by simp
 
 /-- If `ex : exact f g` and `epi g`, then `cokernel.desc _ _ ex.w` is an isomorphism. -/
 instance (ex : Exact f g) [Epi g] : IsIso (cokernel.desc f g ex.w) :=
@@ -300,7 +299,7 @@ theorem Kernel.Lift.inv [Mono f] (ex : Exact f g) : inv (kernel.lift _ _ ex.w) �
 
 /-- If `X ⟶ Y ⟶ Z ⟶ 0` is exact, then the second map is a cokernel of the first. -/
 def isColimitOfExactOfEpi [Epi g] (h : Exact f g) : IsColimit (CokernelCofork.ofπ _ h.w) :=
-  IsColimit.ofIsoColimit (colimit.isColimit _) $
+  IsColimit.ofIsoColimit (colimit.isColimit _) <|
     Cocones.ext
       ⟨cokernel.desc _ _ h.w, epiDesc g (cokernel.π f) ((exact_iff _ _).1 h).2, (cancel_epi (cokernel.π f)).1 (by tidy),
         (cancel_epi g).1 (by tidy)⟩
@@ -309,7 +308,7 @@ def isColimitOfExactOfEpi [Epi g] (h : Exact f g) : IsColimit (CokernelCofork.of
 
 /-- If `0 ⟶ X ⟶ Y ⟶ Z` is exact, then the first map is a kernel of the second. -/
 def isLimitOfExactOfMono [Mono f] (h : Exact f g) : IsLimit (KernelFork.ofι _ h.w) :=
-  IsLimit.ofIsoLimit (limit.isLimit _) $
+  IsLimit.ofIsoLimit (limit.isLimit _) <|
     Cones.ext
       ⟨monoLift f (kernel.ι g) ((exact_iff _ _).1 h).2, kernel.lift _ _ h.w, (cancel_mono (kernel.ι g)).1 (by tidy),
         (cancel_mono f).1 (by tidy)⟩
@@ -354,11 +353,11 @@ variable (Z)
         ":"
         (Term.app
          `Tfae
-         [(Init.Core.«term[_,»
+         [(«term[_]»
            "["
            [(Term.app `Mono [`f])
             ","
-            (Init.Core.«term_=_» (Term.app `kernel.ι [`f]) " = " (num "0"))
+            («term_=_» (Term.app `kernel.ι [`f]) "=" (num "0"))
             ","
             (Term.app
              `Exact
@@ -489,11 +488,11 @@ theorem mono_iff_kernel_ι_eq_zero : Mono f ↔ kernel.ι f = 0 :=
         ":"
         (Term.app
          `Tfae
-         [(Init.Core.«term[_,»
+         [(«term[_]»
            "["
            [(Term.app `Epi [`f])
             ","
-            (Init.Core.«term_=_» (Term.app `cokernel.π [`f]) " = " (num "0"))
+            («term_=_» (Term.app `cokernel.π [`f]) "=" (num "0"))
             ","
             (Term.app
              `Exact

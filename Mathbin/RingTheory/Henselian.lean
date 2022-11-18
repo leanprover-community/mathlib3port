@@ -132,7 +132,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
         ":"
         (Term.app
          `Tfae
-         [(Init.Core.«term[_,»
+         [(«term[_]»
            "["
            [(Term.app `HenselianLocalRing [`R])
             ","
@@ -141,28 +141,23 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
              [(Term.explicitBinder "(" [`f] [":" (Polynomial.Data.Polynomial.Basic.polynomial `R "[X]")] [] ")")
               (Term.explicitBinder "(" [`hf] [":" (Term.proj `f "." `Monic)] [] ")")
               (Term.explicitBinder "(" [`a₀] [":" (Term.app `ResidueField [`R])] [] ")")
-              (Term.explicitBinder
-               "("
-               [`h₁]
-               [":" (Init.Core.«term_=_» (Term.app `aeval [`a₀ `f]) " = " (num "0"))]
-               []
-               ")")
+              (Term.explicitBinder "(" [`h₁] [":" («term_=_» (Term.app `aeval [`a₀ `f]) "=" (num "0"))] [] ")")
               (Term.explicitBinder
                "("
                [`h₂]
-               [":" (Init.Logic.«term_≠_» (Term.app `aeval [`a₀ (Term.proj `f "." `derivative)]) " ≠ " (num "0"))]
+               [":" («term_≠_» (Term.app `aeval [`a₀ (Term.proj `f "." `derivative)]) "≠" (num "0"))]
                []
                ")")]
              []
              ","
-             (Init.Logic.«term∃_,_»
+             («term∃_,_»
               "∃"
-              (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) [(group ":" `R)]))
-              ", "
-              (Init.Logic.«term_∧_»
+              (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `a)] [":" `R]))
+              ","
+              («term_∧_»
                (Term.app (Term.proj `f "." `IsRoot) [`a])
-               " ∧ "
-               (Init.Core.«term_=_» (Term.app `residue [`R `a]) " = " `a₀))))
+               "∧"
+               («term_=_» (Term.app `residue [`R `a]) "=" `a₀))))
             ","
             (Term.forall
              "∀"
@@ -180,25 +175,22 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
                (Term.explicitBinder
                 "("
                 [`h₁]
-                [":" (Init.Core.«term_=_» (Term.app (Term.proj `f "." `eval₂) [`φ `a₀]) " = " (num "0"))]
+                [":" («term_=_» (Term.app (Term.proj `f "." `eval₂) [`φ `a₀]) "=" (num "0"))]
                 []
                 ")")
                (Term.explicitBinder
                 "("
                 [`h₂]
-                [":" (Init.Logic.«term_≠_» (Term.app `f.derivative.eval₂ [`φ `a₀]) " ≠ " (num "0"))]
+                [":" («term_≠_» (Term.app `f.derivative.eval₂ [`φ `a₀]) "≠" (num "0"))]
                 []
                 ")")]
               []
               ","
-              (Init.Logic.«term∃_,_»
+              («term∃_,_»
                "∃"
-               (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) [(group ":" `R)]))
-               ", "
-               (Init.Logic.«term_∧_»
-                (Term.app (Term.proj `f "." `IsRoot) [`a])
-                " ∧ "
-                (Init.Core.«term_=_» (Term.app `φ [`a]) " = " `a₀)))))]
+               (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `a)] [":" `R]))
+               ","
+               («term_∧_» (Term.app (Term.proj `f "." `IsRoot) [`a]) "∧" («term_=_» (Term.app `φ [`a]) "=" `a₀)))))]
            "]")])))
       (Command.declValSimple
        ":="
@@ -1133,7 +1125,7 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R
         have aux : n + 2 ≤ i * (n + 1) := by trans 2 * (n + 1) <;> nlinarith only [h2i]
         refine' Ideal.mul_mem_left _ _ (Ideal.pow_le_pow aux _)
         rw [pow_mul']
-        refine' Ideal.pow_mem_pow ((Ideal.neg_mem_iff _).2 $ Ideal.mul_mem_right _ _ ih) _
+        refine' Ideal.pow_mem_pow ((Ideal.neg_mem_iff _).2 <| Ideal.mul_mem_right _ _ ih) _
         
     -- we are now in the position to show that `c : ℕ → R` is a Cauchy sequence
     have aux : ∀ m n, m ≤ n → c m ≡ c n [SMOD (I ^ m • ⊤ : Ideal R)] := by

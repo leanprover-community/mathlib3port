@@ -182,7 +182,7 @@ theorem dvd_pow_nat_degree_of_eval₂_eq_zero {f : R →+* A} (hf : Function.Inj
   rw [← nat_degree_scale_roots p x, ← Ideal.mem_span_singleton]
   refine'
     (scale_roots.is_weakly_eisenstein_at _
-          (ideal.mem_span_singleton.mpr $ dvd_refl x)).pow_nat_degree_le_of_root_of_monic_mem
+          (ideal.mem_span_singleton.mpr <| dvd_refl x)).pow_nat_degree_le_of_root_of_monic_mem
       _ ((monic_scale_roots_iff x).mpr hp) _ le_rfl
   rw [injective_iff_map_eq_zero'] at hf
   have := scale_roots_eval₂_eq_zero f h
@@ -261,8 +261,8 @@ open Polynomial
 theorem cyclotomicCompXAddOneIsEisensteinAt [hp : Fact p.Prime] : ((cyclotomic p ℤ).comp (X + 1)).IsEisensteinAt 𝓟 := by
   refine'
     monic.is_eisenstein_at_of_mem_of_not_mem _
-      (Ideal.IsPrime.ne_top $
-        (Ideal.span_singleton_prime (by exact_mod_cast hp.out.ne_zero)).2 $ Nat.prime_iff_prime_int.1 hp.out)
+      (Ideal.IsPrime.ne_top <|
+        (Ideal.span_singleton_prime (by exact_mod_cast hp.out.ne_zero)).2 <| Nat.prime_iff_prime_int.1 hp.out)
       (fun i hi => _) _
   · rw [show (X + 1 : ℤ[X]) = X + C 1 by simp]
     refine' (cyclotomic.monic p ℤ).comp (monic_X_add_C 1) fun h => _
@@ -297,8 +297,8 @@ theorem cyclotomicPrimePowCompXAddOneIsEisensteinAt [hp : Fact p.Prime] (n : ℕ
     ((cyclotomic (p ^ (n + 1)) ℤ).comp (X + 1)).IsEisensteinAt 𝓟 := by
   refine'
     monic.is_eisenstein_at_of_mem_of_not_mem _
-      (Ideal.IsPrime.ne_top $
-        (Ideal.span_singleton_prime (by exact_mod_cast hp.out.ne_zero)).2 $ Nat.prime_iff_prime_int.1 hp.out)
+      (Ideal.IsPrime.ne_top <|
+        (Ideal.span_singleton_prime (by exact_mod_cast hp.out.ne_zero)).2 <| Nat.prime_iff_prime_int.1 hp.out)
       _ _
   · rw [show (X + 1 : ℤ[X]) = X + C 1 by simp]
     refine' (cyclotomic.monic _ ℤ).comp (monic_X_add_C 1) fun h => _
@@ -478,7 +478,7 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
   · rw [← mod_by_monic_add_div Q₁ (minpoly.monic hBint)] at hQ
     simpa using hQ
     
-  by_cases hQzero:Q = 0
+  by_cases hQzero : Q = 0
   · simp only [hQzero, Algebra.smul_def, zero_eq_mul, aeval_zero] at hQ
     cases' hQ with H H₁
     · have : Function.Injective (algebraMap R L) := by
@@ -562,7 +562,7 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
     -- we didn't know were multiples of `p`, and we take the norm on both sides.
     replace hQ := congr_arg (fun x => x * B.gen ^ (P.nat_degree - (j + 2))) hQ
     simp_rw [sum_map, add_left_embedding_apply, add_mul, sum_mul, mul_assoc] at hQ
-    rw [← insert_erase (mem_range.2 (tsub_pos_iff_lt.2 $ Nat.lt_of_succ_lt_succ $ mem_range.1 hj)),
+    rw [← insert_erase (mem_range.2 (tsub_pos_iff_lt.2 <| Nat.lt_of_succ_lt_succ <| mem_range.1 hj)),
       sum_insert (not_mem_erase 0 _), add_zero, sum_congr rfl hf₁, ← mul_sum, ← mul_sum, add_assoc, ← mul_add,
       smul_mul_assoc, ← pow_add, Algebra.smul_def] at hQ
     replace hQ := congr_arg (norm K) (eq_sub_of_add_eq hQ)

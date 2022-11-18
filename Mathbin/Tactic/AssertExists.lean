@@ -35,7 +35,7 @@ in the current import scope.
 Be careful to use names (e.g. `rat`) rather than notations (e.g. `ℚ`).
 -/
 @[user_command]
-unsafe def assert_exists (_ : parse $ tk "assert_exists") : lean.parser Unit := do
+unsafe def assert_exists (_ : parse <| tk "assert_exists") : lean.parser Unit := do
   let decl ← ident
   let d ← get_decl decl
   return ()
@@ -57,7 +57,7 @@ In this case, you should refactor your work
 You should *not* delete the `assert_not_exists` statement without careful discussion ahead of time.
 -/
 @[user_command]
-unsafe def assert_not_exists (_ : parse $ tk "assert_not_exists") : lean.parser Unit := do
+unsafe def assert_not_exists (_ : parse <| tk "assert_not_exists") : lean.parser Unit := do
   let decl ← ident
   let ff ← succeeds (get_decl decl) |
     fail f! "Declaration {decl} is not allowed to exist in this file."
@@ -93,7 +93,7 @@ assert_instance semiring ℕ
 ```
 -/
 @[user_command]
-unsafe def assert_instance (_ : parse $ tk "assert_instance") : lean.parser Unit := do
+unsafe def assert_instance (_ : parse <| tk "assert_instance") : lean.parser Unit := do
   let q ← texpr
   let e ← i_to_expr q
   mk_instance e
@@ -119,7 +119,7 @@ assert_no_instance linear_ordered_field ℚ
 ```
 -/
 @[user_command]
-unsafe def assert_no_instance (_ : parse $ tk "assert_no_instance") : lean.parser Unit := do
+unsafe def assert_no_instance (_ : parse <| tk "assert_no_instance") : lean.parser Unit := do
   let q ← texpr
   let e ← i_to_expr q
   let i ← try_core (mk_instance e)

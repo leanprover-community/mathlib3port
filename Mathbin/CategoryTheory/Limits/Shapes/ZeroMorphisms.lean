@@ -329,7 +329,7 @@ end HasZeroMorphisms
 open ZeroObject
 
 instance {B : Type _} [Category B] : HasZeroObject (B ⥤ C) :=
-  (((CategoryTheory.Functor.const B).obj (0 : C)).IsZero $ fun X => is_zero_zero _).HasZeroObject
+  (((CategoryTheory.Functor.const B).obj (0 : C)).IsZero fun X => is_zero_zero _).HasZeroObject
 
 end HasZeroObject
 
@@ -559,12 +559,12 @@ variable [HasZeroMorphisms C]
 
 theorem image_ι_comp_eq_zero {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} [HasImage f] [Epi (factorThruImage f)]
     (h : f ≫ g = 0) : image.ι f ≫ g = 0 :=
-  zero_of_epi_comp (factorThruImage f) $ by simp [h]
+  zero_of_epi_comp (factorThruImage f) <| by simp [h]
 #align category_theory.limits.image_ι_comp_eq_zero CategoryTheory.Limits.image_ι_comp_eq_zero
 
 theorem comp_factor_thru_image_eq_zero {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} [HasImage g] (h : f ≫ g = 0) :
     f ≫ factorThruImage g = 0 :=
-  zero_of_comp_mono (image.ι g) $ by simp [h]
+  zero_of_comp_mono (image.ι g) <| by simp [h]
 #align category_theory.limits.comp_factor_thru_image_eq_zero CategoryTheory.Limits.comp_factor_thru_image_eq_zero
 
 variable [HasZeroObject C]
@@ -588,7 +588,7 @@ def imageFactorisationZero (X Y : C) : ImageFactorisation (0 : X ⟶ Y) where
 #align category_theory.limits.image_factorisation_zero CategoryTheory.Limits.imageFactorisationZero
 
 instance has_image_zero {X Y : C} : HasImage (0 : X ⟶ Y) :=
-  has_image.mk $ imageFactorisationZero _ _
+  has_image.mk <| imageFactorisationZero _ _
 #align category_theory.limits.has_image_zero CategoryTheory.Limits.has_image_zero
 
 /-- The image of a zero morphism is the zero object. -/
@@ -622,13 +622,13 @@ end Image
 /-- In the presence of zero morphisms, coprojections into a coproduct are (split) monomorphisms. -/
 instance is_split_mono_sigma_ι {β : Type u'} [HasZeroMorphisms C] (f : β → C) [HasColimit (Discrete.functor f)]
     (b : β) : IsSplitMono (Sigma.ι f b) :=
-  IsSplitMono.mk' { retraction := sigma.desc $ Pi.single b (𝟙 _) }
+  IsSplitMono.mk' { retraction := sigma.desc <| Pi.single b (𝟙 _) }
 #align category_theory.limits.is_split_mono_sigma_ι CategoryTheory.Limits.is_split_mono_sigma_ι
 
 /-- In the presence of zero morphisms, projections into a product are (split) epimorphisms. -/
 instance is_split_epi_pi_π {β : Type u'} [HasZeroMorphisms C] (f : β → C) [HasLimit (Discrete.functor f)] (b : β) :
     IsSplitEpi (Pi.π f b) :=
-  IsSplitEpi.mk' { section_ := pi.lift $ Pi.single b (𝟙 _) }
+  IsSplitEpi.mk' { section_ := pi.lift <| Pi.single b (𝟙 _) }
 #align category_theory.limits.is_split_epi_pi_π CategoryTheory.Limits.is_split_epi_pi_π
 
 /-- In the presence of zero morphisms, coprojections into a coproduct are (split) monomorphisms. -/

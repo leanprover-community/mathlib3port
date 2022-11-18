@@ -125,7 +125,7 @@ variable (G)
 
 /-- An auxiliary type-theoretic definition defining both the upper central series of
 a group, and a proof that it is normal, all in one go. -/
-def upperCentralSeriesAux : ℕ → Σ' H : Subgroup G, Normal H
+def upperCentralSeriesAux : ℕ → Σ'H : Subgroup G, Normal H
   | 0 => ⟨⊥, inferInstance⟩
   | n + 1 =>
     let un := upperCentralSeriesAux n
@@ -161,7 +161,7 @@ theorem mem_upper_central_series_succ_iff (n : ℕ) (x : G) :
   Iff.rfl
 #align mem_upper_central_series_succ_iff mem_upper_central_series_succ_iff
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`nilpotent] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`nilpotent] [] -/
 -- is_nilpotent is already defined in the root namespace (for elements of rings).
 /-- A group `G` is nilpotent if its upper central series is eventually `G`. -/
 class Group.IsNilpotent (G : Type _) [Group G] : Prop where
@@ -228,7 +228,7 @@ theorem is_decending_rev_series_of_is_ascending {H : ℕ → Subgroup G} {n : �
   cases' hasc with h0 hH
   refine' ⟨hn, fun x m hx g => _⟩
   dsimp at hx
-  by_cases hm:n ≤ m
+  by_cases hm : n ≤ m
   · rw [tsub_eq_zero_of_le hm, h0, Subgroup.mem_bot] at hx
     subst hx
     convert Subgroup.one_mem _
@@ -246,7 +246,7 @@ theorem is_ascending_rev_series_of_is_descending {H : ℕ → Subgroup G} {n : �
   cases' hdesc with h0 hH
   refine' ⟨hn, fun x m hx g => _⟩
   dsimp only at hx⊢
-  by_cases hm:n ≤ m
+  by_cases hm : n ≤ m
   · have hnm : n - m = 0 := tsub_eq_zero_iff_le.mpr hm
     rw [hnm, h0]
     exact mem_top _
@@ -296,13 +296,13 @@ theorem lower_central_series_one : lowerCentralSeries G 1 = commutator G :=
 
 theorem mem_lower_central_series_succ_iff (n : ℕ) (q : G) :
     q ∈ lowerCentralSeries G (n + 1) ↔
-      q ∈ closure { x | ∃ (p ∈ lowerCentralSeries G n) (q ∈ (⊤ : Subgroup G)), p * q * p⁻¹ * q⁻¹ = x } :=
+      q ∈ closure { x | ∃ p ∈ lowerCentralSeries G n, ∃ q ∈ (⊤ : Subgroup G), p * q * p⁻¹ * q⁻¹ = x } :=
   Iff.rfl
 #align mem_lower_central_series_succ_iff mem_lower_central_series_succ_iff
 
 theorem lower_central_series_succ (n : ℕ) :
     lowerCentralSeries G (n + 1) =
-      closure { x | ∃ (p ∈ lowerCentralSeries G n) (q ∈ (⊤ : Subgroup G)), p * q * p⁻¹ * q⁻¹ = x } :=
+      closure { x | ∃ p ∈ lowerCentralSeries G n, ∃ q ∈ (⊤ : Subgroup G), p * q * p⁻¹ * q⁻¹ = x } :=
   rfl
 #align lower_central_series_succ lower_central_series_succ
 
@@ -713,7 +713,7 @@ theorem CommGroup.nilpotency_class_le_one {G : Type _} [CommGroup G] : Group.nil
 
 /-- Groups with nilpotency class at most one are abelian -/
 def commGroupOfNilpotencyClass [IsNilpotent G] (h : Group.nilpotencyClass G ≤ 1) : CommGroup G :=
-  Group.commGroupOfCenterEqTop $ by
+  Group.commGroupOfCenterEqTop <| by
     rw [← upper_central_series_one]
     exact upper_central_series_eq_top_iff_nilpotency_class_le.mpr h
 #align comm_group_of_nilpotency_class commGroupOfNilpotencyClass
@@ -926,7 +926,7 @@ theorem is_nilpotent_of_product_of_sylow_group
         ":"
         (Term.app
          `Tfae
-         [(Init.Core.«term[_,»
+         [(«term[_]»
            "["
            [(Term.app `IsNilpotent [`G])
             ","
@@ -941,15 +941,12 @@ theorem is_nilpotent_of_product_of_sylow_group
             ","
             (Term.forall
              "∀"
-             [(Term.explicitBinder "(" [`p] [":" (Init.Data.Nat.Basic.termℕ "ℕ")] [] ")")
+             [(Term.explicitBinder "(" [`p] [":" (termℕ "ℕ")] [] ")")
               (Term.explicitBinder "(" [`hp] [":" (Term.app `Fact [(Term.proj `p "." `Prime)])] [] ")")
               (Term.explicitBinder "(" [`P] [":" (Term.app `Sylow [`p `G])] [] ")")]
              []
              ","
-             (Term.proj
-              (Term.typeAscription "(" (Init.Coe.«term↑_» "↑" `P) ":" [(Term.app `Subgroup [`G])] ")")
-              "."
-              `Normal))
+             (Term.proj (Term.typeAscription "(" (coeNotation "↑" `P) ":" [(Term.app `Subgroup [`G])] ")") "." `Normal))
             ","
             (Term.app
              `Nonempty
@@ -964,7 +961,7 @@ theorem is_nilpotent_of_product_of_sylow_group
                  [`P]
                  [(Term.typeSpec ":" (Term.app `Sylow [`p `G]))]
                  ","
-                 (Term.typeAscription "(" (Init.Coe.«term↑_» "↑" `P) ":" [(Term.app `Subgroup [`G])] ")")))
+                 (Term.typeAscription "(" (coeNotation "↑" `P) ":" [(Term.app `Subgroup [`G])] ")")))
                " ≃* "
                `G)])]
            "]")])))

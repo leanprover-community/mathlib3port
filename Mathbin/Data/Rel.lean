@@ -3,6 +3,7 @@ Copyright (c) 2018 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
+import Mathbin.Order.CompleteLattice
 import Mathbin.Order.GaloisConnection
 
 /-!
@@ -176,7 +177,7 @@ theorem mem_preimage (x : α) (s : Set β) : x ∈ r.Preimage s ↔ ∃ y ∈ s,
 #align rel.mem_preimage Rel.mem_preimage
 
 theorem preimage_def (s : Set β) : preimage r s = { x | ∃ y ∈ s, r x y } :=
-  Set.ext $ fun x => mem_preimage _ _ _
+  Set.ext fun x => mem_preimage _ _ _
 #align rel.preimage_def Rel.preimage_def
 
 theorem preimage_mono {s t : Set β} (h : s ⊆ t) : r.Preimage s ⊆ r.Preimage t :=

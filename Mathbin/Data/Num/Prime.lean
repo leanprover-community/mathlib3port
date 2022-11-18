@@ -71,7 +71,7 @@ theorem min_fac_to_nat (n : PosNum) : (minFac n : ℕ) = Nat.minFac n := by
       
     simp only [cast_one, cast_bit1]
     rw [Nat.sqrt_lt]
-    convert lt_add_of_pos_right _ (dec_trivial : (0 : ℕ) < (n + 4) * n + 8)
+    convert lt_add_of_pos_right _ (by decide : (0 : ℕ) < (n + 4) * n + 8)
     unfold _root_.bit1 _root_.bit0
     ring
     
@@ -93,7 +93,7 @@ instance decidablePrime : DecidablePred PosNum.Prime
   | bit0 n =>
     decidable_of_iff' (n = 1)
       (by
-        refine' nat.prime_def_min_fac.trans ((and_iff_right _).trans $ eq_comm.trans _)
+        refine' nat.prime_def_min_fac.trans ((and_iff_right _).trans <| eq_comm.trans _)
         · exact bit0_le_bit0.2 (to_nat_pos _)
           
         rw [← min_fac_to_nat, to_nat_inj]

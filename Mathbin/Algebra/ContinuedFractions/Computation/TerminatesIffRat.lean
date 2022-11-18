@@ -5,7 +5,6 @@ Authors: Kevin Kappelmann
 -/
 import Mathbin.Algebra.ContinuedFractions.Computation.Approximations
 import Mathbin.Algebra.ContinuedFractions.Computation.CorrectnessTerminating
-import Mathbin.Algebra.Order.Archimedean
 import Mathbin.Data.Rat.Floor
 
 /-!
@@ -77,7 +76,7 @@ theorem exists_gcf_pair_rat_eq_of_nth_conts_aux :
         simp
         
       -- 2 ≤ n
-      · cases' IH (n + 1) $ lt_add_one (n + 1) with pred_conts pred_conts_eq
+      · cases' IH (n + 1) <| lt_add_one (n + 1) with pred_conts pred_conts_eq
         -- invoke the IH
         cases' s_ppred_nth_eq : g.s.nth n with gp_n
         -- option.none
@@ -88,7 +87,7 @@ theorem exists_gcf_pair_rat_eq_of_nth_conts_aux :
           
         -- option.some
         · -- invoke the IH a second time
-          cases' IH n $ lt_of_le_of_lt n.le_succ $ lt_add_one $ n + 1 with ppred_conts ppred_conts_eq
+          cases' IH n <| lt_of_le_of_lt n.le_succ <| lt_add_one <| n + 1 with ppred_conts ppred_conts_eq
           obtain ⟨a_eq_one, z, b_eq_z⟩ : gp_n.a = 1 ∧ ∃ z : ℤ, gp_n.b = (z : K)
           exact of_part_num_eq_one_and_exists_int_part_denom_eq s_ppred_nth_eq
           -- finally, unfold the recurrence to obtain the required rational value.
@@ -104,7 +103,7 @@ theorem exists_gcf_pair_rat_eq_of_nth_conts_aux :
 
 theorem exists_gcf_pair_rat_eq_nth_conts : ∃ conts : Pair ℚ, (of v).continuants n = (conts.map coe : Pair K) := by
   rw [nth_cont_eq_succ_nth_cont_aux]
-  exact exists_gcf_pair_rat_eq_of_nth_conts_aux v $ n + 1
+  exact exists_gcf_pair_rat_eq_of_nth_conts_aux v <| n + 1
 #align
   generalized_continued_fraction.exists_gcf_pair_rat_eq_nth_conts GeneralizedContinuedFraction.exists_gcf_pair_rat_eq_nth_conts
 
@@ -184,7 +183,7 @@ theorem coe_of_rat_eq : ((IntFractPair.of q).mapFr coe : IntFractPair K) = IntFr
   generalized_continued_fraction.int_fract_pair.coe_of_rat_eq GeneralizedContinuedFraction.IntFractPair.coe_of_rat_eq
 
 theorem coe_stream_nth_rat_eq :
-    ((IntFractPair.stream q n).map (mapFr coe) : Option $ IntFractPair K) = IntFractPair.stream v n := by
+    ((IntFractPair.stream q n).map (mapFr coe) : Option <| IntFractPair K) = IntFractPair.stream v n := by
   induction' n with n IH
   case zero => simp [int_fract_pair.stream, coe_of_rat_eq v_eq_q]
   case succ =>
@@ -208,7 +207,8 @@ theorem coe_stream_nth_rat_eq :
   generalized_continued_fraction.int_fract_pair.coe_stream_nth_rat_eq GeneralizedContinuedFraction.IntFractPair.coe_stream_nth_rat_eq
 
 theorem coe_stream_rat_eq :
-    ((IntFractPair.stream q).map (Option.map (mapFr coe)) : Stream $ Option $ IntFractPair K) = IntFractPair.stream v :=
+    ((IntFractPair.stream q).map (Option.map (mapFr coe)) : Stream <| Option <| IntFractPair K) =
+      IntFractPair.stream v :=
   by
   funext n
   exact int_fract_pair.coe_stream_nth_rat_eq v_eq_q n
@@ -226,7 +226,7 @@ theorem coe_of_h_rat_eq : (↑((of q).h : ℚ) : K) = (of v).h := by
   simp
 #align generalized_continued_fraction.coe_of_h_rat_eq GeneralizedContinuedFraction.coe_of_h_rat_eq
 
-theorem coe_of_s_nth_rat_eq : (((of q).s.nth n).map (Pair.map coe) : Option $ Pair K) = (of v).s.nth n := by
+theorem coe_of_s_nth_rat_eq : (((of q).s.nth n).map (Pair.map coe) : Option <| Pair K) = (of v).s.nth n := by
   simp only [of, int_fract_pair.seq1, Seq.map_nth, Seq.nth_tail]
   simp only [Seq.nth]
   rw [← int_fract_pair.coe_stream_rat_eq v_eq_q]
@@ -234,7 +234,7 @@ theorem coe_of_s_nth_rat_eq : (((of q).s.nth n).map (Pair.map coe) : Option $ Pa
     simp [Stream.map, Stream.nth, succ_nth_stream_eq]
 #align generalized_continued_fraction.coe_of_s_nth_rat_eq GeneralizedContinuedFraction.coe_of_s_nth_rat_eq
 
-theorem coe_of_s_rat_eq : ((of q).s.map (Pair.map coe) : Seq $ Pair K) = (of v).s := by
+theorem coe_of_s_rat_eq : ((of q).s.map (Pair.map coe) : Seq <| Pair K) = (of v).s := by
   ext n
   rw [← coe_of_s_nth_rat_eq v_eq_q]
   rfl
@@ -299,7 +299,7 @@ theorem stream_succ_nth_fr_num_lt_nth_fr_num_rat {ifp_n ifp_succ_n : IntFractPai
   cases this
   rw [← int_fract_pair.of_eq_ifp_succ_n]
   cases' nth_stream_fr_nonneg_lt_one stream_nth_eq with zero_le_ifp_n_fract ifp_n_fract_lt_one
-  have : 0 < ifp_n.fr := lt_of_le_of_ne zero_le_ifp_n_fract $ ifp_n_fract_ne_zero.symm
+  have : 0 < ifp_n.fr := lt_of_le_of_ne zero_le_ifp_n_fract <| ifp_n_fract_ne_zero.symm
   exact of_inv_fr_num_lt_num_of_pos this
 #align
   generalized_continued_fraction.int_fract_pair.stream_succ_nth_fr_num_lt_nth_fr_num_rat GeneralizedContinuedFraction.IntFractPair.stream_succ_nth_fr_num_lt_nth_fr_num_rat

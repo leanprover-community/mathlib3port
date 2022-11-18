@@ -130,7 +130,7 @@ theorem contraction_degree_eq_aux [hq : Fact q.Prime] [hF : CharP F q] (g g' : F
 theorem contraction_degree_eq_or_insep [hq : Fact q.Prime] [CharP F q] (g g' : F[X]) (m m' : ℕ)
     (h_expand : expand F (q ^ m) g = expand F (q ^ m') g') (hg : g.Separable) (hg' : g'.Separable) :
     g.natDegree = g'.natDegree := by
-  by_cases h:m = m'
+  by_cases h : m = m'
   · -- if `m = m'` then we show `g.nat_degree = g'.nat_degree` by unfolding the definitions
     rw [h] at h_expand
     have expand_deg : ((expand F (q ^ m')) g).natDegree = (expand F (q ^ m') g').natDegree := by rw [h_expand]

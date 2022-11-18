@@ -18,7 +18,7 @@ unsafe def mk_full_namespace (ns : Name) : Name :=
 #align tactic.local_cache.internal.mk_full_namespace tactic.local_cache.internal.mk_full_namespace
 
 unsafe def save_data (dn : Name) (a : α) [reflected _ a] : tactic Unit :=
-  tactic.add_decl $ mk_definition dn [] (reflect α) (reflect a)
+  tactic.add_decl <| mk_definition dn [] (reflect α) (reflect a)
 #align tactic.local_cache.internal.save_data tactic.local_cache.internal.save_data
 
 unsafe def load_data (dn : Name) : tactic α := do
@@ -65,20 +65,20 @@ private unsafe def get_name_aux (ns : Name) (mk_new : options → Name → tacti
   let opt := mk_full_namespace ns
   match o opt "" with
     | "" => mk_new o opt
-    | s => return $ Name.fromComponents $ s (· = '.')
+    | s => return <| Name.fromComponents <| s (· = '.')
 #align tactic.local_cache.internal.block_local.get_name_aux tactic.local_cache.internal.block_local.get_name_aux
 
 unsafe def get_name (ns : Name) : tactic Name :=
-  get_name_aux ns $ fun o opt => do
+  (get_name_aux ns) fun o opt => do
     let n ← mk_user_fresh_name
-    tactic.set_options $ o opt n
+    tactic.set_options <| o opt n
     return n
 #align tactic.local_cache.internal.block_local.get_name tactic.local_cache.internal.block_local.get_name
 
 -- Like `get_name`, but fail if `ns` does not have a cached
 -- decl name (we create a new one above).
 unsafe def try_get_name (ns : Name) : tactic Name :=
-  get_name_aux ns $ fun o opt => fail f! "no cache for "{ns}""
+  (get_name_aux ns) fun o opt => fail f! "no cache for "{ns}""
 #align tactic.local_cache.internal.block_local.try_get_name tactic.local_cache.internal.block_local.try_get_name
 
 unsafe def present (ns : Name) : tactic Bool := do
@@ -90,7 +90,7 @@ unsafe def present (ns : Name) : tactic Bool := do
 
 unsafe def clear (ns : Name) : tactic Unit := do
   let o ← tactic.get_options
-  set_options $ o (mk_full_namespace ns) ""
+  set_options <| o (mk_full_namespace ns) ""
 #align tactic.local_cache.internal.block_local.clear tactic.local_cache.internal.block_local.clear
 
 end BlockLocal
@@ -126,12 +126,12 @@ unsafe def hash_context : tactic String := do
   let ns ← open_namespaces
   let dn ← decl_name
   let flat := ((List.cons dn ns).map toString).foldl String.append ""
-  return $ toString dn ++ toString (hash_string flat)
+  return <| toString dn ++ toString (hash_string flat)
 #align tactic.local_cache.internal.def_local.hash_context tactic.local_cache.internal.def_local.hash_context
 
 unsafe def get_root_name (ns : Name) : tactic Name := do
   let hc ← hash_context
-  return $ mk_full_namespace $ hc ++ ns
+  return <| mk_full_namespace <| hc ++ ns
 #align tactic.local_cache.internal.def_local.get_root_name tactic.local_cache.internal.def_local.get_root_name
 
 unsafe def apply_tag (n : Name) (tag : ℕ) : Name :=
@@ -148,7 +148,7 @@ unsafe def kill_name (n : Name) : tactic Unit :=
 
 unsafe def is_name_dead (n : Name) : tactic Bool :=
   (do
-      let witness : Unit ← load_data $ mk_dead_name n
+      let witness : Unit ← load_data <| mk_dead_name n
       return True) <|>
     return False
 #align tactic.local_cache.internal.def_local.is_name_dead tactic.local_cache.internal.def_local.is_name_dead
@@ -175,13 +175,13 @@ unsafe def get_tag_with_status (rn : Name) : tactic (ℕ × Bool) :=
 unsafe def get_name (ns : Name) : tactic Name := do
   let rn ← get_root_name ns
   let (tag, alive) ← get_tag_with_status rn <|> return (0, True)
-  return $ apply_tag rn $ if alive then tag else tag + 1
+  return <| apply_tag rn <| if alive then tag else tag + 1
 #align tactic.local_cache.internal.def_local.get_name tactic.local_cache.internal.def_local.get_name
 
 unsafe def try_get_name (ns : Name) : tactic Name := do
   let rn ← get_root_name ns
   let (tag, alive) ← get_tag_with_status rn
-  if alive then return $ apply_tag rn tag else fail f! "no cache for "{ns}""
+  if alive then return <| apply_tag rn tag else fail f! "no cache for "{ns}""
 #align tactic.local_cache.internal.def_local.try_get_name tactic.local_cache.internal.def_local.try_get_name
 
 unsafe def present (ns : Name) : tactic Bool := do

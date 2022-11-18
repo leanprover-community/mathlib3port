@@ -180,42 +180,32 @@ class CommGroupWithZero (G₀ : Type _) extends CommMonoidWithZero G₀, GroupWi
 
 section NeZero
 
+attribute [field_simps] two_ne_zero three_ne_zero four_ne_zero
+
 variable [MulZeroOneClass M₀] [Nontrivial M₀] {a b : M₀}
 
+variable (M₀)
+
 /-- In a nontrivial monoid with zero, zero and one are different. -/
-@[simp]
-theorem zero_ne_one : 0 ≠ (1 : M₀) := by
-  intro h
-  rcases exists_pair_ne M₀ with ⟨x, y, hx⟩
-  apply hx
-  calc
-    x = 1 * x := by rw [one_mul]
-    _ = 0 := by rw [← h, zero_mul]
-    _ = 1 * y := by rw [← h, zero_mul]
-    _ = y := by rw [one_mul]
-    
-#align zero_ne_one zero_ne_one
-
-@[simp]
-theorem one_ne_zero : (1 : M₀) ≠ 0 :=
-  zero_ne_one.symm
-#align one_ne_zero one_ne_zero
-
-instance NeZero.one (R) [MulZeroOneClass R] [Nontrivial R] : NeZero (1 : R) :=
-  ⟨one_ne_zero⟩
+instance NeZero.one : NeZero (1 : M₀) :=
+  ⟨by
+    intro h
+    rcases exists_pair_ne M₀ with ⟨x, y, hx⟩
+    apply hx
+    calc
+      x = 1 * x := by rw [one_mul]
+      _ = 0 := by rw [h, zero_mul]
+      _ = 1 * y := by rw [h, zero_mul]
+      _ = y := by rw [one_mul]
+      ⟩
 #align ne_zero.one NeZero.one
 
-theorem ne_zero_of_eq_one {a : M₀} (h : a = 1) : a ≠ 0 :=
-  calc
-    a = 1 := h
-    _ ≠ 0 := one_ne_zero
-    
-#align ne_zero_of_eq_one ne_zero_of_eq_one
+variable {M₀}
 
 /-- Pullback a `nontrivial` instance along a function sending `0` to `0` and `1` to `1`. -/
 theorem pullback_nonzero [Zero M₀'] [One M₀'] (f : M₀' → M₀) (zero : f 0 = 0) (one : f 1 = 1) : Nontrivial M₀' :=
   ⟨⟨0, 1,
-      mt (congr_arg f) $ by
+      mt (congr_arg f) <| by
         rw [zero, one]
         exact zero_ne_one⟩⟩
 #align pullback_nonzero pullback_nonzero
@@ -258,7 +248,7 @@ theorem mul_ne_zero_iff : a * b ≠ 0 ↔ a ≠ 0 ∧ b ≠ 0 :=
 /-- If `α` has no zero divisors, then for elements `a, b : α`, `a * b` equals zero iff so is
 `b * a`. -/
 theorem mul_eq_zero_comm : a * b = 0 ↔ b * a = 0 :=
-  mul_eq_zero.trans $ (or_comm' _ _).trans mul_eq_zero.symm
+  mul_eq_zero.trans <| (or_comm' _ _).trans mul_eq_zero.symm
 #align mul_eq_zero_comm mul_eq_zero_comm
 
 /-- If `α` has no zero divisors, then for elements `a, b : α`, `a * b` is nonzero iff so is

@@ -1127,9 +1127,7 @@ theorem insert_rb {t : Rbnode α} (x) {c n} (h : IsRedBlack t c n) : InsertRbRes
     
 #align rbnode.insert_rb Rbnode.insert_rb
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (c n) -/
-theorem insert_is_red_black {t : Rbnode α} {c n} (x) : IsRedBlack t c n → ∃ (c) (n), IsRedBlack (insert lt t x) c n :=
-  by
+theorem insert_is_red_black {t : Rbnode α} {c n} (x) : IsRedBlack t c n → ∃ c n, IsRedBlack (insert lt t x) c n := by
   intro h
   have := insert_rb lt x h
   cases c <;> simp [insert_rb_result] at this

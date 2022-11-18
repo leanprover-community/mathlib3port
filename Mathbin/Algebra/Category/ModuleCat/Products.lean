@@ -3,8 +3,8 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Category.ModuleCat.EpiMono
 import Mathbin.LinearAlgebra.Pi
+import Mathbin.Algebra.Category.ModuleCat.Basic
 
 /-!
 # The concrete products in the category of modules are products in the categorical sense.

@@ -38,13 +38,13 @@ variable {S : Type u'} {T : Type u''} {R : Type u} {M : Type v}
 
 /-- `smul_mem_class S R M` says `S` is a type of subsets `s ≤ M` that are closed under the
 scalar action of `R` on `M`. -/
-class SmulMemClass (S : Type _) (R M : outParam $ Type _) [HasSmul R M] [SetLike S M] where
+class SmulMemClass (S : Type _) (R M : outParam <| Type _) [HasSmul R M] [SetLike S M] where
   smul_mem : ∀ {s : S} (r : R) {m : M}, m ∈ s → r • m ∈ s
 #align smul_mem_class SmulMemClass
 
 /-- `vadd_mem_class S R M` says `S` is a type of subsets `s ≤ M` that are closed under the
 additive action of `R` on `M`. -/
-class VaddMemClass (S : Type _) (R M : outParam $ Type _) [HasVadd R M] [SetLike S M] where
+class VaddMemClass (S : Type _) (R M : outParam <| Type _) [HasVadd R M] [SetLike S M] where
   vadd_mem : ∀ {s : S} (r : R) {m : M}, m ∈ s → r +ᵥ m ∈ s
 #align vadd_mem_class VaddMemClass
 
@@ -222,10 +222,10 @@ theorem smul_of_tower_mem (s : S) {x : M} (h : x ∈ p) : s • x ∈ p := by
 instance hasSmul' : HasSmul S p where smul c x := ⟨c • x.1, smul_of_tower_mem _ c x.2⟩
 #align sub_mul_action.has_smul' SubMulAction.hasSmul'
 
-instance : IsScalarTower S R p where smul_assoc s r x := Subtype.ext $ smul_assoc s r ↑x
+instance : IsScalarTower S R p where smul_assoc s r x := Subtype.ext <| smul_assoc s r ↑x
 
 instance is_scalar_tower' {S' : Type _} [HasSmul S' R] [HasSmul S' S] [HasSmul S' M] [IsScalarTower S' R M]
-    [IsScalarTower S' S M] : IsScalarTower S' S p where smul_assoc s r x := Subtype.ext $ smul_assoc s r ↑x
+    [IsScalarTower S' S M] : IsScalarTower S' S p where smul_assoc s r x := Subtype.ext <| smul_assoc s r ↑x
 #align sub_mul_action.is_scalar_tower' SubMulAction.is_scalar_tower'
 
 @[simp, norm_cast]
@@ -240,7 +240,7 @@ theorem smul_mem_iff' {G} [Group G] [HasSmul G R] [MulAction G M] [IsScalarTower
 #align sub_mul_action.smul_mem_iff' SubMulAction.smul_mem_iff'
 
 instance [HasSmul Sᵐᵒᵖ R] [HasSmul Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] :
-    IsCentralScalar S p where op_smul_eq_smul r x := Subtype.ext $ op_smul_eq_smul r x
+    IsCentralScalar S p where op_smul_eq_smul r x := Subtype.ext <| op_smul_eq_smul r x
 
 end
 
@@ -253,8 +253,8 @@ variable (p : SubMulAction R M)
 /-- If the scalar product forms a `mul_action`, then the subset inherits this action -/
 instance mulAction' : MulAction S p where
   smul := (· • ·)
-  one_smul x := Subtype.ext $ one_smul _ x
-  mul_smul c₁ c₂ x := Subtype.ext $ mul_smul c₁ c₂ x
+  one_smul x := Subtype.ext <| one_smul _ x
+  mul_smul c₁ c₂ x := Subtype.ext <| mul_smul c₁ c₂ x
 #align sub_mul_action.mul_action' SubMulAction.mulAction'
 
 instance : MulAction R p :=
@@ -308,7 +308,7 @@ theorem zero_mem (h : (p : Set M).Nonempty) : (0 : M) ∈ p :=
 
 /-- If the scalar product forms a `module`, and the `sub_mul_action` is not `⊥`, then the
 subset inherits the zero. -/
-instance [n_empty : Nonempty p] : Zero p where zero := ⟨0, n_empty.elim $ fun x => p.zero_mem ⟨x, x.Prop⟩⟩
+instance [n_empty : Nonempty p] : Zero p where zero := ⟨0, n_empty.elim fun x => p.zero_mem ⟨x, x.Prop⟩⟩
 
 end Module
 

@@ -58,7 +58,7 @@ theorem mul_apply_add_eq_mul_of_forall_ne [Add A] {f g : AddMonoidAlgebra R A} {
   · exact fun af0 => by simp [not_mem_support_iff.mp af0]
     
   · refine' (Finset.sum_eq_single b0 (fun b bg b0 => _) _).trans (if_pos rfl)
-    · by_cases af:a0 ∈ f.support
+    · by_cases af : a0 ∈ f.support
       · exact if_neg (h af bg (Or.inr b0))
         
       · simp only [not_mem_support_iff.mp af, zero_mul, if_t_t]

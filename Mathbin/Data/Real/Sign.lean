@@ -43,27 +43,27 @@ theorem sign_zero : sign 0 = 0 := by rw [sign, if_neg (lt_irrefl _), if_neg (lt_
 
 @[simp]
 theorem sign_one : sign 1 = 1 :=
-  sign_of_pos $ by norm_num
+  sign_of_pos <| by norm_num
 #align real.sign_one Real.sign_one
 
 theorem sign_apply_eq (r : ℝ) : sign r = -1 ∨ sign r = 0 ∨ sign r = 1 := by
   obtain hn | rfl | hp := lt_trichotomy r (0 : ℝ)
-  · exact Or.inl $ sign_of_neg hn
+  · exact Or.inl <| sign_of_neg hn
     
-  · exact Or.inr $ Or.inl $ sign_zero
+  · exact Or.inr <| Or.inl <| sign_zero
     
-  · exact Or.inr $ Or.inr $ sign_of_pos hp
+  · exact Or.inr <| Or.inr <| sign_of_pos hp
     
 #align real.sign_apply_eq Real.sign_apply_eq
 
 /-- This lemma is useful for working with `ℝˣ` -/
 theorem sign_apply_eq_of_ne_zero (r : ℝ) (h : r ≠ 0) : sign r = -1 ∨ sign r = 1 := by
   obtain hn | rfl | hp := lt_trichotomy r (0 : ℝ)
-  · exact Or.inl $ sign_of_neg hn
+  · exact Or.inl <| sign_of_neg hn
     
   · exact (h rfl).elim
     
-  · exact Or.inr $ sign_of_pos hp
+  · exact Or.inr <| sign_of_pos hp
     
 #align real.sign_apply_eq_of_ne_zero Real.sign_apply_eq_of_ne_zero
 

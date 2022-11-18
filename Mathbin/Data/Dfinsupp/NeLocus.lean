@@ -114,13 +114,13 @@ variable [∀ a, DecidableEq (N a)]
 @[simp]
 theorem ne_locus_add_left [∀ a, AddLeftCancelMonoid (N a)] (f g h : Π₀ a, N a) :
     (f + g).neLocus (f + h) = g.neLocus h :=
-  zip_with_ne_locus_eq_left _ _ _ _ $ fun a => add_right_injective
+  (zip_with_ne_locus_eq_left _ _ _ _) fun a => add_right_injective
 #align dfinsupp.ne_locus_add_left Dfinsupp.ne_locus_add_left
 
 @[simp]
 theorem ne_locus_add_right [∀ a, AddRightCancelMonoid (N a)] (f g h : Π₀ a, N a) :
     (f + h).neLocus (g + h) = f.neLocus g :=
-  zip_with_ne_locus_eq_right _ _ _ _ $ fun a => add_left_injective
+  (zip_with_ne_locus_eq_right _ _ _ _) fun a => add_left_injective
 #align dfinsupp.ne_locus_add_right Dfinsupp.ne_locus_add_right
 
 section AddGroup

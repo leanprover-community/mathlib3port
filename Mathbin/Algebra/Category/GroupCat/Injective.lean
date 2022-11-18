@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 -/
 import Mathbin.Algebra.Category.GroupCat.EpiMono
-import Mathbin.Algebra.Category.GroupCat.ZModuleEquivalence
 import Mathbin.Algebra.Category.ModuleCat.EpiMono
 import Mathbin.Algebra.Module.Injective
 import Mathbin.CategoryTheory.Preadditive.Injective
@@ -32,7 +31,7 @@ namespace AddCommGroupCat
 
 theorem injective_of_injective_as_module [Injective (⟨A⟩ : ModuleCat ℤ)] :
     CategoryTheory.Injective (⟨A⟩ : AddCommGroupCat) :=
-  { factors := fun X Y g f m => by
+  { Factors := fun X Y g f m => by
       skip
       let G : (⟨X⟩ : ModuleCat ℤ) ⟶ ⟨A⟩ :=
         { g with
@@ -61,7 +60,7 @@ theorem injective_of_injective_as_module [Injective (⟨A⟩ : ModuleCat ℤ)] :
 #align AddCommGroup.injective_of_injective_as_module AddCommGroupCat.injective_of_injective_as_module
 
 theorem injective_as_module_of_injective_as_Ab [Injective (⟨A⟩ : AddCommGroupCat)] : Injective (⟨A⟩ : ModuleCat ℤ) :=
-  { factors := fun X Y g f m => by
+  { Factors := fun X Y g f m => by
       skip
       let G : (⟨X⟩ : AddCommGroupCat) ⟶ ⟨A⟩ := g.to_add_monoid_hom
       let F : (⟨X⟩ : AddCommGroupCat) ⟶ ⟨Y⟩ := f.to_add_monoid_hom
@@ -87,11 +86,11 @@ theorem injective_as_module_of_injective_as_Ab [Injective (⟨A⟩ : AddCommGrou
 #align AddCommGroup.injective_as_module_of_injective_as_Ab AddCommGroupCat.injective_as_module_of_injective_as_Ab
 
 instance injective_of_divisible [DivisibleBy A ℤ] : CategoryTheory.Injective (⟨A⟩ : AddCommGroupCat) :=
-  @injective_of_injective_as_module A _ $
-    @Module.injective_object_of_injective_module ℤ _ A _ _ $
-      Module.BaerCat.injective $ fun I g => by
+  @injective_of_injective_as_module A _ <|
+    @Module.injective_object_of_injective_module ℤ _ A _ _ <|
+      Module.BaerCat.injective fun I g => by
         rcases IsPrincipalIdealRing.principal I with ⟨m, rfl⟩
-        by_cases m_eq_zero:m = 0
+        by_cases m_eq_zero : m = 0
         · subst m_eq_zero
           refine' ⟨{ toFun := _, map_add' := _, map_smul' := _ }, fun n hn => _⟩
           · intro n

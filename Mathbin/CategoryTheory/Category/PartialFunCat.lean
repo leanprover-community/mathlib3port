@@ -71,8 +71,8 @@ instance largeCategory : LargeCategory.{u} PartialFunCat where
 def Iso.mk {α β : PartialFunCat.{u}} (e : α ≃ β) : α ≅ β where
   Hom := e
   inv := e.symm
-  hom_inv_id' := (Pfun.coe_comp _ _).symm.trans $ congr_arg coe e.symm_comp_self
-  inv_hom_id' := (Pfun.coe_comp _ _).symm.trans $ congr_arg coe e.self_comp_symm
+  hom_inv_id' := (Pfun.coe_comp _ _).symm.trans <| congr_arg coe e.symm_comp_self
+  inv_hom_id' := (Pfun.coe_comp _ _).symm.trans <| congr_arg coe e.self_comp_symm
 #align PartialFun.iso.mk PartialFunCat.Iso.mk
 
 end PartialFunCat
@@ -93,14 +93,15 @@ This the computable part of the equivalence `PartialFun_equiv_Pointed`. -/
 def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
   obj X := { x : X // x ≠ X.point }
   map X Y f := Pfun.toSubtype _ f.toFun ∘ Subtype.val
-  map_id' X := Pfun.ext $ fun a b => Pfun.mem_to_subtype_iff.trans (Subtype.coe_inj.trans Part.mem_some_iff.symm)
+  map_id' X := Pfun.ext fun a b => Pfun.mem_to_subtype_iff.trans (Subtype.coe_inj.trans Part.mem_some_iff.symm)
   map_comp' X Y Z f g :=
-    Pfun.ext $ fun a c => by
+    Pfun.ext fun a c => by
       refine' (pfun.mem_to_subtype_iff.trans _).trans part.mem_bind_iff.symm
       simp_rw [Pfun.mem_to_subtype_iff, Subtype.exists]
       refine'
         ⟨fun h =>
-          ⟨f.to_fun a, fun ha => c.2 $ h.trans ((congr_arg g.to_fun ha : g.to_fun _ = _).trans g.map_point), rfl, h⟩, _⟩
+          ⟨f.to_fun a, fun ha => c.2 <| h.trans ((congr_arg g.to_fun ha : g.to_fun _ = _).trans g.map_point), rfl, h⟩,
+          _⟩
       rintro ⟨b, _, rfl : b = _, h⟩
       exact h
 #align Pointed_to_PartialFun pointedToPartialFun
@@ -173,24 +174,22 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   [`X]
                   []
                   "=>"
-                  (Init.Core.«term_$_»
+                  («term_<|_»
                    (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-                   " $ "
-                   (Init.Core.«term_$_»
+                   "<|"
+                   (Term.app
                     `funext
-                    " $ "
-                    (Term.fun
-                     "fun"
-                     (Term.basicFun
-                      [`o]
-                      []
-                      "=>"
-                      (Init.Core.«term_$_»
-                       (Term.app `Option.recOn [`o `rfl])
-                       " $ "
-                       (Term.fun
-                        "fun"
-                        (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))))))))))
+                    [(Term.fun
+                      "fun"
+                      (Term.basicFun
+                       [`o]
+                       []
+                       "=>"
+                       (Term.app
+                        (Term.app `Option.recOn [`o `rfl])
+                        [(Term.fun
+                          "fun"
+                          (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
                ","
                (Term.structInstField
                 (Term.structInstLVal `map_comp' [])
@@ -201,28 +200,26 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   [`X `Y `Z `f `g]
                   []
                   "=>"
-                  (Init.Core.«term_$_»
+                  («term_<|_»
                    (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-                   " $ "
-                   (Init.Core.«term_$_»
+                   "<|"
+                   (Term.app
                     `funext
-                    " $ "
-                    (Term.fun
-                     "fun"
-                     (Term.basicFun
-                      [`o]
-                      []
-                      "=>"
-                      (Init.Core.«term_$_»
-                       (Term.app `Option.recOn [`o `rfl])
-                       " $ "
-                       (Term.fun
-                        "fun"
-                        (Term.basicFun
-                         [`a]
-                         []
-                         "=>"
-                         (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))))))))))]
+                    [(Term.fun
+                      "fun"
+                      (Term.basicFun
+                       [`o]
+                       []
+                       "=>"
+                       (Term.app
+                        (Term.app `Option.recOn [`o `rfl])
+                        [(Term.fun
+                          "fun"
+                          (Term.basicFun
+                           [`a]
+                           []
+                           "=>"
+                           (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))])))))]
               (Term.optEllipsis [])
               []
               "}")))])))
@@ -278,24 +275,22 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                  [`X]
                  []
                  "=>"
-                 (Init.Core.«term_$_»
+                 («term_<|_»
                   (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-                  " $ "
-                  (Init.Core.«term_$_»
+                  "<|"
+                  (Term.app
                    `funext
-                   " $ "
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`o]
-                     []
-                     "=>"
-                     (Init.Core.«term_$_»
-                      (Term.app `Option.recOn [`o `rfl])
-                      " $ "
-                      (Term.fun
-                       "fun"
-                       (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))))))))))
+                   [(Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`o]
+                      []
+                      "=>"
+                      (Term.app
+                       (Term.app `Option.recOn [`o `rfl])
+                       [(Term.fun
+                         "fun"
+                         (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
               ","
               (Term.structInstField
                (Term.structInstLVal `map_comp' [])
@@ -306,28 +301,26 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                  [`X `Y `Z `f `g]
                  []
                  "=>"
-                 (Init.Core.«term_$_»
+                 («term_<|_»
                   (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-                  " $ "
-                  (Init.Core.«term_$_»
+                  "<|"
+                  (Term.app
                    `funext
-                   " $ "
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`o]
-                     []
-                     "=>"
-                     (Init.Core.«term_$_»
-                      (Term.app `Option.recOn [`o `rfl])
-                      " $ "
-                      (Term.fun
-                       "fun"
-                       (Term.basicFun
-                        [`a]
-                        []
-                        "=>"
-                        (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))))))))))]
+                   [(Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`o]
+                      []
+                      "=>"
+                      (Term.app
+                       (Term.app `Option.recOn [`o `rfl])
+                       [(Term.fun
+                         "fun"
+                         (Term.basicFun
+                          [`a]
+                          []
+                          "=>"
+                          (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))])))))]
              (Term.optEllipsis [])
              []
              "}")))])))
@@ -375,24 +368,22 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
              [`X]
              []
              "=>"
-             (Init.Core.«term_$_»
+             («term_<|_»
               (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-              " $ "
-              (Init.Core.«term_$_»
+              "<|"
+              (Term.app
                `funext
-               " $ "
-               (Term.fun
-                "fun"
-                (Term.basicFun
-                 [`o]
-                 []
-                 "=>"
-                 (Init.Core.«term_$_»
-                  (Term.app `Option.recOn [`o `rfl])
-                  " $ "
-                  (Term.fun
-                   "fun"
-                   (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))))))))))
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`o]
+                  []
+                  "=>"
+                  (Term.app
+                   (Term.app `Option.recOn [`o `rfl])
+                   [(Term.fun
+                     "fun"
+                     (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
           ","
           (Term.structInstField
            (Term.structInstLVal `map_comp' [])
@@ -403,28 +394,26 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
              [`X `Y `Z `f `g]
              []
              "=>"
-             (Init.Core.«term_$_»
+             («term_<|_»
               (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-              " $ "
-              (Init.Core.«term_$_»
+              "<|"
+              (Term.app
                `funext
-               " $ "
-               (Term.fun
-                "fun"
-                (Term.basicFun
-                 [`o]
-                 []
-                 "=>"
-                 (Init.Core.«term_$_»
-                  (Term.app `Option.recOn [`o `rfl])
-                  " $ "
-                  (Term.fun
-                   "fun"
-                   (Term.basicFun
-                    [`a]
-                    []
-                    "=>"
-                    (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))))))))))]
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`o]
+                  []
+                  "=>"
+                  (Term.app
+                   (Term.app `Option.recOn [`o `rfl])
+                   [(Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`a]
+                      []
+                      "=>"
+                      (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))])))))]
          (Term.optEllipsis [])
          []
          "}")))
@@ -468,22 +457,22 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
             [`X]
             []
             "=>"
-            (Init.Core.«term_$_»
+            («term_<|_»
              (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-             " $ "
-             (Init.Core.«term_$_»
+             "<|"
+             (Term.app
               `funext
-              " $ "
-              (Term.fun
-               "fun"
-               (Term.basicFun
-                [`o]
-                []
-                "=>"
-                (Init.Core.«term_$_»
-                 (Term.app `Option.recOn [`o `rfl])
-                 " $ "
-                 (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))))))))))
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`o]
+                 []
+                 "=>"
+                 (Term.app
+                  (Term.app `Option.recOn [`o `rfl])
+                  [(Term.fun
+                    "fun"
+                    (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
          ","
          (Term.structInstField
           (Term.structInstLVal `map_comp' [])
@@ -494,28 +483,26 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
             [`X `Y `Z `f `g]
             []
             "=>"
-            (Init.Core.«term_$_»
+            («term_<|_»
              (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-             " $ "
-             (Init.Core.«term_$_»
+             "<|"
+             (Term.app
               `funext
-              " $ "
-              (Term.fun
-               "fun"
-               (Term.basicFun
-                [`o]
-                []
-                "=>"
-                (Init.Core.«term_$_»
-                 (Term.app `Option.recOn [`o `rfl])
-                 " $ "
-                 (Term.fun
-                  "fun"
-                  (Term.basicFun
-                   [`a]
-                   []
-                   "=>"
-                   (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))))))))))]
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`o]
+                 []
+                 "=>"
+                 (Term.app
+                  (Term.app `Option.recOn [`o `rfl])
+                  [(Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`a]
+                     []
+                     "=>"
+                     (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))])))))]
         (Term.optEllipsis [])
         []
         "}"))
@@ -555,22 +542,22 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
            [`X]
            []
            "=>"
-           (Init.Core.«term_$_»
+           («term_<|_»
             (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-            " $ "
-            (Init.Core.«term_$_»
+            "<|"
+            (Term.app
              `funext
-             " $ "
-             (Term.fun
-              "fun"
-              (Term.basicFun
-               [`o]
-               []
-               "=>"
-               (Init.Core.«term_$_»
-                (Term.app `Option.recOn [`o `rfl])
-                " $ "
-                (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))))))))))
+             [(Term.fun
+               "fun"
+               (Term.basicFun
+                [`o]
+                []
+                "=>"
+                (Term.app
+                 (Term.app `Option.recOn [`o `rfl])
+                 [(Term.fun
+                   "fun"
+                   (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))])))))
         ","
         (Term.structInstField
          (Term.structInstLVal `map_comp' [])
@@ -581,28 +568,26 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
            [`X `Y `Z `f `g]
            []
            "=>"
-           (Init.Core.«term_$_»
+           («term_<|_»
             (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-            " $ "
-            (Init.Core.«term_$_»
+            "<|"
+            (Term.app
              `funext
-             " $ "
-             (Term.fun
-              "fun"
-              (Term.basicFun
-               [`o]
-               []
-               "=>"
-               (Init.Core.«term_$_»
-                (Term.app `Option.recOn [`o `rfl])
-                " $ "
-                (Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`a]
-                  []
-                  "=>"
-                  (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))))))))))]
+             [(Term.fun
+               "fun"
+               (Term.basicFun
+                [`o]
+                []
+                "=>"
+                (Term.app
+                 (Term.app `Option.recOn [`o `rfl])
+                 [(Term.fun
+                   "fun"
+                   (Term.basicFun
+                    [`a]
+                    []
+                    "=>"
+                    (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))])))))]
        (Term.optEllipsis [])
        []
        "}")
@@ -614,59 +599,55 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
         [`X `Y `Z `f `g]
         []
         "=>"
-        (Init.Core.«term_$_»
+        («term_<|_»
          (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-         " $ "
-         (Init.Core.«term_$_»
+         "<|"
+         (Term.app
           `funext
-          " $ "
-          (Term.fun
-           "fun"
-           (Term.basicFun
-            [`o]
-            []
-            "=>"
-            (Init.Core.«term_$_»
-             (Term.app `Option.recOn [`o `rfl])
-             " $ "
-             (Term.fun
-              "fun"
-              (Term.basicFun [`a] [] "=>" (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")]))))))))))
+          [(Term.fun
+            "fun"
+            (Term.basicFun
+             [`o]
+             []
+             "=>"
+             (Term.app
+              (Term.app `Option.recOn [`o `rfl])
+              [(Term.fun
+                "fun"
+                (Term.basicFun [`a] [] "=>" (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      («term_<|_»
        (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-       " $ "
-       (Init.Core.«term_$_»
+       "<|"
+       (Term.app
         `funext
-        " $ "
-        (Term.fun
+        [(Term.fun
+          "fun"
+          (Term.basicFun
+           [`o]
+           []
+           "=>"
+           (Term.app
+            (Term.app `Option.recOn [`o `rfl])
+            [(Term.fun
+              "fun"
+              (Term.basicFun [`a] [] "=>" (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `funext
+       [(Term.fun
          "fun"
          (Term.basicFun
           [`o]
           []
           "=>"
-          (Init.Core.«term_$_»
+          (Term.app
            (Term.app `Option.recOn [`o `rfl])
-           " $ "
-           (Term.fun
-            "fun"
-            (Term.basicFun [`a] [] "=>" (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")]))))))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
-       `funext
-       " $ "
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`o]
-         []
-         "=>"
-         (Init.Core.«term_$_»
-          (Term.app `Option.recOn [`o `rfl])
-          " $ "
-          (Term.fun
-           "fun"
-           (Term.basicFun [`a] [] "=>" (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))))))
+           [(Term.fun
+             "fun"
+             (Term.basicFun [`a] [] "=>" (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -674,17 +655,19 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
         [`o]
         []
         "=>"
-        (Init.Core.«term_$_»
+        (Term.app
          (Term.app `Option.recOn [`o `rfl])
-         " $ "
-         (Term.fun
-          "fun"
-          (Term.basicFun [`a] [] "=>" (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")]))))))
+         [(Term.fun
+           "fun"
+           (Term.basicFun [`a] [] "=>" (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      (Term.app
        (Term.app `Option.recOn [`o `rfl])
-       " $ "
-       (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")]))))
+       [(Term.fun
+         "fun"
+         (Term.basicFun [`a] [] "=>" (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.bind_to_option [(Term.hole "_") (Term.hole "_")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -709,8 +692,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.app `Option.recOn [`o `rfl])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
@@ -725,20 +708,21 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.recOn
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `Option.recOn [`o `rfl]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `o
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `funext
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
@@ -753,8 +737,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `PointedCat.Hom.ext
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
@@ -794,53 +778,49 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
         [`X]
         []
         "=>"
-        (Init.Core.«term_$_»
+        («term_<|_»
          (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-         " $ "
-         (Init.Core.«term_$_»
+         "<|"
+         (Term.app
           `funext
-          " $ "
-          (Term.fun
-           "fun"
-           (Term.basicFun
-            [`o]
-            []
-            "=>"
-            (Init.Core.«term_$_»
-             (Term.app `Option.recOn [`o `rfl])
-             " $ "
-             (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")]))))))))))
+          [(Term.fun
+            "fun"
+            (Term.basicFun
+             [`o]
+             []
+             "=>"
+             (Term.app
+              (Term.app `Option.recOn [`o `rfl])
+              [(Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      («term_<|_»
        (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-       " $ "
-       (Init.Core.«term_$_»
+       "<|"
+       (Term.app
         `funext
-        " $ "
-        (Term.fun
+        [(Term.fun
+          "fun"
+          (Term.basicFun
+           [`o]
+           []
+           "=>"
+           (Term.app
+            (Term.app `Option.recOn [`o `rfl])
+            [(Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `funext
+       [(Term.fun
          "fun"
          (Term.basicFun
           [`o]
           []
           "=>"
-          (Init.Core.«term_$_»
+          (Term.app
            (Term.app `Option.recOn [`o `rfl])
-           " $ "
-           (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")]))))))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
-       `funext
-       " $ "
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`o]
-         []
-         "=>"
-         (Init.Core.«term_$_»
-          (Term.app `Option.recOn [`o `rfl])
-          " $ "
-          (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))))))
+           [(Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -848,15 +828,15 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
         [`o]
         []
         "=>"
-        (Init.Core.«term_$_»
+        (Term.app
          (Term.app `Option.recOn [`o `rfl])
-         " $ "
-         (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")]))))))
+         [(Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      (Term.app
        (Term.app `Option.recOn [`o `rfl])
-       " $ "
-       (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")]))))
+       [(Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `Part.some_to_option [(Term.hole "_")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -876,8 +856,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.app `Option.recOn [`o `rfl])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
@@ -892,20 +872,21 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.recOn
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `Option.recOn [`o `rfl]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `o
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `funext
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
@@ -920,8 +901,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `PointedCat.Hom.ext
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
@@ -1079,15 +1060,14 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                 ,
                 map_id'
                   :=
-                  fun
-                    X => PointedCat.Hom.ext _ _ $ funext $ fun o => Option.recOn o rfl $ fun a => Part.some_to_option _
+                  fun X => PointedCat.Hom.ext _ _ <| funext fun o => Option.recOn o rfl fun a => Part.some_to_option _
                 ,
                 map_comp'
                   :=
                   fun
                     X Y Z f g
                       =>
-                      PointedCat.Hom.ext _ _ $ funext $ fun o => Option.recOn o rfl $ fun a => Part.bind_to_option _ _
+                      PointedCat.Hom.ext _ _ <| funext fun o => Option.recOn o rfl fun a => Part.bind_to_option _ _
               }
 #align PartialFun_to_Pointed partialFunToPointed
 
@@ -1131,7 +1111,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
               `equivalence.mk
               [`partialFunToPointed
                `pointedToPartialFun
-               (Init.Core.«term_$_»
+               (Term.app
                 (Term.app
                  `nat_iso.of_components
                  [(Term.fun
@@ -1165,9 +1145,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                            [`a]
                            []
                            "=>"
-                           (Init.Core.«term_$_»
+                           («term_<|_»
                             `get
-                            " $ "
+                            "<|"
                             (Term.app
                              (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
                              [(Term.proj `a "." (fieldIdx "2"))])))))
@@ -1208,81 +1188,79 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                        (Term.optEllipsis [])
                        []
                        "}")])))])
-                " $ "
-                (Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`X `Y `f]
-                  []
-                  "=>"
-                  (Init.Core.«term_$_»
-                   `Pfun.ext
-                   " $ "
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`a `b]
-                     []
-                     "=>"
-                     (Term.byTactic
-                      "by"
-                      (Tactic.tacticSeq
-                       (Tactic.tacticSeq1Indented
-                        [(Tactic.unfoldProjs "unfold_projs" [] [])
-                         []
-                         (Tactic.dsimp "dsimp" [] [] [] [] [])
-                         []
-                         (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
-                         []
-                         (Tactic.refine'
-                          "refine'"
-                          (Term.app
-                           (Term.proj (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) "." `trans)
-                           [`pfun.mem_to_subtype_iff.symm]))
-                         []
-                         (Std.Tactic.obtain
-                          "obtain"
-                          [(Std.Tactic.RCases.rcasesPatMed
-                            [(Std.Tactic.RCases.rcasesPat.tuple
-                              "⟨"
-                              [(Std.Tactic.RCases.rcasesPatLo
-                                (Std.Tactic.RCases.rcasesPatMed
-                                 [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
-                                [])
-                               ","
-                               (Std.Tactic.RCases.rcasesPatLo
-                                (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
-                                [])]
-                              "⟩")])]
-                          []
-                          [":=" [`b]])
-                         []
-                         («tactic___;_»
-                          (cdotTk (patternIgnore (token.«·» "·")))
-                          [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
-                         []
-                         (Tactic.dsimp "dsimp" [] [] [] [] [])
-                         []
-                         (Mathlib.Tactic.tacticSimp_rw__
-                          "simp_rw"
-                          (Tactic.rwRuleSeq
-                           "["
-                           [(Tactic.rwRule [] `Part.mem_some_iff)
-                            ","
-                            (Tactic.rwRule [] `Subtype.mk_eq_mk)
-                            ","
-                            (Tactic.rwRule [] `exists_prop)
-                            ","
-                            (Tactic.rwRule [] `some_inj)
-                            ","
-                            (Tactic.rwRule [] `exists_eq_right')]
-                           "]")
-                          [])
-                         []
-                         (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
-                         []
-                         (Tactic.exact "exact" `eq_comm)])))))))))
-               (Init.Core.«term_$_»
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`X `Y `f]
+                   []
+                   "=>"
+                   (Term.app
+                    `Pfun.ext
+                    [(Term.fun
+                      "fun"
+                      (Term.basicFun
+                       [`a `b]
+                       []
+                       "=>"
+                       (Term.byTactic
+                        "by"
+                        (Tactic.tacticSeq
+                         (Tactic.tacticSeq1Indented
+                          [(Tactic.unfoldProjs "unfold_projs" [] [])
+                           []
+                           (Tactic.dsimp "dsimp" [] [] [] [] [])
+                           []
+                           (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
+                           []
+                           (Tactic.refine'
+                            "refine'"
+                            (Term.app
+                             (Term.proj (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) "." `trans)
+                             [`pfun.mem_to_subtype_iff.symm]))
+                           []
+                           (Std.Tactic.obtain
+                            "obtain"
+                            [(Std.Tactic.RCases.rcasesPatMed
+                              [(Std.Tactic.RCases.rcasesPat.tuple
+                                "⟨"
+                                [(Std.Tactic.RCases.rcasesPatLo
+                                  (Std.Tactic.RCases.rcasesPatMed
+                                   [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
+                                  [])
+                                 ","
+                                 (Std.Tactic.RCases.rcasesPatLo
+                                  (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
+                                  [])]
+                                "⟩")])]
+                            []
+                            [":=" [`b]])
+                           []
+                           («tactic___;_»
+                            (cdotTk (patternIgnore (token.«·» "·")))
+                            [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
+                           []
+                           (Tactic.dsimp "dsimp" [] [] [] [] [])
+                           []
+                           (Mathlib.Tactic.tacticSimp_rw__
+                            "simp_rw"
+                            (Tactic.rwRuleSeq
+                             "["
+                             [(Tactic.rwRule [] `Part.mem_some_iff)
+                              ","
+                              (Tactic.rwRule [] `Subtype.mk_eq_mk)
+                              ","
+                              (Tactic.rwRule [] `exists_prop)
+                              ","
+                              (Tactic.rwRule [] `some_inj)
+                              ","
+                              (Tactic.rwRule [] `exists_eq_right')]
+                             "]")
+                            [])
+                           []
+                           (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
+                           []
+                           (Tactic.exact "exact" `eq_comm)])))))])))])
+               (Term.app
                 (Term.app
                  `nat_iso.of_components
                  [(Term.fun
@@ -1314,7 +1292,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                             "if"
                             (Lean.binderIdent `h)
                             ":"
-                            (Init.Core.«term_=_» `a " = " (Term.proj `X "." `point))
+                            («term_=_» `a "=" (Term.proj `X "." `point))
                             "then"
                             `none
                             "else"
@@ -1329,35 +1307,34 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                            [`a]
                            []
                            "=>"
-                           (Init.Core.«term_$_»
+                           (Term.app
                             (Term.app `Option.recOn [`a (Term.app `dif_pos [`rfl])])
-                            " $ "
-                            (Term.fun
-                             "fun"
-                             (Term.basicFun
-                              [`a]
-                              []
-                              "=>"
-                              (Init.Core.«term_$_»
-                               (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
-                               " $ "
-                               (Term.byTactic
-                                "by"
-                                (Tactic.tacticSeq
-                                 (Tactic.tacticSeq1Indented
-                                  [(Tactic.simp
-                                    "simp"
-                                    []
-                                    []
-                                    ["only"]
-                                    ["["
-                                     [(Tactic.simpLemma [] [] `Option.elim')
-                                      ","
-                                      (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
-                                      ","
-                                      (Tactic.simpLemma [] [] `Subtype.coe_eta)]
-                                     "]"]
-                                    [])]))))))))))
+                            [(Term.fun
+                              "fun"
+                              (Term.basicFun
+                               [`a]
+                               []
+                               "=>"
+                               («term_<|_»
+                                (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
+                                "<|"
+                                (Term.byTactic
+                                 "by"
+                                 (Tactic.tacticSeq
+                                  (Tactic.tacticSeq1Indented
+                                   [(Tactic.simp
+                                     "simp"
+                                     []
+                                     []
+                                     ["only"]
+                                     ["["
+                                      [(Tactic.simpLemma [] [] `Option.elim')
+                                       ","
+                                       (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
+                                       ","
+                                       (Tactic.simpLemma [] [] `Subtype.coe_eta)]
+                                      "]"]
+                                     [])]))))))]))))
                         ","
                         (Term.structInstField
                          (Term.structInstLVal `right_inv [])
@@ -1374,13 +1351,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                              (Tactic.tacticSeq1Indented
                               [(Tactic.change
                                 "change"
-                                (Init.Core.«term_=_»
+                                («term_=_»
                                  (Term.app
                                   `Option.elim'
                                   [(Term.hole "_")
                                    (Term.hole "_")
                                    (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
-                                 " = "
+                                 "="
                                  (Term.hole "_"))
                                 [])
                                []
@@ -1398,67 +1375,64 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                        []
                        "}")
                       `rfl])))])
-                " $ "
-                (Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`X `Y `f]
-                  []
-                  "=>"
-                  (Init.Core.«term_$_»
-                   (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-                   " $ "
-                   (Init.Core.«term_$_»
-                    `funext
-                    " $ "
-                    (Term.fun
-                     "fun"
-                     (Term.basicFun
-                      [`a]
-                      []
-                      "=>"
-                      (Init.Core.«term_$_»
-                       (Term.app `Option.recOn [`a `f.map_point.symm])
-                       " $ "
-                       (Term.fun
-                        "fun"
-                        (Term.basicFun
-                         [`a]
-                         []
-                         "=>"
-                         (Term.byTactic
-                          "by"
-                          (Tactic.tacticSeq
-                           (Tactic.tacticSeq1Indented
-                            [(Tactic.unfoldProjs "unfold_projs" [] [])
-                             []
-                             (Tactic.dsimp "dsimp" [] [] [] [] [])
-                             []
-                             (Tactic.change
-                              "change"
-                              (Init.Core.«term_=_»
-                               (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
-                               " = "
-                               (Term.hole "_"))
-                              [])
-                             []
-                             (Tactic.rwSeq
-                              "rw"
-                              []
-                              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]")
-                              [])
-                             []
-                             (Mathlib.Tactic.splitIfs "split_ifs" [] [])
-                             []
-                             («tactic___;_»
-                              (cdotTk (patternIgnore (token.«·» "·")))
-                              [(group (Tactic.tacticRfl "rfl") [])])
-                             []
-                             («tactic___;_»
-                              (cdotTk (patternIgnore (token.«·» "·")))
-                              [(group
-                                (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-                                [])])])))))))))))))])))])))
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`X `Y `f]
+                   []
+                   "=>"
+                   («term_<|_»
+                    (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
+                    "<|"
+                    (Term.app
+                     `funext
+                     [(Term.fun
+                       "fun"
+                       (Term.basicFun
+                        [`a]
+                        []
+                        "=>"
+                        (Term.app
+                         (Term.app `Option.recOn [`a `f.map_point.symm])
+                         [(Term.fun
+                           "fun"
+                           (Term.basicFun
+                            [`a]
+                            []
+                            "=>"
+                            (Term.byTactic
+                             "by"
+                             (Tactic.tacticSeq
+                              (Tactic.tacticSeq1Indented
+                               [(Tactic.unfoldProjs "unfold_projs" [] [])
+                                []
+                                (Tactic.dsimp "dsimp" [] [] [] [] [])
+                                []
+                                (Tactic.change
+                                 "change"
+                                 («term_=_»
+                                  (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                                  "="
+                                  (Term.hole "_"))
+                                 [])
+                                []
+                                (Tactic.rwSeq
+                                 "rw"
+                                 []
+                                 (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]")
+                                 [])
+                                []
+                                (Mathlib.Tactic.splitIfs "split_ifs" [] [])
+                                []
+                                («tactic___;_»
+                                 (cdotTk (patternIgnore (token.«·» "·")))
+                                 [(group (Tactic.tacticRfl "rfl") [])])
+                                []
+                                («tactic___;_»
+                                 (cdotTk (patternIgnore (token.«·» "·")))
+                                 [(group
+                                   (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
+                                   [])])])))))])))]))))])])))])))
        [])
       []
       []
@@ -1478,7 +1452,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
              `equivalence.mk
              [`partialFunToPointed
               `pointedToPartialFun
-              (Init.Core.«term_$_»
+              (Term.app
                (Term.app
                 `nat_iso.of_components
                 [(Term.fun
@@ -1512,9 +1486,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                           [`a]
                           []
                           "=>"
-                          (Init.Core.«term_$_»
+                          («term_<|_»
                            `get
-                           " $ "
+                           "<|"
                            (Term.app
                             (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
                             [(Term.proj `a "." (fieldIdx "2"))])))))
@@ -1555,81 +1529,79 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                       (Term.optEllipsis [])
                       []
                       "}")])))])
-               " $ "
-               (Term.fun
-                "fun"
-                (Term.basicFun
-                 [`X `Y `f]
-                 []
-                 "=>"
-                 (Init.Core.«term_$_»
-                  `Pfun.ext
-                  " $ "
-                  (Term.fun
-                   "fun"
-                   (Term.basicFun
-                    [`a `b]
-                    []
-                    "=>"
-                    (Term.byTactic
-                     "by"
-                     (Tactic.tacticSeq
-                      (Tactic.tacticSeq1Indented
-                       [(Tactic.unfoldProjs "unfold_projs" [] [])
-                        []
-                        (Tactic.dsimp "dsimp" [] [] [] [] [])
-                        []
-                        (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
-                        []
-                        (Tactic.refine'
-                         "refine'"
-                         (Term.app
-                          (Term.proj (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) "." `trans)
-                          [`pfun.mem_to_subtype_iff.symm]))
-                        []
-                        (Std.Tactic.obtain
-                         "obtain"
-                         [(Std.Tactic.RCases.rcasesPatMed
-                           [(Std.Tactic.RCases.rcasesPat.tuple
-                             "⟨"
-                             [(Std.Tactic.RCases.rcasesPatLo
-                               (Std.Tactic.RCases.rcasesPatMed
-                                [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
-                               [])
-                              ","
-                              (Std.Tactic.RCases.rcasesPatLo
-                               (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
-                               [])]
-                             "⟩")])]
-                         []
-                         [":=" [`b]])
-                        []
-                        («tactic___;_»
-                         (cdotTk (patternIgnore (token.«·» "·")))
-                         [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
-                        []
-                        (Tactic.dsimp "dsimp" [] [] [] [] [])
-                        []
-                        (Mathlib.Tactic.tacticSimp_rw__
-                         "simp_rw"
-                         (Tactic.rwRuleSeq
-                          "["
-                          [(Tactic.rwRule [] `Part.mem_some_iff)
-                           ","
-                           (Tactic.rwRule [] `Subtype.mk_eq_mk)
-                           ","
-                           (Tactic.rwRule [] `exists_prop)
-                           ","
-                           (Tactic.rwRule [] `some_inj)
-                           ","
-                           (Tactic.rwRule [] `exists_eq_right')]
-                          "]")
-                         [])
-                        []
-                        (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
-                        []
-                        (Tactic.exact "exact" `eq_comm)])))))))))
-              (Init.Core.«term_$_»
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`X `Y `f]
+                  []
+                  "=>"
+                  (Term.app
+                   `Pfun.ext
+                   [(Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`a `b]
+                      []
+                      "=>"
+                      (Term.byTactic
+                       "by"
+                       (Tactic.tacticSeq
+                        (Tactic.tacticSeq1Indented
+                         [(Tactic.unfoldProjs "unfold_projs" [] [])
+                          []
+                          (Tactic.dsimp "dsimp" [] [] [] [] [])
+                          []
+                          (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
+                          []
+                          (Tactic.refine'
+                           "refine'"
+                           (Term.app
+                            (Term.proj (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) "." `trans)
+                            [`pfun.mem_to_subtype_iff.symm]))
+                          []
+                          (Std.Tactic.obtain
+                           "obtain"
+                           [(Std.Tactic.RCases.rcasesPatMed
+                             [(Std.Tactic.RCases.rcasesPat.tuple
+                               "⟨"
+                               [(Std.Tactic.RCases.rcasesPatLo
+                                 (Std.Tactic.RCases.rcasesPatMed
+                                  [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
+                                 [])
+                                ","
+                                (Std.Tactic.RCases.rcasesPatLo
+                                 (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
+                                 [])]
+                               "⟩")])]
+                           []
+                           [":=" [`b]])
+                          []
+                          («tactic___;_»
+                           (cdotTk (patternIgnore (token.«·» "·")))
+                           [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
+                          []
+                          (Tactic.dsimp "dsimp" [] [] [] [] [])
+                          []
+                          (Mathlib.Tactic.tacticSimp_rw__
+                           "simp_rw"
+                           (Tactic.rwRuleSeq
+                            "["
+                            [(Tactic.rwRule [] `Part.mem_some_iff)
+                             ","
+                             (Tactic.rwRule [] `Subtype.mk_eq_mk)
+                             ","
+                             (Tactic.rwRule [] `exists_prop)
+                             ","
+                             (Tactic.rwRule [] `some_inj)
+                             ","
+                             (Tactic.rwRule [] `exists_eq_right')]
+                            "]")
+                           [])
+                          []
+                          (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
+                          []
+                          (Tactic.exact "exact" `eq_comm)])))))])))])
+              (Term.app
                (Term.app
                 `nat_iso.of_components
                 [(Term.fun
@@ -1661,7 +1633,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                            "if"
                            (Lean.binderIdent `h)
                            ":"
-                           (Init.Core.«term_=_» `a " = " (Term.proj `X "." `point))
+                           («term_=_» `a "=" (Term.proj `X "." `point))
                            "then"
                            `none
                            "else"
@@ -1676,35 +1648,34 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                           [`a]
                           []
                           "=>"
-                          (Init.Core.«term_$_»
+                          (Term.app
                            (Term.app `Option.recOn [`a (Term.app `dif_pos [`rfl])])
-                           " $ "
-                           (Term.fun
-                            "fun"
-                            (Term.basicFun
-                             [`a]
-                             []
-                             "=>"
-                             (Init.Core.«term_$_»
-                              (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
-                              " $ "
-                              (Term.byTactic
-                               "by"
-                               (Tactic.tacticSeq
-                                (Tactic.tacticSeq1Indented
-                                 [(Tactic.simp
-                                   "simp"
-                                   []
-                                   []
-                                   ["only"]
-                                   ["["
-                                    [(Tactic.simpLemma [] [] `Option.elim')
-                                     ","
-                                     (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
-                                     ","
-                                     (Tactic.simpLemma [] [] `Subtype.coe_eta)]
-                                    "]"]
-                                   [])]))))))))))
+                           [(Term.fun
+                             "fun"
+                             (Term.basicFun
+                              [`a]
+                              []
+                              "=>"
+                              («term_<|_»
+                               (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
+                               "<|"
+                               (Term.byTactic
+                                "by"
+                                (Tactic.tacticSeq
+                                 (Tactic.tacticSeq1Indented
+                                  [(Tactic.simp
+                                    "simp"
+                                    []
+                                    []
+                                    ["only"]
+                                    ["["
+                                     [(Tactic.simpLemma [] [] `Option.elim')
+                                      ","
+                                      (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
+                                      ","
+                                      (Tactic.simpLemma [] [] `Subtype.coe_eta)]
+                                     "]"]
+                                    [])]))))))]))))
                        ","
                        (Term.structInstField
                         (Term.structInstLVal `right_inv [])
@@ -1721,13 +1692,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                             (Tactic.tacticSeq1Indented
                              [(Tactic.change
                                "change"
-                               (Init.Core.«term_=_»
+                               («term_=_»
                                 (Term.app
                                  `Option.elim'
                                  [(Term.hole "_")
                                   (Term.hole "_")
                                   (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
-                                " = "
+                                "="
                                 (Term.hole "_"))
                                [])
                               []
@@ -1745,67 +1716,64 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                       []
                       "}")
                      `rfl])))])
-               " $ "
-               (Term.fun
-                "fun"
-                (Term.basicFun
-                 [`X `Y `f]
-                 []
-                 "=>"
-                 (Init.Core.«term_$_»
-                  (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-                  " $ "
-                  (Init.Core.«term_$_»
-                   `funext
-                   " $ "
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`a]
-                     []
-                     "=>"
-                     (Init.Core.«term_$_»
-                      (Term.app `Option.recOn [`a `f.map_point.symm])
-                      " $ "
-                      (Term.fun
-                       "fun"
-                       (Term.basicFun
-                        [`a]
-                        []
-                        "=>"
-                        (Term.byTactic
-                         "by"
-                         (Tactic.tacticSeq
-                          (Tactic.tacticSeq1Indented
-                           [(Tactic.unfoldProjs "unfold_projs" [] [])
-                            []
-                            (Tactic.dsimp "dsimp" [] [] [] [] [])
-                            []
-                            (Tactic.change
-                             "change"
-                             (Init.Core.«term_=_»
-                              (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
-                              " = "
-                              (Term.hole "_"))
-                             [])
-                            []
-                            (Tactic.rwSeq
-                             "rw"
-                             []
-                             (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]")
-                             [])
-                            []
-                            (Mathlib.Tactic.splitIfs "split_ifs" [] [])
-                            []
-                            («tactic___;_»
-                             (cdotTk (patternIgnore (token.«·» "·")))
-                             [(group (Tactic.tacticRfl "rfl") [])])
-                            []
-                            («tactic___;_»
-                             (cdotTk (patternIgnore (token.«·» "·")))
-                             [(group
-                               (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-                               [])])])))))))))))))])))])))
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`X `Y `f]
+                  []
+                  "=>"
+                  («term_<|_»
+                   (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
+                   "<|"
+                   (Term.app
+                    `funext
+                    [(Term.fun
+                      "fun"
+                      (Term.basicFun
+                       [`a]
+                       []
+                       "=>"
+                       (Term.app
+                        (Term.app `Option.recOn [`a `f.map_point.symm])
+                        [(Term.fun
+                          "fun"
+                          (Term.basicFun
+                           [`a]
+                           []
+                           "=>"
+                           (Term.byTactic
+                            "by"
+                            (Tactic.tacticSeq
+                             (Tactic.tacticSeq1Indented
+                              [(Tactic.unfoldProjs "unfold_projs" [] [])
+                               []
+                               (Tactic.dsimp "dsimp" [] [] [] [] [])
+                               []
+                               (Tactic.change
+                                "change"
+                                («term_=_»
+                                 (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                                 "="
+                                 (Term.hole "_"))
+                                [])
+                               []
+                               (Tactic.rwSeq
+                                "rw"
+                                []
+                                (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]")
+                                [])
+                               []
+                               (Mathlib.Tactic.splitIfs "split_ifs" [] [])
+                               []
+                               («tactic___;_»
+                                (cdotTk (patternIgnore (token.«·» "·")))
+                                [(group (Tactic.tacticRfl "rfl") [])])
+                               []
+                               («tactic___;_»
+                                (cdotTk (patternIgnore (token.«·» "·")))
+                                [(group
+                                  (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
+                                  [])])])))))])))]))))])])))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
@@ -1817,7 +1785,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
          `equivalence.mk
          [`partialFunToPointed
           `pointedToPartialFun
-          (Init.Core.«term_$_»
+          (Term.app
            (Term.app
             `nat_iso.of_components
             [(Term.fun
@@ -1851,9 +1819,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                       [`a]
                       []
                       "=>"
-                      (Init.Core.«term_$_»
+                      («term_<|_»
                        `get
-                       " $ "
+                       "<|"
                        (Term.app
                         (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
                         [(Term.proj `a "." (fieldIdx "2"))])))))
@@ -1894,17 +1862,661 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   (Term.optEllipsis [])
                   []
                   "}")])))])
-           " $ "
-           (Term.fun
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`X `Y `f]
+              []
+              "=>"
+              (Term.app
+               `Pfun.ext
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`a `b]
+                  []
+                  "=>"
+                  (Term.byTactic
+                   "by"
+                   (Tactic.tacticSeq
+                    (Tactic.tacticSeq1Indented
+                     [(Tactic.unfoldProjs "unfold_projs" [] [])
+                      []
+                      (Tactic.dsimp "dsimp" [] [] [] [] [])
+                      []
+                      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
+                      []
+                      (Tactic.refine'
+                       "refine'"
+                       (Term.app
+                        (Term.proj (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) "." `trans)
+                        [`pfun.mem_to_subtype_iff.symm]))
+                      []
+                      (Std.Tactic.obtain
+                       "obtain"
+                       [(Std.Tactic.RCases.rcasesPatMed
+                         [(Std.Tactic.RCases.rcasesPat.tuple
+                           "⟨"
+                           [(Std.Tactic.RCases.rcasesPatLo
+                             (Std.Tactic.RCases.rcasesPatMed
+                              [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
+                             [])
+                            ","
+                            (Std.Tactic.RCases.rcasesPatLo
+                             (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
+                             [])]
+                           "⟩")])]
+                       []
+                       [":=" [`b]])
+                      []
+                      («tactic___;_»
+                       (cdotTk (patternIgnore (token.«·» "·")))
+                       [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
+                      []
+                      (Tactic.dsimp "dsimp" [] [] [] [] [])
+                      []
+                      (Mathlib.Tactic.tacticSimp_rw__
+                       "simp_rw"
+                       (Tactic.rwRuleSeq
+                        "["
+                        [(Tactic.rwRule [] `Part.mem_some_iff)
+                         ","
+                         (Tactic.rwRule [] `Subtype.mk_eq_mk)
+                         ","
+                         (Tactic.rwRule [] `exists_prop)
+                         ","
+                         (Tactic.rwRule [] `some_inj)
+                         ","
+                         (Tactic.rwRule [] `exists_eq_right')]
+                        "]")
+                       [])
+                      []
+                      (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
+                      []
+                      (Tactic.exact "exact" `eq_comm)])))))])))])
+          (Term.app
+           (Term.app
+            `nat_iso.of_components
+            [(Term.fun
+              "fun"
+              (Term.basicFun
+               [`X]
+               []
+               "=>"
+               (Term.app
+                `PointedCat.Iso.mk
+                [(Term.structInst
+                  "{"
+                  []
+                  [(Term.structInstField
+                    (Term.structInstLVal `toFun [])
+                    ":="
+                    (Term.app `Option.elim' [(Term.proj `X "." `point) `Subtype.val]))
+                   ","
+                   (Term.structInstField
+                    (Term.structInstLVal `invFun [])
+                    ":="
+                    (Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`a]
+                      []
+                      "=>"
+                      (termDepIfThenElse
+                       "if"
+                       (Lean.binderIdent `h)
+                       ":"
+                       («term_=_» `a "=" (Term.proj `X "." `point))
+                       "then"
+                       `none
+                       "else"
+                       (Term.app `some [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
+                   ","
+                   (Term.structInstField
+                    (Term.structInstLVal `left_inv [])
+                    ":="
+                    (Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`a]
+                      []
+                      "=>"
+                      (Term.app
+                       (Term.app `Option.recOn [`a (Term.app `dif_pos [`rfl])])
+                       [(Term.fun
+                         "fun"
+                         (Term.basicFun
+                          [`a]
+                          []
+                          "=>"
+                          («term_<|_»
+                           (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
+                           "<|"
+                           (Term.byTactic
+                            "by"
+                            (Tactic.tacticSeq
+                             (Tactic.tacticSeq1Indented
+                              [(Tactic.simp
+                                "simp"
+                                []
+                                []
+                                ["only"]
+                                ["["
+                                 [(Tactic.simpLemma [] [] `Option.elim')
+                                  ","
+                                  (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
+                                  ","
+                                  (Tactic.simpLemma [] [] `Subtype.coe_eta)]
+                                 "]"]
+                                [])]))))))]))))
+                   ","
+                   (Term.structInstField
+                    (Term.structInstLVal `right_inv [])
+                    ":="
+                    (Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`a]
+                      []
+                      "=>"
+                      (Term.byTactic
+                       "by"
+                       (Tactic.tacticSeq
+                        (Tactic.tacticSeq1Indented
+                         [(Tactic.change
+                           "change"
+                           («term_=_»
+                            (Term.app
+                             `Option.elim'
+                             [(Term.hole "_")
+                              (Term.hole "_")
+                              (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
+                            "="
+                            (Term.hole "_"))
+                           [])
+                          []
+                          (Mathlib.Tactic.splitIfs "split_ifs" [] [])
+                          []
+                          («tactic___;_»
+                           (cdotTk (patternIgnore (token.«·» "·")))
+                           [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
+                            (group (Tactic.tacticRfl "rfl") [])])
+                          []
+                          («tactic___;_»
+                           (cdotTk (patternIgnore (token.«·» "·")))
+                           [(group (Tactic.tacticRfl "rfl") [])])]))))))]
+                  (Term.optEllipsis [])
+                  []
+                  "}")
+                 `rfl])))])
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`X `Y `f]
+              []
+              "=>"
+              («term_<|_»
+               (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
+               "<|"
+               (Term.app
+                `funext
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`a]
+                   []
+                   "=>"
+                   (Term.app
+                    (Term.app `Option.recOn [`a `f.map_point.symm])
+                    [(Term.fun
+                      "fun"
+                      (Term.basicFun
+                       [`a]
+                       []
+                       "=>"
+                       (Term.byTactic
+                        "by"
+                        (Tactic.tacticSeq
+                         (Tactic.tacticSeq1Indented
+                          [(Tactic.unfoldProjs "unfold_projs" [] [])
+                           []
+                           (Tactic.dsimp "dsimp" [] [] [] [] [])
+                           []
+                           (Tactic.change
+                            "change"
+                            («term_=_»
+                             (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                             "="
+                             (Term.hole "_"))
+                            [])
+                           []
+                           (Tactic.rwSeq
+                            "rw"
+                            []
+                            (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]")
+                            [])
+                           []
+                           (Mathlib.Tactic.splitIfs "split_ifs" [] [])
+                           []
+                           («tactic___;_»
+                            (cdotTk (patternIgnore (token.«·» "·")))
+                            [(group (Tactic.tacticRfl "rfl") [])])
+                           []
+                           («tactic___;_»
+                            (cdotTk (patternIgnore (token.«·» "·")))
+                            [(group
+                              (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
+                              [])])])))))])))]))))])])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.app
+        `equivalence.mk
+        [`partialFunToPointed
+         `pointedToPartialFun
+         (Term.app
+          (Term.app
+           `nat_iso.of_components
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`X]
+              []
+              "=>"
+              (Term.app
+               `PartialFunCat.Iso.mk
+               [(Term.structInst
+                 "{"
+                 []
+                 [(Term.structInstField
+                   (Term.structInstLVal `toFun [])
+                   ":="
+                   (Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`a]
+                     []
+                     "=>"
+                     (Term.anonymousCtor "⟨" [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])] "⟩"))))
+                  ","
+                  (Term.structInstField
+                   (Term.structInstLVal `invFun [])
+                   ":="
+                   (Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`a]
+                     []
+                     "=>"
+                     («term_<|_»
+                      `get
+                      "<|"
+                      (Term.app
+                       (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
+                       [(Term.proj `a "." (fieldIdx "2"))])))))
+                  ","
+                  (Term.structInstField
+                   (Term.structInstLVal `left_inv [])
+                   ":="
+                   (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
+                  ","
+                  (Term.structInstField
+                   (Term.structInstLVal `right_inv [])
+                   ":="
+                   (Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`a]
+                     []
+                     "=>"
+                     (Term.byTactic
+                      "by"
+                      (Tactic.tacticSeq
+                       (Tactic.tacticSeq1Indented
+                        [(Tactic.simp
+                          "simp"
+                          []
+                          []
+                          ["only"]
+                          ["["
+                           [(Tactic.simpLemma [] [] `Subtype.val_eq_coe)
+                            ","
+                            (Tactic.simpLemma [] [] `some_get)
+                            ","
+                            (Tactic.simpLemma [] [] `Subtype.coe_eta)]
+                           "]"]
+                          [])]))))))]
+                 (Term.optEllipsis [])
+                 []
+                 "}")])))])
+          [(Term.fun
             "fun"
             (Term.basicFun
              [`X `Y `f]
              []
              "=>"
-             (Init.Core.«term_$_»
+             (Term.app
               `Pfun.ext
-              " $ "
-              (Term.fun
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`a `b]
+                 []
+                 "=>"
+                 (Term.byTactic
+                  "by"
+                  (Tactic.tacticSeq
+                   (Tactic.tacticSeq1Indented
+                    [(Tactic.unfoldProjs "unfold_projs" [] [])
+                     []
+                     (Tactic.dsimp "dsimp" [] [] [] [] [])
+                     []
+                     (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
+                     []
+                     (Tactic.refine'
+                      "refine'"
+                      (Term.app
+                       (Term.proj (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) "." `trans)
+                       [`pfun.mem_to_subtype_iff.symm]))
+                     []
+                     (Std.Tactic.obtain
+                      "obtain"
+                      [(Std.Tactic.RCases.rcasesPatMed
+                        [(Std.Tactic.RCases.rcasesPat.tuple
+                          "⟨"
+                          [(Std.Tactic.RCases.rcasesPatLo
+                            (Std.Tactic.RCases.rcasesPatMed
+                             [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
+                            [])
+                           ","
+                           (Std.Tactic.RCases.rcasesPatLo
+                            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
+                            [])]
+                          "⟩")])]
+                      []
+                      [":=" [`b]])
+                     []
+                     («tactic___;_»
+                      (cdotTk (patternIgnore (token.«·» "·")))
+                      [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
+                     []
+                     (Tactic.dsimp "dsimp" [] [] [] [] [])
+                     []
+                     (Mathlib.Tactic.tacticSimp_rw__
+                      "simp_rw"
+                      (Tactic.rwRuleSeq
+                       "["
+                       [(Tactic.rwRule [] `Part.mem_some_iff)
+                        ","
+                        (Tactic.rwRule [] `Subtype.mk_eq_mk)
+                        ","
+                        (Tactic.rwRule [] `exists_prop)
+                        ","
+                        (Tactic.rwRule [] `some_inj)
+                        ","
+                        (Tactic.rwRule [] `exists_eq_right')]
+                       "]")
+                      [])
+                     []
+                     (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
+                     []
+                     (Tactic.exact "exact" `eq_comm)])))))])))])
+         (Term.app
+          (Term.app
+           `nat_iso.of_components
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`X]
+              []
+              "=>"
+              (Term.app
+               `PointedCat.Iso.mk
+               [(Term.structInst
+                 "{"
+                 []
+                 [(Term.structInstField
+                   (Term.structInstLVal `toFun [])
+                   ":="
+                   (Term.app `Option.elim' [(Term.proj `X "." `point) `Subtype.val]))
+                  ","
+                  (Term.structInstField
+                   (Term.structInstLVal `invFun [])
+                   ":="
+                   (Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`a]
+                     []
+                     "=>"
+                     (termDepIfThenElse
+                      "if"
+                      (Lean.binderIdent `h)
+                      ":"
+                      («term_=_» `a "=" (Term.proj `X "." `point))
+                      "then"
+                      `none
+                      "else"
+                      (Term.app `some [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
+                  ","
+                  (Term.structInstField
+                   (Term.structInstLVal `left_inv [])
+                   ":="
+                   (Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`a]
+                     []
+                     "=>"
+                     (Term.app
+                      (Term.app `Option.recOn [`a (Term.app `dif_pos [`rfl])])
+                      [(Term.fun
+                        "fun"
+                        (Term.basicFun
+                         [`a]
+                         []
+                         "=>"
+                         («term_<|_»
+                          (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
+                          "<|"
+                          (Term.byTactic
+                           "by"
+                           (Tactic.tacticSeq
+                            (Tactic.tacticSeq1Indented
+                             [(Tactic.simp
+                               "simp"
+                               []
+                               []
+                               ["only"]
+                               ["["
+                                [(Tactic.simpLemma [] [] `Option.elim')
+                                 ","
+                                 (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
+                                 ","
+                                 (Tactic.simpLemma [] [] `Subtype.coe_eta)]
+                                "]"]
+                               [])]))))))]))))
+                  ","
+                  (Term.structInstField
+                   (Term.structInstLVal `right_inv [])
+                   ":="
+                   (Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`a]
+                     []
+                     "=>"
+                     (Term.byTactic
+                      "by"
+                      (Tactic.tacticSeq
+                       (Tactic.tacticSeq1Indented
+                        [(Tactic.change
+                          "change"
+                          («term_=_»
+                           (Term.app
+                            `Option.elim'
+                            [(Term.hole "_")
+                             (Term.hole "_")
+                             (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
+                           "="
+                           (Term.hole "_"))
+                          [])
+                         []
+                         (Mathlib.Tactic.splitIfs "split_ifs" [] [])
+                         []
+                         («tactic___;_»
+                          (cdotTk (patternIgnore (token.«·» "·")))
+                          [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
+                           (group (Tactic.tacticRfl "rfl") [])])
+                         []
+                         («tactic___;_»
+                          (cdotTk (patternIgnore (token.«·» "·")))
+                          [(group (Tactic.tacticRfl "rfl") [])])]))))))]
+                 (Term.optEllipsis [])
+                 []
+                 "}")
+                `rfl])))])
+          [(Term.fun
+            "fun"
+            (Term.basicFun
+             [`X `Y `f]
+             []
+             "=>"
+             («term_<|_»
+              (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
+              "<|"
+              (Term.app
+               `funext
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`a]
+                  []
+                  "=>"
+                  (Term.app
+                   (Term.app `Option.recOn [`a `f.map_point.symm])
+                   [(Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`a]
+                      []
+                      "=>"
+                      (Term.byTactic
+                       "by"
+                       (Tactic.tacticSeq
+                        (Tactic.tacticSeq1Indented
+                         [(Tactic.unfoldProjs "unfold_projs" [] [])
+                          []
+                          (Tactic.dsimp "dsimp" [] [] [] [] [])
+                          []
+                          (Tactic.change
+                           "change"
+                           («term_=_»
+                            (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                            "="
+                            (Term.hole "_"))
+                           [])
+                          []
+                          (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
+                          []
+                          (Mathlib.Tactic.splitIfs "split_ifs" [] [])
+                          []
+                          («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+                          []
+                          («tactic___;_»
+                           (cdotTk (patternIgnore (token.«·» "·")))
+                           [(group
+                             (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
+                             [])])])))))])))]))))])]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `equivalence.mk
+       [`partialFunToPointed
+        `pointedToPartialFun
+        (Term.app
+         (Term.app
+          `nat_iso.of_components
+          [(Term.fun
+            "fun"
+            (Term.basicFun
+             [`X]
+             []
+             "=>"
+             (Term.app
+              `PartialFunCat.Iso.mk
+              [(Term.structInst
+                "{"
+                []
+                [(Term.structInstField
+                  (Term.structInstLVal `toFun [])
+                  ":="
+                  (Term.fun
+                   "fun"
+                   (Term.basicFun
+                    [`a]
+                    []
+                    "=>"
+                    (Term.anonymousCtor "⟨" [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])] "⟩"))))
+                 ","
+                 (Term.structInstField
+                  (Term.structInstLVal `invFun [])
+                  ":="
+                  (Term.fun
+                   "fun"
+                   (Term.basicFun
+                    [`a]
+                    []
+                    "=>"
+                    («term_<|_»
+                     `get
+                     "<|"
+                     (Term.app
+                      (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
+                      [(Term.proj `a "." (fieldIdx "2"))])))))
+                 ","
+                 (Term.structInstField
+                  (Term.structInstLVal `left_inv [])
+                  ":="
+                  (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
+                 ","
+                 (Term.structInstField
+                  (Term.structInstLVal `right_inv [])
+                  ":="
+                  (Term.fun
+                   "fun"
+                   (Term.basicFun
+                    [`a]
+                    []
+                    "=>"
+                    (Term.byTactic
+                     "by"
+                     (Tactic.tacticSeq
+                      (Tactic.tacticSeq1Indented
+                       [(Tactic.simp
+                         "simp"
+                         []
+                         []
+                         ["only"]
+                         ["["
+                          [(Tactic.simpLemma [] [] `Subtype.val_eq_coe)
+                           ","
+                           (Tactic.simpLemma [] [] `some_get)
+                           ","
+                           (Tactic.simpLemma [] [] `Subtype.coe_eta)]
+                          "]"]
+                         [])]))))))]
+                (Term.optEllipsis [])
+                []
+                "}")])))])
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`X `Y `f]
+            []
+            "=>"
+            (Term.app
+             `Pfun.ext
+             [(Term.fun
                "fun"
                (Term.basicFun
                 [`a `b]
@@ -1967,660 +2579,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                     []
                     (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
                     []
-                    (Tactic.exact "exact" `eq_comm)])))))))))
-          (Init.Core.«term_$_»
-           (Term.app
-            `nat_iso.of_components
-            [(Term.fun
-              "fun"
-              (Term.basicFun
-               [`X]
-               []
-               "=>"
-               (Term.app
-                `PointedCat.Iso.mk
-                [(Term.structInst
-                  "{"
-                  []
-                  [(Term.structInstField
-                    (Term.structInstLVal `toFun [])
-                    ":="
-                    (Term.app `Option.elim' [(Term.proj `X "." `point) `Subtype.val]))
-                   ","
-                   (Term.structInstField
-                    (Term.structInstLVal `invFun [])
-                    ":="
-                    (Term.fun
-                     "fun"
-                     (Term.basicFun
-                      [`a]
-                      []
-                      "=>"
-                      (termDepIfThenElse
-                       "if"
-                       (Lean.binderIdent `h)
-                       ":"
-                       (Init.Core.«term_=_» `a " = " (Term.proj `X "." `point))
-                       "then"
-                       `none
-                       "else"
-                       (Term.app `some [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
-                   ","
-                   (Term.structInstField
-                    (Term.structInstLVal `left_inv [])
-                    ":="
-                    (Term.fun
-                     "fun"
-                     (Term.basicFun
-                      [`a]
-                      []
-                      "=>"
-                      (Init.Core.«term_$_»
-                       (Term.app `Option.recOn [`a (Term.app `dif_pos [`rfl])])
-                       " $ "
-                       (Term.fun
-                        "fun"
-                        (Term.basicFun
-                         [`a]
-                         []
-                         "=>"
-                         (Init.Core.«term_$_»
-                          (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
-                          " $ "
-                          (Term.byTactic
-                           "by"
-                           (Tactic.tacticSeq
-                            (Tactic.tacticSeq1Indented
-                             [(Tactic.simp
-                               "simp"
-                               []
-                               []
-                               ["only"]
-                               ["["
-                                [(Tactic.simpLemma [] [] `Option.elim')
-                                 ","
-                                 (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
-                                 ","
-                                 (Tactic.simpLemma [] [] `Subtype.coe_eta)]
-                                "]"]
-                               [])]))))))))))
-                   ","
-                   (Term.structInstField
-                    (Term.structInstLVal `right_inv [])
-                    ":="
-                    (Term.fun
-                     "fun"
-                     (Term.basicFun
-                      [`a]
-                      []
-                      "=>"
-                      (Term.byTactic
-                       "by"
-                       (Tactic.tacticSeq
-                        (Tactic.tacticSeq1Indented
-                         [(Tactic.change
-                           "change"
-                           (Init.Core.«term_=_»
-                            (Term.app
-                             `Option.elim'
-                             [(Term.hole "_")
-                              (Term.hole "_")
-                              (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
-                            " = "
-                            (Term.hole "_"))
-                           [])
-                          []
-                          (Mathlib.Tactic.splitIfs "split_ifs" [] [])
-                          []
-                          («tactic___;_»
-                           (cdotTk (patternIgnore (token.«·» "·")))
-                           [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
-                            (group (Tactic.tacticRfl "rfl") [])])
-                          []
-                          («tactic___;_»
-                           (cdotTk (patternIgnore (token.«·» "·")))
-                           [(group (Tactic.tacticRfl "rfl") [])])]))))))]
-                  (Term.optEllipsis [])
-                  []
-                  "}")
-                 `rfl])))])
-           " $ "
-           (Term.fun
-            "fun"
-            (Term.basicFun
-             [`X `Y `f]
-             []
-             "=>"
-             (Init.Core.«term_$_»
-              (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-              " $ "
-              (Init.Core.«term_$_»
-               `funext
-               " $ "
-               (Term.fun
-                "fun"
-                (Term.basicFun
-                 [`a]
-                 []
-                 "=>"
-                 (Init.Core.«term_$_»
-                  (Term.app `Option.recOn [`a `f.map_point.symm])
-                  " $ "
-                  (Term.fun
-                   "fun"
-                   (Term.basicFun
-                    [`a]
-                    []
-                    "=>"
-                    (Term.byTactic
-                     "by"
-                     (Tactic.tacticSeq
-                      (Tactic.tacticSeq1Indented
-                       [(Tactic.unfoldProjs "unfold_projs" [] [])
-                        []
-                        (Tactic.dsimp "dsimp" [] [] [] [] [])
-                        []
-                        (Tactic.change
-                         "change"
-                         (Init.Core.«term_=_»
-                          (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
-                          " = "
-                          (Term.hole "_"))
-                         [])
-                        []
-                        (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
-                        []
-                        (Mathlib.Tactic.splitIfs "split_ifs" [] [])
-                        []
-                        («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
-                        []
-                        («tactic___;_»
-                         (cdotTk (patternIgnore (token.«·» "·")))
-                         [(group
-                           (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-                           [])])])))))))))))))])))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Tactic.exact
-       "exact"
-       (Term.app
-        `equivalence.mk
-        [`partialFunToPointed
-         `pointedToPartialFun
-         (Init.Core.«term_$_»
-          (Term.app
-           `nat_iso.of_components
-           [(Term.fun
-             "fun"
-             (Term.basicFun
-              [`X]
-              []
-              "=>"
-              (Term.app
-               `PartialFunCat.Iso.mk
-               [(Term.structInst
-                 "{"
-                 []
-                 [(Term.structInstField
-                   (Term.structInstLVal `toFun [])
-                   ":="
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`a]
-                     []
-                     "=>"
-                     (Term.anonymousCtor "⟨" [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])] "⟩"))))
-                  ","
-                  (Term.structInstField
-                   (Term.structInstLVal `invFun [])
-                   ":="
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`a]
-                     []
-                     "=>"
-                     (Init.Core.«term_$_»
-                      `get
-                      " $ "
-                      (Term.app
-                       (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
-                       [(Term.proj `a "." (fieldIdx "2"))])))))
-                  ","
-                  (Term.structInstField
-                   (Term.structInstLVal `left_inv [])
-                   ":="
-                   (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
-                  ","
-                  (Term.structInstField
-                   (Term.structInstLVal `right_inv [])
-                   ":="
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`a]
-                     []
-                     "=>"
-                     (Term.byTactic
-                      "by"
-                      (Tactic.tacticSeq
-                       (Tactic.tacticSeq1Indented
-                        [(Tactic.simp
-                          "simp"
-                          []
-                          []
-                          ["only"]
-                          ["["
-                           [(Tactic.simpLemma [] [] `Subtype.val_eq_coe)
-                            ","
-                            (Tactic.simpLemma [] [] `some_get)
-                            ","
-                            (Tactic.simpLemma [] [] `Subtype.coe_eta)]
-                           "]"]
-                          [])]))))))]
-                 (Term.optEllipsis [])
-                 []
-                 "}")])))])
-          " $ "
-          (Term.fun
-           "fun"
-           (Term.basicFun
-            [`X `Y `f]
-            []
-            "=>"
-            (Init.Core.«term_$_»
-             `Pfun.ext
-             " $ "
-             (Term.fun
-              "fun"
-              (Term.basicFun
-               [`a `b]
-               []
-               "=>"
-               (Term.byTactic
-                "by"
-                (Tactic.tacticSeq
-                 (Tactic.tacticSeq1Indented
-                  [(Tactic.unfoldProjs "unfold_projs" [] [])
-                   []
-                   (Tactic.dsimp "dsimp" [] [] [] [] [])
-                   []
-                   (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
-                   []
-                   (Tactic.refine'
-                    "refine'"
-                    (Term.app
-                     (Term.proj (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) "." `trans)
-                     [`pfun.mem_to_subtype_iff.symm]))
-                   []
-                   (Std.Tactic.obtain
-                    "obtain"
-                    [(Std.Tactic.RCases.rcasesPatMed
-                      [(Std.Tactic.RCases.rcasesPat.tuple
-                        "⟨"
-                        [(Std.Tactic.RCases.rcasesPatLo
-                          (Std.Tactic.RCases.rcasesPatMed
-                           [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
-                          [])
-                         ","
-                         (Std.Tactic.RCases.rcasesPatLo
-                          (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
-                          [])]
-                        "⟩")])]
-                    []
-                    [":=" [`b]])
-                   []
-                   («tactic___;_»
-                    (cdotTk (patternIgnore (token.«·» "·")))
-                    [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
-                   []
-                   (Tactic.dsimp "dsimp" [] [] [] [] [])
-                   []
-                   (Mathlib.Tactic.tacticSimp_rw__
-                    "simp_rw"
-                    (Tactic.rwRuleSeq
-                     "["
-                     [(Tactic.rwRule [] `Part.mem_some_iff)
-                      ","
-                      (Tactic.rwRule [] `Subtype.mk_eq_mk)
-                      ","
-                      (Tactic.rwRule [] `exists_prop)
-                      ","
-                      (Tactic.rwRule [] `some_inj)
-                      ","
-                      (Tactic.rwRule [] `exists_eq_right')]
-                     "]")
-                    [])
-                   []
-                   (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
-                   []
-                   (Tactic.exact "exact" `eq_comm)])))))))))
-         (Init.Core.«term_$_»
-          (Term.app
-           `nat_iso.of_components
-           [(Term.fun
-             "fun"
-             (Term.basicFun
-              [`X]
-              []
-              "=>"
-              (Term.app
-               `PointedCat.Iso.mk
-               [(Term.structInst
-                 "{"
-                 []
-                 [(Term.structInstField
-                   (Term.structInstLVal `toFun [])
-                   ":="
-                   (Term.app `Option.elim' [(Term.proj `X "." `point) `Subtype.val]))
-                  ","
-                  (Term.structInstField
-                   (Term.structInstLVal `invFun [])
-                   ":="
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`a]
-                     []
-                     "=>"
-                     (termDepIfThenElse
-                      "if"
-                      (Lean.binderIdent `h)
-                      ":"
-                      (Init.Core.«term_=_» `a " = " (Term.proj `X "." `point))
-                      "then"
-                      `none
-                      "else"
-                      (Term.app `some [(Term.anonymousCtor "⟨" [(Term.hole "_") "," `h] "⟩")])))))
-                  ","
-                  (Term.structInstField
-                   (Term.structInstLVal `left_inv [])
-                   ":="
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`a]
-                     []
-                     "=>"
-                     (Init.Core.«term_$_»
-                      (Term.app `Option.recOn [`a (Term.app `dif_pos [`rfl])])
-                      " $ "
-                      (Term.fun
-                       "fun"
-                       (Term.basicFun
-                        [`a]
-                        []
-                        "=>"
-                        (Init.Core.«term_$_»
-                         (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
-                         " $ "
-                         (Term.byTactic
-                          "by"
-                          (Tactic.tacticSeq
-                           (Tactic.tacticSeq1Indented
-                            [(Tactic.simp
-                              "simp"
-                              []
-                              []
-                              ["only"]
-                              ["["
-                               [(Tactic.simpLemma [] [] `Option.elim')
-                                ","
-                                (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
-                                ","
-                                (Tactic.simpLemma [] [] `Subtype.coe_eta)]
-                               "]"]
-                              [])]))))))))))
-                  ","
-                  (Term.structInstField
-                   (Term.structInstLVal `right_inv [])
-                   ":="
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`a]
-                     []
-                     "=>"
-                     (Term.byTactic
-                      "by"
-                      (Tactic.tacticSeq
-                       (Tactic.tacticSeq1Indented
-                        [(Tactic.change
-                          "change"
-                          (Init.Core.«term_=_»
-                           (Term.app
-                            `Option.elim'
-                            [(Term.hole "_")
-                             (Term.hole "_")
-                             (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
-                           " = "
-                           (Term.hole "_"))
-                          [])
-                         []
-                         (Mathlib.Tactic.splitIfs "split_ifs" [] [])
-                         []
-                         («tactic___;_»
-                          (cdotTk (patternIgnore (token.«·» "·")))
-                          [(group (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h)] "]") []) [])
-                           (group (Tactic.tacticRfl "rfl") [])])
-                         []
-                         («tactic___;_»
-                          (cdotTk (patternIgnore (token.«·» "·")))
-                          [(group (Tactic.tacticRfl "rfl") [])])]))))))]
-                 (Term.optEllipsis [])
-                 []
-                 "}")
-                `rfl])))])
-          " $ "
-          (Term.fun
-           "fun"
-           (Term.basicFun
-            [`X `Y `f]
-            []
-            "=>"
-            (Init.Core.«term_$_»
-             (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-             " $ "
-             (Init.Core.«term_$_»
-              `funext
-              " $ "
-              (Term.fun
-               "fun"
-               (Term.basicFun
-                [`a]
-                []
-                "=>"
-                (Init.Core.«term_$_»
-                 (Term.app `Option.recOn [`a `f.map_point.symm])
-                 " $ "
-                 (Term.fun
-                  "fun"
-                  (Term.basicFun
-                   [`a]
-                   []
-                   "=>"
-                   (Term.byTactic
-                    "by"
-                    (Tactic.tacticSeq
-                     (Tactic.tacticSeq1Indented
-                      [(Tactic.unfoldProjs "unfold_projs" [] [])
-                       []
-                       (Tactic.dsimp "dsimp" [] [] [] [] [])
-                       []
-                       (Tactic.change
-                        "change"
-                        (Init.Core.«term_=_»
-                         (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
-                         " = "
-                         (Term.hole "_"))
-                        [])
-                       []
-                       (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
-                       []
-                       (Mathlib.Tactic.splitIfs "split_ifs" [] [])
-                       []
-                       («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
-                       []
-                       («tactic___;_»
-                        (cdotTk (patternIgnore (token.«·» "·")))
-                        [(group
-                          (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-                          [])])])))))))))))))]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app
-       `equivalence.mk
-       [`partialFunToPointed
-        `pointedToPartialFun
-        (Init.Core.«term_$_»
-         (Term.app
-          `nat_iso.of_components
-          [(Term.fun
-            "fun"
-            (Term.basicFun
-             [`X]
-             []
-             "=>"
-             (Term.app
-              `PartialFunCat.Iso.mk
-              [(Term.structInst
-                "{"
-                []
-                [(Term.structInstField
-                  (Term.structInstLVal `toFun [])
-                  ":="
-                  (Term.fun
-                   "fun"
-                   (Term.basicFun
-                    [`a]
-                    []
-                    "=>"
-                    (Term.anonymousCtor "⟨" [(Term.app `some [`a]) "," (Term.app `some_ne_none [`a])] "⟩"))))
-                 ","
-                 (Term.structInstField
-                  (Term.structInstLVal `invFun [])
-                  ":="
-                  (Term.fun
-                   "fun"
-                   (Term.basicFun
-                    [`a]
-                    []
-                    "=>"
-                    (Init.Core.«term_$_»
-                     `get
-                     " $ "
-                     (Term.app
-                      (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
-                      [(Term.proj `a "." (fieldIdx "2"))])))))
-                 ","
-                 (Term.structInstField
-                  (Term.structInstLVal `left_inv [])
-                  ":="
-                  (Term.fun "fun" (Term.basicFun [`a] [] "=>" (Term.app `get_some [(Term.hole "_") (Term.hole "_")]))))
-                 ","
-                 (Term.structInstField
-                  (Term.structInstLVal `right_inv [])
-                  ":="
-                  (Term.fun
-                   "fun"
-                   (Term.basicFun
-                    [`a]
-                    []
-                    "=>"
-                    (Term.byTactic
-                     "by"
-                     (Tactic.tacticSeq
-                      (Tactic.tacticSeq1Indented
-                       [(Tactic.simp
-                         "simp"
-                         []
-                         []
-                         ["only"]
-                         ["["
-                          [(Tactic.simpLemma [] [] `Subtype.val_eq_coe)
-                           ","
-                           (Tactic.simpLemma [] [] `some_get)
-                           ","
-                           (Tactic.simpLemma [] [] `Subtype.coe_eta)]
-                          "]"]
-                         [])]))))))]
-                (Term.optEllipsis [])
-                []
-                "}")])))])
-         " $ "
-         (Term.fun
-          "fun"
-          (Term.basicFun
-           [`X `Y `f]
-           []
-           "=>"
-           (Init.Core.«term_$_»
-            `Pfun.ext
-            " $ "
-            (Term.fun
-             "fun"
-             (Term.basicFun
-              [`a `b]
-              []
-              "=>"
-              (Term.byTactic
-               "by"
-               (Tactic.tacticSeq
-                (Tactic.tacticSeq1Indented
-                 [(Tactic.unfoldProjs "unfold_projs" [] [])
-                  []
-                  (Tactic.dsimp "dsimp" [] [] [] [] [])
-                  []
-                  (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
-                  []
-                  (Tactic.refine'
-                   "refine'"
-                   (Term.app
-                    (Term.proj (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) "." `trans)
-                    [`pfun.mem_to_subtype_iff.symm]))
-                  []
-                  (Std.Tactic.obtain
-                   "obtain"
-                   [(Std.Tactic.RCases.rcasesPatMed
-                     [(Std.Tactic.RCases.rcasesPat.tuple
-                       "⟨"
-                       [(Std.Tactic.RCases.rcasesPatLo
-                         (Std.Tactic.RCases.rcasesPatMed
-                          [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
-                         [])
-                        ","
-                        (Std.Tactic.RCases.rcasesPatLo
-                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
-                         [])]
-                       "⟩")])]
-                   []
-                   [":=" [`b]])
-                  []
-                  («tactic___;_»
-                   (cdotTk (patternIgnore (token.«·» "·")))
-                   [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
-                  []
-                  (Tactic.dsimp "dsimp" [] [] [] [] [])
-                  []
-                  (Mathlib.Tactic.tacticSimp_rw__
-                   "simp_rw"
-                   (Tactic.rwRuleSeq
-                    "["
-                    [(Tactic.rwRule [] `Part.mem_some_iff)
-                     ","
-                     (Tactic.rwRule [] `Subtype.mk_eq_mk)
-                     ","
-                     (Tactic.rwRule [] `exists_prop)
-                     ","
-                     (Tactic.rwRule [] `some_inj)
-                     ","
-                     (Tactic.rwRule [] `exists_eq_right')]
-                    "]")
-                   [])
-                  []
-                  (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
-                  []
-                  (Tactic.exact "exact" `eq_comm)])))))))))
-        (Init.Core.«term_$_»
+                    (Tactic.exact "exact" `eq_comm)])))))])))])
+        (Term.app
          (Term.app
           `nat_iso.of_components
           [(Term.fun
@@ -2652,7 +2612,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                      "if"
                      (Lean.binderIdent `h)
                      ":"
-                     (Init.Core.«term_=_» `a " = " (Term.proj `X "." `point))
+                     («term_=_» `a "=" (Term.proj `X "." `point))
                      "then"
                      `none
                      "else"
@@ -2667,35 +2627,34 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                     [`a]
                     []
                     "=>"
-                    (Init.Core.«term_$_»
+                    (Term.app
                      (Term.app `Option.recOn [`a (Term.app `dif_pos [`rfl])])
-                     " $ "
-                     (Term.fun
-                      "fun"
-                      (Term.basicFun
-                       [`a]
-                       []
-                       "=>"
-                       (Init.Core.«term_$_»
-                        (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
-                        " $ "
-                        (Term.byTactic
-                         "by"
-                         (Tactic.tacticSeq
-                          (Tactic.tacticSeq1Indented
-                           [(Tactic.simp
-                             "simp"
-                             []
-                             []
-                             ["only"]
-                             ["["
-                              [(Tactic.simpLemma [] [] `Option.elim')
-                               ","
-                               (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
-                               ","
-                               (Tactic.simpLemma [] [] `Subtype.coe_eta)]
-                              "]"]
-                             [])]))))))))))
+                     [(Term.fun
+                       "fun"
+                       (Term.basicFun
+                        [`a]
+                        []
+                        "=>"
+                        («term_<|_»
+                         (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
+                         "<|"
+                         (Term.byTactic
+                          "by"
+                          (Tactic.tacticSeq
+                           (Tactic.tacticSeq1Indented
+                            [(Tactic.simp
+                              "simp"
+                              []
+                              []
+                              ["only"]
+                              ["["
+                               [(Tactic.simpLemma [] [] `Option.elim')
+                                ","
+                                (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
+                                ","
+                                (Tactic.simpLemma [] [] `Subtype.coe_eta)]
+                               "]"]
+                              [])]))))))]))))
                  ","
                  (Term.structInstField
                   (Term.structInstLVal `right_inv [])
@@ -2712,13 +2671,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                       (Tactic.tacticSeq1Indented
                        [(Tactic.change
                          "change"
-                         (Init.Core.«term_=_»
+                         («term_=_»
                           (Term.app
                            `Option.elim'
                            [(Term.hole "_")
                             (Term.hole "_")
                             (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
-                          " = "
+                          "="
                           (Term.hole "_"))
                          [])
                         []
@@ -2736,65 +2695,62 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                 []
                 "}")
                `rfl])))])
-         " $ "
-         (Term.fun
-          "fun"
-          (Term.basicFun
-           [`X `Y `f]
-           []
-           "=>"
-           (Init.Core.«term_$_»
-            (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-            " $ "
-            (Init.Core.«term_$_»
-             `funext
-             " $ "
-             (Term.fun
-              "fun"
-              (Term.basicFun
-               [`a]
-               []
-               "=>"
-               (Init.Core.«term_$_»
-                (Term.app `Option.recOn [`a `f.map_point.symm])
-                " $ "
-                (Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`a]
-                  []
-                  "=>"
-                  (Term.byTactic
-                   "by"
-                   (Tactic.tacticSeq
-                    (Tactic.tacticSeq1Indented
-                     [(Tactic.unfoldProjs "unfold_projs" [] [])
-                      []
-                      (Tactic.dsimp "dsimp" [] [] [] [] [])
-                      []
-                      (Tactic.change
-                       "change"
-                       (Init.Core.«term_=_»
-                        (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
-                        " = "
-                        (Term.hole "_"))
-                       [])
-                      []
-                      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
-                      []
-                      (Mathlib.Tactic.splitIfs "split_ifs" [] [])
-                      []
-                      («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
-                      []
-                      («tactic___;_»
-                       (cdotTk (patternIgnore (token.«·» "·")))
-                       [(group
-                         (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-                         [])])])))))))))))))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.ellipsis'
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`X `Y `f]
+            []
+            "=>"
+            («term_<|_»
+             (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
+             "<|"
+             (Term.app
+              `funext
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`a]
+                 []
+                 "=>"
+                 (Term.app
+                  (Term.app `Option.recOn [`a `f.map_point.symm])
+                  [(Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`a]
+                     []
+                     "=>"
+                     (Term.byTactic
+                      "by"
+                      (Tactic.tacticSeq
+                       (Tactic.tacticSeq1Indented
+                        [(Tactic.unfoldProjs "unfold_projs" [] [])
+                         []
+                         (Tactic.dsimp "dsimp" [] [] [] [] [])
+                         []
+                         (Tactic.change
+                          "change"
+                          («term_=_»
+                           (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                           "="
+                           (Term.hole "_"))
+                          [])
+                         []
+                         (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
+                         []
+                         (Mathlib.Tactic.splitIfs "split_ifs" [] [])
+                         []
+                         («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+                         []
+                         («tactic___;_»
+                          (cdotTk (patternIgnore (token.«·» "·")))
+                          [(group
+                            (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
+                            [])])])))))])))]))))])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      (Term.app
        (Term.app
         `nat_iso.of_components
         [(Term.fun
@@ -2826,7 +2782,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                    "if"
                    (Lean.binderIdent `h)
                    ":"
-                   (Init.Core.«term_=_» `a " = " (Term.proj `X "." `point))
+                   («term_=_» `a "=" (Term.proj `X "." `point))
                    "then"
                    `none
                    "else"
@@ -2841,35 +2797,34 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   [`a]
                   []
                   "=>"
-                  (Init.Core.«term_$_»
+                  (Term.app
                    (Term.app `Option.recOn [`a (Term.app `dif_pos [`rfl])])
-                   " $ "
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`a]
-                     []
-                     "=>"
-                     (Init.Core.«term_$_»
-                      (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
-                      " $ "
-                      (Term.byTactic
-                       "by"
-                       (Tactic.tacticSeq
-                        (Tactic.tacticSeq1Indented
-                         [(Tactic.simp
-                           "simp"
-                           []
-                           []
-                           ["only"]
-                           ["["
-                            [(Tactic.simpLemma [] [] `Option.elim')
-                             ","
-                             (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
-                             ","
-                             (Tactic.simpLemma [] [] `Subtype.coe_eta)]
-                            "]"]
-                           [])]))))))))))
+                   [(Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`a]
+                      []
+                      "=>"
+                      («term_<|_»
+                       (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
+                       "<|"
+                       (Term.byTactic
+                        "by"
+                        (Tactic.tacticSeq
+                         (Tactic.tacticSeq1Indented
+                          [(Tactic.simp
+                            "simp"
+                            []
+                            []
+                            ["only"]
+                            ["["
+                             [(Tactic.simpLemma [] [] `Option.elim')
+                              ","
+                              (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
+                              ","
+                              (Tactic.simpLemma [] [] `Subtype.coe_eta)]
+                             "]"]
+                            [])]))))))]))))
                ","
                (Term.structInstField
                 (Term.structInstLVal `right_inv [])
@@ -2886,13 +2841,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                     (Tactic.tacticSeq1Indented
                      [(Tactic.change
                        "change"
-                       (Init.Core.«term_=_»
+                       («term_=_»
                         (Term.app
                          `Option.elim'
                          [(Term.hole "_")
                           (Term.hole "_")
                           (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
-                        " = "
+                        "="
                         (Term.hole "_"))
                        [])
                       []
@@ -2910,61 +2865,60 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
               []
               "}")
              `rfl])))])
-       " $ "
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`X `Y `f]
-         []
-         "=>"
-         (Init.Core.«term_$_»
-          (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-          " $ "
-          (Init.Core.«term_$_»
-           `funext
-           " $ "
-           (Term.fun
-            "fun"
-            (Term.basicFun
-             [`a]
-             []
-             "=>"
-             (Init.Core.«term_$_»
-              (Term.app `Option.recOn [`a `f.map_point.symm])
-              " $ "
-              (Term.fun
-               "fun"
-               (Term.basicFun
-                [`a]
-                []
-                "=>"
-                (Term.byTactic
-                 "by"
-                 (Tactic.tacticSeq
-                  (Tactic.tacticSeq1Indented
-                   [(Tactic.unfoldProjs "unfold_projs" [] [])
-                    []
-                    (Tactic.dsimp "dsimp" [] [] [] [] [])
-                    []
-                    (Tactic.change
-                     "change"
-                     (Init.Core.«term_=_»
-                      (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
-                      " = "
-                      (Term.hole "_"))
-                     [])
-                    []
-                    (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
-                    []
-                    (Mathlib.Tactic.splitIfs "split_ifs" [] [])
-                    []
-                    («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
-                    []
-                    («tactic___;_»
-                     (cdotTk (patternIgnore (token.«·» "·")))
-                     [(group
-                       (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
-                       [])])])))))))))))))
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`X `Y `f]
+          []
+          "=>"
+          («term_<|_»
+           (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
+           "<|"
+           (Term.app
+            `funext
+            [(Term.fun
+              "fun"
+              (Term.basicFun
+               [`a]
+               []
+               "=>"
+               (Term.app
+                (Term.app `Option.recOn [`a `f.map_point.symm])
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`a]
+                   []
+                   "=>"
+                   (Term.byTactic
+                    "by"
+                    (Tactic.tacticSeq
+                     (Tactic.tacticSeq1Indented
+                      [(Tactic.unfoldProjs "unfold_projs" [] [])
+                       []
+                       (Tactic.dsimp "dsimp" [] [] [] [] [])
+                       []
+                       (Tactic.change
+                        "change"
+                        («term_=_»
+                         (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                         "="
+                         (Term.hole "_"))
+                        [])
+                       []
+                       (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
+                       []
+                       (Mathlib.Tactic.splitIfs "split_ifs" [] [])
+                       []
+                       («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+                       []
+                       («tactic___;_»
+                        (cdotTk (patternIgnore (token.«·» "·")))
+                        [(group
+                          (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
+                          [])])])))))])))]))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -2972,22 +2926,67 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
         [`X `Y `f]
         []
         "=>"
-        (Init.Core.«term_$_»
+        («term_<|_»
          (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-         " $ "
-         (Init.Core.«term_$_»
+         "<|"
+         (Term.app
           `funext
-          " $ "
-          (Term.fun
-           "fun"
-           (Term.basicFun
-            [`a]
-            []
-            "=>"
-            (Init.Core.«term_$_»
-             (Term.app `Option.recOn [`a `f.map_point.symm])
-             " $ "
-             (Term.fun
+          [(Term.fun
+            "fun"
+            (Term.basicFun
+             [`a]
+             []
+             "=>"
+             (Term.app
+              (Term.app `Option.recOn [`a `f.map_point.symm])
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`a]
+                 []
+                 "=>"
+                 (Term.byTactic
+                  "by"
+                  (Tactic.tacticSeq
+                   (Tactic.tacticSeq1Indented
+                    [(Tactic.unfoldProjs "unfold_projs" [] [])
+                     []
+                     (Tactic.dsimp "dsimp" [] [] [] [] [])
+                     []
+                     (Tactic.change
+                      "change"
+                      («term_=_»
+                       (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                       "="
+                       (Term.hole "_"))
+                      [])
+                     []
+                     (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
+                     []
+                     (Mathlib.Tactic.splitIfs "split_ifs" [] [])
+                     []
+                     («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+                     []
+                     («tactic___;_»
+                      (cdotTk (patternIgnore (token.«·» "·")))
+                      [(group
+                        (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])]))
+                        [])])])))))])))]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
+       "<|"
+       (Term.app
+        `funext
+        [(Term.fun
+          "fun"
+          (Term.basicFun
+           [`a]
+           []
+           "=>"
+           (Term.app
+            (Term.app `Option.recOn [`a `f.map_point.symm])
+            [(Term.fun
               "fun"
               (Term.basicFun
                [`a]
@@ -3003,9 +3002,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                    []
                    (Tactic.change
                     "change"
-                    (Init.Core.«term_=_»
+                    («term_=_»
                      (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
-                     " = "
+                     "="
                      (Term.hole "_"))
                     [])
                    []
@@ -3017,68 +3016,61 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                    []
                    («tactic___;_»
                     (cdotTk (patternIgnore (token.«·» "·")))
-                    [(group (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])])) [])])]))))))))))))
+                    [(group (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])])) [])])])))))])))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
-       (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-       " $ "
-       (Init.Core.«term_$_»
-        `funext
-        " $ "
-        (Term.fun
+      (Term.app
+       `funext
+       [(Term.fun
          "fun"
          (Term.basicFun
           [`a]
           []
           "=>"
-          (Init.Core.«term_$_»
+          (Term.app
            (Term.app `Option.recOn [`a `f.map_point.symm])
-           " $ "
-           (Term.fun
-            "fun"
-            (Term.basicFun
-             [`a]
-             []
-             "=>"
-             (Term.byTactic
-              "by"
-              (Tactic.tacticSeq
-               (Tactic.tacticSeq1Indented
-                [(Tactic.unfoldProjs "unfold_projs" [] [])
-                 []
-                 (Tactic.dsimp "dsimp" [] [] [] [] [])
-                 []
-                 (Tactic.change
-                  "change"
-                  (Init.Core.«term_=_»
-                   (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
-                   " = "
-                   (Term.hole "_"))
-                  [])
-                 []
-                 (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
-                 []
-                 (Mathlib.Tactic.splitIfs "split_ifs" [] [])
-                 []
-                 («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
-                 []
-                 («tactic___;_»
-                  (cdotTk (patternIgnore (token.«·» "·")))
-                  [(group (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])])) [])])]))))))))))
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`a]
+              []
+              "=>"
+              (Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.unfoldProjs "unfold_projs" [] [])
+                  []
+                  (Tactic.dsimp "dsimp" [] [] [] [] [])
+                  []
+                  (Tactic.change
+                   "change"
+                   («term_=_»
+                    (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                    "="
+                    (Term.hole "_"))
+                   [])
+                  []
+                  (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
+                  []
+                  (Mathlib.Tactic.splitIfs "split_ifs" [] [])
+                  []
+                  («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+                  []
+                  («tactic___;_»
+                   (cdotTk (patternIgnore (token.«·» "·")))
+                   [(group (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])])) [])])])))))])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
-       `funext
-       " $ "
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`a]
-         []
-         "=>"
-         (Init.Core.«term_$_»
-          (Term.app `Option.recOn [`a `f.map_point.symm])
-          " $ "
-          (Term.fun
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`a]
+        []
+        "=>"
+        (Term.app
+         (Term.app `Option.recOn [`a `f.map_point.symm])
+         [(Term.fun
            "fun"
            (Term.basicFun
             [`a]
@@ -3094,9 +3086,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                 []
                 (Tactic.change
                  "change"
-                 (Init.Core.«term_=_»
+                 («term_=_»
                   (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
-                  " = "
+                  "="
                   (Term.hole "_"))
                  [])
                 []
@@ -3108,83 +3100,43 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                 []
                 («tactic___;_»
                  (cdotTk (patternIgnore (token.«·» "·")))
-                 [(group (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])])) [])])])))))))))
+                 [(group (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])])) [])])])))))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun
-       "fun"
-       (Term.basicFun
-        [`a]
-        []
-        "=>"
-        (Init.Core.«term_$_»
-         (Term.app `Option.recOn [`a `f.map_point.symm])
-         " $ "
-         (Term.fun
-          "fun"
-          (Term.basicFun
-           [`a]
-           []
-           "=>"
-           (Term.byTactic
-            "by"
-            (Tactic.tacticSeq
-             (Tactic.tacticSeq1Indented
-              [(Tactic.unfoldProjs "unfold_projs" [] [])
-               []
-               (Tactic.dsimp "dsimp" [] [] [] [] [])
-               []
-               (Tactic.change
-                "change"
-                (Init.Core.«term_=_»
-                 (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
-                 " = "
-                 (Term.hole "_"))
-                [])
-               []
-               (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
-               []
-               (Mathlib.Tactic.splitIfs "split_ifs" [] [])
-               []
-               («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
-               []
-               («tactic___;_»
-                (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])])) [])])]))))))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      (Term.app
        (Term.app `Option.recOn [`a `f.map_point.symm])
-       " $ "
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`a]
-         []
-         "=>"
-         (Term.byTactic
-          "by"
-          (Tactic.tacticSeq
-           (Tactic.tacticSeq1Indented
-            [(Tactic.unfoldProjs "unfold_projs" [] [])
-             []
-             (Tactic.dsimp "dsimp" [] [] [] [] [])
-             []
-             (Tactic.change
-              "change"
-              (Init.Core.«term_=_»
-               (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
-               " = "
-               (Term.hole "_"))
-              [])
-             []
-             (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
-             []
-             (Mathlib.Tactic.splitIfs "split_ifs" [] [])
-             []
-             («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
-             []
-             («tactic___;_»
-              (cdotTk (patternIgnore (token.«·» "·")))
-              [(group (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])])) [])])]))))))
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`a]
+          []
+          "=>"
+          (Term.byTactic
+           "by"
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented
+             [(Tactic.unfoldProjs "unfold_projs" [] [])
+              []
+              (Tactic.dsimp "dsimp" [] [] [] [] [])
+              []
+              (Tactic.change
+               "change"
+               («term_=_»
+                (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                "="
+                (Term.hole "_"))
+               [])
+              []
+              (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
+              []
+              (Mathlib.Tactic.splitIfs "split_ifs" [] [])
+              []
+              («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+              []
+              («tactic___;_»
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(group (Tactic.exact "exact" (Term.app `Eq.symm [(Term.app `of_not_not [`h])])) [])])])))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -3202,10 +3154,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
             []
             (Tactic.change
              "change"
-             (Init.Core.«term_=_»
-              (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
-              " = "
-              (Term.hole "_"))
+             («term_=_» (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "=" (Term.hole "_"))
              [])
             []
             (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
@@ -3228,10 +3177,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
           []
           (Tactic.change
            "change"
-           (Init.Core.«term_=_»
-            (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
-            " = "
-            (Term.hole "_"))
+           («term_=_» (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "=" (Term.hole "_"))
            [])
           []
           (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
@@ -3290,16 +3236,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.change
        "change"
-       (Init.Core.«term_=_»
-        (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
-        " = "
-        (Term.hole "_"))
+       («term_=_» (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "=" (Term.hole "_"))
        [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
-       (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
-       " = "
-       (Term.hole "_"))
+      («term_=_» (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) "=" (Term.hole "_"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -3323,7 +3263,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.elim'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3339,8 +3279,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.app `Option.recOn [`a `f.map_point.symm])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
@@ -3355,20 +3295,21 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.recOn
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `Option.recOn [`a `f.map_point.symm]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `funext
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
@@ -3383,8 +3324,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `PointedCat.Hom.ext
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
@@ -3403,8 +3344,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `X
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.app
        `nat_iso.of_components
        [(Term.fun
@@ -3436,7 +3377,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   "if"
                   (Lean.binderIdent `h)
                   ":"
-                  (Init.Core.«term_=_» `a " = " (Term.proj `X "." `point))
+                  («term_=_» `a "=" (Term.proj `X "." `point))
                   "then"
                   `none
                   "else"
@@ -3451,35 +3392,34 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                  [`a]
                  []
                  "=>"
-                 (Init.Core.«term_$_»
+                 (Term.app
                   (Term.app `Option.recOn [`a (Term.app `dif_pos [`rfl])])
-                  " $ "
-                  (Term.fun
-                   "fun"
-                   (Term.basicFun
-                    [`a]
-                    []
-                    "=>"
-                    (Init.Core.«term_$_»
-                     (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
-                     " $ "
-                     (Term.byTactic
-                      "by"
-                      (Tactic.tacticSeq
-                       (Tactic.tacticSeq1Indented
-                        [(Tactic.simp
-                          "simp"
-                          []
-                          []
-                          ["only"]
-                          ["["
-                           [(Tactic.simpLemma [] [] `Option.elim')
-                            ","
-                            (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
-                            ","
-                            (Tactic.simpLemma [] [] `Subtype.coe_eta)]
-                           "]"]
-                          [])]))))))))))
+                  [(Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`a]
+                     []
+                     "=>"
+                     («term_<|_»
+                      (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
+                      "<|"
+                      (Term.byTactic
+                       "by"
+                       (Tactic.tacticSeq
+                        (Tactic.tacticSeq1Indented
+                         [(Tactic.simp
+                           "simp"
+                           []
+                           []
+                           ["only"]
+                           ["["
+                            [(Tactic.simpLemma [] [] `Option.elim')
+                             ","
+                             (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
+                             ","
+                             (Tactic.simpLemma [] [] `Subtype.coe_eta)]
+                            "]"]
+                           [])]))))))]))))
               ","
               (Term.structInstField
                (Term.structInstLVal `right_inv [])
@@ -3496,13 +3436,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                    (Tactic.tacticSeq1Indented
                     [(Tactic.change
                       "change"
-                      (Init.Core.«term_=_»
+                      («term_=_»
                        (Term.app
                         `Option.elim'
                         [(Term.hole "_")
                          (Term.hole "_")
                          (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
-                       " = "
+                       "="
                        (Term.hole "_"))
                       [])
                      []
@@ -3552,7 +3492,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                 "if"
                 (Lean.binderIdent `h)
                 ":"
-                (Init.Core.«term_=_» `a " = " (Term.proj `X "." `point))
+                («term_=_» `a "=" (Term.proj `X "." `point))
                 "then"
                 `none
                 "else"
@@ -3567,35 +3507,34 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                [`a]
                []
                "=>"
-               (Init.Core.«term_$_»
+               (Term.app
                 (Term.app `Option.recOn [`a (Term.app `dif_pos [`rfl])])
-                " $ "
-                (Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`a]
-                  []
-                  "=>"
-                  (Init.Core.«term_$_»
-                   (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
-                   " $ "
-                   (Term.byTactic
-                    "by"
-                    (Tactic.tacticSeq
-                     (Tactic.tacticSeq1Indented
-                      [(Tactic.simp
-                        "simp"
-                        []
-                        []
-                        ["only"]
-                        ["["
-                         [(Tactic.simpLemma [] [] `Option.elim')
-                          ","
-                          (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
-                          ","
-                          (Tactic.simpLemma [] [] `Subtype.coe_eta)]
-                         "]"]
-                        [])]))))))))))
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`a]
+                   []
+                   "=>"
+                   («term_<|_»
+                    (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
+                    "<|"
+                    (Term.byTactic
+                     "by"
+                     (Tactic.tacticSeq
+                      (Tactic.tacticSeq1Indented
+                       [(Tactic.simp
+                         "simp"
+                         []
+                         []
+                         ["only"]
+                         ["["
+                          [(Tactic.simpLemma [] [] `Option.elim')
+                           ","
+                           (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
+                           ","
+                           (Tactic.simpLemma [] [] `Subtype.coe_eta)]
+                          "]"]
+                         [])]))))))]))))
             ","
             (Term.structInstField
              (Term.structInstLVal `right_inv [])
@@ -3612,13 +3551,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                  (Tactic.tacticSeq1Indented
                   [(Tactic.change
                     "change"
-                    (Init.Core.«term_=_»
+                    («term_=_»
                      (Term.app
                       `Option.elim'
                       [(Term.hole "_")
                        (Term.hole "_")
                        (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
-                     " = "
+                     "="
                      (Term.hole "_"))
                     [])
                    []
@@ -3660,7 +3599,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
               "if"
               (Lean.binderIdent `h)
               ":"
-              (Init.Core.«term_=_» `a " = " (Term.proj `X "." `point))
+              («term_=_» `a "=" (Term.proj `X "." `point))
               "then"
               `none
               "else"
@@ -3675,35 +3614,34 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
              [`a]
              []
              "=>"
-             (Init.Core.«term_$_»
+             (Term.app
               (Term.app `Option.recOn [`a (Term.app `dif_pos [`rfl])])
-              " $ "
-              (Term.fun
-               "fun"
-               (Term.basicFun
-                [`a]
-                []
-                "=>"
-                (Init.Core.«term_$_»
-                 (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
-                 " $ "
-                 (Term.byTactic
-                  "by"
-                  (Tactic.tacticSeq
-                   (Tactic.tacticSeq1Indented
-                    [(Tactic.simp
-                      "simp"
-                      []
-                      []
-                      ["only"]
-                      ["["
-                       [(Tactic.simpLemma [] [] `Option.elim')
-                        ","
-                        (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
-                        ","
-                        (Tactic.simpLemma [] [] `Subtype.coe_eta)]
-                       "]"]
-                      [])]))))))))))
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`a]
+                 []
+                 "=>"
+                 («term_<|_»
+                  (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
+                  "<|"
+                  (Term.byTactic
+                   "by"
+                   (Tactic.tacticSeq
+                    (Tactic.tacticSeq1Indented
+                     [(Tactic.simp
+                       "simp"
+                       []
+                       []
+                       ["only"]
+                       ["["
+                        [(Tactic.simpLemma [] [] `Option.elim')
+                         ","
+                         (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
+                         ","
+                         (Tactic.simpLemma [] [] `Subtype.coe_eta)]
+                        "]"]
+                       [])]))))))]))))
           ","
           (Term.structInstField
            (Term.structInstLVal `right_inv [])
@@ -3720,13 +3658,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                (Tactic.tacticSeq1Indented
                 [(Tactic.change
                   "change"
-                  (Init.Core.«term_=_»
+                  («term_=_»
                    (Term.app
                     `Option.elim'
                     [(Term.hole "_")
                      (Term.hole "_")
                      (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
-                   " = "
+                   "="
                    (Term.hole "_"))
                   [])
                  []
@@ -3771,7 +3709,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
             "if"
             (Lean.binderIdent `h)
             ":"
-            (Init.Core.«term_=_» `a " = " (Term.proj `X "." `point))
+            («term_=_» `a "=" (Term.proj `X "." `point))
             "then"
             `none
             "else"
@@ -3786,35 +3724,34 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
            [`a]
            []
            "=>"
-           (Init.Core.«term_$_»
+           (Term.app
             (Term.app `Option.recOn [`a (Term.app `dif_pos [`rfl])])
-            " $ "
-            (Term.fun
-             "fun"
-             (Term.basicFun
-              [`a]
-              []
-              "=>"
-              (Init.Core.«term_$_»
-               (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
-               " $ "
-               (Term.byTactic
-                "by"
-                (Tactic.tacticSeq
-                 (Tactic.tacticSeq1Indented
-                  [(Tactic.simp
-                    "simp"
-                    []
-                    []
-                    ["only"]
-                    ["["
-                     [(Tactic.simpLemma [] [] `Option.elim')
-                      ","
-                      (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
-                      ","
-                      (Tactic.simpLemma [] [] `Subtype.coe_eta)]
-                     "]"]
-                    [])]))))))))))
+            [(Term.fun
+              "fun"
+              (Term.basicFun
+               [`a]
+               []
+               "=>"
+               («term_<|_»
+                (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
+                "<|"
+                (Term.byTactic
+                 "by"
+                 (Tactic.tacticSeq
+                  (Tactic.tacticSeq1Indented
+                   [(Tactic.simp
+                     "simp"
+                     []
+                     []
+                     ["only"]
+                     ["["
+                      [(Tactic.simpLemma [] [] `Option.elim')
+                       ","
+                       (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
+                       ","
+                       (Tactic.simpLemma [] [] `Subtype.coe_eta)]
+                      "]"]
+                     [])]))))))]))))
         ","
         (Term.structInstField
          (Term.structInstLVal `right_inv [])
@@ -3831,11 +3768,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
              (Tactic.tacticSeq1Indented
               [(Tactic.change
                 "change"
-                (Init.Core.«term_=_»
+                («term_=_»
                  (Term.app
                   `Option.elim'
                   [(Term.hole "_") (Term.hole "_") (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
-                 " = "
+                 "="
                  (Term.hole "_"))
                 [])
                []
@@ -3864,11 +3801,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
           (Tactic.tacticSeq1Indented
            [(Tactic.change
              "change"
-             (Init.Core.«term_=_»
+             («term_=_»
               (Term.app
                `Option.elim'
                [(Term.hole "_") (Term.hole "_") (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
-              " = "
+              "="
               (Term.hole "_"))
              [])
             []
@@ -3887,11 +3824,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
         (Tactic.tacticSeq1Indented
          [(Tactic.change
            "change"
-           (Init.Core.«term_=_»
+           («term_=_»
             (Term.app
              `Option.elim'
              [(Term.hole "_") (Term.hole "_") (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
-            " = "
+            "="
             (Term.hole "_"))
            [])
           []
@@ -3931,19 +3868,19 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.change
        "change"
-       (Init.Core.«term_=_»
+       («term_=_»
         (Term.app
          `Option.elim'
          [(Term.hole "_") (Term.hole "_") (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
-        " = "
+        "="
         (Term.hole "_"))
        [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (Term.app
         `Option.elim'
         [(Term.hole "_") (Term.hole "_") (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")])])
-       " = "
+       "="
        (Term.hole "_"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.hole "_")
@@ -3992,7 +3929,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.elim'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
@@ -4011,65 +3948,65 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
         [`a]
         []
         "=>"
-        (Init.Core.«term_$_»
+        (Term.app
          (Term.app `Option.recOn [`a (Term.app `dif_pos [`rfl])])
-         " $ "
-         (Term.fun
-          "fun"
-          (Term.basicFun
-           [`a]
-           []
-           "=>"
-           (Init.Core.«term_$_»
-            (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
-            " $ "
-            (Term.byTactic
-             "by"
-             (Tactic.tacticSeq
-              (Tactic.tacticSeq1Indented
-               [(Tactic.simp
-                 "simp"
-                 []
-                 []
-                 ["only"]
-                 ["["
-                  [(Tactic.simpLemma [] [] `Option.elim')
-                   ","
-                   (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
-                   ","
-                   (Tactic.simpLemma [] [] `Subtype.coe_eta)]
-                  "]"]
-                 [])])))))))))
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`a]
+            []
+            "=>"
+            («term_<|_»
+             (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
+             "<|"
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.simp
+                  "simp"
+                  []
+                  []
+                  ["only"]
+                  ["["
+                   [(Tactic.simpLemma [] [] `Option.elim')
+                    ","
+                    (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
+                    ","
+                    (Tactic.simpLemma [] [] `Subtype.coe_eta)]
+                   "]"]
+                  [])]))))))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      (Term.app
        (Term.app `Option.recOn [`a (Term.app `dif_pos [`rfl])])
-       " $ "
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`a]
-         []
-         "=>"
-         (Init.Core.«term_$_»
-          (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
-          " $ "
-          (Term.byTactic
-           "by"
-           (Tactic.tacticSeq
-            (Tactic.tacticSeq1Indented
-             [(Tactic.simp
-               "simp"
-               []
-               []
-               ["only"]
-               ["["
-                [(Tactic.simpLemma [] [] `Option.elim')
-                 ","
-                 (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
-                 ","
-                 (Tactic.simpLemma [] [] `Subtype.coe_eta)]
-                "]"]
-               [])])))))))
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`a]
+          []
+          "=>"
+          («term_<|_»
+           (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
+           "<|"
+           (Term.byTactic
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(Tactic.simp
+                "simp"
+                []
+                []
+                ["only"]
+                ["["
+                 [(Tactic.simpLemma [] [] `Option.elim')
+                  ","
+                  (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
+                  ","
+                  (Tactic.simpLemma [] [] `Subtype.coe_eta)]
+                 "]"]
+                [])]))))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -4077,9 +4014,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
         [`a]
         []
         "=>"
-        (Init.Core.«term_$_»
+        («term_<|_»
          (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
-         " $ "
+         "<|"
          (Term.byTactic
           "by"
           (Tactic.tacticSeq
@@ -4098,9 +4035,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                "]"]
               [])]))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      («term_<|_»
        (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
-       " $ "
+       "<|"
        (Term.byTactic
         "by"
         (Tactic.tacticSeq
@@ -4167,8 +4104,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
       `Option.elim'
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.proj (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) "." `trans)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))])
@@ -4185,16 +4122,16 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `a
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.app `Option.recOn [`a (Term.app `dif_pos [`rfl])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
@@ -4218,8 +4155,12 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Option.recOn
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `Option.recOn [`a (Term.paren "(" (Term.app `dif_pos [`rfl]) ")")])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
@@ -4239,7 +4180,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
          "if"
          (Lean.binderIdent `h)
          ":"
-         (Init.Core.«term_=_» `a " = " (Term.proj `X "." `point))
+         («term_=_» `a "=" (Term.proj `X "." `point))
          "then"
          `none
          "else"
@@ -4249,7 +4190,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
        "if"
        (Lean.binderIdent `h)
        ":"
-       (Init.Core.«term_=_» `a " = " (Term.proj `X "." `point))
+       («term_=_» `a "=" (Term.proj `X "." `point))
        "then"
        `none
        "else"
@@ -4275,7 +4216,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
       `none
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_» `a " = " (Term.proj `X "." `point))
+      («term_=_» `a "=" (Term.proj `X "." `point))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.proj `X "." `point)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
@@ -4284,7 +4225,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `a
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
@@ -4329,7 +4270,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `nat_iso.of_components
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 0, term) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
      (Term.app
@@ -4363,7 +4304,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                  "if"
                  (Lean.binderIdent `h)
                  ":"
-                 (Init.Core.«term_=_» `a " = " (Term.proj `X "." `point))
+                 («term_=_» `a "=" (Term.proj `X "." `point))
                  "then"
                  `none
                  "else"
@@ -4378,35 +4319,34 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                 [`a]
                 []
                 "=>"
-                (Init.Core.«term_$_»
-                 (Term.app `Option.recOn [`a (Term.paren "(" (Term.app `dif_pos [`rfl]) ")")])
-                 " $ "
-                 (Term.fun
-                  "fun"
-                  (Term.basicFun
-                   [`a]
-                   []
-                   "=>"
-                   (Init.Core.«term_$_»
-                    (Term.proj (Term.paren "(" (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) ")") "." `trans)
-                    " $ "
-                    (Term.byTactic
-                     "by"
-                     (Tactic.tacticSeq
-                      (Tactic.tacticSeq1Indented
-                       [(Tactic.simp
-                         "simp"
-                         []
-                         []
-                         ["only"]
-                         ["["
-                          [(Tactic.simpLemma [] [] `Option.elim')
-                           ","
-                           (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
-                           ","
-                           (Tactic.simpLemma [] [] `Subtype.coe_eta)]
-                          "]"]
-                         [])]))))))))))
+                (Term.app
+                 (Term.paren "(" (Term.app `Option.recOn [`a (Term.paren "(" (Term.app `dif_pos [`rfl]) ")")]) ")")
+                 [(Term.fun
+                   "fun"
+                   (Term.basicFun
+                    [`a]
+                    []
+                    "=>"
+                    («term_<|_»
+                     (Term.proj (Term.paren "(" (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) ")") "." `trans)
+                     "<|"
+                     (Term.byTactic
+                      "by"
+                      (Tactic.tacticSeq
+                       (Tactic.tacticSeq1Indented
+                        [(Tactic.simp
+                          "simp"
+                          []
+                          []
+                          ["only"]
+                          ["["
+                           [(Tactic.simpLemma [] [] `Option.elim')
+                            ","
+                            (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
+                            ","
+                            (Tactic.simpLemma [] [] `Subtype.coe_eta)]
+                           "]"]
+                          [])]))))))]))))
              ","
              (Term.structInstField
               (Term.structInstLVal `right_inv [])
@@ -4423,13 +4363,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   (Tactic.tacticSeq1Indented
                    [(Tactic.change
                      "change"
-                     (Init.Core.«term_=_»
+                     («term_=_»
                       (Term.app
                        `Option.elim'
                        [(Term.hole "_")
                         (Term.hole "_")
                         (Term.paren "(" (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) ")")])
-                      " = "
+                      "="
                       (Term.hole "_"))
                      [])
                     []
@@ -4448,10 +4388,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
             "}")
            `rfl])))])
      ")")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     (Init.Core.«term_$_»
+     (Term.app
       (Term.paren
        "("
        (Term.app
@@ -4485,7 +4425,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                    "if"
                    (Lean.binderIdent `h)
                    ":"
-                   (Init.Core.«term_=_» `a " = " (Term.proj `X "." `point))
+                   («term_=_» `a "=" (Term.proj `X "." `point))
                    "then"
                    `none
                    "else"
@@ -4500,38 +4440,37 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   [`a]
                   []
                   "=>"
-                  (Init.Core.«term_$_»
-                   (Term.app `Option.recOn [`a (Term.paren "(" (Term.app `dif_pos [`rfl]) ")")])
-                   " $ "
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`a]
-                     []
-                     "=>"
-                     (Init.Core.«term_$_»
-                      (Term.proj
-                       (Term.paren "(" (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) ")")
-                       "."
-                       `trans)
-                      " $ "
-                      (Term.byTactic
-                       "by"
-                       (Tactic.tacticSeq
-                        (Tactic.tacticSeq1Indented
-                         [(Tactic.simp
-                           "simp"
-                           []
-                           []
-                           ["only"]
-                           ["["
-                            [(Tactic.simpLemma [] [] `Option.elim')
-                             ","
-                             (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
-                             ","
-                             (Tactic.simpLemma [] [] `Subtype.coe_eta)]
-                            "]"]
-                           [])]))))))))))
+                  (Term.app
+                   (Term.paren "(" (Term.app `Option.recOn [`a (Term.paren "(" (Term.app `dif_pos [`rfl]) ")")]) ")")
+                   [(Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`a]
+                      []
+                      "=>"
+                      («term_<|_»
+                       (Term.proj
+                        (Term.paren "(" (Term.app `dif_neg [(Term.proj `a "." (fieldIdx "2"))]) ")")
+                        "."
+                        `trans)
+                       "<|"
+                       (Term.byTactic
+                        "by"
+                        (Tactic.tacticSeq
+                         (Tactic.tacticSeq1Indented
+                          [(Tactic.simp
+                            "simp"
+                            []
+                            []
+                            ["only"]
+                            ["["
+                             [(Tactic.simpLemma [] [] `Option.elim')
+                              ","
+                              (Tactic.simpLemma [] [] `Subtype.val_eq_coe)
+                              ","
+                              (Tactic.simpLemma [] [] `Subtype.coe_eta)]
+                             "]"]
+                            [])]))))))]))))
                ","
                (Term.structInstField
                 (Term.structInstLVal `right_inv [])
@@ -4548,13 +4487,13 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                     (Tactic.tacticSeq1Indented
                      [(Tactic.change
                        "change"
-                       (Init.Core.«term_=_»
+                       («term_=_»
                         (Term.app
                          `Option.elim'
                          [(Term.hole "_")
                           (Term.hole "_")
                           (Term.paren "(" (Term.app `dite [(Term.hole "_") (Term.hole "_") (Term.hole "_")]) ")")])
-                        " = "
+                        "="
                         (Term.hole "_"))
                        [])
                       []
@@ -4573,66 +4512,63 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
               "}")
              `rfl])))])
        ")")
-      " $ "
-      (Term.fun
-       "fun"
-       (Term.basicFun
-        [`X `Y `f]
-        []
-        "=>"
-        (Init.Core.«term_$_»
-         (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
-         " $ "
-         (Init.Core.«term_$_»
-          `funext
-          " $ "
-          (Term.fun
-           "fun"
-           (Term.basicFun
-            [`a]
-            []
-            "=>"
-            (Init.Core.«term_$_»
-             (Term.app `Option.recOn [`a `f.map_point.symm])
-             " $ "
-             (Term.fun
-              "fun"
-              (Term.basicFun
-               [`a]
-               []
-               "=>"
-               (Term.byTactic
-                "by"
-                (Tactic.tacticSeq
-                 (Tactic.tacticSeq1Indented
-                  [(Tactic.unfoldProjs "unfold_projs" [] [])
-                   []
-                   (Tactic.dsimp "dsimp" [] [] [] [] [])
-                   []
-                   (Tactic.change
-                    "change"
-                    (Init.Core.«term_=_»
-                     (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
-                     " = "
-                     (Term.hole "_"))
-                    [])
-                   []
-                   (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
-                   []
-                   (Mathlib.Tactic.splitIfs "split_ifs" [] [])
-                   []
-                   («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
-                   []
-                   («tactic___;_»
-                    (cdotTk (patternIgnore (token.«·» "·")))
-                    [(group
-                      (Tactic.exact "exact" (Term.app `Eq.symm [(Term.paren "(" (Term.app `of_not_not [`h]) ")")]))
-                      [])])])))))))))))))
+      [(Term.fun
+        "fun"
+        (Term.basicFun
+         [`X `Y `f]
+         []
+         "=>"
+         («term_<|_»
+          (Term.app `PointedCat.Hom.ext [(Term.hole "_") (Term.hole "_")])
+          "<|"
+          (Term.app
+           `funext
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`a]
+              []
+              "=>"
+              (Term.app
+               (Term.paren "(" (Term.app `Option.recOn [`a `f.map_point.symm]) ")")
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`a]
+                  []
+                  "=>"
+                  (Term.byTactic
+                   "by"
+                   (Tactic.tacticSeq
+                    (Tactic.tacticSeq1Indented
+                     [(Tactic.unfoldProjs "unfold_projs" [] [])
+                      []
+                      (Tactic.dsimp "dsimp" [] [] [] [] [])
+                      []
+                      (Tactic.change
+                       "change"
+                       («term_=_»
+                        (Term.app `Option.elim' [(Term.hole "_") (Term.hole "_") (Term.hole "_")])
+                        "="
+                        (Term.hole "_"))
+                       [])
+                      []
+                      (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.elim_to_option)] "]") [])
+                      []
+                      (Mathlib.Tactic.splitIfs "split_ifs" [] [])
+                      []
+                      («tactic___;_» (cdotTk (patternIgnore (token.«·» "·"))) [(group (Tactic.tacticRfl "rfl") [])])
+                      []
+                      («tactic___;_»
+                       (cdotTk (patternIgnore (token.«·» "·")))
+                       [(group
+                         (Tactic.exact "exact" (Term.app `Eq.symm [(Term.paren "(" (Term.app `of_not_not [`h]) ")")]))
+                         [])])])))))])))]))))])
      ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_$_»', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-      (Init.Core.«term_$_»
+      (Term.app
        (Term.app
         `nat_iso.of_components
         [(Term.fun
@@ -4666,9 +4602,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   [`a]
                   []
                   "=>"
-                  (Init.Core.«term_$_»
+                  («term_<|_»
                    `get
-                   " $ "
+                   "<|"
                    (Term.app
                     (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
                     [(Term.proj `a "." (fieldIdx "2"))])))))
@@ -4707,17 +4643,90 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
               (Term.optEllipsis [])
               []
               "}")])))])
-       " $ "
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`X `Y `f]
-         []
-         "=>"
-         (Init.Core.«term_$_»
-          `Pfun.ext
-          " $ "
-          (Term.fun
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`X `Y `f]
+          []
+          "=>"
+          (Term.app
+           `Pfun.ext
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`a `b]
+              []
+              "=>"
+              (Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.unfoldProjs "unfold_projs" [] [])
+                  []
+                  (Tactic.dsimp "dsimp" [] [] [] [] [])
+                  []
+                  (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
+                  []
+                  (Tactic.refine'
+                   "refine'"
+                   (Term.app
+                    (Term.proj (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) "." `trans)
+                    [`pfun.mem_to_subtype_iff.symm]))
+                  []
+                  (Std.Tactic.obtain
+                   "obtain"
+                   [(Std.Tactic.RCases.rcasesPatMed
+                     [(Std.Tactic.RCases.rcasesPat.tuple
+                       "⟨"
+                       [(Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed
+                          [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
+                         [])
+                        ","
+                        (Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
+                         [])]
+                       "⟩")])]
+                   []
+                   [":=" [`b]])
+                  []
+                  («tactic___;_»
+                   (cdotTk (patternIgnore (token.«·» "·")))
+                   [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
+                  []
+                  (Tactic.dsimp "dsimp" [] [] [] [] [])
+                  []
+                  (Mathlib.Tactic.tacticSimp_rw__
+                   "simp_rw"
+                   (Tactic.rwRuleSeq
+                    "["
+                    [(Tactic.rwRule [] `Part.mem_some_iff)
+                     ","
+                     (Tactic.rwRule [] `Subtype.mk_eq_mk)
+                     ","
+                     (Tactic.rwRule [] `exists_prop)
+                     ","
+                     (Tactic.rwRule [] `some_inj)
+                     ","
+                     (Tactic.rwRule [] `exists_eq_right')]
+                    "]")
+                   [])
+                  []
+                  (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
+                  []
+                  (Tactic.exact "exact" `eq_comm)])))))])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`X `Y `f]
+        []
+        "=>"
+        (Term.app
+         `Pfun.ext
+         [(Term.fun
            "fun"
            (Term.basicFun
             [`a `b]
@@ -4780,149 +4789,76 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                 []
                 (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
                 []
-                (Tactic.exact "exact" `eq_comm)])))))))))
+                (Tactic.exact "exact" `eq_comm)])))))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun
-       "fun"
-       (Term.basicFun
-        [`X `Y `f]
-        []
-        "=>"
-        (Init.Core.«term_$_»
-         `Pfun.ext
-         " $ "
-         (Term.fun
-          "fun"
-          (Term.basicFun
-           [`a `b]
-           []
-           "=>"
-           (Term.byTactic
-            "by"
-            (Tactic.tacticSeq
-             (Tactic.tacticSeq1Indented
-              [(Tactic.unfoldProjs "unfold_projs" [] [])
-               []
-               (Tactic.dsimp "dsimp" [] [] [] [] [])
-               []
-               (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
-               []
-               (Tactic.refine'
-                "refine'"
-                (Term.app
-                 (Term.proj (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) "." `trans)
-                 [`pfun.mem_to_subtype_iff.symm]))
-               []
-               (Std.Tactic.obtain
-                "obtain"
-                [(Std.Tactic.RCases.rcasesPatMed
-                  [(Std.Tactic.RCases.rcasesPat.tuple
-                    "⟨"
-                    [(Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed
-                       [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
-                      [])]
-                    "⟩")])]
-                []
-                [":=" [`b]])
-               []
-               («tactic___;_»
-                (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
-               []
-               (Tactic.dsimp "dsimp" [] [] [] [] [])
-               []
-               (Mathlib.Tactic.tacticSimp_rw__
-                "simp_rw"
-                (Tactic.rwRuleSeq
-                 "["
-                 [(Tactic.rwRule [] `Part.mem_some_iff)
-                  ","
-                  (Tactic.rwRule [] `Subtype.mk_eq_mk)
-                  ","
-                  (Tactic.rwRule [] `exists_prop)
-                  ","
-                  (Tactic.rwRule [] `some_inj)
-                  ","
-                  (Tactic.rwRule [] `exists_eq_right')]
-                 "]")
-                [])
-               []
-               (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
-               []
-               (Tactic.exact "exact" `eq_comm)]))))))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      (Term.app
        `Pfun.ext
-       " $ "
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`a `b]
-         []
-         "=>"
-         (Term.byTactic
-          "by"
-          (Tactic.tacticSeq
-           (Tactic.tacticSeq1Indented
-            [(Tactic.unfoldProjs "unfold_projs" [] [])
-             []
-             (Tactic.dsimp "dsimp" [] [] [] [] [])
-             []
-             (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
-             []
-             (Tactic.refine'
-              "refine'"
-              (Term.app
-               (Term.proj (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) "." `trans)
-               [`pfun.mem_to_subtype_iff.symm]))
-             []
-             (Std.Tactic.obtain
-              "obtain"
-              [(Std.Tactic.RCases.rcasesPatMed
-                [(Std.Tactic.RCases.rcasesPat.tuple
-                  "⟨"
-                  [(Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed
-                     [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
-                    [])]
-                  "⟩")])]
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`a `b]
+          []
+          "=>"
+          (Term.byTactic
+           "by"
+           (Tactic.tacticSeq
+            (Tactic.tacticSeq1Indented
+             [(Tactic.unfoldProjs "unfold_projs" [] [])
               []
-              [":=" [`b]])
-             []
-             («tactic___;_»
-              (cdotTk (patternIgnore (token.«·» "·")))
-              [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
-             []
-             (Tactic.dsimp "dsimp" [] [] [] [] [])
-             []
-             (Mathlib.Tactic.tacticSimp_rw__
-              "simp_rw"
-              (Tactic.rwRuleSeq
-               "["
-               [(Tactic.rwRule [] `Part.mem_some_iff)
-                ","
-                (Tactic.rwRule [] `Subtype.mk_eq_mk)
-                ","
-                (Tactic.rwRule [] `exists_prop)
-                ","
-                (Tactic.rwRule [] `some_inj)
-                ","
-                (Tactic.rwRule [] `exists_eq_right')]
-               "]")
-              [])
-             []
-             (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
-             []
-             (Tactic.exact "exact" `eq_comm)]))))))
+              (Tactic.dsimp "dsimp" [] [] [] [] [])
+              []
+              (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
+              []
+              (Tactic.refine'
+               "refine'"
+               (Term.app
+                (Term.proj (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) "." `trans)
+                [`pfun.mem_to_subtype_iff.symm]))
+              []
+              (Std.Tactic.obtain
+               "obtain"
+               [(Std.Tactic.RCases.rcasesPatMed
+                 [(Std.Tactic.RCases.rcasesPat.tuple
+                   "⟨"
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed
+                      [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
+                     [])]
+                   "⟩")])]
+               []
+               [":=" [`b]])
+              []
+              («tactic___;_»
+               (cdotTk (patternIgnore (token.«·» "·")))
+               [(group (Tactic.exact "exact" (Term.proj (Term.app `hb [`rfl]) "." `elim)) [])])
+              []
+              (Tactic.dsimp "dsimp" [] [] [] [] [])
+              []
+              (Mathlib.Tactic.tacticSimp_rw__
+               "simp_rw"
+               (Tactic.rwRuleSeq
+                "["
+                [(Tactic.rwRule [] `Part.mem_some_iff)
+                 ","
+                 (Tactic.rwRule [] `Subtype.mk_eq_mk)
+                 ","
+                 (Tactic.rwRule [] `exists_prop)
+                 ","
+                 (Tactic.rwRule [] `some_inj)
+                 ","
+                 (Tactic.rwRule [] `exists_eq_right')]
+                "]")
+               [])
+              []
+              (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
+              []
+              (Tactic.exact "exact" `eq_comm)])))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -5202,11 +5138,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `Pfun.ext
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
@@ -5225,8 +5161,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `X
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.app
        `nat_iso.of_components
        [(Term.fun
@@ -5260,9 +5196,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                  [`a]
                  []
                  "=>"
-                 (Init.Core.«term_$_»
+                 («term_<|_»
                   `get
-                  " $ "
+                  "<|"
                   (Term.app (Term.proj `ne_none_iff_is_some "." (fieldIdx "1")) [(Term.proj `a "." (fieldIdx "2"))])))))
               ","
               (Term.structInstField
@@ -5333,9 +5269,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                [`a]
                []
                "=>"
-               (Init.Core.«term_$_»
+               («term_<|_»
                 `get
-                " $ "
+                "<|"
                 (Term.app (Term.proj `ne_none_iff_is_some "." (fieldIdx "1")) [(Term.proj `a "." (fieldIdx "2"))])))))
             ","
             (Term.structInstField
@@ -5398,9 +5334,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
              [`a]
              []
              "=>"
-             (Init.Core.«term_$_»
+             («term_<|_»
               `get
-              " $ "
+              "<|"
               (Term.app (Term.proj `ne_none_iff_is_some "." (fieldIdx "1")) [(Term.proj `a "." (fieldIdx "2"))])))))
           ","
           (Term.structInstField
@@ -5463,9 +5399,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
            [`a]
            []
            "=>"
-           (Init.Core.«term_$_»
+           («term_<|_»
             `get
-            " $ "
+            "<|"
             (Term.app (Term.proj `ne_none_iff_is_some "." (fieldIdx "1")) [(Term.proj `a "." (fieldIdx "2"))])))))
         ","
         (Term.structInstField
@@ -5618,14 +5554,14 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
         [`a]
         []
         "=>"
-        (Init.Core.«term_$_»
+        («term_<|_»
          `get
-         " $ "
+         "<|"
          (Term.app (Term.proj `ne_none_iff_is_some "." (fieldIdx "1")) [(Term.proj `a "." (fieldIdx "2"))]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      («term_<|_»
        `get
-       " $ "
+       "<|"
        (Term.app (Term.proj `ne_none_iff_is_some "." (fieldIdx "1")) [(Term.proj `a "." (fieldIdx "2"))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app (Term.proj `ne_none_iff_is_some "." (fieldIdx "1")) [(Term.proj `a "." (fieldIdx "2"))])
@@ -5643,11 +5579,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
       `ne_none_iff_is_some
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       `get
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
@@ -5711,7 +5647,7 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `nat_iso.of_components
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (some 1, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 0, term) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
      (Term.app
@@ -5747,9 +5683,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                 [`a]
                 []
                 "=>"
-                (Init.Core.«term_$_»
+                («term_<|_»
                  `get
-                 " $ "
+                 "<|"
                  (Term.app (Term.proj `ne_none_iff_is_some "." (fieldIdx "1")) [(Term.proj `a "." (fieldIdx "2"))])))))
              ","
              (Term.structInstField
@@ -5787,10 +5723,10 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
             []
             "}")])))])
      ")")
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1, (some 0, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 0, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
-     (Init.Core.«term_$_»
+     (Term.app
       (Term.paren
        "("
        (Term.app
@@ -5826,9 +5762,9 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                   [`a]
                   []
                   "=>"
-                  (Init.Core.«term_$_»
+                  («term_<|_»
                    `get
-                   " $ "
+                   "<|"
                    (Term.app
                     (Term.proj `ne_none_iff_is_some "." (fieldIdx "1"))
                     [(Term.proj `a "." (fieldIdx "2"))])))))
@@ -5868,80 +5804,78 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
               []
               "}")])))])
        ")")
-      " $ "
-      (Term.fun
-       "fun"
-       (Term.basicFun
-        [`X `Y `f]
-        []
-        "=>"
-        (Init.Core.«term_$_»
-         `Pfun.ext
-         " $ "
-         (Term.fun
-          "fun"
-          (Term.basicFun
-           [`a `b]
-           []
-           "=>"
-           (Term.byTactic
-            "by"
-            (Tactic.tacticSeq
-             (Tactic.tacticSeq1Indented
-              [(Tactic.unfoldProjs "unfold_projs" [] [])
-               []
-               (Tactic.dsimp "dsimp" [] [] [] [] [])
-               []
-               (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
-               []
-               (Tactic.refine'
-                "refine'"
-                (Term.app
-                 (Term.proj (Term.paren "(" (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) ")") "." `trans)
-                 [`pfun.mem_to_subtype_iff.symm]))
-               []
-               (Std.Tactic.obtain
-                "obtain"
-                [(Std.Tactic.RCases.rcasesPatMed
-                  [(Std.Tactic.RCases.rcasesPat.tuple
-                    "⟨"
-                    [(Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed
-                       [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
-                      [])
-                     ","
-                     (Std.Tactic.RCases.rcasesPatLo
-                      (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
-                      [])]
-                    "⟩")])]
-                []
-                [":=" [`b]])
-               []
-               («tactic___;_»
-                (cdotTk (patternIgnore (token.«·» "·")))
-                [(group (Tactic.exact "exact" (Term.proj (Term.paren "(" (Term.app `hb [`rfl]) ")") "." `elim)) [])])
-               []
-               (Tactic.dsimp "dsimp" [] [] [] [] [])
-               []
-               (Mathlib.Tactic.tacticSimp_rw__
-                "simp_rw"
-                (Tactic.rwRuleSeq
-                 "["
-                 [(Tactic.rwRule [] `Part.mem_some_iff)
-                  ","
-                  (Tactic.rwRule [] `Subtype.mk_eq_mk)
-                  ","
-                  (Tactic.rwRule [] `exists_prop)
-                  ","
-                  (Tactic.rwRule [] `some_inj)
-                  ","
-                  (Tactic.rwRule [] `exists_eq_right')]
-                 "]")
-                [])
-               []
-               (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
-               []
-               (Tactic.exact "exact" `eq_comm)])))))))))
+      [(Term.fun
+        "fun"
+        (Term.basicFun
+         [`X `Y `f]
+         []
+         "=>"
+         (Term.app
+          `Pfun.ext
+          [(Term.fun
+            "fun"
+            (Term.basicFun
+             [`a `b]
+             []
+             "=>"
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.unfoldProjs "unfold_projs" [] [])
+                 []
+                 (Tactic.dsimp "dsimp" [] [] [] [] [])
+                 []
+                 (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Part.bind_some)] "]") [])
+                 []
+                 (Tactic.refine'
+                  "refine'"
+                  (Term.app
+                   (Term.proj (Term.paren "(" (Term.app `part.mem_bind_iff.trans [(Term.hole "_")]) ")") "." `trans)
+                   [`pfun.mem_to_subtype_iff.symm]))
+                 []
+                 (Std.Tactic.obtain
+                  "obtain"
+                  [(Std.Tactic.RCases.rcasesPatMed
+                    [(Std.Tactic.RCases.rcasesPat.tuple
+                      "⟨"
+                      [(Std.Tactic.RCases.rcasesPatLo
+                        (Std.Tactic.RCases.rcasesPatMed
+                         [(Std.Tactic.RCases.rcasesPat.one `b) "|" (Std.Tactic.RCases.rcasesPat.one `b)])
+                        [])
+                       ","
+                       (Std.Tactic.RCases.rcasesPatLo
+                        (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hb)])
+                        [])]
+                      "⟩")])]
+                  []
+                  [":=" [`b]])
+                 []
+                 («tactic___;_»
+                  (cdotTk (patternIgnore (token.«·» "·")))
+                  [(group (Tactic.exact "exact" (Term.proj (Term.paren "(" (Term.app `hb [`rfl]) ")") "." `elim)) [])])
+                 []
+                 (Tactic.dsimp "dsimp" [] [] [] [] [])
+                 []
+                 (Mathlib.Tactic.tacticSimp_rw__
+                  "simp_rw"
+                  (Tactic.rwRuleSeq
+                   "["
+                   [(Tactic.rwRule [] `Part.mem_some_iff)
+                    ","
+                    (Tactic.rwRule [] `Subtype.mk_eq_mk)
+                    ","
+                    (Tactic.rwRule [] `exists_prop)
+                    ","
+                    (Tactic.rwRule [] `some_inj)
+                    ","
+                    (Tactic.rwRule [] `exists_eq_right')]
+                   "]")
+                  [])
+                 []
+                 (Tactic.refine' "refine'" (Term.app `part.mem_to_option.symm.trans [(Term.hole "_")]))
+                 []
+                 (Tactic.exact "exact" `eq_comm)])))))])))])
      ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
@@ -5995,18 +5929,16 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                           {
                             toFun := fun a => ⟨ some a , some_ne_none a ⟩
                               ,
-                              invFun := fun a => get $ ne_none_iff_is_some . 1 a . 2
+                              invFun := fun a => get <| ne_none_iff_is_some . 1 a . 2
                               ,
                               left_inv := fun a => get_some _ _
                               ,
                               right_inv := fun a => by simp only [ Subtype.val_eq_coe , some_get , Subtype.coe_eta ]
                             }
-                  $
                   fun
                     X Y f
                       =>
                       Pfun.ext
-                        $
                         fun
                           a b
                             =>
@@ -6038,12 +5970,11 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                                     a
                                       =>
                                       Option.recOn a dif_pos rfl
-                                        $
                                         fun
                                           a
                                             =>
                                             dif_neg a . 2 . trans
-                                              $
+                                              <|
                                               by simp only [ Option.elim' , Subtype.val_eq_coe , Subtype.coe_eta ]
                                 ,
                                 right_inv
@@ -6051,19 +5982,16 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
                                   fun a => by change Option.elim' _ _ dite _ _ _ = _ split_ifs · rw [ h ] rfl · rfl
                               }
                             rfl
-                  $
                   fun
                     X Y f
                       =>
                       PointedCat.Hom.ext _ _
-                        $
+                        <|
                         funext
-                          $
                           fun
                             a
                               =>
                               Option.recOn a f.map_point.symm
-                                $
                                 fun
                                   a
                                     =>
@@ -6081,8 +6009,8 @@ def pointedToPartialFun : PointedCat.{u} ⥤ PartialFunCat where
 adding a point. -/
 @[simps]
 noncomputable def typeToPartialFunIsoPartialFunToPointed : typeToPartialFun ⋙ partialFunToPointed ≅ typeToPointed :=
-  (NatIso.ofComponents fun X => { Hom := ⟨id, rfl⟩, inv := ⟨id, rfl⟩, hom_inv_id' := rfl, inv_hom_id' := rfl }) $
+  (NatIso.ofComponents fun X => { Hom := ⟨id, rfl⟩, inv := ⟨id, rfl⟩, hom_inv_id' := rfl, inv_hom_id' := rfl })
     fun X Y f =>
-    PointedCat.Hom.ext _ _ $ funext $ fun a => Option.recOn a rfl $ fun a => by convert Part.some_to_option _
+    PointedCat.Hom.ext _ _ <| funext fun a => (Option.recOn a rfl) fun a => by convert Part.some_to_option _
 #align Type_to_PartialFun_iso_PartialFun_to_Pointed typeToPartialFunIsoPartialFunToPointed
 

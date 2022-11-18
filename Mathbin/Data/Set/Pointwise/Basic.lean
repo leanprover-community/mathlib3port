@@ -232,7 +232,7 @@ theorem Nonempty.inv (h : s.Nonempty) : s⁻¹.Nonempty :=
 
 @[to_additive]
 theorem Finite.inv (hs : s.Finite) : s⁻¹.Finite :=
-  hs.Preimage $ inv_injective.InjOn _
+  hs.Preimage <| inv_injective.InjOn _
 #align set.finite.inv Set.Finite.inv
 
 @[simp, to_additive]
@@ -302,9 +302,8 @@ theorem image2_mul : image2 Mul.mul s t = s * t :=
   rfl
 #align set.image2_mul Set.image2_mul
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 @[to_additive]
-theorem mem_mul : a ∈ s * t ↔ ∃ (x) (y), x ∈ s ∧ y ∈ t ∧ x * y = a :=
+theorem mem_mul : a ∈ s * t ↔ ∃ x y, x ∈ s ∧ y ∈ t ∧ x * y = a :=
   Iff.rfl
 #align set.mem_mul Set.mem_mul
 
@@ -527,9 +526,8 @@ theorem image2_div : image2 Div.div s t = s / t :=
   rfl
 #align set.image2_div Set.image2_div
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 @[to_additive]
-theorem mem_div : a ∈ s / t ↔ ∃ (x) (y), x ∈ s ∧ y ∈ t ∧ x / y = a :=
+theorem mem_div : a ∈ s / t ↔ ∃ x y, x ∈ s ∧ y ∈ t ∧ x / y = a :=
   Iff.rfl
 #align set.mem_div Set.mem_div
 
@@ -852,7 +850,7 @@ theorem mem_prod_list_of_fn {a : α} {s : Fin n → Set α} :
 @[to_additive]
 theorem mem_list_prod {l : List (Set α)} {a : α} :
     a ∈ l.Prod ↔
-      ∃ l' : List (Σ s : Set α, ↥s), List.prod (l'.map fun x => (Sigma.snd x : α)) = a ∧ l'.map Sigma.fst = l :=
+      ∃ l' : List (Σs : Set α, ↥s), List.prod (l'.map fun x => (Sigma.snd x : α)) = a ∧ l'.map Sigma.fst = l :=
   by
   induction' l using List.ofFnRec with n f
   simp_rw [List.exists_iff_exists_tuple, List.map_of_fn, List.of_fn_inj', and_left_comm, exists_and_left,
@@ -873,22 +871,22 @@ theorem mem_pow {a : α} {n : ℕ} : a ∈ s ^ n ↔ ∃ f : Fin n → s, (List.
 
 @[simp, to_additive]
 theorem empty_pow {n : ℕ} (hn : n ≠ 0) : (∅ : Set α) ^ n = ∅ := by
-  rw [← tsub_add_cancel_of_le (Nat.succ_le_of_lt $ Nat.pos_of_ne_zero hn), pow_succ, empty_mul]
+  rw [← tsub_add_cancel_of_le (Nat.succ_le_of_lt <| Nat.pos_of_ne_zero hn), pow_succ, empty_mul]
 #align set.empty_pow Set.empty_pow
 
 @[to_additive]
 theorem mul_univ_of_one_mem (hs : (1 : α) ∈ s) : s * univ = univ :=
-  eq_univ_iff_forall.2 $ fun a => mem_mul.2 ⟨_, _, hs, mem_univ _, one_mul _⟩
+  eq_univ_iff_forall.2 fun a => mem_mul.2 ⟨_, _, hs, mem_univ _, one_mul _⟩
 #align set.mul_univ_of_one_mem Set.mul_univ_of_one_mem
 
 @[to_additive]
 theorem univ_mul_of_one_mem (ht : (1 : α) ∈ t) : univ * t = univ :=
-  eq_univ_iff_forall.2 $ fun a => mem_mul.2 ⟨_, _, mem_univ _, ht, mul_one _⟩
+  eq_univ_iff_forall.2 fun a => mem_mul.2 ⟨_, _, mem_univ _, ht, mul_one _⟩
 #align set.univ_mul_of_one_mem Set.univ_mul_of_one_mem
 
 @[simp, to_additive]
 theorem univ_mul_univ : (univ : Set α) * univ = univ :=
-  mul_univ_of_one_mem $ mem_univ _
+  mul_univ_of_one_mem <| mem_univ _
 #align set.univ_mul_univ Set.univ_mul_univ
 
 --TODO: `to_additive` trips up on the `1 : ℕ` used in the pattern-matching.
@@ -927,18 +925,17 @@ section DivisionMonoid
 
 variable [DivisionMonoid α] {s t : Set α}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 @[to_additive]
-protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ (a) (b), s = {a} ∧ t = {b} ∧ a * b = 1 := by
+protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = {a} ∧ t = {b} ∧ a * b = 1 := by
   refine' ⟨fun h => _, _⟩
   · have hst : (s * t).Nonempty := h.symm.subst one_nonempty
     obtain ⟨a, ha⟩ := hst.of_image2_left
     obtain ⟨b, hb⟩ := hst.of_image2_right
-    have H : ∀ {a b}, a ∈ s → b ∈ t → a * b = (1 : α) := fun a b ha hb => h.subset $ mem_image2_of_mem ha hb
+    have H : ∀ {a b}, a ∈ s → b ∈ t → a * b = (1 : α) := fun a b ha hb => h.subset <| mem_image2_of_mem ha hb
     refine' ⟨a, b, _, _, H ha hb⟩ <;> refine' eq_singleton_iff_unique_mem.2 ⟨‹_›, fun x hx => _⟩
-    · exact (eq_inv_of_mul_eq_one_left $ H hx hb).trans (inv_eq_of_mul_eq_one_left $ H ha hb)
+    · exact (eq_inv_of_mul_eq_one_left <| H hx hb).trans (inv_eq_of_mul_eq_one_left <| H ha hb)
       
-    · exact (eq_inv_of_mul_eq_one_right $ H ha hx).trans (inv_eq_of_mul_eq_one_right $ H ha hb)
+    · exact (eq_inv_of_mul_eq_one_right <| H ha hx).trans (inv_eq_of_mul_eq_one_right <| H ha hb)
       
     
   · rintro ⟨b, c, rfl, rfl, h⟩
@@ -1033,11 +1030,11 @@ theorem zero_mul_subset (s : Set α) : 0 * s ⊆ 0 := by simp [subset_def, mem_m
 #align set.zero_mul_subset Set.zero_mul_subset
 
 theorem Nonempty.mul_zero (hs : s.Nonempty) : s * 0 = 0 :=
-  s.mul_zero_subset.antisymm $ by simpa [mem_mul] using hs
+  s.mul_zero_subset.antisymm <| by simpa [mem_mul] using hs
 #align set.nonempty.mul_zero Set.Nonempty.mul_zero
 
 theorem Nonempty.zero_mul (hs : s.Nonempty) : 0 * s = 0 :=
-  s.zero_mul_subset.antisymm $ by simpa [mem_mul] using hs
+  s.zero_mul_subset.antisymm <| by simpa [mem_mul] using hs
 #align set.nonempty.zero_mul Set.Nonempty.zero_mul
 
 end MulZeroClass
@@ -1121,13 +1118,13 @@ theorem preimage_mul_right_one' : (· * b⁻¹) ⁻¹' 1 = {b} := by simp
 @[simp, to_additive]
 theorem mul_univ (hs : s.Nonempty) : s * (univ : Set α) = univ :=
   let ⟨a, ha⟩ := hs
-  eq_univ_of_forall $ fun b => ⟨a, a⁻¹ * b, ha, trivial, mul_inv_cancel_left _ _⟩
+  eq_univ_of_forall fun b => ⟨a, a⁻¹ * b, ha, trivial, mul_inv_cancel_left _ _⟩
 #align set.mul_univ Set.mul_univ
 
 @[simp, to_additive]
 theorem univ_mul (ht : t.Nonempty) : (univ : Set α) * t = univ :=
   let ⟨a, ha⟩ := ht
-  eq_univ_of_forall $ fun b => ⟨b * a⁻¹, a, trivial, ha, inv_mul_cancel_right _ _⟩
+  eq_univ_of_forall fun b => ⟨b * a⁻¹, a, trivial, ha, inv_mul_cancel_right _ _⟩
 #align set.univ_mul Set.univ_mul
 
 end Group
@@ -1143,11 +1140,11 @@ theorem zero_div_subset (s : Set α) : 0 / s ⊆ 0 := by simp [subset_def, mem_d
 #align set.zero_div_subset Set.zero_div_subset
 
 theorem Nonempty.div_zero (hs : s.Nonempty) : s / 0 = 0 :=
-  s.div_zero_subset.antisymm $ by simpa [mem_div] using hs
+  s.div_zero_subset.antisymm <| by simpa [mem_div] using hs
 #align set.nonempty.div_zero Set.Nonempty.div_zero
 
 theorem Nonempty.zero_div (hs : s.Nonempty) : 0 / s = 0 :=
-  s.zero_div_subset.antisymm $ by simpa [mem_div] using hs
+  s.zero_div_subset.antisymm <| by simpa [mem_div] using hs
 #align set.nonempty.zero_div Set.Nonempty.zero_div
 
 end GroupWithZero
@@ -1160,7 +1157,7 @@ include α β
 
 @[to_additive]
 theorem image_mul : m '' (s * t) = m '' s * m '' t :=
-  image_image2_distrib $ map_mul m
+  image_image2_distrib <| map_mul m
 #align set.image_mul Set.image_mul
 
 @[to_additive]
@@ -1179,7 +1176,7 @@ include α β
 
 @[to_additive]
 theorem image_div : m '' (s / t) = m '' s / m '' t :=
-  image_image2_distrib $ map_div m
+  image_image2_distrib <| map_div m
 #align set.image_div Set.image_div
 
 @[to_additive]
@@ -1238,9 +1235,8 @@ theorem image_smul_prod : (fun x : α × β => x.fst • x.snd) '' s ×ˢ t = s 
   image_prod _
 #align set.image_smul_prod Set.image_smul_prod
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 @[to_additive]
-theorem mem_smul : b ∈ s • t ↔ ∃ (x) (y), x ∈ s ∧ y ∈ t ∧ x • y = b :=
+theorem mem_smul : b ∈ s • t ↔ ∃ x y, x ∈ s ∧ y ∈ t ∧ x • y = b :=
   Iff.rfl
 #align set.mem_smul Set.mem_smul
 
@@ -1515,7 +1511,7 @@ theorem bUnion_op_smul_set [Mul α] (s t : Set α) : (⋃ a ∈ t, MulOpposite.o
 
 @[to_additive]
 theorem smul_set_inter [Group α] [MulAction α β] {s t : Set β} : a • (s ∩ t) = a • s ∩ a • t :=
-  (image_inter $ MulAction.injective a).symm
+  (image_inter <| MulAction.injective a).symm
 #align set.smul_set_inter Set.smul_set_inter
 
 theorem smul_set_inter₀ [GroupWithZero α] [MulAction α β] {s t : Set β} (ha : a ≠ 0) : a • (s ∩ t) = a • s ∩ a • t :=
@@ -1524,19 +1520,19 @@ theorem smul_set_inter₀ [GroupWithZero α] [MulAction α β] {s t : Set β} (h
 
 @[simp, to_additive]
 theorem smul_set_univ [Group α] [MulAction α β] {a : α} : a • (univ : Set β) = univ :=
-  eq_univ_of_forall $ fun b => ⟨a⁻¹ • b, trivial, smul_inv_smul _ _⟩
+  eq_univ_of_forall fun b => ⟨a⁻¹ • b, trivial, smul_inv_smul _ _⟩
 #align set.smul_set_univ Set.smul_set_univ
 
 @[simp, to_additive]
 theorem smul_univ [Group α] [MulAction α β] {s : Set α} (hs : s.Nonempty) : s • (univ : Set β) = univ :=
   let ⟨a, ha⟩ := hs
-  eq_univ_of_forall $ fun b => ⟨a, a⁻¹ • b, ha, trivial, smul_inv_smul _ _⟩
+  eq_univ_of_forall fun b => ⟨a, a⁻¹ • b, ha, trivial, smul_inv_smul _ _⟩
 #align set.smul_univ Set.smul_univ
 
 @[to_additive]
 theorem range_smul_range {ι κ : Type _} [HasSmul α β] (b : ι → α) (c : κ → β) :
     range b • range c = range fun p : ι × κ => b p.1 • c p.2 :=
-  ext $ fun x =>
+  ext fun x =>
     ⟨fun hx =>
       let ⟨p, q, ⟨i, hi⟩, ⟨j, hj⟩, hpq⟩ := Set.mem_smul.1 hx
       ⟨(i, j), hpq ▸ hi ▸ hj ▸ rfl⟩,
@@ -1550,12 +1546,12 @@ theorem smul_set_range [HasSmul α β] {ι : Sort _} {f : ι → β} : a • ran
 
 @[to_additive]
 instance smul_comm_class_set [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ] : SmulCommClass α β (Set γ) :=
-  ⟨fun _ _ => commute.set_image $ smul_comm _ _⟩
+  ⟨fun _ _ => commute.set_image <| smul_comm _ _⟩
 #align set.smul_comm_class_set Set.smul_comm_class_set
 
 @[to_additive]
 instance smul_comm_class_set' [HasSmul α γ] [HasSmul β γ] [SmulCommClass α β γ] : SmulCommClass α (Set β) (Set γ) :=
-  ⟨fun _ _ _ => image_image2_distrib_right $ smul_comm _⟩
+  ⟨fun _ _ _ => image_image2_distrib_right <| smul_comm _⟩
 #align set.smul_comm_class_set' Set.smul_comm_class_set'
 
 @[to_additive]
@@ -1577,7 +1573,7 @@ instance is_scalar_tower [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScal
 @[to_additive]
 instance is_scalar_tower' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsScalarTower α β γ] :
     IsScalarTower α (Set β) (Set γ) :=
-  ⟨fun _ _ _ => image2_image_left_comm $ smul_assoc _⟩
+  ⟨fun _ _ _ => image2_image_left_comm <| smul_assoc _⟩
 #align set.is_scalar_tower' Set.is_scalar_tower'
 
 @[to_additive]
@@ -1586,7 +1582,7 @@ instance is_scalar_tower'' [HasSmul α β] [HasSmul α γ] [HasSmul β γ] [IsSc
 #align set.is_scalar_tower'' Set.is_scalar_tower''
 
 instance is_central_scalar [HasSmul α β] [HasSmul αᵐᵒᵖ β] [IsCentralScalar α β] : IsCentralScalar α (Set β) :=
-  ⟨fun a S => (congr_arg fun f => f '' S) $ funext fun _ => op_smul_eq_smul _ _⟩
+  ⟨fun a S => (congr_arg fun f => f '' S) <| funext fun _ => op_smul_eq_smul _ _⟩
 #align set.is_central_scalar Set.is_central_scalar
 
 /-- A multiplicative action of a monoid `α` on a type `β` gives a multiplicative action of `set α`
@@ -1595,7 +1591,7 @@ on `set β`. -/
       "An additive action of an additive monoid `α` on a type `β` gives an additive action\nof `set α` on `set β`"]
 protected def mulAction [Monoid α] [MulAction α β] : MulAction (Set α) (Set β) where
   mul_smul _ _ _ := image2_assoc mul_smul
-  one_smul s := image2_singleton_left.trans $ by simp_rw [one_smul, image_id']
+  one_smul s := image2_singleton_left.trans <| by simp_rw [one_smul, image_id']
 #align set.mul_action Set.mulAction
 
 /-- A multiplicative action of a monoid on a type `β` gives a multiplicative action on `set β`. -/
@@ -1614,15 +1610,15 @@ scoped[Pointwise] attribute [instance] Set.mulActionSet Set.addActionSet Set.mul
 /-- A distributive multiplicative action of a monoid on an additive monoid `β` gives a distributive
 multiplicative action on `set β`. -/
 protected def distribMulActionSet [Monoid α] [AddMonoid β] [DistribMulAction α β] : DistribMulAction α (Set β) where
-  smul_add _ _ _ := image_image2_distrib $ smul_add _
-  smul_zero _ := image_singleton.trans $ by rw [smul_zero, singleton_zero]
+  smul_add _ _ _ := image_image2_distrib <| smul_add _
+  smul_zero _ := image_singleton.trans <| by rw [smul_zero, singleton_zero]
 #align set.distrib_mul_action_set Set.distribMulActionSet
 
 /-- A multiplicative action of a monoid on a monoid `β` gives a multiplicative action on `set β`. -/
 protected def mulDistribMulActionSet [Monoid α] [Monoid β] [MulDistribMulAction α β] :
     MulDistribMulAction α (Set β) where
-  smul_mul _ _ _ := image_image2_distrib $ smul_mul' _
-  smul_one _ := image_singleton.trans $ by rw [smul_one, singleton_one]
+  smul_mul _ _ _ := image_image2_distrib <| smul_mul' _
+  smul_one _ := image_singleton.trans <| by rw [smul_one, singleton_one]
 #align set.mul_distrib_mul_action_set Set.mulDistribMulActionSet
 
 scoped[Pointwise] attribute [instance] Set.distribMulActionSet Set.mulDistribMulActionSet
@@ -1633,7 +1629,7 @@ instance [Zero α] [Zero β] [HasSmul α β] [NoZeroSmulDivisors α β] : NoZero
     have hst : (s • t).Nonempty := h.symm.subst zero_nonempty
     simp_rw [← hst.of_smul_left.subset_zero_iff, ← hst.of_smul_right.subset_zero_iff, not_subset, mem_zero] at H
     obtain ⟨⟨a, hs, ha⟩, b, ht, hb⟩ := H
-    exact (eq_zero_or_eq_zero_of_smul_eq_zero $ h.subset $ smul_mem_smul hs ht).elim ha hb⟩
+    exact (eq_zero_or_eq_zero_of_smul_eq_zero <| h.subset <| smul_mem_smul hs ht).elim ha hb⟩
 
 instance no_zero_smul_divisors_set [Zero α] [Zero β] [HasSmul α β] [NoZeroSmulDivisors α β] :
     NoZeroSmulDivisors α (Set β) :=
@@ -1642,7 +1638,7 @@ instance no_zero_smul_divisors_set [Zero α] [Zero β] [HasSmul α β] [NoZeroSm
     have hst : (a • s).Nonempty := h.symm.subst zero_nonempty
     simp_rw [← hst.of_image.subset_zero_iff, not_subset, mem_zero] at H
     obtain ⟨ha, b, ht, hb⟩ := H
-    exact (eq_zero_or_eq_zero_of_smul_eq_zero $ h.subset $ smul_mem_smul_set ht).elim ha hb⟩
+    exact (eq_zero_or_eq_zero_of_smul_eq_zero <| h.subset <| smul_mem_smul_set ht).elim ha hb⟩
 #align set.no_zero_smul_divisors_set Set.no_zero_smul_divisors_set
 
 instance [Zero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisors (Set α) :=
@@ -1670,8 +1666,7 @@ theorem image_vsub_prod : (fun x : β × β => x.fst -ᵥ x.snd) '' s ×ˢ t = s
   image_prod _
 #align set.image_vsub_prod Set.image_vsub_prod
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
-theorem mem_vsub : a ∈ s -ᵥ t ↔ ∃ (x) (y), x ∈ s ∧ y ∈ t ∧ x -ᵥ y = a :=
+theorem mem_vsub : a ∈ s -ᵥ t ↔ ∃ x y, x ∈ s ∧ y ∈ t ∧ x -ᵥ y = a :=
   Iff.rfl
 #align set.mem_vsub Set.mem_vsub
 
@@ -1836,11 +1831,11 @@ theorem zero_smul_subset (t : Set β) : (0 : Set α) • t ⊆ 0 := by simp [sub
 #align set.zero_smul_subset Set.zero_smul_subset
 
 theorem Nonempty.smul_zero (hs : s.Nonempty) : s • (0 : Set β) = 0 :=
-  s.smul_zero_subset.antisymm $ by simpa [mem_smul] using hs
+  s.smul_zero_subset.antisymm <| by simpa [mem_smul] using hs
 #align set.nonempty.smul_zero Set.Nonempty.smul_zero
 
 theorem Nonempty.zero_smul (ht : t.Nonempty) : (0 : Set α) • t = 0 :=
-  t.zero_smul_subset.antisymm $ by simpa [mem_smul] using ht
+  t.zero_smul_subset.antisymm <| by simpa [mem_smul] using ht
 #align set.nonempty.zero_smul Set.Nonempty.zero_smul
 
 /-- A nonempty set is scaled by zero to the singleton set containing 0. -/
@@ -1849,11 +1844,11 @@ theorem zero_smul_set {s : Set β} (h : s.Nonempty) : (0 : α) • s = (0 : Set 
 #align set.zero_smul_set Set.zero_smul_set
 
 theorem zero_smul_set_subset (s : Set β) : (0 : α) • s ⊆ 0 :=
-  image_subset_iff.2 $ fun x _ => zero_smul α x
+  image_subset_iff.2 fun x _ => zero_smul α x
 #align set.zero_smul_set_subset Set.zero_smul_set_subset
 
 theorem subsingleton_zero_smul_set (s : Set β) : ((0 : α) • s).Subsingleton :=
-  subsingleton_singleton.anti $ zero_smul_set_subset s
+  subsingleton_singleton.anti <| zero_smul_set_subset s
 #align set.subsingleton_zero_smul_set Set.subsingleton_zero_smul_set
 
 theorem zero_mem_smul_set {t : Set β} {a : α} (h : (0 : β) ∈ t) : (0 : β) ∈ a • t :=
@@ -1894,7 +1889,7 @@ variable [LeftCancelSemigroup α] {s t : Set α}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive]
 theorem pairwise_disjoint_smul_iff : s.PairwiseDisjoint (· • t) ↔ (s ×ˢ t).InjOn fun p => p.1 * p.2 :=
-  pairwise_disjoint_image_right_iff $ fun _ _ => mul_right_injective _
+  pairwise_disjoint_image_right_iff fun _ _ => mul_right_injective _
 #align set.pairwise_disjoint_smul_iff Set.pairwise_disjoint_smul_iff
 
 end LeftCancelSemigroup
@@ -1930,23 +1925,23 @@ theorem preimage_smul_inv (a : α) (t : Set β) : (fun x => a⁻¹ • x) ⁻¹'
 
 @[simp, to_additive]
 theorem set_smul_subset_set_smul_iff : a • A ⊆ a • B ↔ A ⊆ B :=
-  image_subset_image_iff $ MulAction.injective _
+  image_subset_image_iff <| MulAction.injective _
 #align set.set_smul_subset_set_smul_iff Set.set_smul_subset_set_smul_iff
 
 @[to_additive]
 theorem set_smul_subset_iff : a • A ⊆ B ↔ A ⊆ a⁻¹ • B :=
-  image_subset_iff.trans $ iff_of_eq $ congr_arg _ $ preimage_equiv_eq_image_symm _ $ MulAction.toPerm _
+  image_subset_iff.trans <| iff_of_eq <| congr_arg _ <| preimage_equiv_eq_image_symm _ <| MulAction.toPerm _
 #align set.set_smul_subset_iff Set.set_smul_subset_iff
 
 @[to_additive]
 theorem subset_set_smul_iff : A ⊆ a • B ↔ a⁻¹ • A ⊆ B :=
-  Iff.symm $
-    image_subset_iff.trans $ Iff.symm $ iff_of_eq $ congr_arg _ $ image_equiv_eq_preimage_symm _ $ MulAction.toPerm _
+  Iff.symm <|
+    image_subset_iff.trans <|
+      Iff.symm <| iff_of_eq <| congr_arg _ <| image_equiv_eq_preimage_symm _ <| MulAction.toPerm _
 #align set.subset_set_smul_iff Set.subset_set_smul_iff
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 @[to_additive]
-theorem smul_inter_ne_empty_iff {s t : Set α} {x : α} : x • s ∩ t ≠ ∅ ↔ ∃ (a) (b), (a ∈ t ∧ b ∈ s) ∧ a * b⁻¹ = x := by
+theorem smul_inter_ne_empty_iff {s t : Set α} {x : α} : x • s ∩ t ≠ ∅ ↔ ∃ a b, (a ∈ t ∧ b ∈ s) ∧ a * b⁻¹ = x := by
   rw [ne_empty_iff_nonempty]
   constructor
   · rintro ⟨a, h, ha⟩
@@ -1958,16 +1953,14 @@ theorem smul_inter_ne_empty_iff {s t : Set α} {x : α} : x • s ∩ t ≠ ∅ 
     
 #align set.smul_inter_ne_empty_iff Set.smul_inter_ne_empty_iff
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 @[to_additive]
-theorem smul_inter_ne_empty_iff' {s t : Set α} {x : α} : x • s ∩ t ≠ ∅ ↔ ∃ (a) (b), (a ∈ t ∧ b ∈ s) ∧ a / b = x := by
+theorem smul_inter_ne_empty_iff' {s t : Set α} {x : α} : x • s ∩ t ≠ ∅ ↔ ∃ a b, (a ∈ t ∧ b ∈ s) ∧ a / b = x := by
   simp_rw [smul_inter_ne_empty_iff, div_eq_mul_inv]
 #align set.smul_inter_ne_empty_iff' Set.smul_inter_ne_empty_iff'
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 @[to_additive]
 theorem op_smul_inter_ne_empty_iff {s t : Set α} {x : αᵐᵒᵖ} :
-    x • s ∩ t ≠ ∅ ↔ ∃ (a) (b), (a ∈ s ∧ b ∈ t) ∧ a⁻¹ * b = MulOpposite.unop x := by
+    x • s ∩ t ≠ ∅ ↔ ∃ a b, (a ∈ s ∧ b ∈ t) ∧ a⁻¹ * b = MulOpposite.unop x := by
   rw [ne_empty_iff_nonempty]
   constructor
   · rintro ⟨a, h, ha⟩
@@ -2022,11 +2015,11 @@ theorem subset_set_smul_iff₀ (ha : a ≠ 0) {A B : Set β} : A ⊆ a • B ↔
 
 theorem smul_univ₀ (hs : ¬s ⊆ 0) : s • (univ : Set β) = univ :=
   let ⟨a, ha, ha₀⟩ := not_subset.1 hs
-  eq_univ_of_forall $ fun b => ⟨a, a⁻¹ • b, ha, trivial, smul_inv_smul₀ ha₀ _⟩
+  eq_univ_of_forall fun b => ⟨a, a⁻¹ • b, ha, trivial, smul_inv_smul₀ ha₀ _⟩
 #align set.smul_univ₀ Set.smul_univ₀
 
 theorem smul_set_univ₀ (ha : a ≠ 0) : a • (univ : Set β) = univ :=
-  eq_univ_of_forall $ fun b => ⟨a⁻¹ • b, trivial, smul_inv_smul₀ ha _⟩
+  eq_univ_of_forall fun b => ⟨a⁻¹ • b, trivial, smul_inv_smul₀ ha _⟩
 #align set.smul_set_univ₀ Set.smul_set_univ₀
 
 end GroupWithZero
@@ -2099,7 +2092,7 @@ variable {G : Type _} [Group G] [Fintype G] (S : Set G)
 theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k)] :
     ∀ k, Fintype.card G ≤ k → Fintype.card ↥(S ^ k) = Fintype.card ↥(S ^ Fintype.card G) := by
   have hG : 0 < Fintype.card G := fintype.card_pos_iff.mpr ⟨1⟩
-  by_cases hS:S = ∅
+  by_cases hS : S = ∅
   · refine' fun k hk => Fintype.card_congr _
     rw [hS, empty_pow (ne_of_gt (lt_of_lt_of_le hG hk)), empty_pow (ne_of_gt hG)]
     

@@ -38,12 +38,12 @@ attribute [local instance] Classical.propDecidable
 open Ennreal
 
 /-- Extended norm on a vector space. As in the case of normed spaces, we require only
-`∥c • x∥ ≤ ∥c∥ * ∥x∥` in the definition, then prove an equality in `map_smul`. -/
+`‖c • x‖ ≤ ‖c‖ * ‖x‖` in the definition, then prove an equality in `map_smul`. -/
 structure Enorm (𝕜 : Type _) (V : Type _) [NormedField 𝕜] [AddCommGroup V] [Module 𝕜 V] where
   toFun : V → ℝ≥0∞
   eq_zero' : ∀ x, to_fun x = 0 → x = 0
   map_add_le' : ∀ x y : V, to_fun (x + y) ≤ to_fun x + to_fun y
-  map_smul_le' : ∀ (c : 𝕜) (x : V), to_fun (c • x) ≤ ∥c∥₊ * to_fun x
+  map_smul_le' : ∀ (c : 𝕜) (x : V), to_fun (c • x) ≤ ‖c‖₊ * to_fun x
 #align enorm Enorm
 
 namespace Enorm
@@ -59,7 +59,7 @@ theorem coe_fn_injective : Function.Injective (coeFn : Enorm 𝕜 V → V → �
 
 @[ext.1]
 theorem ext {e₁ e₂ : Enorm 𝕜 V} (h : ∀ x, e₁ x = e₂ x) : e₁ = e₂ :=
-  coe_fn_injective $ funext h
+  coe_fn_injective <| funext h
 #align enorm.ext Enorm.ext
 
 theorem ext_iff {e₁ e₂ : Enorm 𝕜 V} : e₁ = e₂ ↔ ∀ x, e₁ x = e₂ x :=
@@ -72,14 +72,14 @@ theorem coe_inj {e₁ e₂ : Enorm 𝕜 V} : (e₁ : V → ℝ≥0∞) = e₂ �
 #align enorm.coe_inj Enorm.coe_inj
 
 @[simp]
-theorem map_smul (c : 𝕜) (x : V) : e (c • x) = ∥c∥₊ * e x :=
-  le_antisymm (e.map_smul_le' c x) $ by
-    by_cases hc:c = 0
+theorem map_smul (c : 𝕜) (x : V) : e (c • x) = ‖c‖₊ * e x :=
+  le_antisymm (e.map_smul_le' c x) <| by
+    by_cases hc : c = 0
     · simp [hc]
       
     calc
-      (∥c∥₊ : ℝ≥0∞) * e x = ∥c∥₊ * e (c⁻¹ • c • x) := by rw [inv_smul_smul₀ hc]
-      _ ≤ ∥c∥₊ * (∥c⁻¹∥₊ * e (c • x)) := _
+      (‖c‖₊ : ℝ≥0∞) * e x = ‖c‖₊ * e (c⁻¹ • c • x) := by rw [inv_smul_smul₀ hc]
+      _ ≤ ‖c‖₊ * (‖c⁻¹‖₊ * e (c • x)) := _
       _ = e (c • x) := _
       
     · exact Ennreal.mul_le_mul le_rfl (e.map_smul_le' _ _)
@@ -102,7 +102,7 @@ theorem eq_zero_iff {x : V} : e x = 0 ↔ x = 0 :=
 @[simp]
 theorem map_neg (x : V) : e (-x) = e x :=
   calc
-    e (-x) = ∥(-1 : 𝕜)∥₊ * e x := by rw [← map_smul, neg_one_smul]
+    e (-x) = ‖(-1 : 𝕜)‖₊ * e x := by rw [← map_smul, neg_one_smul]
     _ = e x := by simp
     
 #align enorm.map_neg Enorm.map_neg
@@ -126,7 +126,7 @@ instance : PartialOrder (Enorm 𝕜 V) where
   le e₁ e₂ := ∀ x, e₁ x ≤ e₂ x
   le_refl e x := le_rfl
   le_trans e₁ e₂ e₃ h₁₂ h₂₃ x := le_trans (h₁₂ x) (h₂₃ x)
-  le_antisymm e₁ e₂ h₁₂ h₂₁ := ext $ fun x => le_antisymm (h₁₂ x) (h₂₁ x)
+  le_antisymm e₁ e₂ h₁₂ h₂₁ := ext fun x => le_antisymm (h₁₂ x) (h₂₁ x)
 
 /-- The `enorm` sending each non-zero vector to infinity. -/
 noncomputable instance : HasTop (Enorm 𝕜 V) :=
@@ -162,9 +162,9 @@ noncomputable instance : SemilatticeSup (Enorm 𝕜 V) :=
     sup := fun e₁ e₂ =>
       { toFun := fun x => max (e₁ x) (e₂ x), eq_zero' := fun x h => e₁.eq_zero_iff.1 (Ennreal.max_eq_zero_iff.1 h).1,
         map_add_le' := fun x y =>
-          max_le (le_trans (e₁.map_add_le _ _) $ add_le_add (le_max_left _ _) (le_max_left _ _))
-            (le_trans (e₂.map_add_le _ _) $ add_le_add (le_max_right _ _) (le_max_right _ _)),
-        map_smul_le' := fun c x => le_of_eq $ by simp only [map_smul, Ennreal.mul_max] },
+          max_le (le_trans (e₁.map_add_le _ _) <| add_le_add (le_max_left _ _) (le_max_left _ _))
+            (le_trans (e₂.map_add_le _ _) <| add_le_add (le_max_right _ _) (le_max_right _ _)),
+        map_smul_le' := fun c x => le_of_eq <| by simp only [map_smul, Ennreal.mul_max] },
     le_sup_left := fun e₁ e₂ x => le_max_left _ _, le_sup_right := fun e₁ e₂ x => le_max_right _ _,
     sup_le := fun e₁ e₂ e₃ h₁ h₂ x => max_le (h₁ x) (h₂ x) }
 
@@ -199,7 +199,7 @@ def finiteSubspace : Subspace 𝕜 V where
   add_mem' x y hx hy := lt_of_le_of_lt (e.map_add_le x y) (Ennreal.add_lt_top.2 ⟨hx, hy⟩)
   smul_mem' c x (hx : _ < _) :=
     calc
-      e (c • x) = ∥c∥₊ * e x := e.map_smul c x
+      e (c • x) = ‖c‖₊ * e x := e.map_smul c x
       _ < ⊤ := Ennreal.mul_lt_top Ennreal.coe_ne_top hx.Ne
       
 #align enorm.finite_subspace Enorm.finiteSubspace
@@ -225,13 +225,13 @@ instance : NormedAddCommGroup e.finiteSubspace :=
   { finiteSubspace.metricSpace e, Submodule.addCommGroup _ with norm := fun x => (e x).toReal,
     dist_eq := fun x y => rfl }
 
-theorem finite_norm_eq (x : e.finiteSubspace) : ∥x∥ = (e x).toReal :=
+theorem finite_norm_eq (x : e.finiteSubspace) : ‖x‖ = (e x).toReal :=
   rfl
 #align enorm.finite_norm_eq Enorm.finite_norm_eq
 
 /-- Normed space instance on `e.finite_subspace`. -/
 instance :
-    NormedSpace 𝕜 e.finiteSubspace where norm_smul_le c x := le_of_eq $ by simp [finite_norm_eq, Ennreal.to_real_mul]
+    NormedSpace 𝕜 e.finiteSubspace where norm_smul_le c x := le_of_eq <| by simp [finite_norm_eq, Ennreal.to_real_mul]
 
 end Enorm
 

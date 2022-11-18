@@ -159,7 +159,7 @@ theorem left_dist_ne_zero_of_angle_eq_pi {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) 
 
 /-- If ∠ABC = π then dist C B ≠ 0. -/
 theorem right_dist_ne_zero_of_angle_eq_pi {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) : dist p3 p2 ≠ 0 :=
-  left_dist_ne_zero_of_angle_eq_pi $ (angle_comm _ _ _).trans h
+  left_dist_ne_zero_of_angle_eq_pi <| (angle_comm _ _ _).trans h
 #align euclidean_geometry.right_dist_ne_zero_of_angle_eq_pi EuclideanGeometry.right_dist_ne_zero_of_angle_eq_pi
 
 /-- If ∠ABC = π, then (dist A C) = (dist A B) + (dist B C). -/
@@ -360,13 +360,13 @@ strictly between the other two, or those two points are equal but not equal to t
 theorem angle_eq_zero_iff_eq_and_ne_or_sbtw {p₁ p₂ p₃ : P} :
     ∠ p₁ p₂ p₃ = 0 ↔ p₁ = p₃ ∧ p₁ ≠ p₂ ∨ Sbtw ℝ p₂ p₁ p₃ ∨ Sbtw ℝ p₂ p₃ p₁ := by
   rw [angle_eq_zero_iff_ne_and_wbtw]
-  by_cases hp₁p₂:p₁ = p₂
+  by_cases hp₁p₂ : p₁ = p₂
   · simp [hp₁p₂]
     
-  by_cases hp₁p₃:p₁ = p₃
+  by_cases hp₁p₃ : p₁ = p₃
   · simp [hp₁p₃]
     
-  by_cases hp₃p₂:p₃ = p₂
+  by_cases hp₃p₂ : p₃ = p₂
   · simp [hp₃p₂]
     
   simp [hp₁p₂, hp₁p₃, Ne.symm hp₁p₃, Sbtw, hp₃p₂]

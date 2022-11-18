@@ -5,8 +5,8 @@ Authors: Tian Chen, Mantas Bakšys
 -/
 import Mathbin.Algebra.GeomSum
 import Mathbin.Data.Int.Parity
-import Mathbin.NumberTheory.Padics.PadicNorm
 import Mathbin.Data.Zmod.Basic
+import Mathbin.NumberTheory.Padics.PadicVal
 
 /-!
 # Multiplicity in Number Theory
@@ -71,7 +71,7 @@ theorem sq_dvd_add_pow_sub_sub (p x : R) (n : ℕ) : p ^ 2 ∣ (x + p) ^ n - x ^
 
 theorem not_dvd_geom_sum₂ {p : R} (hp : Prime p) (hxy : p ∣ x - y) (hx : ¬p ∣ x) (hn : ¬p ∣ n) :
     ¬p ∣ ∑ i in range n, x ^ i * y ^ (n - 1 - i) := fun h =>
-  hx $ hp.dvd_of_dvd_pow $ (hp.dvd_or_dvd $ (dvd_geom_sum₂_iff_of_dvd_sub' hxy).mp h).resolve_left hn
+  hx <| hp.dvd_of_dvd_pow <| (hp.dvd_or_dvd <| (dvd_geom_sum₂_iff_of_dvd_sub' hxy).mp h).resolve_left hn
 #align not_dvd_geom_sum₂ not_dvd_geom_sum₂
 
 variable {p : ℕ} (a b)

@@ -154,7 +154,7 @@ variable {α : Type _}
   for the big operations
 -/
 def multinomial (f : α →₀ ℕ) : ℕ :=
-  (f.Sum $ fun _ => id)! / f.Prod fun _ n => n !
+  (f.Sum fun _ => id)! / f.Prod fun _ n => n !
 #align finsupp.multinomial Finsupp.multinomial
 
 theorem multinomial_eq (f : α →₀ ℕ) : f.multinomial = Nat.multinomial f.support f :=
@@ -162,7 +162,7 @@ theorem multinomial_eq (f : α →₀ ℕ) : f.multinomial = Nat.multinomial f.s
 #align finsupp.multinomial_eq Finsupp.multinomial_eq
 
 theorem multinomial_update (a : α) (f : α →₀ ℕ) :
-    f.multinomial = (f.Sum $ fun _ => id).choose (f a) * (f.update a 0).multinomial := by
+    f.multinomial = (f.Sum fun _ => id).choose (f a) * (f.update a 0).multinomial := by
   simp only [multinomial_eq]
   classical
   by_cases a ∈ f.support
@@ -217,11 +217,12 @@ variable {α : Type _} [DecidableEq α] (s : Finset α) {R : Type _}
 
   Proof is by induction on the number of summands.
 -/
-theorem sum_pow_of_commute [Semiring R] (x : α → R) (hc : (s : Set α).Pairwise $ fun i j => Commute (x i) (x j)) :
+theorem sum_pow_of_commute [Semiring R] (x : α → R) (hc : (s : Set α).Pairwise fun i j => Commute (x i) (x j)) :
     ∀ n,
       s.Sum x ^ n =
         ∑ k : s.Sym n,
-          k.1.1.multinomial * (k.1.1.map $ x).noncommProd (Multiset.map_set_pairwise $ hc.mono $ mem_sym_iff.1 k.2) :=
+          k.1.1.multinomial *
+            (k.1.1.map <| x).noncommProd (Multiset.map_set_pairwise <| hc.mono <| mem_sym_iff.1 k.2) :=
   by
   induction' s using Finset.induction with a s ha ih
   · rw [sum_empty]
@@ -240,13 +241,13 @@ theorem sum_pow_of_commute [Semiring R] (x : α → R) (hc : (s : Set α).Pairwi
       
     
   intro n
-  specialize ih (hc.mono $ s.subset_insert a)
-  rw [sum_insert ha, (Commute.sum_right s _ _ $ fun b hb => _).add_pow, sum_range]
+  specialize ih (hc.mono <| s.subset_insert a)
+  rw [sum_insert ha, ((Commute.sum_right s _ _) fun b hb => _).add_pow, sum_range]
   swap
   · exact hc (mem_insert_self a s) (mem_insert_of_mem hb) (ne_of_mem_of_not_mem hb ha).symm
     
   simp_rw [ih, mul_sum, sum_mul, sum_sigma', univ_sigma_univ]
-  refine' (Fintype.sum_equiv (sym_insert_equiv ha) _ _ $ fun m => _).symm
+  refine' ((Fintype.sum_equiv (sym_insert_equiv ha) _ _) fun m => _).symm
   rw [m.1.1.multinomial_filter_ne a]
   conv in m.1.1.map _ => rw [← m.1.1.filter_add_not ((· = ·) a), Multiset.map_add]
   simp_rw [Multiset.noncomm_prod_add, m.1.1.filter_eq, Multiset.map_repeat, m.1.2]

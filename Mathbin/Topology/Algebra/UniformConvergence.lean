@@ -50,7 +50,7 @@ open TopologicalSpace Pointwise
 
 section Group
 
-variable {α G ι : Type _} [Group G] [UniformSpace G] [UniformGroup G] {𝔖 : Set $ Set α}
+variable {α G ι : Type _} [Group G] [UniformSpace G] [UniformGroup G] {𝔖 : Set <| Set α}
 
 attribute [-instance] PiCat.uniformSpace
 
@@ -110,7 +110,7 @@ protected theorem UniformConvergenceOn.uniform_group :
 #align uniform_convergence_on.uniform_group UniformConvergenceOn.uniform_group
 
 @[to_additive]
-protected theorem UniformConvergenceOn.has_basis_nhds_one_of_basis (𝔖 : Set $ Set α) (h𝔖₁ : 𝔖.Nonempty)
+protected theorem UniformConvergenceOn.has_basis_nhds_one_of_basis (𝔖 : Set <| Set α) (h𝔖₁ : 𝔖.Nonempty)
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) {p : ι → Prop} {b : ι → Set G} (h : (𝓝 1 : Filter G).HasBasis p b) :
     (@nhds (α → G) (UniformConvergenceOn.topologicalSpace α G 𝔖) 1).HasBasis (fun Si : Set α × ι => Si.1 ∈ 𝔖 ∧ p Si.2)
       fun Si => { f : α → G | ∀ x ∈ Si.1, f x ∈ b Si.2 } :=
@@ -123,7 +123,7 @@ protected theorem UniformConvergenceOn.has_basis_nhds_one_of_basis (𝔖 : Set $
 #align uniform_convergence_on.has_basis_nhds_one_of_basis UniformConvergenceOn.has_basis_nhds_one_of_basis
 
 @[to_additive]
-protected theorem UniformConvergenceOn.has_basis_nhds_one (𝔖 : Set $ Set α) (h𝔖₁ : 𝔖.Nonempty)
+protected theorem UniformConvergenceOn.has_basis_nhds_one (𝔖 : Set <| Set α) (h𝔖₁ : 𝔖.Nonempty)
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
     (@nhds (α → G) (UniformConvergenceOn.topologicalSpace α G 𝔖) 1).HasBasis
       (fun SV : Set α × Set G => SV.1 ∈ 𝔖 ∧ SV.2 ∈ (𝓝 1 : Filter G)) fun SV => { f : α → G | ∀ x ∈ SV.1, f x ∈ SV.2 } :=
@@ -136,7 +136,7 @@ section Module
 
 variable (𝕜 α E H : Type _) {hom : Type _} [NormedField 𝕜] [AddCommGroup H] [Module 𝕜 H] [AddCommGroup E] [Module 𝕜 E]
   [LinearMapClass hom 𝕜 H (α → E)] [TopologicalSpace H] [UniformSpace E] [UniformAddGroup E] [HasContinuousSmul 𝕜 E]
-  {𝔖 : Set $ Set α}
+  {𝔖 : Set <| Set α}
 
 attribute [-instance] PiCat.uniformSpace
 
@@ -164,7 +164,7 @@ theorem UniformConvergenceOn.has_continuous_smul_induced_of_image_bounded (h𝔖
     exact (UniformConvergenceOn.has_basis_nhds_zero 𝔖 h𝔖₁ h𝔖₂).comap φ
   refine' HasContinuousSmul.of_basis_zero this _ _ _
   · rintro ⟨S, V⟩ ⟨hS, hV⟩
-    have : tendsto (fun kx : 𝕜 × E => kx.1 • kx.2) (𝓝 (0, 0)) (𝓝 $ (0 : 𝕜) • 0) := continuous_smul.tendsto (0 : 𝕜 × E)
+    have : tendsto (fun kx : 𝕜 × E => kx.1 • kx.2) (𝓝 (0, 0)) (𝓝 <| (0 : 𝕜) • 0) := continuous_smul.tendsto (0 : 𝕜 × E)
     rw [zero_smul, nhds_prod_eq] at this
     have := this hV
     rw [mem_map, mem_prod_iff] at this
@@ -176,7 +176,7 @@ theorem UniformConvergenceOn.has_continuous_smul_induced_of_image_bounded (h𝔖
     exact hUW (⟨ha, hu x hx⟩ : (a, φ u x) ∈ U ×ˢ W)
     
   · rintro a ⟨S, V⟩ ⟨hS, hV⟩
-    have : tendsto (fun x : E => a • x) (𝓝 0) (𝓝 $ a • 0) := tendsto_id.const_smul a
+    have : tendsto (fun x : E => a • x) (𝓝 0) (𝓝 <| a • 0) := tendsto_id.const_smul a
     rw [smul_zero] at this
     refine' ⟨⟨S, (· • ·) a ⁻¹' V⟩, ⟨hS, this hV⟩, fun f hf x hx => _⟩
     rw [SmulHomClass.map_smul]
@@ -186,14 +186,14 @@ theorem UniformConvergenceOn.has_continuous_smul_induced_of_image_bounded (h𝔖
     rcases h u S hS hV with ⟨r, hrpos, hr⟩
     rw [Metric.eventually_nhds_iff_ball]
     refine' ⟨r⁻¹, inv_pos.mpr hrpos, fun a ha x hx => _⟩
-    by_cases ha0:a = 0
+    by_cases ha0 : a = 0
     · rw [ha0]
       simp [mem_of_mem_nhds hV]
       
     · rw [mem_ball_zero_iff] at ha
       rw [SmulHomClass.map_smul, Pi.smul_apply]
       have : φ u x ∈ a⁻¹ • V := by
-        have ha0 : 0 < ∥a∥ := norm_pos_iff.mpr ha0
+        have ha0 : 0 < ‖a‖ := norm_pos_iff.mpr ha0
         refine' (hr a⁻¹ _) (Set.mem_image_of_mem (φ u) hx)
         rw [norm_inv, le_inv hrpos ha0]
         exact ha.le

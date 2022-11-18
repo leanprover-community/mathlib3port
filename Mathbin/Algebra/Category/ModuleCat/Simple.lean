@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin, Scott Morrison
 -/
 import Mathbin.CategoryTheory.Simple
-import Mathbin.Algebra.Category.ModuleCat.Abelian
 import Mathbin.Algebra.Category.ModuleCat.Subobject
 import Mathbin.RingTheory.SimpleModule
 

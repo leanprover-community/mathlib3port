@@ -32,7 +32,7 @@ unsafe def ext1_wrapper : tactic String := do
   let ng ← num_goals
   ext1 [] { NewGoals := new_goals.all }
   let ng' ← num_goals
-  return $ if ng' > ng then "tactic.ext1 [] {new_goals := tactic.new_goals.all}" else "ext1"
+  return <| if ng' > ng then "tactic.ext1 [] {new_goals := tactic.new_goals.all}" else "ext1"
 #align tactic.tidy.ext1_wrapper tactic.tidy.ext1_wrapper
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
@@ -44,11 +44,12 @@ unsafe def ext1_wrapper : tactic String := do
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def default_tactics : List (tactic String) :=
-  [reflexivity >> pure "refl", sorry >> pure "exact dec_trivial", propositional_goal >> assumption >> pure "assumption",
-    intros1 >>= fun ns => pure ("intros " ++ (" ".intercalate $ ns.map $ fun e => e.toString)), auto_cases,
+  [reflexivity >> pure "refl", sorry >> pure "exact dec_trivial",
+    (propositional_goal >> assumption) >> pure "assumption",
+    intros1 >>= fun ns => pure ("intros " ++ (" ".intercalate <| ns.map fun e => e.toString)), auto_cases,
     sorry >> pure "apply_auto_param", sorry >> pure "dsimp at *", sorry >> pure "simp at *", ext1_wrapper,
     fsplit >> pure "fsplit", injections_and_clear >> pure "injections_and_clear",
-    propositional_goal >> sorry >> pure "solve_by_elim", sorry >> pure "norm_cast", sorry >> pure "unfold_coes",
+    (propositional_goal >> sorry) >> pure "solve_by_elim", sorry >> pure "norm_cast", sorry >> pure "unfold_coes",
     sorry >> pure "unfold_aux", tidy.run_tactics]
 #align tactic.tidy.default_tactics tactic.tidy.default_tactics
 
@@ -64,7 +65,7 @@ initialize
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `cfg -/
 unsafe def core (cfg : cfg := {  }) : tactic (List String) := do
   let results ← chain cfg.tactics
-  when (cfg cfg.trace_result) $ trace (cfg ++ ", ".intercalate results)
+  when (cfg cfg.trace_result) <| trace (cfg ++ ", ".intercalate results)
   return results
 #align tactic.tidy.core tactic.tidy.core
 
@@ -94,7 +95,7 @@ can report a usable tactic script.)
 
 Tactics can also be added to the list by tagging them (locally) with the
 `[tidy]` attribute. -/
-unsafe def tidy (trace : parse $ optional (tk "?")) (cfg : tidy.cfg := {  }) :=
+unsafe def tidy (trace : parse <| optional (tk "?")) (cfg : tidy.cfg := {  }) :=
   tactic.tidy { cfg with trace_result := trace.isSome }
 #align tactic.interactive.tidy tactic.interactive.tidy
 

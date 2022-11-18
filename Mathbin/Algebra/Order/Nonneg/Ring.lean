@@ -3,6 +3,7 @@ Copyright (c) 2021 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
+import Mathbin.Data.Nat.Cast.Basic
 import Mathbin.Algebra.Order.Ring.Defs
 import Mathbin.Algebra.Order.Ring.InjSurj
 import Mathbin.Order.CompleteLatticeIntervals
@@ -88,8 +89,8 @@ protected noncomputable def conditionallyCompleteLinearOrderBot [ConditionallyCo
     (h : sup ∅ ≤ a) : ConditionallyCompleteLinearOrderBot { x : α // a ≤ x } :=
   { Nonneg.orderBot, Nonneg.conditionallyCompleteLinearOrder with
     cSup_empty :=
-      (Function.funext_iff.1 (@subset_Sup_def α (Set.ici a) _ ⟨⟨a, le_rfl⟩⟩) ∅).trans $
-        Subtype.eq $ by
+      (Function.funext_iff.1 (@subset_Sup_def α (Set.ici a) _ ⟨⟨a, le_rfl⟩⟩) ∅).trans <|
+        Subtype.eq <| by
           rw [bot_eq]
           cases' h.lt_or_eq with h2 h2
           · simp [h2.not_le]

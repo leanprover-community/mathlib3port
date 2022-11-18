@@ -6,9 +6,9 @@ Authors: Antoine Labelle
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.Module.LinearMap
 import Mathbin.Algebra.MonoidAlgebra.Basic
-import Mathbin.LinearAlgebra.Trace
 import Mathbin.LinearAlgebra.Dual
-import Mathbin.LinearAlgebra.FreeModule.Basic
+import Mathbin.LinearAlgebra.Contraction
+import Mathbin.RingTheory.TensorProduct
 
 /-!
 # Monoid representations
@@ -374,9 +374,9 @@ def linHom : Representation k G (V →ₗ[k] W) where
   toFun g :=
     { toFun := fun f => ρW g ∘ₗ f ∘ₗ ρV g⁻¹, map_add' := fun f₁ f₂ => by simp_rw [add_comp, comp_add],
       map_smul' := fun r f => by simp_rw [RingHom.id_apply, smul_comp, comp_smul] }
-  map_one' := LinearMap.ext $ fun x => by simp_rw [coe_mk, inv_one, map_one, one_apply, one_eq_id, comp_id, id_comp]
+  map_one' := LinearMap.ext fun x => by simp_rw [coe_mk, inv_one, map_one, one_apply, one_eq_id, comp_id, id_comp]
   map_mul' g h :=
-    LinearMap.ext $ fun x => by
+    LinearMap.ext fun x => by
       simp_rw [LinearMap.coe_mul, coe_mk, Function.comp_apply, mul_inv_rev, map_mul, mul_eq_comp, comp_assoc]
 #align representation.lin_hom Representation.linHom
 

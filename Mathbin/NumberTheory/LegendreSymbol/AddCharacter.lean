@@ -3,8 +3,6 @@ Copyright (c) 2022 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathbin.Tactic.Basic
-import Mathbin.FieldTheory.Finite.GaloisField
 import Mathbin.NumberTheory.Cyclotomic.PrimitiveRoots
 import Mathbin.FieldTheory.Finite.Trace
 
@@ -351,7 +349,7 @@ noncomputable def primitiveCharFiniteField (F F' : Type _) [Field F] [Fintype F]
   have hψ' : is_nontrivial ψ' := by
     obtain ⟨a, ha⟩ := FiniteField.trace_to_zmod_nondegenerate F one_ne_zero
     rw [one_mul] at ha
-    exact ⟨a, fun hf => ha $ (ψ.prim.zmod_char_eq_one_iff pp $ Algebra.trace (Zmod p) F a).mp hf⟩
+    exact ⟨a, fun hf => ha <| (ψ.prim.zmod_char_eq_one_iff pp <| Algebra.trace (Zmod p) F a).mp hf⟩
   exact { n := ψ.n, Char := ψ', prim := hψ'.is_primitive }
 #align add_char.primitive_char_finite_field AddChar.primitiveCharFiniteField
 

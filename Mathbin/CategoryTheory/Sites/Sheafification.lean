@@ -3,8 +3,10 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
+import Mathbin.CategoryTheory.Adjunction.FullyFaithful
 import Mathbin.CategoryTheory.Sites.Plus
 import Mathbin.CategoryTheory.Limits.ConcreteCategory
+import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
 
 /-!
 
@@ -54,7 +56,7 @@ instance {X} (P : Cᵒᵖ ⥤ D) (S : J.cover X) : CoeFun (Meq P S) fun x => ∀
 
 @[ext.1]
 theorem ext {X} {P : Cᵒᵖ ⥤ D} {S : J.cover X} (x y : Meq P S) (h : ∀ I : S.arrow, x I = y I) : x = y :=
-  Subtype.ext $ funext $ h
+  Subtype.ext <| funext <| h
 #align category_theory.meq.ext CategoryTheory.Meq.ext
 
 theorem condition {X} {P : Cᵒᵖ ⥤ D} {S : J.cover X} (x : Meq P S) (I : S.Relation) :
@@ -212,8 +214,7 @@ theorem to_plus_eq_mk {X : C} {P : Cᵒᵖ ⥤ D} (x : P.obj (op X)) : (J.toPlus
 
 variable [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)]
 
-theorem exists_rep {X : C} {P : Cᵒᵖ ⥤ D} (x : (J.plusObj P).obj (op X)) : ∃ (S : J.cover X) (y : Meq P S), x = mk y :=
-  by
+theorem exists_rep {X : C} {P : Cᵒᵖ ⥤ D} (x : (J.plusObj P).obj (op X)) : ∃ (S : J.cover X)(y : Meq P S), x = mk y := by
   obtain ⟨S, y, h⟩ := concrete.colimit_exists_rep (J.diagram P X) x
   use S.unop, meq.equiv _ _ y
   rw [← h]
@@ -222,7 +223,7 @@ theorem exists_rep {X : C} {P : Cᵒᵖ ⥤ D} (x : (J.plusObj P).obj (op X)) : 
 #align category_theory.grothendieck_topology.plus.exists_rep CategoryTheory.GrothendieckTopology.Plus.exists_rep
 
 theorem eq_mk_iff_exists {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (x : Meq P S) (y : Meq P T) :
-    mk x = mk y ↔ ∃ (W : J.cover X) (h1 : W ⟶ S) (h2 : W ⟶ T), x.refine h1 = y.refine h2 := by
+    mk x = mk y ↔ ∃ (W : J.cover X)(h1 : W ⟶ S)(h2 : W ⟶ T), x.refine h1 = y.refine h2 := by
   constructor
   · intro h
     obtain ⟨W, h1, h2, hh⟩ := concrete.colimit_exists_of_rep_eq _ _ _ h
@@ -473,7 +474,7 @@ def toSheafify (P : Cᵒᵖ ⥤ D) : P ⟶ J.sheafify P :=
 
 /-- The canonical map on sheafifications induced by a morphism. -/
 def sheafifyMap {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : J.sheafify P ⟶ J.sheafify Q :=
-  J.plusMap $ J.plusMap η
+  J.plusMap <| J.plusMap η
 #align category_theory.grothendieck_topology.sheafify_map CategoryTheory.GrothendieckTopology.sheafifyMap
 
 @[simp]
@@ -612,8 +613,8 @@ variable (D)
 def presheafToSheaf : (Cᵒᵖ ⥤ D) ⥤ SheafCat J D where
   obj P := ⟨J.sheafify P, J.sheafifyIsSheaf P⟩
   map P Q η := ⟨J.sheafifyMap η⟩
-  map_id' P := SheafCat.Hom.ext _ _ $ J.sheafify_map_id _
-  map_comp' P Q R f g := SheafCat.Hom.ext _ _ $ J.sheafify_map_comp _ _
+  map_id' P := SheafCat.Hom.ext _ _ <| J.sheafify_map_id _
+  map_comp' P Q R f g := SheafCat.Hom.ext _ _ <| J.sheafify_map_comp _ _
 #align category_theory.presheaf_to_Sheaf CategoryTheory.presheafToSheaf
 
 instance presheaf_to_Sheaf_preserves_zero_morphisms [Preadditive D] :
@@ -629,7 +630,7 @@ def sheafificationAdjunction : presheafToSheaf J D ⊣ sheafToPresheaf J D :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun P Q =>
         { toFun := fun e => J.toSheafify P ≫ e.val, invFun := fun e => ⟨J.sheafifyLift e Q.2⟩,
-          left_inv := fun e => SheafCat.Hom.ext _ _ $ (J.sheafify_lift_unique _ _ _ rfl).symm,
+          left_inv := fun e => SheafCat.Hom.ext _ _ <| (J.sheafify_lift_unique _ _ _ rfl).symm,
           right_inv := fun e => J.to_sheafify_sheafify_lift _ _ },
       hom_equiv_naturality_left_symm' := by
         intro P Q R η γ

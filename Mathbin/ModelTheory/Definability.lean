@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
 import Mathbin.Data.SetLike.Basic
-import Mathbin.Logic.Equiv.Fintype
 import Mathbin.ModelTheory.Semantics
 
 /-!
@@ -165,8 +164,8 @@ theorem Definable.image_comp_equiv {s : Set (β → M)} (h : A.Definable L s) (f
 #align set.definable.image_comp_equiv Set.Definable.image_comp_equiv
 
 /-- This lemma is only intended as a helper for `definable.image_comp. -/
-theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (α ⊕ Fin m → M)} (h : A.Definable L s) :
-    A.Definable L ((fun g : α ⊕ Fin m → M => g ∘ Sum.inl) '' s) := by
+theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Fin m) → M)} (h : A.Definable L s) :
+    A.Definable L ((fun g : Sum α (Fin m) → M => g ∘ Sum.inl) '' s) := by
   obtain ⟨φ, rfl⟩ := h
   refine' ⟨(bounded_formula.relabel id φ).exs, _⟩
   ext x

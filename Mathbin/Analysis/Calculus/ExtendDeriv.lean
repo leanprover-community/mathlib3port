@@ -41,33 +41,33 @@ theorem hasFderivAtBoundaryOfTendstoFderiv {f : E → F} {s : Set E} {x : E} {f'
     HasFderivWithinAt f f' (closure s) x := by classical
   -- one can assume without loss of generality that `x` belongs to the closure of `s`, as the
   -- statement is empty otherwise
-  by_cases hx:x ∉ closure s
+  by_cases hx : x ∉ closure s
   · rw [← closure_closure] at hx
     exact hasFderivWithinAtOfNotMemClosure hx
     
   push_neg  at hx
   rw [HasFderivWithinAt, HasFderivAtFilter, Asymptotics.is_o_iff]
-  /- One needs to show that `∥f y - f x - f' (y - x)∥ ≤ ε ∥y - x∥` for `y` close to `x` in `closure
+  /- One needs to show that `‖f y - f x - f' (y - x)‖ ≤ ε ‖y - x‖` for `y` close to `x` in `closure
     s`, where `ε` is an arbitrary positive constant. By continuity of the functions, it suffices to
     prove this for nearby points inside `s`. In a neighborhood of `x`, the derivative of `f` is
     arbitrarily close to `f'` by assumption. The mean value inequality completes the proof. -/
   intro ε ε_pos
-  obtain ⟨δ, δ_pos, hδ⟩ : ∃ δ > 0, ∀ y ∈ s, dist y x < δ → ∥fderiv ℝ f y - f'∥ < ε := by
+  obtain ⟨δ, δ_pos, hδ⟩ : ∃ δ > 0, ∀ y ∈ s, dist y x < δ → ‖fderiv ℝ f y - f'‖ < ε := by
     simpa [dist_zero_right] using tendsto_nhds_within_nhds.1 h ε ε_pos
   set B := ball x δ
-  suffices : ∀ y ∈ B ∩ closure s, ∥f y - f x - (f' y - f' x)∥ ≤ ε * ∥y - x∥
+  suffices : ∀ y ∈ B ∩ closure s, ‖f y - f x - (f' y - f' x)‖ ≤ ε * ‖y - x‖
   exact mem_nhds_within_iff.2 ⟨δ, δ_pos, fun y hy => by simpa using this y hy⟩
-  suffices ∀ p : E × E, p ∈ closure ((B ∩ s) ×ˢ (B ∩ s)) → ∥f p.2 - f p.1 - (f' p.2 - f' p.1)∥ ≤ ε * ∥p.2 - p.1∥ by
+  suffices ∀ p : E × E, p ∈ closure ((B ∩ s) ×ˢ (B ∩ s)) → ‖f p.2 - f p.1 - (f' p.2 - f' p.1)‖ ≤ ε * ‖p.2 - p.1‖ by
     rw [closure_prod_eq] at this
     intro y y_in
     apply this ⟨x, y⟩
     have : B ∩ closure s ⊆ closure (B ∩ s) := is_open_ball.inter_closure
     exact ⟨this ⟨mem_ball_self δ_pos, hx⟩, this y_in⟩
-  have key : ∀ p : E × E, p ∈ (B ∩ s) ×ˢ (B ∩ s) → ∥f p.2 - f p.1 - (f' p.2 - f' p.1)∥ ≤ ε * ∥p.2 - p.1∥ := by
+  have key : ∀ p : E × E, p ∈ (B ∩ s) ×ˢ (B ∩ s) → ‖f p.2 - f p.1 - (f' p.2 - f' p.1)‖ ≤ ε * ‖p.2 - p.1‖ := by
     rintro ⟨u, v⟩ ⟨u_in, v_in⟩
     have conv : Convex ℝ (B ∩ s) := (convex_ball _ _).inter s_conv
     have diff : DifferentiableOn ℝ f (B ∩ s) := f_diff.mono (inter_subset_right _ _)
-    have bound : ∀ z ∈ B ∩ s, ∥fderivWithin ℝ f (B ∩ s) z - f'∥ ≤ ε := by
+    have bound : ∀ z ∈ B ∩ s, ‖fderivWithin ℝ f (B ∩ s) z - f'‖ ≤ ε := by
       intro z z_in
       convert le_of_lt (hδ _ z_in.2 z_in.1)
       have op : IsOpen (B ∩ s) := is_open_ball.inter s_open
@@ -92,11 +92,11 @@ theorem hasFderivAtBoundaryOfTendstoFderiv {f : E → F} {s : Set E} {x : E} {f'
     simp only [this]
     exact
       tendsto.comp continuous_norm.continuous_at
-        ((tendsto.comp (f_cont' v v_in) tendsto_snd).sub $ tendsto.comp (f_cont' u u_in) tendsto_fst)
+        ((tendsto.comp (f_cont' v v_in) tendsto_snd).sub <| tendsto.comp (f_cont' u u_in) tendsto_fst)
     
   · apply tendsto_nhds_within_of_tendsto_nhds
     rw [nhds_prod_eq]
-    exact tendsto_const_nhds.mul (tendsto.comp continuous_norm.continuous_at $ tendsto_snd.sub tendsto_fst)
+    exact tendsto_const_nhds.mul (tendsto.comp continuous_norm.continuous_at <| tendsto_snd.sub tendsto_fst)
     
 #align has_fderiv_at_boundary_of_tendsto_fderiv hasFderivAtBoundaryOfTendstoFderiv
 
@@ -118,7 +118,7 @@ theorem hasDerivAtIntervalLeftEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a : 
   have t_cont : ∀ y ∈ closure t, ContinuousWithinAt f t y := by
     rw [t_closure]
     intro y hy
-    by_cases h:y = a
+    by_cases h : y = a
     · rw [h]
       exact f_lim.mono ts
       
@@ -134,7 +134,7 @@ theorem hasDerivAtIntervalLeftEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a : 
   have : HasDerivWithinAt f e (Icc a b) a := by
     rw [has_deriv_within_at_iff_has_fderiv_within_at, ← t_closure]
     exact hasFderivAtBoundaryOfTendstoFderiv t_diff t_conv t_open t_cont t_diff'
-  exact this.nhds_within (Icc_mem_nhds_within_Ici $ left_mem_Ico.2 ab)
+  exact this.nhds_within (Icc_mem_nhds_within_Ici <| left_mem_Ico.2 ab)
 #align has_deriv_at_interval_left_endpoint_of_tendsto_deriv hasDerivAtIntervalLeftEndpointOfTendstoDeriv
 
 /-- If a function is differentiable on the left of a point `a : ℝ`, continuous at `a`, and
@@ -155,7 +155,7 @@ theorem hasDerivAtIntervalRightEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a :
   have t_cont : ∀ y ∈ closure t, ContinuousWithinAt f t y := by
     rw [t_closure]
     intro y hy
-    by_cases h:y = a
+    by_cases h : y = a
     · rw [h]
       exact f_lim.mono ts
       
@@ -171,7 +171,7 @@ theorem hasDerivAtIntervalRightEndpointOfTendstoDeriv {s : Set ℝ} {e : E} {a :
   have : HasDerivWithinAt f e (Icc b a) a := by
     rw [has_deriv_within_at_iff_has_fderiv_within_at, ← t_closure]
     exact hasFderivAtBoundaryOfTendstoFderiv t_diff t_conv t_open t_cont t_diff'
-  exact this.nhds_within (Icc_mem_nhds_within_Iic $ right_mem_Ioc.2 ba)
+  exact this.nhds_within (Icc_mem_nhds_within_Iic <| right_mem_Ioc.2 ba)
 #align has_deriv_at_interval_right_endpoint_of_tendsto_deriv hasDerivAtIntervalRightEndpointOfTendstoDeriv
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (y «expr ≠ » x) -/

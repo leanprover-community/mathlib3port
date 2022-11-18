@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Mathbin.Data.Nat.Pairing
-import Mathbin.Data.Pnat.Defs
 
 /-!
 # Equivalences involving `ℕ`
@@ -35,7 +34,7 @@ def boolProdNatEquivNat : Bool × ℕ ≃ ℕ where
 `2 * x + 1`.
 -/
 @[simps symmApply]
-def natSumNatEquivNat : ℕ ⊕ ℕ ≃ ℕ :=
+def natSumNatEquivNat : Sum ℕ ℕ ≃ ℕ :=
   (boolProdEquivSum ℕ).symm.trans boolProdNatEquivNat
 #align equiv.nat_sum_nat_equiv_nat Equiv.natSumNatEquivNat
 

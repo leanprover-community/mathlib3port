@@ -76,9 +76,9 @@ instance yonedaPreservesLimits (X : C) :
     { PreservesLimit := fun K =>
         { preserves := fun c t =>
             { lift := fun s x => Quiver.Hom.unop (t.lift ⟨op X, fun j => (s.π.app j x).op, fun j₁ j₂ α => _⟩),
-              fac' := fun s j => funext $ fun x => Quiver.Hom.op_inj (t.fac _ _),
+              fac' := fun s j => funext fun x => Quiver.Hom.op_inj (t.fac _ _),
               uniq' := fun s m w =>
-                funext $ fun x => by
+                funext fun x => by
                   refine' Quiver.Hom.op_inj (t.uniq ⟨op X, _, _⟩ _ fun j => _)
                   · dsimp
                     simp [← s.w α]
@@ -100,9 +100,9 @@ instance coyonedaPreservesLimits (X : Cᵒᵖ) :
                   ⟨unop X, fun j => s.π.app j x, fun j₁ j₂ α => by
                     dsimp
                     simp [← s.w α]⟩,-- See library note [dsimp, simp]
-              fac' := fun s j => funext $ fun x => t.fac _ _,
+              fac' := fun s j => funext fun x => t.fac _ _,
               uniq' := fun s m w =>
-                funext $ fun x => by
+                funext fun x => by
                   refine' t.uniq ⟨unop X, _⟩ _ fun j => _
                   exact congr_fun (w j) x } } }
 #align category_theory.coyoneda_preserves_limits CategoryTheory.coyonedaPreservesLimits
@@ -111,7 +111,7 @@ instance coyonedaPreservesLimits (X : Cᵒᵖ) :
 def yonedaJointlyReflectsLimits (J : Type w) [SmallCategory J] (K : J ⥤ Cᵒᵖ) (c : Cone K)
     (t : ∀ X : C, IsLimit ((yoneda.obj X).mapCone c)) : IsLimit c :=
   let s' : ∀ s : Cone K, Cone (K ⋙ yoneda.obj s.x.unop) := fun s =>
-    ⟨PUnit, fun j _ => (s.π.app j).unop, fun j₁ j₂ α => funext $ fun _ => Quiver.Hom.op_inj (s.w α).symm⟩
+    ⟨PUnit, fun j _ => (s.π.app j).unop, fun j₁ j₂ α => funext fun _ => Quiver.Hom.op_inj (s.w α).symm⟩
   { lift := fun s => ((t s.x.unop).lift (s' s) PUnit.unit).op,
     fac' := fun s j => Quiver.Hom.unop_inj (congr_fun ((t s.x.unop).fac (s' s) j) PUnit.unit),
     uniq' := fun s m w => by
@@ -126,7 +126,7 @@ def yonedaJointlyReflectsLimits (J : Type w) [SmallCategory J] (K : J ⥤ Cᵒ�
 def coyonedaJointlyReflectsLimits (J : Type w) [SmallCategory J] (K : J ⥤ C) (c : Cone K)
     (t : ∀ X : Cᵒᵖ, IsLimit ((coyoneda.obj X).mapCone c)) : IsLimit c :=
   let s' : ∀ s : Cone K, Cone (K ⋙ coyoneda.obj (op s.x)) := fun s =>
-    ⟨PUnit, fun j _ => s.π.app j, fun j₁ j₂ α => funext $ fun _ => (s.w α).symm⟩
+    ⟨PUnit, fun j _ => s.π.app j, fun j₁ j₂ α => funext fun _ => (s.w α).symm⟩
   { lift := fun s => (t (op s.x)).lift (s' s) PUnit.unit, fac' := fun s j => congr_fun ((t _).fac (s' s) j) PUnit.unit,
     uniq' := fun s m w => by
       suffices (fun x : PUnit => m) = (t _).lift (s' s) by apply congr_fun this PUnit.unit
@@ -161,7 +161,6 @@ instance coyonedaFunctorReflectsLimits : ReflectsLimits (@coyoneda D _) :=
 
 end CategoryTheory
 
-/- ./././Mathport/Syntax/Translate/Command.lean:702:14: unsupported user command assert_no_instance -/
-/- ./././Mathport/Syntax/Translate/Command.lean:702:14: unsupported user command assert_no_instance -/
+/- ./././Mathport/Syntax/Translate/Command.lean:687:14: unsupported user command assert_not_exists -/
 -- These act as a guard that the algebraic hierarchy has not been imported
 -- low into the category theory hierarchy again.

@@ -27,7 +27,7 @@ section General
 
 variable {α β : Type _} {r r₁ r₂ : α → α → Prop} {r' : β → β → Prop} {s t : Set α} {a : α}
 
-protected theorem Symmetric.compl (h : Symmetric r) : Symmetric (rᶜ) := fun x y hr hr' => hr $ h hr'
+protected theorem Symmetric.compl (h : Symmetric r) : Symmetric (rᶜ) := fun x y hr hr' => hr <| h hr'
 #align symmetric.compl Symmetric.compl
 
 /-- An antichain is a set such that no two distinct elements are related. -/
@@ -42,15 +42,15 @@ protected theorem subset (hs : IsAntichain r s) (h : t ⊆ s) : IsAntichain r t 
 #align is_antichain.subset IsAntichain.subset
 
 theorem mono (hs : IsAntichain r₁ s) (h : r₂ ≤ r₁) : IsAntichain r₂ s :=
-  hs.mono' $ compl_le_compl h
+  hs.mono' <| compl_le_compl h
 #align is_antichain.mono IsAntichain.mono
 
 theorem mono_on (hs : IsAntichain r₁ s) (h : s.Pairwise fun ⦃a b⦄ => r₂ a b → r₁ a b) : IsAntichain r₂ s :=
-  hs.imp_on $ h.imp $ fun a b h h₁ h₂ => h₁ $ h h₂
+  hs.imp_on <| h.imp fun a b h h₁ h₂ => h₁ <| h h₂
 #align is_antichain.mono_on IsAntichain.mono_on
 
 protected theorem eq (hs : IsAntichain r s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) (h : r a b) : a = b :=
-  hs.Eq ha hb $ not_not_intro h
+  hs.Eq ha hb <| not_not_intro h
 #align is_antichain.eq IsAntichain.eq
 
 protected theorem eq' (hs : IsAntichain r s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) (h : r b a) : a = b :=
@@ -85,7 +85,7 @@ theorem image (hs : IsAntichain r s) (f : α → β) (h : ∀ ⦃a b⦄, r' (f a
 #align is_antichain.image IsAntichain.image
 
 theorem preimage (hs : IsAntichain r s) {f : β → α} (hf : Injective f) (h : ∀ ⦃a b⦄, r' a b → r (f a) (f b)) :
-    IsAntichain r' (f ⁻¹' s) := fun b hb c hc hbc hr => hs hb hc (hf.Ne hbc) $ h hr
+    IsAntichain r' (f ⁻¹' s) := fun b hb c hc hbc hr => hs hb hc (hf.Ne hbc) <| h hr
 #align is_antichain.preimage IsAntichain.preimage
 
 theorem _root_.is_antichain_insert :
@@ -240,7 +240,7 @@ end Preorder
 /-- A strong (upward) antichain is a set such that no two distinct elements are related to a common
 element. -/
 def IsStrongAntichain (r : α → α → Prop) (s : Set α) : Prop :=
-  s.Pairwise $ fun a b => ∀ c, ¬r a c ∨ ¬r b c
+  s.Pairwise fun a b => ∀ c, ¬r a c ∨ ¬r b c
 #align is_strong_antichain IsStrongAntichain
 
 namespace IsStrongAntichain
@@ -250,15 +250,15 @@ protected theorem subset (hs : IsStrongAntichain r s) (h : t ⊆ s) : IsStrongAn
 #align is_strong_antichain.subset IsStrongAntichain.subset
 
 theorem mono (hs : IsStrongAntichain r₁ s) (h : r₂ ≤ r₁) : IsStrongAntichain r₂ s :=
-  hs.mono' $ fun a b hab c => (hab c).imp (compl_le_compl h _ _) (compl_le_compl h _ _)
+  hs.mono' fun a b hab c => (hab c).imp (compl_le_compl h _ _) (compl_le_compl h _ _)
 #align is_strong_antichain.mono IsStrongAntichain.mono
 
 theorem eq (hs : IsStrongAntichain r s) {a b c : α} (ha : a ∈ s) (hb : b ∈ s) (hac : r a c) (hbc : r b c) : a = b :=
-  hs.Eq ha hb $ fun h => False.elim $ (h c).elim (not_not_intro hac) (not_not_intro hbc)
+  (hs.Eq ha hb) fun h => False.elim <| (h c).elim (not_not_intro hac) (not_not_intro hbc)
 #align is_strong_antichain.eq IsStrongAntichain.eq
 
 protected theorem is_antichain [IsRefl α r] (h : IsStrongAntichain r s) : IsAntichain r s :=
-  h.imp $ fun a b hab => (hab b).resolve_right (not_not_intro $ refl _)
+  h.imp fun a b hab => (hab b).resolve_right (not_not_intro <| refl _)
 #align is_strong_antichain.is_antichain IsStrongAntichain.is_antichain
 
 protected theorem subsingleton [IsDirected α r] (h : IsStrongAntichain r s) : s.Subsingleton := fun a ha b hb =>
@@ -267,7 +267,7 @@ protected theorem subsingleton [IsDirected α r] (h : IsStrongAntichain r s) : s
 #align is_strong_antichain.subsingleton IsStrongAntichain.subsingleton
 
 protected theorem flip [IsSymm α r] (hs : IsStrongAntichain r s) : IsStrongAntichain (flip r) s := fun a ha b hb h c =>
-  (hs ha hb h c).imp (mt $ symm_of r) (mt $ symm_of r)
+  (hs ha hb h c).imp (mt <| symm_of r) (mt <| symm_of r)
 #align is_strong_antichain.flip IsStrongAntichain.flip
 
 theorem swap [IsSymm α r] (hs : IsStrongAntichain r s) : IsStrongAntichain (swap r) s :=
@@ -278,16 +278,16 @@ theorem image (hs : IsStrongAntichain r s) {f : α → β} (hf : Surjective f) (
     IsStrongAntichain r' (f '' s) := by
   rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩ hab c
   obtain ⟨c, rfl⟩ := hf c
-  exact (hs ha hb (ne_of_apply_ne _ hab) _).imp (mt $ h _ _) (mt $ h _ _)
+  exact (hs ha hb (ne_of_apply_ne _ hab) _).imp (mt <| h _ _) (mt <| h _ _)
 #align is_strong_antichain.image IsStrongAntichain.image
 
 theorem preimage (hs : IsStrongAntichain r s) {f : β → α} (hf : Injective f) (h : ∀ a b, r' a b → r (f a) (f b)) :
-    IsStrongAntichain r' (f ⁻¹' s) := fun a ha b hb hab c => (hs ha hb (hf.Ne hab) _).imp (mt $ h _ _) (mt $ h _ _)
+    IsStrongAntichain r' (f ⁻¹' s) := fun a ha b hb hab c => (hs ha hb (hf.Ne hab) _).imp (mt <| h _ _) (mt <| h _ _)
 #align is_strong_antichain.preimage IsStrongAntichain.preimage
 
 theorem _root_.is_strong_antichain_insert :
     IsStrongAntichain r (insert a s) ↔ IsStrongAntichain r s ∧ ∀ ⦃b⦄, b ∈ s → a ≠ b → ∀ c, ¬r a c ∨ ¬r b c :=
-  Set.pairwise_insert_of_symmetric $ fun a b h c => (h c).symm
+  Set.pairwise_insert_of_symmetric fun a b h c => (h c).symm
 #align is_strong_antichain._root_.is_strong_antichain_insert is_strong_antichain._root_.is_strong_antichain_insert
 
 protected theorem insert (hs : IsStrongAntichain r s) (h : ∀ ⦃b⦄, b ∈ s → a ≠ b → ∀ c, ¬r a c ∨ ¬r b c) :
@@ -342,7 +342,7 @@ theorem is_weak_antichain_insert :
 #align is_weak_antichain_insert is_weak_antichain_insert
 
 protected theorem IsAntichain.is_weak_antichain (hs : IsAntichain (· ≤ ·) s) : IsWeakAntichain s :=
-  hs.mono $ fun a b => le_of_strong_lt
+  hs.mono fun a b => le_of_strong_lt
 #align is_antichain.is_weak_antichain IsAntichain.is_weak_antichain
 
 theorem Set.Subsingleton.is_weak_antichain (hs : s.Subsingleton) : IsWeakAntichain s :=

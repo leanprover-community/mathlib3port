@@ -73,11 +73,11 @@ the depth of recursive applications.
 -/
 unsafe def congr' : Option ℕ → tactic Unit
   | o =>
-    focus1 $
+    focus1 <|
       assumption <|>
         reflexivity Transparency.none <|>
           by_proof_irrel <|>
-            guard (o ≠ some 0) >> congr_core' >> all_goals' (try (congr' (Nat.pred <$> o))) <|> reflexivity
+            (guard (o ≠ some 0) >> congr_core') >> all_goals' (try (congr' (Nat.pred <$> o))) <|> reflexivity
 #align tactic.congr' tactic.congr'
 
 namespace Interactive
@@ -141,7 +141,7 @@ unsafe def rcongr : parse (List.join <$> parser.many rintro_patt_parse_hi) → t
           (tactic.congr' none >>
             (done <|> do
               let s ← target
-              guard $ ¬s =ₐ t)) |
+              guard <| ¬s == t)) |
       skip
     done <|> rcongr (qs ps)
 #align tactic.interactive.rcongr tactic.interactive.rcongr
@@ -220,7 +220,7 @@ add_tactic_doc
           set_goals [ v ]
           try ( tactic.congr' n )
           let gs' ← get_goals
-          set_goals $ gs' ++ gs
+          set_goals <| gs' ++ gs
 #align tactic.interactive.convert tactic.interactive.convert
 
 add_tactic_doc
@@ -256,7 +256,7 @@ end
 ```
 -/
 unsafe def ac_change (r : parse texpr) (n : parse (parser.optional (tk "using" *> small_nat))) : tactic Unit :=
-  convert_to r n; try ac_refl
+  andthen (convert_to r n) (try ac_refl)
 #align tactic.interactive.ac_change tactic.interactive.ac_change
 
 add_tactic_doc

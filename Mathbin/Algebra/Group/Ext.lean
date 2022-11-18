@@ -46,7 +46,7 @@ theorem CommMonoid.to_monoid_injective {M : Type u} : Function.Injective (@CommM
 
 @[ext.1, to_additive]
 theorem CommMonoid.ext {M : Type _} ⦃m₁ m₂ : CommMonoid M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ :=
-  CommMonoid.to_monoid_injective $ Monoid.ext h_mul
+  CommMonoid.to_monoid_injective <| Monoid.ext h_mul
 #align comm_monoid.ext CommMonoid.ext
 
 @[to_additive]
@@ -57,7 +57,7 @@ theorem LeftCancelMonoid.to_monoid_injective {M : Type u} : Function.Injective (
 
 @[ext.1, to_additive]
 theorem LeftCancelMonoid.ext {M : Type u} ⦃m₁ m₂ : LeftCancelMonoid M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ :=
-  LeftCancelMonoid.to_monoid_injective $ Monoid.ext h_mul
+  LeftCancelMonoid.to_monoid_injective <| Monoid.ext h_mul
 #align left_cancel_monoid.ext LeftCancelMonoid.ext
 
 @[to_additive]
@@ -68,7 +68,7 @@ theorem RightCancelMonoid.to_monoid_injective {M : Type u} : Function.Injective 
 
 @[ext.1, to_additive]
 theorem RightCancelMonoid.ext {M : Type u} ⦃m₁ m₂ : RightCancelMonoid M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ :=
-  RightCancelMonoid.to_monoid_injective $ Monoid.ext h_mul
+  RightCancelMonoid.to_monoid_injective <| Monoid.ext h_mul
 #align right_cancel_monoid.ext RightCancelMonoid.ext
 
 @[to_additive]
@@ -80,7 +80,7 @@ theorem CancelMonoid.to_left_cancel_monoid_injective {M : Type u} :
 
 @[ext.1, to_additive]
 theorem CancelMonoid.ext {M : Type _} ⦃m₁ m₂ : CancelMonoid M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ :=
-  CancelMonoid.to_left_cancel_monoid_injective $ LeftCancelMonoid.ext h_mul
+  CancelMonoid.to_left_cancel_monoid_injective <| LeftCancelMonoid.ext h_mul
 #align cancel_monoid.ext CancelMonoid.ext
 
 @[to_additive]
@@ -92,7 +92,7 @@ theorem CancelCommMonoid.to_comm_monoid_injective {M : Type u} :
 
 @[ext.1, to_additive]
 theorem CancelCommMonoid.ext {M : Type _} ⦃m₁ m₂ : CancelCommMonoid M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ :=
-  CancelCommMonoid.to_comm_monoid_injective $ CommMonoid.ext h_mul
+  CancelCommMonoid.to_comm_monoid_injective <| CommMonoid.ext h_mul
 #align cancel_comm_monoid.ext CancelCommMonoid.ext
 
 @[ext.1, to_additive]
@@ -121,11 +121,11 @@ theorem Group.ext {G : Type _} ⦃g₁ g₂ : Group G⦄ (h_mul : g₁.mul = g�
   set f := @MonoidHom.mk' G G (by letI := g₁ <;> infer_instance) g₂ id fun a b => congr_fun (congr_fun h_mul a) b
   exact
     Group.to_div_inv_monoid_injective
-      (DivInvMonoid.ext h_mul (funext $ @MonoidHom.map_inv G G g₁ (@Group.toDivisionMonoid _ g₂) f))
+      (DivInvMonoid.ext h_mul (funext <| @MonoidHom.map_inv G G g₁ (@Group.toDivisionMonoid _ g₂) f))
 #align group.ext Group.ext
 
 @[ext.1, to_additive]
 theorem CommGroup.ext {G : Type _} ⦃g₁ g₂ : CommGroup G⦄ (h_mul : g₁.mul = g₂.mul) : g₁ = g₂ :=
-  CommGroup.to_group_injective $ Group.ext h_mul
+  CommGroup.to_group_injective <| Group.ext h_mul
 #align comm_group.ext CommGroup.ext
 

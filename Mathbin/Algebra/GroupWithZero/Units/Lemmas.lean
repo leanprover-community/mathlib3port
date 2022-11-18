@@ -201,7 +201,7 @@ variable [GroupWithZero G₀] [Nontrivial M₀] [MonoidWithZero M₀'] [MonoidWi
 include M₀
 
 theorem map_ne_zero : f a ≠ 0 ↔ a ≠ 0 :=
-  ⟨fun hfa ha => hfa $ ha.symm ▸ map_zero f, fun ha => ((IsUnit.mk0 a ha).map f).NeZero⟩
+  ⟨fun hfa ha => hfa <| ha.symm ▸ map_zero f, fun ha => ((IsUnit.mk0 a ha).map f).NeZero⟩
 #align map_ne_zero map_ne_zero
 
 @[simp]
@@ -232,7 +232,7 @@ include G₀'
 /-- A monoid homomorphism between groups with zeros sending `0` to `0` sends `a⁻¹` to `(f a)⁻¹`. -/
 @[simp]
 theorem map_inv₀ : f a⁻¹ = (f a)⁻¹ := by
-  by_cases h:a = 0
+  by_cases h : a = 0
   · simp [h]
     
   apply eq_inv_of_mul_eq_one_left

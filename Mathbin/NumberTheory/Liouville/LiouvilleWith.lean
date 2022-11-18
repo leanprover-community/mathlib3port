@@ -51,7 +51,7 @@ def LiouvilleWith (p x : ℝ) : Prop :=
 /-- For `p = 1` (hence, for any `p ≤ 1`), the condition `liouville_with p x` is trivial. -/
 theorem liouville_with_one (x : ℝ) : LiouvilleWith 1 x := by
   use 2
-  refine' ((eventually_gt_at_top 0).mono $ fun n hn => _).Frequently
+  refine' ((eventually_gt_at_top 0).mono fun n hn => _).Frequently
   have hn' : (0 : ℝ) < n := by simpa
   have : x < ↑(⌊x * ↑n⌋ + 1) / ↑n := by
     rw [lt_div_iff hn', Int.cast_add, Int.cast_one]
@@ -70,9 +70,9 @@ variable {p q x y : ℝ} {r : ℚ} {m : ℤ} {n : ℕ}
 We also add `1 ≤ n` to the list of assumptions about the denominator. While it is equivalent to
 the original statement, the case `n = 0` breaks many arguments. -/
 theorem exists_pos (h : LiouvilleWith p x) :
-    ∃ (C : ℝ) (h₀ : 0 < C), ∃ᶠ n : ℕ in at_top, 1 ≤ n ∧ ∃ m : ℤ, x ≠ m / n ∧ |x - m / n| < C / n ^ p := by
+    ∃ (C : ℝ)(h₀ : 0 < C), ∃ᶠ n : ℕ in at_top, 1 ≤ n ∧ ∃ m : ℤ, x ≠ m / n ∧ |x - m / n| < C / n ^ p := by
   rcases h with ⟨C, hC⟩
-  refine' ⟨max C 1, zero_lt_one.trans_le $ le_max_right _ _, _⟩
+  refine' ⟨max C 1, zero_lt_one.trans_le <| le_max_right _ _, _⟩
   refine' ((eventually_ge_at_top 1).and_frequently hC).mono _
   rintro n ⟨hle, m, hne, hlt⟩
   refine' ⟨hle, m, hne, hlt.trans_le _⟩
@@ -84,7 +84,7 @@ theorem mono (h : LiouvilleWith p x) (hle : q ≤ p) : LiouvilleWith q x := by
   rcases h.exists_pos with ⟨C, hC₀, hC⟩
   refine' ⟨C, hC.mono _⟩
   rintro n ⟨hn, m, hne, hlt⟩
-  refine' ⟨m, hne, hlt.trans_le $ div_le_div_of_le_left hC₀.le _ _⟩
+  refine' ⟨m, hne, hlt.trans_le <| div_le_div_of_le_left hC₀.le _ _⟩
   exacts[rpow_pos_of_pos (Nat.cast_pos.2 hn) _, rpow_le_rpow_of_exponent_le (Nat.one_le_cast.2 hn) hle]
 #align liouville_with.mono LiouvilleWith.mono
 
@@ -99,7 +99,7 @@ theorem frequently_lt_rpow_neg (h : LiouvilleWith p x) (hlt : q < p) :
   refine' (this.and_frequently hC).mono _
   rintro n ⟨hnC, hn, m, hne, hlt⟩
   replace hn : (0 : ℝ) < n := Nat.cast_pos.2 hn
-  refine' ⟨m, hne, hlt.trans $ (div_lt_iff $ rpow_pos_of_pos hn _).2 _⟩
+  refine' ⟨m, hne, hlt.trans <| (div_lt_iff <| rpow_pos_of_pos hn _).2 _⟩
   rwa [mul_comm, ← rpow_add hn, ← sub_eq_add_neg]
 #align liouville_with.frequently_lt_rpow_neg LiouvilleWith.frequently_lt_rpow_neg
 
@@ -115,7 +115,7 @@ theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r)
     
   · rw [A, ← sub_mul, abs_mul]
     simp only [smul_eq_mul, id.def, Nat.cast_mul]
-    refine' (mul_lt_mul_of_pos_right hlt $ abs_pos.2 $ Rat.cast_ne_zero.2 hr).trans_le _
+    refine' (mul_lt_mul_of_pos_right hlt <| abs_pos.2 <| Rat.cast_ne_zero.2 hr).trans_le _
     rw [mul_rpow, mul_div_mul_left, mul_comm, mul_div_assoc]
     exacts[(rpow_pos_of_pos (Nat.cast_pos.2 r.pos) _).ne', Nat.cast_nonneg _, Nat.cast_nonneg _]
     

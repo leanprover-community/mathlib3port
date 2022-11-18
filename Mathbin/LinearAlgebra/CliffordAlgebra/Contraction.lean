@@ -5,7 +5,6 @@ Authors: Eric Wieser
 -/
 import Mathbin.LinearAlgebra.ExteriorAlgebra.Basic
 import Mathbin.LinearAlgebra.CliffordAlgebra.Fold
-import Mathbin.LinearAlgebra.CliffordAlgebra.Grading
 import Mathbin.LinearAlgebra.CliffordAlgebra.Conjugation
 
 /-!
@@ -79,7 +78,7 @@ This includes [grinberg_clifford_2016][] Theorem 10.75 -/
 def contractLeft : Module.Dual R M →ₗ[R] CliffordAlgebra Q →ₗ[R] CliffordAlgebra Q where
   toFun d := foldr' Q (contractLeftAux Q d) (contract_left_aux_contract_left_aux Q d) 0
   map_add' d₁ d₂ :=
-    LinearMap.ext $ fun x => by
+    LinearMap.ext fun x => by
       rw [LinearMap.add_apply]
       induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
       · simp_rw [foldr'_algebra_map, smul_zero, zero_add]
@@ -91,7 +90,7 @@ def contractLeft : Module.Dual R M →ₗ[R] CliffordAlgebra Q →ₗ[R] Cliffor
         rw [sub_add_sub_comm, mul_add, LinearMap.add_apply, add_smul]
         
   map_smul' c d :=
-    LinearMap.ext $ fun x => by
+    LinearMap.ext fun x => by
       rw [LinearMap.smul_apply, RingHom.id_apply]
       induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
       · simp_rw [foldr'_algebra_map, smul_zero]
@@ -114,7 +113,7 @@ def contractRight : CliffordAlgebra Q →ₗ[R] Module.Dual R M →ₗ[R] Cliffo
   LinearMap.flip (LinearMap.compl₂ (LinearMap.compr₂ contractLeft reverse) reverse)
 #align clifford_algebra.contract_right CliffordAlgebra.contractRight
 
-theorem contract_right_eq (x : CliffordAlgebra Q) : contractRight x d = reverse (contractLeft d $ reverse x) :=
+theorem contract_right_eq (x : CliffordAlgebra Q) : contractRight x d = reverse (contractLeft d <| reverse x) :=
   rfl
 #align clifford_algebra.contract_right_eq CliffordAlgebra.contract_right_eq
 
@@ -158,7 +157,7 @@ variable (Q)
 
 @[simp]
 theorem contract_left_ι (x : M) : d⌋ι Q x = algebraMap R _ (d x) :=
-  (foldr'_ι _ _ _ _ _).trans $ by
+  (foldr'_ι _ _ _ _ _).trans <| by
     simp_rw [contract_left_aux_apply_apply, mul_zero, sub_zero, Algebra.algebra_map_eq_smul_one]
 #align clifford_algebra.contract_left_ι CliffordAlgebra.contract_left_ι
 
@@ -169,7 +168,7 @@ theorem contract_right_ι (x : M) : ι Q x⌊d = algebraMap R _ (d x) := by
 
 @[simp]
 theorem contract_left_algebra_map (r : R) : d⌋algebraMap R (CliffordAlgebra Q) r = 0 :=
-  (foldr'_algebra_map _ _ _ _ _).trans $ smul_zero _
+  (foldr'_algebra_map _ _ _ _ _).trans <| smul_zero _
 #align clifford_algebra.contract_left_algebra_map CliffordAlgebra.contract_left_algebra_map
 
 @[simp]
@@ -261,7 +260,7 @@ This is $\lambda_B$ from [bourbaki2007][] $9 Lemma 2. -/
 def changeForm (h : B.toQuadraticForm = Q' - Q) : CliffordAlgebra Q →ₗ[R] CliffordAlgebra Q' :=
   foldr Q (changeFormAux Q' B)
     (fun m x =>
-      (change_form_aux_change_form_aux Q' B m x).trans $ by
+      (change_form_aux_change_form_aux Q' B m x).trans <| by
         dsimp [← BilinForm.to_quadratic_form_apply]
         rw [h, QuadraticForm.sub_apply, sub_sub_cancel])
     1
@@ -274,12 +273,12 @@ theorem changeForm.zero_proof : (0 : BilinForm R M).toQuadraticForm = Q - Q :=
 
 /-- Auxiliary lemma used as an argument to `clifford_algebra.change_form` -/
 theorem changeForm.add_proof : (B + B').toQuadraticForm = Q'' - Q :=
-  (congr_arg₂ (· + ·) h h').trans $ sub_add_sub_cancel' _ _ _
+  (congr_arg₂ (· + ·) h h').trans <| sub_add_sub_cancel' _ _ _
 #align clifford_algebra.change_form.add_proof CliffordAlgebra.changeForm.add_proof
 
 /-- Auxiliary lemma used as an argument to `clifford_algebra.change_form` -/
 theorem changeForm.neg_proof : (-B).toQuadraticForm = Q - Q' :=
-  (congr_arg Neg.neg h).trans $ neg_sub _ _
+  (congr_arg Neg.neg h).trans <| neg_sub _ _
 #align clifford_algebra.change_form.neg_proof CliffordAlgebra.changeForm.neg_proof
 
 theorem changeForm.associated_neg_proof [Invertible (2 : R)] : (-Q).Associated.toQuadraticForm = 0 - Q := by
@@ -288,7 +287,7 @@ theorem changeForm.associated_neg_proof [Invertible (2 : R)] : (-Q).Associated.t
 
 @[simp]
 theorem change_form_algebra_map (r : R) : changeForm h (algebraMap R _ r) = algebraMap R _ r :=
-  (foldr_algebra_map _ _ _ _ _).trans $ Eq.symm $ Algebra.algebra_map_eq_smul_one r
+  (foldr_algebra_map _ _ _ _ _).trans <| Eq.symm <| Algebra.algebra_map_eq_smul_one r
 #align clifford_algebra.change_form_algebra_map CliffordAlgebra.change_form_algebra_map
 
 @[simp]
@@ -297,12 +296,12 @@ theorem change_form_one : changeForm h (1 : CliffordAlgebra Q) = 1 := by simpa u
 
 @[simp]
 theorem change_form_ι (m : M) : changeForm h (ι _ m) = ι _ m :=
-  (foldr_ι _ _ _ _ _).trans $ Eq.symm $ by rw [change_form_aux_apply_apply, mul_one, contract_left_one, sub_zero]
+  (foldr_ι _ _ _ _ _).trans <| Eq.symm <| by rw [change_form_aux_apply_apply, mul_one, contract_left_one, sub_zero]
 #align clifford_algebra.change_form_ι CliffordAlgebra.change_form_ι
 
 theorem change_form_ι_mul (m : M) (x : CliffordAlgebra Q) :
     changeForm h (ι _ m * x) = ι _ m * changeForm h x - BilinForm.toLin B m⌋changeForm h x :=
-  (foldr_mul _ _ _ _ _ _).trans $ by
+  (foldr_mul _ _ _ _ _ _).trans <| by
     rw [foldr_ι]
     rfl
 #align clifford_algebra.change_form_ι_mul CliffordAlgebra.change_form_ι_mul
@@ -336,7 +335,7 @@ theorem change_form_self_apply (x : CliffordAlgebra Q) : changeForm changeForm.z
 
 @[simp]
 theorem change_form_self : changeForm changeForm.zero_proof = (LinearMap.id : CliffordAlgebra Q →ₗ[R] _) :=
-  LinearMap.ext $ change_form_self_apply
+  LinearMap.ext <| change_form_self_apply
 #align clifford_algebra.change_form_self CliffordAlgebra.change_form_self
 
 /-- This is [bourbaki2007][] $9 Lemma 3. -/
@@ -353,7 +352,7 @@ theorem change_form_change_form (x : CliffordAlgebra Q) :
 #align clifford_algebra.change_form_change_form CliffordAlgebra.change_form_change_form
 
 theorem change_form_comp_change_form : (changeForm h').comp (changeForm h) = changeForm (changeForm.add_proof h h') :=
-  LinearMap.ext $ change_form_change_form _ _
+  LinearMap.ext <| change_form_change_form _ _
 #align clifford_algebra.change_form_comp_change_form CliffordAlgebra.change_form_comp_change_form
 
 /-- Any two algebras whose quadratic forms differ by a bilinear form are isomorphic as modules.
@@ -362,13 +361,13 @@ This is $\bar \lambda_B$ from [bourbaki2007][] $9 Proposition 3. -/
 @[simps apply]
 def changeFormEquiv : CliffordAlgebra Q ≃ₗ[R] CliffordAlgebra Q' :=
   { changeForm h with toFun := changeForm h, invFun := changeForm (changeForm.neg_proof h),
-    left_inv := fun x => (change_form_change_form _ _ x).trans $ by simp_rw [add_right_neg, change_form_self_apply],
-    right_inv := fun x => (change_form_change_form _ _ x).trans $ by simp_rw [add_left_neg, change_form_self_apply] }
+    left_inv := fun x => (change_form_change_form _ _ x).trans <| by simp_rw [add_right_neg, change_form_self_apply],
+    right_inv := fun x => (change_form_change_form _ _ x).trans <| by simp_rw [add_left_neg, change_form_self_apply] }
 #align clifford_algebra.change_form_equiv CliffordAlgebra.changeFormEquiv
 
 @[simp]
 theorem change_form_equiv_symm : (changeFormEquiv h).symm = changeFormEquiv (changeForm.neg_proof h) :=
-  LinearEquiv.ext $ fun x => (rfl : changeForm _ x = changeForm _ x)
+  LinearEquiv.ext fun x => (rfl : changeForm _ x = changeForm _ x)
 #align clifford_algebra.change_form_equiv_symm CliffordAlgebra.change_form_equiv_symm
 
 variable (Q)

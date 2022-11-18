@@ -5,7 +5,7 @@ Authors: Kyle Miller
 -/
 import Mathbin.Combinatorics.SimpleGraph.Basic
 import Mathbin.Combinatorics.SimpleGraph.Subgraph
-import Mathbin.Data.List.Default
+import Mathbin.Data.List.Rotate
 
 /-!
 
@@ -164,7 +164,7 @@ theorem cons_copy {u v w v' w'} (h : G.Adj u v) (p : G.Walk v' w') (hv : v' = v)
 #align simple_graph.walk.cons_copy SimpleGraph.Walk.cons_copy
 
 theorem exists_eq_cons_of_ne :
-    ∀ {u v : V} (hne : u ≠ v) (p : G.Walk u v), ∃ (w : V) (h : G.Adj u w) (p' : G.Walk w v), p = cons h p'
+    ∀ {u v : V} (hne : u ≠ v) (p : G.Walk u v), ∃ (w : V)(h : G.Adj u w)(p' : G.Walk w v), p = cons h p'
   | _, _, hne, nil => (hne rfl).elim
   | _, _, _, cons h p' => ⟨_, h, p', rfl⟩
 #align simple_graph.walk.exists_eq_cons_of_ne SimpleGraph.Walk.exists_eq_cons_of_ne
@@ -472,7 +472,7 @@ theorem end_mem_tail_support_of_ne {u v : V} (h : u ≠ v) (p : G.Walk u v) : v 
 theorem mem_support_append_iff {t u v w : V} (p : G.Walk u v) (p' : G.Walk v w) :
     t ∈ (p.append p').support ↔ t ∈ p.support ∨ t ∈ p'.support := by
   simp only [mem_support_iff, mem_tail_support_append_iff]
-  by_cases h:t = v <;> by_cases h':t = u <;> subst_vars <;> try have := Ne.symm h' <;> simp [*]
+  by_cases h : t = v <;> by_cases h' : t = u <;> subst_vars <;> try have := Ne.symm h' <;> simp [*]
 #align simple_graph.walk.mem_support_append_iff SimpleGraph.Walk.mem_support_append_iff
 
 @[simp]
@@ -674,26 +674,26 @@ structure IsTrail {u v : V} (p : G.Walk u v) : Prop where
   edges_nodup : p.edges.Nodup
 #align simple_graph.walk.is_trail SimpleGraph.Walk.IsTrail
 
-/- ./././Mathport/Syntax/Translate/Command.lean:383:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:375:11: unsupported: advanced extends in structure -/
 /-- A *path* is a walk with no repeating vertices.
 Use `simple_graph.walk.is_path.mk'` for a simpler constructor. -/
 structure IsPath {u v : V} (p : G.Walk u v) extends
-  "./././Mathport/Syntax/Translate/Command.lean:383:11: unsupported: advanced extends in structure" : Prop where
+  "./././Mathport/Syntax/Translate/Command.lean:375:11: unsupported: advanced extends in structure" : Prop where
   support_nodup : p.support.Nodup
 #align simple_graph.walk.is_path SimpleGraph.Walk.IsPath
 
-/- ./././Mathport/Syntax/Translate/Command.lean:383:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:375:11: unsupported: advanced extends in structure -/
 /-- A *circuit* at `u : V` is a nonempty trail beginning and ending at `u`. -/
 structure IsCircuit {u : V} (p : G.Walk u u) extends
-  "./././Mathport/Syntax/Translate/Command.lean:383:11: unsupported: advanced extends in structure" : Prop where
+  "./././Mathport/Syntax/Translate/Command.lean:375:11: unsupported: advanced extends in structure" : Prop where
   ne_nil : p ≠ nil
 #align simple_graph.walk.is_circuit SimpleGraph.Walk.IsCircuit
 
-/- ./././Mathport/Syntax/Translate/Command.lean:383:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:375:11: unsupported: advanced extends in structure -/
 /-- A *cycle* at `u : V` is a circuit at `u` whose only repeating vertex
 is `u` (which appears exactly twice). -/
 structure IsCycle {u : V} (p : G.Walk u u) extends
-  "./././Mathport/Syntax/Translate/Command.lean:383:11: unsupported: advanced extends in structure" : Prop where
+  "./././Mathport/Syntax/Translate/Command.lean:375:11: unsupported: advanced extends in structure" : Prop where
   support_nodup : p.support.tail.Nodup
 #align simple_graph.walk.is_cycle SimpleGraph.Walk.IsCycle
 
@@ -858,7 +858,7 @@ variable [DecidableEq V]
 def takeUntil : ∀ {v w : V} (p : G.Walk v w) (u : V) (h : u ∈ p.support), G.Walk v u
   | v, w, nil, u, h => by rw [mem_support_nil_iff.mp h]
   | v, w, cons r p, u, h =>
-    if hx : v = u then by subst u else cons r (take_until p _ $ h.casesOn (fun h' => (hx h'.symm).elim) id)
+    if hx : v = u then by subst u else cons r (take_until p _ <| h.casesOn (fun h' => (hx h'.symm).elim) id)
 #align simple_graph.walk.take_until SimpleGraph.Walk.takeUntil
 
 /-- Given a vertex in the support of a path, give the path from (and including) that vertex to
@@ -870,7 +870,7 @@ def dropUntil : ∀ {v w : V} (p : G.Walk v w) (u : V) (h : u ∈ p.support), G.
     if hx : v = u then by
       subst u
       exact cons r p
-    else drop_until p _ $ h.casesOn (fun h' => (hx h'.symm).elim) id
+    else drop_until p _ <| h.casesOn (fun h' => (hx h'.symm).elim) id
 #align simple_graph.walk.drop_until SimpleGraph.Walk.dropUntil
 
 /-- The `take_until` and `drop_until` functions split a walk into two pieces.
@@ -893,7 +893,7 @@ theorem take_spec {u v w : V} (p : G.Walk v w) (h : u ∈ p.support) : (p.takeUn
 #align simple_graph.walk.take_spec SimpleGraph.Walk.take_spec
 
 theorem mem_support_iff_exists_append {V : Type u} {G : SimpleGraph V} {u v w : V} {p : G.Walk u v} :
-    w ∈ p.support ↔ ∃ (q : G.Walk u w) (r : G.Walk w v), p = q.append r := by classical
+    w ∈ p.support ↔ ∃ (q : G.Walk u w)(r : G.Walk w v), p = q.append r := by classical
   constructor
   · exact fun h => ⟨_, _, (p.take_spec h).symm⟩
     
@@ -1733,7 +1733,7 @@ def Preconnected : Prop :=
 
 theorem Preconnected.map {G : SimpleGraph V} {H : SimpleGraph V'} (f : G →g H) (hf : Surjective f)
     (hG : G.Preconnected) : H.Preconnected :=
-  hf.forall₂.2 $ fun a b => Nonempty.map (Walk.map _) $ hG _ _
+  hf.forall₂.2 fun a b => Nonempty.map (Walk.map _) <| hG _ _
 #align simple_graph.preconnected.map SimpleGraph.Preconnected.map
 
 theorem Iso.preconnected_iff {G : SimpleGraph V} {H : SimpleGraph V'} (e : G ≃g H) : G.Preconnected ↔ H.Preconnected :=
@@ -1970,7 +1970,7 @@ theorem Walk.mem_finset_walk_length_iff_length_eq {n : ℕ} {u v : V} (p : G.Wal
 variable (G)
 
 instance fintypeSetWalkLength (u v : V) (n : ℕ) : Fintype { p : G.Walk u v | p.length = n } :=
-  Fintype.ofFinset (G.finsetWalkLength n u v) $ fun p => by rw [← Finset.mem_coe, coe_finset_walk_length_eq]
+  (Fintype.ofFinset (G.finsetWalkLength n u v)) fun p => by rw [← Finset.mem_coe, coe_finset_walk_length_eq]
 #align simple_graph.fintype_set_walk_length SimpleGraph.fintypeSetWalkLength
 
 theorem set_walk_length_to_finset_eq (n : ℕ) (u v : V) :
@@ -1983,11 +1983,11 @@ theorem set_walk_length_to_finset_eq (n : ℕ) (u v : V) :
 power of the adjacency matrix. -/
 theorem card_set_walk_length_eq (u v : V) (n : ℕ) :
     Fintype.card { p : G.Walk u v | p.length = n } = (G.finsetWalkLength n u v).card :=
-  Fintype.card_of_finset (G.finsetWalkLength n u v) $ fun p => by rw [← Finset.mem_coe, coe_finset_walk_length_eq]
+  (Fintype.card_of_finset (G.finsetWalkLength n u v)) fun p => by rw [← Finset.mem_coe, coe_finset_walk_length_eq]
 #align simple_graph.card_set_walk_length_eq SimpleGraph.card_set_walk_length_eq
 
 instance fintypeSetPathLength (u v : V) (n : ℕ) : Fintype { p : G.Walk u v | p.IsPath ∧ p.length = n } :=
-  Fintype.ofFinset ((G.finsetWalkLength n u v).filter Walk.IsPath) $ by
+  Fintype.ofFinset ((G.finsetWalkLength n u v).filter Walk.IsPath) <| by
     simp [walk.mem_finset_walk_length_iff_length_eq, and_comm']
 #align simple_graph.fintype_set_path_length SimpleGraph.fintypeSetPathLength
 
@@ -2091,7 +2091,7 @@ theorem ReachableDeleteEdgesIffExistsCycle.aux [DecidableEq V] {u v w : V} (hb :
 #align simple_graph.reachable_delete_edges_iff_exists_cycle.aux SimpleGraph.ReachableDeleteEdgesIffExistsCycle.aux
 
 theorem adj_and_reachable_delete_edges_iff_exists_cycle {v w : V} :
-    G.Adj v w ∧ (G.deleteEdges {⟦(v, w)⟧}).Reachable v w ↔ ∃ (u : V) (p : G.Walk u u), p.IsCycle ∧ ⟦(v, w)⟧ ∈ p.edges :=
+    G.Adj v w ∧ (G.deleteEdges {⟦(v, w)⟧}).Reachable v w ↔ ∃ (u : V)(p : G.Walk u u), p.IsCycle ∧ ⟦(v, w)⟧ ∈ p.edges :=
   by classical
   rw [reachable_delete_edges_iff_exists_walk]
   constructor

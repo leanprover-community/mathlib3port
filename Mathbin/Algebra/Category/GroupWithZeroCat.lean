@@ -3,8 +3,8 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Algebra.Category.GroupCat.Basic
 import Mathbin.CategoryTheory.Category.BipointedCat
+import Mathbin.Algebra.Category.MonCat.Basic
 
 /-!
 # The category of groups with zero

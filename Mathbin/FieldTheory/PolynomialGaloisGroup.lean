@@ -256,7 +256,7 @@ def restrictProd : (p * q).Gal →* p.Gal × q.Gal :=
 
 /-- `polynomial.gal.restrict_prod` is actually a subgroup embedding. -/
 theorem restrict_prod_injective : Function.Injective (restrictProd p q) := by
-  by_cases hpq:p * q = 0
+  by_cases hpq : p * q = 0
   · have : Unique (p * q).Gal := by
       rw [hpq]
       infer_instance
@@ -315,7 +315,7 @@ theorem splitsInSplittingFieldOfComp (hq : q.natDegree ≠ 0) : p.Splits (algebr
   let P : F[X] → Prop := fun r => r.Splits (algebraMap F (r.comp q).SplittingField)
   have key1 : ∀ {r : F[X]}, Irreducible r → P r := by
     intro r hr
-    by_cases hr':nat_degree r = 0
+    by_cases hr' : nat_degree r = 0
     · exact splits_of_nat_degree_le_one _ (le_trans (le_of_eq hr') zero_le_one)
       
     obtain ⟨x, hx⟩ :=
@@ -329,7 +329,7 @@ theorem splitsInSplittingFieldOfComp (hq : q.natDegree ≠ 0) : p.Splits (algebr
         ((minpoly.irreducible qx_int).dvd_symm hr (minpoly.dvd F _ hx))
   have key2 : ∀ {p₁ p₂ : F[X]}, P p₁ → P p₂ → P (p₁ * p₂) := by
     intro p₁ p₂ hp₁ hp₂
-    by_cases h₁:p₁.comp q = 0
+    by_cases h₁ : p₁.comp q = 0
     · cases' comp_eq_zero_iff.mp h₁ with h h
       · rw [h, zero_mul]
         exact splits_zero _
@@ -337,7 +337,7 @@ theorem splitsInSplittingFieldOfComp (hq : q.natDegree ≠ 0) : p.Splits (algebr
       · exact False.ndrec _ (hq (by rw [h.2, nat_degree_C]))
         
       
-    by_cases h₂:p₂.comp q = 0
+    by_cases h₂ : p₂.comp q = 0
     · cases' comp_eq_zero_iff.mp h₂ with h h
       · rw [h, mul_zero]
         exact splits_zero _
@@ -404,7 +404,7 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
     (p.rootSet ℂ).toFinset.card =
       (p.rootSet ℝ).toFinset.card + (galActionHom p ℂ (restrict p ℂ (Complex.conjAe.restrictScalars ℚ))).support.card :=
   by
-  by_cases hp:p = 0
+  by_cases hp : p = 0
   · simp_rw [hp, root_set_zero, set.to_finset_eq_empty_iff.mpr rfl, Finset.card_empty, zero_add]
     refine' Eq.symm (le_zero_iff.mp ((Finset.card_le_univ _).trans (le_of_eq _)))
     simp_rw [hp, root_set_zero, Fintype.card_eq_zero_iff]

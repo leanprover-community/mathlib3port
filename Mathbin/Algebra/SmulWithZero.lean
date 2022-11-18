@@ -76,8 +76,8 @@ See note [reducible non-instances]. -/
 protected def Function.Injective.smulWithZero (f : ZeroHom M' M) (hf : Function.Injective f)
     (smul : ∀ (a : R) (b), f (a • b) = a • f b) : SmulWithZero R M' where
   smul := (· • ·)
-  zero_smul a := hf $ by simp [smul]
-  smul_zero a := hf $ by simp [smul]
+  zero_smul a := hf <| by simp [smul]
+  smul_zero a := hf <| by simp [smul]
 #align function.injective.smul_with_zero Function.Injective.smulWithZero
 
 /-- Pushforward a `smul_with_zero` structure along a surjective zero-preserving homomorphism.

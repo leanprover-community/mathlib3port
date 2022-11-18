@@ -137,7 +137,7 @@ theorem Int.coe_nat_pow_pred (b p : ℕ) (w : 0 < b) : ((b ^ p - 1 : ℕ) : ℤ)
 #align lucas_lehmer.int.coe_nat_pow_pred LucasLehmer.Int.coe_nat_pow_pred
 
 theorem Int.coe_nat_two_pow_pred (p : ℕ) : ((2 ^ p - 1 : ℕ) : ℤ) = (2 ^ p - 1 : ℤ) :=
-  Int.coe_nat_pow_pred 2 p dec_trivial
+  Int.coe_nat_pow_pred 2 p (by decide)
 #align lucas_lehmer.int.coe_nat_two_pow_pred LucasLehmer.Int.coe_nat_two_pow_pred
 
 theorem s_zmod_eq_s_mod (p : ℕ) (i : ℕ) : sZmod p i = (sMod p i : Zmod (2 ^ p - 1)) := by
@@ -317,12 +317,7 @@ instance : CommRing (X q) :=
        [(Term.instBinder
          "["
          []
-         (Term.app
-          `Fact
-          [(Init.Core.«term_<_»
-            (num "1")
-            " < "
-            (Term.typeAscription "(" `q ":" [(Init.Data.Nat.Basic.termℕ "ℕ")] ")"))])
+         (Term.app `Fact [(«term_<_» (num "1") "<" (Term.typeAscription "(" `q ":" [(termℕ "ℕ")] ")"))])
          "]")]
        (Term.typeSpec ":" (Term.app `Nontrivial [(Term.app `X [`q])])))
       (Command.declValSimple
@@ -563,14 +558,14 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) := by
         (calc
           2 ≤ p' + 2 := Nat.le_add_left _ _
           _ < 2 ^ (p' + 2) := Nat.lt_two_pow _
-          _ = 2 := Nat.pred_inj (Nat.one_le_two_pow _) dec_trivial h'
+          _ = 2 := Nat.pred_inj (Nat.one_le_two_pow _) (by decide) h'
           )
     
   · -- If q = 2, we get a contradiction from 2 ∣ 2^p - 1
     dsimp [q] at h
     injection h with h'
     clear h
-    rw [mersenne, Pnat.one_coe, Nat.min_fac_eq_two_iff, pow_succ] at h'
+    rw [mersenne, PNat.one_coe, Nat.min_fac_eq_two_iff, pow_succ] at h'
     exact Nat.two_not_dvd_two_mul_sub_one (Nat.one_le_two_pow _) h'
     
 #align lucas_lehmer.two_lt_q LucasLehmer.two_lt_q
@@ -593,7 +588,7 @@ theorem ω_pow_formula (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
   rw [mul_comm, coe_mul] at h
   rw [mul_comm _ (k : X (q (p' + 2)))] at h
   replace h := eq_sub_of_add_eq h
-  have : 1 ≤ 2 ^ (p' + 2) := Nat.one_le_pow _ _ dec_trivial
+  have : 1 ≤ 2 ^ (p' + 2) := Nat.one_le_pow _ _ (by decide)
   exact_mod_cast h
 #align lucas_lehmer.ω_pow_formula LucasLehmer.ω_pow_formula
 
@@ -681,7 +676,7 @@ theorem lucas_lehmer_sufficiency (p : ℕ) (w : 1 < p) : LucasLehmerTest p → (
 
 -- Here we calculate the residue, very inefficiently, using `dec_trivial`. We can do much better.
 example : (mersenne 5).Prime :=
-  lucas_lehmer_sufficiency 5 (by norm_num) dec_trivial
+  lucas_lehmer_sufficiency 5 (by norm_num) (by decide)
 
 -- Next we use `norm_num` to calculate each `s p i`.
 namespace LucasLehmer
@@ -764,7 +759,7 @@ theorem modeq_mersenne (n k : ℕ) : k ≡ k / 2 ^ n + k % 2 ^ n [MOD 2 ^ n - 1]
   skip
   skip
   rw [← one_mul (k / 2 ^ n)]
-  exact (Nat.modeq_sub $ Nat.succ_le_of_lt $ pow_pos zero_lt_two _).mul_right _
+  exact (Nat.modeq_sub <| Nat.succ_le_of_lt <| pow_pos zero_lt_two _).mul_right _
 #align modeq_mersenne modeq_mersenne
 
 -- It's hard to know what the limiting factor for large Mersenne primes would be.

@@ -79,8 +79,8 @@ namespace Interactive
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /-- Solve goals of the form `continuous f`. `continuity?` reports back the proof term it found.
 -/
-unsafe def continuity (bang : parse $ optional (tk "!")) (trace : parse $ optional (tk "?")) (cfg : tidy.cfg := {  }) :
-    tactic Unit :=
+unsafe def continuity (bang : parse <| optional (tk "!")) (trace : parse <| optional (tk "?"))
+    (cfg : tidy.cfg := {  }) : tactic Unit :=
   let md := if bang.isSome then semireducible else reducible
   let continuity_core := tactic.tidy { cfg with tactics := continuity_tactics md }
   let trace_fn := if trace.isSome then show_term else id

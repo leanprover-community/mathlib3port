@@ -56,21 +56,21 @@ section
 /-- `top_hom_class F α β` states that `F` is a type of `⊤`-preserving morphisms.
 
 You should extend this class when you extend `top_hom`. -/
-class TopHomClass (F : Type _) (α β : outParam $ Type _) [HasTop α] [HasTop β] extends FunLike F α fun _ => β where
+class TopHomClass (F : Type _) (α β : outParam <| Type _) [HasTop α] [HasTop β] extends FunLike F α fun _ => β where
   map_top (f : F) : f ⊤ = ⊤
 #align top_hom_class TopHomClass
 
 /-- `bot_hom_class F α β` states that `F` is a type of `⊥`-preserving morphisms.
 
 You should extend this class when you extend `bot_hom`. -/
-class BotHomClass (F : Type _) (α β : outParam $ Type _) [HasBot α] [HasBot β] extends FunLike F α fun _ => β where
+class BotHomClass (F : Type _) (α β : outParam <| Type _) [HasBot α] [HasBot β] extends FunLike F α fun _ => β where
   map_bot (f : F) : f ⊥ = ⊥
 #align bot_hom_class BotHomClass
 
 /-- `bounded_order_hom_class F α β` states that `F` is a type of bounded order morphisms.
 
 You should extend this class when you extend `bounded_order_hom`. -/
-class BoundedOrderHomClass (F : Type _) (α β : outParam $ Type _) [LE α] [LE β] [BoundedOrder α]
+class BoundedOrderHomClass (F : Type _) (α β : outParam <| Type _) [LE α] [LE β] [BoundedOrder α]
   [BoundedOrder β] extends RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop) where
   map_top (f : F) : f ⊤ = ⊤
   map_bot (f : F) : f ⊥ = ⊥
@@ -99,7 +99,7 @@ instance (priority := 100) BoundedOrderHomClass.toBotHomClass [LE α] [LE β] [B
 -- See note [lower instance priority]
 instance (priority := 100) OrderIsoClass.toTopHomClass [LE α] [OrderTop α] [PartialOrder β] [OrderTop β]
     [OrderIsoClass F α β] : TopHomClass F α β :=
-  { show OrderHomClass F α β from inferInstance with map_top := fun f => top_le_iff.1 $ (map_inv_le_iff f).1 le_top }
+  { show OrderHomClass F α β from inferInstance with map_top := fun f => top_le_iff.1 <| (map_inv_le_iff f).1 le_top }
 #align order_iso_class.to_top_hom_class OrderIsoClass.toTopHomClass
 
 -- See note [lower instance priority]
@@ -107,7 +107,7 @@ instance (priority := 100) OrderIsoClass.toBotHomClass [LE α] [OrderBot α] [Pa
     [OrderIsoClass F α β] : BotHomClass F α β :=
   { --⟨λ f, le_bot_iff.1 $ (le_map_inv_iff f).1 bot_le⟩
     show OrderHomClass F α β from inferInstance with
-    map_bot := fun f => le_bot_iff.1 $ (le_map_inv_iff f).1 bot_le }
+    map_bot := fun f => le_bot_iff.1 <| (le_map_inv_iff f).1 bot_le }
 #align order_iso_class.to_bot_hom_class OrderIsoClass.toBotHomClass
 
 -- See note [lower instance priority]
@@ -222,20 +222,20 @@ theorem comp_assoc (f : TopHom γ δ) (g : TopHom β γ) (h : TopHom α β) : (f
 
 @[simp]
 theorem comp_id (f : TopHom α β) : f.comp (TopHom.id α) = f :=
-  TopHom.ext $ fun a => rfl
+  TopHom.ext fun a => rfl
 #align top_hom.comp_id TopHom.comp_id
 
 @[simp]
 theorem id_comp (f : TopHom α β) : (TopHom.id β).comp f = f :=
-  TopHom.ext $ fun a => rfl
+  TopHom.ext fun a => rfl
 #align top_hom.id_comp TopHom.id_comp
 
 theorem cancel_right {g₁ g₂ : TopHom β γ} {f : TopHom α β} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => TopHom.ext $ hf.forall.2 $ FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => TopHom.ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 #align top_hom.cancel_right TopHom.cancel_right
 
 theorem cancel_left {g : TopHom β γ} {f₁ f₂ : TopHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => TopHom.ext $ fun a => hg $ by rw [← TopHom.comp_apply, h, TopHom.comp_apply], congr_arg _⟩
+  ⟨fun h => TopHom.ext fun a => hg <| by rw [← TopHom.comp_apply, h, TopHom.comp_apply], congr_arg _⟩
 #align top_hom.cancel_left TopHom.cancel_left
 
 end HasTop
@@ -273,7 +273,7 @@ instance : HasInf (TopHom α β) :=
   ⟨fun f g => ⟨f ⊓ g, by rw [Pi.inf_apply, map_top, map_top, inf_top_eq]⟩⟩
 
 instance : SemilatticeInf (TopHom α β) :=
-  FunLike.coe_injective.SemilatticeInf _ $ fun _ _ => rfl
+  (FunLike.coe_injective.SemilatticeInf _) fun _ _ => rfl
 
 @[simp]
 theorem coe_inf : ⇑(f ⊓ g) = f ⊓ g :=
@@ -295,7 +295,7 @@ instance : HasSup (TopHom α β) :=
   ⟨fun f g => ⟨f ⊔ g, by rw [Pi.sup_apply, map_top, map_top, sup_top_eq]⟩⟩
 
 instance : SemilatticeSup (TopHom α β) :=
-  FunLike.coe_injective.SemilatticeSup _ $ fun _ _ => rfl
+  (FunLike.coe_injective.SemilatticeSup _) fun _ _ => rfl
 
 @[simp]
 theorem coe_sup : ⇑(f ⊔ g) = f ⊔ g :=
@@ -403,20 +403,20 @@ theorem comp_assoc (f : BotHom γ δ) (g : BotHom β γ) (h : BotHom α β) : (f
 
 @[simp]
 theorem comp_id (f : BotHom α β) : f.comp (BotHom.id α) = f :=
-  BotHom.ext $ fun a => rfl
+  BotHom.ext fun a => rfl
 #align bot_hom.comp_id BotHom.comp_id
 
 @[simp]
 theorem id_comp (f : BotHom α β) : (BotHom.id β).comp f = f :=
-  BotHom.ext $ fun a => rfl
+  BotHom.ext fun a => rfl
 #align bot_hom.id_comp BotHom.id_comp
 
 theorem cancel_right {g₁ g₂ : BotHom β γ} {f : BotHom α β} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => BotHom.ext $ hf.forall.2 $ FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => BotHom.ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 #align bot_hom.cancel_right BotHom.cancel_right
 
 theorem cancel_left {g : BotHom β γ} {f₁ f₂ : BotHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => BotHom.ext $ fun a => hg $ by rw [← BotHom.comp_apply, h, BotHom.comp_apply], congr_arg _⟩
+  ⟨fun h => BotHom.ext fun a => hg <| by rw [← BotHom.comp_apply, h, BotHom.comp_apply], congr_arg _⟩
 #align bot_hom.cancel_left BotHom.cancel_left
 
 end HasBot
@@ -454,7 +454,7 @@ instance : HasInf (BotHom α β) :=
   ⟨fun f g => ⟨f ⊓ g, by rw [Pi.inf_apply, map_bot, map_bot, inf_bot_eq]⟩⟩
 
 instance : SemilatticeInf (BotHom α β) :=
-  FunLike.coe_injective.SemilatticeInf _ $ fun _ _ => rfl
+  (FunLike.coe_injective.SemilatticeInf _) fun _ _ => rfl
 
 @[simp]
 theorem coe_inf : ⇑(f ⊓ g) = f ⊓ g :=
@@ -476,7 +476,7 @@ instance : HasSup (BotHom α β) :=
   ⟨fun f g => ⟨f ⊔ g, by rw [Pi.sup_apply, map_bot, map_bot, sup_bot_eq]⟩⟩
 
 instance : SemilatticeSup (BotHom α β) :=
-  FunLike.coe_injective.SemilatticeSup _ $ fun _ _ => rfl
+  (FunLike.coe_injective.SemilatticeSup _) fun _ _ => rfl
 
 @[simp]
 theorem coe_sup : ⇑(f ⊔ g) = f ⊔ g :=
@@ -607,22 +607,22 @@ theorem comp_assoc (f : BoundedOrderHom γ δ) (g : BoundedOrderHom β γ) (h : 
 
 @[simp]
 theorem comp_id (f : BoundedOrderHom α β) : f.comp (BoundedOrderHom.id α) = f :=
-  BoundedOrderHom.ext $ fun a => rfl
+  BoundedOrderHom.ext fun a => rfl
 #align bounded_order_hom.comp_id BoundedOrderHom.comp_id
 
 @[simp]
 theorem id_comp (f : BoundedOrderHom α β) : (BoundedOrderHom.id β).comp f = f :=
-  BoundedOrderHom.ext $ fun a => rfl
+  BoundedOrderHom.ext fun a => rfl
 #align bounded_order_hom.id_comp BoundedOrderHom.id_comp
 
 theorem cancel_right {g₁ g₂ : BoundedOrderHom β γ} {f : BoundedOrderHom α β} (hf : Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => BoundedOrderHom.ext $ hf.forall.2 $ FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => BoundedOrderHom.ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 #align bounded_order_hom.cancel_right BoundedOrderHom.cancel_right
 
 theorem cancel_left {g : BoundedOrderHom β γ} {f₁ f₂ : BoundedOrderHom α β} (hg : Injective g) :
     g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => BoundedOrderHom.ext $ fun a => hg $ by rw [← BoundedOrderHom.comp_apply, h, BoundedOrderHom.comp_apply],
+  ⟨fun h => BoundedOrderHom.ext fun a => hg <| by rw [← BoundedOrderHom.comp_apply, h, BoundedOrderHom.comp_apply],
     congr_arg _⟩
 #align bounded_order_hom.cancel_left BoundedOrderHom.cancel_left
 
@@ -640,8 +640,8 @@ variable [LE α] [OrderTop α] [LE β] [OrderTop β] [LE γ] [OrderTop γ]
 protected def dual : TopHom α β ≃ BotHom αᵒᵈ βᵒᵈ where
   toFun f := ⟨f, f.map_top'⟩
   invFun f := ⟨f, f.map_bot'⟩
-  left_inv f := TopHom.ext $ fun _ => rfl
-  right_inv f := BotHom.ext $ fun _ => rfl
+  left_inv f := TopHom.ext fun _ => rfl
+  right_inv f := BotHom.ext fun _ => rfl
 #align top_hom.dual TopHom.dual
 
 @[simp]
@@ -676,8 +676,8 @@ variable [LE α] [OrderBot α] [LE β] [OrderBot β] [LE γ] [OrderBot γ]
 protected def dual : BotHom α β ≃ TopHom αᵒᵈ βᵒᵈ where
   toFun f := ⟨f, f.map_bot'⟩
   invFun f := ⟨f, f.map_top'⟩
-  left_inv f := BotHom.ext $ fun _ => rfl
-  right_inv f := TopHom.ext $ fun _ => rfl
+  left_inv f := BotHom.ext fun _ => rfl
+  right_inv f := TopHom.ext fun _ => rfl
 #align bot_hom.dual BotHom.dual
 
 @[simp]
@@ -713,8 +713,8 @@ orders. -/
 protected def dual : BoundedOrderHom α β ≃ BoundedOrderHom αᵒᵈ βᵒᵈ where
   toFun f := ⟨f.toOrderHom.dual, f.map_bot', f.map_top'⟩
   invFun f := ⟨OrderHom.dual.symm f.toOrderHom, f.map_bot', f.map_top'⟩
-  left_inv f := ext $ fun a => rfl
-  right_inv f := ext $ fun a => rfl
+  left_inv f := ext fun a => rfl
+  right_inv f := ext fun a => rfl
 #align bounded_order_hom.dual BoundedOrderHom.dual
 
 @[simp]

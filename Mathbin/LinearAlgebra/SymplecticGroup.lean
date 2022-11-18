@@ -3,7 +3,6 @@ Copyright (c) 2022 Matej Penciak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matej Penciak, Moritz Doll, Fabien Clery
 -/
-import Mathbin.Data.Real.Basic
 import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
 
 /-!
@@ -33,7 +32,7 @@ variable (l) [DecidableEq l] (R) [CommRing R]
 section JMatrixLemmas
 
 /-- The matrix defining the canonical skew-symmetric bilinear form. -/
-def j : Matrix (l ⊕ l) (l ⊕ l) R :=
+def j : Matrix (Sum l l) (Sum l l) R :=
   Matrix.fromBlocks 0 (-1) 1 0
 #align matrix.J Matrix.j
 
@@ -76,7 +75,7 @@ end JMatrixLemmas
 variable [Fintype l]
 
 /-- The group of symplectic matrices over a ring `R`. -/
-def symplecticGroup : Submonoid (Matrix (l ⊕ l) (l ⊕ l) R) where
+def symplecticGroup : Submonoid (Matrix (Sum l l) (Sum l l) R) where
   carrier := { A | A ⬝ j l R ⬝ Aᵀ = j l R }
   mul_mem' := by
     intro a b ha hb
@@ -94,11 +93,11 @@ variable {l} {R} [DecidableEq l] [Fintype l] [CommRing R]
 
 open Matrix
 
-theorem mem_iff {A : Matrix (l ⊕ l) (l ⊕ l) R} : A ∈ symplecticGroup l R ↔ A ⬝ j l R ⬝ Aᵀ = j l R := by
+theorem mem_iff {A : Matrix (Sum l l) (Sum l l) R} : A ∈ symplecticGroup l R ↔ A ⬝ j l R ⬝ Aᵀ = j l R := by
   simp [symplectic_group]
 #align symplectic_group.mem_iff SymplecticGroup.mem_iff
 
-instance coeMatrix : Coe (symplecticGroup l R) (Matrix (l ⊕ l) (l ⊕ l) R) := by infer_instance
+instance coeMatrix : Coe (symplecticGroup l R) (Matrix (Sum l l) (Sum l l) R) := by infer_instance
 #align symplectic_group.coe_matrix SymplecticGroup.coeMatrix
 
 section SymplecticJ
@@ -124,14 +123,14 @@ theorem coe_J : ↑(symJ l R) = j l R :=
 
 end SymplecticJ
 
-variable {R} {A : Matrix (l ⊕ l) (l ⊕ l) R}
+variable {R} {A : Matrix (Sum l l) (Sum l l) R}
 
 theorem neg_mem (h : A ∈ symplecticGroup l R) : -A ∈ symplecticGroup l R := by
   rw [mem_iff] at h⊢
   simp [h]
 #align symplectic_group.neg_mem SymplecticGroup.neg_mem
 
-theorem symplectic_det (hA : A ∈ symplecticGroup l R) : IsUnit $ det A := by
+theorem symplectic_det (hA : A ∈ symplecticGroup l R) : IsUnit <| det A := by
   rw [is_unit_iff_exists_inv]
   use A.det
   refine' (is_unit_det_J l R).mul_left_cancel _
@@ -174,8 +173,8 @@ instance :
     Inv
       (symplecticGroup l
         R) where inv A :=
-    ⟨(-j l R) ⬝ (A : Matrix (l ⊕ l) (l ⊕ l) R)ᵀ ⬝ j l R,
-      mul_mem (mul_mem (neg_mem $ J_mem _ _) $ transpose_mem A.2) $ J_mem _ _⟩
+    ⟨(-j l R) ⬝ (A : Matrix (Sum l l) (Sum l l) R)ᵀ ⬝ j l R,
+      mul_mem (mul_mem (neg_mem <| J_mem _ _) <| transpose_mem A.2) <| J_mem _ _⟩
 
 theorem coe_inv (A : symplecticGroup l R) : (↑A⁻¹ : Matrix _ _ _) = (-j l R) ⬝ (↑A)ᵀ ⬝ j l R :=
   rfl
@@ -193,12 +192,12 @@ theorem inv_left_mul_aux (hA : A ∈ symplecticGroup l R) : -j l R ⬝ Aᵀ ⬝ 
     
 #align symplectic_group.inv_left_mul_aux SymplecticGroup.inv_left_mul_aux
 
-theorem coe_inv' (A : symplecticGroup l R) : (↑A⁻¹ : Matrix (l ⊕ l) (l ⊕ l) R) = A⁻¹ := by
+theorem coe_inv' (A : symplecticGroup l R) : (↑A⁻¹ : Matrix (Sum l l) (Sum l l) R) = A⁻¹ := by
   refine' (coe_inv A).trans (inv_eq_left_inv _).symm
   simp [inv_left_mul_aux, coe_inv]
 #align symplectic_group.coe_inv' SymplecticGroup.coe_inv'
 
-theorem inv_eq_symplectic_inv (A : Matrix (l ⊕ l) (l ⊕ l) R) (hA : A ∈ symplecticGroup l R) :
+theorem inv_eq_symplectic_inv (A : Matrix (Sum l l) (Sum l l) R) (hA : A ∈ symplecticGroup l R) :
     A⁻¹ = (-j l R) ⬝ Aᵀ ⬝ j l R :=
   inv_eq_left_inv (by simp only [Matrix.neg_mul, inv_left_mul_aux hA])
 #align symplectic_group.inv_eq_symplectic_inv SymplecticGroup.inv_eq_symplectic_inv

@@ -40,10 +40,10 @@ variable [AddCommGroup V'] [Module R V'] [AddTorsor V' P']
 
 include V
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (p₁ p₂) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (p₁ p₂ «expr ∈ » s) -/
 /-- The points `x` and `y` are weakly on the same side of `s`. -/
 def WSameSide (s : AffineSubspace R P) (x y : P) : Prop :=
-  ∃ (p₁ ∈ s) (p₂ ∈ s), SameRay R (x -ᵥ p₁) (y -ᵥ p₂)
+  ∃ (p₁ p₂ : _)(_ : p₁ ∈ s)(_ : p₂ ∈ s), SameRay R (x -ᵥ p₁) (y -ᵥ p₂)
 #align affine_subspace.w_same_side AffineSubspace.WSameSide
 
 /-- The points `x` and `y` are strictly on the same side of `s`. -/
@@ -51,10 +51,10 @@ def SSameSide (s : AffineSubspace R P) (x y : P) : Prop :=
   s.WSameSide x y ∧ x ∉ s ∧ y ∉ s
 #align affine_subspace.s_same_side AffineSubspace.SSameSide
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (p₁ p₂) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (p₁ p₂ «expr ∈ » s) -/
 /-- The points `x` and `y` are weakly on opposite sides of `s`. -/
 def WOppSide (s : AffineSubspace R P) (x y : P) : Prop :=
-  ∃ (p₁ ∈ s) (p₂ ∈ s), SameRay R (x -ᵥ p₁) (p₂ -ᵥ y)
+  ∃ (p₁ p₂ : _)(_ : p₁ ∈ s)(_ : p₂ ∈ s), SameRay R (x -ᵥ p₁) (p₂ -ᵥ y)
 #align affine_subspace.w_opp_side AffineSubspace.WOppSide
 
 /-- The points `x` and `y` are strictly on opposite sides of `s`. -/
@@ -894,7 +894,7 @@ theorem is_connected_set_of_w_same_side {s : AffineSubspace ℝ P} (x : P) (h : 
     IsConnected { y | s.WSameSide x y } := by
   obtain ⟨p, hp⟩ := h
   haveI : Nonempty s := ⟨⟨p, hp⟩⟩
-  by_cases hx:x ∈ s
+  by_cases hx : x ∈ s
   · convert is_connected_univ
     · simp [w_same_side_of_left_mem, hx]
       
@@ -940,7 +940,7 @@ theorem is_preconnected_set_of_s_same_side (s : AffineSubspace ℝ P) (x : P) : 
     simp only [h, not_s_same_side_bot]
     rfl
     
-  · by_cases hx:x ∈ s
+  · by_cases hx : x ∈ s
     · convert is_preconnected_empty
       simp only [hx, s_same_side, not_true, false_and_iff, and_false_iff]
       rfl
@@ -954,7 +954,7 @@ theorem is_connected_set_of_w_opp_side {s : AffineSubspace ℝ P} (x : P) (h : (
     IsConnected { y | s.WOppSide x y } := by
   obtain ⟨p, hp⟩ := h
   haveI : Nonempty s := ⟨⟨p, hp⟩⟩
-  by_cases hx:x ∈ s
+  by_cases hx : x ∈ s
   · convert is_connected_univ
     · simp [w_opp_side_of_left_mem, hx]
       
@@ -998,7 +998,7 @@ theorem is_preconnected_set_of_s_opp_side (s : AffineSubspace ℝ P) (x : P) : I
     simp only [h, not_s_opp_side_bot]
     rfl
     
-  · by_cases hx:x ∈ s
+  · by_cases hx : x ∈ s
     · convert is_preconnected_empty
       simp only [hx, s_opp_side, not_true, false_and_iff, and_false_iff]
       rfl

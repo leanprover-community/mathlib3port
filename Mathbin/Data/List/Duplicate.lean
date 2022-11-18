@@ -133,7 +133,7 @@ theorem duplicate_iff_sublist : x ∈+ l ↔ [x, x] <+ l := by
   induction' l with y l IH
   · simp
     
-  · by_cases hx:x = y
+  · by_cases hx : x = y
     · simp [hx, cons_sublist_cons_iff, singleton_sublist]
       
     · rw [duplicate_cons_iff_of_ne hx, IH]

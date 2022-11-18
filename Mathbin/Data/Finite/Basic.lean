@@ -3,7 +3,11 @@ Copyright (c) 2022 Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
-import Mathbin.Data.Fintype.Basic
+import Mathbin.Data.Fintype.Powerset
+import Mathbin.Data.Fintype.Prod
+import Mathbin.Data.Fintype.Sigma
+import Mathbin.Data.Fintype.Sum
+import Mathbin.Data.Fintype.Vector
 
 /-!
 # Finite types
@@ -47,7 +51,7 @@ namespace Finite
 
 -- see Note [lower instance priority]
 instance (priority := 100) of_subsingleton {α : Sort _} [Subsingleton α] : Finite α :=
-  of_injective (Function.const α ()) $ Function.injective_of_subsingleton _
+  of_injective (Function.const α ()) <| Function.injective_of_subsingleton _
 #align finite.of_subsingleton Finite.of_subsingleton
 
 -- Higher priority for `Prop`s
@@ -72,26 +76,26 @@ theorem prod_right (α) [Finite (α × β)] [Nonempty α] : Finite β :=
   of_surjective (Prod.snd : α × β → β) Prod.snd_surjective
 #align finite.prod_right Finite.prod_right
 
-instance [Finite α] [Finite β] : Finite (α ⊕ β) := by
+instance [Finite α] [Finite β] : Finite (Sum α β) := by
   haveI := Fintype.ofFinite α
   haveI := Fintype.ofFinite β
   infer_instance
 
-theorem sum_left (β) [Finite (α ⊕ β)] : Finite α :=
-  of_injective (Sum.inl : α → α ⊕ β) Sum.inl_injective
+theorem sum_left (β) [Finite (Sum α β)] : Finite α :=
+  of_injective (Sum.inl : α → Sum α β) Sum.inl_injective
 #align finite.sum_left Finite.sum_left
 
-theorem sum_right (α) [Finite (α ⊕ β)] : Finite β :=
-  of_injective (Sum.inr : β → α ⊕ β) Sum.inr_injective
+theorem sum_right (α) [Finite (Sum α β)] : Finite β :=
+  of_injective (Sum.inr : β → Sum α β) Sum.inr_injective
 #align finite.sum_right Finite.sum_right
 
-instance {β : α → Type _} [Finite α] [∀ a, Finite (β a)] : Finite (Σ a, β a) := by
+instance {β : α → Type _} [Finite α] [∀ a, Finite (β a)] : Finite (Σa, β a) := by
   letI := Fintype.ofFinite α
   letI := fun a => Fintype.ofFinite (β a)
   infer_instance
 
-instance {ι : Sort _} {π : ι → Sort _} [Finite ι] [∀ i, Finite (π i)] : Finite (Σ' i, π i) :=
-  of_equiv _ (Equiv.psigmaEquivSigmaPlift π).symm
+instance {ι : Sort _} {π : ι → Sort _} [Finite ι] [∀ i, Finite (π i)] : Finite (Σ'i, π i) :=
+  of_equiv _ (Equiv.psigmaEquivSigmaPLift π).symm
 
 instance [Finite α] : Finite (Set α) := by
   cases nonempty_fintype α
@@ -134,7 +138,7 @@ instance Function.Embedding.finite {α β : Sort _} [Finite β] : Finite (α ↪
 #align function.embedding.finite Function.Embedding.finite
 
 instance Equiv.finite_right {α β : Sort _} [Finite β] : Finite (α ≃ β) :=
-  Finite.of_injective Equiv.toEmbedding $ fun e₁ e₂ h => Equiv.ext $ by convert FunLike.congr_fun h
+  (Finite.of_injective Equiv.toEmbedding) fun e₁ e₂ h => Equiv.ext <| by convert FunLike.congr_fun h
 #align equiv.finite_right Equiv.finite_right
 
 instance Equiv.finite_left {α β : Sort _} [Finite α] : Finite (α ≃ β) :=

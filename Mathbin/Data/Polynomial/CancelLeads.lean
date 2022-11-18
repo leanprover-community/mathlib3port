@@ -5,6 +5,7 @@ Authors: Aaron Anderson
 -/
 import Mathbin.Data.Polynomial.Degree.Definitions
 import Mathbin.Tactic.ComputeDegree
+import Mathbin.Data.Polynomial.Degree.Lemmas
 
 /-!
 # Cancel the leading terms of two polynomials
@@ -48,12 +49,12 @@ theorem neg_cancel_leads : -p.cancelLeads q = q.cancelLeads p :=
 theorem nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm
     (comm : p.leadingCoeff * q.leadingCoeff = q.leadingCoeff * p.leadingCoeff) (h : p.natDegree ≤ q.natDegree)
     (hq : 0 < q.natDegree) : (p.cancelLeads q).natDegree < q.natDegree := by
-  by_cases hp:p = 0
+  by_cases hp : p = 0
   · convert hq
     simp [hp, cancel_leads]
     
   rw [cancel_leads, sub_eq_add_neg, tsub_eq_zero_iff_le.mpr h, pow_zero, mul_one]
-  by_cases h0:C p.leading_coeff * q + -(C q.leading_coeff * X ^ (q.nat_degree - p.nat_degree) * p) = 0
+  by_cases h0 : C p.leading_coeff * q + -(C q.leading_coeff * X ^ (q.nat_degree - p.nat_degree) * p) = 0
   · exact (le_of_eq (by simp only [h0, nat_degree_zero])).trans_lt hq
     
   apply lt_of_le_of_ne

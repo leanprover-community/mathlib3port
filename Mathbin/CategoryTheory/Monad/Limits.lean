@@ -5,7 +5,7 @@ Authors: Scott Morrison, Bhavik Mehta
 -/
 import Mathbin.CategoryTheory.Monad.Adjunction
 import Mathbin.CategoryTheory.Adjunction.Limits
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Terminal
+import Mathbin.CategoryTheory.Limits.Shapes.Terminal
 
 /-!
 # Limits and colimits in the category of algebras
@@ -58,16 +58,16 @@ def newCone : Cone (D ⋙ forget T) where
 /-- The algebra structure which will be the apex of the new limit cone for `D`. -/
 @[simps]
 def conePoint : Algebra T where
-  A := c.x
+  a := c.x
   a := t.lift (newCone D c)
   unit' :=
-    t.hom_ext $ fun j => by
+    t.hom_ext fun j => by
       rw [category.assoc, t.fac, new_cone_π_app, ← T.η.naturality_assoc, functor.id_map, (D.obj j).Unit]
       dsimp
       simp
   -- See library note [dsimp, simp]
   assoc' :=
-    t.hom_ext $ fun j => by
+    t.hom_ext fun j => by
       rw [category.assoc, category.assoc, t.fac (new_cone D c), new_cone_π_app, ← functor.map_comp_assoc,
         t.fac (new_cone D c), new_cone_π_app, ← T.μ.naturality_assoc, (D.obj j).assoc, functor.map_comp, category.assoc]
       rfl
@@ -92,7 +92,7 @@ def liftedConeIsLimit : IsLimit (liftedCone D c t) where
   lift s :=
     { f := t.lift ((forget T).mapCone s),
       h' :=
-        t.hom_ext $ fun j => by
+        t.hom_ext fun j => by
           dsimp
           rw [category.assoc, category.assoc, t.fac, new_cone_π_app, ← functor.map_comp_assoc, t.fac,
             functor.map_cone_π_app]
@@ -183,12 +183,12 @@ our `commuting` lemma.
 -/
 @[simps]
 def coconePoint : Algebra T where
-  A := c.x
+  a := c.x
   a := lambda c t
   unit' := by
     apply t.hom_ext
     intro j
-    rw [show c.ι.app j ≫ T.η.app c.X ≫ _ = T.η.app (D.obj j).A ≫ _ ≫ _ from T.η.naturality_assoc _ _, commuting,
+    rw [show c.ι.app j ≫ T.η.app c.X ≫ _ = T.η.app (D.obj j).a ≫ _ ≫ _ from T.η.naturality_assoc _ _, commuting,
       algebra.unit_assoc (D.obj j)]
     dsimp
     simp
@@ -221,7 +221,7 @@ def liftedCoconeIsColimit : IsColimit (liftedCocone c t) where
   desc s :=
     { f := t.desc ((forget T).mapCocone s),
       h' :=
-        (isColimitOfPreserves (T : C ⥤ C) t).hom_ext $ fun j => by
+        (isColimitOfPreserves (T : C ⥤ C) t).hom_ext fun j => by
           dsimp
           rw [← functor.map_comp_assoc, ← category.assoc, t.fac, commuting, category.assoc, t.fac]
           apply algebra.hom.h }
@@ -243,7 +243,7 @@ which the monad itself preserves.
 -/
 noncomputable instance forgetCreatesColimit (D : J ⥤ Algebra T) [PreservesColimit (D ⋙ forget T) (T : C ⥤ C)]
     [PreservesColimit ((D ⋙ forget T) ⋙ ↑T) (T : C ⥤ C)] : CreatesColimit D (forget T) :=
-  creates_colimit_of_reflects_iso $ fun c t =>
+  creates_colimit_of_reflects_iso fun c t =>
     { liftedCocone :=
         { x := coconePoint c t,
           ι :=

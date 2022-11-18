@@ -61,7 +61,7 @@ theorem is_compl_even_odd : IsCompl { n : ℤ | Even n } { n | Odd n } := by sim
 #align int.is_compl_even_odd Int.is_compl_even_odd
 
 theorem even_or_odd (n : ℤ) : Even n ∨ Odd n :=
-  Or.imp_right odd_iff_not_even.2 $ em $ Even n
+  Or.imp_right odd_iff_not_even.2 <| em <| Even n
 #align int.even_or_odd Int.even_or_odd
 
 theorem even_or_odd' (n : ℤ) : ∃ k, n = 2 * k ∨ n = 2 * k + 1 := by
@@ -152,7 +152,7 @@ theorem even_pow {n : ℕ} : Even (m ^ n) ↔ Even m ∧ n ≠ 0 := by
 #align int.even_pow Int.even_pow
 
 theorem even_pow' {n : ℕ} (h : n ≠ 0) : Even (m ^ n) ↔ Even m :=
-  even_pow.trans $ and_iff_left h
+  even_pow.trans <| and_iff_left h
 #align int.even_pow' Int.even_pow'
 
 @[parity_simps]
@@ -256,8 +256,7 @@ theorem two_mul_div_two_of_odd (h : Odd n) : 2 * (n / 2) = n - 1 :=
 #align int.two_mul_div_two_of_odd Int.two_mul_div_two_of_odd
 
 -- Here are examples of how `parity_simps` can be used with `int`.
-example (m n : ℤ) (h : Even m) : ¬Even (n + 3) ↔ Even (m ^ 2 + m + n) := by
-  simp [*, (dec_trivial : ¬2 = 0), parity_simps]
+example (m n : ℤ) (h : Even m) : ¬Even (n + 3) ↔ Even (m ^ 2 + m + n) := by simp [*, (by decide : ¬2 = 0), parity_simps]
 
 example : ¬Even (25394535 : ℤ) := by simp
 

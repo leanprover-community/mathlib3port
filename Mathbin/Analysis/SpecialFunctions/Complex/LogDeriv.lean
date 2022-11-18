@@ -29,7 +29,7 @@ def expLocalHomeomorph : LocalHomeomorph ℂ ℂ :=
       target := { z : ℂ | 0 < z.re } ∪ { z : ℂ | z.im ≠ 0 },
       map_source' := by
         rintro ⟨x, y⟩ ⟨h₁ : -π < y, h₂ : y < π⟩
-        refine' (not_or_of_imp $ fun hz => _).symm
+        refine' (not_or_of_imp fun hz => _).symm
         obtain rfl : y = 0 := by
           rw [exp_im] at hz
           simpa [(Real.exp_pos _).ne', Real.sin_eq_zero_iff_of_lt_of_lt h₁ h₂] using hz
@@ -41,7 +41,7 @@ def expLocalHomeomorph : LocalHomeomorph ℂ ℂ :=
         h.imp (fun h => le_of_lt h) id,
       left_inv' := fun x hx => log_exp hx.1 (le_of_lt hx.2),
       right_inv' := fun x hx =>
-        exp_log $ by
+        exp_log <| by
           rintro rfl
           simpa [lt_irrefl] using hx }
     continuous_exp.ContinuousOn is_open_map_exp (is_open_Ioo.Preimage continuous_im)
@@ -51,7 +51,7 @@ theorem hasStrictDerivAtLog {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : HasStrictD
   have h0 : x ≠ 0 := by
     rintro rfl
     simpa [lt_irrefl] using h
-  expLocalHomeomorph.hasStrictDerivAtSymm h h0 $ by simpa [exp_log h0] using has_strict_deriv_at_exp (log x)
+  expLocalHomeomorph.hasStrictDerivAtSymm h h0 <| by simpa [exp_log h0] using has_strict_deriv_at_exp (log x)
 #align complex.has_strict_deriv_at_log Complex.hasStrictDerivAtLog
 
 theorem hasStrictFderivAtLogReal {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : HasStrictFderivAt log (x⁻¹ • (1 : ℂ →L[ℝ] ℂ)) x :=
@@ -59,7 +59,7 @@ theorem hasStrictFderivAtLogReal {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : HasSt
 #align complex.has_strict_fderiv_at_log_real Complex.hasStrictFderivAtLogReal
 
 theorem contDiffAtLog {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) {n : ℕ∞} : ContDiffAt ℂ n log x :=
-  expLocalHomeomorph.contDiffAtSymmDeriv (exp_ne_zero $ log x) h (hasDerivAtExp _) contDiffExp.ContDiffAt
+  expLocalHomeomorph.contDiffAtSymmDeriv (exp_ne_zero <| log x) h (hasDerivAtExp _) contDiffExp.ContDiffAt
 #align complex.cont_diff_at_log Complex.contDiffAtLog
 
 end Complex

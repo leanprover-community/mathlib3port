@@ -3,6 +3,8 @@ Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 -/
+import Mathbin.Data.Fintype.Card
+import Mathbin.Algebra.Group.Prod
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.Ring.Pi
 
@@ -102,7 +104,7 @@ variable [∀ i, NonAssocSemiring (f i)]
 @[ext.1]
 theorem RingHom.functions_ext [Finite I] (G : Type _) [NonAssocSemiring G] (g h : (∀ i, f i) →+* G)
     (H : ∀ (i : I) (x : f i), g (single i x) = h (single i x)) : g = h :=
-  RingHom.coe_add_monoid_hom_injective $ @AddMonoidHom.functions_ext I _ f _ _ G _ (g : (∀ i, f i) →+ G) h H
+  RingHom.coe_add_monoid_hom_injective <| @AddMonoidHom.functions_ext I _ f _ _ G _ (g : (∀ i, f i) →+ G) h H
 #align ring_hom.functions_ext RingHom.functions_ext
 
 end RingHom

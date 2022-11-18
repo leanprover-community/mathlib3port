@@ -3,7 +3,8 @@ Copyright (c) 2022 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathbin.RingTheory.IntegralDomain
+import Mathbin.Algebra.CharP.Basic
+import Mathbin.Algebra.EuclideanDomain.Instances
 
 /-!
 # Multiplicative characters of finite rings and fields
@@ -68,7 +69,7 @@ structure MulChar extends MonoidHom R R' where
 #align mul_char MulChar
 
 /-- This is the corresponding extension of `monoid_hom_class`. -/
-class MulCharClass (F : Type _) (R R' : outParam $ Type _) [CommMonoid R] [CommMonoidWithZero R'] extends
+class MulCharClass (F : Type _) (R R' : outParam <| Type _) [CommMonoid R] [CommMonoidWithZero R'] extends
   MonoidHomClass F R R' where
   map_nonunit : ∀ (χ : F) {a : R} (ha : ¬IsUnit a), χ a = 0
 #align mul_char_class MulCharClass
@@ -159,7 +160,7 @@ to compare the values on units. -/
 theorem ext {χ χ' : MulChar R R'} (h : ∀ a : Rˣ, χ a = χ' a) : χ = χ' := by
   apply ext'
   intro a
-  by_cases ha:IsUnit a
+  by_cases ha : IsUnit a
   · exact h ha.unit
     
   · rw [map_nonunit χ ha, map_nonunit χ' ha]
@@ -197,9 +198,9 @@ noncomputable def ofUnitHom (f : Rˣ →* R'ˣ) : MulChar R R' where
     simp only [h1, dif_pos, Units.coe_eq_one, map_one, is_unit_one]
   map_mul' := by
     intro x y
-    by_cases hx:IsUnit x
+    by_cases hx : IsUnit x
     · simp only [hx, IsUnit.mul_iff, true_and_iff, dif_pos]
-      by_cases hy:IsUnit y
+      by_cases hy : IsUnit y
       · simp only [hy, dif_pos]
         have hm : (is_unit.mul_iff.mpr ⟨hx, hy⟩).Unit = hx.unit * hy.unit := units.eq_iff.mp rfl
         rw [hm, map_mul]
@@ -327,19 +328,19 @@ noncomputable instance hasInv : Inv (MulChar R R') :=
 
 /-- The inverse of a multiplicative character `χ`, applied to `a`, is the inverse of `χ a`. -/
 theorem inv_apply_eq_inv (χ : MulChar R R') (a : R) : χ⁻¹ a = Ring.inverse (χ a) :=
-  Eq.refl $ inv χ a
+  Eq.refl <| inv χ a
 #align mul_char.inv_apply_eq_inv MulChar.inv_apply_eq_inv
 
 /-- The inverse of a multiplicative character `χ`, applied to `a`, is the inverse of `χ a`.
 Variant when the target is a field -/
 theorem inv_apply_eq_inv' {R' : Type v} [Field R'] (χ : MulChar R R') (a : R) : χ⁻¹ a = (χ a)⁻¹ :=
-  (inv_apply_eq_inv χ a).trans $ Ring.inverse_eq_inv (χ a)
+  (inv_apply_eq_inv χ a).trans <| Ring.inverse_eq_inv (χ a)
 #align mul_char.inv_apply_eq_inv' MulChar.inv_apply_eq_inv'
 
 /-- When the domain has a zero, then the inverse of a multiplicative character `χ`,
 applied to `a`, is `χ` applied to the inverse of `a`. -/
 theorem inv_apply {R : Type u} [CommMonoidWithZero R] (χ : MulChar R R') (a : R) : χ⁻¹ a = χ (Ring.inverse a) := by
-  by_cases ha:IsUnit a
+  by_cases ha : IsUnit a
   · rw [inv_apply_eq_inv]
     have h := IsUnit.map χ ha
     apply_fun (· * ·) (χ a) using IsUnit.mul_right_injective h
@@ -356,7 +357,7 @@ theorem inv_apply {R : Type u} [CommMonoidWithZero R] (χ : MulChar R R') (a : R
 /-- When the domain has a zero, then the inverse of a multiplicative character `χ`,
 applied to `a`, is `χ` applied to the inverse of `a`. -/
 theorem inv_apply' {R : Type u} [Field R] (χ : MulChar R R') (a : R) : χ⁻¹ a = χ a⁻¹ :=
-  (inv_apply χ a).trans $ congr_arg _ (Ring.inverse_eq_inv a)
+  (inv_apply χ a).trans <| congr_arg _ (Ring.inverse_eq_inv a)
 #align mul_char.inv_apply' MulChar.inv_apply'
 
 /-- The product of a character with its inverse is the trivial character. -/
@@ -391,7 +392,7 @@ theorem pow_apply_coe (χ : MulChar R R') (n : ℕ) (a : Rˣ) : (χ ^ n) a = χ 
 
 /-- If `n` is positive, then `(χ ^ n) a = (χ a) ^ n`. -/
 theorem pow_apply' (χ : MulChar R R') {n : ℕ} (hn : 0 < n) (a : R) : (χ ^ n) a = χ a ^ n := by
-  by_cases ha:IsUnit a
+  by_cases ha : IsUnit a
   · exact pow_apply_coe χ n ha.unit
     
   · rw [map_nonunit (χ ^ n) ha, map_nonunit χ ha, zero_pow hn]

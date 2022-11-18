@@ -3,9 +3,7 @@ Copyright (c) 2022 Jireh Loreaux. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
-import Mathbin.Analysis.NormedSpace.Star.Basic
-import Mathbin.Algebra.Star.Module
-import Mathbin.Analysis.SpecialFunctions.Exponential
+import Mathbin.Analysis.NormedSpace.Exponential
 
 /-! # The exponential map from selfadjoint to unitary
 In this file, we establish various propreties related to the map `λ a, exp ℂ A (I • a)` between the

@@ -115,11 +115,11 @@ theorem linear_independent_smul {ι : Type v₁} {b : ι → S} {ι' : Type w₁
   rw [linear_independent_iff'] at hb hc
   rw [linear_independent_iff'']
   rintro s g hg hsg ⟨i, k⟩
-  by_cases hik:(i, k) ∈ s
+  by_cases hik : (i, k) ∈ s
   · have h1 : (∑ i in s.image Prod.fst ×ˢ s.image Prod.snd, g i • b i.1 • c i.2) = 0 := by
       rw [← hsg]
       exact
-        (Finset.sum_subset Finset.subset_product $ fun p _ hp =>
+        ((Finset.sum_subset Finset.subset_product) fun p _ hp =>
             show g p • b p.1 • c p.2 = 0 by rw [hg p hp, zero_smul]).symm
     rw [Finset.sum_product_right] at h1
     simp_rw [← smul_assoc, ← Finset.sum_smul] at h1
@@ -197,7 +197,7 @@ def AlgHom.extendScalars : @AlgHom B C D _ _ _ _ (f.restrictDomain B).toRingHom.
 variable {B}
 
 /-- `alg_hom`s from the top of a tower are equivalent to a pair of `alg_hom`s. -/
-def algHomEquivSigma : (C →ₐ[A] D) ≃ Σ f : B →ₐ[A] D, @AlgHom B C D _ _ _ _ f.toRingHom.toAlgebra where
+def algHomEquivSigma : (C →ₐ[A] D) ≃ Σf : B →ₐ[A] D, @AlgHom B C D _ _ _ _ f.toRingHom.toAlgebra where
   toFun f := ⟨f.restrictDomain B, f.extendScalars B⟩
   invFun fg :=
     let alg := fg.1.toRingHom.toAlgebra

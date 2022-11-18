@@ -5,8 +5,9 @@ Authors: Bhavik Mehta, Scott Morrison
 -/
 import Mathbin.CategoryTheory.Subobject.MonoOver
 import Mathbin.CategoryTheory.Skeletal
-import Mathbin.Tactic.Elementwise
+import Mathbin.CategoryTheory.ConcreteCategory.Basic
 import Mathbin.Tactic.ApplyFun
+import Mathbin.Tactic.Elementwise
 
 /-!
 # Subobjects
@@ -130,7 +131,7 @@ end
 protected def lift {α : Sort _} {X : C} (F : ∀ ⦃A : C⦄ (f : A ⟶ X) [Mono f], α)
     (h : ∀ ⦃A B : C⦄ (f : A ⟶ X) (g : B ⟶ X) [Mono f] [Mono g] (i : A ≅ B), i.Hom ≫ g = f → F f = F g) :
     Subobject X → α := fun P =>
-  (Quotient.liftOn' P fun m => F m.arrow) $ fun m n ⟨i⟩ =>
+  (Quotient.liftOn' P fun m => F m.arrow) fun m n ⟨i⟩ =>
     h m.arrow n.arrow ((MonoOver.forget X ⋙ Over.forget X).mapIso i) (Over.w i.Hom)
 #align category_theory.subobject.lift CategoryTheory.Subobject.lift
 
@@ -240,7 +241,7 @@ theorem mk_le_mk_of_comm {B A₁ A₂ : C} {f₁ : A₁ ⟶ B} {f₂ : A₂ ⟶ 
 
 @[simp]
 theorem mk_arrow (P : Subobject X) : mk P.arrow = P :=
-  Quotient.inductionOn' P $ fun Q => by
+  (Quotient.inductionOn' P) fun Q => by
     obtain ⟨e⟩ := @Quotient.mk_out' _ (is_isomorphic_setoid _) Q
     refine' Quotient.sound' ⟨mono_over.iso_mk _ _ ≪≫ e⟩ <;> tidy
 #align category_theory.subobject.mk_arrow CategoryTheory.Subobject.mk_arrow
@@ -251,19 +252,19 @@ theorem le_of_comm {B : C} {X Y : Subobject B} (f : (X : C) ⟶ (Y : C)) (w : f 
 
 theorem le_mk_of_comm {B A : C} {X : Subobject B} {f : A ⟶ B} [Mono f] (g : (X : C) ⟶ A) (w : g ≫ f = X.arrow) :
     X ≤ mk f :=
-  le_of_comm (g ≫ (underlyingIso f).inv) $ by simp [w]
+  le_of_comm (g ≫ (underlyingIso f).inv) <| by simp [w]
 #align category_theory.subobject.le_mk_of_comm CategoryTheory.Subobject.le_mk_of_comm
 
 theorem mk_le_of_comm {B A : C} {X : Subobject B} {f : A ⟶ B} [Mono f] (g : A ⟶ (X : C)) (w : g ≫ X.arrow = f) :
     mk f ≤ X :=
-  le_of_comm ((underlyingIso f).Hom ≫ g) $ by simp [w]
+  le_of_comm ((underlyingIso f).Hom ≫ g) <| by simp [w]
 #align category_theory.subobject.mk_le_of_comm CategoryTheory.Subobject.mk_le_of_comm
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
     the arrows. -/
 @[ext.1]
 theorem eq_of_comm {B : C} {X Y : Subobject B} (f : (X : C) ≅ (Y : C)) (w : f.Hom ≫ Y.arrow = X.arrow) : X = Y :=
-  le_antisymm (le_of_comm f.Hom w) $ le_of_comm f.inv $ f.inv_comp_eq.2 w.symm
+  le_antisymm (le_of_comm f.Hom w) <| le_of_comm f.inv <| f.inv_comp_eq.2 w.symm
 #align category_theory.subobject.eq_of_comm CategoryTheory.Subobject.eq_of_comm
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
@@ -271,7 +272,7 @@ theorem eq_of_comm {B : C} {X Y : Subobject B} (f : (X : C) ≅ (Y : C)) (w : f.
 @[ext.1]
 theorem eq_mk_of_comm {B A : C} {X : Subobject B} (f : A ⟶ B) [Mono f] (i : (X : C) ≅ A) (w : i.Hom ≫ f = X.arrow) :
     X = mk f :=
-  eq_of_comm (i.trans (underlyingIso f).symm) $ by simp [w]
+  eq_of_comm (i.trans (underlyingIso f).symm) <| by simp [w]
 #align category_theory.subobject.eq_mk_of_comm CategoryTheory.Subobject.eq_mk_of_comm
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
@@ -279,7 +280,7 @@ theorem eq_mk_of_comm {B A : C} {X : Subobject B} (f : A ⟶ B) [Mono f] (i : (X
 @[ext.1]
 theorem mk_eq_of_comm {B A : C} {X : Subobject B} (f : A ⟶ B) [Mono f] (i : A ≅ (X : C)) (w : i.Hom ≫ X.arrow = f) :
     mk f = X :=
-  Eq.symm $ eq_mk_of_comm _ i.symm $ by rw [iso.symm_hom, iso.inv_comp_eq, w]
+  Eq.symm <| eq_mk_of_comm _ i.symm <| by rw [iso.symm_hom, iso.inv_comp_eq, w]
 #align category_theory.subobject.mk_eq_of_comm CategoryTheory.Subobject.mk_eq_of_comm
 
 /-- To show that two subobjects are equal, it suffices to exhibit an isomorphism commuting with
@@ -287,7 +288,7 @@ theorem mk_eq_of_comm {B A : C} {X : Subobject B} (f : A ⟶ B) [Mono f] (i : A 
 @[ext.1]
 theorem mk_eq_mk_of_comm {B A₁ A₂ : C} (f : A₁ ⟶ B) (g : A₂ ⟶ B) [Mono f] [Mono g] (i : A₁ ≅ A₂) (w : i.Hom ≫ g = f) :
     mk f = mk g :=
-  eq_mk_of_comm _ ((underlyingIso f).trans i) $ by simp [w]
+  eq_mk_of_comm _ ((underlyingIso f).trans i) <| by simp [w]
 #align category_theory.subobject.mk_eq_mk_of_comm CategoryTheory.Subobject.mk_eq_mk_of_comm
 
 -- We make `X` and `Y` explicit arguments here so that when `of_le` appears in goal statements
@@ -295,7 +296,7 @@ theorem mk_eq_mk_of_comm {B A₁ A₂ : C} (f : A₁ ⟶ B) (g : A₂ ⟶ B) [Mo
 -- (`h` will just display as `_`, because it is in `Prop`).
 /-- An inequality of subobjects is witnessed by some morphism between the corresponding objects. -/
 def ofLe {B : C} (X Y : Subobject B) (h : X ≤ Y) : (X : C) ⟶ (Y : C) :=
-  underlying.map $ h.Hom
+  underlying.map <| h.Hom
 #align category_theory.subobject.of_le CategoryTheory.Subobject.ofLe
 
 @[simp, reassoc]

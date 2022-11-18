@@ -3,10 +3,8 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.GroupTheory.Subgroup.Basic
 import Mathbin.Algebra.GradedMonoid
 import Mathbin.Algebra.DirectSum.Basic
-import Mathbin.Algebra.BigOperators.Pi
 
 /-!
 # Additively-graded multiplicative structures on `⨁ i, A i`
@@ -157,14 +155,15 @@ def gmulHom {i j} : A i →+ A j →+ A (i + j) where
   toFun a :=
     { toFun := fun b => GradedMonoid.GhasMul.mul a b, map_zero' := GnonUnitalNonAssocSemiring.mul_zero _,
       map_add' := GnonUnitalNonAssocSemiring.mul_add _ }
-  map_zero' := AddMonoidHom.ext $ fun a => GnonUnitalNonAssocSemiring.zero_mul a
-  map_add' a₁ a₂ := AddMonoidHom.ext $ fun b => GnonUnitalNonAssocSemiring.add_mul _ _ _
+  map_zero' := AddMonoidHom.ext fun a => GnonUnitalNonAssocSemiring.zero_mul a
+  map_add' a₁ a₂ := AddMonoidHom.ext fun b => GnonUnitalNonAssocSemiring.add_mul _ _ _
 #align direct_sum.gmul_hom DirectSum.gmulHom
 
 /-- The multiplication from the `has_mul` instance, as a bundled homomorphism. -/
 def mulHom : (⨁ i, A i) →+ (⨁ i, A i) →+ ⨁ i, A i :=
-  DirectSum.toAddMonoid $ fun i =>
-    AddMonoidHom.flip $ DirectSum.toAddMonoid $ fun j => AddMonoidHom.flip $ (DirectSum.of A _).compHom.comp $ gmulHom A
+  DirectSum.toAddMonoid fun i =>
+    AddMonoidHom.flip <|
+      DirectSum.toAddMonoid fun j => AddMonoidHom.flip <| (DirectSum.of A _).compHom.comp <| gmulHom A
 #align direct_sum.mul_hom DirectSum.mulHom
 
 instance : NonUnitalNonAssocSemiring (⨁ i, A i) :=
@@ -201,7 +200,7 @@ private theorem one_mul (x : ⨁ i, A i) : 1 * x = x := by
   intro i xi
   unfold One.one
   rw [mul_hom_of_of]
-  exact of_eq_of_graded_monoid_eq (one_mul $ GradedMonoid.mk i xi)
+  exact of_eq_of_graded_monoid_eq (one_mul <| GradedMonoid.mk i xi)
 #align direct_sum.one_mul direct_sum.one_mul
 
 private theorem mul_one (x : ⨁ i, A i) : x * 1 = x := by
@@ -210,7 +209,7 @@ private theorem mul_one (x : ⨁ i, A i) : x * 1 = x := by
   intro i xi
   unfold One.one
   rw [flip_apply, mul_hom_of_of]
-  exact of_eq_of_graded_monoid_eq (mul_one $ GradedMonoid.mk i xi)
+  exact of_eq_of_graded_monoid_eq (mul_one <| GradedMonoid.mk i xi)
 #align direct_sum.mul_one direct_sum.mul_one
 
 private theorem mul_assoc (a b c : ⨁ i, A i) : a * b * c = a * (b * c) := by
@@ -219,7 +218,7 @@ private theorem mul_assoc (a b c : ⨁ i, A i) : a * b * c = a * (b * c) := by
               mulHom
               A).compHom.comp
         (mulHom A) =
-      (AddMonoidHom.compHom flipHom $
+      (AddMonoidHom.compHom flipHom <|
           (-- `λ a b c, a * (b * c)` as a bundled hom
                     mulHom
                     A).flip.compHom.comp
@@ -243,7 +242,7 @@ instance semiring : Semiring (⨁ i, A i) :=
 
 theorem of_pow {i} (a : A i) (n : ℕ) : of _ i a ^ n = of _ (n • i) (GradedMonoid.Gmonoid.gnpow _ a) := by
   induction' n with n
-  · exact of_eq_of_graded_monoid_eq (pow_zero $ GradedMonoid.mk _ a).symm
+  · exact of_eq_of_graded_monoid_eq (pow_zero <| GradedMonoid.mk _ a).symm
     
   · rw [pow_succ, n_ih, of_mul_of]
     exact of_eq_of_graded_monoid_eq (pow_succ (GradedMonoid.mk _ a) n).symm
@@ -251,7 +250,7 @@ theorem of_pow {i} (a : A i) (n : ℕ) : of _ i a ^ n = of _ (n • i) (GradedMo
 #align direct_sum.of_pow DirectSum.of_pow
 
 theorem of_list_dprod {α} (l : List α) (fι : α → ι) (fA : ∀ a, A (fι a)) :
-    of A _ (l.dprod fι fA) = (l.map $ fun a => of A (fι a) (fA a)).Prod := by
+    of A _ (l.dprod fι fA) = (l.map fun a => of A (fι a) (fA a)).Prod := by
   induction l
   · simp only [List.map_nil, List.prod_nil, List.dprod_nil]
     rfl
@@ -262,14 +261,14 @@ theorem of_list_dprod {α} (l : List α) (fι : α → ι) (fA : ∀ a, A (fι a
 #align direct_sum.of_list_dprod DirectSum.of_list_dprod
 
 theorem list_prod_of_fn_of_eq_dprod (n : ℕ) (fι : Fin n → ι) (fA : ∀ a, A (fι a)) :
-    (List.ofFn $ fun a => of A (fι a) (fA a)).Prod = of A _ ((List.finRange n).dprod fι fA) := by
+    (List.ofFn fun a => of A (fι a) (fA a)).Prod = of A _ ((List.finRange n).dprod fι fA) := by
   rw [List.of_fn_eq_map, of_list_dprod]
 #align direct_sum.list_prod_of_fn_of_eq_dprod DirectSum.list_prod_of_fn_of_eq_dprod
 
 open BigOperators
 
 theorem mul_eq_dfinsupp_sum [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (a a' : ⨁ i, A i) :
-    a * a' = a.Sum fun i ai => a'.Sum $ fun j aj => DirectSum.of _ _ $ GradedMonoid.GhasMul.mul ai aj := by
+    a * a' = a.Sum fun i ai => a'.Sum fun j aj => DirectSum.of _ _ <| GradedMonoid.GhasMul.mul ai aj := by
   change MulHom _ a a' = _
   simpa only [MulHom, to_add_monoid, Dfinsupp.lift_add_hom_apply, Dfinsupp.sum_add_hom_apply,
     AddMonoidHom.dfinsupp_sum_apply, flip_apply, AddMonoidHom.dfinsupp_sum_add_hom_apply]
@@ -327,8 +326,8 @@ variable [∀ i, AddCommGroup (A i)] [AddMonoid ι] [Gring A]
 instance ring : Ring (⨁ i, A i) :=
   { DirectSum.semiring _, DirectSum.addCommGroup _ with one := 1, mul := (· * ·), zero := 0, add := (· + ·),
     neg := Neg.neg, intCast := fun z => of _ _ (Gring.intCast z),
-    int_cast_of_nat := fun z => congr_arg _ $ Gring.int_cast_of_nat _,
-    int_cast_neg_succ_of_nat := fun z => (congr_arg _ $ Gring.int_cast_neg_succ_of_nat _).trans (map_neg _ _) }
+    int_cast_of_nat := fun z => congr_arg _ <| Gring.int_cast_of_nat _,
+    int_cast_neg_succ_of_nat := fun z => (congr_arg _ <| Gring.int_cast_neg_succ_of_nat _).trans (map_neg _ _) }
 #align direct_sum.ring DirectSum.ring
 
 end Ring
@@ -521,12 +520,12 @@ See note [partially-applied ext lemmas]. -/
 @[ext.1]
 theorem ring_hom_ext' ⦃F G : (⨁ i, A i) →+* R⦄ (h : ∀ i, (↑F : _ →+ R).comp (of A i) = (↑G : _ →+ R).comp (of A i)) :
     F = G :=
-  RingHom.coe_add_monoid_hom_injective $ DirectSum.add_hom_ext' h
+  RingHom.coe_add_monoid_hom_injective <| DirectSum.add_hom_ext' h
 #align direct_sum.ring_hom_ext' DirectSum.ring_hom_ext'
 
 /-- Two `ring_hom`s out of a direct sum are equal if they agree on the generators. -/
 theorem ring_hom_ext ⦃f g : (⨁ i, A i) →+* R⦄ (h : ∀ i x, f (of A i x) = g (of A i x)) : f = g :=
-  ring_hom_ext' $ fun i => AddMonoidHom.ext $ h i
+  ring_hom_ext' fun i => AddMonoidHom.ext <| h i
 #align direct_sum.ring_hom_ext DirectSum.ring_hom_ext
 
 /-- A family of `add_monoid_hom`s preserving `direct_sum.ghas_one.one` and `direct_sum.ghas_mul.mul`

@@ -121,10 +121,9 @@ instance (priority := 100) is_lawful_mvfunctor : IsLawfulMvfunctor F where
   comp_map := @comp_map n F _ _
 #align mvqpf.is_lawful_mvfunctor Mvqpf.is_lawful_mvfunctor
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a f) -/
 -- Lifting predicates and relations
 theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : F α) :
-    Liftp p x ↔ ∃ (a) (f), x = abs ⟨a, f⟩ ∧ ∀ i j, p (f i j) := by
+    Liftp p x ↔ ∃ a f, x = abs ⟨a, f⟩ ∧ ∀ i j, p (f i j) := by
   constructor
   · rintro ⟨y, hy⟩
     cases' h : repr y with a f
@@ -143,9 +142,8 @@ theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : F α) :
   rfl
 #align mvqpf.liftp_iff Mvqpf.liftp_iff
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a f₀ f₁) -/
 theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x y : F α) :
-    Liftr r x y ↔ ∃ (a) (f₀) (f₁), x = abs ⟨a, f₀⟩ ∧ y = abs ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) := by
+    Liftr r x y ↔ ∃ a f₀ f₁, x = abs ⟨a, f₀⟩ ∧ y = abs ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) := by
   constructor
   · rintro ⟨u, xeq, yeq⟩
     cases' h : repr u with a f
@@ -200,10 +198,9 @@ theorem supp_eq {α : Typevec n} {i} (x : F α) : supp x i = { u | ∀ a f, abs 
   ext <;> apply mem_supp
 #align mvqpf.supp_eq Mvqpf.supp_eq
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a f) -/
 theorem has_good_supp_iff {α : Typevec n} (x : F α) :
     (∀ p, Liftp p x ↔ ∀ (i), ∀ u ∈ supp x i, p i u) ↔
-      ∃ (a) (f), abs ⟨a, f⟩ = x ∧ ∀ i a' f', abs ⟨a', f'⟩ = x → f i '' univ ⊆ f' i '' univ :=
+      ∃ a f, abs ⟨a, f⟩ = x ∧ ∀ i a' f', abs ⟨a', f'⟩ = x → f i '' univ ⊆ f' i '' univ :=
   by
   constructor
   · intro h

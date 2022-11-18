@@ -68,7 +68,7 @@ instance HasContinuousMul.to_has_continuous_smul : HasContinuousSmul M M :=
 @[to_additive]
 instance HasContinuousMul.to_has_continuous_smul_op : HasContinuousSmul Mᵐᵒᵖ M :=
   ⟨show Continuous ((fun p : M × M => p.1 * p.2) ∘ Prod.swap ∘ Prod.map MulOpposite.unop id) from
-      continuous_mul.comp $ continuous_swap.comp $ Continuous.prod_map MulOpposite.continuous_unop continuous_id⟩
+      continuous_mul.comp <| continuous_swap.comp <| Continuous.prod_map MulOpposite.continuous_unop continuous_id⟩
 #align has_continuous_mul.to_has_continuous_smul_op HasContinuousMul.to_has_continuous_smul_op
 
 @[continuity, to_additive]
@@ -170,7 +170,7 @@ open Function
 
 @[to_additive]
 theorem HasContinuousMul.of_nhds_one {M : Type u} [Monoid M] [TopologicalSpace M]
-    (hmul : Tendsto (uncurry ((· * ·) : M → M → M)) (𝓝 1 ×ᶠ 𝓝 1) $ 𝓝 1)
+    (hmul : Tendsto (uncurry ((· * ·) : M → M → M)) (𝓝 1 ×ᶠ 𝓝 1) <| 𝓝 1)
     (hleft : ∀ x₀ : M, 𝓝 x₀ = map (fun x => x₀ * x) (𝓝 1)) (hright : ∀ x₀ : M, 𝓝 x₀ = map (fun x => x * x₀) (𝓝 1)) :
     HasContinuousMul M :=
   ⟨by
@@ -242,14 +242,14 @@ def monoidHomOfMemClosureRangeCoe (f : M₁ → M₂) (hf : f ∈ closure (range
       "Construct a bundled additive monoid homomorphism from a pointwise limit of additive\nmonoid homomorphisms",
   simps (config := { fullyApplied := false })]
 def monoidHomOfTendsto (f : M₁ → M₂) (g : α → F) [l.ne_bot] (h : Tendsto (fun a x => g a x) l (𝓝 f)) : M₁ →* M₂ :=
-  monoidHomOfMemClosureRangeCoe f $ mem_closure_of_tendsto h $ eventually_of_forall $ fun a => mem_range_self _
+  monoidHomOfMemClosureRangeCoe f <| mem_closure_of_tendsto h <| eventually_of_forall fun a => mem_range_self _
 #align monoid_hom_of_tendsto monoidHomOfTendsto
 
 variable (M₁ M₂)
 
 @[to_additive]
 theorem MonoidHom.isClosedRangeCoe : IsClosed (range (coeFn : (M₁ →* M₂) → M₁ → M₂)) :=
-  isClosedOfClosureSubset $ fun f hf => ⟨monoidHomOfMemClosureRangeCoe f hf, rfl⟩
+  isClosedOfClosureSubset fun f hf => ⟨monoidHomOfMemClosureRangeCoe f hf, rfl⟩
 #align monoid_hom.is_closed_range_coe MonoidHom.isClosedRangeCoe
 
 end PointwiseLimits
@@ -257,7 +257,7 @@ end PointwiseLimits
 @[to_additive]
 theorem Inducing.has_continuous_mul {M N F : Type _} [Mul M] [Mul N] [MulHomClass F M N] [TopologicalSpace M]
     [TopologicalSpace N] [HasContinuousMul N] (f : F) (hf : Inducing f) : HasContinuousMul M :=
-  ⟨hf.continuous_iff.2 $ by simpa only [(· ∘ ·), map_mul f] using hf.continuous.fst'.mul hf.continuous.snd'⟩
+  ⟨hf.continuous_iff.2 <| by simpa only [(· ∘ ·), map_mul f] using hf.continuous.fst'.mul hf.continuous.snd'⟩
 #align inducing.has_continuous_mul Inducing.has_continuous_mul
 
 @[to_additive]
@@ -285,7 +285,7 @@ variable [TopologicalSpace M] [Monoid M] [HasContinuousMul M]
 
 @[to_additive]
 theorem Submonoid.top_closure_mul_self_subset (s : Submonoid M) : closure (s : Set M) * closure s ⊆ closure s :=
-  image2_subset_iff.2 $ fun x hx y hy => map_mem_closure₂ continuous_mul hx hy $ fun a ha b hb => s.mul_mem ha hb
+  image2_subset_iff.2 fun x hx y hy => (map_mem_closure₂ continuous_mul hx hy) fun a ha b hb => s.mul_mem ha hb
 #align submonoid.top_closure_mul_self_subset Submonoid.top_closure_mul_self_subset
 
 @[to_additive]
@@ -327,7 +327,7 @@ def Submonoid.commMonoidTopologicalClosure [T2Space M] (s : Submonoid M) (hs : �
     mul_comm :=
       have : ∀ x ∈ s, ∀ y ∈ s, x * y = y * x := fun x hx y hy => congr_arg Subtype.val (hs ⟨x, hx⟩ ⟨y, hy⟩)
       fun ⟨x, hx⟩ ⟨y, hy⟩ =>
-      Subtype.ext $ eq_on_closure₂ this continuous_mul (continuous_snd.mul continuous_fst) x hx y hy }
+      Subtype.ext <| eq_on_closure₂ this continuous_mul (continuous_snd.mul continuous_fst) x hx y hy }
 #align submonoid.comm_monoid_topological_closure Submonoid.commMonoidTopologicalClosure
 
 @[to_additive exists_open_nhds_zero_half]
@@ -384,7 +384,7 @@ theorem tendsto_list_prod {f : ι → α → M} {x : Filter α} {a : ι → M} :
 @[to_additive]
 theorem continuous_list_prod {f : ι → X → M} (l : List ι) (h : ∀ i ∈ l, Continuous (f i)) :
     Continuous fun a => (l.map fun i => f i a).Prod :=
-  continuous_iff_continuous_at.2 $ fun x => tendsto_list_prod l $ fun c hc => continuous_iff_continuous_at.1 (h c hc) x
+  continuous_iff_continuous_at.2 fun x => (tendsto_list_prod l) fun c hc => continuous_iff_continuous_at.1 (h c hc) x
 #align continuous_list_prod continuous_list_prod
 
 @[to_additive]
@@ -477,6 +477,7 @@ theorem Filter.tendsto_cocompact_mul_right {a b : M} (ha : a * b = 1) :
 multiplication by constants.
 
 Notably, this instances applies when `R = A`, or when `[algebra R A]` is available. -/
+@[to_additive "If `R` acts on `A` via `A`, then continuous addition implies\ncontinuous affine addition by constants."]
 instance (priority := 100) IsScalarTower.has_continuous_const_smul {R A : Type _} [Monoid A] [HasSmul R A]
     [IsScalarTower R A A] [TopologicalSpace A] [HasContinuousMul A] :
     HasContinuousConstSmul R A where continuous_const_smul q := by
@@ -596,10 +597,10 @@ open Function
 
 @[to_additive]
 theorem LocallyFinite.exists_finset_mul_support {M : Type _} [CommMonoid M] {f : ι → X → M}
-    (hf : LocallyFinite fun i => mul_support $ f i) (x₀ : X) :
+    (hf : LocallyFinite fun i => mul_support <| f i) (x₀ : X) :
     ∃ I : Finset ι, ∀ᶠ x in 𝓝 x₀, (mulSupport fun i => f i x) ⊆ I := by
   rcases hf x₀ with ⟨U, hxU, hUf⟩
-  refine' ⟨hUf.to_finset, mem_of_superset hxU $ fun y hy i hi => _⟩
+  refine' ⟨hUf.to_finset, (mem_of_superset hxU) fun y hy i hi => _⟩
   rw [hUf.coe_to_finset]
   exact ⟨y, hi, hy⟩
 #align locally_finite.exists_finset_mul_support LocallyFinite.exists_finset_mul_support
@@ -609,7 +610,7 @@ theorem finprod_eventually_eq_prod {M : Type _} [CommMonoid M] {f : ι → X →
     (hf : LocallyFinite fun i => mulSupport (f i)) (x : X) :
     ∃ s : Finset ι, ∀ᶠ y in 𝓝 x, (∏ᶠ i, f i y) = ∏ i in s, f i y :=
   let ⟨I, hI⟩ := hf.exists_finset_mul_support x
-  ⟨I, hI.mono fun y hy => finprod_eq_prod_of_mul_support_subset _ $ fun i hi => hy hi⟩
+  ⟨I, hI.mono fun y hy => (finprod_eq_prod_of_mul_support_subset _) fun i hi => hy hi⟩
 #align finprod_eventually_eq_prod finprod_eventually_eq_prod
 
 @[to_additive]

@@ -100,7 +100,7 @@ theorem coe_to_non_unital_alg_hom (φ : characterSpace 𝕜 A) : ⇑(toNonUnital
 #align weak_dual.character_space.coe_to_non_unital_alg_hom WeakDual.characterSpace.coe_to_non_unital_alg_hom
 
 instance [Subsingleton A] : IsEmpty (characterSpace 𝕜 A) :=
-  ⟨fun φ => φ.Prop.1 $ ContinuousLinearMap.ext fun x => by simp only [Subsingleton.elim x 0, map_zero]⟩
+  ⟨fun φ => φ.Prop.1 <| ContinuousLinearMap.ext fun x => by simp only [Subsingleton.elim x 0, map_zero]⟩
 
 variable (𝕜 A)
 
@@ -112,7 +112,7 @@ theorem union_zero : characterSpace 𝕜 A ∪ {0} = { φ : WeakDual 𝕜 A | �
         
       · exact fun x y => by simp [Set.eq_of_mem_singleton h₀]
         )
-    fun φ hφ => Or.elim (em $ φ = 0) (fun h₀ => Or.inr h₀) fun h₀ => Or.inl ⟨h₀, hφ⟩
+    fun φ hφ => Or.elim (em <| φ = 0) (fun h₀ => Or.inr h₀) fun h₀ => Or.inl ⟨h₀, hφ⟩
 #align weak_dual.character_space.union_zero WeakDual.characterSpace.union_zero
 
 /-- The `character_space 𝕜 A` along with `0` is always a closed set in `weak_dual 𝕜 A`. -/
@@ -120,7 +120,7 @@ theorem unionZeroIsClosed [T2Space 𝕜] [HasContinuousMul 𝕜] : IsClosed (cha
   simp only [union_zero, Set.set_of_forall]
   exact
     isClosedInter fun x =>
-      isClosedInter $ fun y => isClosedEq (eval_continuous _) $ (eval_continuous _).mul (eval_continuous _)
+      isClosedInter fun y => isClosedEq (eval_continuous _) <| (eval_continuous _).mul (eval_continuous _)
 #align weak_dual.character_space.union_zero_is_closed WeakDual.characterSpace.unionZeroIsClosed
 
 end NonUnitalNonAssocSemiring
@@ -136,7 +136,7 @@ instance : AlgHomClass (characterSpace 𝕜 A) 𝕜 A 𝕜 :=
     have h₁ : φ 1 * (1 - φ 1) = 0 := by rw [mul_sub, sub_eq_zero, mul_one, ← map_mul φ, one_mul]
     rcases mul_eq_zero.mp h₁ with (h₂ | h₂)
     · have : ∀ a, φ (a * 1) = 0 := fun a => by simp only [map_mul φ, h₂, mul_zero]
-      exact False.elim (φ.prop.1 $ ContinuousLinearMap.ext $ by simpa only [mul_one] using this)
+      exact False.elim (φ.prop.1 <| ContinuousLinearMap.ext <| by simpa only [mul_one] using this)
       
     · exact (sub_eq_zero.mp h₂).symm
       
@@ -199,7 +199,7 @@ variable [Ring A] [TopologicalSpace A] [Algebra 𝕜 A]
 
 /-- The `ring_hom.ker` of `φ : character_space 𝕜 A` is maximal. -/
 instance ker_is_maximal (φ : characterSpace 𝕜 A) : (RingHom.ker φ).IsMaximal :=
-  RingHom.ker_is_maximal_of_surjective φ $ fun z =>
+  (RingHom.ker_is_maximal_of_surjective φ) fun z =>
     ⟨algebraMap 𝕜 A z, by simp only [AlgHomClass.commutes, Algebra.id.map_eq_id, RingHom.id_apply]⟩
 #align weak_dual.ker_is_maximal WeakDual.ker_is_maximal
 

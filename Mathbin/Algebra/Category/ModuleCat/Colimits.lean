@@ -3,10 +3,8 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Limits.ConcreteCategory
-import Mathbin.GroupTheory.QuotientGroup
-import Mathbin.CategoryTheory.Limits.Shapes.Kernels
 import Mathbin.Algebra.Category.ModuleCat.Basic
+import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
 
 /-!
 # The category of R-modules has all colimits.

@@ -133,7 +133,7 @@ This is subtle and Lean's elaborator doesn't like it because of the HO unificati
 so it is easier (and prettier) to put it in a tactic script.
 -/
 unsafe def ghost_calc (ids' : parse ident_*) : tactic Unit := do
-  let ids ← ids'.mmap $ fun n => get_local n <|> tactic.intro n
+  let ids ← ids'.mmap fun n => get_local n <|> tactic.intro n
   let q(@Eq (WittVector _ $(R)) _ _) ← target
   match ids with
     | [x] => refine `(is_poly.ext _ _ _ _ $(x))
@@ -145,7 +145,7 @@ unsafe def ghost_calc (ids' : parse ident_*) : tactic Unit := do
       | _ => get_unused_name `R
   iterate_exactly 2 apply_instance
   unfreezingI (tactic.clear' tt [R])
-  introsI $ [nm, nm <.> "_inst"] ++ ids'
+  introsI <| [nm, .str nm "_inst"] ++ ids'
   skip
 #align tactic.interactive.ghost_calc tactic.interactive.ghost_calc
 
@@ -249,7 +249,7 @@ theorem ext {f g} (hf : IsPoly p f) (hg : IsPoly p g)
   apply MvPolynomial.funext
   intro x
   simp only [hom_bind₁]
-  specialize h (ULift ℤ) (mk p $ fun i => ⟨x i⟩) k
+  specialize h (ULift ℤ) ((mk p) fun i => ⟨x i⟩) k
   simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h
   apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective
   simp only [← RingEquiv.coe_to_ring_hom, map_eval₂_hom]
@@ -304,7 +304,7 @@ theorem IsPoly₂.comp {h f g} (hh : IsPoly₂ p h) (hf : IsPoly p f) (hg : IsPo
   obtain ⟨χ, hh⟩ := hh
   refine'
     ⟨⟨fun n =>
-        bind₁ (uncurry $ ![fun k => rename (Prod.mk (0 : Fin 2)) (φ k), fun k => rename (Prod.mk (1 : Fin 2)) (ψ k)])
+        bind₁ (uncurry <| ![fun k => rename (Prod.mk (0 : Fin 2)) (φ k), fun k => rename (Prod.mk (1 : Fin 2)) (ψ k)])
           (χ n),
         _⟩⟩
   intros
@@ -360,15 +360,15 @@ unsafe def mk_poly_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tactic
   let tgt_bod ← to_expr ``(fun f [hf : IsPoly $(p) f] => IsPoly.comp $(appd) hf) >>= replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod
-  let nm := n <.> "comp_i"
-  add_decl $ mk_definition nm tgt_tp tgt_tp tgt_bod
+  let nm := .str n "comp_i"
+  add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
   let tgt_bod ←
     to_expr ``(fun f [hf : IsPoly₂ $(p) f] => IsPoly.comp₂ $(appd) hf) >>= replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod
-  let nm := n <.> "comp₂_i"
-  add_decl $ mk_definition nm tgt_tp tgt_tp tgt_bod
+  let nm := .str n "comp₂_i"
+  add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
 #align witt_vector.tactic.mk_poly_comp_lemmas witt_vector.tactic.mk_poly_comp_lemmas
 
@@ -384,16 +384,16 @@ unsafe def mk_poly₂_comp_lemmas (n : Name) (vars : List expr) (p : expr) : tac
         replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod >>= simp_lemmas.mk.dsimplify
-  let nm := n <.> "comp₂_i"
-  add_decl $ mk_definition nm tgt_tp tgt_tp tgt_bod
+  let nm := .str n "comp₂_i"
+  add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
   let tgt_bod ←
     to_expr ``(fun {f g} [hf : IsPoly $(p) f] [hg : IsPoly $(p) g] => (IsPoly₂.comp $(appd) hf hg).diag) >>=
         replace_univ_metas_with_univ_params
   let tgt_bod ← lambdas vars tgt_bod
   let tgt_tp ← infer_type tgt_bod >>= simp_lemmas.mk.dsimplify
-  let nm := n <.> "comp_diag"
-  add_decl $ mk_definition nm tgt_tp tgt_tp tgt_bod
+  let nm := .str n "comp_diag"
+  add_decl <| mk_definition nm tgt_tp tgt_tp tgt_bod
   set_attribute `instance nm
 #align witt_vector.tactic.mk_poly₂_comp_lemmas witt_vector.tactic.mk_poly₂_comp_lemmas
 
@@ -434,7 +434,7 @@ The user-written lemmas are not instances. Users should be able to assemble `is_
 unsafe def is_poly_attr : user_attribute where
   Name := `is_poly
   descr := "Lemmas with this attribute describe the polynomial structure of functions"
-  after_set := some $ fun n _ _ => mk_comp_lemmas n
+  after_set := some fun n _ _ => mk_comp_lemmas n
 #align witt_vector.tactic.is_poly_attr witt_vector.tactic.is_poly_attr
 
 end Tactic
@@ -588,7 +588,7 @@ theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
   apply MvPolynomial.funext
   intro x
   simp only [hom_bind₁]
-  specialize h (ULift ℤ) (mk p $ fun i => ⟨x (0, i)⟩) (mk p $ fun i => ⟨x (1, i)⟩) k
+  specialize h (ULift ℤ) ((mk p) fun i => ⟨x (0, i)⟩) ((mk p) fun i => ⟨x (1, i)⟩) k
   simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h
   apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective
   simp only [← RingEquiv.coe_to_ring_hom, map_eval₂_hom]

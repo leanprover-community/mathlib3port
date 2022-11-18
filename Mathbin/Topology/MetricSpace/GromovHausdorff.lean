@@ -158,7 +158,7 @@ theorem to_GH_space_eq_to_GH_space_iff_isometric {X : Type u} [MetricSpace X] [C
       rfl
     have f := (kuratowskiEmbedding.isometry X).isometricOnRange
     have g := (kuratowskiEmbedding.isometry Y).isometricOnRange.symm
-    exact ⟨f.trans $ (cast I e).trans g⟩, by
+    exact ⟨f.trans <| (cast I e).trans g⟩, by
     rintro ⟨e⟩
     simp only [to_GH_space, Quotient.eq]
     have f := (kuratowskiEmbedding.isometry X).isometricOnRange.symm
@@ -180,7 +180,7 @@ we only consider embeddings in `ℓ^∞(ℝ)`, but we will prove below that it w
 instance :
     HasDist
       GHSpace where dist x y :=
-    Inf $
+    Inf <|
       (fun p : NonemptyCompacts ℓ_infty_ℝ × NonemptyCompacts ℓ_infty_ℝ => hausdorffDist (p.1 : Set ℓ_infty_ℝ) p.2) ''
         { a | ⟦a⟧ = x } ×ˢ { b | ⟦b⟧ = y }
 
@@ -302,11 +302,11 @@ theorem Hausdorff_dist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [No
           apply add_le_add (add_le_add le_rfl (le_of_lt dy)) le_rfl
         _ = 2 * diam (univ : Set X) + 1 + 2 * diam (univ : Set Y) := by ring
         
-    let f : X ⊕ Y → ℓ_infty_ℝ := fun x =>
+    let f : Sum X Y → ℓ_infty_ℝ := fun x =>
       match x with
       | inl y => Φ y
       | inr z => Ψ z
-    let F : (X ⊕ Y) × (X ⊕ Y) → ℝ := fun p => dist (f p.1) (f p.2)
+    let F : Sum X Y × Sum X Y → ℝ := fun p => dist (f p.1) (f p.2)
     -- check that the induced "distance" is a candidate
     have Fgood : F ∈ candidates X Y := by
       simp only [candidates, forall_const, and_true_iff, add_comm, eq_self_iff_true, dist_eq_zero, and_self_iff,
@@ -331,7 +331,7 @@ theorem Hausdorff_dist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [No
       · exact fun x y =>
           calc
             F (x, y) ≤ diam (range Φ ∪ range Ψ) := by
-              have A : ∀ z : X ⊕ Y, f z ∈ range Φ ∪ range Ψ := by
+              have A : ∀ z : Sum X Y, f z ∈ range Φ ∪ range Ψ := by
                 intro z
                 cases z
                 · apply mem_union_left
@@ -391,7 +391,7 @@ theorem Hausdorff_dist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [No
             Hausdorff_dist (p : Set ℓ_infty_ℝ) q :=
     by
     intro p q hp hq
-    by_cases h:Hausdorff_dist (p : Set ℓ_infty_ℝ) q < diam (univ : Set X) + 1 + diam (univ : Set Y)
+    by_cases h : Hausdorff_dist (p : Set ℓ_infty_ℝ) q < diam (univ : Set X) + 1 + diam (univ : Set Y)
     · exact A p q hp hq h
       
     · calc
@@ -623,7 +623,8 @@ theorem GH_dist_le_of_approx_subsets {s : Set X} (Φ : s → Y) {ε₁ ε₂ ε�
       _ ≤ 2 * (ε₂ / 2 + δ) := by linarith
       
   -- glue `X` and `Y` along the almost matching subsets
-  letI : MetricSpace (X ⊕ Y) := glue_metric_approx (fun x : s => (x : X)) (fun x => Φ x) (ε₂ / 2 + δ) (by linarith) this
+  letI : MetricSpace (Sum X Y) :=
+    glue_metric_approx (fun x : s => (x : X)) (fun x => Φ x) (ε₂ / 2 + δ) (by linarith) this
   let Fl := @Sum.inl X Y
   let Fr := @Sum.inr X Y
   have Il : Isometry Fl := Isometry.ofDistEq fun x y => rfl
@@ -706,8 +707,8 @@ instance : SecondCountableTopology GHSpace := by
   let E := fun p : GH_space => e p (s p) (hs p).1
   -- A function `F` associating to `p : GH_space` the data of all distances between points
   -- in the `ε`-dense set `s p`.
-  let F : GH_space → Σ n : ℕ, Fin n → Fin n → ℤ := fun p => ⟨N p, fun a b => ⌊ε⁻¹ * dist ((E p).symm a) ((E p).symm b)⌋⟩
-  refine' ⟨Σ n, Fin n → Fin n → ℤ, by infer_instance, F, fun p q hpq => _⟩
+  let F : GH_space → Σn : ℕ, Fin n → Fin n → ℤ := fun p => ⟨N p, fun a b => ⌊ε⁻¹ * dist ((E p).symm a) ((E p).symm b)⌋⟩
+  refine' ⟨Σn, Fin n → Fin n → ℤ, by infer_instance, F, fun p q hpq => _⟩
   /- As the target space of F is countable, it suffices to show that two points
     `p` and `q` with `F p = F q` are at distance `≤ δ`.
     For this, we construct a map `Φ` from `s p ⊆ p.rep` (representing `p`)
@@ -723,7 +724,7 @@ instance : SecondCountableTopology GHSpace := by
   -- are within controlled Gromov-Hausdorff distance.
   have main : GH_dist p.rep q.rep ≤ ε + ε / 2 + ε := by
     refine' GH_dist_le_of_approx_subsets Φ _ _ _
-    show ∀ x : p.rep, ∃ (y : p.rep) (H : y ∈ s p), dist x y ≤ ε
+    show ∀ x : p.rep, ∃ (y : p.rep)(H : y ∈ s p), dist x y ≤ ε
     · -- by construction, `s p` is `ε`-dense
       intro x
       have : x ∈ ⋃ y ∈ s p, ball y ε := (hs p).2 (mem_univ _)
@@ -845,7 +846,7 @@ theorem totally_bounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
   -- construct a finite subset `s p` of `p` which is `ε`-dense and has cardinal `≤ K n`
   have : ∀ p : GH_space, ∃ s : Set p.rep, ∃ N ≤ K n, ∃ E : Equiv s (Fin N), p ∈ t → univ ⊆ ⋃ x ∈ s, ball x (u n) := by
     intro p
-    by_cases hp:p ∉ t
+    by_cases hp : p ∉ t
     · have : Nonempty (Equiv (∅ : Set p.rep) (Fin 0)) := by
         rw [← Fintype.card_eq]
         simp only [empty_card', Fintype.card_fin]
@@ -863,7 +864,7 @@ theorem totally_bounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
   -- Define a function `F` taking values in a finite type and associating to `p` enough data
   -- to reconstruct it up to `ε`, namely the (discretized) distances between elements of `s p`.
   let M := ⌊ε⁻¹ * max C 0⌋₊
-  let F : GH_space → Σ k : Fin (K n).succ, Fin k → Fin k → Fin M.succ := fun p =>
+  let F : GH_space → Σk : Fin (K n).succ, Fin k → Fin k → Fin M.succ := fun p =>
     ⟨⟨N p, lt_of_le_of_lt (hN p) (Nat.lt_succ_self _)⟩, fun a b =>
       ⟨min M ⌊ε⁻¹ * dist ((E p).symm a) ((E p).symm b)⌋₊, (min_le_left _ _).trans_lt (Nat.lt_succ_self _)⟩⟩
   refine' ⟨_, _, fun p => F p, _⟩
@@ -878,7 +879,7 @@ theorem totally_bounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
     -- in `q`, and `s p` and `s q` are almost isometric. Then closeness follows
     -- from `GH_dist_le_of_approx_subsets`
     refine' GH_dist_le_of_approx_subsets Φ _ _ _
-    show ∀ x : p.rep, ∃ (y : p.rep) (H : y ∈ s p), dist x y ≤ ε
+    show ∀ x : p.rep, ∃ (y : p.rep)(H : y ∈ s p), dist x y ≤ ε
     · -- by construction, `s p` is `ε`-dense
       intro x
       have : x ∈ ⋃ y ∈ s p, ball y (u n) := (hs p pt) (mem_univ _)

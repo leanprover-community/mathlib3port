@@ -97,7 +97,7 @@ theorem arg_mul_cos_add_sin_mul_I {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ �
   simp only [arg, map_mul, abs_cos_add_sin_mul_I, abs_of_nonneg hr.le, mul_one]
   simp only [of_real_mul_re, of_real_mul_im, neg_im, ← of_real_cos, ← of_real_sin, ← mk_eq_add_mul_I, neg_div,
     mul_div_cancel_left _ hr.ne', mul_nonneg_iff_right_nonneg_of_pos hr]
-  by_cases h₁:θ ∈ Icc (-(π / 2)) (π / 2)
+  by_cases h₁ : θ ∈ Icc (-(π / 2)) (π / 2)
   · rw [if_pos]
     exacts[Real.arcsin_sin' h₁, Real.cos_nonneg_of_mem_Icc h₁]
     
@@ -218,7 +218,7 @@ theorem arg_neg_I : arg (-I) = -(π / 2) := by simp [arg, le_refl]
 
 @[simp]
 theorem tan_arg (x : ℂ) : Real.tan (arg x) = x.im / x.re := by
-  by_cases h:x = 0
+  by_cases h : x = 0
   · simp only [h, zero_div, Complex.zero_im, Complex.arg_zero, Real.tan_zero, Complex.zero_re]
     
   rw [Real.tan_eq_sin_div_cos, sin_arg, cos_arg h, div_div_div_cancel_right _ (abs.ne_zero h)]
@@ -239,7 +239,7 @@ theorem arg_eq_zero_iff {z : ℂ} : arg z = 0 ↔ 0 ≤ z.re ∧ z.im = 0 := by
 #align complex.arg_eq_zero_iff Complex.arg_eq_zero_iff
 
 theorem arg_eq_pi_iff {z : ℂ} : arg z = π ↔ z.re < 0 ∧ z.im = 0 := by
-  by_cases h₀:z = 0
+  by_cases h₀ : z = 0
   · simp [h₀, lt_irrefl, real.pi_ne_zero.symm]
     
   constructor
@@ -263,7 +263,7 @@ theorem arg_of_real_of_neg {x : ℝ} (hx : x < 0) : arg x = π :=
 #align complex.arg_of_real_of_neg Complex.arg_of_real_of_neg
 
 theorem arg_eq_pi_div_two_iff {z : ℂ} : arg z = π / 2 ↔ z.re = 0 ∧ 0 < z.im := by
-  by_cases h₀:z = 0
+  by_cases h₀ : z = 0
   · simp [h₀, lt_irrefl, real.pi_div_two_pos.ne]
     
   constructor
@@ -278,7 +278,7 @@ theorem arg_eq_pi_div_two_iff {z : ℂ} : arg z = π / 2 ↔ z.re = 0 ∧ 0 < z.
 #align complex.arg_eq_pi_div_two_iff Complex.arg_eq_pi_div_two_iff
 
 theorem arg_eq_neg_pi_div_two_iff {z : ℂ} : arg z = -(π / 2) ↔ z.re = 0 ∧ z.im < 0 := by
-  by_cases h₀:z = 0
+  by_cases h₀ : z = 0
   · simp [h₀, lt_irrefl, Real.pi_ne_zero]
     
   constructor
@@ -310,7 +310,7 @@ theorem arg_of_im_nonneg_of_ne_zero {z : ℂ} (h₁ : 0 ≤ z.im) (h₂ : z ≠ 
 #align complex.arg_of_im_nonneg_of_ne_zero Complex.arg_of_im_nonneg_of_ne_zero
 
 theorem arg_of_im_pos {z : ℂ} (hz : 0 < z.im) : arg z = Real.arccos (z.re / abs z) :=
-  arg_of_im_nonneg_of_ne_zero hz.le fun h => hz.ne' $ h.symm ▸ rfl
+  arg_of_im_nonneg_of_ne_zero hz.le fun h => hz.ne' <| h.symm ▸ rfl
 #align complex.arg_of_im_pos Complex.arg_of_im_pos
 
 theorem arg_of_im_neg {z : ℂ} (hz : z.im < 0) : arg z = -Real.arccos (z.re / abs z) := by
@@ -345,7 +345,7 @@ theorem arg_conj (x : ℂ) : arg (conj x) = if arg x = π then π else -arg x :=
 
 theorem arg_inv (x : ℂ) : arg x⁻¹ = if arg x = π then π else -arg x := by
   rw [← arg_conj, inv_def, mul_comm]
-  by_cases hx:x = 0
+  by_cases hx : x = 0
   · simp [hx]
     
   · exact arg_real_mul (conj x) (by simp [hx])
@@ -362,7 +362,7 @@ theorem arg_le_pi_div_two_iff {z : ℂ} : arg z ≤ π / 2 ↔ 0 ≤ re z ∨ im
     rw [iff_false_iff, not_le, arg_of_re_neg_of_im_nonneg hre him, ← sub_lt_iff_lt_add, half_sub,
       Real.neg_pi_div_two_lt_arcsin, neg_im, neg_div, neg_lt_neg_iff, div_lt_one, ← _root_.abs_of_nonneg him,
       abs_im_lt_abs]
-    exacts[hre.ne, abs.pos $ ne_of_apply_ne re hre.ne]
+    exacts[hre.ne, abs.pos <| ne_of_apply_ne re hre.ne]
     
   · simp only [him]
     rw [iff_true_iff, arg_of_re_neg_of_im_neg hre him]
@@ -383,7 +383,7 @@ theorem neg_pi_div_two_le_arg_iff {z : ℂ} : -(π / 2) ≤ arg z ↔ 0 ≤ re z
   · simp only [him.not_le]
     rw [iff_false_iff, not_le, arg_of_re_neg_of_im_neg hre him, sub_lt_iff_lt_add', ← sub_eq_add_neg, sub_half,
       Real.arcsin_lt_pi_div_two, div_lt_one, neg_im, ← abs_of_neg him, abs_im_lt_abs]
-    exacts[hre.ne, abs.pos $ ne_of_apply_ne re hre.ne]
+    exacts[hre.ne, abs.pos <| ne_of_apply_ne re hre.ne]
     
 #align complex.neg_pi_div_two_le_arg_iff Complex.neg_pi_div_two_le_arg_iff
 
@@ -394,11 +394,11 @@ theorem abs_arg_le_pi_div_two_iff {z : ℂ} : |arg z| ≤ π / 2 ↔ 0 ≤ re z 
 
 @[simp]
 theorem arg_conj_coe_angle (x : ℂ) : (arg (conj x) : Real.Angle) = -arg x := by
-  by_cases h:arg x = π <;> simp [arg_conj, h]
+  by_cases h : arg x = π <;> simp [arg_conj, h]
 #align complex.arg_conj_coe_angle Complex.arg_conj_coe_angle
 
 @[simp]
-theorem arg_inv_coe_angle (x : ℂ) : (arg x⁻¹ : Real.Angle) = -arg x := by by_cases h:arg x = π <;> simp [arg_inv, h]
+theorem arg_inv_coe_angle (x : ℂ) : (arg x⁻¹ : Real.Angle) = -arg x := by by_cases h : arg x = π <;> simp [arg_inv, h]
 #align complex.arg_inv_coe_angle Complex.arg_inv_coe_angle
 
 theorem arg_neg_eq_arg_sub_pi_of_im_pos {x : ℂ} (hi : 0 < x.im) : arg (-x) = arg x - π := by
@@ -538,7 +538,7 @@ section Continuity
 variable {x z : ℂ}
 
 theorem arg_eq_nhds_of_re_pos (hx : 0 < x.re) : arg =ᶠ[𝓝 x] fun x => Real.arcsin (x.im / x.abs) :=
-  ((continuous_re.Tendsto _).Eventually (lt_mem_nhds hx)).mono $ fun y hy => arg_of_re_nonneg hy.le
+  ((continuous_re.Tendsto _).Eventually (lt_mem_nhds hx)).mono fun y hy => arg_of_re_nonneg hy.le
 #align complex.arg_eq_nhds_of_re_pos Complex.arg_eq_nhds_of_re_pos
 
 theorem arg_eq_nhds_of_re_neg_of_im_pos (hx_re : x.re < 0) (hx_im : 0 < x.im) :
@@ -558,11 +558,11 @@ theorem arg_eq_nhds_of_re_neg_of_im_neg (hx_re : x.re < 0) (hx_im : x.im < 0) :
 #align complex.arg_eq_nhds_of_re_neg_of_im_neg Complex.arg_eq_nhds_of_re_neg_of_im_neg
 
 theorem arg_eq_nhds_of_im_pos (hz : 0 < im z) : arg =ᶠ[𝓝 z] fun x => Real.arccos (x.re / abs x) :=
-  ((continuous_im.Tendsto _).Eventually (lt_mem_nhds hz)).mono $ fun x => arg_of_im_pos
+  ((continuous_im.Tendsto _).Eventually (lt_mem_nhds hz)).mono fun x => arg_of_im_pos
 #align complex.arg_eq_nhds_of_im_pos Complex.arg_eq_nhds_of_im_pos
 
 theorem arg_eq_nhds_of_im_neg (hz : im z < 0) : arg =ᶠ[𝓝 z] fun x => -Real.arccos (x.re / abs x) :=
-  ((continuous_im.Tendsto _).Eventually (gt_mem_nhds hz)).mono $ fun x => arg_of_im_neg
+  ((continuous_im.Tendsto _).Eventually (gt_mem_nhds hz)).mono fun x => arg_of_im_neg
 #align complex.arg_eq_nhds_of_im_neg Complex.arg_eq_nhds_of_im_neg
 
 theorem continuous_at_arg (h : 0 < x.re ∨ x.im ≠ 0) : ContinuousAt arg x := by
@@ -628,7 +628,7 @@ theorem tendsto_arg_nhds_within_im_nonneg_of_re_neg_of_im_zero {z : ℂ} (hre : 
   complex.tendsto_arg_nhds_within_im_nonneg_of_re_neg_of_im_zero Complex.tendsto_arg_nhds_within_im_nonneg_of_re_neg_of_im_zero
 
 theorem continuous_at_arg_coe_angle (h : x ≠ 0) : ContinuousAt (coe ∘ arg : ℂ → Real.Angle) x := by
-  by_cases hs:0 < x.re ∨ x.im ≠ 0
+  by_cases hs : 0 < x.re ∨ x.im ≠ 0
   · exact real.angle.continuous_coe.continuous_at.comp (continuous_at_arg hs)
     
   · rw [← Function.comp.right_id (coe ∘ arg),

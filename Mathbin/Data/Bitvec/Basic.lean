@@ -6,7 +6,6 @@ Authors: Simon Hudon
 import Mathbin.Data.Bitvec.Core
 import Mathbin.Data.Fin.Basic
 import Mathbin.Tactic.NormNum
-import Mathbin.Tactic.Monotonicity.Default
 
 namespace Bitvec
 
@@ -14,16 +13,16 @@ instance (n : ℕ) : Preorder (Bitvec n) :=
   Preorder.lift Bitvec.toNat
 
 /-- convert `fin` to `bitvec` -/
-def ofFin {n : ℕ} (i : Fin $ 2 ^ n) : Bitvec n :=
+def ofFin {n : ℕ} (i : Fin <| 2 ^ n) : Bitvec n :=
   Bitvec.ofNat _ i.val
 #align bitvec.of_fin Bitvec.ofFin
 
-theorem of_fin_val {n : ℕ} (i : Fin $ 2 ^ n) : (ofFin i).toNat = i.val := by
+theorem of_fin_val {n : ℕ} (i : Fin <| 2 ^ n) : (ofFin i).toNat = i.val := by
   rw [of_fin, to_nat_of_nat, Nat.mod_eq_of_lt] <;> apply i.is_lt
 #align bitvec.of_fin_val Bitvec.of_fin_val
 
 /-- convert `bitvec` to `fin` -/
-def toFin {n : ℕ} (i : Bitvec n) : Fin $ 2 ^ n :=
+def toFin {n : ℕ} (i : Bitvec n) : Fin <| 2 ^ n :=
   Fin.ofNat' i.toNat
 #align bitvec.to_fin Bitvec.toFin
 
@@ -113,7 +112,7 @@ theorem of_fin_le_of_fin_of_le {n : ℕ} {i j : Fin (2 ^ n)} (h : i ≤ j) : ofF
     exact h
 #align bitvec.of_fin_le_of_fin_of_le Bitvec.of_fin_le_of_fin_of_le
 
-theorem to_fin_of_fin {n} (i : Fin $ 2 ^ n) : (ofFin i).toFin = i :=
+theorem to_fin_of_fin {n} (i : Fin <| 2 ^ n) : (ofFin i).toFin = i :=
   Fin.eq_of_veq (by simp [to_fin_val, of_fin, to_nat_of_nat, Nat.mod_eq_of_lt, i.is_lt])
 #align bitvec.to_fin_of_fin Bitvec.to_fin_of_fin
 

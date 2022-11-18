@@ -3,8 +3,13 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Floris van Doorn, Sébastien Gouëzel, Alex J. Best
 -/
-import Mathbin.Algebra.GroupPower.Default
 import Mathbin.Data.List.Forall2
+import Mathbin.Algebra.Group.Opposite
+import Mathbin.Algebra.GroupPower.Basic
+import Mathbin.Algebra.GroupWithZero.Commute
+import Mathbin.Algebra.Ring.Basic
+import Mathbin.Algebra.Ring.Commute
+import Mathbin.Data.Int.Basic
 
 /-!
 # Sums and products from lists
@@ -60,7 +65,7 @@ theorem prod_join {l : List (List M)} : l.join.Prod = (l.map List.prod).Prod := 
 
 @[to_additive]
 theorem prod_eq_foldr : l.Prod = foldr (· * ·) 1 l :=
-  List.recOn l rfl $ fun a l ihl => by rw [prod_cons, foldr_cons, ihl]
+  (List.recOn l rfl) fun a l ihl => by rw [prod_cons, foldr_cons, ihl]
 #align list.prod_eq_foldr List.prod_eq_foldr
 
 @[simp, to_additive]
@@ -92,7 +97,7 @@ theorem prod_hom (l : List M) {F : Type _} [MonoidHomClass F M N] (f : F) : (l.m
 
 @[to_additive]
 theorem prod_hom₂ (l : List ι) (f : M → N → P) (hf : ∀ a b c d, f (a * b) (c * d) = f a c * f b d) (hf' : f 1 1 = 1)
-    (f₁ : ι → M) (f₂ : ι → N) : (l.map $ fun i => f (f₁ i) (f₂ i)).Prod = f (l.map f₁).Prod (l.map f₂).Prod := by
+    (f₁ : ι → M) (f₂ : ι → N) : (l.map fun i => f (f₁ i) (f₂ i)).Prod = f (l.map f₁).Prod (l.map f₂).Prod := by
   simp only [Prod, foldl_map]
   convert l.foldl_hom₂ (fun a b => f a b) _ _ _ _ _ fun a b i => _
   · exact hf'.symm
@@ -103,7 +108,7 @@ theorem prod_hom₂ (l : List ι) (f : M → N → P) (hf : ∀ a b c d, f (a * 
 
 @[simp, to_additive]
 theorem prod_map_mul {α : Type _} [CommMonoid α] {l : List ι} {f g : ι → α} :
-    (l.map $ fun i => f i * g i).Prod = (l.map f).Prod * (l.map g).Prod :=
+    (l.map fun i => f i * g i).Prod = (l.map f).Prod * (l.map g).Prod :=
   l.prod_hom₂ (· * ·) mul_mul_mul_comm (mul_one _) _ _
 #align list.prod_map_mul List.prod_map_mul
 
@@ -222,7 +227,7 @@ theorem _root_.commute.list_prod_right (l : List M) (y : M) (h : ∀ x ∈ l, Co
 
 @[to_additive]
 theorem _root_.commute.list_prod_left (l : List M) (y : M) (h : ∀ x ∈ l, Commute x y) : Commute l.Prod y :=
-  (Commute.list_prod_right _ _ $ fun x hx => (h _ hx).symm).symm
+  ((Commute.list_prod_right _ _) fun x hx => (h _ hx).symm).symm
 #align list._root_.commute.list_prod_left list._root_.commute.list_prod_left
 
 theorem _root_.commute.list_sum_right [NonUnitalNonAssocSemiring R] (a : R) (l : List R) (h : ∀ b ∈ l, Commute a b) :
@@ -231,13 +236,13 @@ theorem _root_.commute.list_sum_right [NonUnitalNonAssocSemiring R] (a : R) (l :
   · exact Commute.zero_right _
     
   · rw [sum_cons]
-    exact (h _ $ mem_cons_self _ _).add_right (ih $ fun j hj => h _ $ mem_cons_of_mem _ hj)
+    exact (h _ <| mem_cons_self _ _).addRight (ih fun j hj => h _ <| mem_cons_of_mem _ hj)
     
 #align list._root_.commute.list_sum_right list._root_.commute.list_sum_right
 
 theorem _root_.commute.list_sum_left [NonUnitalNonAssocSemiring R] (b : R) (l : List R) (h : ∀ a ∈ l, Commute a b) :
     Commute l.Sum b :=
-  (Commute.list_sum_right _ _ $ fun x hx => (h _ hx).symm).symm
+  ((Commute.list_sum_right _ _) fun x hx => (h _ hx).symm).symm
 #align list._root_.commute.list_sum_left list._root_.commute.list_sum_left
 
 @[to_additive sum_le_sum]
@@ -274,14 +279,14 @@ theorem SublistForall₂.prod_le_prod' [Preorder M] [CovariantClass M M (Functio
     [CovariantClass M M (· * ·) (· ≤ ·)] {l₁ l₂ : List M} (h : SublistForall₂ (· ≤ ·) l₁ l₂)
     (h₁ : ∀ a ∈ l₂, (1 : M) ≤ a) : l₁.Prod ≤ l₂.Prod :=
   let ⟨l, hall, hsub⟩ := sublist_forall₂_iff.1 h
-  hall.prod_le_prod'.trans $ hsub.prod_le_prod' h₁
+  hall.prod_le_prod'.trans <| hsub.prod_le_prod' h₁
 #align list.sublist_forall₂.prod_le_prod' List.SublistForall₂.prod_le_prod'
 
 @[to_additive sum_le_sum]
 theorem prod_le_prod' [Preorder M] [CovariantClass M M (Function.swap (· * ·)) (· ≤ ·)]
     [CovariantClass M M (· * ·) (· ≤ ·)] {l : List ι} {f g : ι → M} (h : ∀ i ∈ l, f i ≤ g i) :
     (l.map f).Prod ≤ (l.map g).Prod :=
-  forall₂.prod_le_prod' $ by simpa
+  forall₂.prod_le_prod' <| by simpa
 #align list.prod_le_prod' List.prod_le_prod'
 
 @[to_additive sum_lt_sum]
@@ -294,14 +299,14 @@ theorem prod_lt_prod' [Preorder M] [CovariantClass M M (· * ·) (· < ·)] [Cov
     
   simp only [ball_cons, bex_cons, map_cons, prod_cons] at h₁ h₂⊢
   cases h₂
-  exacts[mul_lt_mul_of_lt_of_le h₂ (prod_le_prod' h₁.2), mul_lt_mul_of_le_of_lt h₁.1 $ ihl h₁.2 h₂]
+  exacts[mul_lt_mul_of_lt_of_le h₂ (prod_le_prod' h₁.2), mul_lt_mul_of_le_of_lt h₁.1 <| ihl h₁.2 h₂]
 #align list.prod_lt_prod' List.prod_lt_prod'
 
 @[to_additive]
 theorem prod_lt_prod_of_ne_nil [Preorder M] [CovariantClass M M (· * ·) (· < ·)] [CovariantClass M M (· * ·) (· ≤ ·)]
     [CovariantClass M M (Function.swap (· * ·)) (· < ·)] [CovariantClass M M (Function.swap (· * ·)) (· ≤ ·)]
     {l : List ι} (hl : l ≠ []) (f g : ι → M) (hlt : ∀ i ∈ l, f i < g i) : (l.map f).Prod < (l.map g).Prod :=
-  (prod_lt_prod' f g fun i hi => (hlt i hi).le) $ (exists_mem_of_ne_nil l hl).imp $ fun i hi => ⟨hi, hlt i hi⟩
+  (prod_lt_prod' f g fun i hi => (hlt i hi).le) <| (exists_mem_of_ne_nil l hl).imp fun i hi => ⟨hi, hlt i hi⟩
 #align list.prod_lt_prod_of_ne_nil List.prod_lt_prod_of_ne_nil
 
 @[to_additive sum_le_card_nsmul]
@@ -563,7 +568,7 @@ theorem prod_pos [StrictOrderedSemiring R] (l : List R) (h : ∀ a ∈ l, (0 : R
   · simp
     
   · rw [prod_cons]
-    exact mul_pos (h _ $ mem_cons_self _ _) (ih $ fun a ha => h a $ mem_cons_of_mem _ ha)
+    exact mul_pos (h _ <| mem_cons_self _ _) (ih fun a ha => h a <| mem_cons_of_mem _ ha)
     
 #align list.prod_pos List.prod_pos
 
@@ -659,12 +664,12 @@ end Alternating
 
 theorem sum_map_mul_left [NonUnitalNonAssocSemiring R] (L : List ι) (f : ι → R) (r : R) :
     (L.map fun b => r * f b).Sum = r * (L.map f).Sum :=
-  sum_map_hom L f $ AddMonoidHom.mulLeft r
+  sum_map_hom L f <| AddMonoidHom.mulLeft r
 #align list.sum_map_mul_left List.sum_map_mul_left
 
 theorem sum_map_mul_right [NonUnitalNonAssocSemiring R] (L : List ι) (f : ι → R) (r : R) :
     (L.map fun b => f b * r).Sum = (L.map f).Sum * r :=
-  sum_map_hom L f $ AddMonoidHom.mulRight r
+  sum_map_hom L f <| AddMonoidHom.mulRight r
 #align list.sum_map_mul_right List.sum_map_mul_right
 
 end List

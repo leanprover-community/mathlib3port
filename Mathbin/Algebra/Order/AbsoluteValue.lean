@@ -99,7 +99,7 @@ protected theorem ne_zero_iff {x : R} : abv x ≠ 0 ↔ x ≠ 0 :=
 #align absolute_value.ne_zero_iff AbsoluteValue.ne_zero_iff
 
 protected theorem pos {x : R} (hx : x ≠ 0) : 0 < abv x :=
-  lt_of_le_of_ne (abv.Nonneg x) (Ne.symm $ mt abv.eq_zero.mp hx)
+  lt_of_le_of_ne (abv.Nonneg x) (Ne.symm <| mt abv.eq_zero.mp hx)
 #align absolute_value.pos AbsoluteValue.pos
 
 @[simp]
@@ -112,7 +112,7 @@ protected theorem ne_zero {x : R} (hx : x ≠ 0) : abv x ≠ 0 :=
 #align absolute_value.ne_zero AbsoluteValue.ne_zero
 
 theorem map_one_of_is_regular (h : IsLeftRegular (abv 1)) : abv 1 = 1 :=
-  h $ by simp [← abv.map_mul]
+  h <| by simp [← abv.map_mul]
 #align absolute_value.map_one_of_is_regular AbsoluteValue.map_one_of_is_regular
 
 @[simp]
@@ -153,7 +153,7 @@ variable [IsDomain S] [Nontrivial R]
 
 @[simp]
 protected theorem map_one : abv 1 = 1 :=
-  abv.map_one_of_is_regular (is_regular_of_ne_zero $ abv.NeZero one_ne_zero).left
+  abv.map_one_of_is_regular (is_regular_of_ne_zero <| abv.NeZero one_ne_zero).left
 #align absolute_value.map_one AbsoluteValue.map_one
 
 instance : MonoidWithZeroHomClass (AbsoluteValue R S) R S :=
@@ -193,7 +193,7 @@ section Ring
 variable {R S : Type _} [Ring R] [OrderedRing S] (abv : AbsoluteValue R S)
 
 protected theorem le_sub (a b : R) : abv a - abv b ≤ abv (a - b) :=
-  sub_le_iff_le_add.2 $ by simpa using abv.add_le (a - b) b
+  sub_le_iff_le_add.2 <| by simpa using abv.add_le (a - b) b
 #align absolute_value.le_sub AbsoluteValue.le_sub
 
 end Ring
@@ -208,7 +208,7 @@ variable [NoZeroDivisors S]
 
 @[simp]
 protected theorem map_neg (a : R) : abv (-a) = abv a := by
-  by_cases ha:a = 0
+  by_cases ha : a = 0
   · simp [ha]
     
   refine' (mul_self_eq_mul_self_iff.mp (by rw [← abv.map_mul, neg_mul_neg, abv.map_mul])).resolve_right _
@@ -251,10 +251,10 @@ end LinearOrderedCommRing
 
 end AbsoluteValue
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`abv_nonneg] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`abv_eq_zero] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`abv_add] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`abv_mul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`abv_nonneg] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`abv_eq_zero] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`abv_add] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`abv_mul] [] -/
 /-- A function `f` is an absolute value if it is nonnegative, zero only at 0, additive, and
 multiplicative.
 
@@ -402,7 +402,8 @@ section Semiring
 variable {R : Type _} [Semiring R] [Nontrivial R] (abv : R → S) [IsAbsoluteValue abv]
 
 theorem abv_one' : abv 1 = 1 :=
-  (toAbsoluteValue abv).map_one_of_is_regular $ (is_regular_of_ne_zero $ (toAbsoluteValue abv).NeZero one_ne_zero).left
+  (toAbsoluteValue abv).map_one_of_is_regular <|
+    (is_regular_of_ne_zero <| (toAbsoluteValue abv).NeZero one_ne_zero).left
 #align is_absolute_value.abv_one' IsAbsoluteValue.abv_one'
 
 /-- An absolute value as a monoid with zero homomorphism, assuming the target is a semifield. -/

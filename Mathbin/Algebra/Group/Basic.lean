@@ -92,7 +92,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ite_mul_one ite_mul_oneₓ'. -/
 @[to_additive]
 theorem ite_mul_one {P : Prop} [Decidable P] {a b : M} : ite P (a * b) 1 = ite P a 1 * ite P b 1 := by
-  by_cases h:P <;> simp [h]
+  by_cases h : P <;> simp [h]
 #align ite_mul_one ite_mul_one
 
 /- warning: ite_one_mul -> ite_one_mul is a dubious translation:
@@ -103,7 +103,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ite_one_mul ite_one_mulₓ'. -/
 @[to_additive]
 theorem ite_one_mul {P : Prop} [Decidable P] {a b : M} : ite P 1 (a * b) = ite P 1 a * ite P 1 b := by
-  by_cases h:P <;> simp [h]
+  by_cases h : P <;> simp [h]
 #align ite_one_mul ite_one_mul
 
 /- warning: eq_one_iff_eq_one_of_mul_eq_one -> eq_one_iff_eq_one_of_mul_eq_one is a dubious translation:
@@ -211,7 +211,7 @@ theorem bit0_add (a b : M) : bit0 (a + b) = bit0 a + bit0 b :=
 #align bit0_add bit0_add
 
 theorem bit1_add [One M] (a b : M) : bit1 (a + b) = bit0 a + bit1 b :=
-  (congr_arg (· + (1 : M)) $ bit0_add a b : _).trans (add_assoc _ _ _)
+  (congr_arg (· + (1 : M)) <| bit0_add a b : _).trans (add_assoc _ _ _)
 #align bit1_add bit1_add
 
 theorem bit1_add' [One M] (a b : M) : bit1 (a + b) = bit1 a + bit0 b := by rw [add_comm, bit1_add, add_comm]
@@ -392,7 +392,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align inv_eq_iff_inv_eq inv_eq_iff_inv_eqₓ'. -/
 @[to_additive]
 theorem inv_eq_iff_inv_eq : a⁻¹ = b ↔ b⁻¹ = a :=
-  eq_comm.trans $ eq_inv_iff_eq_inv.trans eq_comm
+  eq_comm.trans <| eq_inv_iff_eq_inv.trans eq_comm
 #align inv_eq_iff_inv_eq inv_eq_iff_inv_eq
 
 variable (G)
@@ -605,7 +605,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align eq_of_div_eq_one eq_of_div_eq_oneₓ'. -/
 @[to_additive]
 theorem eq_of_div_eq_one (h : a / b = 1) : a = b :=
-  inv_injective $ inv_eq_of_mul_eq_one_right $ by rwa [← div_eq_mul_inv]
+  inv_injective <| inv_eq_of_mul_eq_one_right <| by rwa [← div_eq_mul_inv]
 #align eq_of_div_eq_one eq_of_div_eq_one
 
 /- warning: div_ne_one_of_ne -> div_ne_one_of_ne is a dubious translation:
@@ -1739,7 +1739,7 @@ theorem bit0_sub (a b : M) : bit0 (a - b) = bit0 a - bit0 b :=
 #align bit0_sub bit0_sub
 
 theorem bit1_sub [One M] (a b : M) : bit1 (a - b) = bit1 a - bit0 b :=
-  (congr_arg (· + (1 : M)) $ bit0_sub a b : _).trans $ sub_add_eq_add_sub _ _ _
+  (congr_arg (· + (1 : M)) <| bit0_sub a b : _).trans <| sub_add_eq_add_sub _ _ _
 #align bit1_sub bit1_sub
 
 end SubtractionCommMonoid

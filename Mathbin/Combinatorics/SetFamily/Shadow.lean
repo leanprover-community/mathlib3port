@@ -90,7 +90,7 @@ theorem erase_mem_shadow (hs : s ∈ 𝒜) (ha : a ∈ s) : erase s a ∈ (∂ )
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a «expr ∉ » s) -/
 /-- `t` is in the shadow of `𝒜` iff we can add an element to it so that the resulting finset is in
 `𝒜`. -/
-theorem mem_shadow_iff_insert_mem : s ∈ (∂ ) 𝒜 ↔ ∃ (a) (_ : a ∉ s), insert a s ∈ 𝒜 := by
+theorem mem_shadow_iff_insert_mem : s ∈ (∂ ) 𝒜 ↔ ∃ (a : _)(_ : a ∉ s), insert a s ∈ 𝒜 := by
   refine' mem_shadow_iff.trans ⟨_, _⟩
   · rintro ⟨s, hs, a, ha, rfl⟩
     refine' ⟨a, not_mem_erase a s, _⟩
@@ -124,7 +124,7 @@ theorem mem_shadow_iff_exists_mem_card_add_one : s ∈ (∂ ) 𝒜 ↔ ∃ t ∈
   · rintro ⟨t, ht, hst, h⟩
     obtain ⟨a, ha⟩ : ∃ a, t \ s = {a} := card_eq_one.1 (by rw [card_sdiff hst, h, add_tsub_cancel_left])
     exact
-      ⟨a, fun hat => not_mem_sdiff_of_mem_right hat ((ha.ge : _ ⊆ _) $ mem_singleton_self a), by
+      ⟨a, fun hat => not_mem_sdiff_of_mem_right hat ((ha.ge : _ ⊆ _) <| mem_singleton_self a), by
         rwa [insert_eq a s, ← ha, sdiff_union_of_subset hst]⟩
     
 #align finset.mem_shadow_iff_exists_mem_card_add_one Finset.mem_shadow_iff_exists_mem_card_add_one
@@ -178,7 +178,7 @@ variable [DecidableEq α] [Fintype α] {𝒜 : Finset (Finset α)} {s t : Finset
 `𝒜`, and the (`k` times) iterated upper shadow (`up_shadow^[k]`) is all sets we can get by adding
 `k` elements from any set in `𝒜`. -/
 def upShadow (𝒜 : Finset (Finset α)) : Finset (Finset α) :=
-  𝒜.sup $ fun s => sᶜ.image $ fun a => insert a s
+  𝒜.sup fun s => sᶜ.image fun a => insert a s
 #align finset.up_shadow Finset.upShadow
 
 -- mathport name: finset.up_shadow
@@ -198,7 +198,7 @@ theorem up_shadow_monotone : Monotone (upShadow : Finset (Finset α) → Finset 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a «expr ∉ » t) -/
 /-- `s` is in the upper shadow of `𝒜` iff there is an `t ∈ 𝒜` from which we can remove one element
 to get `s`. -/
-theorem mem_up_shadow_iff : s ∈ (∂⁺ ) 𝒜 ↔ ∃ t ∈ 𝒜, ∃ (a) (_ : a ∉ t), insert a t = s := by
+theorem mem_up_shadow_iff : s ∈ (∂⁺ ) 𝒜 ↔ ∃ t ∈ 𝒜, ∃ (a : _)(_ : a ∉ t), insert a t = s := by
   simp_rw [up_shadow, mem_sup, mem_image, exists_prop, mem_compl]
 #align finset.mem_up_shadow_iff Finset.mem_up_shadow_iff
 
@@ -235,7 +235,7 @@ theorem mem_up_shadow_iff_exists_mem_card_add_one : s ∈ (∂⁺ ) 𝒜 ↔ ∃
     
   · rintro ⟨t, ht, hts, h⟩
     obtain ⟨a, ha⟩ : ∃ a, s \ t = {a} := card_eq_one.1 (by rw [card_sdiff hts, ← h, add_tsub_cancel_left])
-    refine' ⟨a, sdiff_subset _ _ ((ha.ge : _ ⊆ _) $ mem_singleton_self a), _⟩
+    refine' ⟨a, sdiff_subset _ _ ((ha.ge : _ ⊆ _) <| mem_singleton_self a), _⟩
     rwa [← sdiff_singleton_eq_erase, ← ha, sdiff_sdiff_eq_self hts]
     
 #align finset.mem_up_shadow_iff_exists_mem_card_add_one Finset.mem_up_shadow_iff_exists_mem_card_add_one

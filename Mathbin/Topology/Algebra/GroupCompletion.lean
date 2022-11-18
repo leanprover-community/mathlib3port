@@ -3,7 +3,6 @@ Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 -/
-import Mathbin.Algebra.Hom.GroupInstances
 import Mathbin.Topology.Algebra.UniformGroup
 import Mathbin.Topology.Algebra.UniformMulAction
 import Mathbin.Topology.UniformSpace.Completion
@@ -73,7 +72,7 @@ instance [UniformSpace α] [MonoidWithZero M] [Zero α] [MulActionWithZero M α]
   { Completion.mulAction M α with smul := (· • ·),
     smul_zero := fun r => by rw [← completion.coe_zero, ← coe_smul, MulActionWithZero.smul_zero r],
     zero_smul :=
-      ext' (continuous_const_smul _) continuous_const $ fun a => by rw [← coe_smul, zero_smul, completion.coe_zero] }
+      (ext' (continuous_const_smul _) continuous_const) fun a => by rw [← coe_smul, zero_smul, completion.coe_zero] }
 
 end Zero
 
@@ -117,7 +116,7 @@ instance : AddMonoid (Completion α) :=
       Completion.inductionOn a (isClosedEq continuous_map continuous_const) fun a => by
         rw [← coe_smul, ← completion.coe_zero, zero_smul],
     nsmul_succ' := fun n a =>
-      Completion.inductionOn a (isClosedEq continuous_map $ continuous_map₂ continuous_id continuous_map) fun a => by
+      Completion.inductionOn a (isClosedEq continuous_map <| continuous_map₂ continuous_id continuous_map) fun a => by
         rw_mod_cast [succ_nsmul] }
 
 instance : CoeIsAddMonoidHom α (Completion α) :=
@@ -137,12 +136,12 @@ instance : SubNegMonoid (Completion α) :=
         rw_mod_cast [zero_smul]
         rfl,
     zsmul_succ' := fun n a =>
-      Completion.inductionOn a (isClosedEq continuous_map $ continuous_map₂ continuous_id continuous_map) fun a => by
+      Completion.inductionOn a (isClosedEq continuous_map <| continuous_map₂ continuous_id continuous_map) fun a => by
         rw_mod_cast [show Int.ofNat n.succ • a = a + Int.ofNat n • a from SubNegMonoid.zsmul_succ' n a],
     zsmul_neg' := fun n a =>
-      Completion.inductionOn a (isClosedEq continuous_map $ Completion.continuous_map.comp continuous_map) fun a => by
+      Completion.inductionOn a (isClosedEq continuous_map <| Completion.continuous_map.comp continuous_map) fun a => by
         rw [← coe_smul, ← coe_smul, ← completion.coe_neg,
-          show -[1+ n] • a = -((n.succ : ℤ) • a) from SubNegMonoid.zsmul_neg' n a] }
+          show -[n+1] • a = -((n.succ : ℤ) • a) from SubNegMonoid.zsmul_neg' n a] }
 
 instance : AddGroup (Completion α) :=
   { Completion.subNegMonoid with
@@ -204,7 +203,7 @@ instance : AddCommGroup (Completion α) :=
 instance [Semiring R] [Module R α] [HasUniformContinuousConstSmul R α] : Module R (Completion α) :=
   { Completion.distribMulAction, Completion.mulActionWithZero with smul := (· • ·),
     add_smul := fun a b =>
-      ext' (continuous_const_smul _) ((continuous_const_smul _).add (continuous_const_smul _)) $ fun x => by
+      (ext' (continuous_const_smul _) ((continuous_const_smul _).add (continuous_const_smul _))) fun x => by
         norm_cast
         rw [add_smul] }
 

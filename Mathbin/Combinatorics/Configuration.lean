@@ -5,7 +5,7 @@ Authors: Thomas Browning
 -/
 import Mathbin.Algebra.BigOperators.Order
 import Mathbin.Combinatorics.Hall.Basic
-import Mathbin.Data.Fintype.Card
+import Mathbin.Data.Fintype.BigOperators
 import Mathbin.SetTheory.Cardinal.Finite
 
 /-!
@@ -117,11 +117,11 @@ theorem Nondegenerate.exists_injective_of_card_le [Nondegenerate P L] [Fintype P
     obtain ⟨f, hf1, hf2⟩ := (Finset.all_card_le_bUnion_card_iff_exists_injective t).mp this
     exact ⟨f, hf1, fun l => set.mem_to_finset.mp (hf2 l)⟩
   intro s
-  by_cases hs₀:s.card = 0
+  by_cases hs₀ : s.card = 0
   -- If `s = ∅`, then `s.card = 0 ≤ (s.bUnion t).card`
   · simp_rw [hs₀, zero_le]
     
-  by_cases hs₁:s.card = 1
+  by_cases hs₁ : s.card = 1
   -- If `s = {l}`, then pick a point `p ∉ l`
   · obtain ⟨l, rfl⟩ := finset.card_eq_one.mp hs₁
     obtain ⟨p, hl⟩ := exists_point l
@@ -141,7 +141,7 @@ theorem Nondegenerate.exists_injective_of_card_le [Nondegenerate P L] [Fintype P
       Set.mem_set_of_eq, not_not] at hp₁ hp₂
     obtain ⟨l₁, l₂, hl₁, hl₂, hl₃⟩ := finset.one_lt_card_iff.mp (nat.one_lt_iff_ne_zero_and_ne_one.mpr ⟨hs₀, hs₁⟩)
     exact (eq_or_eq (hp₁ l₁ hl₁) (hp₂ l₁ hl₁) (hp₁ l₂ hl₂) (hp₂ l₂ hl₂)).resolve_right hl₃
-  by_cases hs₃:sᶜ.card = 0
+  by_cases hs₃ : sᶜ.card = 0
   · rw [hs₃, le_zero_iff]
     rw [Finset.card_compl, tsub_eq_zero_iff_le, LE.le.le_iff_eq (Finset.card_le_univ _), eq_comm,
       Finset.card_eq_iff_eq_univ] at hs₃⊢
@@ -177,9 +177,9 @@ theorem sum_line_count_eq_sum_point_count [Fintype P] [Fintype L] :
   simp only [line_count, point_count, Nat.card_eq_fintype_card, ← Fintype.card_sigma]
   apply Fintype.card_congr
   calc
-    (Σ p, { l : L // p ∈ l }) ≃ { x : P × L // x.1 ∈ x.2 } := (Equiv.subtypeProdEquivSigmaSubtype (· ∈ ·)).symm
+    (Σp, { l : L // p ∈ l }) ≃ { x : P × L // x.1 ∈ x.2 } := (Equiv.subtypeProdEquivSigmaSubtype (· ∈ ·)).symm
     _ ≃ { x : L × P // x.2 ∈ x.1 } := (Equiv.prodComm P L).subtypeEquiv fun x => Iff.rfl
-    _ ≃ Σ l, { p // p ∈ l } := Equiv.subtypeProdEquivSigmaSubtype fun (l : L) (p : P) => p ∈ l
+    _ ≃ Σl, { p // p ∈ l } := Equiv.subtypeProdEquivSigmaSubtype fun (l : L) (p : P) => p ∈ l
     
 #align configuration.sum_line_count_eq_sum_point_count Configuration.sum_line_count_eq_sum_point_count
 
@@ -187,7 +187,7 @@ variable {P L}
 
 theorem HasLines.point_count_le_line_count [HasLines P L] {p : P} {l : L} (h : p ∉ l) [Finite { l : L // p ∈ l }] :
     pointCount P l ≤ lineCount L p := by
-  by_cases hf:Infinite { p : P // p ∈ l }
+  by_cases hf : Infinite { p : P // p ∈ l }
   · exact (le_of_eq Nat.card_eq_zero_of_infinite).trans (zero_le (line_count L p))
     
   haveI := fintypeOfNotInfinite hf
@@ -312,7 +312,7 @@ noncomputable def HasLines.hasPoints [HasLines P L] [Fintype P] [Fintype L] (h :
         (congr_arg _ Nat.card_eq_fintype_card).mpr (fintype.card_pos_iff.mpr ⟨⟨mk_line hq, (mk_line_ax hq).2⟩⟩)
     have h₂ : ∀ l : L, 0 < point_count P l := fun l => (congr_arg _ (hf2 l)).mpr (h₁ (f l))
     obtain ⟨p, hl₁⟩ := fintype.card_pos_iff.mp ((congr_arg _ Nat.card_eq_fintype_card).mp (h₂ l₁))
-    by_cases hl₂:p ∈ l₂
+    by_cases hl₂ : p ∈ l₂
     exact ⟨p, hl₁, hl₂⟩
     have key' : Fintype.card { q : P // q ∈ l₂ } = Fintype.card { l : L // p ∈ l } :=
       ((has_lines.line_count_eq_point_count h hl₂).trans Nat.card_eq_fintype_card).symm.trans Nat.card_eq_fintype_card
@@ -340,8 +340,6 @@ noncomputable def HasPoints.hasLines [HasPoints P L] [Fintype P] [Fintype L] (h 
 
 variable (P L)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (p₁ p₂ p₃) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (l₁ l₂ l₃) -/
 /-- A projective plane is a nondegenerate configuration in which every pair of lines has
   an intersection point, every pair of points has a line through them,
   and which has three points in general position. -/
@@ -351,8 +349,7 @@ class ProjectivePlane extends Nondegenerate P L : Type u where
   mkLine : ∀ {p₁ p₂ : P} (h : p₁ ≠ p₂), L
   mk_line_ax : ∀ {p₁ p₂ : P} (h : p₁ ≠ p₂), p₁ ∈ mk_line h ∧ p₂ ∈ mk_line h
   exists_config :
-    ∃ (p₁ : P) (p₂ : P) (p₃ : P) (l₁ : L) (l₂ : L) (l₃ : L),
-      p₁ ∉ l₂ ∧ p₁ ∉ l₃ ∧ p₂ ∉ l₁ ∧ p₂ ∈ l₂ ∧ p₂ ∈ l₃ ∧ p₃ ∉ l₁ ∧ p₃ ∈ l₂ ∧ p₃ ∉ l₃
+    ∃ (p₁ p₂ p₃ : P)(l₁ l₂ l₃ : L), p₁ ∉ l₂ ∧ p₁ ∉ l₃ ∧ p₂ ∉ l₁ ∧ p₂ ∈ l₂ ∧ p₂ ∈ l₃ ∧ p₃ ∉ l₁ ∧ p₃ ∈ l₂ ∧ p₃ ∉ l₃
 #align configuration.projective_plane Configuration.ProjectivePlane
 
 namespace ProjectivePlane
@@ -416,8 +413,8 @@ theorem point_count_eq_point_count [Finite P] [Finite L] (l m : L) : pointCount 
 variable {P L}
 
 theorem line_count_eq_point_count [Finite P] [Finite L] (p : P) (l : L) : lineCount L p = pointCount P l :=
-  Exists.elim (exists_point l) $ fun q hq =>
-    (line_count_eq_line_count L p q).trans $ by
+  (Exists.elim (exists_point l)) fun q hq =>
+    (line_count_eq_line_count L p q).trans <| by
       cases nonempty_fintype P
       cases nonempty_fintype L
       exact has_lines.line_count_eq_point_count (card_points_eq_card_lines P L) hq
@@ -476,7 +473,7 @@ variable (P) (L)
 theorem card_points [Fintype P] [Finite L] : Fintype.card P = order P L ^ 2 + order P L + 1 := by
   cases nonempty_fintype L
   obtain ⟨p, -⟩ := @exists_config P L _ _
-  let ϕ : { q // q ≠ p } ≃ Σ l : { l : L // p ∈ l }, { q // q ∈ l.1 ∧ q ≠ p } :=
+  let ϕ : { q // q ≠ p } ≃ Σl : { l : L // p ∈ l }, { q // q ∈ l.1 ∧ q ≠ p } :=
     { toFun := fun q => ⟨⟨mk_line q.2, (mk_line_ax q.2).2⟩, q, (mk_line_ax q.2).1, q.2⟩,
       invFun := fun lq => ⟨lq.2, lq.2.2.2⟩, left_inv := fun q => Subtype.ext rfl,
       right_inv := fun lq =>

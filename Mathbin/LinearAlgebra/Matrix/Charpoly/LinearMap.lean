@@ -96,7 +96,7 @@ theorem Matrix.Represents.congr_fun {A : Matrix ι ι R} {f : Module.EndCat R M}
 
 theorem Matrix.represents_iff {A : Matrix ι ι R} {f : Module.EndCat R M} :
     A.Represents b f ↔ ∀ x, Fintype.total R R b (A.mulVec x) = f (Fintype.total R R b x) :=
-  ⟨fun e x => e.congr_fun x, fun H => LinearMap.ext $ fun x => H x⟩
+  ⟨fun e x => e.congr_fun x, fun H => LinearMap.ext fun x => H x⟩
 #align matrix.represents_iff Matrix.represents_iff
 
 theorem Matrix.represents_iff' {A : Matrix ι ι R} {f : Module.EndCat R M} :

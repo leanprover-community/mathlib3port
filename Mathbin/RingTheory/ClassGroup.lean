@@ -128,7 +128,7 @@ noncomputable def ClassGroup.equiv : ClassGroup R ≃* (FractionalIdeal R⁰ K)�
   QuotientGroup.congr _ _
       (Units.mapEquiv
         (FractionalIdeal.canonicalEquiv R⁰ (FractionRing R) K :
-          FractionalIdeal R⁰ (FractionRing R) ≃* FractionalIdeal R⁰ K)) $
+          FractionalIdeal R⁰ (FractionRing R) ≃* FractionalIdeal R⁰ K)) <|
     by
     ext I
     simp only [Subgroup.mem_map, mem_principal_ideals_iff, MonoidHom.coe_coe]
@@ -223,7 +223,7 @@ theorem ClassGroup.equiv_mk0 [IsDedekindDomain R] (I : (Ideal R)⁰) :
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x «expr ≠ » (0 : K)) -/
 theorem ClassGroup.mk0_eq_mk0_iff_exists_fraction_ring [IsDedekindDomain R] {I J : (Ideal R)⁰} :
-    ClassGroup.mk0 I = ClassGroup.mk0 J ↔ ∃ (x) (_ : x ≠ (0 : K)), spanSingleton R⁰ x * I = J := by
+    ClassGroup.mk0 I = ClassGroup.mk0 J ↔ ∃ (x : _)(_ : x ≠ (0 : K)), spanSingleton R⁰ x * I = J := by
   refine' (ClassGroup.equiv K).Injective.eq_iff.symm.trans _
   simp only [ClassGroup.equiv_mk0, QuotientGroup.mk'_eq_mk', mem_principal_ideals_iff, coe_coe, Units.ext_iff,
     Units.coe_mul, FractionalIdeal.coe_mk0, exists_prop]
@@ -243,10 +243,9 @@ theorem ClassGroup.mk0_eq_mk0_iff_exists_fraction_ring [IsDedekindDomain R] {I J
 
 variable {K}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 theorem ClassGroup.mk0_eq_mk0_iff [IsDedekindDomain R] {I J : (Ideal R)⁰} :
     ClassGroup.mk0 I = ClassGroup.mk0 J ↔
-      ∃ (x : R) (y : R) (hx : x ≠ 0) (hy : y ≠ 0), Ideal.span {x} * (I : Ideal R) = Ideal.span {y} * J :=
+      ∃ (x y : R)(hx : x ≠ 0)(hy : y ≠ 0), Ideal.span {x} * (I : Ideal R) = Ideal.span {y} * J :=
   by
   refine' (ClassGroup.mk0_eq_mk0_iff_exists_fraction_ring (FractionRing R)).trans ⟨_, _⟩
   · rintro ⟨z, hz, h⟩
@@ -380,7 +379,7 @@ theorem card_class_group_eq_one_iff [IsDedekindDomain R] [Fintype (ClassGroup R)
   rintro ⟨I, hI⟩
   have eq_one : ∀ J : ClassGroup R, J = 1 := fun J => trans (hI J) (hI 1).symm
   refine' ⟨fun I => _⟩
-  by_cases hI:I = ⊥
+  by_cases hI : I = ⊥
   · rw [hI]
     exact bot_is_principal
     

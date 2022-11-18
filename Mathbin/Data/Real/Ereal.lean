@@ -343,7 +343,7 @@ theorem coe_to_real {x : Ereal} (hx : x ≠ ⊤) (h'x : x ≠ ⊥) : (x.toReal :
 #align ereal.coe_to_real Ereal.coe_to_real
 
 theorem le_coe_to_real {x : Ereal} (h : x ≠ ⊤) : x ≤ x.toReal := by
-  by_cases h':x = ⊥
+  by_cases h' : x = ⊥
   · simp only [h', bot_le]
     
   · simp only [le_refl, coe_to_real h h']
@@ -351,7 +351,7 @@ theorem le_coe_to_real {x : Ereal} (h : x ≠ ⊤) : x ≤ x.toReal := by
 #align ereal.le_coe_to_real Ereal.le_coe_to_real
 
 theorem coe_to_real_le {x : Ereal} (h : x ≠ ⊥) : ↑x.toReal ≤ x := by
-  by_cases h':x = ⊤
+  by_cases h' : x = ⊤
   · simp only [h', le_top]
     
   · simp only [le_refl, coe_to_real h' h]
@@ -416,13 +416,11 @@ theorem coe_ennreal_eq_top_iff : ∀ {x : ℝ≥0∞}, (x : Ereal) = ⊤ ↔ x =
     decide
 #align ereal.coe_ennreal_eq_top_iff Ereal.coe_ennreal_eq_top_iff
 
-theorem coe_nnreal_ne_top (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) ≠ ⊤ :=
-  dec_trivial
+theorem coe_nnreal_ne_top (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) ≠ ⊤ := by decide
 #align ereal.coe_nnreal_ne_top Ereal.coe_nnreal_ne_top
 
 @[simp]
-theorem coe_nnreal_lt_top (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) < ⊤ :=
-  dec_trivial
+theorem coe_nnreal_lt_top (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) < ⊤ := by decide
 #align ereal.coe_nnreal_lt_top Ereal.coe_nnreal_lt_top
 
 theorem coe_ennreal_strict_mono : StrictMono (coe : ℝ≥0∞ → Ereal)
@@ -565,7 +563,7 @@ def neTopBotEquivReal : ({⊥, ⊤}ᶜ : Set Ereal) ≃ ℝ where
   toFun x := Ereal.toReal x
   invFun x := ⟨x, by simp⟩
   left_inv := fun ⟨x, hx⟩ =>
-    Subtype.eq $ by
+    Subtype.eq <| by
       lift x to ℝ
       · simpa [not_or, and_comm'] using hx
         
@@ -893,12 +891,14 @@ theorem bot_mul_bot : (⊥ : Ereal) * ⊥ = ⊥ :=
 
 @[simp]
 theorem bot_mul_coe (x : ℝ) (h : x ≠ 0) : (⊥ : Ereal) * x = ⊥ :=
-  WithTop.coe_mul.symm.trans $ WithBot.coe_eq_coe.mpr $ WithBot.bot_mul $ Function.Injective.ne (@Option.some.inj _) h
+  WithTop.coe_mul.symm.trans <|
+    WithBot.coe_eq_coe.mpr <| WithBot.bot_mul <| Function.Injective.ne (@Option.some.inj _) h
 #align ereal.bot_mul_coe Ereal.bot_mul_coe
 
 @[simp]
 theorem coe_mul_bot (x : ℝ) (h : x ≠ 0) : (x : Ereal) * ⊥ = ⊥ :=
-  WithTop.coe_mul.symm.trans $ WithBot.coe_eq_coe.mpr $ WithBot.mul_bot $ Function.Injective.ne (@Option.some.inj _) h
+  WithTop.coe_mul.symm.trans <|
+    WithBot.coe_eq_coe.mpr <| WithBot.mul_bot <| Function.Injective.ne (@Option.some.inj _) h
 #align ereal.coe_mul_bot Ereal.coe_mul_bot
 
 @[simp]
@@ -907,11 +907,11 @@ theorem to_real_one : toReal 1 = 1 :=
 #align ereal.to_real_one Ereal.to_real_one
 
 theorem to_real_mul : ∀ {x y : Ereal}, toReal (x * y) = toReal x * toReal y
-  | ⊤, y => by by_cases hy:y = 0 <;> simp [hy]
-  | x, ⊤ => by by_cases hx:x = 0 <;> simp [hx]
+  | ⊤, y => by by_cases hy : y = 0 <;> simp [hy]
+  | x, ⊤ => by by_cases hx : x = 0 <;> simp [hx]
   | (x : ℝ), (y : ℝ) => by simp [← Ereal.coe_mul, -coe_mul]
-  | ⊥, (y : ℝ) => by by_cases hy:y = 0 <;> simp [hy]
-  | (x : ℝ), ⊥ => by by_cases hx:x = 0 <;> simp [hx]
+  | ⊥, (y : ℝ) => by by_cases hy : y = 0 <;> simp [hy]
+  | (x : ℝ), ⊥ => by by_cases hx : x = 0 <;> simp [hx]
   | ⊥, ⊥ => by simp
 #align ereal.to_real_mul Ereal.to_real_mul
 
@@ -941,7 +941,7 @@ private theorem ereal_coe_ennreal_pos {r : ℝ≥0∞} : 0 < r → 0 < (r : Erea
 @[positivity]
 unsafe def positivity_coe_real_ereal : expr → tactic strictness
   | q(@coe _ _ $(inst) $(a)) => do
-    unify inst q(@coeToLift _ _ $ @coeBase _ _ Ereal.hasCoe)
+    unify inst q(@coeToLift _ _ <| @coeBase _ _ Ereal.hasCoe)
     let strictness_a ← core a
     match strictness_a with
       | positive p => positive <$> mk_app `` ereal_coe_pos [p]
@@ -954,7 +954,7 @@ unsafe def positivity_coe_real_ereal : expr → tactic strictness
 @[positivity]
 unsafe def positivity_coe_ennreal_ereal : expr → tactic strictness
   | q(@coe _ _ $(inst) $(a)) => do
-    unify inst q(@coeToLift _ _ $ @coeBase _ _ Ereal.hasCoeEnnreal)
+    unify inst q(@coeToLift _ _ <| @coeBase _ _ Ereal.hasCoeEnnreal)
     let strictness_a ← core a
     match strictness_a with
       | positive p => positive <$> mk_app `` ereal_coe_ennreal_pos [p]

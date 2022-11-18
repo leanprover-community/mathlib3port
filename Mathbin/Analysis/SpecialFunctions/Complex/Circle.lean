@@ -22,7 +22,7 @@ open Real
 namespace circle
 
 theorem injective_arg : Injective fun z : circle => arg z := fun z w h =>
-  Subtype.ext $ ext_abs_arg ((abs_coe_circle z).trans (abs_coe_circle w).symm) h
+  Subtype.ext <| ext_abs_arg ((abs_coe_circle z).trans (abs_coe_circle w).symm) h
 #align circle.injective_arg circle.injective_arg
 
 @[simp]
@@ -38,7 +38,7 @@ theorem arg_exp_map_circle {x : ℝ} (h₁ : -π < x) (h₂ : x ≤ π) : arg (e
 
 @[simp]
 theorem exp_map_circle_arg (z : circle) : expMapCircle (arg z) = z :=
-  circle.injective_arg $ arg_exp_map_circle (neg_pi_lt_arg _) (arg_le_pi _)
+  circle.injective_arg <| arg_exp_map_circle (neg_pi_lt_arg _) (arg_le_pi _)
 #align exp_map_circle_arg exp_map_circle_arg
 
 namespace circle
@@ -63,7 +63,7 @@ noncomputable def argEquiv : circle ≃ ioc (-π) π where
   toFun z := ⟨arg z, neg_pi_lt_arg _, arg_le_pi _⟩
   invFun := expMapCircle ∘ coe
   left_inv z := argLocalEquiv.left_inv trivial
-  right_inv x := Subtype.ext $ argLocalEquiv.right_inv x.2
+  right_inv x := Subtype.ext <| argLocalEquiv.right_inv x.2
 #align circle.arg_equiv circle.argEquiv
 
 end circle

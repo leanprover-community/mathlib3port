@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Heather Macbeth
 -/
 import Mathbin.Topology.ContinuousFunction.Weierstrass
-import Mathbin.Analysis.Complex.Basic
+import Mathbin.Data.Complex.IsROrC
 
 /-!
 # The Stone-Weierstrass theorem
@@ -15,7 +15,7 @@ separates points, then it is dense.
 We argue as follows.
 
 * In any subalgebra `A` of `C(X, ℝ)`, if `f ∈ A`, then `abs f ∈ A.topological_closure`.
-  This follows from the Weierstrass approximation theorem on `[-∥f∥, ∥f∥]` by
+  This follows from the Weierstrass approximation theorem on `[-‖f‖, ‖f‖]` by
   approximating `abs` uniformly thereon by polynomials.
 * This ensures that `A.topological_closure` is actually a sublattice:
   if it contains `f` and `g`, then it contains the pointwise supremum `f ⊔ g`
@@ -49,11 +49,11 @@ variable {X : Type _} [TopologicalSpace X] [CompactSpace X]
 
 open Polynomial
 
-/-- Turn a function `f : C(X, ℝ)` into a continuous map into `set.Icc (-∥f∥) (∥f∥)`,
+/-- Turn a function `f : C(X, ℝ)` into a continuous map into `set.Icc (-‖f‖) (‖f‖)`,
 thereby explicitly attaching bounds.
 -/
 def attachBound (f : C(X, ℝ)) :
-    C(X, Set.icc (-∥f∥) ∥f∥) where toFun x := ⟨f x, ⟨neg_norm_le_apply f x, apply_le_norm f x⟩⟩
+    C(X, Set.icc (-‖f‖) ‖f‖) where toFun x := ⟨f x, ⟨neg_norm_le_apply f x, apply_le_norm f x⟩⟩
 #align continuous_map.attach_bound ContinuousMap.attachBound
 
 @[simp]
@@ -62,7 +62,7 @@ theorem attach_bound_apply_coe (f : C(X, ℝ)) (x : X) : ((attachBound f) x : �
 #align continuous_map.attach_bound_apply_coe ContinuousMap.attach_bound_apply_coe
 
 theorem polynomial_comp_attach_bound (A : Subalgebra ℝ C(X, ℝ)) (f : A) (g : ℝ[X]) :
-    (g.toContinuousMapOn (Set.icc (-∥f∥) ∥f∥)).comp (f : C(X, ℝ)).attachBound = Polynomial.aeval f g := by
+    (g.toContinuousMapOn (Set.icc (-‖f‖) ‖f‖)).comp (f : C(X, ℝ)).attachBound = Polynomial.aeval f g := by
   ext
   simp only [ContinuousMap.coe_comp, Function.comp_apply, ContinuousMap.attach_bound_apply_coe,
     Polynomial.to_continuous_map_on_apply, Polynomial.aeval_subalgebra_coe, Polynomial.aeval_continuous_map_apply,
@@ -73,20 +73,20 @@ theorem polynomial_comp_attach_bound (A : Subalgebra ℝ C(X, ℝ)) (f : A) (g :
 gives another function in `A`.
 
 This lemma proves something slightly more subtle than this:
-we take `f`, and think of it as a function into the restricted target `set.Icc (-∥f∥) ∥f∥)`,
+we take `f`, and think of it as a function into the restricted target `set.Icc (-‖f‖) ‖f‖)`,
 and then postcompose with a polynomial function on that interval.
 This is in fact the same situation as above, and so also gives a function in `A`.
 -/
 theorem polynomial_comp_attach_bound_mem (A : Subalgebra ℝ C(X, ℝ)) (f : A) (g : ℝ[X]) :
-    (g.toContinuousMapOn (Set.icc (-∥f∥) ∥f∥)).comp (f : C(X, ℝ)).attachBound ∈ A := by
+    (g.toContinuousMapOn (Set.icc (-‖f‖) ‖f‖)).comp (f : C(X, ℝ)).attachBound ∈ A := by
   rw [polynomial_comp_attach_bound]
   apply SetLike.coe_mem
 #align continuous_map.polynomial_comp_attach_bound_mem ContinuousMap.polynomial_comp_attach_bound_mem
 
-theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) (p : C(Set.icc (-∥f∥) ∥f∥, ℝ)) :
+theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) (p : C(Set.icc (-‖f‖) ‖f‖, ℝ)) :
     p.comp (attachBound f) ∈ A.topologicalClosure := by
   -- `p` itself is in the closure of polynomials, by the Weierstrass theorem,
-  have mem_closure : p ∈ (polynomialFunctions (Set.icc (-∥f∥) ∥f∥)).topologicalClosure :=
+  have mem_closure : p ∈ (polynomialFunctions (Set.icc (-‖f‖) ‖f‖)).topologicalClosure :=
     continuous_map_mem_polynomial_functions_closure _ _ p
   -- and so there are polynomials arbitrarily close.
   have frequently_mem_polynomials := mem_closure_iff_frequently.mp mem_closure
@@ -105,9 +105,9 @@ theorem comp_attach_bound_mem_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) (p 
 #align continuous_map.comp_attach_bound_mem_closure ContinuousMap.comp_attach_bound_mem_closure
 
 theorem abs_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) : (f : C(X, ℝ)).abs ∈ A.topologicalClosure := by
-  let M := ∥f∥
+  let M := ‖f‖
   let f' := attach_bound (f : C(X, ℝ))
-  let abs : C(Set.icc (-∥f∥) ∥f∥, ℝ) := { toFun := fun x : Set.icc (-∥f∥) ∥f∥ => |(x : ℝ)| }
+  let abs : C(Set.icc (-‖f‖) ‖f‖, ℝ) := { toFun := fun x : Set.icc (-‖f‖) ‖f‖ => |(x : ℝ)| }
   change abs.comp f' ∈ A.topological_closure
   apply comp_attach_bound_mem_closure
 #align continuous_map.abs_mem_subalgebra_closure ContinuousMap.abs_mem_subalgebra_closure
@@ -171,7 +171,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   simp only [exists_prop, Metric.mem_ball]
   -- It will be helpful to assume `X` is nonempty later,
   -- so we get that out of the way here.
-  by_cases nX:Nonempty X
+  by_cases nX : Nonempty X
   swap
   exact ⟨nA.some, (dist_lt_iff Pos).mpr fun x => False.elim (nX ⟨x⟩), nA.some_spec⟩
   /-
@@ -305,7 +305,7 @@ If `A` is a subalgebra of `C(X, ℝ)` which separates points (and `X` is compact
 every real-valued continuous function on `X` is within any `ε > 0` of some element of `A`.
 -/
 theorem exists_mem_subalgebra_near_continuous_map_of_separates_points (A : Subalgebra ℝ C(X, ℝ)) (w : A.SeparatesPoints)
-    (f : C(X, ℝ)) (ε : ℝ) (pos : 0 < ε) : ∃ g : A, ∥(g : C(X, ℝ)) - f∥ < ε := by
+    (f : C(X, ℝ)) (ε : ℝ) (pos : 0 < ε) : ∃ g : A, ‖(g : C(X, ℝ)) - f‖ < ε := by
   have w := mem_closure_iff_frequently.mp (continuous_map_mem_subalgebra_closure_of_separates_points A w f)
   rw [metric.nhds_basis_ball.frequently_iff] at w
   obtain ⟨g, H, m⟩ := w ε Pos
@@ -321,7 +321,7 @@ If `A` is a subalgebra of `C(X, ℝ)` which separates points (and `X` is compact
 every real-valued continuous function on `X` is within any `ε > 0` of some element of `A`.
 -/
 theorem exists_mem_subalgebra_near_continuous_of_separates_points (A : Subalgebra ℝ C(X, ℝ)) (w : A.SeparatesPoints)
-    (f : X → ℝ) (c : Continuous f) (ε : ℝ) (pos : 0 < ε) : ∃ g : A, ∀ x, ∥g x - f x∥ < ε := by
+    (f : X → ℝ) (c : Continuous f) (ε : ℝ) (pos : 0 < ε) : ∃ g : A, ∀ x, ‖g x - f x‖ < ε := by
   obtain ⟨g, b⟩ := exists_mem_subalgebra_near_continuous_map_of_separates_points A w ⟨f, c⟩ ε Pos
   use g
   rwa [norm_lt_iff _ Pos] at b
@@ -364,7 +364,7 @@ theorem Subalgebra.SeparatesPoints.isROrCToReal {A : Subalgebra 𝕜 C(X, 𝕜)}
   let F : C(X, 𝕜) := f - const _ (f x₂)
   -- Subtract the constant `f x₂` from `f`; this is still an element of the subalgebra
   have hFA : F ∈ A := by
-    refine' A.sub_mem hfA (@Eq.subst _ (· ∈ A) _ _ _ $ A.smul_mem A.one_mem $ f x₂)
+    refine' A.sub_mem hfA (@Eq.subst _ (· ∈ A) _ _ _ <| A.smul_mem A.one_mem <| f x₂)
     ext1
     simp only [ContinuousMap.coe_smul, ContinuousMap.coe_one, Pi.smul_apply, Pi.one_apply, Algebra.id.smul_eq_mul,
       mul_one, const_apply]

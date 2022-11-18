@@ -99,8 +99,8 @@ def dual : BoolAlgCat ⥤ BoolAlgCat where
 /-- The equivalence between `BoolAlg` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : BoolAlgCat ≌ BoolAlgCat :=
-  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk $ OrderIso.dualDual X) $ fun X Y f => rfl)
-    ((NatIso.ofComponents fun X => iso.mk $ OrderIso.dualDual X) $ fun X Y f => rfl)
+  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align BoolAlg.dual_equiv BoolAlgCat.dualEquiv
 
 end BoolAlgCat

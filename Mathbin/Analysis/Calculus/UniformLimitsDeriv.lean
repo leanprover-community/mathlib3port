@@ -132,11 +132,11 @@ theorem uniform_cauchy_seq_on_filter_of_fderiv (hf' : UniformCauchySeqOnFilter f
     have hr : 0 < r := by simp [hR]
     have hr' : ∀ ⦃y : E⦄, y ∈ Metric.ball x r → c y := fun y hy =>
       hR' (lt_of_lt_of_le (metric.mem_ball.mp hy) (min_le_right _ _))
-    have hxy : ∀ y : E, y ∈ Metric.ball x r → ∥y - x∥ < 1 := by
+    have hxy : ∀ y : E, y ∈ Metric.ball x r → ‖y - x‖ < 1 := by
       intro y hy
       rw [Metric.mem_ball, dist_eq_norm] at hy
       exact lt_of_lt_of_le hy (min_le_left _ _)
-    have hxyε : ∀ y : E, y ∈ Metric.ball x r → ε * ∥y - x∥ < ε := by
+    have hxyε : ∀ y : E, y ∈ Metric.ball x r → ε * ‖y - x‖ < ε := by
       intro y hy
       exact (mul_lt_iff_lt_one_right hε.lt).mpr (hxy y hy)
     -- With a small ball in hand, apply the mean value theorem
@@ -209,7 +209,7 @@ theorem uniform_cauchy_seq_on_ball_of_fderiv {r : ℝ} (hf' : UniformCauchySeqOn
         (fun z hz => ((hf n.1 z hz).sub (hf n.2 z hz)).HasFderivWithinAt) (fun z hz => (hn z hz).le) (convex_ball x r)
         (Metric.mem_ball_self hr) hy
     refine' lt_of_le_of_lt mvt _
-    have : q * ∥y - x∥ < q * r :=
+    have : q * ‖y - x‖ < q * r :=
       mul_lt_mul' rfl.le (by simpa only [dist_eq_norm] using metric.mem_ball.mp hy) (norm_nonneg _) hqpos
     exact this.trans hq
     
@@ -245,9 +245,9 @@ theorem cauchy_map_of_uniform_cauchy_seq_on_fderiv {s : Set E} (hs : IsOpen s) (
   suffices H : closure t ∩ s ⊆ t
   exact h's.subset_of_closure_inter_subset open_t st_nonempty H
   rintro x ⟨xt, xs⟩
-  obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ) (H : ε > 0), Metric.ball x ε ⊆ s
+  obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ)(H : ε > 0), Metric.ball x ε ⊆ s
   exact Metric.is_open_iff.1 hs x xs
-  obtain ⟨y, yt, hxy⟩ : ∃ (y : E) (yt : y ∈ t), dist x y < ε / 2
+  obtain ⟨y, yt, hxy⟩ : ∃ (y : E)(yt : y ∈ t), dist x y < ε / 2
   exact Metric.mem_closure_iff.1 xt _ (half_pos εpos)
   have B : Metric.ball y (ε / 2) ⊆ Metric.ball x ε := by
     apply Metric.ball_subset_ball'
@@ -257,13 +257,13 @@ theorem cauchy_map_of_uniform_cauchy_seq_on_fderiv {s : Set E} (hs : IsOpen s) (
 #align cauchy_map_of_uniform_cauchy_seq_on_fderiv cauchy_map_of_uniform_cauchy_seq_on_fderiv
 
 /-- If `f_n → g` pointwise and the derivatives `(f_n)' → h` _uniformly_ converge, then
-in fact for a fixed `y`, the difference quotients `∥z - y∥⁻¹ • (f_n z - f_n y)` converge
-_uniformly_ to `∥z - y∥⁻¹ • (g z - g y)` -/
+in fact for a fixed `y`, the difference quotients `‖z - y‖⁻¹ • (f_n z - f_n y)` converge
+_uniformly_ to `‖z - y‖⁻¹ • (g z - g y)` -/
 theorem difference_quotients_converge_uniformly (hf' : TendstoUniformlyOnFilter f' g' l (𝓝 x))
     (hf : ∀ᶠ n : ι × E in l ×ᶠ 𝓝 x, HasFderivAt (f n.1) (f' n.1 n.2) n.2)
     (hfg : ∀ᶠ y : E in 𝓝 x, Tendsto (fun n => f n y) l (𝓝 (g y))) :
-    TendstoUniformlyOnFilter (fun n : ι => fun y : E => (∥y - x∥⁻¹ : 𝕜) • (f n y - f n x))
-      (fun y : E => (∥y - x∥⁻¹ : 𝕜) • (g y - g x)) l (𝓝 x) :=
+    TendstoUniformlyOnFilter (fun n : ι => fun y : E => (‖y - x‖⁻¹ : 𝕜) • (f n y - f n x))
+      (fun y : E => (‖y - x‖⁻¹ : 𝕜) • (g y - g x)) l (𝓝 x) :=
   by
   let : NormedSpace ℝ E
   exact NormedSpace.restrictScalars ℝ 𝕜 _
@@ -292,10 +292,10 @@ theorem difference_quotients_converge_uniformly (hf' : TendstoUniformlyOnFilter 
   simp only [Pi.zero_apply, dist_zero_left]
   rw [← smul_sub, norm_smul, norm_inv, IsROrC.norm_coe_norm]
   refine' lt_of_le_of_lt _ hqε
-  by_cases hyz':x = y
+  by_cases hyz' : x = y
   · simp [hyz', hqpos.le]
     
-  have hyz : 0 < ∥y - x∥ := by
+  have hyz : 0 < ‖y - x‖ := by
     rw [norm_pos_iff]
     intro hy'
     exact hyz' (eq_of_sub_eq_zero hy').symm
@@ -327,7 +327,7 @@ theorem hasFderivAtOfTendstoUniformlyOnFilter [NeBot l] (hf' : TendstoUniformlyO
   --      the quantifiers using the uniform convergence assumption
   rw [has_fderiv_at_iff_tendsto]
   -- Introduce extra quantifier via curried filters
-  suffices tendsto (fun y : ι × E => ∥y.2 - x∥⁻¹ * ∥g y.2 - g x - (g' x) (y.2 - x)∥) (l.curry (𝓝 x)) (𝓝 0) by
+  suffices tendsto (fun y : ι × E => ‖y.2 - x‖⁻¹ * ‖g y.2 - g x - (g' x) (y.2 - x)‖) (l.curry (𝓝 x)) (𝓝 0) by
     rw [Metric.tendsto_nhds] at this⊢
     intro ε hε
     specialize this ε hε
@@ -346,10 +346,10 @@ conv =>
   rw [← norm_norm, ← norm_inv, ← @IsROrC.norm_of_real 𝕜 _ _, IsROrC.of_real_inv, ← norm_smul]
   rw [← tendsto_zero_iff_norm_tendsto_zero]
   have :
-    (fun a : ι × E => (∥a.2 - x∥⁻¹ : 𝕜) • (g a.2 - g x - (g' x) (a.2 - x))) =
-      ((fun a : ι × E => (∥a.2 - x∥⁻¹ : 𝕜) • (g a.2 - g x - (f a.1 a.2 - f a.1 x))) + fun a : ι × E =>
-          (∥a.2 - x∥⁻¹ : 𝕜) • (f a.1 a.2 - f a.1 x - ((f' a.1 x) a.2 - (f' a.1 x) x))) +
-        fun a : ι × E => (∥a.2 - x∥⁻¹ : 𝕜) • (f' a.1 x - g' x) (a.2 - x) :=
+    (fun a : ι × E => (‖a.2 - x‖⁻¹ : 𝕜) • (g a.2 - g x - (g' x) (a.2 - x))) =
+      ((fun a : ι × E => (‖a.2 - x‖⁻¹ : 𝕜) • (g a.2 - g x - (f a.1 a.2 - f a.1 x))) + fun a : ι × E =>
+          (‖a.2 - x‖⁻¹ : 𝕜) • (f a.1 a.2 - f a.1 x - ((f' a.1 x) a.2 - (f' a.1 x) x))) +
+        fun a : ι × E => (‖a.2 - x‖⁻¹ : 𝕜) • (f' a.1 x - g' x) (a.2 - x) :=
     by
     ext
     simp only [Pi.add_apply]
@@ -397,10 +397,10 @@ conv =>
     refine' squeeze_zero_norm _ (tendsto_zero_iff_norm_tendsto_zero.mp this)
     intro n
     simp_rw [norm_smul, norm_inv, IsROrC.norm_coe_norm]
-    by_cases hx:x = n.2
+    by_cases hx : x = n.2
     · simp [hx]
       
-    have hnx : 0 < ∥n.2 - x∥ := by
+    have hnx : 0 < ‖n.2 - x‖ := by
       rw [norm_pos_iff]
       intro hx'
       exact hx (eq_of_sub_eq_zero hx').symm

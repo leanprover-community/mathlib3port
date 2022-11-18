@@ -5,7 +5,6 @@ Authors: Jon Eugster
 -/
 import Mathbin.Algebra.CharP.Algebra
 import Mathbin.Algebra.CharP.LocalRing
-import Mathbin.Data.Pnat.Basic
 import Mathbin.RingTheory.Ideal.Quotient
 import Mathbin.Tactic.FieldSimp
 
@@ -198,7 +197,7 @@ theorem EqualCharZero.pnat_coe_units_eq_one [Fact (∀ I : Ideal R, I ≠ ⊤ �
   rw [Units.coe_one]
   change ((EqualCharZero.pnat_coe_is_unit R 1).Unit : R) = 1
   rw [IsUnit.unit_spec (EqualCharZero.pnat_coe_is_unit R 1)]
-  rw [coe_coe, Pnat.one_coe, Nat.cast_one]
+  rw [coe_coe, PNat.one_coe, Nat.cast_one]
 #align equal_char_zero.pnat_coe_units_eq_one EqualCharZero.pnat_coe_units_eq_one
 
 /-- Internal: Not intended to be used outside this local construction. -/
@@ -318,7 +317,7 @@ variable {P : Prop}
 -/
 theorem splitEqualMixedChar [CharZero R] (h_equal : Algebra ℚ R → P)
     (h_mixed : ∀ p : ℕ, Nat.Prime p → MixedCharZero R p → P) : P := by
-  by_cases h:∃ p > 0, MixedCharZero R p
+  by_cases h : ∃ p > 0, MixedCharZero R p
   · rcases h with ⟨p, ⟨H, hp⟩⟩
     rw [← MixedCharZero.reduce_to_p_prime] at h_mixed
     exact h_mixed p H hp

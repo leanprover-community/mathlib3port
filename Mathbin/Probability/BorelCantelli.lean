@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
 import Mathbin.Probability.Martingale.BorelCantelli
+import Mathbin.Probability.ConditionalExpectation
 import Mathbin.Probability.Independence
 
 /-!
@@ -45,7 +46,7 @@ theorem IndepFun.indepComapNaturalOfLt (hf : ∀ i, StronglyMeasurable (f i)) (h
 theorem IndepFun.condexp_natrual_ae_eq_of_lt [SecondCountableTopology β] [CompleteSpace β] [NormedSpace ℝ β]
     (hf : ∀ i, StronglyMeasurable (f i)) (hfi : IndepFun (fun i => mβ) f μ) (hij : i < j) :
     μ[f j|Filtration.natural f hf i] =ᵐ[μ] fun ω => μ[f j] :=
-  condexp_indep_eq (hf j).Measurable.comap_le (Filtration.le _ _) (comapMeasurable $ f j).StronglyMeasurable
+  condexp_indep_eq (hf j).Measurable.comap_le (Filtration.le _ _) (comapMeasurable <| f j).StronglyMeasurable
     (hfi.indepComapNaturalOfLt hf hij)
 #align probability_theory.Indep_fun.condexp_natrual_ae_eq_of_lt ProbabilityTheory.IndepFun.condexp_natrual_ae_eq_of_lt
 
@@ -67,7 +68,7 @@ open Filter
 theorem measure_limsup_eq_one {s : ℕ → Set Ω} (hsm : ∀ n, MeasurableSet (s n)) (hs : IndepSet s μ)
     (hs' : (∑' n, μ (s n)) = ∞) : μ (limsup s atTop) = 1 := by
   rw [measure_congr
-      (eventually_eq_set.2 (ae_mem_limsup_at_top_iff μ $ measurable_set_filtration_of_set' hsm) :
+      (eventually_eq_set.2 (ae_mem_limsup_at_top_iff μ <| measurable_set_filtration_of_set' hsm) :
         (limsup s at_top : Set Ω) =ᵐ[μ]
           { ω |
             tendsto (fun n => ∑ k in Finset.range n, (μ[(s (k + 1)).indicator (1 : Ω → ℝ)|filtration_of_set hsm k]) ω)
@@ -93,7 +94,7 @@ theorem measure_limsup_eq_one {s : ℕ → Set Ω} (hsm : ∀ n, MeasurableSet (
     exact Ennreal.to_real_nonneg
     
   · rintro ⟨B, hB⟩
-    refine' not_eventually.2 (frequently_of_forall $ fun n => _) (htends B.to_nnreal)
+    refine' not_eventually.2 (frequently_of_forall fun n => _) (htends B.to_nnreal)
     rw [mem_upper_bounds] at hB
     specialize hB (∑ k : ℕ in Finset.range n, μ (s (k + 1))).toReal _
     · refine' ⟨n, _⟩

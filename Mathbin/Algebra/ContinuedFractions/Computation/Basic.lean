@@ -142,7 +142,7 @@ For example, let `(v : ℚ) := 3.4`. The process goes as follows:
 - `stream v 2 = some ⟨⌊0.5⁻¹⌋, 0.5⁻¹ - ⌊0.5⁻¹⌋⟩ = some ⟨⌊2⌋, 2 - ⌊2⌋⟩ = some ⟨2, 0⟩`
 - `stream v n = none`, for `n ≥ 3`
 -/
-protected def stream (v : K) : Stream $ Option (IntFractPair K)
+protected def stream (v : K) : Stream <| Option (IntFractPair K)
   | 0 => some (IntFractPair.of v)
   | n + 1 => do
     let ap_n ← Stream n
@@ -165,7 +165,7 @@ This is just an intermediate representation and users should not (need to) direc
 it. The setup of rewriting/simplification lemmas that make the definitions easy to use is done in
 `algebra.continued_fractions.computation.translations`.
 -/
-protected def seq1 (v : K) : Seq1 $ IntFractPair K :=
+protected def seq1 (v : K) : Seq1 <| IntFractPair K :=
   ⟨IntFractPair.of v,--the head
       Seq.tail-- take the tail of `int_fract_pair.stream` since the first element is already in the
       -- head create a sequence from `int_fract_pair.stream`

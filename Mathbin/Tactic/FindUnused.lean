@@ -61,9 +61,9 @@ unsafe def all_unused (fs : List (Option String)) : tactic (name_map declaration
   let ds ← get_decls_from fs
   let ls ← ds.keys.mfilter (succeeds ∘ user_attribute.get_param_untyped main_declaration_attr)
   let ds ← ls.mfoldl (flip update_unsed_decls_list) ds
-  ds $ fun n d => do
+  ds fun n d => do
       let e ← get_env
-      return $ !d e
+      return <| !d e
 #align tactic.all_unused tactic.all_unused
 
 /-- expecting a string literal (e.g. `"src/tactic/find_unused.lean"`)
@@ -97,12 +97,12 @@ is present).
 Neither `#list_unused_decls` nor `@[main_declaration]` should appear
 in a finished mathlib development. -/
 @[user_command]
-unsafe def unused_decls_cmd (_ : parse $ tk "#list_unused_decls") : lean.parser Unit := do
+unsafe def unused_decls_cmd (_ : parse <| tk "#list_unused_decls") : lean.parser Unit := do
   let fs ← pexpr_list
   show tactic Unit from do
       let fs ← fs parse_file_name
-      let ds ← all_unused $ none :: fs
-      ds $ fun ⟨n, _⟩ =>
+      let ds ← all_unused <| none :: fs
+      ds fun ⟨n, _⟩ =>
           ← do
             dbg_trace "#print {← n}"
 #align tactic.unused_decls_cmd tactic.unused_decls_cmd

@@ -137,7 +137,7 @@ noncomputable def approx : ℕ → CU X → X → ℝ
 
 theorem approx_of_mem_C (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.c) : c.approx n x = 0 := by
   induction' n with n ihn generalizing c
-  · exact indicator_of_not_mem (fun hU => hU $ c.subset hx) _
+  · exact indicator_of_not_mem (fun hU => hU <| c.subset hx) _
     
   · simp only [approx]
     rw [ihn, ihn, midpoint_self]
@@ -151,7 +151,7 @@ theorem approx_of_nmem_U (c : CU X) (n : ℕ) {x : X} (hx : x ∉ c.U) : c.appro
     
   · simp only [approx]
     rw [ihn, ihn, midpoint_self]
-    exacts[hx, fun hU => hx $ c.left_U_subset hU]
+    exacts[hx, fun hU => hx <| c.left_U_subset hU]
     
 #align urysohns.CU.approx_of_nmem_U Urysohns.CU.approx_of_nmem_U
 
@@ -173,13 +173,13 @@ theorem approx_le_one (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ 1 := by
     
 #align urysohns.CU.approx_le_one Urysohns.CU.approx_le_one
 
-theorem bdd_above_range_approx (c : CU X) (x : X) : BddAbove (range $ fun n => c.approx n x) :=
+theorem bdd_above_range_approx (c : CU X) (x : X) : BddAbove (range fun n => c.approx n x) :=
   ⟨1, fun y ⟨n, hn⟩ => hn ▸ c.approx_le_one n x⟩
 #align urysohns.CU.bdd_above_range_approx Urysohns.CU.bdd_above_range_approx
 
 theorem approx_le_approx_of_U_sub_C {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.c) (n₁ n₂ : ℕ) (x : X) :
     c₂.approx n₂ x ≤ c₁.approx n₁ x := by
-  by_cases hx:x ∈ c₁.U
+  by_cases hx : x ∈ c₁.U
   · calc
       approx n₂ c₂ x = 0 := approx_of_mem_C _ _ (h hx)
       _ ≤ approx n₁ c₁ x := approx_nonneg _ _ _
@@ -214,7 +214,7 @@ theorem approx_le_succ (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ c.approx 
 #align urysohns.CU.approx_le_succ Urysohns.CU.approx_le_succ
 
 theorem approx_mono (c : CU X) (x : X) : Monotone fun n => c.approx n x :=
-  monotone_nat_of_le_succ $ fun n => c.approx_le_succ n x
+  monotone_nat_of_le_succ fun n => c.approx_le_succ n x
 #align urysohns.CU.approx_mono Urysohns.CU.approx_mono
 
 /-- A continuous function `f : X → ℝ` such that
@@ -226,7 +226,7 @@ protected noncomputable def lim (c : CU X) (x : X) : ℝ :=
   ⨆ n, c.approx n x
 #align urysohns.CU.lim Urysohns.CU.lim
 
-theorem tendsto_approx_at_top (c : CU X) (x : X) : Tendsto (fun n => c.approx n x) atTop (𝓝 $ c.lim x) :=
+theorem tendsto_approx_at_top (c : CU X) (x : X) : Tendsto (fun n => c.approx n x) atTop (𝓝 <| c.lim x) :=
   tendsto_at_top_csupr (c.approx_mono x) ⟨1, fun x ⟨n, hn⟩ => hn ▸ c.approx_le_one _ _⟩
 #align urysohns.CU.tendsto_approx_at_top Urysohns.CU.tendsto_approx_at_top
 
@@ -253,7 +253,7 @@ theorem lim_nonneg (c : CU X) (x : X) : 0 ≤ c.lim x :=
 #align urysohns.CU.lim_nonneg Urysohns.CU.lim_nonneg
 
 theorem lim_le_one (c : CU X) (x : X) : c.lim x ≤ 1 :=
-  csupr_le $ fun n => c.approx_le_one _ _
+  csupr_le fun n => c.approx_le_one _ _
 #align urysohns.CU.lim_le_one Urysohns.CU.lim_le_one
 
 theorem lim_mem_Icc (c : CU X) (x : X) : c.lim x ∈ icc (0 : ℝ) 1 :=
@@ -265,14 +265,14 @@ theorem continuous_lim (c : CU X) : Continuous c.lim := by
   obtain ⟨h0, h1234, h1⟩ : 0 < (2⁻¹ : ℝ) ∧ (2⁻¹ : ℝ) < 3 / 4 ∧ (3 / 4 : ℝ) < 1 := by norm_num
   refine'
     continuous_iff_continuous_at.2 fun x =>
-      (Metric.nhds_basis_closed_ball_pow (h0.trans h1234) h1).tendsto_right_iff.2 $ fun n _ => _
+      (Metric.nhds_basis_closed_ball_pow (h0.trans h1234) h1).tendsto_right_iff.2 fun n _ => _
   simp only [Metric.mem_closed_ball]
   induction' n with n ihn generalizing c
   · refine' eventually_of_forall fun y => _
     rw [pow_zero]
     exact Real.dist_le_of_mem_Icc_01 (c.lim_mem_Icc _) (c.lim_mem_Icc _)
     
-  · by_cases hxl:x ∈ c.left.U
+  · by_cases hxl : x ∈ c.left.U
     · filter_upwards [IsOpen.mem_nhds c.left.open_U hxl, ihn c.left] with _ hyl hyd
       rw [pow_succ, c.lim_eq_midpoint, c.lim_eq_midpoint, c.right.lim_of_mem_C _ (c.left_U_subset_right_C hyl),
         c.right.lim_of_mem_C _ (c.left_U_subset_right_C hxl)]
@@ -298,7 +298,7 @@ theorem continuous_lim (c : CU X) : Continuous c.lim := by
               zero_le_two).trans_eq
           _
       generalize (3 / 4 : ℝ) ^ n = r
-      field_simp [(@zero_lt_two ℝ _ _).ne']
+      field_simp [two_ne_zero' ℝ]
       ring
       
     

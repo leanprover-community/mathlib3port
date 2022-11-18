@@ -3,7 +3,6 @@ Copyright (c) 2021 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
-import Mathbin.Data.Set.Lattice
 import Mathbin.Order.Zorn
 import Mathbin.Tactic.ByContra
 
@@ -24,7 +23,7 @@ open Classical
 /-- Any partial order can be extended to a linear order.
 -/
 theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOrder α r] :
-    ∃ (s : α → α → Prop) (_ : IsLinearOrder α s), r ≤ s := by
+    ∃ (s : α → α → Prop)(_ : IsLinearOrder α s), r ≤ s := by
   let S := { s | IsPartialOrder α s }
   have hS : ∀ c, c ⊆ S → IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub ∈ S, ∀ z ∈ c, z ≤ ub := by
     rintro c hc₁ hc₂ s hs

@@ -34,7 +34,7 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 /-- When `C` is abelian, `projective.d f` and `f` are exact.
 -/
 theorem exact_d_f [EnoughProjectives C] {X Y : C} (f : X ⟶ Y) : Exact (d f) f :=
-  (Abelian.exact_iff _ _).2 $ ⟨by simp, zero_of_epi_comp (π _) $ by rw [← category.assoc, cokernel.condition]⟩
+  (Abelian.exact_iff _ _).2 <| ⟨by simp, zero_of_epi_comp (π _) <| by rw [← category.assoc, cokernel.condition]⟩
 #align category_theory.exact_d_f CategoryTheory.exact_d_f
 
 /-- The preadditive Co-Yoneda functor on `P` preserves colimits if `P` is projective. -/

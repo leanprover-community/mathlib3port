@@ -92,7 +92,7 @@ theorem mem_prod_principal {f : Filter α} {s : Set (α × β)} {t : Set β} :
   rw [← @exists_mem_subset_iff _ f, mem_prod_iff]
   refine' exists₂_congr fun u u_in => ⟨_, fun h => ⟨t, mem_principal_self t, _⟩⟩
   · rintro ⟨v, v_in, hv⟩ a a_in b b_in
-    exact hv (mk_mem_prod a_in $ v_in b_in)
+    exact hv (mk_mem_prod a_in <| v_in b_in)
     
   · rintro ⟨x, y⟩ ⟨hx, hy⟩
     exact h hx y hy
@@ -128,7 +128,7 @@ theorem prod_sup (f : Filter α) (g₁ g₂ : Filter β) : f ×ᶠ g₁ ⊔ g₂
 
 theorem eventually_prod_iff {p : α × β → Prop} {f : Filter α} {g : Filter β} :
     (∀ᶠ x in f ×ᶠ g, p x) ↔
-      ∃ (pa : α → Prop) (ha : ∀ᶠ x in f, pa x) (pb : β → Prop) (hb : ∀ᶠ y in g, pb y),
+      ∃ (pa : α → Prop)(ha : ∀ᶠ x in f, pa x)(pb : β → Prop)(hb : ∀ᶠ y in g, pb y),
         ∀ {x}, pa x → ∀ {y}, pb y → p (x, y) :=
   by simpa only [Set.prod_subset_iff] using @mem_prod_iff α β p f g
 #align filter.eventually_prod_iff Filter.eventually_prod_iff
@@ -168,7 +168,7 @@ theorem Eventually.prod_mk {la : Filter α} {pa : α → Prop} (ha : ∀ᶠ x in
 
 theorem EventuallyEq.prod_map {δ} {la : Filter α} {fa ga : α → γ} (ha : fa =ᶠ[la] ga) {lb : Filter β} {fb gb : β → δ}
     (hb : fb =ᶠ[lb] gb) : Prod.map fa fb =ᶠ[la ×ᶠ lb] Prod.map ga gb :=
-  (Eventually.prod_mk ha hb).mono $ fun x h => Prod.ext h.1 h.2
+  (Eventually.prod_mk ha hb).mono fun x h => Prod.ext h.1 h.2
 #align filter.eventually_eq.prod_map Filter.EventuallyEq.prod_map
 
 theorem EventuallyLe.prod_map {δ} [LE γ] [LE δ] {la : Filter α} {fa ga : α → γ} (ha : fa ≤ᶠ[la] ga) {lb : Filter β}
@@ -179,7 +179,7 @@ theorem EventuallyLe.prod_map {δ} [LE γ] [LE δ] {la : Filter α} {fa ga : α 
 theorem Eventually.curry {la : Filter α} {lb : Filter β} {p : α × β → Prop} (h : ∀ᶠ x in la ×ᶠ lb, p x) :
     ∀ᶠ x in la, ∀ᶠ y in lb, p (x, y) := by
   rcases eventually_prod_iff.1 h with ⟨pa, ha, pb, hb, h⟩
-  exact ha.mono fun a ha => hb.mono $ fun b hb => h ha hb
+  exact ha.mono fun a ha => hb.mono fun b hb => h ha hb
 #align filter.eventually.curry Filter.Eventually.curry
 
 /-- A fact that is eventually true about all pairs `l ×ᶠ l` is eventually true about
@@ -273,7 +273,7 @@ theorem prod_inj {f₁ f₂ : Filter α} {g₁ g₂ : Filter β} [NeBot f₁] [N
   have hle : f₁ ≤ f₂ ∧ g₁ ≤ g₂ := prod_le_prod.1 h.le
   haveI := ne_bot_of_le hle.1
   haveI := ne_bot_of_le hle.2
-  exact ⟨hle.1.antisymm $ (prod_le_prod.1 h.ge).1, hle.2.antisymm $ (prod_le_prod.1 h.ge).2⟩
+  exact ⟨hle.1.antisymm <| (prod_le_prod.1 h.ge).1, hle.2.antisymm <| (prod_le_prod.1 h.ge).2⟩
 #align filter.prod_inj Filter.prod_inj
 
 theorem eventually_swap_iff {p : α × β → Prop} : (∀ᶠ x : α × β in f ×ᶠ g, p x) ↔ ∀ᶠ y : β × α in g ×ᶠ f, p y.swap := by
@@ -321,7 +321,7 @@ theorem prod_map_map_eq.{u, v, w, x} {α₁ : Type u} {α₂ : Type v} {β₁ : 
   le_antisymm
     (fun s hs =>
       let ⟨s₁, hs₁, s₂, hs₂, h⟩ := mem_prod_iff.mp hs
-      Filter.sets_of_superset _ (prod_mem_prod (image_mem_map hs₁) (image_mem_map hs₂)) $
+      Filter.sets_of_superset _ (prod_mem_prod (image_mem_map hs₁) (image_mem_map hs₂)) <|
         calc
           (m₁ '' s₁) ×ˢ (m₂ '' s₂) = (fun p : α₁ × α₂ => (m₁ p.1, m₂ p.2)) '' s₁ ×ˢ s₂ := Set.prod_image_image_eq
           _ ⊆ _ := by rwa [image_subset_iff]

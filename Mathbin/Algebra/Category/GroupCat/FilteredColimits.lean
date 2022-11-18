@@ -55,24 +55,24 @@ abbrev g : MonCat :=
 
 /-- The canonical projection into the colimit, as a quotient type. -/
 @[to_additive "The canonical projection into the colimit, as a quotient type."]
-abbrev g.mk : (Σ j, F.obj j) → G :=
+abbrev g.mk : (Σj, F.obj j) → G :=
   Quot.mk (Types.Quot.Rel (F ⋙ forget GroupCat))
 #align Group.filtered_colimits.G.mk GroupCat.FilteredColimits.g.mk
 
 @[to_additive]
-theorem g.mk_eq (x y : Σ j, F.obj j) (h : ∃ (k : J) (f : x.1 ⟶ k) (g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) :
+theorem g.mk_eq (x y : Σj, F.obj j) (h : ∃ (k : J)(f : x.1 ⟶ k)(g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) :
     G.mk x = G.mk y :=
   Quot.EqvGen_sound (Types.FilteredColimit.eqv_gen_quot_rel_of_rel (F ⋙ forget GroupCat) x y h)
 #align Group.filtered_colimits.G.mk_eq GroupCat.FilteredColimits.g.mk_eq
 
 /-- The "unlifted" version of taking inverses in the colimit. -/
 @[to_additive "The \"unlifted\" version of negation in the colimit."]
-def colimitInvAux (x : Σ j, F.obj j) : G :=
+def colimitInvAux (x : Σj, F.obj j) : G :=
   G.mk ⟨x.1, x.2⁻¹⟩
 #align Group.filtered_colimits.colimit_inv_aux GroupCat.FilteredColimits.colimitInvAux
 
 @[to_additive]
-theorem colimit_inv_aux_eq_of_rel (x y : Σ j, F.obj j) (h : Types.FilteredColimit.Rel (F ⋙ forget GroupCat) x y) :
+theorem colimit_inv_aux_eq_of_rel (x y : Σj, F.obj j) (h : Types.FilteredColimit.Rel (F ⋙ forget GroupCat) x y) :
     colimit_inv_aux x = colimit_inv_aux y := by
   apply G.mk_eq
   obtain ⟨k, f, g, hfg⟩ := h
@@ -93,7 +93,7 @@ instance colimitHasInv :
 #align Group.filtered_colimits.colimit_has_inv GroupCat.FilteredColimits.colimitHasInv
 
 @[simp, to_additive]
-theorem colimit_inv_mk_eq (x : Σ j, F.obj j) : (G.mk x)⁻¹ = G.mk ⟨x.1, x.2⁻¹⟩ :=
+theorem colimit_inv_mk_eq (x : Σj, F.obj j) : (G.mk x)⁻¹ = G.mk ⟨x.1, x.2⁻¹⟩ :=
   rfl
 #align Group.filtered_colimits.colimit_inv_mk_eq GroupCat.FilteredColimits.colimit_inv_mk_eq
 
@@ -130,11 +130,11 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone where
   desc t :=
     MonCat.FilteredColimits.colimitDesc (F ⋙ forget₂ GroupCat MonCat.{max v u}) ((forget₂ GroupCat MonCat).mapCocone t)
   fac' t j :=
-    MonoidHom.coe_inj $ (Types.colimitCoconeIsColimit (F ⋙ forget GroupCat)).fac ((forget GroupCat).mapCocone t) j
+    MonoidHom.coe_inj <| (Types.colimitCoconeIsColimit (F ⋙ forget GroupCat)).fac ((forget GroupCat).mapCocone t) j
   uniq' t m h :=
-    MonoidHom.coe_inj $
+    MonoidHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget GroupCat)).uniq ((forget GroupCat).mapCocone t) m fun j =>
-        funext $ fun x => MonoidHom.congr_fun (h j) x
+        funext fun x => MonoidHom.congr_fun (h j) x
 #align Group.filtered_colimits.colimit_cocone_is_colimit GroupCat.FilteredColimits.colimitCoconeIsColimit
 
 @[to_additive forget₂_AddMon_preserves_filtered_colimits]
@@ -200,12 +200,12 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone where
     (GroupCat.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ CommGroupCat GroupCat.{max v u})).desc
       ((forget₂ CommGroupCat GroupCat.{max v u}).mapCocone t)
   fac' t j :=
-    MonoidHom.coe_inj $
+    MonoidHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget CommGroupCat)).fac ((forget CommGroupCat).mapCocone t) j
   uniq' t m h :=
-    MonoidHom.coe_inj $
+    MonoidHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget CommGroupCat)).uniq ((forget CommGroupCat).mapCocone t) m fun j =>
-        funext $ fun x => MonoidHom.congr_fun (h j) x
+        funext fun x => MonoidHom.congr_fun (h j) x
 #align CommGroup.filtered_colimits.colimit_cocone_is_colimit CommGroupCat.FilteredColimits.colimitCoconeIsColimit
 
 @[to_additive forget₂_AddGroup_preserves_filtered_colimits]

@@ -63,7 +63,7 @@ theorem discr_prime_pow' [IsCyclotomicExtension {p ^ k} ℚ K] (hζ : IsPrimitiv
 `n : ℕ` such that the discriminant of the power basis given by `ζ - 1` is `u * p ^ n`. Often this is
 enough and less cumbersome to use than `is_cyclotomic_extension.rat.discr_prime_pow'`. -/
 theorem discr_prime_pow_eq_unit_mul_pow' [IsCyclotomicExtension {p ^ k} ℚ K] (hζ : IsPrimitiveRoot ζ ↑(p ^ k)) :
-    ∃ (u : ℤˣ) (n : ℕ), discr ℚ (hζ.subOnePowerBasis ℚ).Basis = u * p ^ n := by
+    ∃ (u : ℤˣ)(n : ℕ), discr ℚ (hζ.subOnePowerBasis ℚ).Basis = u * p ^ n := by
   rw [hζ.discr_zeta_eq_discr_zeta_sub_one.symm]
   exact discr_prime_pow_eq_unit_mul_pow hζ (cyclotomic.irreducible_rat (p ^ k).Pos)
 #align
@@ -147,7 +147,7 @@ theorem cyclotomicRingIsIntegralClosureOfPrimePow :
       
     · simp only [eq_iff_true_of_subsingleton]
       
-    · simp only [Pnat.pow_coe, Set.singleton_subset_iff, Set.mem_set_of_eq]
+    · simp only [PNat.pow_coe, Set.singleton_subset_iff, Set.mem_set_of_eq]
       exact hζ.pow_eq_one
       
     
@@ -205,7 +205,7 @@ noncomputable def integralPowerBasis [hcycl : IsCyclotomicExtension {p ^ k} ℚ 
 @[simp]
 theorem integral_power_basis_gen [hcycl : IsCyclotomicExtension {p ^ k} ℚ K] (hζ : IsPrimitiveRoot ζ ↑(p ^ k)) :
     hζ.integralPowerBasis.gen = ⟨ζ, hζ.IsIntegral (p ^ k).Pos⟩ :=
-  Subtype.ext $ show algebraMap _ K hζ.integralPowerBasis.gen = _ by simpa [integral_power_basis]
+  Subtype.ext <| show algebraMap _ K hζ.integralPowerBasis.gen = _ by simpa [integral_power_basis]
 #align is_primitive_root.integral_power_basis_gen IsPrimitiveRoot.integral_power_basis_gen
 
 @[simp]
@@ -272,7 +272,7 @@ extension of `ℚ`. -/
 noncomputable def subOneIntegralPowerBasis [IsCyclotomicExtension {p ^ k} ℚ K] (hζ : IsPrimitiveRoot ζ ↑(p ^ k)) :
     PowerBasis ℤ (𝓞 K) :=
   PowerBasis.ofGenMemAdjoin' hζ.integralPowerBasis
-    (is_integral_of_mem_ring_of_integers $ Subalgebra.sub_mem _ (hζ.IsIntegral (p ^ k).Pos) (Subalgebra.one_mem _))
+    (is_integral_of_mem_ring_of_integers <| Subalgebra.sub_mem _ (hζ.IsIntegral (p ^ k).Pos) (Subalgebra.one_mem _))
     (by
       simp only [integral_power_basis_gen]
       convert Subalgebra.add_mem _ (self_mem_adjoin_singleton ℤ (⟨ζ - 1, _⟩ : 𝓞 K)) (Subalgebra.one_mem _)

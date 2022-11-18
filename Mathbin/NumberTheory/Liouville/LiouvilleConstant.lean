@@ -86,7 +86,8 @@ theorem liouville_number_tail_pos {m : ℝ} (hm : 1 < m) (k : ℕ) : 0 < liouvil
           (one_div_pos.mpr
             (pow_pos (zero_lt_one.trans hm)
               (0 +
-                  (k + 1))!)) $-- 4. our series converges -- it does since it is the tail of a converging series, though
+                  (k +
+                    1))!)) <|-- 4. our series converges -- it does since it is the tail of a converging series, though
           -- this is not the argument here.
           summable_one_div_pow_of_le
           hm fun i => trans le_self_add (Nat.self_le_factorial _)

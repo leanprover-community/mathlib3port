@@ -73,7 +73,7 @@ variable {G R : Type _} [Group G] [Semiring R]
 
 /-- The tautological action by the group of automorphism of a ring `R` on `R`.-/
 instance applyMulSemiringAction : MulSemiringAction (RingAut R) R where
-  smul := (· $ ·)
+  smul := (· <| ·)
   smul_zero := RingEquiv.map_zero
   smul_add := RingEquiv.map_add
   smul_one := RingEquiv.map_one
@@ -100,8 +100,8 @@ This is a stronger version of `distrib_mul_action.to_add_aut` and
 @[simps]
 def _root_.mul_semiring_action.to_ring_aut [MulSemiringAction G R] : G →* RingAut R where
   toFun := MulSemiringAction.toRingEquiv G R
-  map_mul' g h := RingEquiv.ext $ mul_smul g h
-  map_one' := RingEquiv.ext $ one_smul _
+  map_mul' g h := RingEquiv.ext <| mul_smul g h
+  map_one' := RingEquiv.ext <| one_smul _
 #align ring_aut._root_.mul_semiring_action.to_ring_aut ring_aut._root_.mul_semiring_action.to_ring_aut
 
 end Semiring

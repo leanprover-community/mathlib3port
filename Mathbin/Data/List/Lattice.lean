@@ -141,7 +141,7 @@ theorem disjoint_append_left : Disjoint (l₁ ++ l₂) l ↔ Disjoint l₁ l ∧
 #print List.disjoint_append_right /-
 @[simp]
 theorem disjoint_append_right : Disjoint l (l₁ ++ l₂) ↔ Disjoint l l₁ ∧ Disjoint l l₂ :=
-  disjoint_comm.trans $ by simp only [disjoint_comm, disjoint_append_left]
+  disjoint_comm.trans <| by simp only [disjoint_comm, disjoint_append_left]
 #align list.disjoint_append_right List.disjoint_append_right
 -/
 
@@ -153,7 +153,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.disjoint_cons_left List.disjoint_cons_leftₓ'. -/
 @[simp]
 theorem disjoint_cons_left : Disjoint (a :: l₁) l₂ ↔ a ∉ l₂ ∧ Disjoint l₁ l₂ :=
-  (@disjoint_append_left _ l₂ [a] l₁).trans $ by simp only [singleton_disjoint]
+  (@disjoint_append_left _ l₂ [a] l₁).trans <| by simp only [singleton_disjoint]
 #align list.disjoint_cons_left List.disjoint_cons_left
 
 /- warning: list.disjoint_cons_right -> List.disjoint_cons_right is a dubious translation:
@@ -164,7 +164,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.disjoint_cons_right List.disjoint_cons_rightₓ'. -/
 @[simp]
 theorem disjoint_cons_right : Disjoint l₁ (a :: l₂) ↔ a ∉ l₁ ∧ Disjoint l₁ l₂ :=
-  disjoint_comm.trans $ by simp only [disjoint_comm, disjoint_cons_left]
+  disjoint_comm.trans <| by simp only [disjoint_comm, disjoint_cons_left]
 #align list.disjoint_cons_right List.disjoint_cons_right
 
 /- warning: list.disjoint_of_disjoint_append_left_left -> List.disjoint_of_disjoint_append_left_left is a dubious translation:
@@ -393,7 +393,7 @@ theorem mem_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁.bagInter 
   | b :: l₁, l₂ => by
     by_cases b ∈ l₂
     · rw [cons_bag_inter_of_pos _ h, mem_cons_iff, mem_cons_iff, mem_bag_inter]
-      by_cases ba:a = b
+      by_cases ba : a = b
       · simp only [ba, h, eq_self_iff_true, true_or_iff, true_and_iff]
         
       · simp only [mem_erase_of_ne ba, ba, false_or_iff]
@@ -412,9 +412,9 @@ theorem count_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, count a (l₁.bagI
   | [], l₂ => by simp
   | l₁, [] => by simp
   | b :: l₁, l₂ => by
-    by_cases hb:b ∈ l₂
+    by_cases hb : b ∈ l₂
     · rw [cons_bag_inter_of_pos _ hb, count_cons', count_cons', count_bag_inter, count_erase, ← min_add_add_right]
-      by_cases ab:a = b
+      by_cases ab : a = b
       · rw [if_pos ab, tsub_add_cancel_of_le]
         rwa [succ_le_iff, count_pos, ab]
         
@@ -422,7 +422,7 @@ theorem count_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, count a (l₁.bagI
         
       
     · rw [cons_bag_inter_of_neg _ hb, count_bag_inter]
-      by_cases ab:a = b
+      by_cases ab : a = b
       · rw [← ab] at hb
         rw [count_eq_zero.2 hb, min_zero, min_zero]
         
@@ -445,7 +445,7 @@ theorem bag_inter_sublist_left : ∀ l₁ l₂ : List α, l₁.bagInter l₂ <+ 
 theorem bag_inter_nil_iff_inter_nil : ∀ l₁ l₂ : List α, l₁.bagInter l₂ = [] ↔ l₁ ∩ l₂ = []
   | [], l₂ => by simp
   | b :: l₁, l₂ => by
-    by_cases h:b ∈ l₂ <;> simp [h]
+    by_cases h : b ∈ l₂ <;> simp [h]
     exact bag_inter_nil_iff_inter_nil l₁ l₂
 #align list.bag_inter_nil_iff_inter_nil List.bag_inter_nil_iff_inter_nil
 

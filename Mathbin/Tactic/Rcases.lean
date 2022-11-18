@@ -229,11 +229,11 @@ unsafe instance has_reflect : has_reflect rcases_patt
   | explicit l => q(explicit).subst (has_reflect l)
   | typed l e => (q(typed).subst (has_reflect l)).subst (reflect e)
   | tuple l =>
-    q(fun l => tuple l).subst $
+    q(fun l => tuple l).subst <|
       haveI := has_reflect
       list.reflect l
   | alts l =>
-    q(fun l => alts l).subst $
+    q(fun l => alts l).subst <|
       haveI := has_reflect
       list.reflect l
 #align tactic.rcases_patt.has_reflect tactic.rcases_patt.has_reflect
@@ -242,28 +242,28 @@ unsafe instance has_reflect : has_reflect rcases_patt
 printed at high precedence, i.e. it will have parentheses around it if it is not already a tuple
 or atomic name. -/
 protected unsafe def format : ∀ bracket : Bool, rcases_patt → tactic _root_.format
-  | _, one n => pure $ to_fmt n
+  | _, one n => pure <| to_fmt n
   | _, clear => pure "-"
   | _, explicit p => do
     let f ← format true p
-    pure $ "@" ++ f
+    pure <| "@" ++ f
   | _, tuple [] => pure "⟨⟩"
   | _, tuple ls => do
-    let fs ← ls.mmap $ format false
-    pure $
+    let fs ← ls.mmap <| format false
+    pure <|
         "⟨" ++
             _root_.format.group
-              (_root_.format.nest 1 $ _root_.format.join $ List.intersperse ("," ++ _root_.format.line) fs) ++
+              (_root_.format.nest 1 <| _root_.format.join <| List.intersperse ("," ++ _root_.format.line) fs) ++
           "⟩"
   | br, alts ls => do
-    let fs ← ls.mmap $ format true
-    let fmt := _root_.format.join $ List.intersperse (↑" |" ++ _root_.format.space) fs
-    pure $ if br then _root_.format.bracket "(" ")" fmt else fmt
+    let fs ← ls.mmap <| format true
+    let fmt := _root_.format.join <| List.intersperse (↑" |" ++ _root_.format.space) fs
+    pure <| if br then _root_.format.bracket "(" ")" fmt else fmt
   | br, typed p e => do
     let fp ← format false p
     let fe ← pp e
     let fmt := fp ++ " : " ++ fe
-    pure $ if br then _root_.format.bracket "(" ")" fmt else fmt
+    pure <| if br then _root_.format.bracket "(" ")" fmt else fmt
 #align tactic.rcases_patt.format tactic.rcases_patt.format
 
 unsafe instance has_to_tactic_format : has_to_tactic_format rcases_patt :=
@@ -280,7 +280,7 @@ tactics. -/
 unsafe def rcases.process_constructor : Bool → List BinderInfo → listΠ rcases_patt → listΠ Name × listΠ rcases_patt
   | _, [], ps => ([], [])
   | explicit, bi :: l, ps =>
-    if !explicit && (bi ≠ BinderInfo.default) then
+    if !explicit && bi ≠ BinderInfo.default then
       let (ns, tl) := rcases.process_constructor explicit l ps
       (`_ :: ns, default :: tl)
     else
@@ -383,14 +383,14 @@ mutual
       _ => List.map (Prod.mk []) <$> get_goals
     | rcases_patt.clear, e => do
       let m ← try_core (get_local_and_type e)
-      List.map (Prod.mk $ m [] fun ⟨_, e⟩ => [e]) <$> get_goals
+      List.map (Prod.mk <| m [] fun ⟨_, e⟩ => [e]) <$> get_goals
     | rcases_patt.typed p ty, e => do
       let (t, e) ← get_local_and_type e
       let ty ← i_to_expr_no_subgoals ``(($(ty) : Sort _))
       unify t ty
       let t ← instantiate_mvars t
       let ty ← instantiate_mvars ty
-      let e ← if t =ₐ ty then pure e else change_core ty (some e) >> get_local e.local_pp_name
+      let e ← if t == ty then pure e else change_core ty (some e) >> get_local e.local_pp_name
       rcases_core p e
     | rcases_patt.alts [p], e => rcases_core p e
     | pat, e => do
@@ -401,7 +401,7 @@ mutual
       let pat := pat.as_alts
       let (ids, r, l) ←
         if I ≠ `quot then do
-            when (¬env I) $ fail f! "rcases tactic failed: {e } : {I} is not an inductive datatype"
+            when ¬env I <| fail f! "rcases tactic failed: {e } : {I} is not an inductive datatype"
             let params := env.inductive_num_params I
             let c := env.constructors_of I
             let (ids, r) ← rcases.process_constructors params c pat
@@ -437,7 +437,7 @@ mutual
           gs fun ⟨cs, g⟩ => do
             set_goals [g]
             let ugs ← rcases.continue pes
-            pure $ ugs $ fun ⟨cs', gs⟩ => (cs ++ cs', gs)
+            pure <| ugs fun ⟨cs', gs⟩ => (cs ++ cs', gs)
 end
 #align tactic.rcases_core tactic.rcases_core
 #align tactic.rcases.continue tactic.rcases.continue
@@ -474,7 +474,7 @@ unsafe def rcases (h : Option Name) (p : pexpr) (pat : rcases_patt) : tactic Uni
   let e ←
     match h with
       | some h => do
-        let x ← get_unused_name $ pat.Name.getOrElse `this
+        let x ← get_unused_name <| pat.Name.getOrElse `this
         interactive.generalize h () (p, x)
         get_local x
       | none => i_to_expr p
@@ -535,7 +535,7 @@ the same syntax as `rcases`. -/
 unsafe def rintro (ids : listΠ rcases_patt) : tactic Unit := do
   let l ←
     ids.mmap fun id => do
-        let e ← intro $ id.Name.getOrElse `_
+        let e ← intro <| id.Name.getOrElse `_
         pure (id, e)
   focus1 (rcases.continue l >>= clear_goals)
 #align tactic.rintro tactic.rintro
@@ -588,7 +588,7 @@ mutual
   unsafe def rcases_hint_core (explicit : Bool) : Bool → ℕ → expr → tactic (Option rcases_patt × List expr)
     | force, depth, e => do
       let (t, e) ← get_local_and_type e
-      let tt ← pure (explicit || force || (e.local_binding_info = BinderInfo.default)) |
+      let tt ← pure (explicit || force || e.local_binding_info = BinderInfo.default) |
         Prod.mk none <$> get_goals
       let t ← whnf t
       let env ← get_env
@@ -679,7 +679,7 @@ recursive types like `nat`, which can be cased as many times as you like). -/
 unsafe def rcases_hint (p : pexpr) (depth : Nat) : tactic rcases_patt := do
   let e ← i_to_expr p
   if e then
-      focus1 $ do
+      focus1 <| do
         let (p, gs) ← rcases_hint_core ff tt depth e
         set_goals gs
         pure (p default)
@@ -692,7 +692,7 @@ unsafe def rcases_hint (p : pexpr) (depth : Nat) : tactic rcases_patt := do
           get_local x >>= tactic.revert
           pure ()
       let h ← tactic.intro1
-      focus1 $ do
+      focus1 <| do
           let (p, gs) ← rcases_hint_core ff tt depth h
           set_goals gs
           pure (p default)
@@ -718,7 +718,7 @@ unsafe def rcases_hint_many (ps : List pexpr) (depth : Nat) : tactic (listΠ rca
                 get_local x >>= tactic.revert
                 pure ()
             tactic.intro1
-  focus1 $ do
+  focus1 <| do
       let (ps, gs) ← rcases_hint.continue ff depth es
       set_goals gs
       pure ps
@@ -730,7 +730,7 @@ everything it can, and it outputs an `rintro` invocation that should have the sa
 recursive types like `nat`, which can be cased as many times as you like). -/
 unsafe def rintro_hint (depth : Nat) : tactic (listΠ rcases_patt) := do
   let l ← intros
-  focus1 $ do
+  focus1 <| do
       let (p, gs) ← rcases_hint.continue ff depth l
       set_goals gs
       pure p
@@ -876,7 +876,7 @@ unsafe def rcases_patt_parse_list :=
 /-- Parse the optional depth argument `(: n)?` of `rcases?` and `rintro?`, with default depth 5. -/
 unsafe def rcases_parse_depth : parser Nat := do
   let o ← parser.optional (tk ":" *> small_nat)
-  pure $ o 5
+  pure <| o 5
 #align tactic.rcases_parse_depth tactic.rcases_parse_depth
 
 /-- The arguments to `rcases`, which in fact dispatch to several other tactics.
@@ -886,7 +886,7 @@ unsafe def rcases_parse_depth : parser Nat := do
 * `rcases ⟨expr, ...⟩ (with patt)?` calls `rcases_many`
 -/
 unsafe inductive rcases_args
-  | hint (tgt : pexpr ⊕ List pexpr) (depth : Nat)
+  | hint (tgt : Sum pexpr (List pexpr)) (depth : Nat)
   | rcases (name : Option Name) (tgt : pexpr) (pat : rcases_patt)
   | rcases_many (tgt : listΠ pexpr) (pat : rcases_patt)
   deriving has_reflect
@@ -898,7 +898,7 @@ unsafe inductive rcases_args
 * `rcases? expr (: n)?`
 * `rcases (h :)? expr (with patt_list (: expr)?)?`. -/
 unsafe def rcases_parse : parser rcases_args :=
-  with_desc "('?' expr (: n)?) | ((h :)? expr (with patt)?)" $ do
+  with_desc "('?' expr (: n)?) | ((h :)? expr (with patt)?)" <| do
     let hint ← parser.optional (tk "?")
     let p ← Sum.inr <$> brackets "⟨" "⟩" (sep_by (tk ",") (parser.pexpr 0)) <|> Sum.inl <$> texpr
     match hint with
@@ -906,18 +906,18 @@ unsafe def rcases_parse : parser rcases_args :=
         let p ←
           (do
                 let Sum.inl (expr.local_const h _ _ _) ← pure p
-                tk ":" *> (@Sum.inl _ (pexpr ⊕ List pexpr) ∘ Prod.mk h) <$> texpr) <|>
+                tk ":" *> (@Sum.inl _ (Sum pexpr (List pexpr)) ∘ Prod.mk h) <$> texpr) <|>
               pure (Sum.inr p)
         let ids ← parser.optional (tk "with" *> rcases_patt_parse)
         let ids := ids (rcases_patt.tuple [])
-        pure $
+        pure <|
             match p with
             | Sum.inl (Name, tgt) => rcases_args.rcases (some Name) tgt ids
             | Sum.inr (Sum.inl tgt) => rcases_args.rcases none tgt ids
             | Sum.inr (Sum.inr tgts) => rcases_args.rcases_many tgts ids
       | some _ => do
         let depth ← rcases_parse_depth
-        pure $ rcases_args.hint p depth
+        pure <| rcases_args.hint p depth
 #align tactic.rcases_parse tactic.rcases_parse
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
@@ -1007,7 +1007,7 @@ rintro_patt ::= (rintro_patt_hi+ | patt_med) (":" expr)?
 ```
 -/
 unsafe def rintro_patt_parse :=
-  with_desc "rintro_patt" $ rintro_patt_parse' true
+  with_desc "rintro_patt" <| rintro_patt_parse' true
 #align tactic.rintro_patt_parse tactic.rintro_patt_parse
 
 /-- `rintro_patt_parse_low` parses `rintro_patt_low`, which is the same as `rintro_patt_parse tt` but
@@ -1017,12 +1017,12 @@ rintro_patt_low ::= rintro_patt_hi* (":" expr)?
 ```
 -/
 unsafe def rintro_patt_parse_low :=
-  with_desc "rintro_patt_low" $ rintro_patt_parse' false
+  with_desc "rintro_patt_low" <| rintro_patt_parse' false
 #align tactic.rintro_patt_parse_low tactic.rintro_patt_parse_low
 
 /-- Syntax for a `rintro` pattern: `('?' (: n)?) | rintro_patt`. -/
-unsafe def rintro_parse : parser (listΠ rcases_patt ⊕ Nat) :=
-  with_desc "('?' (: n)?) | patt*" $ tk "?" >> Sum.inr <$> rcases_parse_depth <|> Sum.inl <$> rintro_patt_parse_low
+unsafe def rintro_parse : parser (Sum (listΠ rcases_patt) Nat) :=
+  with_desc "('?' (: n)?) | patt*" <| tk "?" >> Sum.inr <$> rcases_parse_depth <|> Sum.inl <$> rintro_patt_parse_low
 #align tactic.rintro_parse tactic.rintro_parse
 
 namespace Interactive
@@ -1088,7 +1088,7 @@ unsafe def rcases : parse rcases_parse → tactic Unit
           let pes ← ps.mmap pp
           pure (format.bracket "⟨" "⟩" (format.comma_separated pes), rcases_patt.tuple patts)
     let ppat ← pp patt
-    trace $ ↑"Try this: rcases " ++ pe ++ " with " ++ ppat
+    trace <| ↑"Try this: rcases " ++ pe ++ " with " ++ ppat
 #align tactic.interactive.rcases tactic.interactive.rcases
 
 add_tactic_doc
@@ -1117,9 +1117,9 @@ unsafe def rintro : parse rintro_parse → tactic Unit
     let ps ← tactic.rintro_hint depth
     let fs ←
       ps.mmap fun p => do
-          let f ← pp $ p.format true
-          pure $ format.space ++ format.group f
-    trace $ ↑"Try this: rintro" ++ format.join fs
+          let f ← pp <| p.format true
+          pure <| format.space ++ format.group f
+    trace <| ↑"Try this: rintro" ++ format.join fs
 #align tactic.interactive.rintro tactic.interactive.rintro
 
 /-- Alias for `rintro`. -/
@@ -1137,12 +1137,12 @@ add_tactic_doc
 /-- Parses `patt? (: expr)? (:= expr)?`, the arguments for `obtain`.
  (This is almost the same as `rcases_patt_parse`,
 but it allows the pattern part to be empty.) -/
-unsafe def obtain_parse : parser ((Option rcases_patt × Option pexpr) × Option (pexpr ⊕ List pexpr)) :=
-  with_desc "patt? (: expr)? (:= expr)?" $ do
+unsafe def obtain_parse : parser ((Option rcases_patt × Option pexpr) × Option (Sum pexpr (List pexpr))) :=
+  with_desc "patt? (: expr)? (:= expr)?" <| do
     let (pat, tp) ←
       (do
             let pat ← rcases_patt_parse
-            pure $
+            pure <|
                 match pat with
                 | rcases_patt.typed pat tp => (some pat, some tp)
                 | _ => (some pat, none)) <|>
@@ -1176,7 +1176,7 @@ If `type` is omitted, `:= proof` is required.
 unsafe def obtain : parse obtain_parse → tactic Unit
   | ((pat, _), some (Sum.inr val)) => tactic.rcases_many val (pat.getOrElse default)
   | ((pat, none), some (Sum.inl val)) => tactic.rcases none val (pat.getOrElse default)
-  | ((pat, some tp), some (Sum.inl val)) => tactic.rcases none val $ (pat.getOrElse default).typed tp
+  | ((pat, some tp), some (Sum.inl val)) => tactic.rcases none val <| (pat.getOrElse default).typed tp
   | ((pat, some tp), none) => do
     let nm ← mk_fresh_name
     let e ← to_expr tp >>= assert nm
@@ -1186,7 +1186,7 @@ unsafe def obtain : parse obtain_parse → tactic Unit
     let gs ← get_goals
     set_goals (g :: gs)
   | ((pat, none), none) =>
-    fail $
+    fail <|
       "`obtain` requires either an expected type or a value.\n" ++
         "usage: `obtain ⟨patt⟩? : type (:= val)?` or `obtain ⟨patt⟩? (: type)? := val`"
 #align tactic.interactive.obtain tactic.interactive.obtain
@@ -1199,7 +1199,7 @@ of any syntax that would be valid in an `obtain` block. This tactic just calls `
 on the expression, and then `rotate 1`.
 -/
 unsafe def rsuffices (h : parse obtain_parse) : tactic Unit :=
-  focus1 $ obtain h >> tactic.rotate 1
+  focus1 <| obtain h >> tactic.rotate 1
 #align tactic.interactive.rsuffices tactic.interactive.rsuffices
 
 add_tactic_doc
@@ -1210,7 +1210,7 @@ add_tactic_doc
 cache on the resulting goals.
 -/
 unsafe def rsufficesI (h : parse obtain_parse) : tactic Unit :=
-  rsuffices h; resetI
+  andthen (rsuffices h) resetI
 #align tactic.interactive.rsufficesI tactic.interactive.rsufficesI
 
 add_tactic_doc

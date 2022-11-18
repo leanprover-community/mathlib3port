@@ -5,6 +5,7 @@ Authors: Yaël Dillies, Bhavik Mehta, Huỳnh Trần Khanh, Stuart Presnell
 -/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Data.Finset.Sym
+import Mathbin.Data.Fintype.Sum
 
 /-!
 # Stars and bars

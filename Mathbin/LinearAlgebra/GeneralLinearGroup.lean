@@ -56,7 +56,7 @@ def det : GL n R →* Rˣ where
       val_inv := by rw [← det_mul, ← mul_eq_mul, A.mul_inv, det_one],
       inv_val := by rw [← det_mul, ← mul_eq_mul, A.inv_mul, det_one] }
   map_one' := Units.ext det_one
-  map_mul' A B := Units.ext $ det_mul _ _
+  map_mul' A B := Units.ext <| det_mul _ _
 #align matrix.general_linear_group.det Matrix.GeneralLinearGroup.det
 
 /-- The `GL n R` and `general_linear_group R n` groups are multiplicatively equivalent-/
@@ -85,7 +85,7 @@ theorem ext_iff (A B : GL n R) : A = B ↔ ∀ i j, (A : Matrix n n R) i j = (B 
 
 /-- Not marked `@[ext]` as the `ext` tactic already solves this. -/
 theorem ext ⦃A B : GL n R⦄ (h : ∀ i j, (A : Matrix n n R) i j = (B : Matrix n n R) i j) : A = B :=
-  Units.ext $ Matrix.ext h
+  Units.ext <| Matrix.ext h
 #align matrix.general_linear_group.ext Matrix.GeneralLinearGroup.ext
 
 section CoeLemmas
@@ -179,7 +179,7 @@ instance : Neg (gLPos n R) :=
   ⟨fun g =>
     ⟨-g, by
       rw [mem_GL_pos, general_linear_group.coe_det_apply, Units.coe_neg, det_neg,
-        (Fact.out $ Even $ Fintype.card n).neg_one_pow, one_mul]
+        (Fact.out <| Even <| Fintype.card n).neg_one_pow, one_mul]
       exact g.prop⟩⟩
 
 @[simp]
@@ -209,8 +209,8 @@ variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [LinearOrderedCom
 /-- `special_linear_group n R` embeds into `GL_pos n R` -/
 def toGLPos : SpecialLinearGroup n R →* gLPos n R where
   toFun A := ⟨(A : GL n R), show 0 < (↑A : Matrix n n R).det from A.Prop.symm ▸ zero_lt_one⟩
-  map_one' := Subtype.ext $ Units.ext $ rfl
-  map_mul' A₁ A₂ := Subtype.ext $ Units.ext $ rfl
+  map_one' := Subtype.ext <| Units.ext <| rfl
+  map_mul' A₁ A₂ := Subtype.ext <| Units.ext <| rfl
 #align matrix.special_linear_group.to_GL_pos Matrix.SpecialLinearGroup.toGLPos
 
 instance : Coe (SpecialLinearGroup n R) (gLPos n R) :=
@@ -241,7 +241,7 @@ variable [Fact (Even (Fintype.card n))]
 
 @[norm_cast]
 theorem coe_GL_pos_neg (g : SpecialLinearGroup n R) : ↑(-g) = -(↑g : gLPos n R) :=
-  Subtype.ext $ Units.ext rfl
+  Subtype.ext <| Units.ext rfl
 #align matrix.special_linear_group.coe_GL_pos_neg Matrix.SpecialLinearGroup.coe_GL_pos_neg
 
 end SpecialLinearGroup

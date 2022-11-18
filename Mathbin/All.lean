@@ -1260,13 +1260,25 @@ import Mathbin.Data.Finsupp.Pwo
 import Mathbin.Data.Finsupp.ToDfinsupp
 import Mathbin.Data.Finsupp.WellFounded
 import Mathbin.Data.Fintype.Basic
+import Mathbin.Data.Fintype.BigOperators
 import Mathbin.Data.Fintype.Card
 import Mathbin.Data.Fintype.CardEmbedding
 import Mathbin.Data.Fintype.Fin
+import Mathbin.Data.Fintype.Lattice
 import Mathbin.Data.Fintype.List
+import Mathbin.Data.Fintype.Option
 import Mathbin.Data.Fintype.Order
+import Mathbin.Data.Fintype.Parity
+import Mathbin.Data.Fintype.Perm
+import Mathbin.Data.Fintype.Pi
+import Mathbin.Data.Fintype.Powerset
+import Mathbin.Data.Fintype.Prod
+import Mathbin.Data.Fintype.Sigma
 import Mathbin.Data.Fintype.Small
 import Mathbin.Data.Fintype.Sort
+import Mathbin.Data.Fintype.Sum
+import Mathbin.Data.Fintype.Units
+import Mathbin.Data.Fintype.Vector
 import Mathbin.Data.Fp.Basic
 import Mathbin.Data.FunLike.Basic
 import Mathbin.Data.FunLike.Embedding
@@ -2787,6 +2799,8 @@ import Mathbin.Topology.DenseEmbedding
 import Mathbin.Topology.DiscreteQuotient
 import Mathbin.Topology.ExtendFrom
 import Mathbin.Topology.FiberBundle.Basic
+import Mathbin.Topology.FiberBundle.Constructions
+import Mathbin.Topology.FiberBundle.IsHomeomorphicTrivialBundle
 import Mathbin.Topology.FiberBundle.Trivialization
 import Mathbin.Topology.Filter
 import Mathbin.Topology.Gluing
@@ -2917,7 +2931,6 @@ import Mathbin.Topology.UnitInterval
 import Mathbin.Topology.UrysohnsBounded
 import Mathbin.Topology.UrysohnsLemma
 import Mathbin.Topology.VectorBundle.Basic
+import Mathbin.Topology.VectorBundle.Constructions
 import Mathbin.Topology.VectorBundle.Hom
-import Mathbin.Topology.VectorBundle.Prod
-import Mathbin.Topology.VectorBundle.Pullback
 

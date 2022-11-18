@@ -4,10 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 -/
 import Mathbin.Order.OmegaCompletePartialOrder
-import Mathbin.Order.Category.PreorderCat
 import Mathbin.CategoryTheory.Limits.Shapes.Products
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
+import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
 
 /-!
 # Category of types with a omega complete partial order
@@ -97,7 +97,7 @@ end HasProducts
 
 instance omegaCompletePartialOrderEqualizer {α β : Type _} [OmegaCompletePartialOrder α] [OmegaCompletePartialOrder β]
     (f g : α →𝒄 β) : OmegaCompletePartialOrder { a : α // f a = g a } :=
-  OmegaCompletePartialOrder.subtype _ $ fun c hc => by
+  (OmegaCompletePartialOrder.subtype _) fun c hc => by
     rw [f.continuous, g.continuous]
     congr 1
     ext
@@ -119,7 +119,7 @@ def equalizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : Fork f g :=
 
 /-- The equalizer fork is a limit. -/
 def isEqualizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : IsLimit (equalizer f g) :=
-  Fork.IsLimit.mk' _ $ fun s =>
+  (Fork.IsLimit.mk' _) fun s =>
     ⟨{ toFun := fun x => ⟨s.ι x, by apply continuous_hom.congr_fun s.condition⟩,
         monotone' := fun x y h => s.ι.Monotone h, cont := fun x => Subtype.ext (s.ι.Continuous x) },
       by

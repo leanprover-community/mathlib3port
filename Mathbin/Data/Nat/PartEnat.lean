@@ -3,7 +3,6 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Order.WellFounded
 import Mathbin.Algebra.Hom.Equiv.Basic
 import Mathbin.Data.Part
 import Mathbin.Data.Enat.Basic
@@ -208,12 +207,12 @@ theorem dom_of_le_coe {x : PartEnat} {y : ℕ} (h : x ≤ y) : x.Dom := by
 instance decidableLe (x y : PartEnat) [Decidable x.Dom] [Decidable y.Dom] : Decidable (x ≤ y) :=
   if hx : x.Dom then
     decidable_of_decidable_of_iff
-        (show Decidable (∀ hy : (y : PartEnat).Dom, x.get hx ≤ (y : PartEnat).get hy) from forallPropDecidable _) $
+        (show Decidable (∀ hy : (y : PartEnat).Dom, x.get hx ≤ (y : PartEnat).get hy) from forallPropDecidable _) <|
       by
       dsimp [(· ≤ ·)]
       simp only [hx, exists_prop_of_true, forall_true_iff]
   else
-    if hy : y.Dom then is_false $ fun h => hx $ dom_of_le_of_dom h hy
+    if hy : y.Dom then is_false fun h => hx <| dom_of_le_of_dom h hy
     else isTrue ⟨fun h => (hy h).elim, fun h => (hy h).elim⟩
 #align part_enat.decidable_le PartEnat.decidableLe
 
@@ -237,7 +236,7 @@ theorem lt_def (x y : PartEnat) : x < y ↔ ∃ hx : x.Dom, ∀ hy : y.Dom, x.ge
   rw [lt_iff_le_not_le, le_def, le_def, not_exists]
   constructor
   · rintro ⟨⟨hyx, H⟩, h⟩
-    by_cases hx:x.dom
+    by_cases hx : x.dom
     · use hx
       intro hy
       specialize H hy
@@ -327,7 +326,7 @@ theorem ne_zero_iff {x : PartEnat} : x ≠ 0 ↔ ⊥ < x :=
 #align part_enat.ne_zero_iff PartEnat.ne_zero_iff
 
 theorem dom_of_lt {x y : PartEnat} : x < y → x.Dom :=
-  PartEnat.cases_on x not_top_lt $ fun _ _ => dom_coe _
+  (PartEnat.cases_on x not_top_lt) fun _ _ => dom_coe _
 #align part_enat.dom_of_lt PartEnat.dom_of_lt
 
 theorem top_eq_none : (⊤ : PartEnat) = none :=
@@ -336,7 +335,7 @@ theorem top_eq_none : (⊤ : PartEnat) = none :=
 
 @[simp]
 theorem coe_lt_top (x : ℕ) : (x : PartEnat) < ⊤ :=
-  Ne.lt_top fun h => absurd (congr_arg Dom h) $ by simpa only [dom_coe] using true_ne_false
+  Ne.lt_top fun h => absurd (congr_arg Dom h) <| by simpa only [dom_coe] using true_ne_false
 #align part_enat.coe_lt_top PartEnat.coe_lt_top
 
 @[simp]
@@ -359,12 +358,7 @@ theorem ne_top_iff {x : PartEnat} : x ≠ ⊤ ↔ ∃ n : ℕ, x = n := by simpa
       (Command.declId `ne_top_iff_dom [])
       (Command.declSig
        [(Term.implicitBinder "{" [`x] [":" `PartEnat] "}")]
-       (Term.typeSpec
-        ":"
-        (Init.Logic.«term_↔_»
-         (Init.Logic.«term_≠_» `x " ≠ " (Order.BoundedOrder.«term⊤» "⊤"))
-         " ↔ "
-         (Term.proj `x "." `Dom))))
+       (Term.typeSpec ":" («term_↔_» («term_≠_» `x "≠" (Order.BoundedOrder.«term⊤» "⊤")) "↔" (Term.proj `x "." `Dom))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -434,7 +428,7 @@ theorem not_dom_iff_eq_top {x : PartEnat} : ¬x.Dom ↔ x = ⊤ :=
 #align part_enat.not_dom_iff_eq_top PartEnat.not_dom_iff_eq_top
 
 theorem ne_top_of_lt {x y : PartEnat} (h : x < y) : x ≠ ⊤ :=
-  ne_of_lt $ lt_of_lt_of_le h le_top
+  ne_of_lt <| lt_of_lt_of_le h le_top
 #align part_enat.ne_top_of_lt PartEnat.ne_top_of_lt
 
 theorem eq_top_iff_forall_lt (x : PartEnat) : x = ⊤ ↔ ∀ n : ℕ, (n : PartEnat) < x := by
@@ -455,7 +449,7 @@ theorem eq_top_iff_forall_le (x : PartEnat) : x = ⊤ ↔ ∀ n : ℕ, (n : Part
 #align part_enat.eq_top_iff_forall_le PartEnat.eq_top_iff_forall_le
 
 theorem pos_iff_one_le {x : PartEnat} : 0 < x ↔ 1 ≤ x :=
-  PartEnat.cases_on x (by simp only [iff_true_iff, le_top, coe_lt_top, ← @Nat.cast_zero PartEnat]) $ fun n => by
+  (PartEnat.cases_on x (by simp only [iff_true_iff, le_top, coe_lt_top, ← @Nat.cast_zero PartEnat])) fun n => by
     rw [← Nat.cast_zero, ← Nat.cast_one, PartEnat.coe_lt_coe, PartEnat.coe_le_coe]
     rfl
 #align part_enat.pos_iff_one_le PartEnat.pos_iff_one_le
@@ -488,11 +482,11 @@ instance : OrderedAddCommMonoid PartEnat :=
 instance : CanonicallyOrderedAddMonoid PartEnat :=
   { PartEnat.semilatticeSup, PartEnat.orderBot, PartEnat.orderedAddCommMonoid with
     le_self_add := fun a b =>
-      PartEnat.cases_on b (le_top.trans_eq (add_top _).symm) $ fun b =>
-        PartEnat.cases_on a (top_add _).ge $ fun a => (coe_le_coe.2 le_self_add).trans_eq (Nat.cast_add _ _),
+      (PartEnat.cases_on b (le_top.trans_eq (add_top _).symm)) fun b =>
+        (PartEnat.cases_on a (top_add _).ge) fun a => (coe_le_coe.2 le_self_add).trans_eq (Nat.cast_add _ _),
     exists_add_of_le := fun a b =>
-      (PartEnat.cases_on b fun _ => ⟨⊤, (add_top _).symm⟩) $ fun b =>
-        (PartEnat.cases_on a fun h => ((coe_lt_top _).not_le h).elim) $ fun a h =>
+      (PartEnat.cases_on b fun _ => ⟨⊤, (add_top _).symm⟩) fun b =>
+        (PartEnat.cases_on a fun h => ((coe_lt_top _).not_le h).elim) fun a h =>
           ⟨(b - a : ℕ), by rw [← Nat.cast_add, coe_inj, add_comm, tsub_add_cancel_of_le (coe_le_coe.1 h)]⟩ }
 
 protected theorem add_lt_add_right {x y z : PartEnat} (h : x < y) (hz : z ≠ ⊤) : x + z < y + z := by
@@ -717,7 +711,7 @@ end WithTopEquiv
 theorem lt_wf : @WellFounded PartEnat (· < ·) := by classical
   change WellFounded fun a b : PartEnat => a < b
   simp_rw [← to_with_top_lt]
-  exact InvImage.wf _ (WithTop.well_founded_lt Nat.lt_wf)
+  exact InvImage.wf _ (WithTop.well_founded_lt Nat.lt_wfRel.wf)
 #align part_enat.lt_wf PartEnat.lt_wf
 
 instance : WellFoundedLt PartEnat :=
@@ -725,7 +719,7 @@ instance : WellFoundedLt PartEnat :=
 
 instance : IsWellOrder PartEnat (· < ·) where
 
-instance : HasWellFounded PartEnat :=
+instance : WellFoundedRelation PartEnat :=
   ⟨(· < ·), lt_wf⟩
 
 section Find
@@ -758,7 +752,7 @@ theorem lt_find (n : ℕ) (h : ∀ m ≤ n, ¬P m) : (n : PartEnat) < find P := 
 theorem lt_find_iff (n : ℕ) : (n : PartEnat) < find P ↔ ∀ m ≤ n, ¬P m := by
   refine' ⟨_, lt_find P n⟩
   intro h m hm
-  by_cases H:(find P).Dom
+  by_cases H : (find P).Dom
   · apply Nat.find_min H
     rw [coe_lt_iff] at h
     specialize h H
@@ -775,7 +769,7 @@ theorem find_le (n : ℕ) (h : P n) : find P ≤ n := by
 
 theorem find_eq_top_iff : find P = ⊤ ↔ ∀ n, ¬P n :=
   (eq_top_iff_forall_lt _).trans
-    ⟨fun h n => (lt_find_iff P n).mp (h n) _ le_rfl, fun h n => lt_find P n $ fun _ _ => h _⟩
+    ⟨fun h n => (lt_find_iff P n).mp (h n) _ le_rfl, fun h n => (lt_find P n) fun _ _ => h _⟩
 #align part_enat.find_eq_top_iff PartEnat.find_eq_top_iff
 
 end Find

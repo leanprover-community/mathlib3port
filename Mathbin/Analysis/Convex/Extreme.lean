@@ -154,7 +154,7 @@ theorem extreme_points_empty : (∅ : Set E).extremePoints 𝕜 = ∅ :=
 
 @[simp]
 theorem extreme_points_singleton : ({x} : Set E).extremePoints 𝕜 = {x} :=
-  extreme_points_subset.antisymm $ singleton_subset_iff.2 ⟨mem_singleton x, fun x₁ hx₁ x₂ hx₂ _ => ⟨hx₁, hx₂⟩⟩
+  extreme_points_subset.antisymm <| singleton_subset_iff.2 ⟨mem_singleton x, fun x₁ hx₁ x₂ hx₂ _ => ⟨hx₁, hx₂⟩⟩
 #align extreme_points_singleton extreme_points_singleton
 
 theorem inter_extreme_points_subset_extreme_points_of_subset (hBA : B ⊆ A) :
@@ -196,11 +196,11 @@ variable [DenselyOrdered 𝕜] [NoZeroSmulDivisors 𝕜 E] {A B : Set E} {x : E}
 that contain it are those with `x` as one of their endpoints. -/
 theorem mem_extreme_points_iff_forall_segment :
     x ∈ A.extremePoints 𝕜 ↔ x ∈ A ∧ ∀ (x₁ x₂) (_ : x₁ ∈ A) (_ : x₂ ∈ A), x ∈ segment 𝕜 x₁ x₂ → x₁ = x ∨ x₂ = x := by
-  refine' and_congr_right fun hxA => forall₄_congr $ fun x₁ h₁ x₂ h₂ => _
+  refine' and_congr_right fun hxA => forall₄_congr fun x₁ h₁ x₂ h₂ => _
   constructor
   · rw [← insert_endpoints_open_segment]
     rintro H (rfl | rfl | hx)
-    exacts[Or.inl rfl, Or.inr rfl, Or.inl $ (H hx).1]
+    exacts[Or.inl rfl, Or.inr rfl, Or.inl <| (H hx).1]
     
   · intro H hx
     rcases H (open_segment_subset_segment _ _ _ hx) with (rfl | rfl)

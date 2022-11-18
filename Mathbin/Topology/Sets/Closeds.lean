@@ -69,10 +69,10 @@ theorem gc : GaloisConnection Closeds.closure (coe : Closeds α → Set α) := f
 
 /-- The galois coinsertion between sets and opens. -/
 def gi : GaloisInsertion (@Closeds.closure α _) coe where
-  choice s hs := ⟨s, closure_eq_iff_is_closed.1 $ hs.antisymm subset_closure⟩
+  choice s hs := ⟨s, closure_eq_iff_is_closed.1 <| hs.antisymm subset_closure⟩
   gc := gc
   le_l_u _ := subset_closure
-  choice_eq s hs := SetLike.coe_injective $ subset_closure.antisymm hs
+  choice_eq s hs := SetLike.coe_injective <| subset_closure.antisymm hs
 #align topological_space.closeds.gi TopologicalSpace.Closeds.gi
 
 instance : CompleteLattice (Closeds α) :=
@@ -86,15 +86,15 @@ instance : CompleteLattice (Closeds α) :=
     (SetLike.coe_injective closure_empty.symm)
     (-- sup
     fun s t => ⟨s ∪ t, s.2.union t.2⟩)
-    (funext $ fun s => funext $ fun t => SetLike.coe_injective (s.2.union t.2).closure_eq.symm)
+    (funext fun s => funext fun t => SetLike.coe_injective (s.2.union t.2).closure_eq.symm)
     (-- inf
     fun s t => ⟨s ∩ t, s.2.inter t.2⟩)
     rfl-- Sup
     _
     rfl
     (-- Inf
-    fun S => ⟨⋂ s ∈ S, ↑s, isClosedBInter $ fun s _ => s.2⟩)
-    (funext $ fun S => SetLike.coe_injective Inf_image.symm)
+    fun S => ⟨⋂ s ∈ S, ↑s, isClosedBInter fun s _ => s.2⟩)
+    (funext fun S => SetLike.coe_injective Inf_image.symm)
 
 /-- The type of closed sets is inhabited, with default element the empty set. -/
 instance : Inhabited (Closeds α) :=
@@ -135,7 +135,7 @@ theorem coe_finset_inf (f : ι → Closeds α) (s : Finset ι) : (↑(s.inf f) :
   map_finset_inf (⟨⟨coe, coe_inf⟩, coe_top⟩ : InfTopHom (Closeds α) (Set α)) _ _
 #align topological_space.closeds.coe_finset_inf TopologicalSpace.Closeds.coe_finset_inf
 
-theorem infi_def {ι} (s : ι → Closeds α) : (⨅ i, s i) = ⟨⋂ i, s i, isClosedInter $ fun i => (s i).2⟩ := by
+theorem infi_def {ι} (s : ι → Closeds α) : (⨅ i, s i) = ⟨⋂ i, s i, isClosedInter fun i => (s i).2⟩ := by
   ext
   simp only [infi, coe_Inf, bInter_range]
   rfl
@@ -161,7 +161,7 @@ theorem mem_Inf {S : Set (Closeds α)} {x : α} : x ∈ inf S ↔ ∀ s ∈ S, x
 instance : Coframe (Closeds α) :=
   { Closeds.completeLattice with inf := inf,
     infi_sup_le_sup_Inf := fun a s =>
-      (SetLike.coe_injective $ by simp only [coe_sup, coe_infi, coe_Inf, Set.union_Inter₂]).le }
+      (SetLike.coe_injective <| by simp only [coe_sup, coe_infi, coe_Inf, Set.union_Inter₂]).le }
 
 /-- The term of `closeds α` corresponding to a singleton. -/
 @[simps]
@@ -209,7 +209,7 @@ def Closeds.complOrderIso : Closeds α ≃o (Opens α)ᵒᵈ where
   left_inv s := by simp [closeds.compl_compl]
   right_inv s := by simp [opens.compl_compl]
   map_rel_iff' s t := by
-    simpa only [Equiv.coe_fn_mk, Function.comp_apply, OrderDual.to_dual_le_to_dual] using compl_subset_compl
+    simpa only [Equiv.coe_fn_mk, Function.comp_apply, OrderDual.toDual_le_toDual] using compl_subset_compl
 #align topological_space.closeds.compl_order_iso TopologicalSpace.Closeds.complOrderIso
 
 /-- `opens.compl` as an `order_iso` to the order dual of `closeds α`. -/
@@ -220,7 +220,7 @@ def Opens.complOrderIso : Opens α ≃o (Closeds α)ᵒᵈ where
   left_inv s := by simp [opens.compl_compl]
   right_inv s := by simp [closeds.compl_compl]
   map_rel_iff' s t := by
-    simpa only [Equiv.coe_fn_mk, Function.comp_apply, OrderDual.to_dual_le_to_dual] using compl_subset_compl
+    simpa only [Equiv.coe_fn_mk, Function.comp_apply, OrderDual.toDual_le_toDual] using compl_subset_compl
 #align topological_space.opens.compl_order_iso TopologicalSpace.Opens.complOrderIso
 
 variable {α}

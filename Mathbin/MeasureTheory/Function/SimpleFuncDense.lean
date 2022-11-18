@@ -3,9 +3,7 @@ Copyright (c) 2019 Zhouhang Zhou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Heather Macbeth
 -/
-import Mathbin.MeasureTheory.Integral.MeanInequalities
-import Mathbin.Topology.ContinuousFunction.Compact
-import Mathbin.Topology.MetricSpace.Metrizable
+import Mathbin.MeasureTheory.Integral.Lebesgue
 
 /-!
 # Density of simple functions
@@ -60,9 +58,9 @@ noncomputable def nearestPtInd (e : ℕ → α) : ℕ → α →ₛ ℕ
   | 0 => const α 0
   | N + 1 =>
     piecewise (⋂ k ≤ N, { x | edist (e (N + 1)) x < edist (e k) x })
-      (MeasurableSet.inter $ fun k =>
-        MeasurableSet.inter $ fun hk => measurableSetLt measurableEdistRight measurableEdistRight)
-      (const α $ N + 1) (nearest_pt_ind N)
+      (MeasurableSet.inter fun k =>
+        MeasurableSet.inter fun hk => measurableSetLt measurableEdistRight measurableEdistRight)
+      (const α <| N + 1) (nearest_pt_ind N)
 #align measure_theory.simple_func.nearest_pt_ind MeasureTheory.SimpleFunc.nearestPtInd
 
 /-- `nearest_pt e N x` is the nearest point to `x` among the points `e 0`, ..., `e N`. If more than
@@ -155,7 +153,7 @@ theorem approx_on_comp {γ : Type _} [MeasurableSpace γ] {f : β → α} (hf : 
 #align measure_theory.simple_func.approx_on_comp MeasureTheory.SimpleFunc.approx_on_comp
 
 theorem tendsto_approx_on {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s) [SeparableSpace s] {x : β}
-    (hx : f x ∈ closure s) : Tendsto (fun n => approxOn f hf s y₀ h₀ n x) atTop (𝓝 $ f x) := by
+    (hx : f x ∈ closure s) : Tendsto (fun n => approxOn f hf s y₀ h₀ n x) atTop (𝓝 <| f x) := by
   haveI : Nonempty s := ⟨⟨y₀, h₀⟩⟩
   rw [← @Subtype.range_coe _ s, ← image_univ, ← (dense_range_dense_seq s).closure_eq] at hx
   simp only [approx_on, coe_comp]

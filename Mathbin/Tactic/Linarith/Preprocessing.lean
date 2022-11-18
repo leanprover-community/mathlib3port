@@ -188,12 +188,12 @@ unsafe def nat_to_int : global_preprocessor where
   transform l :=-- we lock the tactic state here because a `simplify` call inside of
   -- `zify_proof` corrupts the tactic state when run under `io.run_tactic`.
   do
-    let l ← lock_tactic_state $ l.mmap $ fun h => infer_type h >>= guardb ∘ is_nat_prop >> zify_proof [] h <|> return h
+    let l ← lock_tactic_state <| l.mmap fun h => (infer_type h >>= guardb ∘ is_nat_prop) >> zify_proof [] h <|> return h
     let nonnegs ←
       l.mfoldl
           (fun (es : expr_set) h => do
             let (a, b) ← infer_type h >>= get_rel_sides
-            return $ (es (get_nat_comps a)).insert_list (get_nat_comps b))
+            return <| (es (get_nat_comps a)).insert_list (get_nat_comps b))
           mk_rb_set
     (· ++ ·) l <$> nonnegs mk_coe_nat_nonneg_prf
 #align linarith.nat_to_int linarith.nat_to_int
@@ -235,7 +235,7 @@ unsafe def cancel_denoms : preprocessor where
   transform pf :=
     (do
         let some (_, lhs) ← parse_into_comp_and_expr <$> infer_type pf
-        guardb $ lhs (· = `has_div.div)
+        guardb <| lhs (· = `has_div.div)
         singleton <$> normalize_denominators_in_lhs pf lhs) <|>
       return [pf]
 #align linarith.cancel_denoms linarith.cancel_denoms
@@ -249,7 +249,7 @@ unsafe def cancel_denoms : preprocessor where
     unsafe
   def
     find_squares
-    : rb_set ( expr × Bool ) → expr → tactic ( rb_set $ expr ×ₗ Bool )
+    : rb_set ( expr × Bool ) → expr → tactic ( rb_set <| expr ×ₗ Bool )
     | s , q( $ ( a ) ^ 2 ) => do let s ← find_squares s a return ( s ( a , tt ) )
       |
         s , e @ q( $ ( e1 ) * $ ( e2 ) )
@@ -258,7 +258,6 @@ unsafe def cancel_denoms : preprocessor where
       | s , e => e . mfoldl find_squares s
 #align linarith.find_squares linarith.find_squares
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `nlinarith_extras` is the preprocessor corresponding to the `nlinarith` tactic.
 
 * For every term `t` such that `t^2` or `t*t` appears in the input, adds a proof of `t^2 ≥ 0`
@@ -272,10 +271,10 @@ unsafe def nlinarith_extras : global_preprocessor where
   transform ls := do
     let s ← ls.mfoldr (fun h s' => infer_type h >>= find_squares s') mk_rb_set
     let new_es ←
-      s.mfold ([] : List expr) $ fun ⟨e, is_sq⟩ new_es =>
+      (s.mfold ([] : List expr)) fun ⟨e, is_sq⟩ new_es =>
           (do
               let p ← mk_app (if is_sq then `` sq_nonneg else `` mul_self_nonneg) [e]
-              return $ p::new_es) <|>
+              return <| p :: new_es) <|>
             return new_es
     let new_es ← make_comp_with_zero.globalize.transform new_es
     linarith_trace "nlinarith preprocessing found squares"
@@ -284,9 +283,9 @@ unsafe def nlinarith_extras : global_preprocessor where
     let with_comps ←
       (new_es ++ ls).mmap fun e => do
           let tp ← infer_type e
-          return $ (parse_into_comp_and_expr tp).elim (ineq.lt, e) fun ⟨ine, _⟩ => (ine, e)
+          return <| (parse_into_comp_and_expr tp).elim (ineq.lt, e) fun ⟨ine, _⟩ => (ine, e)
     let products ←
-      with_comps.mmapUpperTriangle $ fun ⟨posa, a⟩ ⟨posb, b⟩ =>
+      with_comps.mmapUpperTriangle fun ⟨posa, a⟩ ⟨posb, b⟩ =>
           (some <$>
               match posa, posb with
               | ineq.eq, _ => mk_app `` zero_mul_eq [a, b]
@@ -301,10 +300,9 @@ unsafe def nlinarith_extras : global_preprocessor where
               | ineq.le, ineq.le => mk_app `` mul_nonneg_of_nonpos_of_nonpos [a, b]) <|>
             return none
     let products ← make_comp_with_zero.globalize.transform products.reduceOption
-    return $ new_es ++ ls ++ products
+    return <| new_es ++ ls ++ products
 #align linarith.nlinarith_extras linarith.nlinarith_extras
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `remove_ne_aux` case splits on any proof `h : a ≠ b` in the input, turning it into `a < b ∨ a > b`.
 This produces `2^n` branches when there are `n` such hypotheses in the input.
 -/
@@ -313,13 +311,13 @@ unsafe def remove_ne_aux : List expr → tactic (List branch) := fun hs =>
       let e ←
         hs.mfind fun e : expr => do
             let e ← infer_type e
-            guard $ e
+            guard <| e
       let [(_, ng1), (_, ng2)] ← to_expr ``(Or.elim (lt_or_gt_of_ne $(e))) >>= apply
       let do_goal : expr → tactic (List branch) := fun g => do
           set_goals [g]
           let h ← intro1
-          let ls ← remove_ne_aux $ hs.removeAll [e]
-          return $ ls fun b : branch => (b.1, h::b.2)
+          let ls ← remove_ne_aux <| hs.removeAll [e]
+          return <| ls fun b : branch => (b.1, h :: b.2)
         (· ++ ·) <$> do_goal ng1 <*> do_goal ng2) <|>
     do
     let g ← get_goal
@@ -349,7 +347,7 @@ so the size of the list may change.
 -/
 unsafe def preprocess (pps : List global_branching_preprocessor) (l : List expr) : tactic (List branch) := do
   let g ← get_goal
-  pps (fun ls pp => List.join <$> (ls $ fun b => set_goals [b.1] >> pp b.2)) [(g, l)]
+  pps (fun ls pp => List.join <$> ls fun b => set_goals [b.1] >> pp b.2) [(g, l)]
 #align linarith.preprocess linarith.preprocess
 
 end Linarith

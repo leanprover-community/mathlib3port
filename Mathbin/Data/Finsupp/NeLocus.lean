@@ -81,7 +81,7 @@ end NHasZero
 section NeLocusAndMaps
 
 theorem subset_map_range_ne_locus [DecidableEq N] [Zero N] [DecidableEq M] [Zero M] (f g : α →₀ N) {F : N → M}
-    (F0 : F 0 = 0) : (f.map_range F F0).neLocus (g.map_range F F0) ⊆ f.neLocus g := fun x => by
+    (F0 : F 0 = 0) : (f.mapRange F F0).neLocus (g.mapRange F F0) ⊆ f.neLocus g := fun x => by
   simpa only [mem_ne_locus, map_range_apply, not_imp_not] using congr_arg F
 #align finsupp.subset_map_range_ne_locus Finsupp.subset_map_range_ne_locus
 
@@ -100,7 +100,7 @@ theorem zip_with_ne_locus_eq_right [DecidableEq M] [Zero M] [DecidableEq P] [Zer
 #align finsupp.zip_with_ne_locus_eq_right Finsupp.zip_with_ne_locus_eq_right
 
 theorem map_range_ne_locus_eq [DecidableEq N] [DecidableEq M] [Zero M] [Zero N] (f g : α →₀ N) {F : N → M}
-    (F0 : F 0 = 0) (hF : Function.Injective F) : (f.map_range F F0).neLocus (g.map_range F F0) = f.neLocus g := by
+    (F0 : F 0 = 0) (hF : Function.Injective F) : (f.mapRange F F0).neLocus (g.mapRange F F0) = f.neLocus g := by
   ext
   simpa only [mem_ne_locus] using hF.ne_iff
 #align finsupp.map_range_ne_locus_eq Finsupp.map_range_ne_locus_eq

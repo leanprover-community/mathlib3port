@@ -73,12 +73,12 @@ variable (K)
 theorem Normal.exists_is_splitting_field [h : Normal F K] [FiniteDimensional F K] :
     ∃ p : F[X], IsSplittingField F K p := by
   let s := Basis.ofVectorSpace F K
-  refine' ⟨∏ x, minpoly F (s x), splits_prod _ $ fun x hx => h.splits (s x), Subalgebra.to_submodule_injective _⟩
+  refine' ⟨∏ x, minpoly F (s x), (splits_prod _) fun x hx => h.splits (s x), Subalgebra.to_submodule_injective _⟩
   rw [Algebra.top_to_submodule, eq_top_iff, ← s.span_eq, Submodule.span_le, Set.range_subset_iff]
   refine' fun x =>
     Algebra.subset_adjoin
-      (multiset.mem_to_finset.mpr $
-        (mem_roots $ mt (Polynomial.map_eq_zero $ algebraMap F K).1 $ Finset.prod_ne_zero_iff.2 $ fun x hx => _).2 _)
+      (multiset.mem_to_finset.mpr <|
+        (mem_roots <| mt (Polynomial.map_eq_zero <| algebraMap F K).1 <| Finset.prod_ne_zero_iff.2 fun x hx => _).2 _)
   · exact minpoly.ne_zero (h.is_integral (s x))
     
   rw [is_root.def, eval_map, ← aeval_def, AlgHom.map_prod]
@@ -90,7 +90,7 @@ section NormalTower
 variable (E : Type _) [Field E] [Algebra F E] [Algebra K E] [IsScalarTower F K E]
 
 theorem Normal.towerTopOfNormal [h : Normal F E] : Normal K E :=
-  normal_iff.2 $ fun x => by
+  normal_iff.2 fun x => by
     cases' h.out x with hx hhx
     rw [algebra_map_eq F K E] at hhx
     exact
@@ -121,7 +121,7 @@ theorem AlgHom.normal_bijective [h : Normal F E] (ϕ : E →ₐ[F] K) : Function
 variable {F} {E} {E' : Type _} [Field E'] [Algebra F E']
 
 theorem Normal.ofAlgEquiv [h : Normal F E] (f : E ≃ₐ[F] E') : Normal F E' :=
-  normal_iff.2 $ fun x => by
+  normal_iff.2 fun x => by
     cases' h.out (f.symm x) with hx hhx
     have H := mapIsIntegral f.to_alg_hom hx
     rw [AlgEquiv.to_alg_hom_eq_coe, AlgEquiv.coe_alg_hom, AlgEquiv.apply_symm_apply] at H
@@ -142,7 +142,7 @@ theorem AlgEquiv.transfer_normal (f : E ≃ₐ[F] E') : Normal F E ↔ Normal F 
 #align alg_equiv.transfer_normal AlgEquiv.transfer_normal
 
 theorem Normal.ofIsSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : Normal F E := by
-  by_cases hp:p = 0
+  by_cases hp : p = 0
   · have : is_splitting_field F F p := by
       rw [hp]
       exact ⟨splits_zero _, Subsingleton.elim _ _⟩
@@ -355,8 +355,8 @@ variable {F} {K₁ K₂} (E : Type _) [Field E] [Algebra F E] [Algebra K₁ E] [
 /-- If `E/Kᵢ/F` are towers of fields with `E/F` normal then we can lift
   an algebra homomorphism `ϕ : K₁ →ₐ[F] K₂` to `ϕ.lift_normal E : E →ₐ[F] E`. -/
 noncomputable def AlgHom.liftNormal [h : Normal F E] : E →ₐ[F] E :=
-  @AlgHom.restrictScalars F K₁ E E _ _ _ _ _ _ ((IsScalarTower.toAlgHom F K₂ E).comp ϕ).toRingHom.toAlgebra _ _ _ _ $
-    Nonempty.some $
+  @AlgHom.restrictScalars F K₁ E E _ _ _ _ _ _ ((IsScalarTower.toAlgHom F K₂ E).comp ϕ).toRingHom.toAlgebra _ _ _ _ <|
+    Nonempty.some <|
       @IntermediateField.alg_hom_mk_adjoin_splits' _ _ _ _ _ _ _
         ((IsScalarTower.toAlgHom F K₂ E).comp ϕ).toRingHom.toAlgebra _ (IntermediateField.adjoin_univ _ _) fun x hx =>
         ⟨isIntegralOfIsScalarTower (h.out x).1,

@@ -115,7 +115,7 @@ theorem nodupkeys_singleton (s : Sigma β) : Nodupkeys [s] :=
 #align list.nodupkeys_singleton List.nodupkeys_singleton
 
 theorem Nodupkeys.sublist {l₁ l₂ : List (Sigma β)} (h : l₁ <+ l₂) : Nodupkeys l₂ → Nodupkeys l₁ :=
-  nodup.sublist $ h.map _
+  nodup.sublist <| h.map _
 #align list.nodupkeys.sublist List.Nodupkeys.sublist
 
 protected theorem Nodupkeys.nodup {l : List (Sigma β)} : Nodupkeys l → Nodup l :=
@@ -129,7 +129,7 @@ theorem perm_nodupkeys {l₁ l₂ : List (Sigma β)} (h : l₁ ~ l₂) : Nodupke
 theorem nodupkeys_join {L : List (List (Sigma β))} :
     Nodupkeys (join L) ↔ (∀ l ∈ L, Nodupkeys l) ∧ Pairwise Disjoint (L.map keys) := by
   rw [nodupkeys_iff_pairwise, pairwise_join, pairwise_map]
-  refine' and_congr (ball_congr $ fun l h => by simp [nodupkeys_iff_pairwise]) _
+  refine' and_congr (ball_congr fun l h => by simp [nodupkeys_iff_pairwise]) _
   apply iff_of_eq
   congr with (l₁ l₂)
   simp [keys, disjoint_iff_ne]
@@ -161,7 +161,7 @@ theorem mem_ext {l₀ l₁ : List (Sigma β)} (nd₀ : l₀.Nodup) (nd₁ : l₁
     
   · trans x :: y :: ys.erase x
     · constructor
-      refine' l₀_ih nd₀.2 ((nd₁.2.erase _).cons $ fun h => nd₁.1 $ mem_of_mem_erase h) fun a => _
+      refine' l₀_ih nd₀.2 ((nd₁.2.erase _).cons fun h => nd₁.1 <| mem_of_mem_erase h) fun a => _
       · specialize h a
         simp at h
         obtain rfl | h' := eq_or_ne a x
@@ -222,7 +222,7 @@ theorem lookup_cons_ne (l) {a} : ∀ s : Sigma β, a ≠ s.1 → lookup a (s :: 
 theorem lookup_is_some {a : α} : ∀ {l : List (Sigma β)}, (lookup a l).isSome ↔ a ∈ l.keys
   | [] => by simp
   | ⟨a', b⟩ :: l => by
-    by_cases h:a = a'
+    by_cases h : a = a'
     · subst a'
       simp
       
@@ -236,7 +236,7 @@ theorem lookup_eq_none {a : α} {l : List (Sigma β)} : lookup a l = none ↔ a 
 
 theorem of_mem_lookup {a : α} {b : β a} : ∀ {l : List (Sigma β)}, b ∈ lookup a l → Sigma.mk a b ∈ l
   | ⟨a', b'⟩ :: l, H => by
-    by_cases h:a = a'
+    by_cases h : a = a'
     · subst a'
       simp at H
       simp [H]
@@ -255,7 +255,7 @@ theorem mem_lookup {a} {b : β a} {l : List (Sigma β)} (nd : l.Nodupkeys) (h : 
 theorem map_lookup_eq_find (a : α) : ∀ l : List (Sigma β), (lookup a l).map (Sigma.mk a) = find (fun s => a = s.1) l
   | [] => rfl
   | ⟨a', b'⟩ :: l => by
-    by_cases h:a = a'
+    by_cases h : a = a'
     · subst a'
       simp
       
@@ -303,7 +303,7 @@ theorem lookup_all_cons_ne (l) {a} : ∀ s : Sigma β, a ≠ s.1 → lookupAll a
 theorem lookup_all_eq_nil {a : α} : ∀ {l : List (Sigma β)}, lookupAll a l = [] ↔ ∀ b : β a, Sigma.mk a b ∉ l
   | [] => by simp
   | ⟨a', b⟩ :: l => by
-    by_cases h:a = a'
+    by_cases h : a = a'
     · subst a'
       simp
       
@@ -314,7 +314,7 @@ theorem lookup_all_eq_nil {a : α} : ∀ {l : List (Sigma β)}, lookupAll a l = 
 theorem head_lookup_all (a : α) : ∀ l : List (Sigma β), head' (lookupAll a l) = lookup a l
   | [] => by simp
   | ⟨a', b⟩ :: l => by
-    by_cases h:a = a' <;>
+    by_cases h : a = a' <;>
       [· subst h
         simp
         ,
@@ -324,7 +324,7 @@ theorem head_lookup_all (a : α) : ∀ l : List (Sigma β), head' (lookupAll a l
 theorem mem_lookup_all {a : α} {b : β a} : ∀ {l : List (Sigma β)}, b ∈ lookupAll a l ↔ Sigma.mk a b ∈ l
   | [] => by simp
   | ⟨a', b'⟩ :: l => by
-    by_cases h:a = a' <;>
+    by_cases h : a = a' <;>
       [· subst h
         simp [*]
         ,
@@ -334,7 +334,7 @@ theorem mem_lookup_all {a : α} {b : β a} : ∀ {l : List (Sigma β)}, b ∈ lo
 theorem lookup_all_sublist (a : α) : ∀ l : List (Sigma β), (lookupAll a l).map (Sigma.mk a) <+ l
   | [] => by simp
   | ⟨a', b'⟩ :: l => by
-    by_cases h:a = a'
+    by_cases h : a = a'
     · subst h
       simp
       exact (lookup_all_sublist l).cons2 _ _ _
@@ -354,7 +354,7 @@ theorem lookup_all_eq_lookup (a : α) {l : List (Sigma β)} (h : l.Nodupkeys) : 
   have := lookup_all_length_le_one a h
   revert this
   rcases lookup_all a l with (_ | ⟨b, _ | ⟨c, l⟩⟩) <;> intro <;> try rfl
-  exact absurd this dec_trivial
+  exact absurd this (by decide)
 #align list.lookup_all_eq_lookup List.lookup_all_eq_lookup
 
 theorem lookup_all_nodup (a : α) {l : List (Sigma β)} (h : l.Nodupkeys) : (lookupAll a l).Nodup := by
@@ -370,12 +370,12 @@ theorem perm_lookup_all (a : α) {l₁ l₂ : List (Sigma β)} (nd₁ : l₁.Nod
 
 /-- Replaces the first value with key `a` by `b`. -/
 def kreplace (a : α) (b : β a) : List (Sigma β) → List (Sigma β) :=
-  lookmap $ fun s => if a = s.1 then some ⟨a, b⟩ else none
+  lookmap fun s => if a = s.1 then some ⟨a, b⟩ else none
 #align list.kreplace List.kreplace
 
 theorem kreplace_of_forall_not (a : α) (b : β a) {l : List (Sigma β)} (H : ∀ b : β a, Sigma.mk a b ∉ l) :
     kreplace a b l = l :=
-  lookmap_of_forall_not _ $ by
+  lookmap_of_forall_not _ <| by
     rintro ⟨a', b'⟩ h
     dsimp
     split_ifs
@@ -393,7 +393,7 @@ theorem kreplace_self {a : α} {b : β a} {l : List (Sigma β)} (nd : Nodupkeys 
     dsimp [Option.guard]
     split_ifs
     · subst a'
-      exact ⟨rfl, heq_of_eq $ nd.eq_of_mk_mem h h'⟩
+      exact ⟨rfl, heq_of_eq <| nd.eq_of_mk_mem h h'⟩
       
     · rfl
       
@@ -409,7 +409,7 @@ theorem kreplace_self {a : α} {b : β a} {l : List (Sigma β)} (nd : Nodupkeys 
 #align list.kreplace_self List.kreplace_self
 
 theorem keys_kreplace (a : α) (b : β a) : ∀ l : List (Sigma β), (kreplace a b l).keys = l.keys :=
-  lookmap_map_eq _ _ $ by
+  lookmap_map_eq _ _ <| by
     rintro ⟨a₁, b₂⟩ ⟨a₂, b₂⟩ <;> dsimp <;> split_ifs <;> simp (config := { contextual := true }) [h]
 #align list.keys_kreplace List.keys_kreplace
 
@@ -419,7 +419,7 @@ theorem kreplace_nodupkeys (a : α) (b : β a) {l : List (Sigma β)} : (kreplace
 
 theorem Perm.kreplace {a : α} {b : β a} {l₁ l₂ : List (Sigma β)} (nd : l₁.Nodupkeys) :
     l₁ ~ l₂ → kreplace a b l₁ ~ kreplace a b l₂ :=
-  perm_lookmap _ $ by
+  perm_lookmap _ <| by
     refine' nd.pairwise_ne.imp _
     intro x y h z h₁ w h₂
     split_ifs  at h₁ h₂ <;> cases h₁ <;> cases h₂
@@ -431,7 +431,7 @@ theorem Perm.kreplace {a : α} {b : β a} {l₁ l₂ : List (Sigma β)} (nd : l�
 
 /-- Remove the first pair with the key `a`. -/
 def kerase (a : α) : List (Sigma β) → List (Sigma β) :=
-  erasep $ fun s => a = s.1
+  erasep fun s => a = s.1
 #align list.kerase List.kerase
 
 @[simp]
@@ -469,15 +469,12 @@ theorem mem_keys_of_mem_keys_kerase {a₁ a₂} {l : List (Sigma β)} : a₁ ∈
   @kerase_keys_subset _ _ _ _ _ _
 #align list.mem_keys_of_mem_keys_kerase List.mem_keys_of_mem_keys_kerase
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (l₁ l₂) -/
 theorem exists_of_kerase {a : α} {l : List (Sigma β)} (h : a ∈ l.keys) :
-    ∃ (b : β a) (l₁ : List (Sigma β)) (l₂ : List (Sigma β)),
-      a ∉ l₁.keys ∧ l = l₁ ++ ⟨a, b⟩ :: l₂ ∧ kerase a l = l₁ ++ l₂ :=
-  by
+    ∃ (b : β a)(l₁ l₂ : List (Sigma β)), a ∉ l₁.keys ∧ l = l₁ ++ ⟨a, b⟩ :: l₂ ∧ kerase a l = l₁ ++ l₂ := by
   induction l
   case nil => cases h
   case cons hd tl ih =>
-  by_cases e:a = hd.1
+  by_cases e : a = hd.1
   · subst e
     exact ⟨hd.2, [], tl, by simp, by cases hd <;> rfl, by simp⟩
     
@@ -492,7 +489,7 @@ theorem exists_of_kerase {a : α} {l : List (Sigma β)} (h : a ∈ l.keys) :
 
 @[simp]
 theorem mem_keys_kerase_of_ne {a₁ a₂} {l : List (Sigma β)} (h : a₁ ≠ a₂) : a₁ ∈ (kerase a₂ l).keys ↔ a₁ ∈ l.keys :=
-  Iff.intro mem_keys_of_mem_keys_kerase $ fun p =>
+  (Iff.intro mem_keys_of_mem_keys_kerase) fun p =>
     if q : a₂ ∈ l.keys then
       match l, kerase a₂ l, exists_of_kerase q, p with
       | _, _, ⟨_, _, _, _, rfl, rfl⟩, p => by simpa [keys, h] using p
@@ -514,7 +511,7 @@ theorem kerase_kerase {a a'} {l : List (Sigma β)} : (kerase a' l).kerase a = (k
     · subst a'
       simp [kerase_cons_ne h, kerase_cons_eq rfl]
       
-    by_cases h':a = x.1
+    by_cases h' : a = x.1
     · subst a
       simp [kerase_cons_eq rfl, kerase_cons_ne (Ne.symm h)]
       
@@ -524,11 +521,11 @@ theorem kerase_kerase {a a'} {l : List (Sigma β)} : (kerase a' l).kerase a = (k
 #align list.kerase_kerase List.kerase_kerase
 
 theorem Nodupkeys.kerase (a : α) : Nodupkeys l → (kerase a l).Nodupkeys :=
-  nodupkeys.sublist $ kerase_sublist _ _
+  nodupkeys.sublist <| kerase_sublist _ _
 #align list.nodupkeys.kerase List.Nodupkeys.kerase
 
 theorem Perm.kerase {a : α} {l₁ l₂ : List (Sigma β)} (nd : l₁.Nodupkeys) : l₁ ~ l₂ → kerase a l₁ ~ kerase a l₂ :=
-  Perm.erasep _ $ (nodupkeys_iff_pairwise.1 nd).imp $ by rintro x y h rfl <;> exact h
+  Perm.erasep _ <| (nodupkeys_iff_pairwise.1 nd).imp <| by rintro x y h rfl <;> exact h
 #align list.perm.kerase List.Perm.kerase
 
 @[simp]
@@ -537,7 +534,7 @@ theorem not_mem_keys_kerase (a) {l : List (Sigma β)} (nd : l.Nodupkeys) : a ∉
   case nil => simp
   case cons hd tl ih =>
   simp at nd
-  by_cases h:a = hd.1
+  by_cases h : a = hd.1
   · subst h
     simp [nd.1]
     
@@ -556,7 +553,7 @@ theorem lookup_kerase_ne {a a'} {l : List (Sigma β)} (h : a ≠ a') : lookup a 
   case nil => rfl
   case cons hd tl ih =>
   cases' hd with ah bh
-  by_cases h₁:a = ah <;> by_cases h₂:a' = ah
+  by_cases h₁ : a = ah <;> by_cases h₂ : a' = ah
   · substs h₁ h₂
     cases Ne.irrefl h
     
@@ -622,7 +619,7 @@ theorem kinsert_def {a} {b : β a} {l : List (Sigma β)} : kinsert a b l = ⟨a,
 #align list.kinsert_def List.kinsert_def
 
 theorem mem_keys_kinsert {a a'} {b' : β a'} {l : List (Sigma β)} : a ∈ (kinsert a' b' l).keys ↔ a = a' ∨ a ∈ l.keys :=
-  by by_cases h:a = a' <;> simp [h]
+  by by_cases h : a = a' <;> simp [h]
 #align list.mem_keys_kinsert List.mem_keys_kinsert
 
 theorem kinsert_nodupkeys (a) (b : β a) {l : List (Sigma β)} (nd : l.Nodupkeys) : (kinsert a b l).Nodupkeys :=
@@ -759,13 +756,13 @@ theorem kunion_cons {s} {l₁ l₂ : List (Sigma β)} : kunion (s :: l₁) l₂ 
 theorem mem_keys_kunion {a} {l₁ l₂ : List (Sigma β)} : a ∈ (kunion l₁ l₂).keys ↔ a ∈ l₁.keys ∨ a ∈ l₂.keys := by
   induction l₁ generalizing l₂
   case nil => simp
-  case cons s l₁ ih => by_cases h:a = s.1 <;> [simp [h], simp [h, ih]]
+  case cons s l₁ ih => by_cases h : a = s.1 <;> [simp [h], simp [h, ih]]
 #align list.mem_keys_kunion List.mem_keys_kunion
 
 @[simp]
 theorem kunion_kerase {a} : ∀ {l₁ l₂ : List (Sigma β)}, kunion (kerase a l₁) (kerase a l₂) = kerase a (kunion l₁ l₂)
   | [], _ => rfl
-  | s :: _, l => by by_cases h:a = s.1 <;> simp [h, kerase_comm a s.1 l, kunion_kerase]
+  | s :: _, l => by by_cases h : a = s.1 <;> simp [h, kerase_comm a s.1 l, kunion_kerase]
 #align list.kunion_kerase List.kunion_kerase
 
 theorem Nodupkeys.kunion (nd₁ : l₁.Nodupkeys) (nd₂ : l₂.Nodupkeys) : (kunion l₁ l₂).Nodupkeys := by
@@ -786,7 +783,7 @@ theorem Perm.kunion_right {l₁ l₂ : List (Sigma β)} (p : l₁ ~ l₂) (l) : 
 
 theorem Perm.kunion_left : ∀ (l) {l₁ l₂ : List (Sigma β)}, l₁.Nodupkeys → l₁ ~ l₂ → kunion l l₁ ~ kunion l l₂
   | [], _, _, _, p => p
-  | s :: l, l₁, l₂, nd₁, p => by simp [((p.kerase nd₁).kunion_left l $ nd₁.kerase s.1).cons s]
+  | s :: l, l₁, l₂, nd₁, p => by simp [((p.kerase nd₁).kunion_left l <| nd₁.kerase s.1).cons s]
 #align list.perm.kunion_left List.Perm.kunion_left
 
 theorem Perm.kunion {l₁ l₂ l₃ l₄ : List (Sigma β)} (nd₃ : l₃.Nodupkeys) (p₁₂ : l₁ ~ l₂) (p₃₄ : l₃ ~ l₄) :
@@ -801,7 +798,7 @@ theorem lookup_kunion_left {a} {l₁ l₂ : List (Sigma β)} (h : a ∈ l₁.key
     simp
     
   · rw [kunion_cons]
-    by_cases h':a = a'
+    by_cases h' : a = a'
     · subst h'
       simp
       
@@ -826,7 +823,7 @@ theorem mem_lookup_kunion {a} {b : β a} {l₁ l₂ : List (Sigma β)} :
   case nil => simp
   case cons s _ ih =>
   cases' s with a'
-  by_cases h₁:a = a'
+  by_cases h₁ : a = a'
   · subst h₁
     simp
     
@@ -840,7 +837,7 @@ theorem mem_lookup_kunion_middle {a} {b : β a} {l₁ l₂ l₃ : List (Sigma β
     (h₂ : a ∉ keys l₂) : b ∈ lookup a (kunion (kunion l₁ l₂) l₃) :=
   match mem_lookup_kunion.mp h₁ with
   | Or.inl h => mem_lookup_kunion.mpr (Or.inl (mem_lookup_kunion.mpr (Or.inl h)))
-  | Or.inr h => mem_lookup_kunion.mpr $ Or.inr ⟨mt mem_keys_kunion.mp (not_or.mpr ⟨h.1, h₂⟩), h.2⟩
+  | Or.inr h => mem_lookup_kunion.mpr <| Or.inr ⟨mt mem_keys_kunion.mp (not_or.mpr ⟨h.1, h₂⟩), h.2⟩
 #align list.mem_lookup_kunion_middle List.mem_lookup_kunion_middle
 
 end List

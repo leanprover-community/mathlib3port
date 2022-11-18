@@ -48,7 +48,7 @@ instance (x : X) : PartialOrder (OpenNhds x) where
   le U V := U.1 ≤ V.1
   le_refl _ := le_rfl
   le_trans _ _ _ := le_trans
-  le_antisymm _ _ i j := FullSubcategory.ext _ _ $ le_antisymm i j
+  le_antisymm _ _ i j := FullSubcategory.ext _ _ <| le_antisymm i j
 
 instance (x : X) : Lattice (OpenNhds x) :=
   { OpenNhds.partialOrder x with inf := fun U V => ⟨U.1 ⊓ V.1, ⟨U.2, V.2⟩⟩,
@@ -171,8 +171,8 @@ def functorNhds (h : IsOpenMap f) (x : X) : OpenNhds x ⥤ OpenNhds (f x) where
 -/
 def adjunctionNhds (h : IsOpenMap f) (x : X) : IsOpenMap.functorNhds h x ⊣ OpenNhds.map f x :=
   Adjunction.mkOfUnitCounit
-    { Unit := { app := fun U => hom_of_le $ fun x hxU => ⟨x, hxU, rfl⟩ },
-      counit := { app := fun V => hom_of_le $ fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }
+    { Unit := { app := fun U => hom_of_le fun x hxU => ⟨x, hxU, rfl⟩ },
+      counit := { app := fun V => hom_of_le fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }
 #align is_open_map.adjunction_nhds IsOpenMap.adjunctionNhds
 
 end IsOpenMap

@@ -115,7 +115,7 @@ theorem to_list_prod (xs : List (FreeMonoid α)) : toList xs.Prod = (xs.map toLi
 
 @[simp, to_additive]
 theorem of_list_join (xs : List (List α)) : ofList xs.join = (xs.map ofList).Prod :=
-  toList.Injective $ by simp
+  toList.Injective <| by simp
 #align free_monoid.of_list_join FreeMonoid.of_list_join
 
 /-- Embeds an element of `α` into `free_monoid α` as a singleton list. -/
@@ -192,8 +192,8 @@ theorem cases_on_of_mul {C : FreeMonoid α → Sort _} (x : α) (xs : FreeMonoid
 
 @[ext.1, to_additive]
 theorem hom_eq ⦃f g : FreeMonoid α →* M⦄ (h : ∀ x, f (of x) = g (of x)) : f = g :=
-  MonoidHom.ext $ fun l =>
-    recOn l (f.map_one.trans g.map_one.symm) $ fun x xs hxs => by simp only [h, hxs, MonoidHom.map_mul]
+  MonoidHom.ext fun l =>
+    (recOn l (f.map_one.trans g.map_one.symm)) fun x xs hxs => by simp only [h, hxs, MonoidHom.map_mul]
 #align free_monoid.hom_eq FreeMonoid.hom_eq
 
 /-- Equivalence between maps `α → M` and monoid homomorphisms `free_monoid α →* M`. -/
@@ -202,8 +202,8 @@ def lift : (α → M) ≃ (FreeMonoid α →* M) where
   toFun f :=
     ⟨fun l => (l.toList.map f).Prod, rfl, fun l₁ l₂ => by simp only [to_list_mul, List.map_append, List.prod_append]⟩
   invFun f x := f (of x)
-  left_inv f := funext $ fun x => one_mul (f x)
-  right_inv f := hom_eq $ fun x => one_mul (f (of x))
+  left_inv f := funext fun x => one_mul (f x)
+  right_inv f := hom_eq fun x => one_mul (f (of x))
 #align free_monoid.lift FreeMonoid.lift
 
 @[simp, to_additive]
@@ -277,7 +277,7 @@ each `of x` to `of (f x)`. -/
 @[to_additive
       "The unique additive monoid homomorphism `free_add_monoid α →+ free_add_monoid β`\nthat sends each `of x` to `of (f x)`."]
 def map (f : α → β) : FreeMonoid α →* FreeMonoid β where
-  toFun l := of_list $ l.toList.map f
+  toFun l := of_list <| l.toList.map f
   map_one' := rfl
   map_mul' l₁ l₂ := List.map_append _ _ _
 #align free_monoid.map FreeMonoid.map
@@ -299,17 +299,17 @@ theorem of_list_map (f : α → β) (xs : List α) : ofList (xs.map f) = map f (
 
 @[to_additive]
 theorem lift_of_comp_eq_map (f : α → β) : (lift fun x => of (f x)) = map f :=
-  hom_eq $ fun x => rfl
+  hom_eq fun x => rfl
 #align free_monoid.lift_of_comp_eq_map FreeMonoid.lift_of_comp_eq_map
 
 @[to_additive]
 theorem map_comp (g : β → γ) (f : α → β) : map (g ∘ f) = (map g).comp (map f) :=
-  hom_eq $ fun x => rfl
+  hom_eq fun x => rfl
 #align free_monoid.map_comp FreeMonoid.map_comp
 
 @[simp, to_additive]
 theorem map_id : map (@id α) = MonoidHom.id (FreeMonoid α) :=
-  hom_eq $ fun x => rfl
+  hom_eq fun x => rfl
 #align free_monoid.map_id FreeMonoid.map_id
 
 end FreeMonoid

@@ -7,7 +7,6 @@ import Mathbin.Algebra.Category.ModuleCat.EpiMono
 import Mathbin.Algebra.Category.ModuleCat.Kernels
 import Mathbin.CategoryTheory.Subobject.WellPowered
 import Mathbin.CategoryTheory.Subobject.Limits
-import Mathbin.CategoryTheory.Limits.ConcreteCategory
 
 /-!
 # Subobjects in the category of `R`-modules

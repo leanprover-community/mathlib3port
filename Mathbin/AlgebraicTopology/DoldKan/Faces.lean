@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 -/
 import Mathbin.AlgebraicTopology.DoldKan.Homotopies
-import Mathbin.Data.Nat.Parity
 import Mathbin.Tactic.RingExp
 
 /-!
@@ -164,7 +163,7 @@ theorem comp_Hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : Higher
     φ ≫ (hσ q).f (n + 1) = 0 := by
   simp only [Hσ, Homotopy.null_homotopic_map'_f (c_mk (n + 2) (n + 1) rfl) (c_mk (n + 1) n rfl)]
   rw [hσ'_eq_zero hqn (c_mk (n + 1) n rfl), comp_zero, zero_add]
-  by_cases hqn':n + 1 < q
+  by_cases hqn' : n + 1 < q
   · rw [hσ'_eq_zero hqn' (c_mk (n + 2) (n + 1) rfl), zero_comp, comp_zero]
     
   · simp only [hσ'_eq (show n + 1 = 0 + q by linarith) (c_mk (n + 2) (n + 1) rfl), pow_zero, Fin.mk_zero, one_zsmul,
@@ -201,7 +200,7 @@ theorem induction {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVa
   dsimp
   simp only [comp_add, add_comp, comp_id]
   -- when n < q, the result follows immediately from the assumption
-  by_cases hqn:n < q
+  by_cases hqn : n < q
   · rw [v.comp_Hσ_eq_zero hqn, zero_comp, add_zero, v j (by linarith)]
     
   -- we now assume that n≥q, and write n=a+q
@@ -213,7 +212,7 @@ theorem induction {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVa
     
   -- in the other case, we need to write n as m+1
   -- then, we first consider the particular case j = a
-  by_cases hj₂:a = (j : ℕ)
+  by_cases hj₂ : a = (j : ℕ)
   · simp only [hj₂, Fin.eta, δ_comp_σ_succ, comp_id]
     congr
     ext

@@ -92,8 +92,7 @@ theorem bihimp_iff_iff {p q : Prop} : p ⇔ q ↔ (p ↔ q) :=
 #align bihimp_iff_iff bihimp_iff_iff
 
 @[simp]
-theorem Bool.symm_diff_eq_bxor : ∀ p q : Bool, p ∆ q = xor p q :=
-  dec_trivial
+theorem Bool.symm_diff_eq_bxor : ∀ p q : Bool, p ∆ q = xor p q := by decide
 #align bool.symm_diff_eq_bxor Bool.symm_diff_eq_bxor
 
 section GeneralizedCoheytingAlgebra
@@ -141,7 +140,7 @@ theorem symm_diff_of_ge {a b : α} (h : b ≤ a) : a ∆ b = a \ b := by rw [sym
 #align symm_diff_of_ge symm_diff_of_ge
 
 theorem symm_diff_le {a b c : α} (ha : a ≤ b ⊔ c) (hb : b ≤ a ⊔ c) : a ∆ b ≤ c :=
-  sup_le (sdiff_le_iff.2 ha) $ sdiff_le_iff.2 hb
+  sup_le (sdiff_le_iff.2 ha) <| sdiff_le_iff.2 hb
 #align symm_diff_le symm_diff_le
 
 theorem symm_diff_le_iff {a b c : α} : a ∆ b ≤ c ↔ a ≤ b ⊔ c ∧ b ≤ a ⊔ c := by
@@ -175,7 +174,7 @@ theorem symm_diff_sdiff_eq_sup : a ∆ (b \ a) = a ⊔ b := by
   rw [symmDiff, sdiff_idem]
   exact
     le_antisymm (sup_le_sup sdiff_le sdiff_le)
-      (sup_le le_sdiff_sup $ le_sdiff_sup.trans $ sup_le le_sup_right le_sdiff_sup)
+      (sup_le le_sdiff_sup <| le_sdiff_sup.trans <| sup_le le_sup_right le_sdiff_sup)
 #align symm_diff_sdiff_eq_sup symm_diff_sdiff_eq_sup
 
 @[simp]
@@ -209,7 +208,7 @@ theorem inf_symm_diff_symm_diff : (a ⊓ b) ∆ (a ∆ b) = a ⊔ b := by rw [sy
 #align inf_symm_diff_symm_diff inf_symm_diff_symm_diff
 
 theorem symm_diff_triangle : a ∆ c ≤ a ∆ b ⊔ b ∆ c := by
-  refine' (sup_le_sup (sdiff_triangle a b c) $ sdiff_triangle _ b _).trans_eq _
+  refine' (sup_le_sup (sdiff_triangle a b c) <| sdiff_triangle _ b _).trans_eq _
   rw [@sup_comm _ _ (c \ b), sup_sup_sup_comm, symmDiff, symmDiff]
 #align symm_diff_triangle symm_diff_triangle
 
@@ -260,7 +259,7 @@ theorem bihimp_of_ge {a b : α} (h : b ≤ a) : a ⇔ b = a ⇨ b := by rw [bihi
 #align bihimp_of_ge bihimp_of_ge
 
 theorem le_bihimp {a b c : α} (hb : a ⊓ b ≤ c) (hc : a ⊓ c ≤ b) : a ≤ b ⇔ c :=
-  le_inf (le_himp_iff.2 hc) $ le_himp_iff.2 hb
+  le_inf (le_himp_iff.2 hc) <| le_himp_iff.2 hb
 #align le_bihimp le_bihimp
 
 theorem le_bihimp_iff {a b c : α} : a ≤ b ⇔ c ↔ a ⊓ b ≤ c ∧ a ⊓ c ≤ b := by
@@ -434,7 +433,7 @@ theorem symm_diff_eq_sup : a ∆ b = a ⊔ b ↔ Disjoint a b := by
 theorem le_symm_diff_iff_left : a ≤ a ∆ b ↔ Disjoint a b := by
   refine' ⟨fun h => _, fun h => h.symm_diff_eq_sup.symm ▸ le_sup_left⟩
   rw [symm_diff_eq_sup_sdiff_inf] at h
-  exact disjoint_iff_inf_le.mpr (le_sdiff_iff.1 $ inf_le_of_left_le h).le
+  exact disjoint_iff_inf_le.mpr (le_sdiff_iff.1 <| inf_le_of_left_le h).le
 #align le_symm_diff_iff_left le_symm_diff_iff_left
 
 @[simp]
@@ -722,7 +721,7 @@ theorem compl_bihimp : (a ⇔ b)ᶜ = a ∆ b :=
 
 @[simp]
 theorem compl_symm_diff_compl : aᶜ ∆ bᶜ = a ∆ b :=
-  sup_comm.trans $ by simp_rw [compl_sdiff_compl, sdiff_eq, symm_diff_eq]
+  sup_comm.trans <| by simp_rw [compl_sdiff_compl, sdiff_eq, symm_diff_eq]
 #align compl_symm_diff_compl compl_symm_diff_compl
 
 @[simp]

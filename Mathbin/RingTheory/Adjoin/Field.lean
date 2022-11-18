@@ -31,15 +31,15 @@ variable (F : Type _) [Field F]
 /-- If `p` is the minimal polynomial of `a` over `F` then `F[a] ≃ₐ[F] F[x]/(p)` -/
 def AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly {R : Type _} [CommRing R] [Algebra F R] (x : R) :
     Algebra.adjoin F ({x} : Set R) ≃ₐ[F] AdjoinRoot (minpoly F x) :=
-  AlgEquiv.symm $
+  AlgEquiv.symm <|
     AlgEquiv.ofBijective
-      (AlgHom.codRestrict (AdjoinRoot.liftHom _ x $ minpoly.aeval F x) _ fun p =>
-        AdjoinRoot.induction_on _ p $ fun p =>
+      (AlgHom.codRestrict (AdjoinRoot.liftHom _ x <| minpoly.aeval F x) _ fun p =>
+        (AdjoinRoot.induction_on _ p) fun p =>
           (Algebra.adjoin_singleton_eq_range_aeval F x).symm ▸ (Polynomial.aeval _).mem_range.mpr ⟨p, rfl⟩)
-      ⟨(AlgHom.injective_cod_restrict _ _ _).2 $
-          (injective_iff_map_eq_zero _).2 $ fun p =>
-            AdjoinRoot.induction_on _ p $ fun p hp =>
-              Ideal.Quotient.eq_zero_iff_mem.2 $ Ideal.mem_span_singleton.2 $ minpoly.dvd F x hp,
+      ⟨(AlgHom.injective_cod_restrict _ _ _).2 <|
+          (injective_iff_map_eq_zero _).2 fun p =>
+            (AdjoinRoot.induction_on _ p) fun p hp =>
+              Ideal.Quotient.eq_zero_iff_mem.2 <| Ideal.mem_span_singleton.2 <| minpoly.dvd F x hp,
         fun y =>
         let ⟨p, hp⟩ := (SetLike.ext_iff.1 (Algebra.adjoin_singleton_eq_range_aeval F x) (y : R)).1 y.2
         ⟨AdjoinRoot.mk _ p, Subtype.eq hp⟩⟩
@@ -76,7 +76,7 @@ theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F
   have H6 : (minpoly (Algebra.adjoin F (↑s : Set K)) a).Splits (algebraMap (Algebra.adjoin F (↑s : Set K)) L) := by
     refine'
       Polynomial.splitsOfSplitsOfDvd _
-        (Polynomial.map_ne_zero $ minpoly.ne_zero H1 : Polynomial.map (algebraMap _ _) _ ≠ 0)
+        (Polynomial.map_ne_zero <| minpoly.ne_zero H1 : Polynomial.map (algebraMap _ _) _ ≠ 0)
         ((Polynomial.splits_map_iff _ _).2 _) (minpoly.dvd _ _ _)
     · rw [← IsScalarTower.algebra_map_eq]
       exact H2

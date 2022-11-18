@@ -32,7 +32,7 @@ variable {r : α → α → Prop} [IsStrictOrder α r]
 
 /-- If `f` is a strictly `r`-increasing sequence, then this returns `f` as an order embedding. -/
 def natLt (f : ℕ → α) (H : ∀ n : ℕ, r (f n) (f (n + 1))) : ((· < ·) : ℕ → ℕ → Prop) ↪r r :=
-  ofMonotone f $ Nat.rel_of_forall_rel_succ_of_lt r H
+  ofMonotone f <| Nat.rel_of_forall_rel_succ_of_lt r H
 #align rel_embedding.nat_lt RelEmbedding.natLt
 
 @[simp]
@@ -150,8 +150,8 @@ theorem exists_subseq_of_forall_mem_union {s t : Set α} (e : ℕ → α) (he : 
     simp only [Set.infinite_coe_iff, ← Set.infinite_union, ← Set.preimage_union,
       Set.eq_univ_of_forall fun n => Set.mem_preimage.2 (he n), Set.infinite_univ]
   cases this
-  exacts[⟨Nat.orderEmbeddingOfSet (e ⁻¹' s), Or.inl $ fun n => (Nat.Subtype.ofNat (e ⁻¹' s) _).2⟩,
-    ⟨Nat.orderEmbeddingOfSet (e ⁻¹' t), Or.inr $ fun n => (Nat.Subtype.ofNat (e ⁻¹' t) _).2⟩]
+  exacts[⟨Nat.orderEmbeddingOfSet (e ⁻¹' s), Or.inl fun n => (Nat.Subtype.ofNat (e ⁻¹' s) _).2⟩,
+    ⟨Nat.orderEmbeddingOfSet (e ⁻¹' t), Or.inr fun n => (Nat.Subtype.ofNat (e ⁻¹' t) _).2⟩]
 #align nat.exists_subseq_of_forall_mem_union Nat.exists_subseq_of_forall_mem_union
 
 end Nat
@@ -159,7 +159,7 @@ end Nat
 theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f : ℕ → α) :
     ∃ g : ℕ ↪o ℕ, (∀ n : ℕ, r (f (g n)) (f (g (n + 1)))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) := by classical
   let bad : Set ℕ := { m | ∀ n, m < n → ¬r (f m) (f n) }
-  by_cases hbad:Infinite bad
+  by_cases hbad : Infinite bad
   · haveI := hbad
     refine' ⟨Nat.orderEmbeddingOfSet bad, Or.intro_right _ fun m n mn => _⟩
     have h := Set.mem_range_self m
@@ -168,7 +168,7 @@ theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f :
     
   · rw [Set.infinite_coe_iff, Set.Infinite, not_not] at hbad
     obtain ⟨m, hm⟩ : ∃ m, ∀ n, m ≤ n → ¬n ∈ bad := by
-      by_cases he:hbad.to_finset.nonempty
+      by_cases he : hbad.to_finset.nonempty
       · refine'
           ⟨(hbad.to_finset.max' he).succ, fun n hn nbad =>
             Nat.not_succ_le_self _ (hn.trans (hbad.to_finset.le_max' n (hbad.mem_to_finset.2 nbad)))⟩
@@ -227,7 +227,7 @@ theorem WellFounded.monotone_chain_condition' [Preorder α] :
 /-- The "monotone chain condition" below is sometimes a convenient form of well foundedness. -/
 theorem WellFounded.monotone_chain_condition [PartialOrder α] :
     WellFounded ((· > ·) : α → α → Prop) ↔ ∀ a : ℕ →o α, ∃ n, ∀ m, n ≤ m → a n = a m :=
-  WellFounded.monotone_chain_condition'.trans $ by
+  WellFounded.monotone_chain_condition'.trans <| by
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `congrm #[[expr ∀ a, «expr∃ , »((n), ∀ (m) (h : «expr ≤ »(n, m)), (_ : exprProp()))]]"
     rw [lt_iff_le_and_ne]
@@ -253,7 +253,7 @@ theorem WellFounded.supr_eq_monotonic_sequence_limit [CompleteLattice α] (h : W
   suffices (⨆ m : ℕ, a m) ≤ monotonicSequenceLimit a by exact le_antisymm this (le_supr a _)
   apply supr_le
   intro m
-  by_cases hm:m ≤ monotonicSequenceLimitIndex a
+  by_cases hm : m ≤ monotonicSequenceLimitIndex a
   · exact a.monotone hm
     
   · replace hm := le_of_not_le hm

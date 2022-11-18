@@ -57,7 +57,7 @@ theorem nat_degree_sum_le (f : ι → S[X]) : natDegree (∑ i in s, f i) ≤ s.
 #align polynomial.nat_degree_sum_le Polynomial.nat_degree_sum_le
 
 theorem degree_list_sum_le (l : List S[X]) : degree l.Sum ≤ (l.map natDegree).maximum := by
-  by_cases h:l.sum = 0
+  by_cases h : l.sum = 0
   · simp [h]
     
   · rw [degree_eq_nat_degree h]

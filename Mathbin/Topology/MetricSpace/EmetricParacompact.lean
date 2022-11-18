@@ -30,7 +30,6 @@ open Set
 
 namespace Emetric
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (n i) -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr ennreal.add_lt_add, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 -- See note [lower instance priority]
 /-- A `pseudo_emetric_space` is always a paracompact space. Formalization is based
@@ -78,7 +77,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by c
   have memD :
     ∀ {n i y},
       y ∈ D n i ↔
-        ∃ (x) (hi : ind x = i) (hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i) (hlt : ∀ m < n, ∀ (j : ι), x ∉ D m j),
+        ∃ (x : _)(hi : ind x = i)(hb : ball x (3 * 2⁻¹ ^ n) ⊆ s i)(hlt : ∀ m < n, ∀ (j : ι), x ∉ D m j),
           edist y x < 2⁻¹ ^ n :=
     by
     intro n i y
@@ -86,11 +85,11 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by c
     simp only [mem_Union, mem_ball]
   -- The sets `D n i` cover the whole space. Indeed, for each `x` we can choose `n` such that
   -- `ball x (3 / 2 ^ n) ⊆ s (ind x)`, then either `x ∈ D n i`, or `x ∈ D m i` for some `m < n`.
-  have Dcov : ∀ x, ∃ (n) (i), x ∈ D n i := by
+  have Dcov : ∀ x, ∃ n i, x ∈ D n i := by
     intro x
     obtain ⟨n, hn⟩ : ∃ n : ℕ, ball x (3 * 2⁻¹ ^ n) ⊆ s (ind x) := by
       -- This proof takes 5 lines because we can't import `specific_limits` here
-      rcases is_open_iff.1 (ho $ ind x) x (mem_ind x) with ⟨ε, ε0, hε⟩
+      rcases is_open_iff.1 (ho <| ind x) x (mem_ind x) with ⟨ε, ε0, hε⟩
       have : 0 < ε / 3 := Ennreal.div_pos_iff.2 ⟨ε0.lt.ne', Ennreal.coe_ne_top⟩
       rcases Ennreal.exists_inv_two_pow_lt this.ne' with ⟨n, hn⟩
       refine' ⟨n, subset.trans (ball_subset_ball _) hε⟩
@@ -146,7 +145,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by c
       calc
         edist z x ≤ edist y z + edist y x := edist_triangle_left _ _ _
         _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) := Ennreal.add_lt_add hz hyx
-        _ ≤ 2⁻¹ ^ (k + 1) + 2⁻¹ ^ (k + 1) := add_le_add (hpow_le $ by linarith) (hpow_le $ by linarith)
+        _ ≤ 2⁻¹ ^ (k + 1) + 2⁻¹ ^ (k + 1) := add_le_add (hpow_le <| by linarith) (hpow_le <| by linarith)
         _ = 2⁻¹ ^ k := by rw [← two_mul, h2pow]
         
     -- For each `m ≤ n + k` there is at most one `j` such that `D m j ∩ B` is nonempty.
@@ -167,7 +166,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by c
             "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[[\"[\", expr ennreal.add_lt_add, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
         _ = 2 * (2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1)) := by simp only [two_mul, add_comm]
         _ ≤ 2 * (2⁻¹ ^ m + 2⁻¹ ^ (m + 1)) :=
-          Ennreal.mul_le_mul le_rfl $ add_le_add le_rfl $ hpow_le (add_le_add hm le_rfl)
+          Ennreal.mul_le_mul le_rfl <| add_le_add le_rfl <| hpow_le (add_le_add hm le_rfl)
         _ = 3 * 2⁻¹ ^ m := by rw [mul_add, h2pow, bit1, add_mul, one_mul]
         
     -- Finally, we glue `Hgt` and `Hle`

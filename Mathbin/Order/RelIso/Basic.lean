@@ -57,8 +57,8 @@ satisfy `r a b → s (f a) (f b)`.
 The relations `r` and `s` are `out_param`s since figuring them out from a goal is a higher-order
 matching problem that Lean usually can't do unaided.
 -/
-class RelHomClass (F : Type _) {α β : outParam $ Type _} (r : outParam $ α → α → Prop)
-  (s : outParam $ β → β → Prop) extends FunLike F α fun _ => β where
+class RelHomClass (F : Type _) {α β : outParam <| Type _} (r : outParam <| α → α → Prop)
+  (s : outParam <| β → β → Prop) extends FunLike F α fun _ => β where
   map_rel : ∀ (f : F) {a b}, r a b → s (f a) (f b)
 #align rel_hom_class RelHomClass
 
@@ -341,7 +341,7 @@ protected theorem is_irrefl (f : r ↪r s) [IsIrrefl β s] : IsIrrefl α r :=
 #align rel_embedding.is_irrefl RelEmbedding.is_irrefl
 
 protected theorem is_refl (f : r ↪r s) [IsRefl β s] : IsRefl α r :=
-  ⟨fun a => f.map_rel_iff.1 $ refl _⟩
+  ⟨fun a => f.map_rel_iff.1 <| refl _⟩
 #align rel_embedding.is_refl RelEmbedding.is_refl
 
 protected theorem is_symm (f : r ↪r s) [IsSymm β s] : IsSymm α r :=
@@ -660,7 +660,7 @@ theorem default_def (r : α → α → Prop) : default = RelIso.refl r :=
 
 /-- A relation isomorphism between equal relations on equal types. -/
 @[simps toEquiv apply]
-protected def cast {α β : Type u} {r : α → α → Prop} {s : β → β → Prop} (h₁ : α = β) (h₂ : r == s) : r ≃r s :=
+protected def cast {α β : Type u} {r : α → α → Prop} {s : β → β → Prop} (h₁ : α = β) (h₂ : HEq r s) : r ≃r s :=
   ⟨Equiv.cast h₁, fun a b => by
     subst h₁
     rw [eq_of_heq h₂]
@@ -668,22 +668,22 @@ protected def cast {α β : Type u} {r : α → α → Prop} {s : β → β → 
 #align rel_iso.cast RelIso.cast
 
 @[simp]
-protected theorem cast_symm {α β : Type u} {r : α → α → Prop} {s : β → β → Prop} (h₁ : α = β) (h₂ : r == s) :
+protected theorem cast_symm {α β : Type u} {r : α → α → Prop} {s : β → β → Prop} (h₁ : α = β) (h₂ : HEq r s) :
     (RelIso.cast h₁ h₂).symm = RelIso.cast h₁.symm h₂.symm :=
   rfl
 #align rel_iso.cast_symm RelIso.cast_symm
 
 @[simp]
-protected theorem cast_refl {α : Type u} {r : α → α → Prop} (h₁ : α = α := rfl) (h₂ : r == r := HEq.rfl) :
+protected theorem cast_refl {α : Type u} {r : α → α → Prop} (h₁ : α = α := rfl) (h₂ : HEq r r := HEq.rfl) :
     RelIso.cast h₁ h₂ = RelIso.refl r :=
   rfl
 #align rel_iso.cast_refl RelIso.cast_refl
 
 @[simp]
 protected theorem cast_trans {α β γ : Type u} {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop} (h₁ : α = β)
-    (h₁' : β = γ) (h₂ : r == s) (h₂' : s == t) :
+    (h₁' : β = γ) (h₂ : HEq r s) (h₂' : HEq s t) :
     (RelIso.cast h₁ h₂).trans (RelIso.cast h₁' h₂') = RelIso.cast (h₁.trans h₁') (h₂.trans h₂') :=
-  ext $ fun x => by
+  ext fun x => by
     subst h₁
     rfl
 #align rel_iso.cast_trans RelIso.cast_trans

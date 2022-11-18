@@ -97,12 +97,12 @@ theorem nth_cons_succ (a : α) (s : Seq α) (n : ℕ) : (cons a s).nth (n + 1) =
 
 @[ext.1]
 protected theorem ext {s t : Seq α} (h : ∀ n : ℕ, s.nth n = t.nth n) : s = t :=
-  Subtype.eq $ funext h
+  Subtype.eq <| funext h
 #align seq.ext Seq.ext
 
 theorem cons_injective2 : Function.Injective2 (cons : α → Seq α → Seq α) := fun x y s t h =>
   ⟨by rw [← Option.some_inj, ← nth_cons_zero, h, nth_cons_zero],
-    Seq.ext $ fun n => by simp_rw [← nth_cons_succ x s n, h, nth_cons_succ]⟩
+    Seq.ext fun n => by simp_rw [← nth_cons_succ x s n, h, nth_cons_succ]⟩
 #align seq.cons_injective2 Seq.cons_injective2
 
 theorem cons_left_injective (s : Seq α) : Function.Injective fun x => cons x s :=
@@ -120,7 +120,7 @@ def TerminatedAt (s : Seq α) (n : ℕ) : Prop :=
 
 /-- It is decidable whether a sequence terminates at a given position. -/
 instance terminatedAtDecidable (s : Seq α) (n : ℕ) : Decidable (s.TerminatedAt n) :=
-  decidable_of_iff' (s.nth n).isNone $ by unfold terminated_at <;> cases s.nth n <;> simp
+  decidable_of_iff' (s.nth n).isNone <| by unfold terminated_at <;> cases s.nth n <;> simp
 #align seq.terminated_at_decidable Seq.terminatedAtDecidable
 
 /-- A sequence terminates if there is some position `n` at which it has terminated. -/
@@ -228,9 +228,9 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
        (Term.typeSpec
         ":"
         (Term.arrow
-         (Init.Core.«term_=_» (Term.app `destruct [`s]) " = " (Term.app `some [(Term.tuple "(" [`a "," [`s']] ")")]))
+         («term_=_» (Term.app `destruct [`s]) "=" (Term.app `some [(Term.tuple "(" [`a "," [`s']] ")")]))
          "→"
-         (Init.Core.«term_=_» `s " = " (Term.app `cons [`a `s'])))))
+         («term_=_» `s "=" (Term.app `cons [`a `s'])))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -646,11 +646,10 @@ def IsBisimulation :=
   ∀ ⦃s₁ s₂⦄, s₁ ~ s₂ → BisimO R (destruct s₁) (destruct s₂)
 #align seq.is_bisimulation Seq.IsBisimulation
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (s s') -/
 -- If two streams are bisimilar, then they are equal
 theorem eq_of_bisim (bisim : IsBisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : s₁ = s₂ := by
   apply Subtype.eq
-  apply Stream.eq_of_bisim fun x y => ∃ (s : Seq α) (s' : Seq α), s.1 = x ∧ s'.1 = y ∧ R s s'
+  apply Stream.eq_of_bisim fun x y => ∃ s s' : Seq α, s.1 = x ∧ s'.1 = y ∧ R s s'
   dsimp [Stream.IsBisimulation]
   intro t₁ t₂ e
   exact
@@ -941,13 +940,13 @@ def toList (s : Seq α) (h : s.Terminates) : List α :=
 #align seq.to_list Seq.toList
 
 /-- Convert a sequence which is known not to terminate into a stream -/
-def toStream (s : Seq α) (h : ¬s.Terminates) : Stream α := fun n => Option.get $ not_terminates_iff.1 h n
+def toStream (s : Seq α) (h : ¬s.Terminates) : Stream α := fun n => Option.get <| not_terminates_iff.1 h n
 #align seq.to_stream Seq.toStream
 
 /-- Convert a sequence into either a list or a stream depending on whether
   it is finite or infinite. (Without decidability of the infiniteness predicate,
   this is not constructively possible.) -/
-def toListOrStream (s : Seq α) [Decidable s.Terminates] : List α ⊕ Stream α :=
+def toListOrStream (s : Seq α) [Decidable s.Terminates] : Sum (List α) (Stream α) :=
   if h : s.Terminates then Sum.inl (toList s h) else Sum.inr (toStream s h)
 #align seq.to_list_or_stream Seq.toListOrStream
 
@@ -970,7 +969,7 @@ theorem nil_append (s : Seq α) : append nil s = s := by
 
 @[simp]
 theorem cons_append (a : α) (s t) : append (cons a s) t = cons a (append s t) :=
-  destruct_eq_cons $ by
+  destruct_eq_cons <| by
     dsimp [append]
     rw [corec_eq]
     dsimp [append]
@@ -993,10 +992,9 @@ theorem append_nil (s : Seq α) : append s nil = s := by
     
 #align seq.append_nil Seq.append_nil
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (s t u) -/
 @[simp]
 theorem append_assoc (s t u : Seq α) : append (append s t) u = append s (append t u) := by
-  apply eq_of_bisim fun s1 s2 => ∃ (s) (t) (u), s1 = append (append s t) u ∧ s2 = append s (append t u)
+  apply eq_of_bisim fun s1 s2 => ∃ s t u, s1 = append (append s t) u ∧ s2 = append s (append t u)
   · intro s1 s2 h
     exact
       match s1, s2, h with
@@ -1050,11 +1048,9 @@ theorem map_comp (f : α → β) (g : β → γ) : ∀ s : Seq α, map (g ∘ f)
     ext ⟨⟩ <;> rfl
 #align seq.map_comp Seq.map_comp
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (s t) -/
 @[simp]
 theorem map_append (f : α → β) (s t) : map f (append s t) = append (map f s) (map f t) := by
-  apply
-    eq_of_bisim (fun s1 s2 => ∃ (s) (t), s1 = map f (append s t) ∧ s2 = append (map f s) (map f t)) _ ⟨s, t, rfl, rfl⟩
+  apply eq_of_bisim (fun s1 s2 => ∃ s t, s1 = map f (append s t) ∧ s2 = append (map f s) (map f t)) _ ⟨s, t, rfl, rfl⟩
   intro s1 s2 h
   exact
     match s1, s2, h with
@@ -1088,24 +1084,23 @@ theorem join_nil : join nil = (nil : Seq α) :=
 
 @[simp]
 theorem join_cons_nil (a : α) (S) : join (cons (a, nil) S) = cons a (join S) :=
-  destruct_eq_cons $ by simp [join]
+  destruct_eq_cons <| by simp [join]
 #align seq.join_cons_nil Seq.join_cons_nil
 
 @[simp]
 theorem join_cons_cons (a b : α) (s S) : join (cons (a, cons b s) S) = cons a (join (cons (b, s) S)) :=
-  destruct_eq_cons $ by simp [join]
+  destruct_eq_cons <| by simp [join]
 #align seq.join_cons_cons Seq.join_cons_cons
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a s S) -/
 @[simp]
 theorem join_cons (a : α) (s S) : join (cons (a, s) S) = cons a (append s (join S)) := by
   apply
-    eq_of_bisim (fun s1 s2 => s1 = s2 ∨ ∃ (a) (s) (S), s1 = join (cons (a, s) S) ∧ s2 = cons a (append s (join S))) _
+    eq_of_bisim (fun s1 s2 => s1 = s2 ∨ ∃ a s S, s1 = join (cons (a, s) S) ∧ s2 = cons a (append s (join S))) _
       (Or.inr ⟨a, s, S, rfl, rfl⟩)
   intro s1 s2 h
   exact
     match s1, s2, h with
-    | _, _, Or.inl $ Eq.refl s => by
+    | _, _, Or.inl <| Eq.refl s => by
       apply rec_on s
       · trivial
         
@@ -1123,11 +1118,9 @@ theorem join_cons (a : α) (s S) : join (cons (a, s) S) = cons a (append s (join
         
 #align seq.join_cons Seq.join_cons
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (s S T) -/
 @[simp]
 theorem join_append (S T : Seq (Seq1 α)) : join (append S T) = append (join S) (join T) := by
-  apply
-    eq_of_bisim fun s1 s2 => ∃ (s) (S) (T), s1 = append s (join (append S T)) ∧ s2 = append s (append (join S) (join T))
+  apply eq_of_bisim fun s1 s2 => ∃ s S T, s1 = append s (join (append S T)) ∧ s2 = append s (append (join S) (join T))
   · intro s1 s2 h
     exact
       match s1, s2, h with
@@ -1332,12 +1325,11 @@ theorem ret_bind (a : α) (f : α → Seq1 β) : bind (ret a) f = f a := by
   apply rec_on s <;> intros <;> simp
 #align seq1.ret_bind Seq1.ret_bind
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (s S) -/
 @[simp]
 theorem map_join' (f : α → β) (S) : Seq.map f (Seq.join S) = Seq.join (Seq.map (map f) S) := by
   apply
     eq_of_bisim fun s1 s2 =>
-      ∃ (s) (S), s1 = append s (Seq.map f (Seq.join S)) ∧ s2 = append s (Seq.join (Seq.map (map f) S))
+      ∃ s S, s1 = append s (Seq.map f (Seq.join S)) ∧ s2 = append s (Seq.join (Seq.map (map f) S))
   · intro s1 s2 h
     exact
       match s1, s2, h with
@@ -1362,12 +1354,11 @@ theorem map_join (f : α → β) : ∀ S, map f (join S) = join (map (map f) S)
   | ((a, s), S) => by apply rec_on s <;> intros <;> simp [map]
 #align seq1.map_join Seq1.map_join
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (s SS) -/
 @[simp]
 theorem join_join (SS : Seq (Seq1 (Seq1 α))) : Seq.join (Seq.join SS) = Seq.join (Seq.map join SS) := by
   apply
     eq_of_bisim fun s1 s2 =>
-      ∃ (s) (SS), s1 = Seq.append s (Seq.join (Seq.join SS)) ∧ s2 = Seq.append s (Seq.join (Seq.map join SS))
+      ∃ s SS, s1 = Seq.append s (Seq.join (Seq.join SS)) ∧ s2 = Seq.append s (Seq.join (Seq.map join SS))
   · intro s1 s2 h
     exact
       match s1, s2, h with

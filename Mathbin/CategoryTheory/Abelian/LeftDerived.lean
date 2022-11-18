@@ -46,7 +46,7 @@ variable [Abelian C] [Abelian D] [Additive F]
 `exact f g`. -/
 theorem preserves_exact_of_preserves_finite_colimits_of_epi [PreservesFiniteColimits F] [Epi g] (ex : Exact f g) :
     Exact (F.map f) (F.map g) :=
-  Abelian.exact_of_is_cokernel _ _ (by simp [← functor.map_comp, ex.w]) $
+  Abelian.exact_of_is_cokernel _ _ (by simp [← functor.map_comp, ex.w]) <|
     Limits.isColimitCoforkMapOfIsColimit' _ ex.w (Abelian.isColimitOfExactOfEpi _ _ ex)
 #align
   category_theory.abelian.functor.preserves_exact_of_preserves_finite_colimits_of_epi CategoryTheory.Abelian.Functor.preserves_exact_of_preserves_finite_colimits_of_epi

@@ -230,7 +230,7 @@ def toJordanDecomposition (s : SignedMeasure α) : JordanDecomposition α :=
 #align measure_theory.signed_measure.to_jordan_decomposition MeasureTheory.SignedMeasure.toJordanDecomposition
 
 theorem to_jordan_decomposition_spec (s : SignedMeasure α) :
-    ∃ (i : Set α) (hi₁ : MeasurableSet i) (hi₂ : 0 ≤[i] s) (hi₃ : s ≤[iᶜ] 0),
+    ∃ (i : Set α)(hi₁ : MeasurableSet i)(hi₂ : 0 ≤[i] s)(hi₃ : s ≤[iᶜ] 0),
       s.toJordanDecomposition.posPart = s.toMeasureOfZeroLe i hi₁ hi₂ ∧
         s.toJordanDecomposition.negPart = s.toMeasureOfLeZero (iᶜ) hi₁.compl hi₃ :=
   by
@@ -366,7 +366,7 @@ private theorem eq_of_pos_part_eq_pos_part {j₁ j₂ : JordanDecomposition α} 
   measure_theory.jordan_decomposition.eq_of_pos_part_eq_pos_part measure_theory.jordan_decomposition.eq_of_pos_part_eq_pos_part
 
 /-- The Jordan decomposition of a signed measure is unique. -/
-theorem to_signed_measure_injective : injective $ @JordanDecomposition.toSignedMeasure α _ := by
+theorem to_signed_measure_injective : injective <| @JordanDecomposition.toSignedMeasure α _ := by
   /- The main idea is that two Jordan decompositions of a signed measure provide two
     Hahn decompositions for that measure. Then, from `of_symm_diff_compl_positive_negative`,
     the symmetric difference of the two Hahn decompositions has measure zero, thus, allowing us to
@@ -473,7 +473,7 @@ private theorem to_jordan_decomposition_smul_real_nonneg (s : SignedMeasure α) 
 
 theorem to_jordan_decomposition_smul_real (s : SignedMeasure α) (r : ℝ) :
     (r • s).toJordanDecomposition = r • s.toJordanDecomposition := by
-  by_cases hr:0 ≤ r
+  by_cases hr : 0 ≤ r
   · exact to_jordan_decomposition_smul_real_nonneg s r hr
     
   · ext1
@@ -512,7 +512,7 @@ theorem null_of_total_variation_zero (s : SignedMeasure α) {i : Set α} (hs : s
   rw [total_variation, measure.coe_add, Pi.add_apply, add_eq_zero_iff] at hs
   rw [← to_signed_measure_to_jordan_decomposition s, to_signed_measure, vector_measure.coe_sub, Pi.sub_apply,
     measure.to_signed_measure_apply, measure.to_signed_measure_apply]
-  by_cases hi:MeasurableSet i
+  by_cases hi : MeasurableSet i
   · rw [if_pos hi, if_pos hi]
     simp [hs.1, hs.2]
     

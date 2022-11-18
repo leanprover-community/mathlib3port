@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Kalle Kytölä
 -/
 import Mathbin.Analysis.Normed.Field.Basic
-import Mathbin.Analysis.Convex.Basic
 import Mathbin.LinearAlgebra.SesquilinearForm
 import Mathbin.Topology.Algebra.Module.WeakDual
 
@@ -48,17 +47,17 @@ variable [Module 𝕜 E] [Module 𝕜 F]
 
 variable (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜)
 
-/-- The (absolute) polar of `s : set E` is given by the set of all `y : F` such that `∥B x y∥ ≤ 1`
+/-- The (absolute) polar of `s : set E` is given by the set of all `y : F` such that `‖B x y‖ ≤ 1`
 for all `x ∈ s`.-/
 def polar (s : Set E) : Set F :=
-  { y : F | ∀ x ∈ s, ∥B x y∥ ≤ 1 }
+  { y : F | ∀ x ∈ s, ‖B x y‖ ≤ 1 }
 #align linear_map.polar LinearMap.polar
 
-theorem polar_mem_iff (s : Set E) (y : F) : y ∈ B.polar s ↔ ∀ x ∈ s, ∥B x y∥ ≤ 1 :=
+theorem polar_mem_iff (s : Set E) (y : F) : y ∈ B.polar s ↔ ∀ x ∈ s, ‖B x y‖ ≤ 1 :=
   Iff.rfl
 #align linear_map.polar_mem_iff LinearMap.polar_mem_iff
 
-theorem polar_mem (s : Set E) (y : F) (hy : y ∈ B.polar s) : ∀ x ∈ s, ∥B x y∥ ≤ 1 :=
+theorem polar_mem (s : Set E) (y : F) (hy : y ∈ B.polar s) : ∀ x ∈ s, ‖B x y‖ ≤ 1 :=
   hy
 #align linear_map.polar_mem LinearMap.polar_mem
 
@@ -66,7 +65,7 @@ theorem polar_mem (s : Set E) (y : F) (hy : y ∈ B.polar s) : ∀ x ∈ s, ∥B
 theorem zero_mem_polar (s : Set E) : (0 : F) ∈ B.polar s := fun _ _ => by simp only [map_zero, norm_zero, zero_le_one]
 #align linear_map.zero_mem_polar LinearMap.zero_mem_polar
 
-theorem polar_eq_Inter {s : Set E} : B.polar s = ⋂ x ∈ s, { y : F | ∥B x y∥ ≤ 1 } := by
+theorem polar_eq_Inter {s : Set E} : B.polar s = ⋂ x ∈ s, { y : F | ‖B x y‖ ≤ 1 } := by
   ext
   simp only [polar_mem_iff, Set.mem_Inter, Set.mem_set_of_eq]
 #align linear_map.polar_eq_Inter LinearMap.polar_eq_Inter
@@ -136,10 +135,10 @@ variable (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜)
 theorem polar_univ (h : SeparatingRight B) : B.polar Set.univ = {(0 : F)} := by
   rw [Set.eq_singleton_iff_unique_mem]
   refine' ⟨by simp only [zero_mem_polar], fun y hy => h _ fun x => _⟩
-  refine' norm_le_zero_iff.mp (le_of_forall_le_of_dense $ fun ε hε => _)
+  refine' norm_le_zero_iff.mp (le_of_forall_le_of_dense fun ε hε => _)
   rcases NormedField.exists_norm_lt 𝕜 hε with ⟨c, hc, hcε⟩
   calc
-    ∥B x y∥ = ∥c∥ * ∥B (c⁻¹ • x) y∥ := by
+    ‖B x y‖ = ‖c‖ * ‖B (c⁻¹ • x) y‖ := by
       rw [B.map_smul, LinearMap.smul_apply, Algebra.id.smul_eq_mul, norm_mul, norm_inv, mul_inv_cancel_left₀ hc.ne']
     _ ≤ ε * 1 := mul_le_mul hcε.le (hy _ trivial) (norm_nonneg _) hε.le
     _ = ε := mul_one _

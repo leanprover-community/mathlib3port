@@ -258,7 +258,7 @@ unsafe def tactic.interactive.push_neg : parse location → tactic Unit
       match l with
       | some h => do
         push_neg_at_hyp h
-        try $
+        try <|
             interactive.simp_core { eta := ff } failed tt [simp_arg_type.expr ``(PushNeg.not_eq)] []
               (Interactive.Loc.ns [some h])
       | none => do
@@ -299,7 +299,7 @@ unsafe def name_with_opt : lean.parser (Name × Option Name) :=
     |
         some ( h , h' )
         =>
-        get_local h >>= revert >> tactic.interactive.contrapose none >> intro ( h' . getOrElse h ) >> skip
+        ( ( ( get_local h >>= revert ) >> tactic.interactive.contrapose none ) >> intro ( h' . getOrElse h ) ) >> skip
       |
         none
         =>
@@ -316,7 +316,7 @@ unsafe def name_with_opt : lean.parser (Name × Option Name) :=
                   <|>
                   fail "contrapose only applies to nondependent arrows between props"
             apply cp
-            when push $ try ( tactic.interactive.push_neg ( loc.ns [ none ] ) )
+            when push <| try ( tactic.interactive.push_neg ( loc.ns [ none ] ) )
 #align tactic.interactive.contrapose tactic.interactive.contrapose
 
 add_tactic_doc
@@ -343,7 +343,7 @@ which will print the `push_neg` form of `e`.
 introduce parameters.
 -/
 @[user_command]
-unsafe def push_neg_cmd (_ : parse $ tk "#push_neg") : lean.parser Unit := do
+unsafe def push_neg_cmd (_ : parse <| tk "#push_neg") : lean.parser Unit := do
   let e ← texpr
   let/- Synthesize a `tactic_state` including local variables as hypotheses under which
          `normalize_negations` may be safely called with expected behaviour given the `variables` in the
@@ -352,7 +352,7 @@ unsafe def push_neg_cmd (_ : parse $ tk "#push_neg") : lean.parser Unit := do
     ← synthesize_tactic_state_with_variables_as_hyps [e]
   let result
     ←-- Enter the `tactic` monad, *critically* using the synthesized tactic state `ts`.
-        lean.parser.of_tactic $
+        lean.parser.of_tactic
         fun _ =>
         (/- Resolve the local variables added by the parser to `e` (when it was parsed) against the local
                  hypotheses added to the `ts : tactic_state` which we are using. -/

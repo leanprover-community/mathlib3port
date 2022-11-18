@@ -81,7 +81,7 @@ structure ProjectiveResolutionCat (Z : C) where
 
 attribute [instance] ProjectiveResolution.projective ProjectiveResolution.epi
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- An object admits a projective resolution.
 -/
 class HasProjectiveResolution (Z : C) : Prop where
@@ -177,7 +177,7 @@ theorem lift_f_one_zero_comm {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolutionCa
 def liftFSucc {Y Z : C} (P : ProjectiveResolutionCat Y) (Q : ProjectiveResolutionCat Z) (n : ℕ)
     (g : P.complex.x n ⟶ Q.complex.x n) (g' : P.complex.x (n + 1) ⟶ Q.complex.x (n + 1))
     (w : g' ≫ Q.complex.d (n + 1) n = P.complex.d (n + 1) n ≫ g) :
-    Σ' g'' : P.complex.x (n + 2) ⟶ Q.complex.x (n + 2),
+    Σ'g'' : P.complex.x (n + 2) ⟶ Q.complex.x (n + 2),
       g'' ≫ Q.complex.d (n + 2) (n + 1) = P.complex.d (n + 2) (n + 1) ≫ g' :=
   ⟨Exact.lift (P.complex.d (n + 2) (n + 1) ≫ g') (Q.complex.d (n + 2) (n + 1)) (Q.complex.d (n + 1) n) (Q.exact _)
       (by simp [w]),

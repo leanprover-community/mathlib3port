@@ -179,7 +179,7 @@ def shift {n : ℕ} {Δ : SimplexCategory} (f : [n] ⟶ Δ) : [n + 1] ⟶ Δ :=
   SimplexCategory.Hom.mk
     { toFun := shiftFun f.toOrderHom,
       monotone' := fun i₁ i₂ hi => by
-        by_cases h₁:i₁ = 0
+        by_cases h₁ : i₁ = 0
         · subst h₁
           simp only [shift_fun_0, Fin.zero_le]
           

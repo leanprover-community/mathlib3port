@@ -5,7 +5,7 @@ Authors: Joachim Breitner
 -/
 import Mathbin.GroupTheory.OrderOfElement
 import Mathbin.Data.Finset.NoncommProd
-import Mathbin.Data.Fintype.Card
+import Mathbin.Data.Fintype.BigOperators
 import Mathbin.Data.Nat.Gcd.BigOperators
 
 /-!
@@ -57,7 +57,7 @@ variable {N : ι → Type _} [∀ i, Monoid (N i)]
 variable (ϕ : ∀ i : ι, N i →* M)
 
 -- We assume that the elements of different morphism commute
-variable (hcomm : Pairwise $ fun i j => ∀ x y, Commute (ϕ i x) (ϕ j y))
+variable (hcomm : Pairwise fun i j => ∀ x y, Commute (ϕ i x) (ϕ j y))
 
 include hcomm
 
@@ -70,7 +70,7 @@ namespace MonoidHom
 @[to_additive
       "The canonical homomorphism from a family of additive monoids.\n\nSee also `linear_map.lsum` for a linear version without the commutativity assumption."]
 def noncommPiCoprod : (∀ i : ι, N i) →* M where
-  toFun f := (Finset.univ.noncommProd fun i => ϕ i (f i)) $ fun i _ j _ h => hcomm h _ _
+  toFun f := (Finset.univ.noncommProd fun i => ϕ i (f i)) fun i _ j _ h => hcomm h _ _
   map_one' := by
     apply (Finset.noncomm_prod_eq_pow_card _ _ _ _ _).trans (one_pow _)
     simp

@@ -6,9 +6,11 @@ Authors: Johannes Hölzl
 import Mathbin.Algebra.Group.Pi
 import Mathbin.Algebra.Hom.Equiv.Basic
 import Mathbin.Algebra.Ring.Opposite
-import Mathbin.Data.Finset.Fold
-import Mathbin.Data.Fintype.Basic
 import Mathbin.Data.Set.Pairwise
+import Mathbin.Data.Finset.Sum
+import Mathbin.Data.Fintype.Basic
+import Mathbin.Data.Finset.Sigma
+import Mathbin.Algebra.GroupPower.Lemmas
 
 /-!
 # Big operators
@@ -238,7 +240,7 @@ the product over `s`, as long as `a` is in `s` or `f a = 1`.
       "The sum of `f` over `insert a s` is the same as\nthe sum over `s`, as long as `a` is in `s` or `f a = 0`."]
 theorem prod_insert_of_eq_one_if_not_mem [DecidableEq α] (h : a ∉ s → f a = 1) :
     (∏ x in insert a s, f x) = ∏ x in s, f x := by
-  by_cases hm:a ∈ s
+  by_cases hm : a ∈ s
   · simp_rw [insert_eq_of_mem hm]
     
   · rw [prod_insert hm, h hm, one_mul]
@@ -254,7 +256,7 @@ theorem prod_insert_one [DecidableEq α] (h : f a = 1) : (∏ x in insert a s, f
 
 @[simp, to_additive]
 theorem prod_singleton : (∏ x in singleton a, f x) = f a :=
-  Eq.trans fold_singleton $ mul_one _
+  Eq.trans fold_singleton <| mul_one _
 #align finset.prod_singleton Finset.prod_singleton
 
 @[to_additive]
@@ -355,7 +357,7 @@ variable [Fintype α] [CommMonoid β]
 @[to_additive]
 theorem IsCompl.prod_mul_prod {s t : Finset α} (h : IsCompl s t) (f : α → β) :
     ((∏ i in s, f i) * ∏ i in t, f i) = ∏ i, f i :=
-  (Finset.prod_disj_union h.Disjoint).symm.trans $ by
+  (Finset.prod_disj_union h.Disjoint).symm.trans <| by
     classical rw [Finset.disj_union_eq_union, ← Finset.sup_eq_union, h.sup_eq_top] <;> rfl
 #align is_compl.prod_mul_prod IsCompl.prod_mul_prod
 
@@ -388,7 +390,7 @@ theorem prod_sdiff [DecidableEq α] (h : s₁ ⊆ s₂) : ((∏ x in s₂ \ s₁
 #align finset.prod_sdiff Finset.prod_sdiff
 
 @[simp, to_additive]
-theorem prod_disj_sum (s : Finset α) (t : Finset γ) (f : α ⊕ γ → β) :
+theorem prod_disj_sum (s : Finset α) (t : Finset γ) (f : Sum α γ → β) :
     (∏ x in s.disjSum t, f x) = (∏ x in s, f (Sum.inl x)) * ∏ x in t, f (Sum.inr x) := by
   rw [← map_inl_disj_union_map_inr, prod_disj_union, Prod_map, Prod_map]
   rfl
@@ -408,7 +410,7 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
     
   · simp_rw [coe_insert, Set.pairwise_disjoint_insert, mem_coe] at hs
     have : Disjoint (t x) (Finset.bUnion s t) :=
-      (disjoint_bUnion_right _ _ _).mpr fun y hy => hs.2 y hy $ fun H => hxs $ H.substr hy
+      (disjoint_bUnion_right _ _ _).mpr fun y hy => (hs.2 y hy) fun H => hxs <| H.substr hy
     rw [bUnion_insert, prod_insert hxs, prod_union this, ih hs.1]
     
 #align finset.prod_bUnion Finset.prod_bUnion
@@ -450,7 +452,7 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
         (Term.explicitBinder "(" [`f] [":" (Term.arrow (Term.app `Sigma [`σ]) "→" `β)] [] ")")]
        (Term.typeSpec
         ":"
-        (Init.Core.«term_=_»
+        («term_=_»
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -458,7 +460,7 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
           (Term.app (Term.proj `s "." `Sigma) [`t])
           ", "
           (Term.app `f [`x]))
-         " = "
+         "="
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) []))
@@ -484,7 +486,7 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
             (calcTactic
              "calc"
              (calcStep
-              (Init.Core.«term_=_»
+              («term_=_»
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -492,7 +494,7 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
                 (Term.app `s.sigma [`t])
                 ", "
                 (Term.app `f [`x]))
-               " = "
+               "="
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -515,9 +517,9 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
                 (Tactic.tacticSeq1Indented
                  [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `sigma_eq_bUnion)] "]") [])]))))
              [(calcStep
-               (Init.Core.«term_=_»
+               («term_=_»
                 (Term.hole "_")
-                " = "
+                "="
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) []))
@@ -532,18 +534,167 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
                   ", "
                   (Term.app `f [`x]))))
                ":="
-               (Init.Core.«term_$_»
+               (Term.app
                 `prod_bUnion
-                " $ "
-                (Term.fun
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`a₁ `ha `a₂ `ha₂ `h]
+                   []
+                   "=>"
+                   («term_<|_»
+                    `disjoint_left.mpr
+                    "<|"
+                    (Term.byTactic
+                     "by"
+                     (Tactic.tacticSeq
+                      (Tactic.tacticSeq1Indented
+                       [(Mathlib.Tactic.tacticSimp_rw__
+                         "simp_rw"
+                         (Tactic.rwRuleSeq
+                          "["
+                          [(Tactic.rwRule [] `mem_map) "," (Tactic.rwRule [] `Function.Embedding.sigma_mk_apply)]
+                          "]")
+                         [])
+                        []
+                        (Std.Tactic.rintro
+                         "rintro"
+                         [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.ignore "_"))
+                          (Std.Tactic.RCases.rintroPat.one
+                           (Std.Tactic.RCases.rcasesPat.tuple
+                            "⟨"
+                            [(Std.Tactic.RCases.rcasesPatLo
+                              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `y)])
+                              [])
+                             ","
+                             (Std.Tactic.RCases.rcasesPatLo
+                              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hy)])
+                              [])
+                             ","
+                             (Std.Tactic.RCases.rcasesPatLo
+                              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                              [])]
+                            "⟩"))
+                          (Std.Tactic.RCases.rintroPat.one
+                           (Std.Tactic.RCases.rcasesPat.tuple
+                            "⟨"
+                            [(Std.Tactic.RCases.rcasesPatLo
+                              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `z)])
+                              [])
+                             ","
+                             (Std.Tactic.RCases.rcasesPatLo
+                              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hz)])
+                              [])
+                             ","
+                             (Std.Tactic.RCases.rcasesPatLo
+                              (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hz')])
+                              [])]
+                            "⟩"))]
+                         [])
+                        []
+                        (Tactic.exact "exact" (Term.app `h [(Term.app `congr_arg [`Sigma.fst `hz'.symm])]))]))))))]))
+              (calcStep
+               («term_=_»
+                (Term.hole "_")
+                "="
+                (BigOperators.Algebra.BigOperators.Basic.finset.prod
+                 "∏"
+                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) []))
+                 " in "
+                 `s
+                 ", "
+                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
+                  "∏"
+                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) []))
+                  " in "
+                  (Term.app `t [`a])
+                  ", "
+                  (Term.app `f [(Term.anonymousCtor "⟨" [`a "," `s] "⟩")]))))
+               ":="
+               (Term.app
+                (Term.app `prod_congr [`rfl])
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [(Term.hole "_") (Term.hole "_")]
+                   []
+                   "=>"
+                   (Term.app `Prod_map [(Term.hole "_") (Term.hole "_") (Term.hole "_")])))]))]))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.«tactic_<;>_»
+           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+           "<;>"
+           (calcTactic
+            "calc"
+            (calcStep
+             («term_=_»
+              (BigOperators.Algebra.BigOperators.Basic.finset.prod
+               "∏"
+               (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+               " in "
+               (Term.app `s.sigma [`t])
+               ", "
+               (Term.app `f [`x]))
+              "="
+              (BigOperators.Algebra.BigOperators.Basic.finset.prod
+               "∏"
+               (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+               " in "
+               (Term.app
+                `s.bUnion
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`a]
+                   []
+                   "=>"
+                   (Term.app (Term.proj (Term.app `t [`a]) "." `map) [(Term.app `Function.Embedding.sigmaMk [`a])])))])
+               ", "
+               (Term.app `f [`x])))
+             ":="
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `sigma_eq_bUnion)] "]") [])]))))
+            [(calcStep
+              («term_=_»
+               (Term.hole "_")
+               "="
+               (BigOperators.Algebra.BigOperators.Basic.finset.prod
+                "∏"
+                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) []))
+                " in "
+                `s
+                ", "
+                (BigOperators.Algebra.BigOperators.Basic.finset.prod
+                 "∏"
+                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+                 " in "
+                 (Term.app (Term.proj (Term.app `t [`a]) "." `map) [(Term.app `Function.Embedding.sigmaMk [`a])])
+                 ", "
+                 (Term.app `f [`x]))))
+              ":="
+              (Term.app
+               `prod_bUnion
+               [(Term.fun
                  "fun"
                  (Term.basicFun
                   [`a₁ `ha `a₂ `ha₂ `h]
                   []
                   "=>"
-                  (Init.Core.«term_$_»
+                  («term_<|_»
                    `disjoint_left.mpr
-                   " $ "
+                   "<|"
                    (Term.byTactic
                     "by"
                     (Tactic.tacticSeq
@@ -591,163 +742,11 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
                            "⟩"))]
                         [])
                        []
-                       (Tactic.exact "exact" (Term.app `h [(Term.app `congr_arg [`Sigma.fst `hz'.symm])]))]))))))))
-              (calcStep
-               (Init.Core.«term_=_»
-                (Term.hole "_")
-                " = "
-                (BigOperators.Algebra.BigOperators.Basic.finset.prod
-                 "∏"
-                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) []))
-                 " in "
-                 `s
-                 ", "
-                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
-                  "∏"
-                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) []))
-                  " in "
-                  (Term.app `t [`a])
-                  ", "
-                  (Term.app `f [(Term.anonymousCtor "⟨" [`a "," `s] "⟩")]))))
-               ":="
-               (Init.Core.«term_$_»
-                (Term.app `prod_congr [`rfl])
-                " $ "
-                (Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [(Term.hole "_") (Term.hole "_")]
-                  []
-                  "=>"
-                  (Term.app `Prod_map [(Term.hole "_") (Term.hole "_") (Term.hole "_")])))))]))])))
-       [])
-      []
-      []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.byTactic
-       "by"
-       (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented
-         [(Tactic.«tactic_<;>_»
-           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
-           "<;>"
-           (calcTactic
-            "calc"
-            (calcStep
-             (Init.Core.«term_=_»
-              (BigOperators.Algebra.BigOperators.Basic.finset.prod
-               "∏"
-               (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
-               " in "
-               (Term.app `s.sigma [`t])
-               ", "
-               (Term.app `f [`x]))
-              " = "
-              (BigOperators.Algebra.BigOperators.Basic.finset.prod
-               "∏"
-               (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
-               " in "
-               (Term.app
-                `s.bUnion
-                [(Term.fun
-                  "fun"
-                  (Term.basicFun
-                   [`a]
-                   []
-                   "=>"
-                   (Term.app (Term.proj (Term.app `t [`a]) "." `map) [(Term.app `Function.Embedding.sigmaMk [`a])])))])
-               ", "
-               (Term.app `f [`x])))
-             ":="
-             (Term.byTactic
-              "by"
-              (Tactic.tacticSeq
-               (Tactic.tacticSeq1Indented
-                [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `sigma_eq_bUnion)] "]") [])]))))
-            [(calcStep
-              (Init.Core.«term_=_»
-               (Term.hole "_")
-               " = "
-               (BigOperators.Algebra.BigOperators.Basic.finset.prod
-                "∏"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) []))
-                " in "
-                `s
-                ", "
-                (BigOperators.Algebra.BigOperators.Basic.finset.prod
-                 "∏"
-                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
-                 " in "
-                 (Term.app (Term.proj (Term.app `t [`a]) "." `map) [(Term.app `Function.Embedding.sigmaMk [`a])])
-                 ", "
-                 (Term.app `f [`x]))))
-              ":="
-              (Init.Core.«term_$_»
-               `prod_bUnion
-               " $ "
-               (Term.fun
-                "fun"
-                (Term.basicFun
-                 [`a₁ `ha `a₂ `ha₂ `h]
-                 []
-                 "=>"
-                 (Init.Core.«term_$_»
-                  `disjoint_left.mpr
-                  " $ "
-                  (Term.byTactic
-                   "by"
-                   (Tactic.tacticSeq
-                    (Tactic.tacticSeq1Indented
-                     [(Mathlib.Tactic.tacticSimp_rw__
-                       "simp_rw"
-                       (Tactic.rwRuleSeq
-                        "["
-                        [(Tactic.rwRule [] `mem_map) "," (Tactic.rwRule [] `Function.Embedding.sigma_mk_apply)]
-                        "]")
-                       [])
-                      []
-                      (Std.Tactic.rintro
-                       "rintro"
-                       [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.ignore "_"))
-                        (Std.Tactic.RCases.rintroPat.one
-                         (Std.Tactic.RCases.rcasesPat.tuple
-                          "⟨"
-                          [(Std.Tactic.RCases.rcasesPatLo
-                            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `y)])
-                            [])
-                           ","
-                           (Std.Tactic.RCases.rcasesPatLo
-                            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hy)])
-                            [])
-                           ","
-                           (Std.Tactic.RCases.rcasesPatLo
-                            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                            [])]
-                          "⟩"))
-                        (Std.Tactic.RCases.rintroPat.one
-                         (Std.Tactic.RCases.rcasesPat.tuple
-                          "⟨"
-                          [(Std.Tactic.RCases.rcasesPatLo
-                            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `z)])
-                            [])
-                           ","
-                           (Std.Tactic.RCases.rcasesPatLo
-                            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hz)])
-                            [])
-                           ","
-                           (Std.Tactic.RCases.rcasesPatLo
-                            (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hz')])
-                            [])]
-                          "⟩"))]
-                       [])
-                      []
-                      (Tactic.exact "exact" (Term.app `h [(Term.app `congr_arg [`Sigma.fst `hz'.symm])]))]))))))))
+                       (Tactic.exact "exact" (Term.app `h [(Term.app `congr_arg [`Sigma.fst `hz'.symm])]))]))))))]))
              (calcStep
-              (Init.Core.«term_=_»
+              («term_=_»
                (Term.hole "_")
-               " = "
+               "="
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) []))
@@ -762,16 +761,15 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
                  ", "
                  (Term.app `f [(Term.anonymousCtor "⟨" [`a "," `s] "⟩")]))))
               ":="
-              (Init.Core.«term_$_»
+              (Term.app
                (Term.app `prod_congr [`rfl])
-               " $ "
-               (Term.fun
-                "fun"
-                (Term.basicFun
-                 [(Term.hole "_") (Term.hole "_")]
-                 []
-                 "=>"
-                 (Term.app `Prod_map [(Term.hole "_") (Term.hole "_") (Term.hole "_")])))))]))])))
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [(Term.hole "_") (Term.hole "_")]
+                  []
+                  "=>"
+                  (Term.app `Prod_map [(Term.hole "_") (Term.hole "_") (Term.hole "_")])))]))]))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
@@ -780,7 +778,7 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
        (calcTactic
         "calc"
         (calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -788,7 +786,7 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
            (Term.app `s.sigma [`t])
            ", "
            (Term.app `f [`x]))
-          " = "
+          "="
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -811,9 +809,9 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
            (Tactic.tacticSeq1Indented
             [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `sigma_eq_bUnion)] "]") [])]))))
         [(calcStep
-          (Init.Core.«term_=_»
+          («term_=_»
            (Term.hole "_")
-           " = "
+           "="
            (BigOperators.Algebra.BigOperators.Basic.finset.prod
             "∏"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) []))
@@ -828,18 +826,155 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
              ", "
              (Term.app `f [`x]))))
           ":="
-          (Init.Core.«term_$_»
+          (Term.app
            `prod_bUnion
-           " $ "
-           (Term.fun
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`a₁ `ha `a₂ `ha₂ `h]
+              []
+              "=>"
+              («term_<|_»
+               `disjoint_left.mpr
+               "<|"
+               (Term.byTactic
+                "by"
+                (Tactic.tacticSeq
+                 (Tactic.tacticSeq1Indented
+                  [(Mathlib.Tactic.tacticSimp_rw__
+                    "simp_rw"
+                    (Tactic.rwRuleSeq
+                     "["
+                     [(Tactic.rwRule [] `mem_map) "," (Tactic.rwRule [] `Function.Embedding.sigma_mk_apply)]
+                     "]")
+                    [])
+                   []
+                   (Std.Tactic.rintro
+                    "rintro"
+                    [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.ignore "_"))
+                     (Std.Tactic.RCases.rintroPat.one
+                      (Std.Tactic.RCases.rcasesPat.tuple
+                       "⟨"
+                       [(Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `y)])
+                         [])
+                        ","
+                        (Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hy)])
+                         [])
+                        ","
+                        (Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                         [])]
+                       "⟩"))
+                     (Std.Tactic.RCases.rintroPat.one
+                      (Std.Tactic.RCases.rcasesPat.tuple
+                       "⟨"
+                       [(Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `z)])
+                         [])
+                        ","
+                        (Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hz)])
+                         [])
+                        ","
+                        (Std.Tactic.RCases.rcasesPatLo
+                         (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hz')])
+                         [])]
+                       "⟩"))]
+                    [])
+                   []
+                   (Tactic.exact "exact" (Term.app `h [(Term.app `congr_arg [`Sigma.fst `hz'.symm])]))]))))))]))
+         (calcStep
+          («term_=_»
+           (Term.hole "_")
+           "="
+           (BigOperators.Algebra.BigOperators.Basic.finset.prod
+            "∏"
+            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) []))
+            " in "
+            `s
+            ", "
+            (BigOperators.Algebra.BigOperators.Basic.finset.prod
+             "∏"
+             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) []))
+             " in "
+             (Term.app `t [`a])
+             ", "
+             (Term.app `f [(Term.anonymousCtor "⟨" [`a "," `s] "⟩")]))))
+          ":="
+          (Term.app
+           (Term.app `prod_congr [`rfl])
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [(Term.hole "_") (Term.hole "_")]
+              []
+              "=>"
+              (Term.app `Prod_map [(Term.hole "_") (Term.hole "_") (Term.hole "_")])))]))]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (calcTactic
+       "calc"
+       (calcStep
+        («term_=_»
+         (BigOperators.Algebra.BigOperators.Basic.finset.prod
+          "∏"
+          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+          " in "
+          (Term.app `s.sigma [`t])
+          ", "
+          (Term.app `f [`x]))
+         "="
+         (BigOperators.Algebra.BigOperators.Basic.finset.prod
+          "∏"
+          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+          " in "
+          (Term.app
+           `s.bUnion
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`a]
+              []
+              "=>"
+              (Term.app (Term.proj (Term.app `t [`a]) "." `map) [(Term.app `Function.Embedding.sigmaMk [`a])])))])
+          ", "
+          (Term.app `f [`x])))
+        ":="
+        (Term.byTactic
+         "by"
+         (Tactic.tacticSeq
+          (Tactic.tacticSeq1Indented
+           [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `sigma_eq_bUnion)] "]") [])]))))
+       [(calcStep
+         («term_=_»
+          (Term.hole "_")
+          "="
+          (BigOperators.Algebra.BigOperators.Basic.finset.prod
+           "∏"
+           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) []))
+           " in "
+           `s
+           ", "
+           (BigOperators.Algebra.BigOperators.Basic.finset.prod
+            "∏"
+            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
+            " in "
+            (Term.app (Term.proj (Term.app `t [`a]) "." `map) [(Term.app `Function.Embedding.sigmaMk [`a])])
+            ", "
+            (Term.app `f [`x]))))
+         ":="
+         (Term.app
+          `prod_bUnion
+          [(Term.fun
             "fun"
             (Term.basicFun
              [`a₁ `ha `a₂ `ha₂ `h]
              []
              "=>"
-             (Init.Core.«term_$_»
+             («term_<|_»
               `disjoint_left.mpr
-              " $ "
+              "<|"
               (Term.byTactic
                "by"
                (Tactic.tacticSeq
@@ -887,151 +1022,11 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
                       "⟩"))]
                    [])
                   []
-                  (Tactic.exact "exact" (Term.app `h [(Term.app `congr_arg [`Sigma.fst `hz'.symm])]))]))))))))
-         (calcStep
-          (Init.Core.«term_=_»
-           (Term.hole "_")
-           " = "
-           (BigOperators.Algebra.BigOperators.Basic.finset.prod
-            "∏"
-            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) []))
-            " in "
-            `s
-            ", "
-            (BigOperators.Algebra.BigOperators.Basic.finset.prod
-             "∏"
-             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `s) []))
-             " in "
-             (Term.app `t [`a])
-             ", "
-             (Term.app `f [(Term.anonymousCtor "⟨" [`a "," `s] "⟩")]))))
-          ":="
-          (Init.Core.«term_$_»
-           (Term.app `prod_congr [`rfl])
-           " $ "
-           (Term.fun
-            "fun"
-            (Term.basicFun
-             [(Term.hole "_") (Term.hole "_")]
-             []
-             "=>"
-             (Term.app `Prod_map [(Term.hole "_") (Term.hole "_") (Term.hole "_")])))))]))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (calcTactic
-       "calc"
-       (calcStep
-        (Init.Core.«term_=_»
-         (BigOperators.Algebra.BigOperators.Basic.finset.prod
-          "∏"
-          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
-          " in "
-          (Term.app `s.sigma [`t])
-          ", "
-          (Term.app `f [`x]))
-         " = "
-         (BigOperators.Algebra.BigOperators.Basic.finset.prod
-          "∏"
-          (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
-          " in "
-          (Term.app
-           `s.bUnion
-           [(Term.fun
-             "fun"
-             (Term.basicFun
-              [`a]
-              []
-              "=>"
-              (Term.app (Term.proj (Term.app `t [`a]) "." `map) [(Term.app `Function.Embedding.sigmaMk [`a])])))])
-          ", "
-          (Term.app `f [`x])))
-        ":="
-        (Term.byTactic
-         "by"
-         (Tactic.tacticSeq
-          (Tactic.tacticSeq1Indented
-           [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `sigma_eq_bUnion)] "]") [])]))))
-       [(calcStep
-         (Init.Core.«term_=_»
-          (Term.hole "_")
-          " = "
-          (BigOperators.Algebra.BigOperators.Basic.finset.prod
-           "∏"
-           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) []))
-           " in "
-           `s
-           ", "
-           (BigOperators.Algebra.BigOperators.Basic.finset.prod
-            "∏"
-            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
-            " in "
-            (Term.app (Term.proj (Term.app `t [`a]) "." `map) [(Term.app `Function.Embedding.sigmaMk [`a])])
-            ", "
-            (Term.app `f [`x]))))
-         ":="
-         (Init.Core.«term_$_»
-          `prod_bUnion
-          " $ "
-          (Term.fun
-           "fun"
-           (Term.basicFun
-            [`a₁ `ha `a₂ `ha₂ `h]
-            []
-            "=>"
-            (Init.Core.«term_$_»
-             `disjoint_left.mpr
-             " $ "
-             (Term.byTactic
-              "by"
-              (Tactic.tacticSeq
-               (Tactic.tacticSeq1Indented
-                [(Mathlib.Tactic.tacticSimp_rw__
-                  "simp_rw"
-                  (Tactic.rwRuleSeq
-                   "["
-                   [(Tactic.rwRule [] `mem_map) "," (Tactic.rwRule [] `Function.Embedding.sigma_mk_apply)]
-                   "]")
-                  [])
-                 []
-                 (Std.Tactic.rintro
-                  "rintro"
-                  [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.ignore "_"))
-                   (Std.Tactic.RCases.rintroPat.one
-                    (Std.Tactic.RCases.rcasesPat.tuple
-                     "⟨"
-                     [(Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `y)])
-                       [])
-                      ","
-                      (Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hy)])
-                       [])
-                      ","
-                      (Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                       [])]
-                     "⟩"))
-                   (Std.Tactic.RCases.rintroPat.one
-                    (Std.Tactic.RCases.rcasesPat.tuple
-                     "⟨"
-                     [(Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `z)])
-                       [])
-                      ","
-                      (Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hz)])
-                       [])
-                      ","
-                      (Std.Tactic.RCases.rcasesPatLo
-                       (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hz')])
-                       [])]
-                     "⟩"))]
-                  [])
-                 []
-                 (Tactic.exact "exact" (Term.app `h [(Term.app `congr_arg [`Sigma.fst `hz'.symm])]))]))))))))
+                  (Tactic.exact "exact" (Term.app `h [(Term.app `congr_arg [`Sigma.fst `hz'.symm])]))]))))))]))
         (calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (Term.hole "_")
-          " = "
+          "="
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) []))
@@ -1046,27 +1041,27 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
             ", "
             (Term.app `f [(Term.anonymousCtor "⟨" [`a "," `s] "⟩")]))))
          ":="
-         (Init.Core.«term_$_»
+         (Term.app
           (Term.app `prod_congr [`rfl])
-          " $ "
-          (Term.fun
-           "fun"
-           (Term.basicFun
-            [(Term.hole "_") (Term.hole "_")]
-            []
-            "=>"
-            (Term.app `Prod_map [(Term.hole "_") (Term.hole "_") (Term.hole "_")])))))])
+          [(Term.fun
+            "fun"
+            (Term.basicFun
+             [(Term.hole "_") (Term.hole "_")]
+             []
+             "=>"
+             (Term.app `Prod_map [(Term.hole "_") (Term.hole "_") (Term.hole "_")])))]))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      (Term.app
        (Term.app `prod_congr [`rfl])
-       " $ "
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [(Term.hole "_") (Term.hole "_")]
-         []
-         "=>"
-         (Term.app `Prod_map [(Term.hole "_") (Term.hole "_") (Term.hole "_")]))))
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [(Term.hole "_") (Term.hole "_")]
+          []
+          "=>"
+          (Term.app `Prod_map [(Term.hole "_") (Term.hole "_") (Term.hole "_")])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -1108,8 +1103,8 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
       (Term.hole "_")
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1023, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.app `prod_congr [`rfl])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
@@ -1119,12 +1114,13 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `prod_congr
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1022, (some 1023, term) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `prod_congr [`rfl]) ")")
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (Term.hole "_")
-       " = "
+       "="
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) []))
@@ -1195,69 +1191,70 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
-      (Init.Core.«term_$_»
+      (Term.app
        `prod_bUnion
-       " $ "
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`a₁ `ha `a₂ `ha₂ `h]
-         []
-         "=>"
-         (Init.Core.«term_$_»
-          `disjoint_left.mpr
-          " $ "
-          (Term.byTactic
-           "by"
-           (Tactic.tacticSeq
-            (Tactic.tacticSeq1Indented
-             [(Mathlib.Tactic.tacticSimp_rw__
-               "simp_rw"
-               (Tactic.rwRuleSeq
-                "["
-                [(Tactic.rwRule [] `mem_map) "," (Tactic.rwRule [] `Function.Embedding.sigma_mk_apply)]
-                "]")
-               [])
-              []
-              (Std.Tactic.rintro
-               "rintro"
-               [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.ignore "_"))
-                (Std.Tactic.RCases.rintroPat.one
-                 (Std.Tactic.RCases.rcasesPat.tuple
-                  "⟨"
-                  [(Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `y)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hy)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
-                    [])]
-                  "⟩"))
-                (Std.Tactic.RCases.rintroPat.one
-                 (Std.Tactic.RCases.rcasesPat.tuple
-                  "⟨"
-                  [(Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `z)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hz)])
-                    [])
-                   ","
-                   (Std.Tactic.RCases.rcasesPatLo
-                    (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hz')])
-                    [])]
-                  "⟩"))]
-               [])
-              []
-              (Tactic.exact "exact" (Term.app `h [(Term.app `congr_arg [`Sigma.fst `hz'.symm])]))])))))))
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`a₁ `ha `a₂ `ha₂ `h]
+          []
+          "=>"
+          («term_<|_»
+           `disjoint_left.mpr
+           "<|"
+           (Term.byTactic
+            "by"
+            (Tactic.tacticSeq
+             (Tactic.tacticSeq1Indented
+              [(Mathlib.Tactic.tacticSimp_rw__
+                "simp_rw"
+                (Tactic.rwRuleSeq
+                 "["
+                 [(Tactic.rwRule [] `mem_map) "," (Tactic.rwRule [] `Function.Embedding.sigma_mk_apply)]
+                 "]")
+                [])
+               []
+               (Std.Tactic.rintro
+                "rintro"
+                [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.ignore "_"))
+                 (Std.Tactic.RCases.rintroPat.one
+                  (Std.Tactic.RCases.rcasesPat.tuple
+                   "⟨"
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `y)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hy)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `rfl)])
+                     [])]
+                   "⟩"))
+                 (Std.Tactic.RCases.rintroPat.one
+                  (Std.Tactic.RCases.rcasesPat.tuple
+                   "⟨"
+                   [(Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `z)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hz)])
+                     [])
+                    ","
+                    (Std.Tactic.RCases.rcasesPatLo
+                     (Std.Tactic.RCases.rcasesPatMed [(Std.Tactic.RCases.rcasesPat.one `hz')])
+                     [])]
+                   "⟩"))]
+                [])
+               []
+               (Tactic.exact "exact" (Term.app `h [(Term.app `congr_arg [`Sigma.fst `hz'.symm])]))]))))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -1265,9 +1262,9 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
         [`a₁ `ha `a₂ `ha₂ `h]
         []
         "=>"
-        (Init.Core.«term_$_»
+        («term_<|_»
          `disjoint_left.mpr
-         " $ "
+         "<|"
          (Term.byTactic
           "by"
           (Tactic.tacticSeq
@@ -1317,9 +1314,9 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
              []
              (Tactic.exact "exact" (Term.app `h [(Term.app `congr_arg [`Sigma.fst `hz'.symm])]))]))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      («term_<|_»
        `disjoint_left.mpr
-       " $ "
+       "<|"
        (Term.byTactic
         "by"
         (Tactic.tacticSeq
@@ -1485,11 +1482,11 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
       `mem_map
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       `disjoint_left.mpr
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
@@ -1520,15 +1517,15 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `a₁
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `prod_bUnion
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (Term.hole "_")
-       " = "
+       "="
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) []))
@@ -1614,7 +1611,7 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.byTactic
@@ -1631,7 +1628,7 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -1639,7 +1636,7 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
         (Term.app `s.sigma [`t])
         ", "
         (Term.app `f [`x]))
-       " = "
+       "="
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -1776,7 +1773,7 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
       `s.sigma
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 0, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
      (BigOperators.Algebra.BigOperators.Basic.finset.prod
@@ -1823,26 +1820,24 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
             _ = ∏ a in s , ∏ x in t a . map Function.Embedding.sigmaMk a , f x
                 :=
                 prod_bUnion
-                  $
                   fun
                     a₁ ha a₂ ha₂ h
                       =>
                       disjoint_left.mpr
-                        $
+                        <|
                         by
                           simp_rw [ mem_map , Function.Embedding.sigma_mk_apply ]
                             rintro _ ⟨ y , hy , rfl ⟩ ⟨ z , hz , hz' ⟩
                             exact h congr_arg Sigma.fst hz'.symm
-              _ = ∏ a in s , ∏ s in t a , f ⟨ a , s ⟩ := prod_congr rfl $ fun _ _ => Prod_map _ _ _
+              _ = ∏ a in s , ∏ s in t a , f ⟨ a , s ⟩ := prod_congr rfl fun _ _ => Prod_map _ _ _
 #align finset.prod_sigma Finset.prod_sigma
 
 @[to_additive]
 theorem prod_sigma' {σ : α → Type _} (s : Finset α) (t : ∀ a, Finset (σ a)) (f : ∀ a, σ a → β) :
     (∏ a in s, ∏ s in t a, f a s) = ∏ x in s.Sigma t, f x.1 x.2 :=
-  Eq.symm $ prod_sigma s t fun x => f x.1 x.2
+  Eq.symm <| prod_sigma s t fun x => f x.1 x.2
 #align finset.prod_sigma' Finset.prod_sigma'
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a ha) -/
 /-- Reorder a product.
 
   The difference with `prod_bij'` is that the bijection is specified as a surjective injection,
@@ -1852,7 +1847,7 @@ theorem prod_sigma' {σ : α → Type _} (s : Finset α) (t : ∀ a, Finset (σ 
       "\n  Reorder a sum.\n\n  The difference with `sum_bij'` is that the bijection is specified as a surjective injection,\n  rather than by an inverse function.\n"]
 theorem prod_bij {s : Finset α} {t : Finset γ} {f : α → β} {g : γ → β} (i : ∀ a ∈ s, γ) (hi : ∀ a ha, i a ha ∈ t)
     (h : ∀ a ha, f a = g (i a ha)) (i_inj : ∀ a₁ a₂ ha₁ ha₂, i a₁ ha₁ = i a₂ ha₂ → a₁ = a₂)
-    (i_surj : ∀ b ∈ t, ∃ (a) (ha), b = i a ha) : (∏ x in s, f x) = ∏ x in t, g x :=
+    (i_surj : ∀ b ∈ t, ∃ a ha, b = i a ha) : (∏ x in s, f x) = ∏ x in t, g x :=
   congr_arg Multiset.prod (Multiset.map_eq_map_of_bij_of_nodup f g s.2 t.2 i hi h i_inj i_surj)
 #align finset.prod_bij Finset.prod_bij
 
@@ -1928,13 +1923,13 @@ theorem prod_finset_product_right' (r : Finset (α × γ)) (s : Finset γ) (t : 
   prod_finset_product_right r s t h
 #align finset.prod_finset_product_right' Finset.prod_finset_product_right'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:130:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
 @[to_additive]
 theorem prod_fiberwise_of_maps_to [DecidableEq γ] {s : Finset α} {t : Finset γ} {g : α → γ} (h : ∀ x ∈ s, g x ∈ t)
     (f : α → β) : (∏ y in t, ∏ x in s.filter fun x => g x = y, f x) = ∏ x in s, f x := by
   letI := Classical.decEq α
   rw [← bUnion_filter_eq_of_maps_to h]
-  refine' (prod_bUnion $ fun x' hx y' hy hne => _).symm
+  refine' (prod_bUnion fun x' hx y' hy hne => _).symm
   rw [Function.onFun, disjoint_filter]
   rintro x hx rfl
   exact hne
@@ -1945,7 +1940,7 @@ theorem prod_image' [DecidableEq α] {s : Finset γ} {g : γ → α} (h : γ →
     (eq : ∀ c ∈ s, f (g c) = ∏ x in s.filter fun c' => g c' = g c, h x) : (∏ x in s.image g, f x) = ∏ x in s, h x :=
   calc
     (∏ x in s.image g, f x) = ∏ x in s.image g, ∏ x in s.filter fun c' => g c' = x, h x :=
-      prod_congr rfl $ fun x hx =>
+      (prod_congr rfl) fun x hx =>
         let ⟨c, hcs, hc⟩ := mem_image.1 hx
         hc ▸ Eq c hcs
     _ = ∏ x in s, h x := prod_fiberwise_of_maps_to (fun x => mem_image_of_mem g) _
@@ -1995,18 +1990,18 @@ variable. -/
 theorem prod_comm' {s : Finset γ} {t : γ → Finset α} {t' : Finset α} {s' : α → Finset γ}
     (h : ∀ x y, x ∈ s ∧ y ∈ t x ↔ x ∈ s' y ∧ y ∈ t') {f : γ → α → β} :
     (∏ x in s, ∏ y in t x, f x y) = ∏ y in t', ∏ x in s' y, f x y := by classical
-  have : ∀ z : γ × α, (z ∈ s.bUnion fun x => (t x).map $ Function.Embedding.sectr x _) ↔ z.1 ∈ s ∧ z.2 ∈ t z.1 := by
+  have : ∀ z : γ × α, (z ∈ s.bUnion fun x => (t x).map <| Function.Embedding.sectr x _) ↔ z.1 ∈ s ∧ z.2 ∈ t z.1 := by
     rintro ⟨x, y⟩
     simp
   exact
     (prod_finset_product' _ _ _ this).symm.trans
-      (prod_finset_product_right' _ _ _ $ fun ⟨x, y⟩ => (this _).trans ((h x y).trans and_comm))
+      ((prod_finset_product_right' _ _ _) fun ⟨x, y⟩ => (this _).trans ((h x y).trans and_comm))
 #align finset.prod_comm' Finset.prod_comm'
 
 @[to_additive]
 theorem prod_comm {s : Finset γ} {t : Finset α} {f : γ → α → β} :
     (∏ x in s, ∏ y in t, f x y) = ∏ y in t, ∏ x in s, f x y :=
-  prod_comm' $ fun _ _ => Iff.rfl
+  prod_comm' fun _ _ => Iff.rfl
 #align finset.prod_comm Finset.prod_comm
 
 @[to_additive]
@@ -2040,7 +2035,7 @@ theorem prod_subset (h : s₁ ⊆ s₂) (hf : ∀ x ∈ s₂, x ∉ s₁ → f x
 @[to_additive]
 theorem prod_filter_of_ne {p : α → Prop} [DecidablePred p] (hp : ∀ x ∈ s, f x ≠ 1 → p x) :
     (∏ x in s.filter p, f x) = ∏ x in s, f x :=
-  prod_subset (filter_subset _ _) $ fun x => by classical
+  (prod_subset (filter_subset _ _)) fun x => by classical
     rw [not_imp_comm, mem_filter]
     exact fun h₁ h₂ => ⟨h₁, hp _ h₁ h₂⟩
 #align finset.prod_filter_of_ne Finset.prod_filter_of_ne
@@ -2048,8 +2043,8 @@ theorem prod_filter_of_ne {p : α → Prop} [DecidablePred p] (hp : ∀ x ∈ s,
 -- If we use `[decidable_eq β]` here, some rewrites fail because they find a wrong `decidable`
 -- instance first; `{∀ x, decidable (f x ≠ 1)}` doesn't work with `rw ← prod_filter_ne_one`
 @[to_additive]
-theorem prod_filter_ne_one [∀ x, Decidable (f x ≠ 1)] : (∏ x in s.filter $ fun x => f x ≠ 1, f x) = ∏ x in s, f x :=
-  prod_filter_of_ne $ fun _ _ => id
+theorem prod_filter_ne_one [∀ x, Decidable (f x ≠ 1)] : (∏ x in s.filter fun x => f x ≠ 1, f x) = ∏ x in s, f x :=
+  prod_filter_of_ne fun _ _ => id
 #align finset.prod_filter_ne_one Finset.prod_filter_ne_one
 
 @[to_additive]
@@ -2086,7 +2081,7 @@ theorem prod_eq_single {s : Finset α} {f : α → β} (a : α) (h₀ : ∀ b �
     (∏ x in s, f x) = f a :=
   haveI := Classical.decEq α
   Classical.by_cases (fun this : a ∈ s => prod_eq_single_of_mem a this h₀) fun this : a ∉ s =>
-    (prod_congr rfl $ fun b hb => h₀ b hb $ by rintro rfl <;> cc).trans $ prod_const_one.trans (h₁ this).symm
+    ((prod_congr rfl) fun b hb => h₀ b hb <| by rintro rfl <;> cc).trans <| prod_const_one.trans (h₁ this).symm
 #align finset.prod_eq_single Finset.prod_eq_single
 
 @[to_additive]
@@ -2113,7 +2108,7 @@ theorem prod_eq_mul_of_mem {s : Finset α} {f : α → β} (a b : α) (ha : a �
 @[to_additive]
 theorem prod_eq_mul {s : Finset α} {f : α → β} (a b : α) (hn : a ≠ b) (h₀ : ∀ c ∈ s, c ≠ a ∧ c ≠ b → f c = 1)
     (ha : a ∉ s → f a = 1) (hb : b ∉ s → f b = 1) : (∏ x in s, f x) = f a * f b := by
-  haveI := Classical.decEq α <;> by_cases h₁:a ∈ s <;> by_cases h₂:b ∈ s
+  haveI := Classical.decEq α <;> by_cases h₁ : a ∈ s <;> by_cases h₂ : b ∈ s
   · exact prod_eq_mul_of_mem a b h₁ h₂ hn h₀
     
   · rw [hb h₂, mul_one]
@@ -2292,7 +2287,7 @@ theorem prod_apply_ite_of_true {p : α → Prop} {hp : DecidablePred p} (f g : �
 @[to_additive]
 theorem prod_extend_by_one [DecidableEq α] (s : Finset α) (f : α → β) :
     (∏ i in s, if i ∈ s then f i else 1) = ∏ i in s, f i :=
-  prod_congr rfl $ fun i hi => if_pos hi
+  (prod_congr rfl) fun i hi => if_pos hi
 #align finset.prod_extend_by_one Finset.prod_extend_by_one
 
 @[simp, to_additive]
@@ -2387,7 +2382,6 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
   sum_dite_eq _ _ _
 #align finset.sum_pi_single Finset.sum_pi_single
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a h₁ h₂) -/
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
      (Command.declModifiers
@@ -2414,13 +2408,13 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
            (Lean.binderIdent `a)
            («binderTerm∈_» "∈" `s)
            ","
-           (Term.arrow (Init.Logic.«term_≠_» (Term.app `f [`a]) " ≠ " (num "1")) "→" `γ))]
+           (Term.arrow («term_≠_» (Term.app `f [`a]) "≠" (num "1")) "→" `γ))]
          []
          ")")
         (Term.explicitBinder
          "("
          [`hi]
-         [":" (Term.forall "∀" [`a `h₁ `h₂] [] "," (Init.Core.«term_∈_» (Term.app `i [`a `h₁ `h₂]) " ∈ " `t))]
+         [":" (Term.forall "∀" [`a `h₁ `h₂] [] "," («term_∈_» (Term.app `i [`a `h₁ `h₂]) "∈" `t))]
          []
          ")")
         (Term.explicitBinder
@@ -2433,9 +2427,9 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
            []
            ","
            (Term.arrow
-            (Init.Core.«term_=_» (Term.app `i [`a₁ `h₁₁ `h₁₂]) " = " (Term.app `i [`a₂ `h₂₁ `h₂₂]))
+            («term_=_» (Term.app `i [`a₁ `h₁₁ `h₁₂]) "=" (Term.app `i [`a₂ `h₂₁ `h₂₂]))
             "→"
-            (Init.Core.«term_=_» `a₁ " = " `a₂)))]
+            («term_=_» `a₁ "=" `a₂)))]
          []
          ")")
         (Term.explicitBinder
@@ -2448,26 +2442,16 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
            («binderTerm∈_» "∈" `t)
            ","
            (Term.arrow
-            (Init.Logic.«term_≠_» (Term.app `g [`b]) " ≠ " (num "1"))
+            («term_≠_» (Term.app `g [`b]) "≠" (num "1"))
             "→"
-            (Init.Logic.«term∃_,_»
+            («term∃_,_»
              "∃"
-             (Std.ExtendedBinder.extBinders
-              (Std.ExtendedBinder.extBinderCollection
-               [(Std.ExtendedBinder.extBinderParenthesized
-                 "("
-                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `a) [])
-                 ")")
-                (Std.ExtendedBinder.extBinderParenthesized
-                 "("
-                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `h₁) [])
-                 ")")
-                (Std.ExtendedBinder.extBinderParenthesized
-                 "("
-                 (Std.ExtendedBinder.extBinder (Lean.binderIdent `h₂) [])
-                 ")")]))
-             ", "
-             (Init.Core.«term_=_» `b " = " (Term.app `i [`a `h₁ `h₂])))))]
+             (Lean.explicitBinders
+              (Lean.unbracketedExplicitBinders
+               [(Lean.binderIdent `a) (Lean.binderIdent `h₁) (Lean.binderIdent `h₂)]
+               []))
+             ","
+             («term_=_» `b "=" (Term.app `i [`a `h₁ `h₂])))))]
          []
          ")")
         (Term.explicitBinder
@@ -2479,12 +2463,12 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
            [`a `h₁ `h₂]
            []
            ","
-           (Init.Core.«term_=_» (Term.app `f [`a]) " = " (Term.app `g [(Term.app `i [`a `h₁ `h₂])])))]
+           («term_=_» (Term.app `f [`a]) "=" (Term.app `g [(Term.app `i [`a `h₁ `h₂])])))]
          []
          ")")]
        (Term.typeSpec
         ":"
-        (Init.Core.«term_=_»
+        («term_=_»
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -2492,7 +2476,7 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
           `s
           ", "
           (Term.app `f [`x]))
-         " = "
+         "="
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -2514,7 +2498,7 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
              (calc
               "calc"
               (calcStep
-               (Init.Core.«term_=_»
+               («term_=_»
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -2522,35 +2506,29 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
                  `s
                  ", "
                  (Term.app `f [`x]))
-                " = "
+                "="
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                  " in "
-                 (Init.Core.«term_$_»
+                 (Term.app
                   `s.filter
-                  " $ "
-                  (Term.fun
-                   "fun"
-                   (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1")))))
+                  [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
                  ", "
                  (Term.app `f [`x])))
                ":="
                `prod_filter_ne_one.symm)
               [(calcStep
-                (Init.Core.«term_=_»
+                («term_=_»
                  (Term.hole "_")
-                 " = "
+                 "="
                  (BigOperators.Algebra.BigOperators.Basic.finset.prod
                   "∏"
                   (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                   " in "
-                  (Init.Core.«term_$_»
+                  (Term.app
                    `t.filter
-                   " $ "
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `g [`x]) " ≠ " (num "1")))))
+                   [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `g [`x]) "≠" (num "1"))))])
                   ", "
                   (Term.app `g [`x])))
                 ":="
@@ -2573,99 +2551,92 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
                     [`a `ha]
                     []
                     "=>"
-                    (Init.Core.«term_$_»
+                    (Term.app
                      (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim)
-                     " $ "
-                     (Term.fun
-                      "fun"
-                      (Term.basicFun
-                       [`h₁ `h₂]
-                       []
-                       "=>"
-                       (Term.app
-                        `mem_filter.mpr
-                        [(Term.anonymousCtor
-                          "⟨"
-                          [(Term.app `hi [`a `h₁ `h₂])
-                           ","
-                           (Term.fun
-                            "fun"
-                            (Term.basicFun
-                             [`hg]
-                             []
-                             "=>"
-                             (Term.app `h₂ [(Init.Core.«term_▸_» `hg " ▸ " (Term.app `h [`a `h₁ `h₂]))])))]
-                          "⟩")]))))))
+                     [(Term.fun
+                       "fun"
+                       (Term.basicFun
+                        [`h₁ `h₂]
+                        []
+                        "=>"
+                        (Term.app
+                         `mem_filter.mpr
+                         [(Term.anonymousCtor
+                           "⟨"
+                           [(Term.app `hi [`a `h₁ `h₂])
+                            ","
+                            (Term.fun
+                             "fun"
+                             (Term.basicFun
+                              [`hg]
+                              []
+                              "=>"
+                              (Term.app `h₂ [(Term.subst `hg "▸" [(Term.app `h [`a `h₁ `h₂])])])))]
+                           "⟩")])))])))
                   (Term.fun
                    "fun"
                    (Term.basicFun
                     [`a `ha]
                     []
                     "=>"
-                    (Init.Core.«term_$_»
-                     (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim)
-                     " $ "
-                     (Term.app `h [`a]))))
+                    («term_<|_» (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim) "<|" (Term.app `h [`a]))))
                   (Term.fun
                    "fun"
                    (Term.basicFun
                     [`a₁ `a₂ `ha₁ `ha₂]
                     []
                     "=>"
-                    (Init.Core.«term_$_»
+                    (Term.app
                      (Term.proj (Term.app `mem_filter.mp [`ha₁]) "." `elim)
-                     " $ "
-                     (Term.fun
-                      "fun"
-                      (Term.basicFun
-                       [`ha₁₁ `ha₁₂]
-                       []
-                       "=>"
-                       (Init.Core.«term_$_»
-                        (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
-                        " $ "
-                        (Term.fun
-                         "fun"
-                         (Term.basicFun
-                          [`ha₂₁ `ha₂₂]
-                          []
-                          "=>"
-                          (Term.app
-                           `i_inj
-                           [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))))))))
+                     [(Term.fun
+                       "fun"
+                       (Term.basicFun
+                        [`ha₁₁ `ha₁₂]
+                        []
+                        "=>"
+                        (Term.app
+                         (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
+                         [(Term.fun
+                           "fun"
+                           (Term.basicFun
+                            [`ha₂₁ `ha₂₂]
+                            []
+                            "=>"
+                            (Term.app
+                             `i_inj
+                             [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))])))])))
                   (Term.fun
                    "fun"
                    (Term.basicFun
                     [`b `hb]
                     []
                     "=>"
-                    (Init.Core.«term_$_»
+                    (Term.app
                      (Term.proj (Term.app `mem_filter.mp [`hb]) "." `elim)
-                     " $ "
-                     (Term.fun
-                      "fun"
-                      (Term.basicFun
-                       [`h₁ `h₂]
-                       []
-                       "=>"
-                       (Term.let
-                        "let"
-                        (Term.letDecl
-                         (Term.letPatDecl
-                          (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂ "," `Eq] "⟩")
-                          []
-                          []
-                          ":="
-                          (Term.app `i_surj [`b `h₁ `h₂])))
+                     [(Term.fun
+                       "fun"
+                       (Term.basicFun
+                        [`h₁ `h₂]
                         []
-                        (Term.anonymousCtor
-                         "⟨"
-                         [`a "," (Term.app `mem_filter.mpr [(Term.anonymousCtor "⟨" [`ha₁ "," `ha₂] "⟩")]) "," `Eq]
-                         "⟩")))))))]))
+                        "=>"
+                        (Term.let
+                         "let"
+                         (Term.letDecl
+                          (Term.letPatDecl
+                           (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂ "," `Eq] "⟩")
+                           []
+                           []
+                           ":="
+                           (Term.app `i_surj [`b `h₁ `h₂])))
+                         []
+                         (Term.anonymousCtor
+                          "⟨"
+                          [`a "," (Term.app `mem_filter.mpr [(Term.anonymousCtor "⟨" [`ha₁ "," `ha₂] "⟩")]) "," `Eq]
+                          "⟩"))))])))]))
                (calcStep
-                (Init.Core.«term_=_»
+                («term_=_»
                  (Term.hole "_")
-                 " = "
+                 "="
                  (BigOperators.Algebra.BigOperators.Basic.finset.prod
                   "∏"
                   (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -2693,7 +2664,7 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
             (calc
              "calc"
              (calcStep
-              (Init.Core.«term_=_»
+              («term_=_»
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -2701,35 +2672,29 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
                 `s
                 ", "
                 (Term.app `f [`x]))
-               " = "
+               "="
                (BigOperators.Algebra.BigOperators.Basic.finset.prod
                 "∏"
                 (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                 " in "
-                (Init.Core.«term_$_»
+                (Term.app
                  `s.filter
-                 " $ "
-                 (Term.fun
-                  "fun"
-                  (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1")))))
+                 [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
                 ", "
                 (Term.app `f [`x])))
               ":="
               `prod_filter_ne_one.symm)
              [(calcStep
-               (Init.Core.«term_=_»
+               («term_=_»
                 (Term.hole "_")
-                " = "
+                "="
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
                  " in "
-                 (Init.Core.«term_$_»
+                 (Term.app
                   `t.filter
-                  " $ "
-                  (Term.fun
-                   "fun"
-                   (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `g [`x]) " ≠ " (num "1")))))
+                  [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `g [`x]) "≠" (num "1"))))])
                  ", "
                  (Term.app `g [`x])))
                ":="
@@ -2752,99 +2717,92 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
                    [`a `ha]
                    []
                    "=>"
-                   (Init.Core.«term_$_»
+                   (Term.app
                     (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim)
-                    " $ "
-                    (Term.fun
-                     "fun"
-                     (Term.basicFun
-                      [`h₁ `h₂]
-                      []
-                      "=>"
-                      (Term.app
-                       `mem_filter.mpr
-                       [(Term.anonymousCtor
-                         "⟨"
-                         [(Term.app `hi [`a `h₁ `h₂])
-                          ","
-                          (Term.fun
-                           "fun"
-                           (Term.basicFun
-                            [`hg]
-                            []
-                            "=>"
-                            (Term.app `h₂ [(Init.Core.«term_▸_» `hg " ▸ " (Term.app `h [`a `h₁ `h₂]))])))]
-                         "⟩")]))))))
+                    [(Term.fun
+                      "fun"
+                      (Term.basicFun
+                       [`h₁ `h₂]
+                       []
+                       "=>"
+                       (Term.app
+                        `mem_filter.mpr
+                        [(Term.anonymousCtor
+                          "⟨"
+                          [(Term.app `hi [`a `h₁ `h₂])
+                           ","
+                           (Term.fun
+                            "fun"
+                            (Term.basicFun
+                             [`hg]
+                             []
+                             "=>"
+                             (Term.app `h₂ [(Term.subst `hg "▸" [(Term.app `h [`a `h₁ `h₂])])])))]
+                          "⟩")])))])))
                  (Term.fun
                   "fun"
                   (Term.basicFun
                    [`a `ha]
                    []
                    "=>"
-                   (Init.Core.«term_$_»
-                    (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim)
-                    " $ "
-                    (Term.app `h [`a]))))
+                   («term_<|_» (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim) "<|" (Term.app `h [`a]))))
                  (Term.fun
                   "fun"
                   (Term.basicFun
                    [`a₁ `a₂ `ha₁ `ha₂]
                    []
                    "=>"
-                   (Init.Core.«term_$_»
+                   (Term.app
                     (Term.proj (Term.app `mem_filter.mp [`ha₁]) "." `elim)
-                    " $ "
-                    (Term.fun
-                     "fun"
-                     (Term.basicFun
-                      [`ha₁₁ `ha₁₂]
-                      []
-                      "=>"
-                      (Init.Core.«term_$_»
-                       (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
-                       " $ "
-                       (Term.fun
-                        "fun"
-                        (Term.basicFun
-                         [`ha₂₁ `ha₂₂]
-                         []
-                         "=>"
-                         (Term.app
-                          `i_inj
-                          [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))))))))
+                    [(Term.fun
+                      "fun"
+                      (Term.basicFun
+                       [`ha₁₁ `ha₁₂]
+                       []
+                       "=>"
+                       (Term.app
+                        (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
+                        [(Term.fun
+                          "fun"
+                          (Term.basicFun
+                           [`ha₂₁ `ha₂₂]
+                           []
+                           "=>"
+                           (Term.app
+                            `i_inj
+                            [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))])))])))
                  (Term.fun
                   "fun"
                   (Term.basicFun
                    [`b `hb]
                    []
                    "=>"
-                   (Init.Core.«term_$_»
+                   (Term.app
                     (Term.proj (Term.app `mem_filter.mp [`hb]) "." `elim)
-                    " $ "
-                    (Term.fun
-                     "fun"
-                     (Term.basicFun
-                      [`h₁ `h₂]
-                      []
-                      "=>"
-                      (Term.let
-                       "let"
-                       (Term.letDecl
-                        (Term.letPatDecl
-                         (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂ "," `Eq] "⟩")
-                         []
-                         []
-                         ":="
-                         (Term.app `i_surj [`b `h₁ `h₂])))
+                    [(Term.fun
+                      "fun"
+                      (Term.basicFun
+                       [`h₁ `h₂]
                        []
-                       (Term.anonymousCtor
-                        "⟨"
-                        [`a "," (Term.app `mem_filter.mpr [(Term.anonymousCtor "⟨" [`ha₁ "," `ha₂] "⟩")]) "," `Eq]
-                        "⟩")))))))]))
+                       "=>"
+                       (Term.let
+                        "let"
+                        (Term.letDecl
+                         (Term.letPatDecl
+                          (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂ "," `Eq] "⟩")
+                          []
+                          []
+                          ":="
+                          (Term.app `i_surj [`b `h₁ `h₂])))
+                        []
+                        (Term.anonymousCtor
+                         "⟨"
+                         [`a "," (Term.app `mem_filter.mpr [(Term.anonymousCtor "⟨" [`ha₁ "," `ha₂] "⟩")]) "," `Eq]
+                         "⟩"))))])))]))
               (calcStep
-               (Init.Core.«term_=_»
+               («term_=_»
                 (Term.hole "_")
-                " = "
+                "="
                 (BigOperators.Algebra.BigOperators.Basic.finset.prod
                  "∏"
                  (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -2864,7 +2822,7 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
         (calc
          "calc"
          (calcStep
-          (Init.Core.«term_=_»
+          («term_=_»
            (BigOperators.Algebra.BigOperators.Basic.finset.prod
             "∏"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -2872,31 +2830,29 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
             `s
             ", "
             (Term.app `f [`x]))
-           " = "
+           "="
            (BigOperators.Algebra.BigOperators.Basic.finset.prod
             "∏"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
             " in "
-            (Init.Core.«term_$_»
+            (Term.app
              `s.filter
-             " $ "
-             (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1")))))
+             [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
             ", "
             (Term.app `f [`x])))
           ":="
           `prod_filter_ne_one.symm)
          [(calcStep
-           (Init.Core.«term_=_»
+           («term_=_»
             (Term.hole "_")
-            " = "
+            "="
             (BigOperators.Algebra.BigOperators.Basic.finset.prod
              "∏"
              (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
              " in "
-             (Init.Core.«term_$_»
+             (Term.app
               `t.filter
-              " $ "
-              (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `g [`x]) " ≠ " (num "1")))))
+              [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `g [`x]) "≠" (num "1"))))])
              ", "
              (Term.app `g [`x])))
            ":="
@@ -2919,94 +2875,92 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
                [`a `ha]
                []
                "=>"
-               (Init.Core.«term_$_»
+               (Term.app
                 (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim)
-                " $ "
-                (Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`h₁ `h₂]
-                  []
-                  "=>"
-                  (Term.app
-                   `mem_filter.mpr
-                   [(Term.anonymousCtor
-                     "⟨"
-                     [(Term.app `hi [`a `h₁ `h₂])
-                      ","
-                      (Term.fun
-                       "fun"
-                       (Term.basicFun
-                        [`hg]
-                        []
-                        "=>"
-                        (Term.app `h₂ [(Init.Core.«term_▸_» `hg " ▸ " (Term.app `h [`a `h₁ `h₂]))])))]
-                     "⟩")]))))))
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`h₁ `h₂]
+                   []
+                   "=>"
+                   (Term.app
+                    `mem_filter.mpr
+                    [(Term.anonymousCtor
+                      "⟨"
+                      [(Term.app `hi [`a `h₁ `h₂])
+                       ","
+                       (Term.fun
+                        "fun"
+                        (Term.basicFun
+                         [`hg]
+                         []
+                         "=>"
+                         (Term.app `h₂ [(Term.subst `hg "▸" [(Term.app `h [`a `h₁ `h₂])])])))]
+                      "⟩")])))])))
              (Term.fun
               "fun"
               (Term.basicFun
                [`a `ha]
                []
                "=>"
-               (Init.Core.«term_$_» (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim) " $ " (Term.app `h [`a]))))
+               («term_<|_» (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim) "<|" (Term.app `h [`a]))))
              (Term.fun
               "fun"
               (Term.basicFun
                [`a₁ `a₂ `ha₁ `ha₂]
                []
                "=>"
-               (Init.Core.«term_$_»
+               (Term.app
                 (Term.proj (Term.app `mem_filter.mp [`ha₁]) "." `elim)
-                " $ "
-                (Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`ha₁₁ `ha₁₂]
-                  []
-                  "=>"
-                  (Init.Core.«term_$_»
-                   (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
-                   " $ "
-                   (Term.fun
-                    "fun"
-                    (Term.basicFun
-                     [`ha₂₁ `ha₂₂]
-                     []
-                     "=>"
-                     (Term.app `i_inj [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))))))))
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`ha₁₁ `ha₁₂]
+                   []
+                   "=>"
+                   (Term.app
+                    (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
+                    [(Term.fun
+                      "fun"
+                      (Term.basicFun
+                       [`ha₂₁ `ha₂₂]
+                       []
+                       "=>"
+                       (Term.app
+                        `i_inj
+                        [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))])))])))
              (Term.fun
               "fun"
               (Term.basicFun
                [`b `hb]
                []
                "=>"
-               (Init.Core.«term_$_»
+               (Term.app
                 (Term.proj (Term.app `mem_filter.mp [`hb]) "." `elim)
-                " $ "
-                (Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`h₁ `h₂]
-                  []
-                  "=>"
-                  (Term.let
-                   "let"
-                   (Term.letDecl
-                    (Term.letPatDecl
-                     (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂ "," `Eq] "⟩")
-                     []
-                     []
-                     ":="
-                     (Term.app `i_surj [`b `h₁ `h₂])))
+                [(Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`h₁ `h₂]
                    []
-                   (Term.anonymousCtor
-                    "⟨"
-                    [`a "," (Term.app `mem_filter.mpr [(Term.anonymousCtor "⟨" [`ha₁ "," `ha₂] "⟩")]) "," `Eq]
-                    "⟩")))))))]))
+                   "=>"
+                   (Term.let
+                    "let"
+                    (Term.letDecl
+                     (Term.letPatDecl
+                      (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂ "," `Eq] "⟩")
+                      []
+                      []
+                      ":="
+                      (Term.app `i_surj [`b `h₁ `h₂])))
+                    []
+                    (Term.anonymousCtor
+                     "⟨"
+                     [`a "," (Term.app `mem_filter.mpr [(Term.anonymousCtor "⟨" [`ha₁ "," `ha₂] "⟩")]) "," `Eq]
+                     "⟩"))))])))]))
           (calcStep
-           (Init.Core.«term_=_»
+           («term_=_»
             (Term.hole "_")
-            " = "
+            "="
             (BigOperators.Algebra.BigOperators.Basic.finset.prod
              "∏"
              (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -3022,7 +2976,7 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
        (calc
         "calc"
         (calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -3030,31 +2984,29 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
            `s
            ", "
            (Term.app `f [`x]))
-          " = "
+          "="
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
            " in "
-           (Init.Core.«term_$_»
+           (Term.app
             `s.filter
-            " $ "
-            (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1")))))
+            [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
            ", "
            (Term.app `f [`x])))
          ":="
          `prod_filter_ne_one.symm)
         [(calcStep
-          (Init.Core.«term_=_»
+          («term_=_»
            (Term.hole "_")
-           " = "
+           "="
            (BigOperators.Algebra.BigOperators.Basic.finset.prod
             "∏"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
             " in "
-            (Init.Core.«term_$_»
+            (Term.app
              `t.filter
-             " $ "
-             (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `g [`x]) " ≠ " (num "1")))))
+             [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `g [`x]) "≠" (num "1"))))])
             ", "
             (Term.app `g [`x])))
           ":="
@@ -3077,94 +3029,92 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
               [`a `ha]
               []
               "=>"
-              (Init.Core.«term_$_»
+              (Term.app
                (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim)
-               " $ "
-               (Term.fun
-                "fun"
-                (Term.basicFun
-                 [`h₁ `h₂]
-                 []
-                 "=>"
-                 (Term.app
-                  `mem_filter.mpr
-                  [(Term.anonymousCtor
-                    "⟨"
-                    [(Term.app `hi [`a `h₁ `h₂])
-                     ","
-                     (Term.fun
-                      "fun"
-                      (Term.basicFun
-                       [`hg]
-                       []
-                       "=>"
-                       (Term.app `h₂ [(Init.Core.«term_▸_» `hg " ▸ " (Term.app `h [`a `h₁ `h₂]))])))]
-                    "⟩")]))))))
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`h₁ `h₂]
+                  []
+                  "=>"
+                  (Term.app
+                   `mem_filter.mpr
+                   [(Term.anonymousCtor
+                     "⟨"
+                     [(Term.app `hi [`a `h₁ `h₂])
+                      ","
+                      (Term.fun
+                       "fun"
+                       (Term.basicFun
+                        [`hg]
+                        []
+                        "=>"
+                        (Term.app `h₂ [(Term.subst `hg "▸" [(Term.app `h [`a `h₁ `h₂])])])))]
+                     "⟩")])))])))
             (Term.fun
              "fun"
              (Term.basicFun
               [`a `ha]
               []
               "=>"
-              (Init.Core.«term_$_» (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim) " $ " (Term.app `h [`a]))))
+              («term_<|_» (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim) "<|" (Term.app `h [`a]))))
             (Term.fun
              "fun"
              (Term.basicFun
               [`a₁ `a₂ `ha₁ `ha₂]
               []
               "=>"
-              (Init.Core.«term_$_»
+              (Term.app
                (Term.proj (Term.app `mem_filter.mp [`ha₁]) "." `elim)
-               " $ "
-               (Term.fun
-                "fun"
-                (Term.basicFun
-                 [`ha₁₁ `ha₁₂]
-                 []
-                 "=>"
-                 (Init.Core.«term_$_»
-                  (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
-                  " $ "
-                  (Term.fun
-                   "fun"
-                   (Term.basicFun
-                    [`ha₂₁ `ha₂₂]
-                    []
-                    "=>"
-                    (Term.app `i_inj [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))))))))
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`ha₁₁ `ha₁₂]
+                  []
+                  "=>"
+                  (Term.app
+                   (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
+                   [(Term.fun
+                     "fun"
+                     (Term.basicFun
+                      [`ha₂₁ `ha₂₂]
+                      []
+                      "=>"
+                      (Term.app
+                       `i_inj
+                       [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))])))])))
             (Term.fun
              "fun"
              (Term.basicFun
               [`b `hb]
               []
               "=>"
-              (Init.Core.«term_$_»
+              (Term.app
                (Term.proj (Term.app `mem_filter.mp [`hb]) "." `elim)
-               " $ "
-               (Term.fun
-                "fun"
-                (Term.basicFun
-                 [`h₁ `h₂]
-                 []
-                 "=>"
-                 (Term.let
-                  "let"
-                  (Term.letDecl
-                   (Term.letPatDecl
-                    (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂ "," `Eq] "⟩")
-                    []
-                    []
-                    ":="
-                    (Term.app `i_surj [`b `h₁ `h₂])))
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`h₁ `h₂]
                   []
-                  (Term.anonymousCtor
-                   "⟨"
-                   [`a "," (Term.app `mem_filter.mpr [(Term.anonymousCtor "⟨" [`ha₁ "," `ha₂] "⟩")]) "," `Eq]
-                   "⟩")))))))]))
+                  "=>"
+                  (Term.let
+                   "let"
+                   (Term.letDecl
+                    (Term.letPatDecl
+                     (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂ "," `Eq] "⟩")
+                     []
+                     []
+                     ":="
+                     (Term.app `i_surj [`b `h₁ `h₂])))
+                   []
+                   (Term.anonymousCtor
+                    "⟨"
+                    [`a "," (Term.app `mem_filter.mpr [(Term.anonymousCtor "⟨" [`ha₁ "," `ha₂] "⟩")]) "," `Eq]
+                    "⟩"))))])))]))
          (calcStep
-          (Init.Core.«term_=_»
+          («term_=_»
            (Term.hole "_")
-           " = "
+           "="
            (BigOperators.Algebra.BigOperators.Basic.finset.prod
             "∏"
             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -3178,7 +3128,7 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
       (calc
        "calc"
        (calcStep
-        (Init.Core.«term_=_»
+        («term_=_»
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -3186,31 +3136,29 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
           `s
           ", "
           (Term.app `f [`x]))
-         " = "
+         "="
          (BigOperators.Algebra.BigOperators.Basic.finset.prod
           "∏"
           (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
           " in "
-          (Init.Core.«term_$_»
+          (Term.app
            `s.filter
-           " $ "
-           (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1")))))
+           [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
           ", "
           (Term.app `f [`x])))
         ":="
         `prod_filter_ne_one.symm)
        [(calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (Term.hole "_")
-          " = "
+          "="
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
            " in "
-           (Init.Core.«term_$_»
+           (Term.app
             `t.filter
-            " $ "
-            (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `g [`x]) " ≠ " (num "1")))))
+            [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `g [`x]) "≠" (num "1"))))])
            ", "
            (Term.app `g [`x])))
          ":="
@@ -3233,94 +3181,88 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
              [`a `ha]
              []
              "=>"
-             (Init.Core.«term_$_»
+             (Term.app
               (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim)
-              " $ "
-              (Term.fun
-               "fun"
-               (Term.basicFun
-                [`h₁ `h₂]
-                []
-                "=>"
-                (Term.app
-                 `mem_filter.mpr
-                 [(Term.anonymousCtor
-                   "⟨"
-                   [(Term.app `hi [`a `h₁ `h₂])
-                    ","
-                    (Term.fun
-                     "fun"
-                     (Term.basicFun
-                      [`hg]
-                      []
-                      "=>"
-                      (Term.app `h₂ [(Init.Core.«term_▸_» `hg " ▸ " (Term.app `h [`a `h₁ `h₂]))])))]
-                   "⟩")]))))))
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`h₁ `h₂]
+                 []
+                 "=>"
+                 (Term.app
+                  `mem_filter.mpr
+                  [(Term.anonymousCtor
+                    "⟨"
+                    [(Term.app `hi [`a `h₁ `h₂])
+                     ","
+                     (Term.fun
+                      "fun"
+                      (Term.basicFun [`hg] [] "=>" (Term.app `h₂ [(Term.subst `hg "▸" [(Term.app `h [`a `h₁ `h₂])])])))]
+                    "⟩")])))])))
            (Term.fun
             "fun"
             (Term.basicFun
              [`a `ha]
              []
              "=>"
-             (Init.Core.«term_$_» (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim) " $ " (Term.app `h [`a]))))
+             («term_<|_» (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim) "<|" (Term.app `h [`a]))))
            (Term.fun
             "fun"
             (Term.basicFun
              [`a₁ `a₂ `ha₁ `ha₂]
              []
              "=>"
-             (Init.Core.«term_$_»
+             (Term.app
               (Term.proj (Term.app `mem_filter.mp [`ha₁]) "." `elim)
-              " $ "
-              (Term.fun
-               "fun"
-               (Term.basicFun
-                [`ha₁₁ `ha₁₂]
-                []
-                "=>"
-                (Init.Core.«term_$_»
-                 (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
-                 " $ "
-                 (Term.fun
-                  "fun"
-                  (Term.basicFun
-                   [`ha₂₁ `ha₂₂]
-                   []
-                   "=>"
-                   (Term.app `i_inj [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))))))))
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`ha₁₁ `ha₁₂]
+                 []
+                 "=>"
+                 (Term.app
+                  (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
+                  [(Term.fun
+                    "fun"
+                    (Term.basicFun
+                     [`ha₂₁ `ha₂₂]
+                     []
+                     "=>"
+                     (Term.app
+                      `i_inj
+                      [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))])))])))
            (Term.fun
             "fun"
             (Term.basicFun
              [`b `hb]
              []
              "=>"
-             (Init.Core.«term_$_»
+             (Term.app
               (Term.proj (Term.app `mem_filter.mp [`hb]) "." `elim)
-              " $ "
-              (Term.fun
-               "fun"
-               (Term.basicFun
-                [`h₁ `h₂]
-                []
-                "=>"
-                (Term.let
-                 "let"
-                 (Term.letDecl
-                  (Term.letPatDecl
-                   (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂ "," `Eq] "⟩")
-                   []
-                   []
-                   ":="
-                   (Term.app `i_surj [`b `h₁ `h₂])))
+              [(Term.fun
+                "fun"
+                (Term.basicFun
+                 [`h₁ `h₂]
                  []
-                 (Term.anonymousCtor
-                  "⟨"
-                  [`a "," (Term.app `mem_filter.mpr [(Term.anonymousCtor "⟨" [`ha₁ "," `ha₂] "⟩")]) "," `Eq]
-                  "⟩")))))))]))
+                 "=>"
+                 (Term.let
+                  "let"
+                  (Term.letDecl
+                   (Term.letPatDecl
+                    (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂ "," `Eq] "⟩")
+                    []
+                    []
+                    ":="
+                    (Term.app `i_surj [`b `h₁ `h₂])))
+                  []
+                  (Term.anonymousCtor
+                   "⟨"
+                   [`a "," (Term.app `mem_filter.mpr [(Term.anonymousCtor "⟨" [`ha₁ "," `ha₂] "⟩")]) "," `Eq]
+                   "⟩"))))])))]))
         (calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (Term.hole "_")
-          " = "
+          "="
           (BigOperators.Algebra.BigOperators.Basic.finset.prod
            "∏"
            (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -3334,9 +3276,9 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
       `prod_filter_ne_one
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (Term.hole "_")
-       " = "
+       "="
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -3369,7 +3311,7 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.app
@@ -3391,90 +3333,82 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
           [`a `ha]
           []
           "=>"
-          (Init.Core.«term_$_»
+          (Term.app
            (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim)
-           " $ "
-           (Term.fun
-            "fun"
-            (Term.basicFun
-             [`h₁ `h₂]
-             []
-             "=>"
-             (Term.app
-              `mem_filter.mpr
-              [(Term.anonymousCtor
-                "⟨"
-                [(Term.app `hi [`a `h₁ `h₂])
-                 ","
-                 (Term.fun
-                  "fun"
-                  (Term.basicFun
-                   [`hg]
-                   []
-                   "=>"
-                   (Term.app `h₂ [(Init.Core.«term_▸_» `hg " ▸ " (Term.app `h [`a `h₁ `h₂]))])))]
-                "⟩")]))))))
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`h₁ `h₂]
+              []
+              "=>"
+              (Term.app
+               `mem_filter.mpr
+               [(Term.anonymousCtor
+                 "⟨"
+                 [(Term.app `hi [`a `h₁ `h₂])
+                  ","
+                  (Term.fun
+                   "fun"
+                   (Term.basicFun [`hg] [] "=>" (Term.app `h₂ [(Term.subst `hg "▸" [(Term.app `h [`a `h₁ `h₂])])])))]
+                 "⟩")])))])))
         (Term.fun
          "fun"
          (Term.basicFun
           [`a `ha]
           []
           "=>"
-          (Init.Core.«term_$_» (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim) " $ " (Term.app `h [`a]))))
+          («term_<|_» (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim) "<|" (Term.app `h [`a]))))
         (Term.fun
          "fun"
          (Term.basicFun
           [`a₁ `a₂ `ha₁ `ha₂]
           []
           "=>"
-          (Init.Core.«term_$_»
+          (Term.app
            (Term.proj (Term.app `mem_filter.mp [`ha₁]) "." `elim)
-           " $ "
-           (Term.fun
-            "fun"
-            (Term.basicFun
-             [`ha₁₁ `ha₁₂]
-             []
-             "=>"
-             (Init.Core.«term_$_»
-              (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
-              " $ "
-              (Term.fun
-               "fun"
-               (Term.basicFun
-                [`ha₂₁ `ha₂₂]
-                []
-                "=>"
-                (Term.app `i_inj [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))))))))
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`ha₁₁ `ha₁₂]
+              []
+              "=>"
+              (Term.app
+               (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
+               [(Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`ha₂₁ `ha₂₂]
+                  []
+                  "=>"
+                  (Term.app `i_inj [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))])))])))
         (Term.fun
          "fun"
          (Term.basicFun
           [`b `hb]
           []
           "=>"
-          (Init.Core.«term_$_»
+          (Term.app
            (Term.proj (Term.app `mem_filter.mp [`hb]) "." `elim)
-           " $ "
-           (Term.fun
-            "fun"
-            (Term.basicFun
-             [`h₁ `h₂]
-             []
-             "=>"
-             (Term.let
-              "let"
-              (Term.letDecl
-               (Term.letPatDecl
-                (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂ "," `Eq] "⟩")
-                []
-                []
-                ":="
-                (Term.app `i_surj [`b `h₁ `h₂])))
+           [(Term.fun
+             "fun"
+             (Term.basicFun
+              [`h₁ `h₂]
               []
-              (Term.anonymousCtor
-               "⟨"
-               [`a "," (Term.app `mem_filter.mpr [(Term.anonymousCtor "⟨" [`ha₁ "," `ha₂] "⟩")]) "," `Eq]
-               "⟩")))))))])
+              "=>"
+              (Term.let
+               "let"
+               (Term.letDecl
+                (Term.letPatDecl
+                 (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂ "," `Eq] "⟩")
+                 []
+                 []
+                 ":="
+                 (Term.app `i_surj [`b `h₁ `h₂])))
+               []
+               (Term.anonymousCtor
+                "⟨"
+                [`a "," (Term.app `mem_filter.mpr [(Term.anonymousCtor "⟨" [`ha₁ "," `ha₂] "⟩")]) "," `Eq]
+                "⟩"))))])))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -3484,53 +3418,53 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
         [`b `hb]
         []
         "=>"
-        (Init.Core.«term_$_»
+        (Term.app
          (Term.proj (Term.app `mem_filter.mp [`hb]) "." `elim)
-         " $ "
-         (Term.fun
-          "fun"
-          (Term.basicFun
-           [`h₁ `h₂]
-           []
-           "=>"
-           (Term.let
-            "let"
-            (Term.letDecl
-             (Term.letPatDecl
-              (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂ "," `Eq] "⟩")
-              []
-              []
-              ":="
-              (Term.app `i_surj [`b `h₁ `h₂])))
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`h₁ `h₂]
             []
-            (Term.anonymousCtor
-             "⟨"
-             [`a "," (Term.app `mem_filter.mpr [(Term.anonymousCtor "⟨" [`ha₁ "," `ha₂] "⟩")]) "," `Eq]
-             "⟩")))))))
+            "=>"
+            (Term.let
+             "let"
+             (Term.letDecl
+              (Term.letPatDecl
+               (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂ "," `Eq] "⟩")
+               []
+               []
+               ":="
+               (Term.app `i_surj [`b `h₁ `h₂])))
+             []
+             (Term.anonymousCtor
+              "⟨"
+              [`a "," (Term.app `mem_filter.mpr [(Term.anonymousCtor "⟨" [`ha₁ "," `ha₂] "⟩")]) "," `Eq]
+              "⟩"))))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      (Term.app
        (Term.proj (Term.app `mem_filter.mp [`hb]) "." `elim)
-       " $ "
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`h₁ `h₂]
-         []
-         "=>"
-         (Term.let
-          "let"
-          (Term.letDecl
-           (Term.letPatDecl
-            (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂ "," `Eq] "⟩")
-            []
-            []
-            ":="
-            (Term.app `i_surj [`b `h₁ `h₂])))
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`h₁ `h₂]
           []
-          (Term.anonymousCtor
-           "⟨"
-           [`a "," (Term.app `mem_filter.mpr [(Term.anonymousCtor "⟨" [`ha₁ "," `ha₂] "⟩")]) "," `Eq]
-           "⟩")))))
+          "=>"
+          (Term.let
+           "let"
+           (Term.letDecl
+            (Term.letPatDecl
+             (Term.anonymousCtor "⟨" [`a "," `ha₁ "," `ha₂ "," `Eq] "⟩")
+             []
+             []
+             ":="
+             (Term.app `i_surj [`b `h₁ `h₂])))
+           []
+           (Term.anonymousCtor
+            "⟨"
+            [`a "," (Term.app `mem_filter.mpr [(Term.anonymousCtor "⟨" [`ha₁ "," `ha₂] "⟩")]) "," `Eq]
+            "⟩"))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -3646,8 +3580,8 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `h₁
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj (Term.app `mem_filter.mp [`hb]) "." `elim)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.app `mem_filter.mp [`hb])
@@ -3661,8 +3595,8 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `mem_filter.mp [`hb]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
@@ -3685,45 +3619,43 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
         [`a₁ `a₂ `ha₁ `ha₂]
         []
         "=>"
-        (Init.Core.«term_$_»
+        (Term.app
          (Term.proj (Term.app `mem_filter.mp [`ha₁]) "." `elim)
-         " $ "
-         (Term.fun
-          "fun"
-          (Term.basicFun
-           [`ha₁₁ `ha₁₂]
-           []
-           "=>"
-           (Init.Core.«term_$_»
-            (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
-            " $ "
-            (Term.fun
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`ha₁₁ `ha₁₂]
+            []
+            "=>"
+            (Term.app
+             (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
+             [(Term.fun
+               "fun"
+               (Term.basicFun
+                [`ha₂₁ `ha₂₂]
+                []
+                "=>"
+                (Term.app `i_inj [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))])))])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj (Term.app `mem_filter.mp [`ha₁]) "." `elim)
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`ha₁₁ `ha₁₂]
+          []
+          "=>"
+          (Term.app
+           (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
+           [(Term.fun
              "fun"
              (Term.basicFun
               [`ha₂₁ `ha₂₂]
               []
               "=>"
-              (Term.app `i_inj [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))))))))
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
-       (Term.proj (Term.app `mem_filter.mp [`ha₁]) "." `elim)
-       " $ "
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`ha₁₁ `ha₁₂]
-         []
-         "=>"
-         (Init.Core.«term_$_»
-          (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
-          " $ "
-          (Term.fun
-           "fun"
-           (Term.basicFun
-            [`ha₂₁ `ha₂₂]
-            []
-            "=>"
-            (Term.app `i_inj [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))))))
+              (Term.app `i_inj [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -3731,27 +3663,27 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
         [`ha₁₁ `ha₁₂]
         []
         "=>"
-        (Init.Core.«term_$_»
+        (Term.app
          (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
-         " $ "
-         (Term.fun
-          "fun"
-          (Term.basicFun
-           [`ha₂₁ `ha₂₂]
-           []
-           "=>"
-           (Term.app `i_inj [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")]))))))
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`ha₂₁ `ha₂₂]
+            []
+            "=>"
+            (Term.app `i_inj [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      (Term.app
        (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
-       " $ "
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`ha₂₁ `ha₂₂]
-         []
-         "=>"
-         (Term.app `i_inj [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")]))))
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`ha₂₁ `ha₂₂]
+          []
+          "=>"
+          (Term.app `i_inj [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -3808,8 +3740,8 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `ha₂₁
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj (Term.app `mem_filter.mp [`ha₂]) "." `elim)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.app `mem_filter.mp [`ha₂])
@@ -3823,8 +3755,8 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `mem_filter.mp [`ha₂]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
@@ -3837,8 +3769,8 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `ha₁₁
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj (Term.app `mem_filter.mp [`ha₁]) "." `elim)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.app `mem_filter.mp [`ha₁])
@@ -3852,8 +3784,8 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `mem_filter.mp [`ha₁]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
@@ -3887,25 +3819,23 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
        [`a₁ `a₂ `ha₁ `ha₂]
        []
        "=>"
-       (Init.Core.«term_$_»
+       (Term.app
         (Term.proj (Term.paren "(" (Term.app `mem_filter.mp [`ha₁]) ")") "." `elim)
-        " $ "
-        (Term.fun
-         "fun"
-         (Term.basicFun
-          [`ha₁₁ `ha₁₂]
-          []
-          "=>"
-          (Init.Core.«term_$_»
-           (Term.proj (Term.paren "(" (Term.app `mem_filter.mp [`ha₂]) ")") "." `elim)
-           " $ "
-           (Term.fun
-            "fun"
-            (Term.basicFun
-             [`ha₂₁ `ha₂₂]
-             []
-             "=>"
-             (Term.app `i_inj [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))))))))
+        [(Term.fun
+          "fun"
+          (Term.basicFun
+           [`ha₁₁ `ha₁₂]
+           []
+           "=>"
+           (Term.app
+            (Term.proj (Term.paren "(" (Term.app `mem_filter.mp [`ha₂]) ")") "." `elim)
+            [(Term.fun
+              "fun"
+              (Term.basicFun
+               [`ha₂₁ `ha₂₂]
+               []
+               "=>"
+               (Term.app `i_inj [`a₁ `a₂ (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.hole "_")])))])))])))
      ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
@@ -3916,9 +3846,9 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
         [`a `ha]
         []
         "=>"
-        (Init.Core.«term_$_» (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim) " $ " (Term.app `h [`a]))))
+        («term_<|_» (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim) "<|" (Term.app `h [`a]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_» (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim) " $ " (Term.app `h [`a]))
+      («term_<|_» (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim) "<|" (Term.app `h [`a]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `h [`a])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -3929,8 +3859,8 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `h
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
       (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.app `mem_filter.mp [`ha])
@@ -3944,8 +3874,8 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `mem_filter.mp [`ha]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 10, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
@@ -3967,10 +3897,7 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
        [`a `ha]
        []
        "=>"
-       (Init.Core.«term_$_»
-        (Term.proj (Term.paren "(" (Term.app `mem_filter.mp [`ha]) ")") "." `elim)
-        " $ "
-        (Term.app `h [`a]))))
+       («term_<|_» (Term.proj (Term.paren "(" (Term.app `mem_filter.mp [`ha]) ")") "." `elim) "<|" (Term.app `h [`a]))))
      ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
@@ -3981,53 +3908,45 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
         [`a `ha]
         []
         "=>"
-        (Init.Core.«term_$_»
+        (Term.app
          (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim)
-         " $ "
-         (Term.fun
-          "fun"
-          (Term.basicFun
-           [`h₁ `h₂]
-           []
-           "=>"
-           (Term.app
-            `mem_filter.mpr
-            [(Term.anonymousCtor
-              "⟨"
-              [(Term.app `hi [`a `h₁ `h₂])
-               ","
-               (Term.fun
-                "fun"
-                (Term.basicFun
-                 [`hg]
-                 []
-                 "=>"
-                 (Term.app `h₂ [(Init.Core.«term_▸_» `hg " ▸ " (Term.app `h [`a `h₁ `h₂]))])))]
-              "⟩")]))))))
+         [(Term.fun
+           "fun"
+           (Term.basicFun
+            [`h₁ `h₂]
+            []
+            "=>"
+            (Term.app
+             `mem_filter.mpr
+             [(Term.anonymousCtor
+               "⟨"
+               [(Term.app `hi [`a `h₁ `h₂])
+                ","
+                (Term.fun
+                 "fun"
+                 (Term.basicFun [`hg] [] "=>" (Term.app `h₂ [(Term.subst `hg "▸" [(Term.app `h [`a `h₁ `h₂])])])))]
+               "⟩")])))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
+      (Term.app
        (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim)
-       " $ "
-       (Term.fun
-        "fun"
-        (Term.basicFun
-         [`h₁ `h₂]
-         []
-         "=>"
-         (Term.app
-          `mem_filter.mpr
-          [(Term.anonymousCtor
-            "⟨"
-            [(Term.app `hi [`a `h₁ `h₂])
-             ","
-             (Term.fun
-              "fun"
-              (Term.basicFun
-               [`hg]
-               []
-               "=>"
-               (Term.app `h₂ [(Init.Core.«term_▸_» `hg " ▸ " (Term.app `h [`a `h₁ `h₂]))])))]
-            "⟩")]))))
+       [(Term.fun
+         "fun"
+         (Term.basicFun
+          [`h₁ `h₂]
+          []
+          "=>"
+          (Term.app
+           `mem_filter.mpr
+           [(Term.anonymousCtor
+             "⟨"
+             [(Term.app `hi [`a `h₁ `h₂])
+              ","
+              (Term.fun
+               "fun"
+               (Term.basicFun [`hg] [] "=>" (Term.app `h₂ [(Term.subst `hg "▸" [(Term.app `h [`a `h₁ `h₂])])])))]
+             "⟩")])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.fun
        "fun"
@@ -4043,7 +3962,7 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
             ","
             (Term.fun
              "fun"
-             (Term.basicFun [`hg] [] "=>" (Term.app `h₂ [(Init.Core.«term_▸_» `hg " ▸ " (Term.app `h [`a `h₁ `h₂]))])))]
+             (Term.basicFun [`hg] [] "=>" (Term.app `h₂ [(Term.subst `hg "▸" [(Term.app `h [`a `h₁ `h₂])])])))]
            "⟩")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app
@@ -4054,7 +3973,7 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
           ","
           (Term.fun
            "fun"
-           (Term.basicFun [`hg] [] "=>" (Term.app `h₂ [(Init.Core.«term_▸_» `hg " ▸ " (Term.app `h [`a `h₁ `h₂]))])))]
+           (Term.basicFun [`hg] [] "=>" (Term.app `h₂ [(Term.subst `hg "▸" [(Term.app `h [`a `h₁ `h₂])])])))]
          "⟩")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.ellipsis'
@@ -4065,18 +3984,16 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
         ","
         (Term.fun
          "fun"
-         (Term.basicFun [`hg] [] "=>" (Term.app `h₂ [(Init.Core.«term_▸_» `hg " ▸ " (Term.app `h [`a `h₁ `h₂]))])))]
+         (Term.basicFun [`hg] [] "=>" (Term.app `h₂ [(Term.subst `hg "▸" [(Term.app `h [`a `h₁ `h₂])])])))]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun
-       "fun"
-       (Term.basicFun [`hg] [] "=>" (Term.app `h₂ [(Init.Core.«term_▸_» `hg " ▸ " (Term.app `h [`a `h₁ `h₂]))])))
+      (Term.fun "fun" (Term.basicFun [`hg] [] "=>" (Term.app `h₂ [(Term.subst `hg "▸" [(Term.app `h [`a `h₁ `h₂])])])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.app `h₂ [(Init.Core.«term_▸_» `hg " ▸ " (Term.app `h [`a `h₁ `h₂]))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_▸_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Init.Core.«term_▸_»', expected 'Lean.Parser.Term.ellipsis'
+      (Term.app `h₂ [(Term.subst `hg "▸" [(Term.app `h [`a `h₁ `h₂])])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.subst', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.subst', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_▸_» `hg " ▸ " (Term.app `h [`a `h₁ `h₂]))
+      (Term.subst `hg "▸" [(Term.app `h [`a `h₁ `h₂])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `h [`a `h₁ `h₂])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -4100,12 +4017,9 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] ...precedences are 75 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 75, term))
       `hg
-[PrettyPrinter.parenthesize] ...precedences are 76 >? 1024, (none, [anonymous]) <=? (some 75, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 75, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 75, (some 75, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
-     "("
-     (Init.Core.«term_▸_» `hg " ▸ " (Term.app `h [`a `h₁ `h₂]))
-     ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.subst `hg "▸" [(Term.app `h [`a `h₁ `h₂])]) ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `h₂
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
@@ -4155,8 +4069,8 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       `h₁
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       (Term.proj (Term.app `mem_filter.mp [`ha]) "." `elim)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
       (Term.app `mem_filter.mp [`ha])
@@ -4170,8 +4084,8 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `mem_filter.mp [`ha]) ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
@@ -4193,29 +4107,28 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
        [`a `ha]
        []
        "=>"
-       (Init.Core.«term_$_»
+       (Term.app
         (Term.proj (Term.paren "(" (Term.app `mem_filter.mp [`ha]) ")") "." `elim)
-        " $ "
-        (Term.fun
-         "fun"
-         (Term.basicFun
-          [`h₁ `h₂]
-          []
-          "=>"
-          (Term.app
-           `mem_filter.mpr
-           [(Term.anonymousCtor
-             "⟨"
-             [(Term.app `hi [`a `h₁ `h₂])
-              ","
-              (Term.fun
-               "fun"
-               (Term.basicFun
-                [`hg]
-                []
-                "=>"
-                (Term.app `h₂ [(Term.paren "(" (Init.Core.«term_▸_» `hg " ▸ " (Term.app `h [`a `h₁ `h₂])) ")")])))]
-             "⟩")]))))))
+        [(Term.fun
+          "fun"
+          (Term.basicFun
+           [`h₁ `h₂]
+           []
+           "=>"
+           (Term.app
+            `mem_filter.mpr
+            [(Term.anonymousCtor
+              "⟨"
+              [(Term.app `hi [`a `h₁ `h₂])
+               ","
+               (Term.fun
+                "fun"
+                (Term.basicFun
+                 [`hg]
+                 []
+                 "=>"
+                 (Term.app `h₂ [(Term.paren "(" (Term.subst `hg "▸" [(Term.app `h [`a `h₁ `h₂])]) ")")])))]
+              "⟩")])))])))
      ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
@@ -4312,17 +4225,16 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (Term.hole "_")
-       " = "
+       "="
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
         " in "
-        (Init.Core.«term_$_»
+        (Term.app
          `t.filter
-         " $ "
-         (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `g [`x]) " ≠ " (num "1")))))
+         [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `g [`x]) "≠" (num "1"))))])
         ", "
         (Term.app `g [`x])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4330,10 +4242,7 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
        "∏"
        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
        " in "
-       (Init.Core.«term_$_»
-        `t.filter
-        " $ "
-        (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `g [`x]) " ≠ " (num "1")))))
+       (Term.app `t.filter [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `g [`x]) "≠" (num "1"))))])
        ", "
        (Term.app `g [`x]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4348,14 +4257,13 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
-       `t.filter
-       " $ "
-       (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `g [`x]) " ≠ " (num "1")))))
+      (Term.app `t.filter [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `g [`x]) "≠" (num "1"))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `g [`x]) " ≠ " (num "1"))))
+      (Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `g [`x]) "≠" (num "1"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Logic.«term_≠_» (Term.app `g [`x]) " ≠ " (num "1"))
+      («term_≠_» (Term.app `g [`x]) "≠" (num "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "1")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -4369,7 +4277,7 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `g
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
@@ -4377,21 +4285,21 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `t.filter
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       `prod_filter_ne_one.symm
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
@@ -4399,15 +4307,14 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
         `s
         ", "
         (Term.app `f [`x]))
-       " = "
+       "="
        (BigOperators.Algebra.BigOperators.Basic.finset.prod
         "∏"
         (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
         " in "
-        (Init.Core.«term_$_»
+        (Term.app
          `s.filter
-         " $ "
-         (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1")))))
+         [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
         ", "
         (Term.app `f [`x])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4415,10 +4322,7 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
        "∏"
        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) []))
        " in "
-       (Init.Core.«term_$_»
-        `s.filter
-        " $ "
-        (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1")))))
+       (Term.app `s.filter [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
        ", "
        (Term.app `f [`x]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -4433,14 +4337,13 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_$_»
-       `s.filter
-       " $ "
-       (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1")))))
+      (Term.app `s.filter [(Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Term.fun "fun" (Term.basicFun [`x] [] "=>" (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1"))))
+      (Term.fun "fun" (Term.basicFun [`x] [] "=>" («term_≠_» (Term.app `f [`x]) "≠" (num "1"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Logic.«term_≠_» (Term.app `f [`x]) " ≠ " (num "1"))
+      («term_≠_» (Term.app `f [`x]) "≠" (num "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (num "1")
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -4454,7 +4357,7 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `f
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
@@ -4462,11 +4365,11 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `x
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, term))
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `s.filter
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (BigOperators.Algebra.BigOperators.Basic.finset.prod
@@ -4490,7 +4393,7 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `s
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 0, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 0, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
      "("
      (BigOperators.Algebra.BigOperators.Basic.finset.prod
@@ -4526,7 +4429,7 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
         ( i : ∀ a ∈ s , f a ≠ 1 → γ )
         ( hi : ∀ a h₁ h₂ , i a h₁ h₂ ∈ t )
         ( i_inj : ∀ a₁ a₂ h₁₁ h₁₂ h₂₁ h₂₂ , i a₁ h₁₁ h₁₂ = i a₂ h₂₁ h₂₂ → a₁ = a₂ )
-        ( i_surj : ∀ b ∈ t , g b ≠ 1 → ∃ ( a ) ( h₁ ) ( h₂ ) , b = i a h₁ h₂ )
+        ( i_surj : ∀ b ∈ t , g b ≠ 1 → ∃ a h₁ h₂ , b = i a h₁ h₂ )
         ( h : ∀ a h₁ h₂ , f a = g i a h₁ h₂ )
       : ∏ x in s , f x = ∏ x in t , g x
     :=
@@ -4535,8 +4438,8 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
           <;>
           exact
             calc
-              ∏ x in s , f x = ∏ x in s.filter $ fun x => f x ≠ 1 , f x := prod_filter_ne_one.symm
-              _ = ∏ x in t.filter $ fun x => g x ≠ 1 , g x
+              ∏ x in s , f x = ∏ x in s.filter fun x => f x ≠ 1 , f x := prod_filter_ne_one.symm
+              _ = ∏ x in t.filter fun x => g x ≠ 1 , g x
                   :=
                   prod_bij
                     fun a ha => i a mem_filter.mp ha . 1 mem_filter.mp ha . 2
@@ -4544,20 +4447,17 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
                         a ha
                           =>
                           mem_filter.mp ha . elim
-                            $
                             fun h₁ h₂ => mem_filter.mpr ⟨ hi a h₁ h₂ , fun hg => h₂ hg ▸ h a h₁ h₂ ⟩
-                      fun a ha => mem_filter.mp ha . elim $ h a
+                      fun a ha => mem_filter.mp ha . elim <| h a
                       fun
                         a₁ a₂ ha₁ ha₂
                           =>
                           mem_filter.mp ha₁ . elim
-                            $
-                            fun ha₁₁ ha₁₂ => mem_filter.mp ha₂ . elim $ fun ha₂₁ ha₂₂ => i_inj a₁ a₂ _ _ _ _
+                            fun ha₁₁ ha₁₂ => mem_filter.mp ha₂ . elim fun ha₂₁ ha₂₂ => i_inj a₁ a₂ _ _ _ _
                       fun
                         b hb
                           =>
                           mem_filter.mp hb . elim
-                            $
                             fun
                               h₁ h₂
                                 =>
@@ -4587,7 +4487,7 @@ theorem prod_dite_of_true {p : α → Prop} {hp : DecidablePred p} (h : ∀ x �
 
 @[to_additive]
 theorem nonempty_of_prod_ne_one (h : (∏ x in s, f x) ≠ 1) : s.Nonempty :=
-  s.eq_empty_or_nonempty.elim (fun H => False.elim $ h $ H.symm ▸ prod_empty) id
+  s.eq_empty_or_nonempty.elim (fun H => False.elim <| h <| H.symm ▸ prod_empty) id
 #align finset.nonempty_of_prod_ne_one Finset.nonempty_of_prod_ne_one
 
 @[to_additive]
@@ -4660,7 +4560,7 @@ theorem prod_list_map_count [DecidableEq α] (l : List α) {M : Type _} [CommMon
   · simp only [map_nil, prod_nil, count_nil, pow_zero, prod_const_one]
     
   simp only [List.map, List.prod_cons, to_finset_cons, IH]
-  by_cases has:a ∈ s.to_finset
+  by_cases has : a ∈ s.to_finset
   · rw [insert_eq_of_mem has, ← insert_erase has, prod_insert (not_mem_erase _ _), prod_insert (not_mem_erase _ _), ←
       mul_assoc, count_cons_self, pow_succ]
     congr 1
@@ -4735,7 +4635,7 @@ the property is multiplicative and holds on factors.
 @[to_additive
       "To prove a property of a sum, it suffices to prove that\nthe property is additive and holds on summands."]
 theorem prod_induction {M : Type _} [CommMonoid M] (f : α → M) (p : M → Prop) (p_mul : ∀ a b, p a → p b → p (a * b))
-    (p_one : p 1) (p_s : ∀ x ∈ s, p $ f x) : p $ ∏ x in s, f x :=
+    (p_one : p 1) (p_s : ∀ x ∈ s, p <| f x) : p <| ∏ x in s, f x :=
   Multiset.prod_induction _ _ p_mul p_one (Multiset.forall_mem_map_iff.mpr p_s)
 #align finset.prod_induction Finset.prod_induction
 
@@ -4745,7 +4645,7 @@ the property is multiplicative and holds on factors.
 @[to_additive
       "To prove a property of a sum, it suffices to prove that\nthe property is additive and holds on summands."]
 theorem prod_induction_nonempty {M : Type _} [CommMonoid M] (f : α → M) (p : M → Prop)
-    (p_mul : ∀ a b, p a → p b → p (a * b)) (hs_nonempty : s.Nonempty) (p_s : ∀ x ∈ s, p $ f x) : p $ ∏ x in s, f x :=
+    (p_mul : ∀ a b, p a → p b → p (a * b)) (hs_nonempty : s.Nonempty) (p_s : ∀ x ∈ s, p <| f x) : p <| ∏ x in s, f x :=
   Multiset.prod_induction_nonempty p p_mul (by simp [nonempty_iff_ne_empty.mp hs_nonempty])
     (Multiset.forall_mem_map_iff.mpr p_s)
 #align finset.prod_induction_nonempty Finset.prod_induction_nonempty
@@ -4805,7 +4705,7 @@ theorem sum_range_tsub [CanonicallyOrderedAddMonoid α] [Sub α] [HasOrderedSub 
 
 @[simp, to_additive]
 theorem prod_const (b : β) : (∏ x in s, b) = b ^ s.card :=
-  (congr_arg _ $ s.val.mapConst b).trans $ Multiset.prod_repeat b s.card
+  (congr_arg _ <| s.val.mapConst b).trans <| Multiset.prod_repeat b s.card
 #align finset.prod_const Finset.prod_const
 
 @[to_additive]
@@ -4972,7 +4872,7 @@ do the terms in that product. -/
 theorem eq_of_card_le_one_of_prod_eq {s : Finset α} (hc : s.card ≤ 1) {f : α → β} {b : β} (h : (∏ x in s, f x) = b) :
     ∀ x ∈ s, f x = b := by
   intro x hx
-  by_cases hc0:s.card = 0
+  by_cases hc0 : s.card = 0
   · exact False.elim (card_ne_zero_of_mem hx hc0)
     
   · have h1 : s.card = 1 := le_antisymm hc (Nat.one_le_of_lt (Nat.pos_of_ne_zero hc0))
@@ -5029,7 +4929,7 @@ theorem eq_one_of_prod_eq_one {s : Finset α} {f : α → β} {a : α} (hp : (�
     (h1 : ∀ x ∈ s, x ≠ a → f x = 1) : ∀ x ∈ s, f x = 1 := by
   intro x hx
   classical
-  by_cases h:x = a
+  by_cases h : x = a
   · rw [h]
     rw [h] at hx
     rw [← prod_subset (singleton_subset_iff.2 hx) fun t ht ha => h1 t ht (not_mem_singleton.1 ha), prod_singleton] at hp
@@ -5055,7 +4955,7 @@ theorem prod_dvd_prod_of_dvd {S : Finset α} (g1 g2 : α → β) (h : ∀ a ∈ 
 
 theorem prod_dvd_prod_of_subset {ι M : Type _} [CommMonoid M] (s t : Finset ι) (f : ι → M) (h : s ⊆ t) :
     (∏ i in s, f i) ∣ ∏ i in t, f i :=
-  Multiset.prod_dvd_prod_of_le $ Multiset.map_le_map $ by simpa
+  Multiset.prod_dvd_prod_of_le <| Multiset.map_le_map <| by simpa
 #align finset.prod_dvd_prod_of_subset Finset.prod_dvd_prod_of_subset
 
 end CommMonoid
@@ -5079,19 +4979,20 @@ theorem sum_const_nat {m : ℕ} {f : α → ℕ} (h₁ : ∀ x ∈ s, f x = m) :
 
 @[simp]
 theorem sum_boole {s : Finset α} {p : α → Prop} [NonAssocSemiring β] {hp : DecidablePred p} :
-    (∑ x in s, if p x then (1 : β) else (0 : β)) = (s.filter p).card := by simp [sum_ite]
+    (∑ x in s, if p x then (1 : β) else (0 : β)) = (s.filter p).card := by
+  simp only [add_zero, mul_one, Finset.sum_const, nsmul_eq_mul, eq_self_iff_true, Finset.sum_const_zero, Finset.sum_ite]
 #align finset.sum_boole Finset.sum_boole
 
 theorem _root_.commute.sum_right [NonUnitalNonAssocSemiring β] (s : Finset α) (f : α → β) (b : β)
     (h : ∀ i ∈ s, Commute b (f i)) : Commute b (∑ i in s, f i) :=
-  Commute.multiset_sum_right _ _ $ fun b hb => by
+  (Commute.multiset_sum_right _ _) fun b hb => by
     obtain ⟨i, hi, rfl⟩ := multiset.mem_map.mp hb
     exact h _ hi
 #align finset._root_.commute.sum_right finset._root_.commute.sum_right
 
 theorem _root_.commute.sum_left [NonUnitalNonAssocSemiring β] (s : Finset α) (f : α → β) (b : β)
     (h : ∀ i ∈ s, Commute (f i) b) : Commute (∑ i in s, f i) b :=
-  (Commute.sum_right _ _ _ $ fun i hi => (h _ hi).symm).symm
+  ((Commute.sum_right _ _ _) fun i hi => (h _ hi).symm).symm
 #align finset._root_.commute.sum_left finset._root_.commute.sum_left
 
 section Opposite
@@ -5256,7 +5157,7 @@ See `function.bijective.prod_comp` for a version without `h`. -/
 theorem prod_bijective {α β M : Type _} [Fintype α] [Fintype β] [CommMonoid M] (e : α → β) (he : Function.Bijective e)
     (f : α → M) (g : β → M) (h : ∀ x, f x = g (e x)) : (∏ x : α, f x) = ∏ x : β, g x :=
   prod_bij (fun x _ => e x) (fun x _ => mem_univ (e x)) (fun x _ => h x) (fun x x' _ _ h => he.Injective h) fun y _ =>
-    (he.Surjective y).imp $ fun a h => ⟨mem_univ _, h.symm⟩
+    (he.Surjective y).imp fun a h => ⟨mem_univ _, h.symm⟩
 #align fintype.prod_bijective Fintype.prod_bijective
 
 /-- `fintype.prod_equiv` is a specialization of `finset.prod_bij` that
@@ -5307,12 +5208,11 @@ end Fintype
 
 namespace List
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive]
 theorem prod_to_finset {M : Type _} [DecidableEq α] [CommMonoid M] (f : α → M) :
     ∀ {l : List α} (hl : l.Nodup), l.toFinset.Prod f = (l.map f).Prod
   | [], _ => by simp
-  | a::l, hl => by
+  | a :: l, hl => by
     let ⟨not_mem, hl⟩ := List.nodup_cons.mp hl
     simp [Finset.prod_insert (mt list.mem_to_finset.mp not_mem), prod_to_finset hl]
 #align list.prod_to_finset List.prod_to_finset
@@ -5338,7 +5238,7 @@ theorem disjoint_list_sum_right {a : Multiset α} {l : List (Multiset α)} :
 
 theorem disjoint_sum_left {a : Multiset α} {i : Multiset (Multiset α)} :
     Multiset.Disjoint i.Sum a ↔ ∀ b ∈ i, Multiset.Disjoint b a :=
-  Quotient.induction_on i $ fun l => by
+  (Quotient.induction_on i) fun l => by
     rw [quot_mk_to_coe, Multiset.coe_sum]
     exact disjoint_list_sum_left
 #align multiset.disjoint_sum_left Multiset.disjoint_sum_left
@@ -5365,7 +5265,7 @@ theorem add_eq_union_left_of_le {x y z : Multiset α} (h : y ≤ x) : z + x = z 
   constructor
   · intro h0
     rw [and_iff_right_of_imp]
-    · exact (le_of_add_le_add_left $ h0.trans_le $ union_le_add z y).antisymm h
+    · exact (le_of_add_le_add_left <| h0.trans_le <| union_le_add z y).antisymm h
       
     · rintro rfl
       exact h0

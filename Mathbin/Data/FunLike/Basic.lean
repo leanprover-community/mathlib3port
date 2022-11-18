@@ -144,7 +144,7 @@ injective coercion to functions from `α` to `β`.
 This typeclass is used in the definition of the homomorphism typeclasses,
 such as `zero_hom_class`, `mul_hom_class`, `monoid_hom_class`, ....
 -/
-class FunLike (F : Sort _) (α : outParam (Sort _)) (β : outParam $ α → Sort _) where
+class FunLike (F : Sort _) (α : outParam (Sort _)) (β : outParam <| α → Sort _) where
   coe : F → ∀ a : α, β a
   coe_injective' : Function.Injective coe
 #align fun_like FunLike
@@ -271,7 +271,7 @@ theorem exists_ne {f g : F} (h : f ≠ g) : ∃ x, f x ≠ g x :=
 
 /-- This is not an instance to avoid slowing down every single `subsingleton` typeclass search.-/
 theorem subsingleton_cod [∀ a, Subsingleton (β a)] : Subsingleton F :=
-  ⟨fun f g => coe_injective $ Subsingleton.elim _ _⟩
+  ⟨fun f g => coe_injective <| Subsingleton.elim _ _⟩
 #align fun_like.subsingleton_cod FunLike.subsingleton_cod
 
 end FunLike

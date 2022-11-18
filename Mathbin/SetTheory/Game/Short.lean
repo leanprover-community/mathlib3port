@@ -5,7 +5,6 @@ Authors: Scott Morrison
 -/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.SetTheory.Cardinal.Cofinality
-import Mathbin.SetTheory.Game.Basic
 import Mathbin.SetTheory.Game.Birthday
 
 /-!

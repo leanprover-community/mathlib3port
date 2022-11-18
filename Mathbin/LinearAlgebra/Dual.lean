@@ -7,7 +7,7 @@ import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.LinearAlgebra.Projection
 import Mathbin.LinearAlgebra.SesquilinearForm
 import Mathbin.RingTheory.Finiteness
-import Mathbin.LinearAlgebra.FreeModule.Finite.Rank
+import Mathbin.LinearAlgebra.FreeModule.Finite.Basic
 
 /-!
 # Dual vector spaces
@@ -132,7 +132,7 @@ variable (b : Basis ι R M)
 /-- The linear map from a vector space equipped with basis to its dual vector space,
 taking basis elements to corresponding dual basis elements. -/
 def toDual : M →ₗ[R] Module.Dual R M :=
-  b.constr ℕ $ fun v => b.constr ℕ $ fun w => if w = v then (1 : R) else 0
+  (b.constr ℕ) fun v => (b.constr ℕ) fun w => if w = v then (1 : R) else 0
 #align basis.to_dual Basis.toDual
 
 theorem to_dual_apply (i j : ι) : b.toDual (b i) (b j) = if i = j then 1 else 0 := by
@@ -209,7 +209,7 @@ theorem to_dual_range [Finite ι] : b.toDual.range = ⊤ := by
   refine' eq_top_iff'.2 fun f => _
   rw [LinearMap.mem_range]
   let lin_comb : ι →₀ R := Finsupp.equivFunOnFintype.2 fun i => f.to_fun (b i)
-  refine' ⟨Finsupp.total ι M R b lin_comb, b.ext $ fun i => _⟩
+  refine' ⟨Finsupp.total ι M R b lin_comb, b.ext fun i => _⟩
   rw [b.to_dual_eq_repr _ i, repr_total b]
   rfl
 #align basis.to_dual_range Basis.to_dual_range
@@ -561,7 +561,7 @@ theorem dual_restrict_apply (W : Submodule R M) (φ : Module.Dual R M) (x : W) :
 /-- The `dual_annihilator` of a submodule `W` is the set of linear maps `φ` such
   that `φ w = 0` for all `w ∈ W`. -/
 def dualAnnihilator {R : Type u} {M : Type v} [CommSemiring R] [AddCommMonoid M] [Module R M] (W : Submodule R M) :
-    Submodule R $ Module.Dual R M :=
+    Submodule R <| Module.Dual R M :=
   W.dualRestrict.ker
 #align submodule.dual_annihilator Submodule.dualAnnihilator
 
@@ -794,7 +794,7 @@ theorem dual_lift_injective : Function.Injective W.dualLift :=
   dual of that subspace. -/
 noncomputable def quotAnnihilatorEquiv (W : Subspace K V) :
     (Module.Dual K V ⧸ W.dualAnnihilator) ≃ₗ[K] Module.Dual K W :=
-  (quotEquivOfEq _ _ W.dual_restrict_ker_eq_dual_annihilator).symm.trans $
+  (quotEquivOfEq _ _ W.dual_restrict_ker_eq_dual_annihilator).symm.trans <|
     W.dualRestrict.quotKerEquivOfSurjective dual_restrict_surjective
 #align subspace.quot_annihilator_equiv Subspace.quotAnnihilatorEquiv
 
@@ -832,7 +832,7 @@ theorem dual_finrank_eq : finrank K (Module.Dual K V) = finrank K V :=
 /-- The quotient by the dual is isomorphic to its dual annihilator.  -/
 noncomputable def quotDualEquivAnnihilator (W : Subspace K V) :
     (Module.Dual K V ⧸ W.dualLift.range) ≃ₗ[K] W.dualAnnihilator :=
-  linear_equiv.quot_equiv_of_quot_equiv $ LinearEquiv.trans W.quotAnnihilatorEquiv W.dualEquivDual
+  linear_equiv.quot_equiv_of_quot_equiv <| LinearEquiv.trans W.quotAnnihilatorEquiv W.dualEquivDual
 #align subspace.quot_dual_equiv_annihilator Subspace.quotDualEquivAnnihilator
 
 /-- The quotient by a subspace is isomorphic to its dual annihilator. -/

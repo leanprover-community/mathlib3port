@@ -3,9 +3,6 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Algebra.Hom.Group
-import Mathbin.Algebra.Order.WithZero
-import Mathbin.Order.Hom.Basic
 import Mathbin.Tactic.Positivity
 
 /-!
@@ -32,32 +29,32 @@ open Function
 variable {ι F α β γ δ : Type _}
 
 /-- `nonneg_hom_class F α β` states that `F` is a type of nonnegative morphisms. -/
-class NonnegHomClass (F : Type _) (α β : outParam $ Type _) [Zero β] [LE β] extends FunLike F α fun _ => β where
+class NonnegHomClass (F : Type _) (α β : outParam <| Type _) [Zero β] [LE β] extends FunLike F α fun _ => β where
   map_nonneg (f : F) : ∀ a, 0 ≤ f a
 #align nonneg_hom_class NonnegHomClass
 
 /-- `subadditive_hom_class F α β` states that `F` is a type of subadditive morphisms. -/
-class SubadditiveHomClass (F : Type _) (α β : outParam $ Type _) [Add α] [Add β] [LE β] extends
+class SubadditiveHomClass (F : Type _) (α β : outParam <| Type _) [Add α] [Add β] [LE β] extends
   FunLike F α fun _ => β where
   map_add_le_add (f : F) : ∀ a b, f (a + b) ≤ f a + f b
 #align subadditive_hom_class SubadditiveHomClass
 
 /-- `submultiplicative_hom_class F α β` states that `F` is a type of submultiplicative morphisms. -/
 @[to_additive SubadditiveHomClass]
-class SubmultiplicativeHomClass (F : Type _) (α β : outParam $ Type _) [Mul α] [Mul β] [LE β] extends
+class SubmultiplicativeHomClass (F : Type _) (α β : outParam <| Type _) [Mul α] [Mul β] [LE β] extends
   FunLike F α fun _ => β where
   map_mul_le_mul (f : F) : ∀ a b, f (a * b) ≤ f a * f b
 #align submultiplicative_hom_class SubmultiplicativeHomClass
 
 /-- `mul_le_add_hom_class F α β` states that `F` is a type of subadditive morphisms. -/
 @[to_additive SubadditiveHomClass]
-class MulLeAddHomClass (F : Type _) (α β : outParam $ Type _) [Mul α] [Add β] [LE β] extends
+class MulLeAddHomClass (F : Type _) (α β : outParam <| Type _) [Mul α] [Add β] [LE β] extends
   FunLike F α fun _ => β where
   map_mul_le_add (f : F) : ∀ a b, f (a * b) ≤ f a + f b
 #align mul_le_add_hom_class MulLeAddHomClass
 
 /-- `nonarchimedean_hom_class F α β` states that `F` is a type of non-archimedean morphisms. -/
-class NonarchimedeanHomClass (F : Type _) (α β : outParam $ Type _) [Add α] [LinearOrder β] extends
+class NonarchimedeanHomClass (F : Type _) (α β : outParam <| Type _) [Add α] [LinearOrder β] extends
   FunLike F α fun _ => β where
   map_add_le_max (f : F) : ∀ a b, f (a + b) ≤ max (f a) (f b)
 #align nonarchimedean_hom_class NonarchimedeanHomClass

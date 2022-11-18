@@ -48,8 +48,8 @@ theorem midpoint_fixed {x y : PE} : ∀ e : PE ≃ᵢ PE, e x = x → e y = y �
   set s := { e : PE ≃ᵢ PE | e x = x ∧ e y = y }
   haveI : Nonempty s := ⟨⟨Isometric.refl PE, rfl, rfl⟩⟩
   -- On the one hand, `e` cannot send the midpoint `z` of `[x, y]` too far
-  have h_bdd : BddAbove (range $ fun e : s => dist (e z) z) := by
-    refine' ⟨dist x z + dist x z, forall_range_iff.2 $ Subtype.forall.2 _⟩
+  have h_bdd : BddAbove (range fun e : s => dist (e z) z) := by
+    refine' ⟨dist x z + dist x z, forall_range_iff.2 <| Subtype.forall.2 _⟩
     rintro e ⟨hx, hy⟩
     calc
       dist (e z) z ≤ dist (e z) x + dist x z := dist_triangle (e z) x z
@@ -89,8 +89,8 @@ include F
 /-- A bijective isometry sends midpoints to midpoints. -/
 theorem map_midpoint (f : PE ≃ᵢ PF) (x y : PE) : f (midpoint ℝ x y) = midpoint ℝ (f x) (f y) := by
   set e : PE ≃ᵢ PE :=
-    ((f.trans $ (point_reflection ℝ $ midpoint ℝ (f x) (f y)).toIsometric).trans f.symm).trans
-      (point_reflection ℝ $ midpoint ℝ x y).toIsometric
+    ((f.trans <| (point_reflection ℝ <| midpoint ℝ (f x) (f y)).toIsometric).trans f.symm).trans
+      (point_reflection ℝ <| midpoint ℝ x y).toIsometric
   have hx : e x = x := by simp
   have hy : e y = y := by simp
   have hm := e.midpoint_fixed hx hy
@@ -109,7 +109,7 @@ We define a conversion to a `continuous_linear_equiv` first, then a conversion t
 over `ℝ` and `f 0 = 0`, then `f` is a linear isometry equivalence. -/
 def toRealLinearIsometryEquivOfMapZero (f : E ≃ᵢ F) (h0 : f 0 = 0) : E ≃ₗᵢ[ℝ] F :=
   { (AddMonoidHom.ofMapMidpoint ℝ ℝ f h0 f.map_midpoint).toRealLinearMap f.Continuous, f with
-    norm_map' := fun x => show ∥f x∥ = ∥x∥ by simp only [← dist_zero_right, ← h0, f.dist_eq] }
+    norm_map' := fun x => show ‖f x‖ = ‖x‖ by simp only [← dist_zero_right, ← h0, f.dist_eq] }
 #align isometric.to_real_linear_isometry_equiv_of_map_zero Isometric.toRealLinearIsometryEquivOfMapZero
 
 @[simp]
@@ -146,8 +146,8 @@ theorem to_real_linear_isometry_equiv_symm_apply (f : E ≃ᵢ F) (y : F) :
 normed vector spaces over `ℝ`, then `f` is an affine isometry equivalence. -/
 def toRealAffineIsometryEquiv (f : PE ≃ᵢ PF) : PE ≃ᵃⁱ[ℝ] PF :=
   AffineIsometryEquiv.mk' f
-    ((vaddConst (Classical.arbitrary PE)).trans $
-        f.trans (vaddConst (f $ Classical.arbitrary PE)).symm).toRealLinearIsometryEquiv
+    ((vaddConst (Classical.arbitrary PE)).trans <|
+        f.trans (vaddConst (f <| Classical.arbitrary PE)).symm).toRealLinearIsometryEquiv
     (Classical.arbitrary PE) fun p => by simp
 #align isometric.to_real_affine_isometry_equiv Isometric.toRealAffineIsometryEquiv
 

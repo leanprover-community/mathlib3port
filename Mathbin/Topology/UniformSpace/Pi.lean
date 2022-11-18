@@ -26,11 +26,11 @@ variable {ι : Type _} (α : ι → Type u) [U : ∀ i, UniformSpace (α i)]
 include U
 
 instance PiCat.uniformSpace : UniformSpace (∀ i, α i) :=
-  UniformSpace.ofCoreEq (⨅ i, UniformSpace.comap (fun a : ∀ i, α i => a i) (U i)).toCore PiCat.topologicalSpace $
+  UniformSpace.ofCoreEq (⨅ i, UniformSpace.comap (fun a : ∀ i, α i => a i) (U i)).toCore PiCat.topologicalSpace <|
     Eq.symm to_topological_space_infi
 #align Pi.uniform_space PiCat.uniformSpace
 
-theorem PiCat.uniformity : 𝓤 (∀ i, α i) = ⨅ i : ι, (Filter.comap fun a => (a.1 i, a.2 i)) $ 𝓤 (α i) :=
+theorem PiCat.uniformity : 𝓤 (∀ i, α i) = ⨅ i : ι, (Filter.comap fun a => (a.1 i, a.2 i)) <| 𝓤 (α i) :=
   infi_uniformity
 #align Pi.uniformity PiCat.uniformity
 
@@ -61,7 +61,7 @@ instance PiCat.complete [∀ i, CompleteSpace (α i)] : CompleteSpace (∀ i, α
 #align Pi.complete PiCat.complete
 
 instance PiCat.separated [∀ i, SeparatedSpace (α i)] : SeparatedSpace (∀ i, α i) :=
-  separated_def.2 $ fun x y H => by
+  separated_def.2 fun x y H => by
     ext i
     apply eq_of_separated_of_uniform_continuous (PiCat.uniform_continuous_proj α i)
     apply H

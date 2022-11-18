@@ -62,7 +62,7 @@ theorem DirectedOn.mono' {s : Set α} (hs : DirectedOn r s) (h : ∀ ⦃a⦄, a 
 #align directed_on.mono' DirectedOn.mono'
 
 theorem DirectedOn.mono {s : Set α} (h : DirectedOn r s) (H : ∀ {a b}, r a b → r' a b) : DirectedOn r' s :=
-  h.mono' $ fun _ _ _ _ => H
+  h.mono' fun _ _ _ _ => H
 #align directed_on.mono DirectedOn.mono
 
 theorem directed_comp {ι} {f : ι → β} {g : β → α} : Directed r (g ∘ f) ↔ Directed (g ⁻¹'o r) f :=
@@ -77,7 +77,7 @@ theorem Directed.mono {s : α → α → Prop} {ι} {f : ι → α} (H : ∀ a b
 
 theorem Directed.mono_comp {ι} {rb : β → β → Prop} {g : α → β} {f : ι → α} (hg : ∀ ⦃x y⦄, x ≼ y → rb (g x) (g y))
     (hf : Directed r f) : Directed rb (g ∘ f) :=
-  directed_comp.2 $ hf.mono hg
+  directed_comp.2 <| hf.mono hg
 #align directed.mono_comp Directed.mono_comp
 
 /-- A monotone function on a sup-semilattice is directed. -/
@@ -218,15 +218,13 @@ theorem is_top_iff_is_max [IsDirected α (· ≤ ·)] : IsTop a ↔ IsMax a :=
 
 variable (β) [PartialOrder β]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
-theorem exists_lt_of_directed_ge [IsDirected β (· ≥ ·)] [Nontrivial β] : ∃ (a : β) (b : β), a < b := by
+theorem exists_lt_of_directed_ge [IsDirected β (· ≥ ·)] [Nontrivial β] : ∃ a b : β, a < b := by
   rcases exists_pair_ne β with ⟨a, b, hne⟩
   rcases is_bot_or_exists_lt a with (ha | ⟨c, hc⟩)
   exacts[⟨a, b, (ha b).lt_of_ne hne⟩, ⟨_, _, hc⟩]
 #align exists_lt_of_directed_ge exists_lt_of_directed_ge
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
-theorem exists_lt_of_directed_le [IsDirected β (· ≤ ·)] [Nontrivial β] : ∃ (a : β) (b : β), a < b :=
+theorem exists_lt_of_directed_le [IsDirected β (· ≤ ·)] [Nontrivial β] : ∃ a b : β, a < b :=
   let ⟨a, b, h⟩ := exists_lt_of_directed_ge βᵒᵈ
   ⟨b, a, h⟩
 #align exists_lt_of_directed_le exists_lt_of_directed_le

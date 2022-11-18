@@ -7,7 +7,6 @@ import Mathbin.Analysis.Analytic.Basic
 import Mathbin.Analysis.Calculus.Dslope
 import Mathbin.Analysis.Calculus.FderivAnalytic
 import Mathbin.Analysis.Calculus.FormalMultilinearSeries
-import Mathbin.Analysis.Complex.Basic
 import Mathbin.Topology.Algebra.InfiniteSum
 import Mathbin.Analysis.Analytic.Uniqueness
 
@@ -51,7 +50,7 @@ theorem exists_has_sum_smul_of_apply_eq_zero (hs : HasSum (fun m => z ^ m • a 
   obtain rfl | hn := n.eq_zero_or_pos
   · simpa
     
-  by_cases h:z = 0
+  by_cases h : z = 0
   · have : s = 0 := hs.unique (by simpa [ha 0 hn, h] using has_sum_at_zero a)
     exact ⟨a n, by simp [h, hn, this], by simpa [h] using has_sum_at_zero fun m => a (m + n)⟩
     
@@ -76,7 +75,7 @@ theorem hasFpowerSeriesDslopeFslope (hp : HasFpowerSeriesAt f p z₀) : HasFpowe
   have hp0 : p.coeff 0 = f z₀ := hp.coeff_zero 1
   simp only [has_fpower_series_at_iff, apply_eq_pow_smul_coeff, coeff_fslope] at hp⊢
   refine' hp.mono fun x hx => _
-  by_cases h:x = 0
+  by_cases h : x = 0
   · convert has_sum_single 0 _ <;> intros <;> simp [*]
     
   · have hxx : ∀ n : ℕ, x⁻¹ * x ^ (n + 1) = x ^ n := fun n => by field_simp [h, pow_succ']
@@ -135,7 +134,7 @@ vanish in a punctured neighborhood of `z₀`. -/
 theorem eventually_eq_zero_or_eventually_ne_zero (hf : AnalyticAt 𝕜 f z₀) :
     (∀ᶠ z in 𝓝 z₀, f z = 0) ∨ ∀ᶠ z in 𝓝[≠] z₀, f z ≠ 0 := by
   rcases hf with ⟨p, hp⟩
-  by_cases h:p = 0
+  by_cases h : p = 0
   · exact Or.inl (HasFpowerSeriesAt.eventually_eq_zero (by rwa [h] at hp))
     
   · exact Or.inr (hp.locally_ne_zero h)

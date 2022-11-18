@@ -209,7 +209,7 @@ def homologyOfZeroRight [HasCokernel (imageToKernel f (0 : B ⟶ C) comp_zero)] 
 /-- The kernel of the map `Im 0 ⟶ Ker f` is isomorphic to the kernel of `f.` -/
 def homologyOfZeroLeft [HasZeroObject V] [HasKernels V] [HasImage (0 : A ⟶ B)]
     [HasCokernel (imageToKernel (0 : A ⟶ B) g zero_comp)] : homology (0 : A ⟶ B) g zero_comp ≅ kernel g :=
-  ((cokernel_iso_of_eq $ image_to_kernel_zero_left _).trans cokernelZeroIsoTarget).trans (kernelSubobjectIso _)
+  ((cokernel_iso_of_eq <| image_to_kernel_zero_left _).trans cokernelZeroIsoTarget).trans (kernelSubobjectIso _)
 #align homology_of_zero_left homologyOfZeroLeft
 
 /-- `homology 0 0 _` is just the middle object. -/
@@ -330,10 +330,10 @@ private unsafe def aux_tac : tactic Unit :=
   sorry
 #align aux_tac aux_tac
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.512755821.aux_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.512755821.aux_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.512755821.aux_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.512755821.aux_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.2634269843.aux_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.2634269843.aux_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.2634269843.aux_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic _private.2634269843.aux_tac -/
 /-- `homology f g w ≅ homology f' g' w'` if `f = f'` and `g = g'`.
 (Note the objects are not changing here.)
 -/

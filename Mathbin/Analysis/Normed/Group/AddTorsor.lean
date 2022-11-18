@@ -28,9 +28,9 @@ structure and require the distance to be the same as results from the
 norm (which in fact implies the distance yields a pseudometric space, but
 bundling just the distance and using an instance for the pseudometric space
 results in type class problems). -/
-class NormedAddTorsor (V : outParam $ Type _) (P : Type _) [outParam $ SeminormedAddCommGroup V]
+class NormedAddTorsor (V : outParam <| Type _) (P : Type _) [outParam <| SeminormedAddCommGroup V]
   [PseudoMetricSpace P] extends AddTorsor V P where
-  dist_eq_norm' : ∀ x y : P, dist x y = ∥(x -ᵥ y : V)∥
+  dist_eq_norm' : ∀ x y : P, dist x y = ‖(x -ᵥ y : V)‖
 #align normed_add_torsor NormedAddTorsor
 
 /-- Shortcut instance to help typeclass inference out. -/
@@ -52,7 +52,7 @@ instance (priority := 100) SeminormedAddCommGroup.toNormedAddTorsor :
 @[nolint fails_quickly]
 instance AffineSubspace.toNormedAddTorsor {R : Type _} [Ring R] [Module R V] (s : AffineSubspace R P) [Nonempty s] :
     NormedAddTorsor s.direction s :=
-  { AffineSubspace.toAddTorsor s with dist_eq_norm' := fun x y => NormedAddTorsor.dist_eq_norm' (↑x) ↑y }
+  { AffineSubspace.toAddTorsor s with dist_eq_norm' := fun x y => NormedAddTorsor.dist_eq_norm' ↑x ↑y }
 #align affine_subspace.to_normed_add_torsor AffineSubspace.toNormedAddTorsor
 
 include V
@@ -64,14 +64,14 @@ variable (V W)
 /-- The distance equals the norm of subtracting two points. In this
 lemma, it is necessary to have `V` as an explicit argument; otherwise
 `rw dist_eq_norm_vsub` sometimes doesn't work. -/
-theorem dist_eq_norm_vsub (x y : P) : dist x y = ∥x -ᵥ y∥ :=
+theorem dist_eq_norm_vsub (x y : P) : dist x y = ‖x -ᵥ y‖ :=
   NormedAddTorsor.dist_eq_norm' x y
 #align dist_eq_norm_vsub dist_eq_norm_vsub
 
 /-- The distance equals the norm of subtracting two points. In this
 lemma, it is necessary to have `V` as an explicit argument; otherwise
 `rw dist_eq_norm_vsub'` sometimes doesn't work. -/
-theorem dist_eq_norm_vsub' (x y : P) : dist x y = ∥y -ᵥ x∥ :=
+theorem dist_eq_norm_vsub' (x y : P) : dist x y = ‖y -ᵥ x‖ :=
   (dist_comm _ _).trans (dist_eq_norm_vsub _ _ _)
 #align dist_eq_norm_vsub' dist_eq_norm_vsub'
 
@@ -88,11 +88,11 @@ theorem dist_vadd_cancel_right (v₁ v₂ : V) (x : P) : dist (v₁ +ᵥ x) (v�
 #align dist_vadd_cancel_right dist_vadd_cancel_right
 
 @[simp]
-theorem dist_vadd_left (v : V) (x : P) : dist (v +ᵥ x) x = ∥v∥ := by simp [dist_eq_norm_vsub V _ x]
+theorem dist_vadd_left (v : V) (x : P) : dist (v +ᵥ x) x = ‖v‖ := by simp [dist_eq_norm_vsub V _ x]
 #align dist_vadd_left dist_vadd_left
 
 @[simp]
-theorem dist_vadd_right (v : V) (x : P) : dist x (v +ᵥ x) = ∥v∥ := by rw [dist_comm, dist_vadd_left]
+theorem dist_vadd_right (v : V) (x : P) : dist x (v +ᵥ x) = ‖v‖ := by rw [dist_comm, dist_vadd_left]
 #align dist_vadd_right dist_vadd_right
 
 /-- Isometry between the tangent space `V` of a (semi)normed add torsor `P` and `P` given by
@@ -100,7 +100,7 @@ addition/subtraction of `x : P`. -/
 @[simps]
 def Isometric.vaddConst (x : P) : V ≃ᵢ P where
   toEquiv := Equiv.vaddConst x
-  isometryToFun := Isometry.ofDistEq $ fun _ _ => dist_vadd_cancel_right _ _ _
+  isometryToFun := Isometry.ofDistEq fun _ _ => dist_vadd_cancel_right _ _ _
 #align isometric.vadd_const Isometric.vaddConst
 
 section
@@ -111,7 +111,7 @@ variable (P)
 @[simps]
 def Isometric.constVadd (x : V) : P ≃ᵢ P where
   toEquiv := Equiv.constVadd P x
-  isometryToFun := Isometry.ofDistEq $ fun _ _ => dist_vadd_cancel_left _ _ _
+  isometryToFun := Isometry.ofDistEq fun _ _ => dist_vadd_cancel_left _ _ _
 #align isometric.const_vadd Isometric.constVadd
 
 end
@@ -126,7 +126,7 @@ subtraction from `x : P`. -/
 @[simps]
 def Isometric.constVsub (x : P) : P ≃ᵢ V where
   toEquiv := Equiv.constVsub x
-  isometryToFun := Isometry.ofDistEq $ fun y z => dist_vsub_cancel_left _ _ _
+  isometryToFun := Isometry.ofDistEq fun y z => dist_vsub_cancel_left _ _ _
 #align isometric.const_vsub Isometric.constVsub
 
 @[simp]
@@ -189,12 +189,12 @@ is not an instance because it depends on `V` to define a `metric_space
 P`. -/
 def pseudoMetricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [SeminormedAddCommGroup V] [AddTorsor V P] :
     PseudoMetricSpace P where
-  dist x y := ∥(x -ᵥ y : V)∥
+  dist x y := ‖(x -ᵥ y : V)‖
   dist_self x := by simp
   dist_comm x y := by simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
   dist_triangle := by
     intro x y z
-    change ∥x -ᵥ z∥ ≤ ∥x -ᵥ y∥ + ∥y -ᵥ z∥
+    change ‖x -ᵥ z‖ ≤ ‖x -ᵥ y‖ + ‖y -ᵥ z‖
     rw [← vsub_add_vsub_cancel]
     apply norm_add_le
 #align pseudo_metric_space_of_normed_add_comm_group_of_add_torsor pseudoMetricSpaceOfNormedAddCommGroupOfAddTorsor
@@ -204,13 +204,13 @@ is not an instance because it depends on `V` to define a `metric_space
 P`. -/
 def metricSpaceOfNormedAddCommGroupOfAddTorsor (V P : Type _) [NormedAddCommGroup V] [AddTorsor V P] :
     MetricSpace P where
-  dist x y := ∥(x -ᵥ y : V)∥
+  dist x y := ‖(x -ᵥ y : V)‖
   dist_self x := by simp
   eq_of_dist_eq_zero x y h := by simpa using h
   dist_comm x y := by simp only [← neg_vsub_eq_vsub_rev y x, norm_neg]
   dist_triangle := by
     intro x y z
-    change ∥x -ᵥ z∥ ≤ ∥x -ᵥ y∥ + ∥y -ᵥ z∥
+    change ‖x -ᵥ z‖ ≤ ‖x -ᵥ y‖ + ‖y -ᵥ z‖
     rw [← vsub_add_vsub_cancel]
     apply norm_add_le
 #align metric_space_of_normed_add_comm_group_of_add_torsor metricSpaceOfNormedAddCommGroupOfAddTorsor
@@ -282,13 +282,13 @@ variable {R : Type _} [Ring R] [TopologicalSpace R] [Module R V] [HasContinuousS
 
 theorem Filter.Tendsto.line_map {l : Filter α} {f₁ f₂ : α → P} {g : α → R} {p₁ p₂ : P} {c : R}
     (h₁ : Tendsto f₁ l (𝓝 p₁)) (h₂ : Tendsto f₂ l (𝓝 p₂)) (hg : Tendsto g l (𝓝 c)) :
-    Tendsto (fun x => AffineMap.lineMap (f₁ x) (f₂ x) (g x)) l (𝓝 $ AffineMap.lineMap p₁ p₂ c) :=
+    Tendsto (fun x => AffineMap.lineMap (f₁ x) (f₂ x) (g x)) l (𝓝 <| AffineMap.lineMap p₁ p₂ c) :=
   (hg.smul (h₂.vsub h₁)).vadd h₁
 #align filter.tendsto.line_map Filter.Tendsto.line_map
 
 theorem Filter.Tendsto.midpoint [Invertible (2 : R)] {l : Filter α} {f₁ f₂ : α → P} {p₁ p₂ : P}
     (h₁ : Tendsto f₁ l (𝓝 p₁)) (h₂ : Tendsto f₂ l (𝓝 p₂)) :
-    Tendsto (fun x => midpoint R (f₁ x) (f₂ x)) l (𝓝 $ midpoint R p₁ p₂) :=
+    Tendsto (fun x => midpoint R (f₁ x) (f₂ x)) l (𝓝 <| midpoint R p₁ p₂) :=
   h₁.lineMap h₂ tendsto_const_nhds
 #align filter.tendsto.midpoint Filter.Tendsto.midpoint
 

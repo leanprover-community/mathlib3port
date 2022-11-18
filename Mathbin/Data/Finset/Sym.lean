@@ -3,7 +3,8 @@ Copyright (c) 2021 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Data.Finset.Prod
+import Mathbin.Data.Fintype.Prod
+import Mathbin.Data.Fintype.Vector
 import Mathbin.Data.Sym.Sym2
 
 /-!
@@ -89,11 +90,11 @@ theorem sym2_singleton (a : α) : ({a} : Finset α).Sym2 = {Sym2.diag a} := by
 
 @[simp]
 theorem diag_mem_sym2_iff : Sym2.diag a ∈ s.Sym2 ↔ a ∈ s :=
-  mk_mem_sym2_iff.trans $ and_self_iff _
+  mk_mem_sym2_iff.trans <| and_self_iff _
 #align finset.diag_mem_sym2_iff Finset.diag_mem_sym2_iff
 
 @[simp]
-theorem sym2_mono (h : s ⊆ t) : s.Sym2 ⊆ t.Sym2 := fun m he => mem_sym2_iff.2 $ fun a ha => h $ mem_sym2_iff.1 he _ ha
+theorem sym2_mono (h : s ⊆ t) : s.Sym2 ⊆ t.Sym2 := fun m he => mem_sym2_iff.2 fun a ha => h <| mem_sym2_iff.1 he _ ha
 #align finset.sym2_mono Finset.sym2_mono
 
 theorem image_diag_union_image_off_diag : s.diag.image Quotient.mk'' ∪ s.offDiag.image Quotient.mk'' = s.Sym2 := by
@@ -111,7 +112,7 @@ variable {n : ℕ} {m : Sym α n}
 with elements in `s`. -/
 protected def sym (s : Finset α) : ∀ n, Finset (Sym α n)
   | 0 => {∅}
-  | n + 1 => s.sup $ fun a => (Sym n).image $ Sym.cons a
+  | n + 1 => s.sup fun a => (Sym n).image <| Sym.cons a
 #align finset.sym Finset.sym
 
 @[simp]
@@ -120,7 +121,7 @@ theorem sym_zero : s.Sym 0 = {∅} :=
 #align finset.sym_zero Finset.sym_zero
 
 @[simp]
-theorem sym_succ : s.Sym (n + 1) = s.sup fun a => (s.Sym n).image $ Sym.cons a :=
+theorem sym_succ : s.Sym (n + 1) = s.sup fun a => (s.Sym n).image <| Sym.cons a :=
   rfl
 #align finset.sym_succ Finset.sym_succ
 
@@ -143,7 +144,7 @@ theorem mem_sym_iff : m ∈ s.Sym n ↔ ∀ a ∈ m, a ∈ s := by
       
     
   · obtain ⟨a, m, rfl⟩ := m.exists_eq_cons_of_succ
-    exact ⟨a, h _ $ Sym.mem_cons_self _ _, mem_image_of_mem _ $ ih.2 $ fun b hb => h _ $ Sym.mem_cons_of_mem hb⟩
+    exact ⟨a, h _ <| Sym.mem_cons_self _ _, mem_image_of_mem _ <| ih.2 fun b hb => h _ <| Sym.mem_cons_of_mem hb⟩
     
 #align finset.mem_sym_iff Finset.mem_sym_iff
 
@@ -153,7 +154,7 @@ theorem sym_empty (n : ℕ) : (∅ : Finset α).Sym (n + 1) = ∅ :=
 #align finset.sym_empty Finset.sym_empty
 
 theorem repeat_mem_sym (ha : a ∈ s) (n : ℕ) : Sym.repeat a n ∈ s.Sym n :=
-  mem_sym_iff.2 $ fun b hb => by rwa [(Sym.mem_repeat.1 hb).2]
+  mem_sym_iff.2 fun b hb => by rwa [(Sym.mem_repeat.1 hb).2]
 #align finset.repeat_mem_sym Finset.repeat_mem_sym
 
 protected theorem Nonempty.sym (h : s.Nonempty) (n : ℕ) : (s.Sym n).Nonempty :=
@@ -165,7 +166,7 @@ protected theorem Nonempty.sym (h : s.Nonempty) (n : ℕ) : (s.Sym n).Nonempty :
 theorem sym_singleton (a : α) (n : ℕ) : ({a} : Finset α).Sym n = {Sym.repeat a n} :=
   eq_singleton_iff_nonempty_unique_mem.2
     ⟨(singleton_nonempty _).Sym n, fun s hs =>
-      Sym.eq_repeat_iff.2 $ fun b hb => eq_of_mem_singleton $ mem_sym_iff.1 hs _ hb⟩
+      Sym.eq_repeat_iff.2 fun b hb => eq_of_mem_singleton <| mem_sym_iff.1 hs _ hb⟩
 #align finset.sym_singleton Finset.sym_singleton
 
 theorem eq_empty_of_sym_eq_empty (h : s.Sym n = ∅) : s = ∅ := by
@@ -195,12 +196,12 @@ attribute [protected] nonempty.sym2
 
 @[simp]
 theorem sym_univ [Fintype α] (n : ℕ) : (univ : Finset α).Sym n = univ :=
-  eq_univ_iff_forall.2 $ fun s => mem_sym_iff.2 $ fun a _ => mem_univ _
+  eq_univ_iff_forall.2 fun s => mem_sym_iff.2 fun a _ => mem_univ _
 #align finset.sym_univ Finset.sym_univ
 
 @[simp]
 theorem sym_mono (h : s ⊆ t) (n : ℕ) : s.Sym n ⊆ t.Sym n := fun m hm =>
-  mem_sym_iff.2 $ fun a ha => h $ mem_sym_iff.1 hm _ ha
+  mem_sym_iff.2 fun a ha => h <| mem_sym_iff.1 hm _ ha
 #align finset.sym_mono Finset.sym_mono
 
 @[simp]
@@ -216,21 +217,21 @@ theorem sym_union (s t : Finset α) (n : ℕ) : s.Sym n ∪ t.Sym n ⊆ (s ∪ t
 
 theorem sym_fill_mem (a : α) {i : Fin (n + 1)} {m : Sym α (n - i)} (h : m ∈ s.Sym (n - i)) :
     m.fill a i ∈ (insert a s).Sym n :=
-  mem_sym_iff.2 $ fun b hb => mem_insert.2 $ (Sym.mem_fill_iff.1 hb).imp And.right $ mem_sym_iff.1 h b
+  mem_sym_iff.2 fun b hb => mem_insert.2 <| (Sym.mem_fill_iff.1 hb).imp And.right <| mem_sym_iff.1 h b
 #align finset.sym_fill_mem Finset.sym_fill_mem
 
 theorem sym_filter_ne_mem (a : α) (h : m ∈ s.Sym n) : (m.filter_ne a).2 ∈ (s.erase a).Sym (n - (m.filter_ne a).1) :=
-  mem_sym_iff.2 $ fun b H => mem_erase.2 $ (Multiset.mem_filter.1 H).symm.imp Ne.symm $ mem_sym_iff.1 h b
+  mem_sym_iff.2 fun b H => mem_erase.2 <| (Multiset.mem_filter.1 H).symm.imp Ne.symm <| mem_sym_iff.1 h b
 #align finset.sym_filter_ne_mem Finset.sym_filter_ne_mem
 
 /-- If `a` does not belong to the finset `s`, then the `n`th symmetric power of `{a} ∪ s` is
   in 1-1 correspondence with the disjoint union of the `n - i`th symmetric powers of `s`,
   for `0 ≤ i ≤ n`. -/
 @[simps]
-def symInsertEquiv (h : a ∉ s) : (insert a s).Sym n ≃ Σ i : Fin (n + 1), s.Sym (n - i) where
+def symInsertEquiv (h : a ∉ s) : (insert a s).Sym n ≃ Σi : Fin (n + 1), s.Sym (n - i) where
   toFun m := ⟨_, (m.1.filter_ne a).2, by convert sym_filter_ne_mem a m.2 <;> rw [erase_insert h]⟩
   invFun m := ⟨m.2.1.fill a m.1, sym_fill_mem a m.2.2⟩
-  left_inv m := Subtype.ext $ m.1.fill_filter_ne a
+  left_inv m := Subtype.ext <| m.1.fill_filter_ne a
   right_inv := fun ⟨i, m, hm⟩ => by
     refine' (_ : id.injective).sigma_map (fun i => _) _
     · exact fun i => Sym α (n - i)

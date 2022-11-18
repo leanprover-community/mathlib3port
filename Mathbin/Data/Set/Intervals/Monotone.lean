@@ -6,6 +6,7 @@ Authors: Yury Kudryashov
 import Mathbin.Data.Set.Intervals.Disjoint
 import Mathbin.Order.ConditionallyCompleteLattice
 import Mathbin.Order.SuccPred.Basic
+import Mathbin.Algebra.Order.Field.Basic
 import Mathbin.Tactic.FieldSimp
 
 /-!
@@ -168,7 +169,7 @@ theorem MonotoneOn.exists_monotone_extension {β : Type _} [ConditionallyComplet
   have hfg : eq_on f g s := by
     intro x xs
     dsimp only [g]
-    by_cases hxa:x ≤ a
+    by_cases hxa : x ≤ a
     · have : x = a := le_antisymm hxa (ha.2 xs)
       simp only [if_true, this, le_refl]
       
@@ -181,7 +182,7 @@ theorem MonotoneOn.exists_monotone_extension {β : Type _} [ConditionallyComplet
   have g_eq : ∀ x ∈ Ici a, g x = Sup (f '' (Icc a x ∩ s)) := by
     rintro x ax
     dsimp only [g]
-    by_cases hxa:x ≤ a
+    by_cases hxa : x ≤ a
     · have : x = a := le_antisymm hxa ax
       simp_rw [hxa, if_true, H a ha.1, this]
       
@@ -438,9 +439,9 @@ theorem StrictMonoOn.Iic_id_le [SuccOrder α] [IsSuccArchimedean α] [OrderBot �
   revert hφ
   refine' Succ.rec_bot (fun n => StrictMonoOn φ (Set.iic n) → ∀ m ≤ n, m ≤ φ m) (fun _ _ hm => hm.trans bot_le) _ _
   rintro k ih hφ m hm
-  by_cases hk:IsMax k
+  by_cases hk : IsMax k
   · rw [succ_eq_iff_is_max.2 hk] at hm
-    exact ih (hφ.mono $ Iic_subset_Iic.2 (le_succ _)) _ hm
+    exact ih (hφ.mono <| Iic_subset_Iic.2 (le_succ _)) _ hm
     
   obtain rfl | h := le_succ_iff_eq_or_le.1 hm
   · specialize ih (StrictMonoOn.mono hφ fun x hx => le_trans hx (le_succ _)) k le_rfl
@@ -473,11 +474,11 @@ theorem strict_mono_on_Iic_of_lt_succ [SuccOrder α] [IsSuccArchimedean α] {n :
     
   rw [Set.mem_Iic] at *
   simp only [Function.iterate_succ', Function.comp_apply] at ih hxy hy⊢
-  by_cases hmax:IsMax ((succ^[k]) x)
+  by_cases hmax : IsMax ((succ^[k]) x)
   · rw [succ_eq_iff_is_max.2 hmax] at hxy⊢
     exact ih (le_trans (le_succ _) hy) hxy
     
-  by_cases hmax':IsMax (succ ((succ^[k]) x))
+  by_cases hmax' : IsMax (succ ((succ^[k]) x))
   · rw [succ_eq_iff_is_max.2 hmax'] at hxy⊢
     exact ih (le_trans (le_succ _) hy) hxy
     

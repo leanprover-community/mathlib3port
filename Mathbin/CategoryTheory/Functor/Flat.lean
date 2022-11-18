@@ -5,7 +5,6 @@ Authors: Andrew Yang
 -/
 import Mathbin.CategoryTheory.Limits.FilteredColimitCommutesFiniteLimit
 import Mathbin.CategoryTheory.Limits.Preserves.FunctorCategory
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.Bicones
 import Mathbin.CategoryTheory.Limits.Comma
 import Mathbin.CategoryTheory.Limits.Preserves.Finite
@@ -217,10 +216,10 @@ Given a limit cone `c : cone K` and a cone `s : cone (K ⋙ F)` with `F` represe
 noncomputable def lift : s.x ⟶ F.obj c.x :=
   let s' := IsCofiltered.cone (toDiagram s ⋙ StructuredArrow.pre _ K F)
   s'.x.Hom ≫
-    (F.map $
-      hc.lift $
+    (F.map <|
+      hc.lift <|
         (Cones.postcompose
-              ({ app := fun X => 𝟙 _, naturality' := by simp } : (toDiagram s ⋙ pre s.x K F) ⋙ proj s.x F ⟶ K)).obj $
+              ({ app := fun X => 𝟙 _, naturality' := by simp } : (toDiagram s ⋙ pre s.x K F) ⋙ proj s.x F ⟶ K)).obj <|
           (StructuredArrow.proj s.x F).mapCone s')
 #align category_theory.preserves_finite_limits_of_flat.lift CategoryTheory.PreservesFiniteLimitsOfFlat.lift
 
@@ -264,12 +263,12 @@ attribute [local simp] eq_to_hom_map
            [`j]
            [(Term.typeSpec ":" `J)]
            ","
-           (Init.Core.«term_=_»
+           («term_=_»
             (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
              `f₁
              " ≫ "
              (Term.app (Term.proj (Term.proj (Term.app (Term.proj `F "." `mapCone) [`c]) "." `π) "." `app) [`j]))
-            " = "
+            "="
             (Term.app (Term.proj (Term.proj `s "." `π) "." `app) [`j])))]
          []
          ")")
@@ -282,16 +281,16 @@ attribute [local simp] eq_to_hom_map
            [`j]
            [(Term.typeSpec ":" `J)]
            ","
-           (Init.Core.«term_=_»
+           («term_=_»
             (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
              `f₂
              " ≫ "
              (Term.app (Term.proj (Term.proj (Term.app (Term.proj `F "." `mapCone) [`c]) "." `π) "." `app) [`j]))
-            " = "
+            "="
             (Term.app (Term.proj (Term.proj `s "." `π) "." `app) [`j])))]
          []
          ")")]
-       (Term.typeSpec ":" (Init.Core.«term_=_» `f₁ " = " `f₂)))
+       (Term.typeSpec ":" («term_=_» `f₁ "=" `f₂)))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -518,9 +517,9 @@ attribute [local simp] eq_to_hom_map
                  [`j]
                  [(Term.typeSpec ":" `J)]
                  ","
-                 (Init.Core.«term_=_»
+                 («term_=_»
                   (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `g₁.right " ≫ " (Term.app `c.π.app [`j]))
-                  " = "
+                  "="
                   (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `g₂.right " ≫ " (Term.app `c.π.app [`j])))))]
               ":="
               (Term.byTactic
@@ -550,9 +549,7 @@ attribute [local simp] eq_to_hom_map
             (Term.haveDecl
              (Term.haveIdDecl
               []
-              [(Term.typeSpec
-                ":"
-                (Init.Core.«term_=_» (Term.app `c.extend [`g₁.right]) " = " (Term.app `c.extend [`g₂.right])))]
+              [(Term.typeSpec ":" («term_=_» (Term.app `c.extend [`g₁.right]) "=" (Term.app `c.extend [`g₂.right])))]
               ":="
               (Term.byTactic
                "by"
@@ -569,12 +566,12 @@ attribute [local simp] eq_to_hom_map
                   []
                   (Tactic.apply "apply" `this)]))))))
            []
-           (Mathlib.Tactic.tacticHave_ "have" [] [(Term.typeSpec ":" (Init.Core.«term_=_» `g₁.right " = " `g₂.right))])
+           (Mathlib.Tactic.tacticHave_ "have" [] [(Term.typeSpec ":" («term_=_» `g₁.right "=" `g₂.right))])
            []
            (calcTactic
             "calc"
             (calcStep
-             (Init.Core.«term_=_» `g₁.right " = " (Term.app `hc.lift [(Term.app `c.extend [`g₁.right])]))
+             («term_=_» `g₁.right "=" (Term.app `hc.lift [(Term.app `c.extend [`g₁.right])]))
              ":="
              (Term.byTactic
               "by"
@@ -584,14 +581,14 @@ attribute [local simp] eq_to_hom_map
                  []
                  (Tactic.tidy "tidy" [])]))))
             [(calcStep
-              (Init.Core.«term_=_» (Term.hole "_") " = " (Term.app `hc.lift [(Term.app `c.extend [`g₂.right])]))
+              («term_=_» (Term.hole "_") "=" (Term.app `hc.lift [(Term.app `c.extend [`g₂.right])]))
               ":="
               (Term.byTactic
                "by"
                (Tactic.tacticSeq
                 (Tactic.tacticSeq1Indented [(Tactic.congr "congr" []) [] (Tactic.exact "exact" `this)]))))
              (calcStep
-              (Init.Core.«term_=_» (Term.hole "_") " = " `g₂.right)
+              («term_=_» (Term.hole "_") "=" `g₂.right)
               ":="
               (Term.byTactic
                "by"
@@ -606,9 +603,9 @@ attribute [local simp] eq_to_hom_map
            (calcTactic
             "calc"
             (calcStep
-             (Init.Core.«term_=_»
+             («term_=_»
               `f₁
-              " = "
+              "="
               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                (Term.app (CategoryTheory.CategoryTheory.Category.Basic.«term𝟙» "𝟙") [(Term.hole "_")])
                " ≫ "
@@ -616,16 +613,16 @@ attribute [local simp] eq_to_hom_map
              ":="
              (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))
             [(calcStep
-              (Init.Core.«term_=_»
+              («term_=_»
                (Term.hole "_")
-               " = "
+               "="
                (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `c₀.X.hom " ≫ " (Term.app `F.map [`g₁.right])))
               ":="
               `g₁.w)
              (calcStep
-              (Init.Core.«term_=_»
+              («term_=_»
                (Term.hole "_")
-               " = "
+               "="
                (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `c₀.X.hom " ≫ " (Term.app `F.map [`g₂.right])))
               ":="
               (Term.byTactic
@@ -634,9 +631,9 @@ attribute [local simp] eq_to_hom_map
                 (Tactic.tacticSeq1Indented
                  [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `this)] "]") [])]))))
              (calcStep
-              (Init.Core.«term_=_»
+              («term_=_»
                (Term.hole "_")
-               " = "
+               "="
                (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                 (Term.app (CategoryTheory.CategoryTheory.Category.Basic.«term𝟙» "𝟙") [(Term.hole "_")])
                 " ≫ "
@@ -644,7 +641,7 @@ attribute [local simp] eq_to_hom_map
               ":="
               `g₂.w.symm)
              (calcStep
-              (Init.Core.«term_=_» (Term.hole "_") " = " `f₂)
+              («term_=_» (Term.hole "_") "=" `f₂)
               ":="
               (Term.byTactic
                "by"
@@ -879,9 +876,9 @@ attribute [local simp] eq_to_hom_map
                 [`j]
                 [(Term.typeSpec ":" `J)]
                 ","
-                (Init.Core.«term_=_»
+                («term_=_»
                  (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `g₁.right " ≫ " (Term.app `c.π.app [`j]))
-                 " = "
+                 "="
                  (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `g₂.right " ≫ " (Term.app `c.π.app [`j])))))]
              ":="
              (Term.byTactic
@@ -911,9 +908,7 @@ attribute [local simp] eq_to_hom_map
            (Term.haveDecl
             (Term.haveIdDecl
              []
-             [(Term.typeSpec
-               ":"
-               (Init.Core.«term_=_» (Term.app `c.extend [`g₁.right]) " = " (Term.app `c.extend [`g₂.right])))]
+             [(Term.typeSpec ":" («term_=_» (Term.app `c.extend [`g₁.right]) "=" (Term.app `c.extend [`g₂.right])))]
              ":="
              (Term.byTactic
               "by"
@@ -930,12 +925,12 @@ attribute [local simp] eq_to_hom_map
                  []
                  (Tactic.apply "apply" `this)]))))))
           []
-          (Mathlib.Tactic.tacticHave_ "have" [] [(Term.typeSpec ":" (Init.Core.«term_=_» `g₁.right " = " `g₂.right))])
+          (Mathlib.Tactic.tacticHave_ "have" [] [(Term.typeSpec ":" («term_=_» `g₁.right "=" `g₂.right))])
           []
           (calcTactic
            "calc"
            (calcStep
-            (Init.Core.«term_=_» `g₁.right " = " (Term.app `hc.lift [(Term.app `c.extend [`g₁.right])]))
+            («term_=_» `g₁.right "=" (Term.app `hc.lift [(Term.app `c.extend [`g₁.right])]))
             ":="
             (Term.byTactic
              "by"
@@ -945,14 +940,14 @@ attribute [local simp] eq_to_hom_map
                 []
                 (Tactic.tidy "tidy" [])]))))
            [(calcStep
-             (Init.Core.«term_=_» (Term.hole "_") " = " (Term.app `hc.lift [(Term.app `c.extend [`g₂.right])]))
+             («term_=_» (Term.hole "_") "=" (Term.app `hc.lift [(Term.app `c.extend [`g₂.right])]))
              ":="
              (Term.byTactic
               "by"
               (Tactic.tacticSeq
                (Tactic.tacticSeq1Indented [(Tactic.congr "congr" []) [] (Tactic.exact "exact" `this)]))))
             (calcStep
-             (Init.Core.«term_=_» (Term.hole "_") " = " `g₂.right)
+             («term_=_» (Term.hole "_") "=" `g₂.right)
              ":="
              (Term.byTactic
               "by"
@@ -967,9 +962,9 @@ attribute [local simp] eq_to_hom_map
           (calcTactic
            "calc"
            (calcStep
-            (Init.Core.«term_=_»
+            («term_=_»
              `f₁
-             " = "
+             "="
              (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
               (Term.app (CategoryTheory.CategoryTheory.Category.Basic.«term𝟙» "𝟙") [(Term.hole "_")])
               " ≫ "
@@ -977,16 +972,16 @@ attribute [local simp] eq_to_hom_map
             ":="
             (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))
            [(calcStep
-             (Init.Core.«term_=_»
+             («term_=_»
               (Term.hole "_")
-              " = "
+              "="
               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `c₀.X.hom " ≫ " (Term.app `F.map [`g₁.right])))
              ":="
              `g₁.w)
             (calcStep
-             (Init.Core.«term_=_»
+             («term_=_»
               (Term.hole "_")
-              " = "
+              "="
               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `c₀.X.hom " ≫ " (Term.app `F.map [`g₂.right])))
              ":="
              (Term.byTactic
@@ -995,9 +990,9 @@ attribute [local simp] eq_to_hom_map
                (Tactic.tacticSeq1Indented
                 [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `this)] "]") [])]))))
             (calcStep
-             (Init.Core.«term_=_»
+             («term_=_»
               (Term.hole "_")
-              " = "
+              "="
               (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
                (Term.app (CategoryTheory.CategoryTheory.Category.Basic.«term𝟙» "𝟙") [(Term.hole "_")])
                " ≫ "
@@ -1005,7 +1000,7 @@ attribute [local simp] eq_to_hom_map
              ":="
              `g₂.w.symm)
             (calcStep
-             (Init.Core.«term_=_» (Term.hole "_") " = " `f₂)
+             («term_=_» (Term.hole "_") "=" `f₂)
              ":="
              (Term.byTactic
               "by"
@@ -1015,9 +1010,9 @@ attribute [local simp] eq_to_hom_map
       (calcTactic
        "calc"
        (calcStep
-        (Init.Core.«term_=_»
+        («term_=_»
          `f₁
-         " = "
+         "="
          (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
           (Term.app (CategoryTheory.CategoryTheory.Category.Basic.«term𝟙» "𝟙") [(Term.hole "_")])
           " ≫ "
@@ -1025,16 +1020,16 @@ attribute [local simp] eq_to_hom_map
         ":="
         (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))
        [(calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (Term.hole "_")
-          " = "
+          "="
           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `c₀.X.hom " ≫ " (Term.app `F.map [`g₁.right])))
          ":="
          `g₁.w)
         (calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (Term.hole "_")
-          " = "
+          "="
           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `c₀.X.hom " ≫ " (Term.app `F.map [`g₂.right])))
          ":="
          (Term.byTactic
@@ -1043,9 +1038,9 @@ attribute [local simp] eq_to_hom_map
            (Tactic.tacticSeq1Indented
             [(Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `this)] "]") [])]))))
         (calcStep
-         (Init.Core.«term_=_»
+         («term_=_»
           (Term.hole "_")
-          " = "
+          "="
           (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
            (Term.app (CategoryTheory.CategoryTheory.Category.Basic.«term𝟙» "𝟙") [(Term.hole "_")])
            " ≫ "
@@ -1053,7 +1048,7 @@ attribute [local simp] eq_to_hom_map
          ":="
          `g₂.w.symm)
         (calcStep
-         (Init.Core.«term_=_» (Term.hole "_") " = " `f₂)
+         («term_=_» (Term.hole "_") "=" `f₂)
          ":="
          (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])]))))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1064,21 +1059,21 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_» (Term.hole "_") " = " `f₂)
+      («term_=_» (Term.hole "_") "=" `f₂)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `f₂
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       `g₂.w.symm
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (Term.hole "_")
-       " = "
+       "="
        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
         (Term.app (CategoryTheory.CategoryTheory.Category.Basic.«term𝟙» "𝟙") [(Term.hole "_")])
         " ≫ "
@@ -1105,7 +1100,7 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 80, (some 80, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.byTactic
@@ -1121,9 +1116,9 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (Term.hole "_")
-       " = "
+       "="
        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `c₀.X.hom " ≫ " (Term.app `F.map [`g₂.right])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `c₀.X.hom " ≫ " (Term.app `F.map [`g₂.right]))
@@ -1144,15 +1139,15 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 80, (some 80, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       `g₁.w
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (Term.hole "_")
-       " = "
+       "="
        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `c₀.X.hom " ≫ " (Term.app `F.map [`g₁.right])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `c₀.X.hom " ≫ " (Term.app `F.map [`g₁.right]))
@@ -1173,7 +1168,7 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 80, (some 80, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.byTactic "by" (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.simp "simp" [] [] [] [] [])])))
@@ -1183,9 +1178,9 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        `f₁
-       " = "
+       "="
        (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_»
         (Term.app (CategoryTheory.CategoryTheory.Category.Basic.«term𝟙» "𝟙") [(Term.hole "_")])
         " ≫ "
@@ -1212,14 +1207,14 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 80, (some 80, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `f₁
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (calcTactic
        "calc"
        (calcStep
-        (Init.Core.«term_=_» `g₁.right " = " (Term.app `hc.lift [(Term.app `c.extend [`g₁.right])]))
+        («term_=_» `g₁.right "=" (Term.app `hc.lift [(Term.app `c.extend [`g₁.right])]))
         ":="
         (Term.byTactic
          "by"
@@ -1229,13 +1224,13 @@ attribute [local simp] eq_to_hom_map
             []
             (Tactic.tidy "tidy" [])]))))
        [(calcStep
-         (Init.Core.«term_=_» (Term.hole "_") " = " (Term.app `hc.lift [(Term.app `c.extend [`g₂.right])]))
+         («term_=_» (Term.hole "_") "=" (Term.app `hc.lift [(Term.app `c.extend [`g₂.right])]))
          ":="
          (Term.byTactic
           "by"
           (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(Tactic.congr "congr" []) [] (Tactic.exact "exact" `this)]))))
         (calcStep
-         (Init.Core.«term_=_» (Term.hole "_") " = " `g₂.right)
+         («term_=_» (Term.hole "_") "=" `g₂.right)
          ":="
          (Term.byTactic
           "by"
@@ -1288,13 +1283,13 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_» (Term.hole "_") " = " `g₂.right)
+      («term_=_» (Term.hole "_") "=" `g₂.right)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `g₂.right
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.byTactic
@@ -1312,7 +1307,7 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_» (Term.hole "_") " = " (Term.app `hc.lift [(Term.app `c.extend [`g₂.right])]))
+      («term_=_» (Term.hole "_") "=" (Term.app `hc.lift [(Term.app `c.extend [`g₂.right])]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `hc.lift [(Term.app `c.extend [`g₂.right])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
@@ -1335,7 +1330,7 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       (Term.hole "_")
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, term))
       (Term.byTactic
@@ -1374,7 +1369,7 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_» `g₁.right " = " (Term.app `hc.lift [(Term.app `c.extend [`g₁.right])]))
+      («term_=_» `g₁.right "=" (Term.app `hc.lift [(Term.app `c.extend [`g₁.right])]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `hc.lift [(Term.app `c.extend [`g₁.right])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
@@ -1397,19 +1392,19 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `g₁.right
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Mathlib.Tactic.tacticHave_ "have" [] [(Term.typeSpec ":" (Init.Core.«term_=_» `g₁.right " = " `g₂.right))])
+      (Mathlib.Tactic.tacticHave_ "have" [] [(Term.typeSpec ":" («term_=_» `g₁.right "=" `g₂.right))])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_» `g₁.right " = " `g₂.right)
+      («term_=_» `g₁.right "=" `g₂.right)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `g₂.right
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
       `g₁.right
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1418,9 +1413,7 @@ attribute [local simp] eq_to_hom_map
        (Term.haveDecl
         (Term.haveIdDecl
          []
-         [(Term.typeSpec
-           ":"
-           (Init.Core.«term_=_» (Term.app `c.extend [`g₁.right]) " = " (Term.app `c.extend [`g₂.right])))]
+         [(Term.typeSpec ":" («term_=_» (Term.app `c.extend [`g₁.right]) "=" (Term.app `c.extend [`g₂.right])))]
          ":="
          (Term.byTactic
           "by"
@@ -1472,7 +1465,7 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_» (Term.app `c.extend [`g₁.right]) " = " (Term.app `c.extend [`g₂.right]))
+      («term_=_» (Term.app `c.extend [`g₁.right]) "=" (Term.app `c.extend [`g₂.right]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `c.extend [`g₂.right])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -1494,7 +1487,7 @@ attribute [local simp] eq_to_hom_map
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
       `c.extend
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1022, (some 1023, term) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1022, (some 1023, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1510,9 +1503,9 @@ attribute [local simp] eq_to_hom_map
             [`j]
             [(Term.typeSpec ":" `J)]
             ","
-            (Init.Core.«term_=_»
+            («term_=_»
              (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `g₁.right " ≫ " (Term.app `c.π.app [`j]))
-             " = "
+             "="
              (CategoryTheory.CategoryTheory.Category.Basic.«term_≫_» `g₂.right " ≫ " (Term.app `c.π.app [`j])))))]
          ":="
          (Term.byTactic

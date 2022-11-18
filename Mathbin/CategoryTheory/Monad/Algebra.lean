@@ -36,7 +36,7 @@ namespace Monad
 /-- An Eilenberg-Moore algebra for a monad `T`.
     cf Definition 5.2.3 in [Riehl][riehl2017]. -/
 structure Algebra (T : Monad C) : Type max u₁ v₁ where
-  A : C
+  a : C
   a : (T : C ⥤ C).obj A ⟶ A
   unit' : T.η.app A ≫ a = 𝟙 A := by obviously
   assoc' : T.μ.app A ≫ a = (T : C ⥤ C).map a ≫ a := by obviously
@@ -55,7 +55,7 @@ variable {T : Monad C}
 /-- A morphism of Eilenberg–Moore algebras for the monad `T`. -/
 @[ext.1]
 structure Hom (A B : Algebra T) where
-  f : A.A ⟶ B.A
+  f : A.a ⟶ B.a
   h' : (T : C ⥤ C).map f ≫ B.a = A.a ≫ f := by obviously
 #align category_theory.monad.algebra.hom CategoryTheory.Monad.Algebra.Hom
 
@@ -66,7 +66,7 @@ attribute [simp, reassoc] hom.h
 namespace Hom
 
 /-- The identity homomorphism for an Eilenberg–Moore algebra. -/
-def id (A : Algebra T) : Hom A A where f := 𝟙 A.A
+def id (A : Algebra T) : Hom A A where f := 𝟙 A.a
 #align category_theory.monad.algebra.hom.id CategoryTheory.Monad.Algebra.Hom.id
 
 instance (A : Algebra T) : Inhabited (Hom A A) :=
@@ -94,7 +94,7 @@ theorem id_eq_id (A : Algebra T) : Algebra.Hom.id A = 𝟙 A :=
 #align category_theory.monad.algebra.id_eq_id CategoryTheory.Monad.Algebra.id_eq_id
 
 @[simp]
-theorem id_f (A : Algebra T) : (𝟙 A : A ⟶ A).f = 𝟙 A.A :=
+theorem id_f (A : Algebra T) : (𝟙 A : A ⟶ A).f = 𝟙 A.a :=
   rfl
 #align category_theory.monad.algebra.id_f CategoryTheory.Monad.Algebra.id_f
 
@@ -112,7 +112,7 @@ instance eilenbergMoore : Category (Algebra T) where
 commutes with the structure morphisms.
 -/
 @[simps]
-def isoMk {A B : Algebra T} (h : A.A ≅ B.A) (w : (T : C ⥤ C).map h.Hom ≫ B.a = A.a ≫ h.Hom) : A ≅ B where
+def isoMk {A B : Algebra T} (h : A.a ≅ B.a) (w : (T : C ⥤ C).map h.Hom ≫ B.a = A.a ≫ h.Hom) : A ≅ B where
   Hom := { f := h.Hom }
   inv :=
     { f := h.inv,
@@ -128,14 +128,14 @@ variable (T : Monad C)
 /-- The forgetful functor from the Eilenberg-Moore category, forgetting the algebraic structure. -/
 @[simps]
 def forget : Algebra T ⥤ C where
-  obj A := A.A
+  obj A := A.a
   map A B f := f.f
 #align category_theory.monad.forget CategoryTheory.Monad.forget
 
 /-- The free functor from the Eilenberg-Moore category, constructing an algebra for any object. -/
 @[simps]
 def free : C ⥤ Algebra T where
-  obj X := { A := T.obj X, a := T.μ.app X, assoc' := (T.assoc _).symm }
+  obj X := { a := T.obj X, a := T.μ.app X, assoc' := (T.assoc _).symm }
   map X Y f := { f := T.map f, h' := T.μ.naturality _ }
 #align category_theory.monad.free CategoryTheory.Monad.free
 
@@ -213,7 +213,7 @@ theorem of_right_adjoint_forget : Adjunction.ofRightAdjoint T.forget = T.adj :=
 @[simps]
 def algebraFunctorOfMonadHom {T₁ T₂ : Monad C} (h : T₂ ⟶ T₁) : Algebra T₁ ⥤ Algebra T₂ where
   obj A :=
-    { A := A.A, a := h.app A.A ≫ A.a,
+    { a := A.a, a := h.app A.a ≫ A.a,
       unit' := by
         dsimp
         simp [A.unit],
@@ -302,7 +302,7 @@ namespace Comonad
 /-- An Eilenberg-Moore coalgebra for a comonad `T`. -/
 @[nolint has_nonempty_instance]
 structure Coalgebra (G : Comonad C) : Type max u₁ v₁ where
-  A : C
+  a : C
   a : A ⟶ (G : C ⥤ C).obj A
   counit' : a ≫ G.ε.app A = 𝟙 A := by obviously
   coassoc' : a ≫ G.δ.app A = a ≫ G.map a := by obviously
@@ -321,7 +321,7 @@ variable {G : Comonad C}
 /-- A morphism of Eilenberg-Moore coalgebras for the comonad `G`. -/
 @[ext.1, nolint has_nonempty_instance]
 structure Hom (A B : Coalgebra G) where
-  f : A.A ⟶ B.A
+  f : A.a ⟶ B.a
   h' : A.a ≫ (G : C ⥤ C).map f = f ≫ B.a := by obviously
 #align category_theory.comonad.coalgebra.hom CategoryTheory.Comonad.Coalgebra.Hom
 
@@ -332,7 +332,7 @@ attribute [simp, reassoc] hom.h
 namespace Hom
 
 /-- The identity homomorphism for an Eilenberg–Moore coalgebra. -/
-def id (A : Coalgebra G) : Hom A A where f := 𝟙 A.A
+def id (A : Coalgebra G) : Hom A A where f := 𝟙 A.a
 #align category_theory.comonad.coalgebra.hom.id CategoryTheory.Comonad.Coalgebra.Hom.id
 
 /-- Composition of Eilenberg–Moore coalgebra homomorphisms. -/
@@ -358,7 +358,7 @@ theorem id_eq_id (A : Coalgebra G) : Coalgebra.Hom.id A = 𝟙 A :=
 #align category_theory.comonad.coalgebra.id_eq_id CategoryTheory.Comonad.Coalgebra.id_eq_id
 
 @[simp]
-theorem id_f (A : Coalgebra G) : (𝟙 A : A ⟶ A).f = 𝟙 A.A :=
+theorem id_f (A : Coalgebra G) : (𝟙 A : A ⟶ A).f = 𝟙 A.a :=
   rfl
 #align category_theory.comonad.coalgebra.id_f CategoryTheory.Comonad.Coalgebra.id_f
 
@@ -375,7 +375,7 @@ instance eilenbergMoore : Category (Coalgebra G) where
 commutes with the structure morphisms.
 -/
 @[simps]
-def isoMk {A B : Coalgebra G} (h : A.A ≅ B.A) (w : A.a ≫ (G : C ⥤ C).map h.Hom = h.Hom ≫ B.a) : A ≅ B where
+def isoMk {A B : Coalgebra G} (h : A.a ≅ B.a) (w : A.a ≫ (G : C ⥤ C).map h.Hom = h.Hom ≫ B.a) : A ≅ B where
   Hom := { f := h.Hom }
   inv :=
     { f := h.inv,
@@ -392,7 +392,7 @@ variable (G : Comonad C)
 structure. -/
 @[simps]
 def forget : Coalgebra G ⥤ C where
-  obj A := A.A
+  obj A := A.a
   map A B f := f.f
 #align category_theory.comonad.forget CategoryTheory.Comonad.forget
 
@@ -400,7 +400,7 @@ def forget : Coalgebra G ⥤ C where
 object. -/
 @[simps]
 def cofree : C ⥤ Coalgebra G where
-  obj X := { A := G.obj X, a := G.δ.app X, coassoc' := (G.coassoc _).symm }
+  obj X := { a := G.obj X, a := G.δ.app X, coassoc' := (G.coassoc _).symm }
   map X Y f := { f := G.map f, h' := (G.δ.naturality _).symm }
 #align category_theory.comonad.cofree CategoryTheory.Comonad.cofree
 

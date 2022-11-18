@@ -3,10 +3,8 @@ Copyright (c) 2020 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhangir Azerbayev, Adam Topaz, Eric Wieser
 -/
-import Mathbin.Algebra.RingQuot
 import Mathbin.LinearAlgebra.CliffordAlgebra.Basic
 import Mathbin.LinearAlgebra.Alternating
-import Mathbin.GroupTheory.Perm.Sign
 
 /-!
 # Exterior Algebras
@@ -71,7 +69,7 @@ variable {R}
 /-- As well as being linear, `ι m` squares to zero -/
 @[simp]
 theorem ι_sq_zero (m : M) : ι R m * ι R m = 0 :=
-  (CliffordAlgebra.ι_sq_scalar _ m).trans $ map_zero _
+  (CliffordAlgebra.ι_sq_scalar _ m).trans <| map_zero _
 #align exterior_algebra.ι_sq_zero ExteriorAlgebra.ι_sq_zero
 
 variable {A : Type _} [Semiring A] [Algebra R A]
@@ -89,7 +87,7 @@ from `exterior_algebra R M` to `A`.
 -/
 @[simps symmApply]
 def lift : { f : M →ₗ[R] A // ∀ m, f m * f m = 0 } ≃ (ExteriorAlgebra R M →ₐ[R] A) :=
-  Equiv.trans (Equiv.subtypeEquiv (Equiv.refl _) $ by simp) $ CliffordAlgebra.lift _
+  Equiv.trans (Equiv.subtypeEquiv (Equiv.refl _) <| by simp) <| CliffordAlgebra.lift _
 #align exterior_algebra.lift ExteriorAlgebra.lift
 
 @[simp]
@@ -138,7 +136,7 @@ def algebraMapInv : ExteriorAlgebra R M →ₐ[R] R :=
 
 variable (M)
 
-theorem algebra_map_left_inverse : Function.LeftInverse algebraMapInv (algebraMap R $ ExteriorAlgebra R M) := fun x =>
+theorem algebra_map_left_inverse : Function.LeftInverse algebraMapInv (algebraMap R <| ExteriorAlgebra R M) := fun x =>
   by simp [algebra_map_inv]
 #align exterior_algebra.algebra_map_left_inverse ExteriorAlgebra.algebra_map_left_inverse
 
@@ -241,16 +239,16 @@ theorem ι_add_mul_swap (x y : M) : ι R x * ι R y + ι R y * ι R x = 0 :=
     
 #align exterior_algebra.ι_add_mul_swap ExteriorAlgebra.ι_add_mul_swap
 
-theorem ι_mul_prod_list {n : ℕ} (f : Fin n → M) (i : Fin n) : (ι R $ f i) * (List.ofFn $ fun i => ι R $ f i).Prod = 0 :=
+theorem ι_mul_prod_list {n : ℕ} (f : Fin n → M) (i : Fin n) : (ι R <| f i) * (List.ofFn fun i => ι R <| f i).Prod = 0 :=
   by
   induction' n with n hn
   · exact i.elim0
     
   · rw [List.of_fn_succ, List.prod_cons, ← mul_assoc]
-    by_cases h:i = 0
+    by_cases h : i = 0
     · rw [h, ι_sq_zero, zero_mul]
       
-    · replace hn := congr_arg ((· * ·) $ ι R $ f 0) (hn (fun i => f $ Fin.succ i) (i.pred h))
+    · replace hn := congr_arg ((· * ·) <| ι R <| f 0) (hn (fun i => f <| Fin.succ i) (i.pred h))
       simp only at hn
       rw [Fin.succ_pred, ← mul_assoc, mul_zero] at hn
       refine' (eq_zero_iff_eq_zero_of_add_eq_zero _).mp hn
@@ -278,14 +276,14 @@ def ιMulti (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Fin n) :=
       · exact x.elim0
         
       · rw [List.of_fn_succ, List.prod_cons]
-        by_cases hx:x = 0
+        by_cases hx : x = 0
         · rw [hx] at hfxy h
           rw [hfxy, ← Fin.succ_pred y (ne_of_lt h).symm]
           exact ι_mul_prod_list (f ∘ Fin.succ) _
           
         · convert mul_zero _
           refine'
-            hn (fun i => f $ Fin.succ i) (x.pred hx) (y.pred (ne_of_lt $ lt_of_le_of_lt x.zero_le h).symm)
+            hn (fun i => f <| Fin.succ i) (x.pred hx) (y.pred (ne_of_lt <| lt_of_le_of_lt x.zero_le h).symm)
               (fin.pred_lt_pred_iff.mpr h) _
           simp only [Fin.succ_pred]
           exact hfxy
@@ -296,7 +294,7 @@ def ιMulti (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Fin n) :=
 
 variable {R}
 
-theorem ι_multi_apply {n : ℕ} (v : Fin n → M) : ιMulti R n v = (List.ofFn $ fun i => ι R (v i)).Prod :=
+theorem ι_multi_apply {n : ℕ} (v : Fin n → M) : ιMulti R n v = (List.ofFn fun i => ι R (v i)).Prod :=
   rfl
 #align exterior_algebra.ι_multi_apply ExteriorAlgebra.ι_multi_apply
 
@@ -312,8 +310,8 @@ theorem ι_multi_succ_apply {n : ℕ} (v : Fin n.succ → M) : ιMulti R _ v = �
 
 theorem ι_multi_succ_curry_left {n : ℕ} (m : M) :
     (ιMulti R n.succ).curryLeft m = (LinearMap.mulLeft R (ι R m)).compAlternatingMap (ιMulti R n) :=
-  AlternatingMap.ext $ fun v =>
-    (ι_multi_succ_apply _).trans $ by
+  AlternatingMap.ext fun v =>
+    (ι_multi_succ_apply _).trans <| by
       simp_rw [Matrix.tail_cons]
       rfl
 #align exterior_algebra.ι_multi_succ_curry_left ExteriorAlgebra.ι_multi_succ_curry_left

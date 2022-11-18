@@ -156,7 +156,7 @@ unsafe def apply_contr_lemma : tactic (Option (expr × expr)) := do
     | some (nm, tp) => do
       refine ((expr.const nm []) pexpr.mk_placeholder)
       let v ← intro1
-      return $ some (tp, v)
+      return <| some (tp, v)
     | none => return none
 #align linarith.apply_contr_lemma linarith.apply_contr_lemma
 
@@ -168,7 +168,7 @@ unsafe def partition_by_type (l : List expr) : tactic (rb_lmap expr expr) :=
   l.mfoldl
     (fun m h => do
       let tp ← ineq_prf_tp h
-      return $ m tp h)
+      return <| m tp h)
     mk_rb_map
 #align linarith.partition_by_type linarith.partition_by_type
 
@@ -177,10 +177,9 @@ prove `false` by calling `linarith` on each list in succession. It will stop at 
 `false`, and fail if no contradiction is found with any list.
 -/
 unsafe def try_linarith_on_lists (cfg : linarith_config) (ls : List (List expr)) : tactic expr :=
-  (first $ ls.map $ prove_false_by_linarith cfg) <|> fail "linarith failed to find a contradiction"
+  (first <| ls.map <| prove_false_by_linarith cfg) <|> fail "linarith failed to find a contradiction"
 #align linarith.try_linarith_on_lists linarith.try_linarith_on_lists
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given a list `hyps` of proofs of comparisons, `run_linarith_on_pfs cfg hyps pref_type`
 preprocesses `hyps` according to the list of preprocessors in `cfg`.
 This results in a list of branches (typically only one),
@@ -199,10 +198,10 @@ unsafe def run_linarith_on_pfs (cfg : linarith_config) (hyps : List expr) (pref_
       | some t => prove_false_by_linarith cfg (hyp_set t) <|> try_linarith_on_lists cfg (rb_map.values (hyp_set t))
       | none => try_linarith_on_lists cfg (rb_map.values hyp_set)
   let preprocessors := cfg.preprocessors.getOrElse default_preprocessors
-  let preprocessors := if cfg.split_ne then linarith.remove_ne::preprocessors else preprocessors
+  let preprocessors := if cfg.split_ne then linarith.remove_ne :: preprocessors else preprocessors
   do
   let hyps ← preprocess preprocessors hyps
-  hyps $ fun hs => do
+  hyps fun hs => do
       set_goals [hs.1]
       single_process hs.2 >>= exact
 #align linarith.run_linarith_on_pfs linarith.run_linarith_on_pfs
@@ -211,10 +210,10 @@ unsafe def run_linarith_on_pfs (cfg : linarith_config) (hyps : List expr) (pref_
 to only those that are comparisons over the type `restr_type`.
 -/
 unsafe def filter_hyps_to_type (restr_type : expr) (hyps : List expr) : tactic (List expr) :=
-  hyps.mfilter $ fun h => do
+  hyps.mfilter fun h => do
     let ht ← infer_type h
     match get_contr_lemma_name_and_type ht with
-      | some (_, htype) => succeeds $ unify htype restr_type
+      | some (_, htype) => succeeds <| unify htype restr_type
       | none => return ff
 #align linarith.filter_hyps_to_type linarith.filter_hyps_to_type
 
@@ -243,13 +242,13 @@ expressions.
 -/
 unsafe def tactic.linarith (reduce_semi : Bool) (only_on : Bool) (hyps : List pexpr) (cfg : linarith_config := {  }) :
     tactic Unit :=
-  focus1 $ do
+  focus1 <| do
     let t ← target
     -- if the target is an equality, we run `linarith` twice, to prove ≤ and ≥.
         if t then
         linarith_trace "target is an equality: splitting" >> seq' (applyc `` eq_of_not_lt_of_not_gt) tactic.linarith
       else do
-        let hyps ← hyps $ fun e => i_to_expr e >>= note_anon none
+        let hyps ← hyps fun e => i_to_expr e >>= note_anon none
         when cfg (linarith_trace "trying to split hypotheses" >> try auto.split_hyps)
         let pref_type_and_new_var_from_tgt
           ←/- If we are proving a comparison goal (and not just `false`), we consider the type of the
@@ -259,7 +258,7 @@ unsafe def tactic.linarith (reduce_semi : Bool) (only_on : Bool) (hyps : List pe
                Otherwise, there is no preferred type and no new variable; we simply change the goal to `false`.
             -/
             apply_contr_lemma
-        when pref_type_and_new_var_from_tgt $
+        when pref_type_and_new_var_from_tgt <|
             if cfg then linarith_trace "using exfalso" >> exfalso
             else fail "linarith failed: target is not a valid comparison"
         let cfg := cfg reduce_semi
@@ -371,7 +370,7 @@ in `linarith`. The preprocessing is as follows:
 unsafe def tactic.interactive.nlinarith (red : parse (tk "!")?) (restr : parse (tk "only")?) (hyps : parse pexpr_list ?)
     (cfg : linarith_config := {  }) : tactic Unit :=
   tactic.linarith red.isSome restr.isSome (hyps.getOrElse [])
-    { cfg with preprocessors := some $ cfg.preprocessors.getOrElse default_preprocessors ++ [nlinarith_extras] }
+    { cfg with preprocessors := some <| cfg.preprocessors.getOrElse default_preprocessors ++ [nlinarith_extras] }
 #align tactic.interactive.nlinarith tactic.interactive.nlinarith
 
 add_hint_tactic nlinarith

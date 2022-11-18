@@ -5,6 +5,7 @@ Authors: Yaël Dillies
 -/
 import Mathbin.Tactic.Protected
 import Mathbin.Tactic.SplitIfs
+import Mathbin.Logic.Basic
 
 /-!
 # More basic logic properties
@@ -36,7 +37,7 @@ variable {α : Sort _} {p q r : Prop} [Decidable p] [Decidable q] {a b c : α}
 #print dite_dite_distrib_left /-
 theorem dite_dite_distrib_left {a : p → α} {b : ¬p → q → α} {c : ¬p → ¬q → α} :
     (dite p a fun hp => dite q (b hp) (c hp)) =
-      dite q (fun hq => dite p a $ fun hp => b hp hq) fun hq => dite p a $ fun hp => c hp hq :=
+      dite q (fun hq => (dite p a) fun hp => b hp hq) fun hq => (dite p a) fun hp => c hp hq :=
   by split_ifs <;> rfl
 #align dite_dite_distrib_left dite_dite_distrib_left
 -/
@@ -51,7 +52,7 @@ theorem dite_dite_distrib_right {a : p → q → α} {b : p → ¬q → α} {c :
 
 #print ite_dite_distrib_left /-
 theorem ite_dite_distrib_left {a : α} {b : q → α} {c : ¬q → α} :
-    ite p a (dite q b c) = dite q (fun hq => ite p a $ b hq) fun hq => ite p a $ c hq :=
+    ite p a (dite q b c) = dite q (fun hq => ite p a <| b hq) fun hq => ite p a <| c hq :=
   dite_dite_distrib_left
 #align ite_dite_distrib_left ite_dite_distrib_left
 -/

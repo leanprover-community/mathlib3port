@@ -5,7 +5,6 @@ Authors: Andrew Yang, Jujian Zhang
 -/
 import Mathbin.GroupTheory.MonoidLocalization
 import Mathbin.RingTheory.Localization.Basic
-import Mathbin.RingTheory.Ideal.Operations
 import Mathbin.Algebra.Algebra.RestrictScalars
 
 /-!
@@ -140,7 +139,7 @@ instance :
     Add
       (LocalizedModule S
         M) where add p1 p2 :=
-    (liftOn₂ p1 p2 fun x y => mk (y.2 • x.1 + x.2 • y.1) (x.2 * y.2)) $
+    (liftOn₂ p1 p2 fun x y => mk (y.2 • x.1 + x.2 • y.1) (x.2 * y.2))
       fun ⟨m1, s1⟩ ⟨m2, s2⟩ ⟨m1', s1'⟩ ⟨m2', s2'⟩ ⟨u1, hu1⟩ ⟨u2, hu2⟩ =>
       mk_eq.mpr
         ⟨u1 * u2, by
@@ -151,7 +150,7 @@ instance :
           rw [hu1', hu2']⟩
 
 theorem mk_add_mk {m1 m2 : M} {s1 s2 : S} : mk m1 s1 + mk m2 s2 = mk (s2 • m1 + s1 • m2) (s1 * s2) :=
-  mk_eq.mpr $ ⟨1, by dsimp only <;> rw [one_smul]⟩
+  mk_eq.mpr <| ⟨1, by dsimp only <;> rw [one_smul]⟩
 #align localized_module.mk_add_mk LocalizedModule.mk_add_mk
 
 private theorem add_assoc' (x y z : LocalizedModule S M) : x + y + z = x + (y + z) := by
@@ -417,7 +416,7 @@ theorem mk_cancel_common_right (s s' : S) (m : M) : mk (s' • m) (s * s') = mk 
 #align localized_module.mk_cancel_common_right LocalizedModule.mk_cancel_common_right
 
 instance isModule' : Module R (LocalizedModule S M) :=
-  { Module.compHom (LocalizedModule S M) $ algebraMap R (Localization S) with }
+  { Module.compHom (LocalizedModule S M) <| algebraMap R (Localization S) with }
 #align localized_module.is_module' LocalizedModule.isModule'
 
 theorem smul'_mk (r : R) (s : S) (m : M) : r • mk m s = mk (r • m) s := by erw [mk_smul_mk r m 1 s, one_mul]
@@ -449,7 +448,7 @@ instance : IsScalarTower R (Localization S) (LocalizedModule S M) :=
   RestrictScalars.is_scalar_tower R (Localization S) (LocalizedModule S M)
 
 instance algebra' {A : Type _} [Semiring A] [Algebra R A] : Algebra R (LocalizedModule S A) :=
-  { (algebraMap (Localization S) (LocalizedModule S A)).comp (algebraMap R $ Localization S),
+  { (algebraMap (Localization S) (LocalizedModule S A)).comp (algebraMap R <| Localization S),
     show Module R (LocalizedModule S A) by infer_instance with
     commutes' := by
       intro r x
@@ -483,7 +482,7 @@ end
 @[simps]
 def divBy (s : S) : LocalizedModule S M →ₗ[R] LocalizedModule S M where
   toFun p :=
-    (p.liftOn fun p => mk p.1 (s * p.2)) $ fun ⟨a, b⟩ ⟨a', b'⟩ ⟨c, eq1⟩ =>
+    (p.liftOn fun p => mk p.1 (s * p.2)) fun ⟨a, b⟩ ⟨a', b'⟩ ⟨c, eq1⟩ =>
       mk_eq.mpr ⟨c, by rw [mul_smul, mul_smul, smul_comm c, eq1, smul_comm s] <;> infer_instance⟩
   map_add' x y :=
     x.induction_on₂
@@ -496,7 +495,7 @@ def divBy (s : S) : LocalizedModule S M →ₗ[R] LocalizedModule S M where
             ring])
       y
   map_smul' r x :=
-    x.induction_on $ by
+    x.induction_on <| by
       intros
       simp [LocalizedModule.lift_on_mk, smul'_mk]
 #align localized_module.div_by LocalizedModule.divBy
@@ -533,9 +532,9 @@ variable {M M' M'' : Type _} [AddCommMonoid M] [AddCommMonoid M'] [AddCommMonoid
 
 variable [Module R M] [Module R M'] [Module R M''] (f : M →ₗ[R] M') (g : M →ₗ[R] M'')
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`map_units] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`surj] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`eq_iff_exists] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`map_units] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`surj] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`eq_iff_exists] [] -/
 /-- The characteristic predicate for localized module.
 `is_localized_module S f` describes that `f : M ⟶ M'` is the localization map identifying `M'` as
 `localized_module S M`.
@@ -553,7 +552,7 @@ there is a linear map `localized_module S M → M''`.
 -/
 noncomputable def lift' (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R (Module.EndCat R M'')) x)) :
     LocalizedModule S M → M'' := fun m =>
-  (m.liftOn fun p => (h $ p.2).Unit⁻¹ $ g p.1) $ fun ⟨m, s⟩ ⟨m', s'⟩ ⟨c, eq1⟩ => by
+  (m.liftOn fun p => (h <| p.2).Unit⁻¹ <| g p.1) fun ⟨m, s⟩ ⟨m', s'⟩ ⟨c, eq1⟩ => by
     generalize_proofs h1 h2
     erw [Module.End_algebra_map_is_unit_inv_apply_eq_iff, ← h2.unit⁻¹.1.map_smul]
     symm
@@ -661,9 +660,9 @@ end LocalizedModule
 instance localizedModuleIsLocalizedModule : IsLocalizedModule S (LocalizedModule.mkLinearMap S M) where
   map_units s :=
     ⟨⟨algebraMap R (Module.EndCat R (LocalizedModule S M)) s, LocalizedModule.divBy s,
-        FunLike.ext _ _ $ LocalizedModule.mul_by_div_by s, FunLike.ext _ _ $ LocalizedModule.div_by_mul_by s⟩,
-      FunLike.ext _ _ $ fun p =>
-        p.induction_on $ by
+        FunLike.ext _ _ <| LocalizedModule.mul_by_div_by s, FunLike.ext _ _ <| LocalizedModule.div_by_mul_by s⟩,
+      (FunLike.ext _ _) fun p =>
+        p.induction_on <| by
           intros
           rfl⟩
   surj p :=
@@ -750,7 +749,7 @@ theorem from_localized_module_mk (m : M) (s : S) :
   rfl
 #align is_localized_module.from_localized_module_mk IsLocalizedModule.from_localized_module_mk
 
-theorem fromLocalizedModule.inj : Function.Injective $ fromLocalizedModule S f := fun x y eq1 => by
+theorem fromLocalizedModule.inj : Function.Injective <| fromLocalizedModule S f := fun x y eq1 => by
   induction' x using LocalizedModule.induction_on with a b
   induction' y using LocalizedModule.induction_on with a' b'
   simp only [from_localized_module_mk] at eq1
@@ -761,14 +760,14 @@ theorem fromLocalizedModule.inj : Function.Injective $ fromLocalizedModule S f :
   rfl
 #align is_localized_module.from_localized_module.inj IsLocalizedModule.fromLocalizedModule.inj
 
-theorem fromLocalizedModule.surj : Function.Surjective $ fromLocalizedModule S f := fun x =>
+theorem fromLocalizedModule.surj : Function.Surjective <| fromLocalizedModule S f := fun x =>
   let ⟨⟨m, s⟩, eq1⟩ := IsLocalizedModule.surj S f x
   ⟨LocalizedModule.mk m s, by
     rw [from_localized_module_mk, Module.End_algebra_map_is_unit_inv_apply_eq_iff, ← eq1]
     rfl⟩
 #align is_localized_module.from_localized_module.surj IsLocalizedModule.fromLocalizedModule.surj
 
-theorem fromLocalizedModule.bij : Function.Bijective $ fromLocalizedModule S f :=
+theorem fromLocalizedModule.bij : Function.Bijective <| fromLocalizedModule S f :=
   ⟨fromLocalizedModule.inj _ _, fromLocalizedModule.surj _ _⟩
 #align is_localized_module.from_localized_module.bij IsLocalizedModule.fromLocalizedModule.bij
 
@@ -777,7 +776,7 @@ theorem fromLocalizedModule.bij : Function.Bijective $ fromLocalizedModule S f :
 -/
 @[simps]
 noncomputable def iso : LocalizedModule S M ≃ₗ[R] M' :=
-  { fromLocalizedModule S f, Equiv.ofBijective (fromLocalizedModule S f) $ fromLocalizedModule.bij _ _ with }
+  { fromLocalizedModule S f, Equiv.ofBijective (fromLocalizedModule S f) <| fromLocalizedModule.bij _ _ with }
 #align is_localized_module.iso IsLocalizedModule.iso
 
 theorem iso_apply_mk (m : M) (s : S) :
@@ -796,8 +795,8 @@ theorem iso_symm_apply_aux (m : M') :
 #align is_localized_module.iso_symm_apply_aux IsLocalizedModule.iso_symm_apply_aux
 
 theorem iso_symm_apply' (m : M') (a : M) (b : S) (eq1 : b • m = f a) : (iso S f).symm m = LocalizedModule.mk a b :=
-  (iso_symm_apply_aux S f m).trans $
-    LocalizedModule.mk_eq.mpr $ by
+  (iso_symm_apply_aux S f m).trans <|
+    LocalizedModule.mk_eq.mpr <| by
       generalize_proofs h1
       erw [← IsLocalizedModule.eq_iff_exists S f, f.map_smul, f.map_smul, ← h1.some_spec, ← mul_smul, mul_comm,
         mul_smul, eq1]
@@ -1006,7 +1005,7 @@ theorem eq_zero_iff {m : M} : f m = 0 ↔ ∃ s' : S, s' • m = 0 :=
   (mk'_eq_zero (1 : S)).symm.trans (mk'_eq_zero' f _)
 #align is_localized_module.eq_zero_iff IsLocalizedModule.eq_zero_iff
 
-theorem mk'_surjective : Function.Surjective (Function.uncurry $ mk' f : M × S → M') := by
+theorem mk'_surjective : Function.Surjective (Function.uncurry <| mk' f : M × S → M') := by
   intro x
   obtain ⟨⟨m, s⟩, e : s • x = f m⟩ := IsLocalizedModule.surj S f x
   exact ⟨⟨m, s⟩, mk'_eq_iff.mpr e.symm⟩

@@ -52,10 +52,10 @@ unsafe def prove_univ_close (m : Nat) (p : Preform) : tactic expr := do
         =>
         ( do let z ← eval_expr' Int x return ( exprterm.cst ( - z : Int ) ) )
           <|>
-          ( return $ exprterm.exp ( - 1 : Int ) x )
+          ( return <| exprterm.exp ( - 1 : Int ) x )
       | q( $ ( mx ) * $ ( zx ) ) => do let z ← eval_expr' Int zx return ( exprterm.exp z mx )
       | q( $ ( t1x ) + $ ( t2x ) ) => do let t1 ← to_exprterm t1x let t2 ← to_exprterm t2x return ( exprterm.add t1 t2 )
-      | x => ( do let z ← eval_expr' Int x return ( exprterm.cst z ) ) <|> ( return $ exprterm.exp 1 x )
+      | x => ( do let z ← eval_expr' Int x return ( exprterm.cst z ) ) <|> ( return <| exprterm.exp 1 x )
 #align omega.int.to_exprterm omega.int.to_exprterm
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -69,7 +69,7 @@ unsafe def prove_univ_close (m : Nat) (p : Preform) : tactic expr := do
       | q( $ ( px ) ∨ $ ( qx ) ) => do let p ← to_exprform px let q ← to_exprform qx return ( exprform.or p q )
       | q( $ ( px ) ∧ $ ( qx ) ) => do let p ← to_exprform px let q ← to_exprform qx return ( exprform.and p q )
       | q( _ → $ ( px ) ) => to_exprform px
-      | x => trace "Cannot reify expr : " >> trace x >> failed
+      | x => ( trace "Cannot reify expr : " >> trace x ) >> failed
 #align omega.int.to_exprform omega.int.to_exprform
 
 /-- List of all unreified exprs -/
@@ -202,6 +202,6 @@ open Omega.Int
 
 /-- The core omega tactic for integers. -/
 unsafe def omega_int (is_manual : Bool) : tactic Unit :=
-  (desugar; if is_manual then skip else preprocess); prove >>= apply >> skip
+  andthen (andthen desugar (if is_manual then skip else preprocess)) ((prove >>= apply) >> skip)
 #align omega_int omega_int
 

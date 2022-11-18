@@ -103,7 +103,7 @@ instance faithful_whiskering_right_obj {F : D ⥤ E} [Faithful F] :
     Faithful
       ((whiskeringRight C D E).obj
         F) where map_injective' G H α β hαβ :=
-    NatTrans.ext _ _ $ funext $ fun X => Functor.map_injective _ $ congr_fun (congr_arg NatTrans.app hαβ) X
+    NatTrans.ext _ _ <| funext fun X => Functor.map_injective _ <| congr_fun (congr_arg NatTrans.app hαβ) X
 #align category_theory.faithful_whiskering_right_obj CategoryTheory.faithful_whiskering_right_obj
 
 @[simp]

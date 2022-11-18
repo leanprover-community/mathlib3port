@@ -128,11 +128,11 @@ variable [DecidableEq α] {a b c : α}
 theorem is_3_clique_triple_iff : G.IsNClique 3 {a, b, c} ↔ G.Adj a b ∧ G.Adj a c ∧ G.Adj b c := by
   simp only [is_n_clique_iff, is_clique_iff, Set.pairwise_insert_of_symmetric G.symm, coe_insert]
   have : ¬1 + 1 = 3 := by norm_num
-  by_cases hab:a = b <;> by_cases hbc:b = c <;> by_cases hac:a = c <;> subst_vars <;> simp [G.ne_of_adj, and_rotate, *]
+  by_cases hab : a = b <;>
+    by_cases hbc : b = c <;> by_cases hac : a = c <;> subst_vars <;> simp [G.ne_of_adj, and_rotate, *]
 #align simple_graph.is_3_clique_triple_iff SimpleGraph.is_3_clique_triple_iff
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b c) -/
-theorem is_3_clique_iff : G.IsNClique 3 s ↔ ∃ (a) (b) (c), G.Adj a b ∧ G.Adj a c ∧ G.Adj b c ∧ s = {a, b, c} := by
+theorem is_3_clique_iff : G.IsNClique 3 s ↔ ∃ a b c, G.Adj a b ∧ G.Adj a c ∧ G.Adj b c ∧ s = {a, b, c} := by
   refine' ⟨fun h => _, _⟩
   · obtain ⟨a, b, c, -, -, -, rfl⟩ := card_eq_three.1 h.card_eq
     refine' ⟨a, b, c, _⟩
@@ -218,7 +218,7 @@ theorem CliqueFree.mono (h : m ≤ n) : G.CliqueFree m → G.CliqueFree n := by
 #align simple_graph.clique_free.mono SimpleGraph.CliqueFree.mono
 
 theorem CliqueFree.anti (h : G ≤ H) : H.CliqueFree n → G.CliqueFree n :=
-  forall_imp $ fun s => mt $ IsNClique.mono h
+  forall_imp fun s => mt <| IsNClique.mono h
 #align simple_graph.clique_free.anti SimpleGraph.CliqueFree.anti
 
 /-- See `simple_graph.clique_free_chromatic_number_succ` for a tighter bound. -/
@@ -276,16 +276,16 @@ variable (G) [Fintype α] [DecidableEq α] [DecidableRel G.Adj] {n : ℕ} {a b c
 
 /-- The `n`-cliques in a graph as a finset. -/
 def cliqueFinset (n : ℕ) : Finset (Finset α) :=
-  univ.filter $ G.IsNClique n
+  univ.filter <| G.IsNClique n
 #align simple_graph.clique_finset SimpleGraph.cliqueFinset
 
 theorem mem_clique_finset_iff : s ∈ G.cliqueFinset n ↔ G.IsNClique n s :=
-  mem_filter.trans $ and_iff_right $ mem_univ _
+  mem_filter.trans <| and_iff_right <| mem_univ _
 #align simple_graph.mem_clique_finset_iff SimpleGraph.mem_clique_finset_iff
 
 @[simp]
 theorem coe_clique_finset (n : ℕ) : (G.cliqueFinset n : Set (Finset α)) = G.cliqueSet n :=
-  Set.ext $ fun _ => mem_clique_finset_iff _
+  Set.ext fun _ => mem_clique_finset_iff _
 #align simple_graph.coe_clique_finset SimpleGraph.coe_clique_finset
 
 @[simp]
@@ -301,7 +301,7 @@ variable {G} [DecidableRel H.Adj]
 
 @[mono]
 theorem clique_finset_mono (h : G ≤ H) : G.cliqueFinset n ⊆ H.cliqueFinset n :=
-  monotone_filter_right _ $ fun _ => IsNClique.mono h
+  (monotone_filter_right _) fun _ => IsNClique.mono h
 #align simple_graph.clique_finset_mono SimpleGraph.clique_finset_mono
 
 end CliqueFinset

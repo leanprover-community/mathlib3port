@@ -185,7 +185,7 @@ theorem affine_independent_iff_indicator_eq_of_affine_combination_eq (p : ι →
   constructor
   · intro ha s1 s2 w1 w2 hw1 hw2 heq
     ext i
-    by_cases hi:i ∈ s1 ∪ s2
+    by_cases hi : i ∈ s1 ∪ s2
     · rw [← sub_eq_zero]
       rw [Set.sum_indicator_subset _ (Finset.subset_union_left s1 s2)] at hw1
       rw [Set.sum_indicator_subset _ (Finset.subset_union_right s1 s2)] at hw2
@@ -469,7 +469,7 @@ theorem exists_nontrivial_relation_sum_zero_of_not_affine_ind {t : Finset V} (h 
   suffices (∑ e : V in t, dite (e ∈ t) (fun hx => f e hx • e) fun hx => 0) = 0 by
     convert this
     ext
-    by_cases hx:x ∈ t <;> simp [hx]
+    by_cases hx : x ∈ t <;> simp [hx]
   all_goals simp only [Finset.sum_dite_of_true fun x h => h, Subtype.val_eq_coe, Finset.mk_coe, f, hwt, hw]
 #align exists_nontrivial_relation_sum_zero_of_not_affine_ind exists_nontrivial_relation_sum_zero_of_not_affine_ind
 
@@ -531,7 +531,7 @@ variable (k V)
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem exists_affine_independent (s : Set P) :
-    ∃ (t) (_ : t ⊆ s), affineSpan k t = affineSpan k s ∧ AffineIndependent k (coe : t → P) := by
+    ∃ (t : _)(_ : t ⊆ s), affineSpan k t = affineSpan k s ∧ AffineIndependent k (coe : t → P) := by
   rcases s.eq_empty_or_nonempty with (rfl | ⟨p, hp⟩)
   · exact ⟨∅, Set.empty_subset ∅, rfl, affine_independent_of_subsingleton k _⟩
     
@@ -588,7 +588,7 @@ theorem AffineIndependent.affine_independent_of_not_mem_span {p : ι → P} {i :
   intro s w hw hs
   let s' : Finset { y // y ≠ i } := s.subtype (· ≠ i)
   let p' : { y // y ≠ i } → P := fun x => p x
-  by_cases his:i ∈ s ∧ w i ≠ 0
+  by_cases his : i ∈ s ∧ w i ≠ 0
   · refine' False.elim (hi _)
     let wm : ι → k := -(w i)⁻¹ • w
     have hms : s.weighted_vsub p wm = (0 : V) := by simp [wm, hs]
@@ -618,7 +618,7 @@ theorem AffineIndependent.affine_independent_of_not_mem_span {p : ι → P} {i :
       rintro x hxs hwx rfl
       exact hwx (his.neg_resolve_left hxs)
     intro j hj
-    by_cases hji:j = i
+    by_cases hji : j = i
     · rw [hji] at hj
       exact hji.symm ▸ his.neg_resolve_left hj
       
@@ -705,7 +705,7 @@ instance [Inhabited P] : Inhabited (Simplex k P 0) :=
   ⟨mkOfPoint k default⟩
 
 instance nonempty : Nonempty (Simplex k P 0) :=
-  ⟨mkOfPoint k $ AddTorsor.nonempty.some⟩
+  ⟨mkOfPoint k <| AddTorsor.nonempty.some⟩
 #align affine.simplex.nonempty Affine.Simplex.nonempty
 
 variable {k V}

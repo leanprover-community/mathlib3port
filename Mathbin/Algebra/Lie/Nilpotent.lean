@@ -127,7 +127,7 @@ namespace LieModule
 
 variable (R L M)
 
-theorem antitone_lower_central_series : Antitone $ lowerCentralSeries R L M := by
+theorem antitone_lower_central_series : Antitone <| lowerCentralSeries R L M := by
   intro l k
   induction' k with k ih generalizing l <;> intro h
   · exact (le_zero_iff.mp h).symm ▸ le_rfl
@@ -486,8 +486,8 @@ theorem Function.Surjective.lie_module_lcs_map_eq (k : ℕ) :
   · simp [LinearMap.range_eq_top, hg]
     
   · suffices
-      g '' { m | ∃ (x : L) (n), n ∈ lower_central_series R L M k ∧ ⁅x, n⁆ = m } =
-        { m | ∃ (x : L₂) (n), n ∈ lower_central_series R L M k ∧ ⁅x, g n⁆ = m }
+      g '' { m | ∃ (x : L)(n : _), n ∈ lower_central_series R L M k ∧ ⁅x, n⁆ = m } =
+        { m | ∃ (x : L₂)(n : _), n ∈ lower_central_series R L M k ∧ ⁅x, g n⁆ = m }
       by
       simp only [← LieSubmodule.mem_coe_submodule] at this
       simp [← LieSubmodule.mem_coe_submodule, ← ih, LieSubmodule.lie_ideal_oper_eq_linear_span', Submodule.map_span,
@@ -622,7 +622,7 @@ theorem LieAlgebra.nilpotent_of_nilpotent_quotient {I : LieIdeal R L} (h₁ : I 
   simp [← LieSubmodule.coe_to_submodule_eq_iff, coe_lower_central_series_ideal_quot_eq, hk]
 #align lie_algebra.nilpotent_of_nilpotent_quotient LieAlgebra.nilpotent_of_nilpotent_quotient
 
-theorem LieAlgebra.non_trivial_center_of_is_nilpotent [Nontrivial L] [IsNilpotent R L] : Nontrivial $ center R L :=
+theorem LieAlgebra.non_trivial_center_of_is_nilpotent [Nontrivial L] [IsNilpotent R L] : Nontrivial <| center R L :=
   LieModule.nontrivial_max_triv_of_is_nilpotent R L L
 #align lie_algebra.non_trivial_center_of_is_nilpotent LieAlgebra.non_trivial_center_of_is_nilpotent
 
@@ -780,7 +780,7 @@ theorem LieSubalgebra.is_nilpotent_ad_of_is_nilpotent_ad {L : Type v} [LieRing L
 
 theorem LieAlgebra.is_nilpotent_ad_of_is_nilpotent {L : LieSubalgebra R A} {x : L} (h : IsNilpotent (x : A)) :
     IsNilpotent (LieAlgebra.ad R L x) :=
-  L.is_nilpotent_ad_of_is_nilpotent_ad $ LieAlgebra.ad_nilpotent_of_nilpotent R h
+  L.is_nilpotent_ad_of_is_nilpotent_ad <| LieAlgebra.ad_nilpotent_of_nilpotent R h
 #align lie_algebra.is_nilpotent_ad_of_is_nilpotent LieAlgebra.is_nilpotent_ad_of_is_nilpotent
 
 end OfAssociative

@@ -41,11 +41,11 @@ theorem range'_eq_nil {s n : ℕ} : range' s n = [] ↔ n = 0 := by rw [← leng
 #print List.mem_range' /-
 @[simp]
 theorem mem_range' {m : ℕ} : ∀ {s n : ℕ}, m ∈ range' s n ↔ s ≤ m ∧ m < s + n
-  | s, 0 => (false_iff_iff _).2 $ fun ⟨H1, H2⟩ => not_le_of_lt H2 H1
+  | s, 0 => (false_iff_iff _).2 fun ⟨H1, H2⟩ => not_le_of_lt H2 H1
   | s, succ n =>
     have : m = s → m < s + n + 1 := fun e => e ▸ lt_succ_of_le (Nat.le_add_right _ _)
     have l : m = s ∨ s + 1 ≤ m ↔ s ≤ m := by simpa only [eq_comm] using (@Decidable.le_iff_eq_or_lt _ _ _ s m).symm
-    (mem_cons_iff _ _ _).trans $ by
+    (mem_cons_iff _ _ _).trans <| by
       simp only [mem_range', or_and_left, or_iff_right_of_imp this, l, add_right_comm] <;> rfl
 #align list.mem_range' List.mem_range'
 -/
@@ -104,19 +104,19 @@ theorem range'_sublist_right {s m n : ℕ} : range' s m <+ range' s n ↔ m ≤ 
 
 theorem range'_subset_right {s m n : ℕ} : range' s m ⊆ range' s n ↔ m ≤ n :=
   ⟨fun h =>
-    le_of_not_lt $ fun hn =>
-      lt_irrefl (s + n) $ (mem_range'.1 $ h $ mem_range'.2 ⟨Nat.le_add_right _ _, Nat.add_lt_add_left hn s⟩).2,
+    le_of_not_lt fun hn =>
+      lt_irrefl (s + n) <| (mem_range'.1 <| h <| mem_range'.2 ⟨Nat.le_add_right _ _, Nat.add_lt_add_left hn s⟩).2,
     fun h => (range'_sublist_right.2 h).Subset⟩
 #align list.range'_subset_right List.range'_subset_right
 
 theorem nth_range' : ∀ (s) {m n : ℕ}, m < n → nth (range' s n) m = some (s + m)
   | s, 0, n + 1, _ => rfl
-  | s, m + 1, n + 1, h => (nth_range' (s + 1) (lt_of_add_lt_add_right h)).trans $ by rw [add_right_comm] <;> rfl
+  | s, m + 1, n + 1, h => (nth_range' (s + 1) (lt_of_add_lt_add_right h)).trans <| by rw [add_right_comm] <;> rfl
 #align list.nth_range' List.nth_range'
 
 @[simp]
 theorem nth_le_range' {n m} (i) (H : i < (range' n m).length) : nthLe (range' n m) i H = n + i :=
-  Option.some.inj $ by rw [← nth_le_nth _, nth_range' _ (by simpa using H)]
+  Option.some.inj <| by rw [← nth_le_nth _, nth_range' _ (by simpa using H)]
 #align list.nth_le_range' List.nth_le_range'
 
 theorem range'_concat (s n : ℕ) : range' s (n + 1) = range' s n ++ [s + n] := by
@@ -130,7 +130,7 @@ theorem range_core_range' : ∀ s n : ℕ, rangeCore s (range' s n) = range' 0 (
 
 #print List.range_eq_range' /-
 theorem range_eq_range' (n : ℕ) : range n = range' 0 n :=
-  (range_core_range' n 0).trans $ by rw [zero_add]
+  (range_core_range' n 0).trans <| by rw [zero_add]
 #align list.range_eq_range' List.range_eq_range'
 -/
 
@@ -177,7 +177,7 @@ theorem mem_range {m n : ℕ} : m ∈ range n ↔ m < n := by
 
 @[simp]
 theorem not_mem_range_self {n : ℕ} : n ∉ range n :=
-  mt mem_range.1 $ lt_irrefl _
+  mt mem_range.1 <| lt_irrefl _
 #align list.not_mem_range_self List.not_mem_range_self
 
 @[simp]
@@ -270,7 +270,7 @@ theorem mem_fin_range {n : ℕ} (a : Fin n) : a ∈ finRange n :=
 
 #print List.nodup_fin_range /-
 theorem nodup_fin_range (n : ℕ) : (finRange n).Nodup :=
-  (nodup_range _).pmap $ fun _ _ _ _ => Fin.veq_of_eq
+  (nodup_range _).pmap fun _ _ _ _ => Fin.veq_of_eq
 #align list.nodup_fin_range List.nodup_fin_range
 -/
 
@@ -342,7 +342,7 @@ theorem unzip_enum_from_eq_prod (l : List α) {n : ℕ} : (l.enumFrom n).unzip =
 
 @[simp]
 theorem nth_le_range {n} (i) (H : i < (range n).length) : nthLe (range n) i H = i :=
-  Option.some.inj $ by rw [← nth_le_nth _, nth_range (by simpa using H)]
+  Option.some.inj <| by rw [← nth_le_nth _, nth_range (by simpa using H)]
 #align list.nth_le_range List.nth_le_range
 
 @[simp]
@@ -352,7 +352,7 @@ theorem nth_le_fin_range {n : ℕ} {i : ℕ} (h) : (finRange n).nthLe i h = ⟨i
 
 @[simp]
 theorem map_nth_le (l : List α) : ((finRange l.length).map fun n => l.nthLe n n.2) = l :=
-  ext_le (by rw [length_map, length_fin_range]) $ fun n _ h => by
+  (ext_le (by rw [length_map, length_fin_range])) fun n _ h => by
     rw [← nth_le_map_rev]
     congr
     · rw [nth_le_fin_range]
@@ -381,7 +381,7 @@ theorem of_fn_eq_map {α n} {f : Fin n → α} : ofFn f = (finRange n).map f := 
 
 theorem nodup_of_fn {α n} {f : Fin n → α} (hf : Function.Injective f) : Nodup (ofFn f) := by
   rw [of_fn_eq_pmap]
-  exact (nodup_range n).pmap fun _ _ _ _ H => Fin.veq_of_eq $ hf H
+  exact (nodup_range n).pmap fun _ _ _ _ H => Fin.veq_of_eq <| hf H
 #align list.nodup_of_fn List.nodup_of_fn
 
 end List

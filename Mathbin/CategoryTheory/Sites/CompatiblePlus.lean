@@ -3,8 +3,8 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import Mathbin.CategoryTheory.Sites.Sheafification
 import Mathbin.CategoryTheory.Sites.Whiskering
+import Mathbin.CategoryTheory.Sites.Plus
 
 /-!
 
@@ -154,7 +154,7 @@ theorem plus_comp_iso_whisker_left {F G : D ⥤ E} (η : F ⟶ G) (P : Cᵒᵖ �
 def plusFunctorWhiskerLeftIso (P : Cᵒᵖ ⥤ D) [∀ (F : D ⥤ E) (X : C), PreservesColimitsOfShape (J.cover X)ᵒᵖ F]
     [∀ (F : D ⥤ E) (X : C) (W : J.cover X) (P : Cᵒᵖ ⥤ D), PreservesLimit (W.index P).multicospan F] :
     (whiskeringLeft _ _ E).obj (J.plusObj P) ≅ (whiskeringLeft _ _ _).obj P ⋙ J.plusFunctor E :=
-  (NatIso.ofComponents fun X => plusCompIso _ _ _) $ fun F G η => plus_comp_iso_whisker_left _ _ _
+  (NatIso.ofComponents fun X => plusCompIso _ _ _) fun F G η => plus_comp_iso_whisker_left _ _ _
 #align
   category_theory.grothendieck_topology.plus_functor_whisker_left_iso CategoryTheory.GrothendieckTopology.plusFunctorWhiskerLeftIso
 
@@ -185,7 +185,7 @@ theorem plus_comp_iso_whisker_right {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) :
 @[simps hom_app inv_app]
 def plusFunctorWhiskerRightIso :
     J.plusFunctor D ⋙ (whiskeringRight _ _ _).obj F ≅ (whiskeringRight _ _ _).obj F ⋙ J.plusFunctor E :=
-  (NatIso.ofComponents fun P => J.plusCompIso _ _) $ fun P Q η => plus_comp_iso_whisker_right _ _ _
+  (NatIso.ofComponents fun P => J.plusCompIso _ _) fun P Q η => plus_comp_iso_whisker_right _ _ _
 #align
   category_theory.grothendieck_topology.plus_functor_whisker_right_iso CategoryTheory.GrothendieckTopology.plusFunctorWhiskerRightIso
 

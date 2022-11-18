@@ -71,7 +71,7 @@ theorem ContDiffAt.realOfComplex {n : ℕ∞} (h : ContDiffAt ℂ n e z) : ContD
 #align cont_diff_at.real_of_complex ContDiffAt.realOfComplex
 
 theorem ContDiff.realOfComplex {n : ℕ∞} (h : ContDiff ℂ n e) : ContDiff ℝ n fun x : ℝ => (e x).re :=
-  cont_diff_iff_cont_diff_at.2 $ fun x => h.ContDiffAt.realOfComplex
+  cont_diff_iff_cont_diff_at.2 fun x => h.ContDiffAt.realOfComplex
 #align cont_diff.real_of_complex ContDiff.realOfComplex
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E]

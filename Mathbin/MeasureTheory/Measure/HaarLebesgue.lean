@@ -327,7 +327,8 @@ theorem add_haar_image_continuous_linear_equiv {E : Type _} [NormedAddCommGroup 
 
 
 variable {E : Type _} [NormedAddCommGroup E] [MeasurableSpace E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
-  [BorelSpace E] (μ : Measure E) [IsAddHaarMeasure μ]
+  [BorelSpace E] (μ : Measure E) [IsAddHaarMeasure μ] {F : Type _} [NormedAddCommGroup F] [NormedSpace ℝ F]
+  [CompleteSpace F]
 
 theorem map_add_haar_smul {r : ℝ} (hr : r ≠ 0) :
     Measure.map ((· • ·) r) μ = Ennreal.ofReal (abs (r ^ finrank ℝ E)⁻¹) • μ := by
@@ -362,7 +363,7 @@ theorem add_haar_smul (r : ℝ) (s : Set E) : μ (r • s) = Ennreal.ofReal (abs
   · simp only [measure_empty, mul_zero, smul_set_empty]
     
   rw [zero_smul_set hs, ← singleton_zero]
-  by_cases h:finrank ℝ E = 0
+  by_cases h : finrank ℝ E = 0
   · haveI : Subsingleton E := finrank_zero_iff.1 h
     simp only [h, one_mul, Ennreal.of_real_one, abs_one, Subsingleton.eq_univ_of_nonempty hs, pow_zero,
       Subsingleton.eq_univ_of_nonempty (singleton_nonempty (0 : E))]
@@ -383,6 +384,56 @@ theorem add_haar_image_homothety (x : E) (r : ℝ) (s : Set E) :
       simp only [image_add_right, measure_preimage_add_right, add_haar_smul]
     
 #align measure_theory.measure.add_haar_image_homothety MeasureTheory.Measure.add_haar_image_homothety
+
+/-- The integral of `f (R • x)` with respect to an additive Haar measure is a multiple of the
+integral of `f`. The formula we give works even when `f` is not integrable or `R = 0`
+thanks to the convention that a non-integrable function has integral zero. -/
+theorem integral_comp_smul (f : E → F) (R : ℝ) : (∫ x, f (R • x) ∂μ) = |(R ^ finrank ℝ E)⁻¹| • ∫ x, f x ∂μ := by
+  rcases eq_or_ne R 0 with (rfl | hR)
+  · simp only [zero_smul, integral_const]
+    rcases Nat.eq_zero_or_pos (finrank ℝ E) with (hE | hE)
+    · have : Subsingleton E := finrank_zero_iff.1 hE
+      have : f = fun x => f 0 := by
+        ext x
+        rw [Subsingleton.elim x 0]
+      conv_rhs => rw [this]
+      simp only [hE, pow_zero, inv_one, abs_one, one_smul, integral_const]
+      
+    · have : Nontrivial E := finrank_pos_iff.1 hE
+      simp only [zero_pow hE, measure_univ_of_is_add_left_invariant, Ennreal.top_to_real, zero_smul, inv_zero, abs_zero]
+      
+    
+  · calc
+      (∫ x, f (R • x) ∂μ) = ∫ y, f y ∂measure.map (fun x => R • x) μ :=
+        (integral_map_equiv (Homeomorph.smul (is_unit_iff_ne_zero.2 hR).Unit).toMeasurableEquiv f).symm
+      _ = |(R ^ finrank ℝ E)⁻¹| • ∫ x, f x ∂μ := by
+        simp only [map_add_haar_smul μ hR, integral_smul_measure, Ennreal.to_real_of_real, abs_nonneg]
+      
+    
+#align measure_theory.measure.integral_comp_smul MeasureTheory.Measure.integral_comp_smul
+
+/-- The integral of `f (R • x)` with respect to an additive Haar measure is a multiple of the
+integral of `f`. The formula we give works even when `f` is not integrable or `R = 0`
+thanks to the convention that a non-integrable function has integral zero. -/
+theorem integral_comp_smul_of_nonneg (f : E → F) (R : ℝ) {hR : 0 ≤ R} :
+    (∫ x, f (R • x) ∂μ) = (R ^ finrank ℝ E)⁻¹ • ∫ x, f x ∂μ := by
+  rw [integral_comp_smul μ f R, abs_of_nonneg (inv_nonneg.2 (pow_nonneg hR _))]
+#align measure_theory.measure.integral_comp_smul_of_nonneg MeasureTheory.Measure.integral_comp_smul_of_nonneg
+
+/-- The integral of `f (R⁻¹ • x)` with respect to an additive Haar measure is a multiple of the
+integral of `f`. The formula we give works even when `f` is not integrable or `R = 0`
+thanks to the convention that a non-integrable function has integral zero. -/
+theorem integral_comp_inv_smul (f : E → F) (R : ℝ) : (∫ x, f (R⁻¹ • x) ∂μ) = |R ^ finrank ℝ E| • ∫ x, f x ∂μ := by
+  rw [integral_comp_smul μ f R⁻¹, inv_pow, inv_inv]
+#align measure_theory.measure.integral_comp_inv_smul MeasureTheory.Measure.integral_comp_inv_smul
+
+/-- The integral of `f (R⁻¹ • x)` with respect to an additive Haar measure is a multiple of the
+integral of `f`. The formula we give works even when `f` is not integrable or `R = 0`
+thanks to the convention that a non-integrable function has integral zero. -/
+theorem integral_comp_inv_smul_of_nonneg (f : E → F) {R : ℝ} (hR : 0 ≤ R) :
+    (∫ x, f (R⁻¹ • x) ∂μ) = R ^ finrank ℝ E • ∫ x, f x ∂μ := by
+  rw [integral_comp_inv_smul μ f R, abs_of_nonneg (pow_nonneg hR _)]
+#align measure_theory.measure.integral_comp_inv_smul_of_nonneg MeasureTheory.Measure.integral_comp_inv_smul_of_nonneg
 
 /-! We don't need to state `map_add_haar_neg` here, because it has already been proved for
 general Haar measures on general commutative groups. -/
@@ -471,7 +522,7 @@ theorem add_haar_closed_ball (x : E) {r : ℝ} (hr : 0 ≤ r) :
 #align measure_theory.measure.add_haar_closed_ball MeasureTheory.Measure.add_haar_closed_ball
 
 theorem add_haar_closed_ball_eq_add_haar_ball [Nontrivial E] (x : E) (r : ℝ) : μ (closedBall x r) = μ (ball x r) := by
-  by_cases h:r < 0
+  by_cases h : r < 0
   · rw [metric.closed_ball_eq_empty.mpr h, metric.ball_eq_empty.mpr h.le]
     
   push_neg  at h

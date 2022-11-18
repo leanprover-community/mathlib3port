@@ -80,7 +80,7 @@ theorem condCountIsProbabilityMeasure {s : Set Ω} (hs : s.Finite) (hs' : s.None
     IsProbabilityMeasure (condCount s) :=
   { measure_univ := by
       rw [cond_count, cond_apply _ hs.measurable_set, Set.inter_univ, Ennreal.inv_mul_cancel]
-      · exact fun h => hs'.ne_empty $ measure.empty_of_count_eq_zero h
+      · exact fun h => hs'.ne_empty <| measure.empty_of_count_eq_zero h
         
       · exact (measure.count_apply_lt_top.2 hs).Ne
          }
@@ -103,7 +103,7 @@ theorem cond_count_inter_self (hs : s.Finite) : condCount s (s ∩ t) = condCoun
 
 theorem cond_count_self (hs : s.Finite) (hs' : s.Nonempty) : condCount s s = 1 := by
   rw [cond_count, cond_apply _ hs.measurable_set, Set.inter_self, Ennreal.inv_mul_cancel]
-  · exact fun h => hs'.ne_empty $ measure.empty_of_count_eq_zero h
+  · exact fun h => hs'.ne_empty <| measure.empty_of_count_eq_zero h
     
   · exact (measure.count_apply_lt_top.2 hs).Ne
     
@@ -140,7 +140,7 @@ theorem cond_count_of_univ (hs : s.Finite) (hs' : s.Nonempty) : condCount s Set.
 #align probability_theory.cond_count_of_univ ProbabilityTheory.cond_count_of_univ
 
 theorem cond_count_inter (hs : s.Finite) : condCount s (t ∩ u) = condCount (s ∩ t) u * condCount s t := by
-  by_cases hst:s ∩ t = ∅
+  by_cases hst : s ∩ t = ∅
   · rw [hst, cond_count_empty_meas, measure.coe_zero, Pi.zero_apply, zero_mul, cond_count_eq_zero_iff hs, ←
       Set.inter_assoc, hst, Set.empty_inter]
     
@@ -149,7 +149,7 @@ theorem cond_count_inter (hs : s.Finite) : condCount s (t ∩ u) = condCount (s 
     mul_comm _ (measure.count (s ∩ t)), ← mul_assoc, Ennreal.mul_inv_cancel, one_mul, mul_comm, Set.inter_assoc]
   · rwa [← measure.count_eq_zero_iff] at hst
     
-  · exact (measure.count_apply_lt_top.2 $ hs.inter_of_left _).Ne
+  · exact (measure.count_apply_lt_top.2 <| hs.inter_of_left _).Ne
     
 #align probability_theory.cond_count_inter ProbabilityTheory.cond_count_inter
 

@@ -60,12 +60,12 @@ variable (X : Type u) (Y : Type v) [MetricSpace X] [CompactSpace X] [Nonempty X]
 
 @[reducible]
 private def prod_space_fun : Type _ :=
-  (X ⊕ Y) × (X ⊕ Y) → ℝ
+  Sum X Y × Sum X Y → ℝ
 #align Gromov_Hausdorff.prod_space_fun Gromov_Hausdorff.prod_space_fun
 
 @[reducible]
 private def Cb : Type _ :=
-  BoundedContinuousFunction ((X ⊕ Y) × (X ⊕ Y)) ℝ
+  BoundedContinuousFunction (Sum X Y × Sum X Y) ℝ
 #align Gromov_Hausdorff.Cb Gromov_Hausdorff.Cb
 
 private def max_var : ℝ≥0 :=
@@ -106,14 +106,14 @@ end Definitions
 section Constructions
 
 variable {X : Type u} {Y : Type v} [MetricSpace X] [CompactSpace X] [Nonempty X] [MetricSpace Y] [CompactSpace Y]
-  [Nonempty Y] {f : ProdSpaceFun X Y} {x y z t : X ⊕ Y}
+  [Nonempty Y] {f : ProdSpaceFun X Y} {x y z t : Sum X Y}
 
 attribute [local instance] inhabited_of_nonempty'
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul_of_nonneg_right, ",", expr diam_nonneg, ",", expr le_refl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 private theorem max_var_bound : dist x y ≤ maxVar X Y :=
   calc
-    dist x y ≤ diam (univ : Set (X ⊕ Y)) := dist_le_diam_of_mem boundedOfCompactSpace (mem_univ _) (mem_univ _)
+    dist x y ≤ diam (univ : Set (Sum X Y)) := dist_le_diam_of_mem boundedOfCompactSpace (mem_univ _) (mem_univ _)
     _ = diam (inl '' (univ : Set X) ∪ inr '' (univ : Set Y)) := by
       apply congr_arg <;> ext (x y z) <;> cases x <;> simp [mem_univ, mem_range_self]
     _ ≤ diam (inl '' (univ : Set X)) + dist (inl default) (inr default) + diam (inr '' (univ : Set Y)) :=
@@ -167,7 +167,7 @@ private theorem candidates_le_max_var (fA : f ∈ candidates X Y) : f (x, y) ≤
 #align Gromov_Hausdorff.candidates_le_max_var Gromov_Hausdorff.candidates_le_max_var
 
 /-- candidates are bounded by `max_var X Y` -/
-private theorem candidates_dist_bound (fA : f ∈ candidates X Y) : ∀ {x y : X ⊕ Y}, f (x, y) ≤ maxVar X Y * dist x y
+private theorem candidates_dist_bound (fA : f ∈ candidates X Y) : ∀ {x y : Sum X Y}, f (x, y) ≤ maxVar X Y * dist x y
   | inl x, inl y =>
     calc
       f (inl x, inl y) = dist x y := candidates_dist_inl fA x y
@@ -243,7 +243,7 @@ theorem candidates_b_of_candidates_mem (f : ProdSpaceFun X Y) (fA : f ∈ candid
 #align Gromov_Hausdorff.candidates_b_of_candidates_mem GromovHausdorff.candidates_b_of_candidates_mem
 
 /-- The distance on `X ⊕ Y` is a candidate -/
-private theorem dist_mem_candidates : (fun p : (X ⊕ Y) × (X ⊕ Y) => dist p.1 p.2) ∈ candidates X Y := by
+private theorem dist_mem_candidates : (fun p : Sum X Y × Sum X Y => dist p.1 p.2) ∈ candidates X Y := by
   simp only [candidates, dist_comm, forall_const, and_true_iff, add_comm, eq_self_iff_true, and_self_iff, Sum.forall,
     Set.mem_set_of_eq, dist_self]
   repeat'
@@ -504,7 +504,7 @@ private theorem HD_optimal_GH_dist_le (g : CbCat X Y) (hg : g ∈ candidatesB X 
 /-- With the optimal candidate, construct a premetric space structure on `X ⊕ Y`, on which the
 predistance is given by the candidate. Then, we will identify points at `0` predistance
 to obtain a genuine metric space -/
-def premetricOptimalGHDist : PseudoMetricSpace (X ⊕ Y) where
+def premetricOptimalGHDist : PseudoMetricSpace (Sum X Y) where
   dist p q := optimalGHDist X Y (p, q)
   dist_self x := candidates_refl (optimal_GH_dist_mem_candidates_b X Y)
   dist_comm x y := candidates_symm (optimal_GH_dist_mem_candidates_b X Y)
@@ -516,7 +516,7 @@ attribute [local instance] premetric_optimal_GH_dist PseudoMetric.distSetoid
 /-- A metric space which realizes the optimal coupling between `X` and `Y` -/
 @[nolint has_nonempty_instance]
 def OptimalGHCoupling : Type _ :=
-  PseudoMetricQuot (X ⊕ Y)deriving MetricSpace
+  PseudoMetricQuot (Sum X Y)deriving MetricSpace
 #align Gromov_Hausdorff.optimal_GH_coupling GromovHausdorff.OptimalGHCoupling
 
 /-- Injection of `X` in the optimal coupling between `X` and `Y` -/

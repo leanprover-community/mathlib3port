@@ -134,13 +134,13 @@ variable (i j : n) (c : α) (i' j' : n)
 
 @[simp]
 theorem diag_zero (h : j ≠ i) : diag (stdBasisMatrix i j c) = 0 :=
-  funext $ fun k => if_neg $ fun ⟨e₁, e₂⟩ => h (e₂.trans e₁.symm)
+  funext fun k => if_neg fun ⟨e₁, e₂⟩ => h (e₂.trans e₁.symm)
 #align matrix.std_basis_matrix.diag_zero Matrix.stdBasisMatrix.diag_zero
 
 @[simp]
 theorem diag_same : diag (stdBasisMatrix i i c) = Pi.single i c := by
   ext j
-  by_cases hij:i = j <;> try rw [hij] <;> simp [hij]
+  by_cases hij : i = j <;> try rw [hij] <;> simp [hij]
 #align matrix.std_basis_matrix.diag_same Matrix.stdBasisMatrix.diag_same
 
 variable [Fintype n]
@@ -177,14 +177,14 @@ theorem mul_right_apply_of_ne (a b : n) (hbj : b ≠ j) (M : Matrix n n α) : (M
 theorem mul_same (k : n) (d : α) : stdBasisMatrix i j c ⬝ stdBasisMatrix j k d = stdBasisMatrix i k (c * d) := by
   ext (a b)
   simp only [mul_apply, std_basis_matrix, boole_mul]
-  by_cases h₁:i = a <;> by_cases h₂:k = b <;> simp [h₁, h₂]
+  by_cases h₁ : i = a <;> by_cases h₂ : k = b <;> simp [h₁, h₂]
 #align matrix.std_basis_matrix.mul_same Matrix.stdBasisMatrix.mul_same
 
 @[simp]
 theorem mul_of_ne {k l : n} (h : j ≠ k) (d : α) : stdBasisMatrix i j c ⬝ stdBasisMatrix k l d = 0 := by
   ext (a b)
   simp only [mul_apply, boole_mul, std_basis_matrix]
-  by_cases h₁:i = a <;> simp [h₁, h, h.symm]
+  by_cases h₁ : i = a <;> simp [h₁, h, h.symm]
 #align matrix.std_basis_matrix.mul_of_ne Matrix.stdBasisMatrix.mul_of_ne
 
 end

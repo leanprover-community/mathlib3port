@@ -213,9 +213,9 @@ theorem normalize_aux_nil_comp {a b c : B} (f : Hom a b) (g : Hom b c) :
 def normalize (B : Type u) [Quiver.{v + 1} B] : Pseudofunctor (FreeBicategory B) (LocallyDiscrete (Paths B)) where
   obj := id
   map a b f := ⟨normalizeAux nil f⟩
-  map₂ a b f g η := eq_to_hom $ Discrete.ext _ _ $ normalize_aux_congr nil η
-  map_id a := eq_to_iso $ Discrete.ext _ _ rfl
-  map_comp a b c f g := eq_to_iso $ Discrete.ext _ _ $ normalize_aux_nil_comp f g
+  map₂ a b f g η := eq_to_hom <| Discrete.ext _ _ <| normalize_aux_congr nil η
+  map_id a := eq_to_iso <| Discrete.ext _ _ rfl
+  map_comp a b c f g := eq_to_iso <| Discrete.ext _ _ <| normalize_aux_nil_comp f g
 #align category_theory.free_bicategory.normalize CategoryTheory.FreeBicategory.normalize
 
 /-- Auxiliary definition for `normalize_equiv`. -/

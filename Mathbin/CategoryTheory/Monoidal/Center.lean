@@ -83,7 +83,7 @@ and `b` is a half-braiding on `X`.
 -/
 @[nolint has_nonempty_instance]
 def Center :=
-  Σ X : C, HalfBraiding X
+  ΣX : C, HalfBraiding X
 #align category_theory.center CategoryTheory.Center
 
 namespace Center

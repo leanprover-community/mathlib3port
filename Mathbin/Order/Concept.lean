@@ -76,7 +76,7 @@ theorem extent_closure_swap (s : Set α) : extentClosure (swap r) s = intentClos
 
 @[simp]
 theorem intent_closure_empty : intentClosure r ∅ = univ :=
-  eq_univ_of_forall $ fun _ _ => False.elim
+  eq_univ_of_forall fun _ _ => False.elim
 #align intent_closure_empty intent_closure_empty
 
 @[simp]
@@ -86,7 +86,7 @@ theorem extent_closure_empty : extentClosure r ∅ = univ :=
 
 @[simp]
 theorem intent_closure_union (s₁ s₂ : Set α) : intentClosure r (s₁ ∪ s₂) = intentClosure r s₁ ∩ intentClosure r s₂ :=
-  Set.ext $ fun _ => ball_or_left
+  Set.ext fun _ => ball_or_left
 #align intent_closure_union intent_closure_union
 
 @[simp]
@@ -130,13 +130,13 @@ theorem subset_intent_closure_extent_closure (t : Set β) : t ⊆ intentClosure 
 
 @[simp]
 theorem intent_closure_extent_closure_intent_closure (s : Set α) :
-    intentClosure r (extentClosure r $ intentClosure r s) = intentClosure r s :=
+    intentClosure r (extentClosure r <| intentClosure r s) = intentClosure r s :=
   (gc_intent_closure_extent_closure r).l_u_l_eq_l _
 #align intent_closure_extent_closure_intent_closure intent_closure_extent_closure_intent_closure
 
 @[simp]
 theorem extent_closure_intent_closure_extent_closure (t : Set β) :
-    extentClosure r (intentClosure r $ extentClosure r t) = extentClosure r t :=
+    extentClosure r (intentClosure r <| extentClosure r t) = extentClosure r t :=
   intent_closure_extent_closure_intent_closure _ t
 #align extent_closure_intent_closure_extent_closure extent_closure_intent_closure_extent_closure
 
@@ -206,7 +206,7 @@ instance : HasInf (Concept α β r) :=
         rw [← c.closure_snd, ← d.closure_snd, ← extent_closure_union, extent_closure_intent_closure_extent_closure] }⟩
 
 instance : SemilatticeInf (Concept α β r) :=
-  fst_injective.SemilatticeInf _ $ fun _ _ => rfl
+  (fst_injective.SemilatticeInf _) fun _ _ => rfl
 
 @[simp]
 theorem fst_subset_fst_iff : c.fst ⊆ d.fst ↔ c ≤ d :=
@@ -241,17 +241,17 @@ theorem strict_anti_snd : StrictAnti (Prod.snd ∘ to_prod : Concept α β r →
 #align concept.strict_anti_snd Concept.strict_anti_snd
 
 instance : Lattice (Concept α β r) :=
-  { Concept.semilatticeInf with sup := (· ⊔ ·), le_sup_left := fun c d => snd_subset_snd_iff.1 $ inter_subset_left _ _,
-    le_sup_right := fun c d => snd_subset_snd_iff.1 $ inter_subset_right _ _,
+  { Concept.semilatticeInf with sup := (· ⊔ ·), le_sup_left := fun c d => snd_subset_snd_iff.1 <| inter_subset_left _ _,
+    le_sup_right := fun c d => snd_subset_snd_iff.1 <| inter_subset_right _ _,
     sup_le := fun c d e => by
       simp_rw [← snd_subset_snd_iff]
       exact subset_inter }
 
 instance : BoundedOrder (Concept α β r) where
-  top := ⟨⟨univ, intentClosure r univ⟩, rfl, eq_univ_of_forall $ fun a b hb => hb trivial⟩
+  top := ⟨⟨univ, intentClosure r univ⟩, rfl, eq_univ_of_forall fun a b hb => hb trivial⟩
   le_top _ := subset_univ _
-  bot := ⟨⟨extentClosure r univ, univ⟩, eq_univ_of_forall $ fun b a ha => ha trivial, rfl⟩
-  bot_le _ := snd_subset_snd_iff.1 $ subset_univ _
+  bot := ⟨⟨extentClosure r univ, univ⟩, eq_univ_of_forall fun b a ha => ha trivial, rfl⟩
+  bot_le _ := snd_subset_snd_iff.1 <| subset_univ _
 
 instance : HasSup (Concept α β r) :=
   ⟨fun S =>
@@ -268,8 +268,8 @@ instance : HasInf (Concept α β r) :=
 
 instance : CompleteLattice (Concept α β r) :=
   { Concept.lattice, Concept.boundedOrder with sup := sup,
-    le_Sup := fun S c hc => snd_subset_snd_iff.1 $ bInter_subset_of_mem hc,
-    Sup_le := fun S c hc => snd_subset_snd_iff.1 $ subset_Inter₂ $ fun d hd => snd_subset_snd_iff.2 $ hc d hd,
+    le_Sup := fun S c hc => snd_subset_snd_iff.1 <| bInter_subset_of_mem hc,
+    Sup_le := fun S c hc => snd_subset_snd_iff.1 <| subset_Inter₂ fun d hd => snd_subset_snd_iff.2 <| hc d hd,
     inf := inf, Inf_le := fun S c => bInter_subset_of_mem, le_Inf := fun S c => subset_Inter₂ }
 
 @[simp]

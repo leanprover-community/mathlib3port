@@ -5,7 +5,7 @@ Authors: Eric Wieser
 -/
 import Mathbin.LinearAlgebra.PiTensorProduct
 import Mathbin.Logic.Equiv.Fin
-import Mathbin.Algebra.DirectSum.Algebra
+import Mathbin.Algebra.GradedMonoid
 
 /-!
 # Tensor power of a semimodule over a commutative semirings
@@ -49,7 +49,7 @@ scoped[TensorProduct] notation:100 "⨂[" R "]^" n:arg => TensorPower R n
 
 namespace TensorPower
 
-open TensorProduct DirectSum
+open TensorProduct
 
 open PiTensorProduct
 

@@ -38,7 +38,7 @@ section
 /-- `continuous_map_class F α β` states that `F` is a type of continuous maps.
 
 You should extend this class when you extend `continuous_map`. -/
-class ContinuousMapClass (F : Type _) (α β : outParam $ Type _) [TopologicalSpace α] [TopologicalSpace β] extends
+class ContinuousMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α] [TopologicalSpace β] extends
   FunLike F α fun _ => β where
   map_continuous (f : F) : Continuous f
 #align continuous_map_class ContinuousMapClass
@@ -225,35 +225,35 @@ theorem comp_assoc (f : C(γ, δ)) (g : C(β, γ)) (h : C(α, β)) : (f.comp g).
 
 @[simp]
 theorem id_comp (f : C(α, β)) : (ContinuousMap.id _).comp f = f :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 #align continuous_map.id_comp ContinuousMap.id_comp
 
 @[simp]
 theorem comp_id (f : C(α, β)) : f.comp (ContinuousMap.id _) = f :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 #align continuous_map.comp_id ContinuousMap.comp_id
 
 @[simp]
 theorem const_comp (c : γ) (f : C(α, β)) : (const β c).comp f = const α c :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 #align continuous_map.const_comp ContinuousMap.const_comp
 
 @[simp]
 theorem comp_const (f : C(β, γ)) (b : β) : f.comp (const α b) = const α (f b) :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 #align continuous_map.comp_const ContinuousMap.comp_const
 
 theorem cancel_right {f₁ f₂ : C(β, γ)} {g : C(α, β)} (hg : Surjective g) : f₁.comp g = f₂.comp g ↔ f₁ = f₂ :=
-  ⟨fun h => ext $ hg.forall.2 $ FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hg.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 #align continuous_map.cancel_right ContinuousMap.cancel_right
 
 theorem cancel_left {f : C(β, γ)} {g₁ g₂ : C(α, β)} (hf : Injective f) : f.comp g₁ = f.comp g₂ ↔ g₁ = g₂ :=
-  ⟨fun h => ext $ fun a => hf $ by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+  ⟨fun h => ext fun a => hf <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align continuous_map.cancel_left ContinuousMap.cancel_left
 
 instance [Nonempty α] [Nontrivial β] : Nontrivial C(α, β) :=
   ⟨let ⟨b₁, b₂, hb⟩ := exists_pair_ne β
-    ⟨const _ b₁, const _ b₂, fun h => hb $ FunLike.congr_fun h $ Classical.arbitrary α⟩⟩
+    ⟨const _ b₁, const _ b₂, fun h => hb <| FunLike.congr_fun h <| Classical.arbitrary α⟩⟩
 
 section Prod
 
@@ -311,7 +311,7 @@ theorem coe_restrict (f : C(α, β)) : ⇑(f.restrict s) = f ∘ coe :=
 /-- The restriction of a continuous map onto the preimage of a set. -/
 @[simps]
 def restrictPreimage (f : C(α, β)) (s : Set β) : C(f ⁻¹' s, s) :=
-  ⟨s.restrictPreimage f, continuous_iff_continuous_at.mpr $ fun x => f.2.ContinuousAt.restrictPreimage⟩
+  ⟨s.restrictPreimage f, continuous_iff_continuous_at.mpr fun x => f.2.ContinuousAt.restrictPreimage⟩
 #align continuous_map.restrict_preimage ContinuousMap.restrictPreimage
 
 end Restrict
@@ -349,7 +349,7 @@ theorem lift_cover_coe {i : ι} (x : S i) : liftCover S φ hφ hS x = φ i x :=
 
 @[simp]
 theorem lift_cover_restrict {i : ι} : (liftCover S φ hφ hS).restrict (S i) = φ i :=
-  ext $ lift_cover_coe
+  ext <| lift_cover_coe
 #align continuous_map.lift_cover_restrict ContinuousMap.lift_cover_restrict
 
 omit hφ hS
@@ -382,7 +382,7 @@ theorem lift_cover_coe' {s : Set α} {hs : s ∈ A} (x : s) : liftCover' A F hF 
 
 @[simp]
 theorem lift_cover_restrict' {s : Set α} {hs : s ∈ A} : (liftCover' A F hF hA).restrict s = F s hs :=
-  ext $ lift_cover_coe'
+  ext <| lift_cover_coe'
 #align continuous_map.lift_cover_restrict' ContinuousMap.lift_cover_restrict'
 
 end Gluing

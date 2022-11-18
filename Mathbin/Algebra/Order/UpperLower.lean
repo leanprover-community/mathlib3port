@@ -24,12 +24,12 @@ variable {α : Type _} [OrderedCommMonoid α] {s : Set α} {x : α}
 
 @[to_additive]
 theorem IsUpperSet.smul_subset (hs : IsUpperSet s) (hx : 1 ≤ x) : x • s ⊆ s :=
-  smul_set_subset_iff.2 $ fun y => hs $ le_mul_of_one_le_left' hx
+  smul_set_subset_iff.2 fun y => hs <| le_mul_of_one_le_left' hx
 #align is_upper_set.smul_subset IsUpperSet.smul_subset
 
 @[to_additive]
 theorem IsLowerSet.smul_subset (hs : IsLowerSet s) (hx : x ≤ 1) : x • s ⊆ s :=
-  smul_set_subset_iff.2 $ fun y => hs $ mul_le_of_le_one_left' hx
+  smul_set_subset_iff.2 fun y => hs <| mul_le_of_le_one_left' hx
 #align is_lower_set.smul_subset IsLowerSet.smul_subset
 
 end OrderedCommMonoid
@@ -69,20 +69,20 @@ theorem IsUpperSet.mul_right (hs : IsUpperSet s) : IsUpperSet (s * t) := by
 
 @[to_additive]
 theorem IsLowerSet.mul_left (ht : IsLowerSet t) : IsLowerSet (s * t) :=
-  ht.ofDual.mul_left
+  ht.ofDual.mulLeft
 #align is_lower_set.mul_left IsLowerSet.mul_left
 
 @[to_additive]
 theorem IsLowerSet.mul_right (hs : IsLowerSet s) : IsLowerSet (s * t) :=
-  hs.ofDual.mul_right
+  hs.ofDual.mulRight
 #align is_lower_set.mul_right IsLowerSet.mul_right
 
 @[to_additive]
-theorem IsUpperSet.inv (hs : IsUpperSet s) : IsLowerSet s⁻¹ := fun x y h => hs $ inv_le_inv' h
+theorem IsUpperSet.inv (hs : IsUpperSet s) : IsLowerSet s⁻¹ := fun x y h => hs <| inv_le_inv' h
 #align is_upper_set.inv IsUpperSet.inv
 
 @[to_additive]
-theorem IsLowerSet.inv (hs : IsLowerSet s) : IsUpperSet s⁻¹ := fun x y h => hs $ inv_le_inv' h
+theorem IsLowerSet.inv (hs : IsLowerSet s) : IsUpperSet s⁻¹ := fun x y h => hs <| inv_le_inv' h
 #align is_lower_set.inv IsLowerSet.inv
 
 @[to_additive]
@@ -115,7 +115,7 @@ instance : One (UpperSet α) :=
 
 @[to_additive]
 instance : Mul (UpperSet α) :=
-  ⟨fun s t => ⟨image2 (· * ·) s t, s.2.mul_right⟩⟩
+  ⟨fun s t => ⟨image2 (· * ·) s t, s.2.mulRight⟩⟩
 
 @[to_additive]
 instance : Div (UpperSet α) :=
@@ -160,8 +160,8 @@ instance : CommSemigroup (UpperSet α) :=
 
 @[to_additive]
 private theorem one_mul (s : UpperSet α) : 1 * s = s :=
-  SetLike.coe_injective $
-    (subset_mul_right _ left_mem_Ici).antisymm' $ by
+  SetLike.coe_injective <|
+    (subset_mul_right _ left_mem_Ici).antisymm' <| by
       rw [← smul_eq_mul, ← bUnion_smul_set]
       exact Union₂_subset fun _ => s.upper.smul_subset
 #align upper_set.one_mul upper_set.one_mul
@@ -183,7 +183,7 @@ instance : One (LowerSet α) :=
 
 @[to_additive]
 instance : Mul (LowerSet α) :=
-  ⟨fun s t => ⟨image2 (· * ·) s t, s.2.mul_right⟩⟩
+  ⟨fun s t => ⟨image2 (· * ·) s t, s.2.mulRight⟩⟩
 
 @[to_additive]
 instance : Div (LowerSet α) :=
@@ -223,8 +223,8 @@ instance : CommSemigroup (LowerSet α) :=
 
 @[to_additive]
 private theorem one_mul (s : LowerSet α) : 1 * s = s :=
-  SetLike.coe_injective $
-    (subset_mul_right _ right_mem_Iic).antisymm' $ by
+  SetLike.coe_injective <|
+    (subset_mul_right _ right_mem_Iic).antisymm' <| by
       rw [← smul_eq_mul, ← bUnion_smul_set]
       exact Union₂_subset fun _ => s.lower.smul_subset
 #align lower_set.one_mul lower_set.one_mul
@@ -252,12 +252,12 @@ theorem lower_closure_one : lowerClosure (1 : Set α) = 1 :=
 
 @[simp, to_additive]
 theorem upper_closure_smul : upperClosure (a • s) = a • upperClosure s :=
-  upper_closure_image $ OrderIso.mulLeft a
+  upper_closure_image <| OrderIso.mulLeft a
 #align upper_closure_smul upper_closure_smul
 
 @[simp, to_additive]
 theorem lower_closure_smul : lowerClosure (a • s) = a • lowerClosure s :=
-  lower_closure_image $ OrderIso.mulLeft a
+  lower_closure_image <| OrderIso.mulLeft a
 #align lower_closure_smul lower_closure_smul
 
 @[to_additive]
@@ -286,12 +286,12 @@ theorem lower_closure_mul : ↑(lowerClosure s) * t = lowerClosure (s * t) := by
 
 @[simp, to_additive]
 theorem upper_closure_mul_distrib : upperClosure (s * t) = upperClosure s * upperClosure t :=
-  SetLike.coe_injective $ by rw [UpperSet.coe_mul, mul_upper_closure, upper_closure_mul, UpperSet.upper_closure]
+  SetLike.coe_injective <| by rw [UpperSet.coe_mul, mul_upper_closure, upper_closure_mul, UpperSet.upper_closure]
 #align upper_closure_mul_distrib upper_closure_mul_distrib
 
 @[simp, to_additive]
 theorem lower_closure_mul_distrib : lowerClosure (s * t) = lowerClosure s * lowerClosure t :=
-  SetLike.coe_injective $ by rw [LowerSet.coe_mul, mul_lower_closure, lower_closure_mul, LowerSet.lower_closure]
+  SetLike.coe_injective <| by rw [LowerSet.coe_mul, mul_lower_closure, lower_closure_mul, LowerSet.lower_closure]
 #align lower_closure_mul_distrib lower_closure_mul_distrib
 
 end OrderedCommGroup

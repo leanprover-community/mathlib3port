@@ -112,7 +112,7 @@ theorem int_valuation_zero_le (x : nonZeroDivisors R) : 0 < v.intValuationDef x 
 /-- The `v`-adic valuation on `R` is bounded above by 1. -/
 theorem int_valuation_le_one (x : R) : v.intValuationDef x ≤ 1 := by
   rw [int_valuation_def]
-  by_cases hx:x = 0
+  by_cases hx : x = 0
   · rw [if_pos hx]
     exact WithZero.zero_le 1
     
@@ -170,10 +170,10 @@ theorem IntValuation.map_one' : v.intValuationDef 1 = 1 := by
 /-- The `v`-adic valuation of a product equals the product of the valuations. -/
 theorem IntValuation.map_mul' (x y : R) : v.intValuationDef (x * y) = v.intValuationDef x * v.intValuationDef y := by
   simp only [int_valuation_def]
-  by_cases hx:x = 0
+  by_cases hx : x = 0
   · rw [hx, zero_mul, if_pos (Eq.refl _), zero_mul]
     
-  · by_cases hy:y = 0
+  · by_cases hy : y = 0
     · rw [hy, mul_zero, if_pos (Eq.refl _), mul_zero]
       
     · rw [if_neg hx, if_neg hy, if_neg (mul_ne_zero hx hy), ← WithZero.coe_mul, WithZero.coe_inj, ← of_add_add, ←
@@ -195,19 +195,19 @@ theorem IntValuation.le_max_iff_min_le {a b c : ℕ} :
 /-- The `v`-adic valuation of a sum is bounded above by the maximum of the valuations. -/
 theorem IntValuation.map_add_le_max' (x y : R) :
     v.intValuationDef (x + y) ≤ max (v.intValuationDef x) (v.intValuationDef y) := by
-  by_cases hx:x = 0
+  by_cases hx : x = 0
   · rw [hx, zero_add]
     conv_rhs => rw [int_valuation_def, if_pos (Eq.refl _)]
     rw [max_eq_right (WithZero.zero_le (v.int_valuation_def y))]
     exact le_refl _
     
-  · by_cases hy:y = 0
+  · by_cases hy : y = 0
     · rw [hy, add_zero]
       conv_rhs => rw [max_comm, int_valuation_def, if_pos (Eq.refl _)]
       rw [max_eq_right (WithZero.zero_le (v.int_valuation_def x))]
       exact le_refl _
       
-    · by_cases hxy:x + y = 0
+    · by_cases hxy : x + y = 0
       · rw [int_valuation_def, if_pos hxy]
         exact zero_le'
         
@@ -274,7 +274,7 @@ theorem int_valuation_exists_uniformizer : ∃ π : R, v.intValuationDef π = Mu
 /-- The `v`-adic valuation of `x ∈ K` is the valuation of `r` divided by the valuation of `s`,
 where `r` and `s` are chosen so that `x = r/s`. -/
 def valuation (v : HeightOneSpectrum R) : Valuation K ℤₘ₀ :=
-  v.intValuation.extendToLocalization (fun r hr => Set.mem_compl $ v.int_valuation_ne_zero' ⟨r, hr⟩) K
+  v.intValuation.extendToLocalization (fun r hr => Set.mem_compl <| v.int_valuation_ne_zero' ⟨r, hr⟩) K
 #align is_dedekind_domain.height_one_spectrum.valuation IsDedekindDomain.HeightOneSpectrum.valuation
 
 theorem valuation_def (x : K) :

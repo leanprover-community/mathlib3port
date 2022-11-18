@@ -37,10 +37,10 @@ theorem inv_symm_left₀ (h : SemiconjBy a x y) : SemiconjBy a⁻¹ y x :=
 #align semiconj_by.inv_symm_left₀ SemiconjBy.inv_symm_left₀
 
 theorem inv_right₀ (h : SemiconjBy a x y) : SemiconjBy a x⁻¹ y⁻¹ := by
-  by_cases ha:a = 0
+  by_cases ha : a = 0
   · simp only [ha, zero_left]
     
-  by_cases hx:x = 0
+  by_cases hx : x = 0
   · subst x
     simp only [SemiconjBy, mul_zero, @eq_comm _ _ (y * a), mul_eq_zero] at h
     simp [h.resolve_right ha]

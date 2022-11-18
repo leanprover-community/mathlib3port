@@ -76,7 +76,7 @@ variable {C}
 /-- `unop` induces morphisms of monoids on hom groups of a preadditive category -/
 @[simps]
 def unopHom (X Y : Cᵒᵖ) : (X ⟶ Y) →+ (Opposite.unop Y ⟶ Opposite.unop X) :=
-  (AddMonoidHom.mk' fun f => f.unop) $ fun f g => unop_add _ f g
+  (AddMonoidHom.mk' fun f => f.unop) fun f g => unop_add _ f g
 #align category_theory.unop_hom CategoryTheory.unopHom
 
 @[simp]
@@ -88,7 +88,7 @@ theorem unop_sum (X Y : Cᵒᵖ) {ι : Type _} (s : Finset ι) (f : ι → (X �
 /-- `op` induces morphisms of monoids on hom groups of a preadditive category -/
 @[simps]
 def opHom (X Y : C) : (X ⟶ Y) →+ (Opposite.op Y ⟶ Opposite.op X) :=
-  (AddMonoidHom.mk' fun f => f.op) $ fun f g => op_add _ f g
+  (AddMonoidHom.mk' fun f => f.op) fun f g => op_add _ f g
 #align category_theory.op_hom CategoryTheory.opHom
 
 @[simp]

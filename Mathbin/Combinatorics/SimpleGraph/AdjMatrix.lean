@@ -5,7 +5,6 @@ Authors: Aaron Anderson, Jalex Stark, Kyle Miller, Lu-Ming Zhang
 -/
 import Mathbin.Combinatorics.SimpleGraph.Basic
 import Mathbin.Combinatorics.SimpleGraph.Connectivity
-import Mathbin.Data.Rel
 import Mathbin.LinearAlgebra.Matrix.Trace
 import Mathbin.LinearAlgebra.Matrix.Symmetric
 
@@ -131,7 +130,7 @@ theorem compl [Zero α] [One α] (h : IsAdjMatrix A) : IsAdjMatrix A.compl :=
 
 theorem to_graph_compl_eq [MulZeroOneClass α] [Nontrivial α] (h : IsAdjMatrix A) : h.compl.toGraph = h.toGraphᶜ := by
   ext (v w)
-  cases' h.zero_or_one v w with h h <;> by_cases hvw:v = w <;> simp [Matrix.compl, h, hvw]
+  cases' h.zero_or_one v w with h h <;> by_cases hvw : v = w <;> simp [Matrix.compl, h, hvw]
 #align matrix.is_adj_matrix.to_graph_compl_eq Matrix.IsAdjMatrix.to_graph_compl_eq
 
 end IsAdjMatrix

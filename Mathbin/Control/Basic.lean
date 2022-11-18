@@ -223,7 +223,7 @@ lean 3 declaration is
 but is expected to have type
   forall {e : Type.{v}} {α : Type.{_aux_param_0}} {β : Type.{_aux_param_1}}, (Sum.{v _aux_param_0} e α) -> (α -> (Sum.{v _aux_param_1} e β)) -> (Sum.{v _aux_param_1} e β)
 Case conversion may be inaccurate. Consider using '#align sum.bind Sum.bindₓ'. -/
-protected def bind {α β} : e ⊕ α → (α → e ⊕ β) → e ⊕ β
+protected def bind {α β} : Sum e α → (α → Sum e β) → Sum e β
   | inl x, _ => inl x
   | inr x, f => f x
 #align sum.bind Sum.bind
@@ -232,18 +232,18 @@ instance : Monad (Sum.{v, u} e) where
   pure := @Sum.inr e
   bind := @Sum.bind e
 
-instance : IsLawfulFunctor (Sum.{v, u} e) := by refine' { .. } <;> intros <;> casesm _ ⊕ _ <;> rfl
+instance : IsLawfulFunctor (Sum.{v, u} e) := by refine' { .. } <;> intros <;> casesm Sum _ _ <;> rfl
 
 instance : LawfulMonad (Sum.{v, u} e) where
   bind_assoc := by
     intros
-    casesm _ ⊕ _ <;> rfl
+    casesm Sum _ _ <;> rfl
   pure_bind := by
     intros
     rfl
   bind_pure_comp_eq_map := by
     intros
-    casesm _ ⊕ _ <;> rfl
+    casesm Sum _ _ <;> rfl
   bind_map_eq_seq := by
     intros
     cases f <;> rfl

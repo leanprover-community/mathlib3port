@@ -131,13 +131,13 @@ structure Besicovitch.SatelliteConfig (α : Type _) [MetricSpace α] (N : ℕ) (
   inter : ∀ i < last N, dist (c i) (c (last N)) ≤ r i + r (last N)
 #align besicovitch.satellite_config Besicovitch.SatelliteConfig
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`no_satellite_config] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`no_satellite_config] [] -/
 /-- A metric space has the Besicovitch covering property if there exist `N` and `τ > 1` such that
 there are no satellite configuration of parameter `τ` with `N+1` points. This is the condition that
 guarantees that the measurable Besicovitch covering theorem holds. It is satified by
 finite-dimensional real vector spaces. -/
 class HasBesicovitchCovering (α : Type _) [MetricSpace α] : Prop where
-  no_satellite_config : ∃ (N : ℕ) (τ : ℝ), 1 < τ ∧ IsEmpty (Besicovitch.SatelliteConfig α N τ)
+  no_satellite_config : ∃ (N : ℕ)(τ : ℝ), 1 < τ ∧ IsEmpty (Besicovitch.SatelliteConfig α N τ)
 #align has_besicovitch_covering HasBesicovitchCovering
 
 /-- There is always a satellite configuration with a single point. -/
@@ -594,7 +594,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
   have A : s = ⋃ i : Fin N, s ∩ v i := by
     refine' subset.antisymm _ (Union_subset fun i => inter_subset_left _ _)
     intro x hx
-    obtain ⟨i, y, hxy, h'⟩ : ∃ (i : Fin N) (i_1 : ↥s) (i : i_1 ∈ u i), x ∈ ball (↑i_1) (r ↑i_1) := by
+    obtain ⟨i, y, hxy, h'⟩ : ∃ (i : Fin N)(i_1 : ↥s)(i : i_1 ∈ u i), x ∈ ball (↑i_1) (r ↑i_1) := by
       have : x ∈ range a.c := by simpa only [Subtype.range_coe_subtype, set_of_mem_eq]
       simpa only [mem_Union] using hu' this
     refine' mem_Union.2 ⟨i, ⟨hx, _⟩⟩
@@ -614,7 +614,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
         apply measure_Union_fintype_le
       
   -- choose an index `i` of a subfamily covering at least a proportion `1/N` of `s`.
-  obtain ⟨i, -, hi⟩ : ∃ (i : Fin N) (hi : i ∈ Finset.univ), μ s / N ≤ μ (s ∩ v i) := by
+  obtain ⟨i, -, hi⟩ : ∃ (i : Fin N)(hi : i ∈ Finset.univ), μ s / N ≤ μ (s ∩ v i) := by
     apply Ennreal.exists_le_of_sum_le _ S
     exact ⟨⟨0, bot_lt_iff_ne_bot.2 Npos⟩, Finset.mem_univ _⟩
   replace hi : μ s / (N + 1) < μ (s ∩ v i)
@@ -905,7 +905,7 @@ Besicovitch covering property (which is satisfied for instance by normed real ve
 -/
 theorem exists_disjoint_closed_ball_covering_ae (μ : Measure α) [SigmaFinite μ] (f : α → Set ℝ) (s : Set α)
     (hf : ∀ x ∈ s, ∀ δ > 0, (f x ∩ ioo 0 δ).Nonempty) (R : α → ℝ) (hR : ∀ x ∈ s, 0 < R x) :
-    ∃ (t : Set α) (r : α → ℝ),
+    ∃ (t : Set α)(r : α → ℝ),
       t.Countable ∧
         t ⊆ s ∧
           (∀ x ∈ t, r x ∈ f x ∩ ioo 0 (R x)) ∧
@@ -967,14 +967,13 @@ theorem exists_disjoint_closed_ball_covering_ae (μ : Measure α) [SigmaFinite �
 #align besicovitch.exists_disjoint_closed_ball_covering_ae Besicovitch.exists_disjoint_closed_ball_covering_ae
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (U «expr ⊇ » s) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (N τ) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (v «expr ⊇ » s') -/
 /-- In a space with the Besicovitch property, any set `s` can be covered with balls whose measures
 add up to at most `μ s + ε`, for any positive `ε`. This works even if one restricts the set of
 allowed radii around a point `x` to a set `f x` which accumulates at `0`. -/
 theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFinite μ] [Measure.OuterRegular μ] {ε : ℝ≥0∞}
     (hε : ε ≠ 0) (f : α → Set ℝ) (s : Set α) (hf : ∀ x ∈ s, ∀ δ > 0, (f x ∩ ioo 0 δ).Nonempty) :
-    ∃ (t : Set α) (r : α → ℝ),
+    ∃ (t : Set α)(r : α → ℝ),
       t.Countable ∧
         t ⊆ s ∧
           (∀ x ∈ t, r x ∈ f x) ∧ (s ⊆ ⋃ x ∈ t, closedBall x (r x)) ∧ (∑' x : t, μ (closedBall x (r x))) ≤ μ s + ε :=
@@ -985,13 +984,13 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFini
     `0`. Applying the other version of Besicovitch, one may cover it with at most `N` disjoint
     subfamilies. Making sure that they are all included in a neighborhood `v` of `s'` of measure at
     most `ε / (2 N)`, the sum of their measures is at most `ε / 2`, completing the proof. -/
-  obtain ⟨u, su, u_open, μu⟩ : ∃ (U) (_ : U ⊇ s), IsOpen U ∧ μ U ≤ μ s + ε / 2 :=
+  obtain ⟨u, su, u_open, μu⟩ : ∃ (U : _)(_ : U ⊇ s), IsOpen U ∧ μ U ≤ μ s + ε / 2 :=
     Set.exists_is_open_le_add _ _
       (by simpa only [or_false_iff, Ne.def, Ennreal.div_zero_iff, Ennreal.one_ne_top, Ennreal.bit0_eq_top_iff] using hε)
   have : ∀ x ∈ s, ∃ R > 0, ball x R ⊆ u := fun x hx => Metric.mem_nhds_iff.1 (u_open.mem_nhds (su hx))
   choose! R hR using this
   obtain ⟨t0, r0, t0_count, t0s, hr0, μt0, t0_disj⟩ :
-    ∃ (t0 : Set α) (r0 : α → ℝ),
+    ∃ (t0 : Set α)(r0 : α → ℝ),
       t0.Countable ∧
         t0 ⊆ s ∧
           (∀ x ∈ t0, r0 x ∈ f x ∩ Ioo 0 (R x)) ∧
@@ -1001,9 +1000,9 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFini
   -- remaining set.
   let s' := s \ ⋃ x ∈ t0, closed_ball x (r0 x)
   have s's : s' ⊆ s := diff_subset _ _
-  obtain ⟨N, τ, hτ, H⟩ : ∃ (N) (τ), 1 < τ ∧ IsEmpty (Besicovitch.SatelliteConfig α N τ) :=
+  obtain ⟨N, τ, hτ, H⟩ : ∃ N τ, 1 < τ ∧ IsEmpty (Besicovitch.SatelliteConfig α N τ) :=
     HasBesicovitchCovering.no_satellite_config α
-  obtain ⟨v, s'v, v_open, μv⟩ : ∃ (v) (_ : v ⊇ s'), IsOpen v ∧ μ v ≤ μ s' + ε / 2 / N :=
+  obtain ⟨v, s'v, v_open, μv⟩ : ∃ (v : _)(_ : v ⊇ s'), IsOpen v ∧ μ v ≤ μ s' + ε / 2 / N :=
     Set.exists_is_open_le_add _ _
       (by
         simp only [hε, Ennreal.nat_ne_top, WithTop.mul_eq_top_iff, Ne.def, Ennreal.div_zero_iff, Ennreal.one_ne_top,
@@ -1064,8 +1063,8 @@ theorem exists_closed_ball_covering_tsum_measure_le (μ : Measure α) [SigmaFini
       
     
   · intro x hx
-    by_cases h'x:x ∈ s'
-    · obtain ⟨i, y, ySi, xy⟩ : ∃ (i : Fin N) (y : ↥s') (ySi : y ∈ S i), x ∈ ball (y : α) (r1 y) := by
+    by_cases h'x : x ∈ s'
+    · obtain ⟨i, y, ySi, xy⟩ : ∃ (i : Fin N)(y : ↥s')(ySi : y ∈ S i), x ∈ ball (y : α) (r1 y) := by
         have A : x ∈ range q.c := by
           simpa only [not_exists, exists_prop, mem_Union, mem_closed_ball, not_and, not_le, mem_set_of_eq,
             Subtype.range_coe_subtype, mem_diff] using h'x
@@ -1175,7 +1174,7 @@ protected def vitaliFamily (μ : Measure α) [SigmaFinite μ] : VitaliFamily μ 
     let g : α → Set ℝ := fun x => { r | 0 < r ∧ closed_ball x r ∈ f x }
     have A : ∀ x ∈ s, ∀ δ > 0, (g x ∩ Ioo 0 δ).Nonempty := by
       intro x xs δ δpos
-      obtain ⟨t, tf, ht⟩ : ∃ (t : Set α) (H : t ∈ f x), t ⊆ closed_ball x (δ / 2) := ffine x xs (δ / 2) (half_pos δpos)
+      obtain ⟨t, tf, ht⟩ : ∃ (t : Set α)(H : t ∈ f x), t ⊆ closed_ball x (δ / 2) := ffine x xs (δ / 2) (half_pos δpos)
       obtain ⟨r, rpos, rfl⟩ : ∃ r : ℝ, 0 < r ∧ closed_ball x r = t := by simpa using fsubset x xs tf
       rcases le_total r (δ / 2) with (H | H)
       · exact ⟨r, ⟨rpos, tf⟩, ⟨rpos, H.trans_lt (half_lt_self δpos)⟩⟩
@@ -1185,7 +1184,7 @@ protected def vitaliFamily (μ : Measure α) [SigmaFinite μ] : VitaliFamily μ 
         refine' ⟨δ / 2, ⟨half_pos δpos, tf⟩, ⟨half_pos δpos, half_lt_self δpos⟩⟩
         
     obtain ⟨t, r, t_count, ts, tg, μt, tdisj⟩ :
-      ∃ (t : Set α) (r : α → ℝ),
+      ∃ (t : Set α)(r : α → ℝ),
         t.Countable ∧
           t ⊆ s ∧
             (∀ x ∈ t, r x ∈ g x ∩ Ioo 0 1) ∧
@@ -1215,7 +1214,7 @@ theorem tendsto_filter_at (μ : Measure α) [SigmaFinite μ] (x : α) :
   intro s hs
   simp only [mem_map]
   obtain ⟨ε, εpos, hε⟩ :
-    ∃ (ε : ℝ) (H : ε > 0), ∀ a : Set α, a ∈ (Besicovitch.vitaliFamily μ).setsAt x → a ⊆ closed_ball x ε → a ∈ s :=
+    ∃ (ε : ℝ)(H : ε > 0), ∀ a : Set α, a ∈ (Besicovitch.vitaliFamily μ).setsAt x → a ⊆ closed_ball x ε → a ∈ s :=
     (VitaliFamily.mem_filter_at_iff _).1 hs
   have : Ioc (0 : ℝ) ε ∈ 𝓝[>] (0 : ℝ) := Ioc_mem_nhds_within_Ioi ⟨le_rfl, εpos⟩
   filter_upwards [this] with _ hr

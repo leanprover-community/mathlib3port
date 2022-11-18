@@ -36,7 +36,7 @@ def _root_.doset (a : α) (s t : Set α) : Set α :=
   s * {a} * t
 #align doset._root_.doset doset._root_.doset
 
-theorem mem_doset {s t : Set α} {a b : α} : b ∈ doset a s t ↔ ∃ (x ∈ s) (y ∈ t), b = x * a * y :=
+theorem mem_doset {s t : Set α} {a b : α} : b ∈ doset a s t ↔ ∃ x ∈ s, ∃ y ∈ t, b = x * a * y :=
   ⟨fun ⟨_, y, ⟨x, _, hx, rfl, rfl⟩, hy, h⟩ => ⟨x, hx, y, hy, h.symm⟩, fun ⟨x, hx, y, hy, h⟩ =>
     ⟨x * a, y, ⟨x, a, hx, rfl, rfl⟩, hy, h.symm⟩⟩
 #align doset.mem_doset doset.mem_doset
@@ -77,11 +77,11 @@ def Quotient (H K : Set G) : Type _ :=
   Quotient (setoid H K)
 #align doset.quotient doset.Quotient
 
-theorem rel_iff {H K : Subgroup G} {x y : G} : (setoid (↑H) ↑K).Rel x y ↔ ∃ (a ∈ H) (b ∈ K), y = a * x * b :=
+theorem rel_iff {H K : Subgroup G} {x y : G} : (setoid ↑H ↑K).Rel x y ↔ ∃ a ∈ H, ∃ b ∈ K, y = a * x * b :=
   Iff.trans ⟨fun hxy => (congr_arg _ hxy).mpr (mem_doset_self H K y), fun hxy => (doset_eq_of_mem hxy).symm⟩ mem_doset
 #align doset.rel_iff doset.rel_iff
 
-theorem bot_rel_eq_left_rel (H : Subgroup G) : (setoid (↑(⊥ : Subgroup G)) ↑H).Rel = (QuotientGroup.leftRel H).Rel := by
+theorem bot_rel_eq_left_rel (H : Subgroup G) : (setoid ↑(⊥ : Subgroup G) ↑H).Rel = (QuotientGroup.leftRel H).Rel := by
   ext (a b)
   rw [rel_iff, Setoid.Rel, QuotientGroup.left_rel_apply]
   constructor
@@ -95,7 +95,7 @@ theorem bot_rel_eq_left_rel (H : Subgroup G) : (setoid (↑(⊥ : Subgroup G)) �
 #align doset.bot_rel_eq_left_rel doset.bot_rel_eq_left_rel
 
 theorem rel_bot_eq_right_group_rel (H : Subgroup G) :
-    (setoid (↑H) ↑(⊥ : Subgroup G)).Rel = (QuotientGroup.rightRel H).Rel := by
+    (setoid ↑H ↑(⊥ : Subgroup G)).Rel = (QuotientGroup.rightRel H).Rel := by
   ext (a b)
   rw [rel_iff, Setoid.Rel, QuotientGroup.right_rel_apply]
   constructor
@@ -109,31 +109,30 @@ theorem rel_bot_eq_right_group_rel (H : Subgroup G) :
 #align doset.rel_bot_eq_right_group_rel doset.rel_bot_eq_right_group_rel
 
 /-- Create a doset out of an element of `H \ G / K`-/
-def quotToDoset (H K : Subgroup G) (q : Quotient (↑H) ↑K) : Set G :=
+def quotToDoset (H K : Subgroup G) (q : Quotient ↑H ↑K) : Set G :=
   doset q.out' H K
 #align doset.quot_to_doset doset.quotToDoset
 
 /-- Map from `G` to `H \ G / K`-/
-abbrev mk (H K : Subgroup G) (a : G) : Quotient (↑H) ↑K :=
+abbrev mk (H K : Subgroup G) (a : G) : Quotient ↑H ↑K :=
   Quotient.mk' a
 #align doset.mk doset.mk
 
-instance (H K : Subgroup G) : Inhabited (Quotient (↑H) ↑K) :=
+instance (H K : Subgroup G) : Inhabited (Quotient ↑H ↑K) :=
   ⟨mk H K (1 : G)⟩
 
-theorem eq (H K : Subgroup G) (a b : G) : mk H K a = mk H K b ↔ ∃ (h ∈ H) (k ∈ K), b = h * a * k := by
+theorem eq (H K : Subgroup G) (a b : G) : mk H K a = mk H K b ↔ ∃ h ∈ H, ∃ k ∈ K, b = h * a * k := by
   rw [Quotient.eq']
   apply rel_iff
 #align doset.eq doset.eq
 
-theorem out_eq' (H K : Subgroup G) (q : Quotient (↑H) ↑K) : mk H K q.out' = q :=
+theorem out_eq' (H K : Subgroup G) (q : Quotient ↑H ↑K) : mk H K q.out' = q :=
   Quotient.out_eq' q
 #align doset.out_eq' doset.out_eq'
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (h k) -/
 theorem mk_out'_eq_mul (H K : Subgroup G) (g : G) :
-    ∃ (h : G) (k : G), h ∈ H ∧ k ∈ K ∧ (mk H K g : Quotient (↑H) ↑K).out' = h * g * k := by
-  have := Eq H K (mk H K g : Quotient (↑H) ↑K).out' g
+    ∃ h k : G, h ∈ H ∧ k ∈ K ∧ (mk H K g : Quotient ↑H ↑K).out' = h * g * k := by
+  have := Eq H K (mk H K g : Quotient ↑H ↑K).out' g
   rw [out_eq'] at this
   obtain ⟨h, h_h, k, hk, T⟩ := this.1 rfl
   refine' ⟨h⁻¹, k⁻¹, H.inv_mem h_h, K.inv_mem hk, eq_mul_inv_of_mul_eq (eq_inv_mul_of_mul_eq _)⟩

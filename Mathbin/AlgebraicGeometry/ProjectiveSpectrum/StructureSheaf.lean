@@ -67,12 +67,11 @@ namespace ProjectiveSpectrum.StructureSheaf
 
 variable {𝒜}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (r s) -/
 /-- The predicate saying that a dependent function on an open `U` is realised as a fixed fraction
 `r / s` of *same grading* in each of the stalks (which are localizations at various prime ideals).
 -/
 def IsFraction {U : Opens (ProjectiveSpectrum.top 𝒜)} (f : ∀ x : U, at x.1) : Prop :=
-  ∃ (i : ℕ) (r : 𝒜 i) (s : 𝒜 i), ∀ x : U, ∃ s_nin : s.1 ∉ x.1.asHomogeneousIdeal, f x = Quotient.mk' ⟨i, r, s, s_nin⟩
+  ∃ (i : ℕ)(r s : 𝒜 i), ∀ x : U, ∃ s_nin : s.1 ∉ x.1.asHomogeneousIdeal, f x = Quotient.mk' ⟨i, r, s, s_nin⟩
 #align
   algebraic_geometry.projective_spectrum.structure_sheaf.is_fraction AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf.IsFraction
 

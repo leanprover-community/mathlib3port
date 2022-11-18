@@ -102,7 +102,7 @@ theorem ess_sup_const (c : β) (hμ : μ ≠ 0) : essSup (fun x : α => c) μ = 
 
 theorem ess_sup_le_of_ae_le {f : α → β} (c : β) (hf : f ≤ᵐ[μ] fun _ => c) : essSup f μ ≤ c := by
   refine' (ess_sup_mono_ae hf).trans _
-  by_cases hμ:μ = 0
+  by_cases hμ : μ = 0
   · simp [hμ]
     
   · rwa [ess_sup_const]
@@ -305,7 +305,7 @@ theorem ess_sup_indicator_eq_ess_sup_restrict [Zero β] {s : Set α} {f : α →
     rw [Pi.zero_apply] at hxf_nonneg
     exact ⟨hxf_nonneg hxs, hxs_imp_c hxs⟩
   refine' h_restrict_le.mono fun x hxc => _
-  by_cases hxs:x ∈ s
+  by_cases hxs : x ∈ s
   · simpa [hxs] using hxc hxs
     
   · simpa [hxs] using hc

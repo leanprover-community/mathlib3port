@@ -127,7 +127,8 @@ unsafe def pi_lower_bound (l : List ℚ) : tactic Unit := do
   l fun r => do
       let a := r
       let b := r
-      () <$ tactic.apply q(@sqrt_two_add_series_step_up $(reflect a) $(reflect b)); [tactic.skip, sorry, sorry, sorry]
+      andthen (() <$ tactic.apply q(@sqrt_two_add_series_step_up $(reflect a) $(reflect b)))
+          [tactic.skip, sorry, sorry, sorry]
   sorry
   sorry
 #align real.pi_lower_bound real.pi_lower_bound
@@ -171,11 +172,12 @@ sequence of rational numbers `sqrt 2 < r 1 < r 2 < ... < r n < 2` satisfying the
 `sqrt (2 + r i) ≥ r(i+1)`, where `r 0 = 0` and `sqrt (2 - r n) ≥ (a - 1/4^n) / 2^(n+1)`. -/
 unsafe def pi_upper_bound (l : List ℚ) : tactic Unit := do
   let n := l.length
-  () <$ tactic.apply q(@pi_upper_bound_start $(reflect n)); [pure (), sorry]
+  andthen (() <$ tactic.apply q(@pi_upper_bound_start $(reflect n))) [pure (), sorry]
   l fun r => do
       let a := r
       let b := r
-      () <$ tactic.apply q(@sqrt_two_add_series_step_down $(reflect a) $(reflect b)); [pure (), sorry, sorry, sorry]
+      andthen (() <$ tactic.apply q(@sqrt_two_add_series_step_down $(reflect a) $(reflect b)))
+          [pure (), sorry, sorry, sorry]
   sorry
   sorry
 #align real.pi_upper_bound real.pi_upper_bound

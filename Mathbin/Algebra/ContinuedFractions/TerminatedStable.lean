@@ -51,7 +51,7 @@ theorem continuants_aux_stable_of_terminated (succ_n_le_m : n + 1 ≤ m) (termin
 #align
   generalized_continued_fraction.continuants_aux_stable_of_terminated GeneralizedContinuedFraction.continuants_aux_stable_of_terminated
 
-theorem convergents'_aux_stable_step_of_terminated {s : Seq $ Pair K} (terminated_at_n : s.TerminatedAt n) :
+theorem convergents'_aux_stable_step_of_terminated {s : Seq <| Pair K} (terminated_at_n : s.TerminatedAt n) :
     convergents'Aux s (n + 1) = convergents'Aux s n := by
   change s.nth n = none at terminated_at_n
   induction' n with n IH generalizing s
@@ -65,8 +65,8 @@ theorem convergents'_aux_stable_step_of_terminated {s : Seq $ Pair K} (terminate
 #align
   generalized_continued_fraction.convergents'_aux_stable_step_of_terminated GeneralizedContinuedFraction.convergents'_aux_stable_step_of_terminated
 
-theorem convergents'_aux_stable_of_terminated {s : Seq $ Pair K} (n_le_m : n ≤ m) (terminated_at_n : s.TerminatedAt n) :
-    convergents'Aux s m = convergents'Aux s n := by
+theorem convergents'_aux_stable_of_terminated {s : Seq <| Pair K} (n_le_m : n ≤ m)
+    (terminated_at_n : s.TerminatedAt n) : convergents'Aux s m = convergents'Aux s n := by
   induction' n_le_m with m n_le_m IH generalizing s
   · rfl
     

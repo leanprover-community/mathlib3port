@@ -75,7 +75,7 @@ theorem disjoint_split_center_box (I : Box ι) {s t : Set ι} (h : s ≠ t) :
 #align box_integral.box.disjoint_split_center_box BoxIntegral.Box.disjoint_split_center_box
 
 theorem injective_split_center_box (I : Box ι) : Injective I.splitCenterBox := fun s t H =>
-  by_contra $ fun Hne => (I.disjoint_split_center_box Hne).Ne (nonempty_coe _).ne_empty (H ▸ rfl)
+  by_contra fun Hne => (I.disjoint_split_center_box Hne).Ne (nonempty_coe _).ne_empty (H ▸ rfl)
 #align box_integral.box.injective_split_center_box BoxIntegral.Box.injective_split_center_box
 
 @[simp]
@@ -99,7 +99,7 @@ theorem Union_coe_split_center_box (I : Box ι) : (⋃ s, (I.splitCenterBox s : 
 @[simp]
 theorem upper_sub_lower_split_center_box (I : Box ι) (s : Set ι) (i : ι) :
     (I.splitCenterBox s).upper i - (I.splitCenterBox s).lower i = (I.upper i - I.lower i) / 2 := by
-  by_cases hs:i ∈ s <;> field_simp [split_center_box, hs, mul_two, two_mul]
+  by_cases hs : i ∈ s <;> field_simp [split_center_box, hs, mul_two, two_mul]
 #align box_integral.box.upper_sub_lower_split_center_box BoxIntegral.Box.upper_sub_lower_split_center_box
 
 /-- Let `p` be a predicate on `box ι`, let `I` be a box. Suppose that the following two properties
@@ -131,7 +131,7 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι) (H_ind : ∀ J �
   simp only [exists_imp, not_forall] at H_ind
   choose! s hs using H_ind
   set J : ℕ → box ι := fun m => ((fun J => split_center_box J (s J))^[m]) I
-  have J_succ : ∀ m, J (m + 1) = split_center_box (J m) (s $ J m) := fun m => iterate_succ_apply' _ _ _
+  have J_succ : ∀ m, J (m + 1) = split_center_box (J m) (s <| J m) := fun m => iterate_succ_apply' _ _ _
   -- Now we prove some properties of `J`
   have hJmono : Antitone J := antitone_nat_of_succ_le fun n => by simpa [J_succ] using split_center_box_le _ _
   have hJle : ∀ m, J m ≤ I := fun m => hJmono (zero_le m)
@@ -159,7 +159,7 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι) (H_ind : ∀ J �
   have hJuz : tendsto (fun m => (J m).upper) at_top (𝓝 z) := by
     suffices tendsto (fun m => (J m).upper - (J m).lower) at_top (𝓝 0) by simpa using hJlz.add this
     refine' tendsto_pi_nhds.2 fun i => _
-    simpa [hJsub] using tendsto_const_nhds.div_at_top (tendsto_pow_at_top_at_top_of_one_lt $ @one_lt_two ℝ _)
+    simpa [hJsub] using tendsto_const_nhds.div_at_top (tendsto_pow_at_top_at_top_of_one_lt <| @one_lt_two ℝ _)
   replace hJlz : tendsto (fun m => (J m).lower) at_top (𝓝[Icc I.lower I.upper] z)
   exact tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ hJlz (eventually_of_forall hJl_mem)
   replace hJuz : tendsto (fun m => (J m).upper) at_top (𝓝[Icc I.lower I.upper] z)

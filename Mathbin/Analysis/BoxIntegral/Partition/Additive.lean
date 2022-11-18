@@ -5,7 +5,6 @@ Authors: Yury Kudryashov
 -/
 import Mathbin.Analysis.BoxIntegral.Partition.Split
 import Mathbin.Analysis.NormedSpace.OperatorNorm
-import Mathbin.Data.Set.Intervals.ProjIcc
 
 /-!
 # Box additive functions
@@ -136,15 +135,15 @@ def ofMapSplitAdd [Fintype ι] (f : Box ι → M) (I₀ : WithTop (Box ι))
       
     rw [split_many_insert, inf_split, ← ihs, bUnion_boxes, sum_bUnion_boxes]
     refine' Finset.sum_congr rfl fun J' hJ' => _
-    by_cases h:a.2 ∈ Ioo (J'.lower a.1) (J'.upper a.1)
+    by_cases h : a.2 ∈ Ioo (J'.lower a.1) (J'.upper a.1)
     · rw [sum_split_boxes]
-      exact hf _ ((WithTop.coe_le_coe.2 $ le_of_mem _ hJ').trans hI) h
+      exact hf _ ((WithTop.coe_le_coe.2 <| le_of_mem _ hJ').trans hI) h
       
     · rw [split_of_not_mem_Ioo h, top_boxes, Finset.sum_singleton]
       
     
   intro I hI π hπ
-  have Hle : ∀ J ∈ π, ↑J ≤ I₀ := fun J hJ => (WithTop.coe_le_coe.2 $ π.le_of_mem hJ).trans hI
+  have Hle : ∀ J ∈ π, ↑J ≤ I₀ := fun J hJ => (WithTop.coe_le_coe.2 <| π.le_of_mem hJ).trans hI
   rcases hπ.exists_split_many_le with ⟨s, hs⟩
   rw [← hf _ hI, ← inf_of_le_right hs, inf_split_many, bUnion_boxes, sum_bUnion_boxes]
   exact Finset.sum_congr rfl fun J hJ => (hf _ (Hle _ hJ) _).symm
@@ -175,7 +174,7 @@ theorem sum_boxes_congr [Finite ι] (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I�
     _ = ∑ J in π₂.boxes, ∑ J' in (split_many J s).boxes, f J' := sum_bUnion_boxes _ _ _
     _ = ∑ J in π₂.boxes, f J := Finset.sum_congr rfl fun J hJ => f.sum_partition_boxes _ (is_partition_split_many _ _)
     
-  exacts[(WithTop.coe_le_coe.2 $ π₁.le_of_mem hJ).trans hI, (WithTop.coe_le_coe.2 $ π₂.le_of_mem hJ).trans hI]
+  exacts[(WithTop.coe_le_coe.2 <| π₁.le_of_mem hJ).trans hI, (WithTop.coe_le_coe.2 <| π₂.le_of_mem hJ).trans hI]
 #align box_integral.box_additive_map.sum_boxes_congr BoxIntegral.BoxAdditiveMap.sum_boxes_congr
 
 section ToSmul

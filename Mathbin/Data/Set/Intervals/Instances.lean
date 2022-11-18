@@ -5,7 +5,6 @@ Authors: Stuart Presnell, Eric Wieser, Yaël Dillies, Patrick Massot, Scott Morr
 -/
 import Mathbin.Algebra.GroupPower.Order
 import Mathbin.Algebra.Ring.Regular
-import Mathbin.Data.Set.Intervals.ProjIcc
 
 /-!
 # Algebraic instances for unit intervals
@@ -316,8 +315,8 @@ instance commMonoid {α : Type _} [StrictOrderedCommSemiring α] [Nontrivial α]
 
 instance cancelMonoid {α : Type _} [StrictOrderedRing α] [IsDomain α] : CancelMonoid (ioc (0 : α) 1) :=
   { Set.ioc.monoid with
-    mul_left_cancel := fun a b c h => Subtype.ext $ mul_left_cancel₀ a.Prop.1.ne' $ (congr_arg Subtype.val h : _),
-    mul_right_cancel := fun a b c h => Subtype.ext $ mul_right_cancel₀ b.Prop.1.ne' $ (congr_arg Subtype.val h : _) }
+    mul_left_cancel := fun a b c h => Subtype.ext <| mul_left_cancel₀ a.Prop.1.ne' <| (congr_arg Subtype.val h : _),
+    mul_right_cancel := fun a b c h => Subtype.ext <| mul_right_cancel₀ b.Prop.1.ne' <| (congr_arg Subtype.val h : _) }
 #align set.Ioc.cancel_monoid Set.ioc.cancelMonoid
 
 instance cancelCommMonoid {α : Type _} [StrictOrderedCommRing α] [IsDomain α] : CancelCommMonoid (ioc (0 : α) 1) :=

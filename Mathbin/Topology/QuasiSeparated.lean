@@ -120,6 +120,6 @@ theorem IsQuasiSeparated.of_quasi_separated_space (s : Set α) [QuasiSeparatedSp
 #align is_quasi_separated.of_quasi_separated_space IsQuasiSeparated.of_quasi_separated_space
 
 theorem QuasiSeparatedSpace.of_open_embedding (h : OpenEmbedding f) [QuasiSeparatedSpace β] : QuasiSeparatedSpace α :=
-  is_quasi_separated_univ_iff.mp (h.is_quasi_separated_iff.mpr $ IsQuasiSeparated.of_quasi_separated_space _)
+  is_quasi_separated_univ_iff.mp (h.is_quasi_separated_iff.mpr <| IsQuasiSeparated.of_quasi_separated_space _)
 #align quasi_separated_space.of_open_embedding QuasiSeparatedSpace.of_open_embedding
 

@@ -106,11 +106,11 @@ theorem smul_nonpos_of_nonneg_of_nonpos (hc : 0 ≤ c) (ha : a ≤ 0) : c • a 
 #align smul_nonpos_of_nonneg_of_nonpos smul_nonpos_of_nonneg_of_nonpos
 
 theorem eq_of_smul_eq_smul_of_pos_of_le (h₁ : c • a = c • b) (hc : 0 < c) (hle : a ≤ b) : a = b :=
-  hle.lt_or_eq.resolve_left $ fun hlt => (smul_lt_smul_of_pos hlt hc).Ne h₁
+  hle.lt_or_eq.resolve_left fun hlt => (smul_lt_smul_of_pos hlt hc).Ne h₁
 #align eq_of_smul_eq_smul_of_pos_of_le eq_of_smul_eq_smul_of_pos_of_le
 
 theorem lt_of_smul_lt_smul_of_nonneg (h : c • a < c • b) (hc : 0 ≤ c) : a < b :=
-  hc.eq_or_lt.elim (fun hc => False.elim $ lt_irrefl (0 : M) $ by rwa [← hc, zero_smul, zero_smul] at h)
+  hc.eq_or_lt.elim (fun hc => False.elim <| lt_irrefl (0 : M) <| by rwa [← hc, zero_smul, zero_smul] at h)
     (OrderedSmul.lt_of_smul_lt_smul_of_pos h)
 #align lt_of_smul_lt_smul_of_nonneg lt_of_smul_lt_smul_of_nonneg
 
@@ -161,7 +161,7 @@ theorem OrderedSmul.mk'' [OrderedSemiring 𝕜] [LinearOrderedAddCommMonoid M] [
 #align ordered_smul.mk'' OrderedSmul.mk''
 
 instance Nat.ordered_smul [LinearOrderedCancelAddCommMonoid M] : OrderedSmul ℕ M :=
-  OrderedSmul.mk'' $ fun n hn a b hab => by
+  OrderedSmul.mk'' fun n hn a b hab => by
     cases n
     · cases hn
       
@@ -173,7 +173,7 @@ instance Nat.ordered_smul [LinearOrderedCancelAddCommMonoid M] : OrderedSmul ℕ
 #align nat.ordered_smul Nat.ordered_smul
 
 instance Int.ordered_smul [LinearOrderedAddCommGroup M] : OrderedSmul ℤ M :=
-  OrderedSmul.mk'' $ fun n hn => by
+  OrderedSmul.mk'' fun n hn => by
     cases n
     · simp only [Int.ofNat_eq_coe, Int.coe_nat_pos, coe_nat_zsmul] at hn⊢
       exact strict_mono_smul_left hn
@@ -184,7 +184,7 @@ instance Int.ordered_smul [LinearOrderedAddCommGroup M] : OrderedSmul ℤ M :=
 
 -- TODO: `linear_ordered_field M → ordered_smul ℚ M`
 instance LinearOrderedSemiring.to_ordered_smul {R : Type _} [LinearOrderedSemiring R] : OrderedSmul R R :=
-  OrderedSmul.mk'' $ fun c => strict_mono_mul_left_of_pos
+  OrderedSmul.mk'' fun c => strict_mono_mul_left_of_pos
 #align linear_ordered_semiring.to_ordered_smul LinearOrderedSemiring.to_ordered_smul
 
 section LinearOrderedSemifield
@@ -208,11 +208,11 @@ theorem OrderedSmul.mk' (h : ∀ ⦃a b : M⦄ ⦃c : 𝕜⦄, a < b → 0 < c �
 #align ordered_smul.mk' OrderedSmul.mk'
 
 instance [OrderedSmul 𝕜 M] [OrderedSmul 𝕜 N] : OrderedSmul 𝕜 (M × N) :=
-  OrderedSmul.mk' $ fun a b c h hc => ⟨smul_le_smul_of_nonneg h.1.1 hc.le, smul_le_smul_of_nonneg h.1.2 hc.le⟩
+  OrderedSmul.mk' fun a b c h hc => ⟨smul_le_smul_of_nonneg h.1.1 hc.le, smul_le_smul_of_nonneg h.1.2 hc.le⟩
 
 instance Pi.ordered_smul {M : ι → Type _} [∀ i, OrderedAddCommMonoid (M i)] [∀ i, MulActionWithZero 𝕜 (M i)]
     [∀ i, OrderedSmul 𝕜 (M i)] : OrderedSmul 𝕜 (∀ i, M i) :=
-  OrderedSmul.mk' $ fun v u c h hc i => smul_le_smul_of_nonneg (h.le i) hc.le
+  OrderedSmul.mk' fun v u c h hc i => smul_le_smul_of_nonneg (h.le i) hc.le
 #align pi.ordered_smul Pi.ordered_smul
 
 /- Sometimes Lean fails to apply the dependent version to non-dependent functions, so we define

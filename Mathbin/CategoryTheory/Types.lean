@@ -196,7 +196,7 @@ instance uliftFunctorFull : Full.{u} uliftFunctor where preimage X Y f x := (f (
 instance ulift_functor_faithful :
     Faithful
       uliftFunctor where map_injective' X Y f g p :=
-    funext $ fun x => congr_arg ULift.down (congr_fun p (ULift.up x) : ULift.up (f x) = ULift.up (g x))
+    funext fun x => congr_arg ULift.down (congr_fun p (ULift.up x) : ULift.up (f x) = ULift.up (g x))
 #align category_theory.ulift_functor_faithful CategoryTheory.ulift_functor_faithful
 
 /-- The functor embedding `Type u` into `Type u` via `ulift` is isomorphic to the identity functor.
@@ -263,7 +263,7 @@ def ofTypeFunctor (m : Type u → Type v) [Functor m] [IsLawfulFunctor m] : Type
   obj := m
   map α β := Functor.map
   map_id' α := Functor.map_id
-  map_comp' α β γ f g := funext $ fun a => IsLawfulFunctor.comp_map f g _
+  map_comp' α β γ f g := funext fun a => IsLawfulFunctor.comp_map f g _
 #align category_theory.of_type_functor CategoryTheory.ofTypeFunctor
 
 variable (m : Type u → Type v) [Functor m] [IsLawfulFunctor m]
@@ -362,8 +362,8 @@ instance :
       (Type
         u) where is_split_epi_of_epi X Y f hf :=
     IsSplitEpi.mk'
-      { section_ := Function.surjInv $ (epi_iff_surjective f).1 hf,
-        id' := funext $ Function.right_inverse_surj_inv $ (epi_iff_surjective f).1 hf }
+      { section_ := Function.surjInv <| (epi_iff_surjective f).1 hf,
+        id' := funext <| Function.right_inverse_surj_inv <| (epi_iff_surjective f).1 hf }
 
 end CategoryTheory
 

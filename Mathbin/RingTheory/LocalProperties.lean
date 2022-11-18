@@ -3,8 +3,6 @@ Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.GroupTheory.Submonoid.Pointwise
-import Mathbin.Logic.Equiv.TransferInstance
 import Mathbin.RingTheory.FiniteType
 import Mathbin.RingTheory.Localization.AtPrime
 import Mathbin.RingTheory.Localization.Away
@@ -304,7 +302,7 @@ theorem is_reduced_of_localization_maximal : OfLocalizationMaximal fun R hR => I
   intro J hJ
   specialize h J hJ
   skip
-  exact (hx.map $ algebraMap R $ Localization.AtPrime J).eq_zero
+  exact (hx.map <| algebraMap R <| Localization.AtPrime J).eq_zero
 #align is_reduced_of_localization_maximal is_reduced_of_localization_maximal
 
 end Reduced

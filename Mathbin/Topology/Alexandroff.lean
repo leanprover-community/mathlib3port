@@ -3,6 +3,7 @@ Copyright (c) 2021 Yourong Zang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang, Yury Kudryashov
 -/
+import Mathbin.Data.Fintype.Option
 import Mathbin.Topology.Separation
 import Mathbin.Topology.Sets.Opens
 
@@ -185,11 +186,11 @@ instance : TopologicalSpace (Alexandroff X) where
     rintro ⟨hms', hmt'⟩
     simpa [compl_inter] using (hms hms').union (hmt hmt')
   is_open_sUnion S ho := by
-    suffices IsOpen (coe ⁻¹' ⋃₀ S : Set X) by
+    suffices IsOpen (coe ⁻¹' ⋃₀S : Set X) by
       refine' ⟨_, this⟩
       rintro ⟨s, hsS : s ∈ S, hs : ∞ ∈ s⟩
       refine' is_compact_of_is_closed_subset ((ho s hsS).1 hs) this.is_closed_compl _
-      exact compl_subset_compl.mpr (preimage_mono $ subset_sUnion_of_mem hsS)
+      exact compl_subset_compl.mpr (preimage_mono <| subset_sUnion_of_mem hsS)
     rw [preimage_sUnion]
     exact is_open_bUnion fun s hs => (ho s hs).2
 
@@ -344,18 +345,18 @@ theorem tendsto_nhds_infty' {α : Type _} {f : Alexandroff X → α} {l : Filter
 
 theorem tendsto_nhds_infty {α : Type _} {f : Alexandroff X → α} {l : Filter α} :
     Tendsto f (𝓝 ∞) l ↔ ∀ s ∈ l, f ∞ ∈ s ∧ ∃ t : Set X, IsClosed t ∧ IsCompact t ∧ MapsTo (f ∘ coe) (tᶜ) s :=
-  tendsto_nhds_infty'.trans $ by
+  tendsto_nhds_infty'.trans <| by
     simp only [tendsto_pure_left, has_basis_coclosed_compact.tendsto_left_iff, forall_and, and_assoc', exists_prop]
 #align alexandroff.tendsto_nhds_infty Alexandroff.tendsto_nhds_infty
 
 theorem continuous_at_infty' {Y : Type _} [TopologicalSpace Y] {f : Alexandroff X → Y} :
     ContinuousAt f ∞ ↔ Tendsto (f ∘ coe) (coclosedCompact X) (𝓝 (f ∞)) :=
-  tendsto_nhds_infty'.trans $ and_iff_right (tendsto_pure_nhds _ _)
+  tendsto_nhds_infty'.trans <| and_iff_right (tendsto_pure_nhds _ _)
 #align alexandroff.continuous_at_infty' Alexandroff.continuous_at_infty'
 
 theorem continuous_at_infty {Y : Type _} [TopologicalSpace Y] {f : Alexandroff X → Y} :
     ContinuousAt f ∞ ↔ ∀ s ∈ 𝓝 (f ∞), ∃ t : Set X, IsClosed t ∧ IsCompact t ∧ MapsTo (f ∘ coe) (tᶜ) s :=
-  continuous_at_infty'.trans $ by simp only [has_basis_coclosed_compact.tendsto_left_iff, exists_prop, and_assoc']
+  continuous_at_infty'.trans <| by simp only [has_basis_coclosed_compact.tendsto_left_iff, exists_prop, and_assoc']
 #align alexandroff.continuous_at_infty Alexandroff.continuous_at_infty
 
 theorem continuous_at_coe {Y : Type _} [TopologicalSpace Y] {f : Alexandroff X → Y} {x : X} :
@@ -438,14 +439,10 @@ instance [T1Space X] :
       exact ⟨isClosedSingleton, is_compact_singleton⟩
       
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (u v) -/
 /-- The one point compactification of a locally compact Hausdorff space is a normal (hence,
 Hausdorff and regular) topological space. -/
 instance [LocallyCompactSpace X] [T2Space X] : NormalSpace (Alexandroff X) := by
-  have key :
-    ∀ z : X,
-      ∃ (u : Set (Alexandroff X)) (v : Set (Alexandroff X)), IsOpen u ∧ IsOpen v ∧ ↑z ∈ u ∧ ∞ ∈ v ∧ Disjoint u v :=
-    by
+  have key : ∀ z : X, ∃ u v : Set (Alexandroff X), IsOpen u ∧ IsOpen v ∧ ↑z ∈ u ∧ ∞ ∈ v ∧ Disjoint u v := by
     intro z
     rcases exists_open_with_compact_closure z with ⟨u, hu, huy', Hu⟩
     exact
@@ -482,7 +479,6 @@ theorem not_continuous_cofinite_topology_of_symm [Infinite X] [DiscreteTopology 
 
 end Alexandroff
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (α β) -/
 /-- A concrete counterexample shows that  `continuous.homeo_of_equiv_compact_to_t2`
 cannot be generalized from `t2_space` to `t1_space`.
 
@@ -491,7 +487,7 @@ Let `α = alexandroff ℕ` be the one-point compactification of `ℕ`, and let `
 `id : α → β` is a continuous equivalence that is not a homeomorphism.
 -/
 theorem Continuous.homeoOfEquivCompactToT2.t1_counterexample :
-    ∃ (α : Type) (β : Type) (Iα : TopologicalSpace α) (Iβ : TopologicalSpace β),
+    ∃ (α β : Type)(Iα : TopologicalSpace α)(Iβ : TopologicalSpace β),
       CompactSpace α ∧ T1Space β ∧ ∃ f : α ≃ β, Continuous f ∧ ¬Continuous f.symm :=
   ⟨Alexandroff ℕ, CofiniteTopology (Alexandroff ℕ), inferInstance, inferInstance, inferInstance, inferInstance,
     CofiniteTopology.of, CofiniteTopology.continuous_of, Alexandroff.not_continuous_cofinite_topology_of_symm⟩

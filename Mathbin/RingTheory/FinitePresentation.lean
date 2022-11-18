@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
 import Mathbin.RingTheory.FiniteType
+import Mathbin.RingTheory.MvPolynomial.Tower
 
 /-!
 # Finiteness conditions in commutative algebra
@@ -33,7 +34,7 @@ variable (R A B M N : Type _)
 /-- An algebra over a commutative semiring is `finite_presentation` if it is the quotient of a
 polynomial ring in `n` variables by a finitely generated ideal. -/
 def Algebra.FinitePresentation [CommSemiring R] [Semiring A] [Algebra R A] : Prop :=
-  ∃ (n : ℕ) (f : MvPolynomial (Fin n) R →ₐ[R] A), Surjective f ∧ f.toRingHom.ker.Fg
+  ∃ (n : ℕ)(f : MvPolynomial (Fin n) R →ₐ[R] A), Surjective f ∧ f.toRingHom.ker.Fg
 #align algebra.finite_presentation Algebra.FinitePresentation
 
 namespace Algebra
@@ -98,7 +99,7 @@ variable (R)
 protected theorem mvPolynomial (ι : Type u_2) [Finite ι] : FinitePresentation R (MvPolynomial ι R) := by
   cases nonempty_fintype ι <;>
     exact
-      let eqv := (MvPolynomial.renameEquiv R $ Fintype.equivFin ι).symm
+      let eqv := (MvPolynomial.renameEquiv R <| Fintype.equivFin ι).symm
       ⟨Fintype.card ι, eqv, eqv.Surjective,
         ((RingHom.injective_iff_ker_eq_bot _).1 eqv.Injective).symm ▸ Submodule.fg_bot⟩
 #align algebra.finite_presentation.mv_polynomial Algebra.FinitePresentation.mvPolynomial
@@ -134,7 +135,7 @@ theorem ofSurjective {f : A →ₐ[R] B} (hf : Function.Surjective f) (hker : f.
   equiv (hfp.Quotient hker) (Ideal.quotientKerAlgEquivOfSurjective hf)
 #align algebra.finite_presentation.of_surjective Algebra.FinitePresentation.ofSurjective
 
-theorem iff : FinitePresentation R A ↔ ∃ (n) (I : Ideal (MvPolynomial (Fin n) R)) (e : (_ ⧸ I) ≃ₐ[R] A), I.Fg := by
+theorem iff : FinitePresentation R A ↔ ∃ (n : _)(I : Ideal (MvPolynomial (Fin n) R))(e : (_ ⧸ I) ≃ₐ[R] A), I.Fg := by
   constructor
   · rintro ⟨n, f, hf⟩
     exact ⟨n, f.to_ring_hom.ker, Ideal.quotientKerAlgEquivOfSurjective hf.1, hf.2⟩
@@ -148,7 +149,7 @@ theorem iff : FinitePresentation R A ↔ ∃ (n) (I : Ideal (MvPolynomial (Fin n
 variables are indexed by a fintype by a finitely generated ideal. -/
 theorem iff_quotient_mv_polynomial' :
     FinitePresentation R A ↔
-      ∃ (ι : Type u_2) (_ : Fintype ι) (f : MvPolynomial ι R →ₐ[R] A), Surjective f ∧ f.toRingHom.ker.Fg :=
+      ∃ (ι : Type u_2)(_ : Fintype ι)(f : MvPolynomial ι R →ₐ[R] A), Surjective f ∧ f.toRingHom.ker.Fg :=
   by
   constructor
   · rintro ⟨n, f, hfs, hfk⟩
@@ -179,9 +180,9 @@ theorem mvPolynomialOfFinitePresentation (hfp : FinitePresentation R A) (ι : Ty
   obtain ⟨ι', _, f, hf_surj, hf_ker⟩ := hfp
   skip
   let g := (MvPolynomial.mapAlgHom f).comp (MvPolynomial.sumAlgEquiv R ι ι').toAlgHom
-  cases nonempty_fintype (ι ⊕ ι')
+  cases nonempty_fintype (Sum ι ι')
   refine'
-    ⟨ι ⊕ ι', by infer_instance, g, (MvPolynomial.map_surjective f.to_ring_hom hf_surj).comp (AlgEquiv.surjective _),
+    ⟨Sum ι ι', by infer_instance, g, (MvPolynomial.map_surjective f.to_ring_hom hf_surj).comp (AlgEquiv.surjective _),
       Ideal.fg_ker_comp _ _ _ _ (AlgEquiv.surjective _)⟩
   · convert Submodule.fg_bot
     exact RingHom.ker_coe_equiv (MvPolynomial.sumAlgEquiv R ι ι').toRingEquiv
@@ -287,7 +288,7 @@ theorem ofRestrictScalarsFinitePresentation [Algebra A B] [IsScalarTower R A B] 
         
     obtain ⟨_, ⟨p, rfl⟩, q, hq, rfl⟩ := add_submonoid.mem_sup.mp this
     rw [map_add, aeval_map_algebra_map, ← aeval_unique, show aeval (f ∘ X) q = 0 from leI hq, add_zero] at hx
-    suffices Ideal.span (s : Set RX) ≤ (Ideal.span s₀).comap (map $ algebraMap R A) by
+    suffices Ideal.span (s : Set RX) ≤ (Ideal.span s₀).comap (map <| algebraMap R A) by
       refine' add_mem _ hq
       rw [hs] at this
       exact this hx
@@ -307,9 +308,9 @@ theorem ker_fg_of_mv_polynomial {n : ℕ} (f : MvPolynomial (Fin n) R →ₐ[R] 
   obtain ⟨m, f', hf', s, hs⟩ := hfp
   let RXn := MvPolynomial (Fin n) R
   let RXm := MvPolynomial (Fin m) R
-  have := fun i : Fin n => hf' (f $ X i)
+  have := fun i : Fin n => hf' (f <| X i)
   choose g hg
-  have := fun i : Fin m => hf (f' $ X i)
+  have := fun i : Fin m => hf (f' <| X i)
   choose h hh
   let aeval_h : RXm →ₐ[R] RXn := aeval h
   let g' : Fin n → RXn := fun i => X i - aeval_h (g i)

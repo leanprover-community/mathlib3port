@@ -291,7 +291,7 @@ denominator share the same grading.
 -/
 @[nolint has_nonempty_instance]
 def HomogeneousLocalization : Type _ :=
-  Quotient (Setoid.ker $ HomogeneousLocalization.NumDenomSameDeg.embedding 𝒜 x)
+  Quotient (Setoid.ker <| HomogeneousLocalization.NumDenomSameDeg.embedding 𝒜 x)
 #align homogeneous_localization HomogeneousLocalization
 
 namespace HomogeneousLocalization
@@ -304,7 +304,7 @@ variable {𝒜} {x}
 numerator and denominator are of the same grading.
 -/
 def val (y : HomogeneousLocalization 𝒜 x) : at x :=
-  Quotient.liftOn' y (NumDenomSameDeg.embedding 𝒜 x) $ fun _ _ => id
+  (Quotient.liftOn' y (NumDenomSameDeg.embedding 𝒜 x)) fun _ _ => id
 #align homogeneous_localization.val HomogeneousLocalization.val
 
 @[simp]
@@ -315,7 +315,7 @@ theorem val_mk' (i : NumDenomSameDeg 𝒜 x) : val (Quotient.mk' i) = Localizati
 variable (x)
 
 theorem val_injective : Function.Injective (@HomogeneousLocalization.val _ _ _ _ _ _ _ _ 𝒜 _ x) := fun a b =>
-  Quotient.recOnSubsingleton₂' a b $ fun a b h => Quotient.sound' h
+  (Quotient.recOnSubsingleton₂' a b) fun a b h => Quotient.sound' h
 #align homogeneous_localization.val_injective HomogeneousLocalization.val_injective
 
 instance hasPow :
@@ -598,11 +598,11 @@ instance : Nontrivial (HomogeneousLocalization.AtPrime 𝒜 𝔭) :=
   ⟨⟨0, 1, fun r => by simpa [ext_iff_val, zero_val, one_val, zero_ne_one] using r⟩⟩
 
 instance : LocalRing (HomogeneousLocalization.AtPrime 𝒜 𝔭) :=
-  LocalRing.ofIsUnitOrIsUnitOneSubSelf $ fun a => by
+  LocalRing.ofIsUnitOrIsUnitOneSubSelf fun a => by
     simp only [← is_unit_iff_is_unit_val, sub_val, one_val]
     induction a using Quotient.inductionOn'
     simp only [HomogeneousLocalization.val_mk', ← Subtype.val_eq_coe]
-    by_cases mem1:a.num.1 ∈ 𝔭
+    by_cases mem1 : a.num.1 ∈ 𝔭
     · right
       have : a.denom.1 - a.num.1 ∈ 𝔭.prime_compl := fun h =>
         a.denom_mem (sub_add_cancel a.denom.val a.num.val ▸ Ideal.add_mem _ h mem1 : a.denom.1 ∈ 𝔭)

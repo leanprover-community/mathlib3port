@@ -53,7 +53,7 @@ theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * ch
     · rw [pow_succ x, succ_sub_succ, mul_assoc, mul_assoc, mul_assoc]
       
     · rw [← mul_assoc y, ← mul_assoc y, (h.symm.pow_right i.succ).Eq]
-      by_cases h_eq:i = n
+      by_cases h_eq : i = n
       · rw [h_eq, choose_succ_self, Nat.cast_zero, mul_zero, mul_zero]
         
       · rw [succ_sub (lt_of_le_of_ne h_le h_eq)]
@@ -96,8 +96,8 @@ theorem sum_range_choose (n : ℕ) : (∑ m in range (n + 1), choose n m) = 2 ^ 
 
 theorem sum_range_choose_halfway (m : Nat) : (∑ i in range (m + 1), choose (2 * m + 1) i) = 4 ^ m :=
   have : (∑ i in range (m + 1), choose (2 * m + 1) (2 * m + 1 - i)) = ∑ i in range (m + 1), choose (2 * m + 1) i :=
-    sum_congr rfl $ fun i hi => choose_symm $ by linarith [mem_range.1 hi]
-  mul_right_injective₀ two_ne_zero $
+    (sum_congr rfl) fun i hi => choose_symm <| by linarith [mem_range.1 hi]
+  mul_right_injective₀ two_ne_zero <|
     calc
       (2 * ∑ i in range (m + 1), choose (2 * m + 1) i) =
           (∑ i in range (m + 1), choose (2 * m + 1) i) + ∑ i in range (m + 1), choose (2 * m + 1) (2 * m + 1 - i) :=

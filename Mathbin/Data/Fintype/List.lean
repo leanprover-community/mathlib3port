@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
 import Mathbin.Data.Fintype.Basic
-import Mathbin.Data.List.Perm
+import Mathbin.Data.Finset.Powerset
 
 /-!
 

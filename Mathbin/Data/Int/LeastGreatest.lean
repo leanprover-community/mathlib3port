@@ -48,7 +48,7 @@ def leastOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ,
     | _, ⟨n, rfl⟩, Hn => ⟨n, Hn⟩
   ⟨b + (Nat.find EX : ℤ), Nat.find_spec EX, fun z h =>
     match z, le.dest (Hb _ h), h with
-    | _, ⟨n, rfl⟩, h => add_le_add_left (Int.coe_nat_le.2 $ Nat.find_min' _ h) _⟩
+    | _, ⟨n, rfl⟩, h => add_le_add_left (Int.coe_nat_le.2 <| Nat.find_min' _ h) _⟩
 #align int.least_of_bdd Int.leastOfBdd
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -66,56 +66,49 @@ def leastOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ,
       "theorem"
       (Command.declId `exists_least_of_bdd [])
       (Command.declSig
-       [(Term.implicitBinder
-         "{"
-         [`P]
-         [":" (Term.arrow (Init.Data.Int.Basic.termℤ "ℤ") "→" (Init.Core.termProp "Prop"))]
-         "}")
+       [(Term.implicitBinder "{" [`P] [":" (Term.arrow (termℤ "ℤ") "→" (Term.prop "Prop"))] "}")
         (Term.explicitBinder
          "("
          [`Hbdd]
          [":"
-          (Init.Logic.«term∃_,_»
+          («term∃_,_»
            "∃"
-           (Std.ExtendedBinder.extBinders
-            (Std.ExtendedBinder.extBinder (Lean.binderIdent `b) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-           ", "
+           (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+           ","
            (Term.forall
             "∀"
             [`z]
-            [(Term.typeSpec ":" (Init.Data.Int.Basic.termℤ "ℤ"))]
+            [(Term.typeSpec ":" (termℤ "ℤ"))]
             ","
-            (Term.arrow (Term.app `P [`z]) "→" (Init.Core.«term_≤_» `b " ≤ " `z))))]
+            (Term.arrow (Term.app `P [`z]) "→" («term_≤_» `b "≤" `z))))]
          []
          ")")
         (Term.explicitBinder
          "("
          [`Hinh]
          [":"
-          (Init.Logic.«term∃_,_»
+          («term∃_,_»
            "∃"
-           (Std.ExtendedBinder.extBinders
-            (Std.ExtendedBinder.extBinder (Lean.binderIdent `z) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-           ", "
+           (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `z)] [":" (termℤ "ℤ")]))
+           ","
            (Term.app `P [`z]))]
          []
          ")")]
        (Term.typeSpec
         ":"
-        (Init.Logic.«term∃_,_»
+        («term∃_,_»
          "∃"
-         (Std.ExtendedBinder.extBinders
-          (Std.ExtendedBinder.extBinder (Lean.binderIdent `lb) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-         ", "
-         (Init.Logic.«term_∧_»
+         (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `lb)] [":" (termℤ "ℤ")]))
+         ","
+         («term_∧_»
           (Term.app `P [`lb])
-          " ∧ "
+          "∧"
           (Term.forall
            "∀"
            [`z]
-           [(Term.typeSpec ":" (Init.Data.Int.Basic.termℤ "ℤ"))]
+           [(Term.typeSpec ":" (termℤ "ℤ"))]
            ","
-           (Term.arrow (Term.app `P [`z]) "→" (Init.Core.«term_≤_» `lb " ≤ " `z)))))))
+           (Term.arrow (Term.app `P [`z]) "→" («term_≤_» `lb "≤" `z)))))))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -326,7 +319,7 @@ def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : �
     let ⟨elt, Helt⟩ := Hinh
     ⟨-elt, by rw [neg_neg] <;> exact Helt⟩
   let ⟨lb, Plb, al⟩ := leastOfBdd (-b) Hbdd' Hinh'
-  ⟨-lb, Plb, fun z h => le_neg.1 $ al _ $ by rwa [neg_neg]⟩
+  ⟨-lb, Plb, fun z h => le_neg.1 <| al _ <| by rwa [neg_neg]⟩
 #align int.greatest_of_bdd Int.greatestOfBdd
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -344,56 +337,49 @@ def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : �
       "theorem"
       (Command.declId `exists_greatest_of_bdd [])
       (Command.declSig
-       [(Term.implicitBinder
-         "{"
-         [`P]
-         [":" (Term.arrow (Init.Data.Int.Basic.termℤ "ℤ") "→" (Init.Core.termProp "Prop"))]
-         "}")
+       [(Term.implicitBinder "{" [`P] [":" (Term.arrow (termℤ "ℤ") "→" (Term.prop "Prop"))] "}")
         (Term.explicitBinder
          "("
          [`Hbdd]
          [":"
-          (Init.Logic.«term∃_,_»
+          («term∃_,_»
            "∃"
-           (Std.ExtendedBinder.extBinders
-            (Std.ExtendedBinder.extBinder (Lean.binderIdent `b) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-           ", "
+           (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `b)] [":" (termℤ "ℤ")]))
+           ","
            (Term.forall
             "∀"
             [`z]
-            [(Term.typeSpec ":" (Init.Data.Int.Basic.termℤ "ℤ"))]
+            [(Term.typeSpec ":" (termℤ "ℤ"))]
             ","
-            (Term.arrow (Term.app `P [`z]) "→" (Init.Core.«term_≤_» `z " ≤ " `b))))]
+            (Term.arrow (Term.app `P [`z]) "→" («term_≤_» `z "≤" `b))))]
          []
          ")")
         (Term.explicitBinder
          "("
          [`Hinh]
          [":"
-          (Init.Logic.«term∃_,_»
+          («term∃_,_»
            "∃"
-           (Std.ExtendedBinder.extBinders
-            (Std.ExtendedBinder.extBinder (Lean.binderIdent `z) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-           ", "
+           (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `z)] [":" (termℤ "ℤ")]))
+           ","
            (Term.app `P [`z]))]
          []
          ")")]
        (Term.typeSpec
         ":"
-        (Init.Logic.«term∃_,_»
+        («term∃_,_»
          "∃"
-         (Std.ExtendedBinder.extBinders
-          (Std.ExtendedBinder.extBinder (Lean.binderIdent `ub) [(group ":" (Init.Data.Int.Basic.termℤ "ℤ"))]))
-         ", "
-         (Init.Logic.«term_∧_»
+         (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `ub)] [":" (termℤ "ℤ")]))
+         ","
+         («term_∧_»
           (Term.app `P [`ub])
-          " ∧ "
+          "∧"
           (Term.forall
            "∀"
            [`z]
-           [(Term.typeSpec ":" (Init.Data.Int.Basic.termℤ "ℤ"))]
+           [(Term.typeSpec ":" (termℤ "ℤ"))]
            ","
-           (Term.arrow (Term.app `P [`z]) "→" (Init.Core.«term_≤_» `z " ≤ " `ub)))))))
+           (Term.arrow (Term.app `P [`z]) "→" («term_≤_» `z "≤" `ub)))))))
       (Command.declValSimple
        ":="
        (Term.byTactic

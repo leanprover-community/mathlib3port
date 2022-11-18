@@ -159,7 +159,7 @@ theorem range_inl : range (inl R M M₂) = ker (snd R M M₂) := by
 #align linear_map.range_inl LinearMap.range_inl
 
 theorem ker_snd : ker (snd R M M₂) = range (inl R M M₂) :=
-  Eq.symm $ range_inl R M M₂
+  Eq.symm <| range_inl R M M₂
 #align linear_map.ker_snd LinearMap.ker_snd
 
 theorem range_inr : range (inr R M M₂) = ker (fst R M M₂) := by
@@ -175,7 +175,7 @@ theorem range_inr : range (inr R M M₂) = ker (fst R M M₂) := by
 #align linear_map.range_inr LinearMap.range_inr
 
 theorem ker_fst : ker (fst R M M₂) = range (inr R M M₂) :=
-  Eq.symm $ range_inr R M M₂
+  Eq.symm <| range_inr R M M₂
 #align linear_map.ker_fst LinearMap.ker_fst
 
 end
@@ -239,7 +239,7 @@ theorem coprod_inl_inr : coprod (inl R M M₂) (inr R M M₂) = LinearMap.id := 
 
 theorem comp_coprod (f : M₃ →ₗ[R] M₄) (g₁ : M →ₗ[R] M₃) (g₂ : M₂ →ₗ[R] M₃) :
     f.comp (g₁.coprod g₂) = (f.comp g₁).coprod (f.comp g₂) :=
-  ext $ fun x => f.map_add (g₁ x.1) (g₂ x.2)
+  ext fun x => f.map_add (g₁ x.1) (g₂ x.2)
 #align linear_map.comp_coprod LinearMap.comp_coprod
 
 theorem fst_eq_coprod : fst R M M₂ = coprod LinearMap.id 0 := by ext <;> simp
@@ -257,7 +257,7 @@ theorem coprod_comp_prod (f : M₂ →ₗ[R] M₄) (g : M₃ →ₗ[R] M₄) (f'
 @[simp]
 theorem coprod_map_prod (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) (S : Submodule R M) (S' : Submodule R M₂) :
     (Submodule.prod S S').map (LinearMap.coprod f g) = S.map f ⊔ S'.map g :=
-  SetLike.coe_injective $ by
+  SetLike.coe_injective <| by
     simp only [LinearMap.coprod_apply, Submodule.coe_sup, Submodule.map_coe]
     rw [← Set.image2_add, Set.image2_image_left, Set.image2_image_right]
     exact Set.image_prod fun m m₂ => f m + g m₂
@@ -309,7 +309,7 @@ theorem prod_map_apply (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) (x) : f.
 
 theorem prod_map_comap_prod (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄) (S : Submodule R M₂) (S' : Submodule R M₄) :
     (Submodule.prod S S').comap (LinearMap.prodMap f g) = (S.comap f).Prod (S'.comap g) :=
-  SetLike.coe_injective $ Set.preimage_prod_map_prod f g _ _
+  SetLike.coe_injective <| Set.preimage_prod_map_prod f g _ _
 #align linear_map.prod_map_comap_prod LinearMap.prod_map_comap_prod
 
 theorem ker_prod_map (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄) : (LinearMap.prodMap f g).ker = Submodule.prod f.ker g.ker := by
@@ -319,12 +319,12 @@ theorem ker_prod_map (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄) : (LinearM
 
 @[simp]
 theorem prod_map_id : (id : M →ₗ[R] M).prod_map (id : M₂ →ₗ[R] M₂) = id :=
-  LinearMap.ext $ fun _ => Prod.mk.eta
+  LinearMap.ext fun _ => Prod.mk.eta
 #align linear_map.prod_map_id LinearMap.prod_map_id
 
 @[simp]
 theorem prod_map_one : (1 : M →ₗ[R] M).prod_map (1 : M₂ →ₗ[R] M₂) = 1 :=
-  LinearMap.ext $ fun _ => Prod.mk.eta
+  LinearMap.ext fun _ => Prod.mk.eta
 #align linear_map.prod_map_one LinearMap.prod_map_one
 
 theorem prod_map_comp (f₁₂ : M →ₗ[R] M₂) (f₂₃ : M₂ →ₗ[R] M₃) (g₁₂ : M₄ →ₗ[R] M₅) (g₂₃ : M₅ →ₗ[R] M₆) :
@@ -422,7 +422,7 @@ variable [Semiring R] [AddCommMonoid M] [AddCommMonoid M₂] [AddCommMonoid M₃
   [Module R M₂] [Module R M₃] [Module R M₄]
 
 theorem range_coprod (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) : (f.coprod g).range = f.range ⊔ g.range :=
-  Submodule.ext $ fun x => by simp [mem_sup]
+  Submodule.ext fun x => by simp [mem_sup]
 #align linear_map.range_coprod LinearMap.range_coprod
 
 theorem is_compl_range_inl_inr : IsCompl (inl R M M₂).range (inr R M M₂).range := by
@@ -463,12 +463,12 @@ theorem map_coprod_prod (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) (p : Su
 
 theorem comap_prod_prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) (p : Submodule R M₂) (q : Submodule R M₃) :
     comap (prod f g) (p.Prod q) = comap f p ⊓ comap g q :=
-  Submodule.ext $ fun x => Iff.rfl
+  Submodule.ext fun x => Iff.rfl
 #align linear_map.comap_prod_prod LinearMap.comap_prod_prod
 
 theorem prod_eq_inf_comap (p : Submodule R M) (q : Submodule R M₂) :
     p.Prod q = p.comap (LinearMap.fst R M M₂) ⊓ q.comap (LinearMap.snd R M M₂) :=
-  Submodule.ext $ fun x => Iff.rfl
+  Submodule.ext fun x => Iff.rfl
 #align linear_map.prod_eq_inf_comap LinearMap.prod_eq_inf_comap
 
 theorem prod_eq_sup_map (p : Submodule R M) (q : Submodule R M₂) :
@@ -526,7 +526,7 @@ variable [AddCommMonoid M] [AddCommMonoid M₂]
 variable [Module R M] [Module R M₂]
 
 theorem sup_eq_range (p q : Submodule R M) : p ⊔ q = (p.Subtype.coprod q.Subtype).range :=
-  Submodule.ext $ fun x => by simp [Submodule.mem_sup, SetLike.exists]
+  Submodule.ext fun x => by simp [Submodule.mem_sup, SetLike.exists]
 #align submodule.sup_eq_range Submodule.sup_eq_range
 
 variable (p : Submodule R M) (q : Submodule R M₂)
@@ -840,11 +840,11 @@ open Function
 /-- An auxiliary construction for `tunnel`.
 The composition of `f`, followed by the isomorphism back to `K`,
 followed by the inclusion of this submodule back into `M`. -/
-def tunnelAux (f : M × N →ₗ[R] M) (Kφ : Σ K : Submodule R M, K ≃ₗ[R] M) : M × N →ₗ[R] M :=
+def tunnelAux (f : M × N →ₗ[R] M) (Kφ : ΣK : Submodule R M, K ≃ₗ[R] M) : M × N →ₗ[R] M :=
   (Kφ.1.Subtype.comp Kφ.2.symm.toLinearMap).comp f
 #align linear_map.tunnel_aux LinearMap.tunnelAux
 
-theorem tunnel_aux_injective (f : M × N →ₗ[R] M) (i : Injective f) (Kφ : Σ K : Submodule R M, K ≃ₗ[R] M) :
+theorem tunnel_aux_injective (f : M × N →ₗ[R] M) (i : Injective f) (Kφ : ΣK : Submodule R M, K ≃ₗ[R] M) :
     Injective (tunnelAux f Kφ) :=
   (Subtype.val_injective.comp Kφ.2.symm.Injective).comp i
 #align linear_map.tunnel_aux_injective LinearMap.tunnel_aux_injective
@@ -854,7 +854,7 @@ noncomputable section
 -- Even though we have `noncomputable theory`,
 -- we get an error without another `noncomputable` here.
 /-- Auxiliary definition for `tunnel`. -/
-noncomputable def tunnel' (f : M × N →ₗ[R] M) (i : Injective f) : ℕ → Σ K : Submodule R M, K ≃ₗ[R] M
+noncomputable def tunnel' (f : M × N →ₗ[R] M) (i : Injective f) : ℕ → ΣK : Submodule R M, K ≃ₗ[R] M
   | 0 => ⟨⊤, LinearEquiv.ofTop ⊤ rfl⟩
   | n + 1 =>
     ⟨(Submodule.fst R M N).map (tunnelAux f (tunnel' n)),

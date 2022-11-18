@@ -157,7 +157,7 @@ This version works for modules over division rings. -/
 @[reducible]
 noncomputable def mkSpanSingleton {K E F : Type _} [DivisionRing K] [AddCommGroup E] [Module K E] [AddCommGroup F]
     [Module K F] (x : E) (y : F) (hx : x ≠ 0) : E →ₗ.[K] F :=
-  mkSpanSingleton' x y $ fun c hc => (smul_eq_zero.1 hc).elim (fun hc => by rw [hc, zero_smul]) fun hx' => absurd hx' hx
+  (mkSpanSingleton' x y) fun c hc => (smul_eq_zero.1 hc).elim (fun hc => by rw [hc, zero_smul]) fun hx' => absurd hx' hx
 #align linear_pmap.mk_span_singleton LinearPmap.mkSpanSingleton
 
 theorem mk_span_singleton_apply (K : Type _) {E F : Type _} [DivisionRing K] [AddCommGroup E] [Module K E]
@@ -206,7 +206,7 @@ theorem eq_of_le_of_domain_eq {f g : E →ₗ.[R] F} (hle : f ≤ g) (heq : f.do
 /-- Given two partial linear maps `f`, `g`, the set of points `x` such that
 both `f` and `g` are defined at `x` and `f x = g x` form a submodule. -/
 def eqLocus (f g : E →ₗ.[R] F) : Submodule R E where
-  carrier := { x | ∃ (hf : x ∈ f.domain) (hg : x ∈ g.domain), f ⟨x, hf⟩ = g ⟨x, hg⟩ }
+  carrier := { x | ∃ (hf : x ∈ f.domain)(hg : x ∈ g.domain), f ⟨x, hf⟩ = g ⟨x, hg⟩ }
   zero_mem' := ⟨zero_mem _, zero_mem _, f.map_zero.trans g.map_zero.symm⟩
   add_mem' := fun x y ⟨hfx, hgx, hx⟩ ⟨hfy, hgy, hy⟩ =>
     ⟨add_mem hfx hfy, add_mem hgx hgy, by erw [f.map_add ⟨x, hfx⟩ ⟨y, hfy⟩, g.map_add ⟨x, hgx⟩ ⟨y, hgy⟩, hx, hy]⟩
@@ -215,7 +215,7 @@ def eqLocus (f g : E →ₗ.[R] F) : Submodule R E where
 #align linear_pmap.eq_locus LinearPmap.eqLocus
 
 instance : HasInf (E →ₗ.[R] F) :=
-  ⟨fun f g => ⟨f.eqLocus g, f.toFun.comp $ of_le $ fun x hx => hx.fst⟩⟩
+  ⟨fun f g => ⟨f.eqLocus g, f.toFun.comp <| of_le fun x hx => hx.fst⟩⟩
 
 instance : HasBot (E →ₗ.[R] F) :=
   ⟨⟨⊥, 0⟩⟩
@@ -229,7 +229,7 @@ instance : SemilatticeInf (E →ₗ.[R] F) where
   le_trans := fun f g h ⟨fg_le, fg_eq⟩ ⟨gh_le, gh_eq⟩ =>
     ⟨le_trans fg_le gh_le, fun x z hxz =>
       have hxy : (x : E) = ofLe fg_le x := rfl
-      (fg_eq hxy).trans (gh_eq $ hxy.symm.trans hxz)⟩
+      (fg_eq hxy).trans (gh_eq <| hxy.symm.trans hxz)⟩
   le_antisymm f g fg gf := eq_of_le_of_domain_eq fg (le_antisymm fg.1 gf.1)
   inf := (· ⊓ ·)
   le_inf := fun f g h ⟨fg_le, fg_eq⟩ ⟨fh_le, fh_eq⟩ =>
@@ -237,8 +237,8 @@ instance : SemilatticeInf (E →ₗ.[R] F) where
       fun x ⟨y, yg, hy⟩ h => by
       apply fg_eq
       exact h⟩
-  inf_le_left f g := ⟨fun x hx => hx.fst, fun x y h => congr_arg f $ Subtype.eq $ h⟩
-  inf_le_right f g := ⟨fun x hx => hx.snd.fst, fun ⟨x, xf, xg, hx⟩ y h => hx.trans $ congr_arg g $ Subtype.eq $ h⟩
+  inf_le_left f g := ⟨fun x hx => hx.fst, fun x y h => congr_arg f <| Subtype.eq <| h⟩
+  inf_le_right f g := ⟨fun x hx => hx.snd.fst, fun ⟨x, xf, xg, hx⟩ y h => hx.trans <| congr_arg g <| Subtype.eq <| h⟩
 
 instance : OrderBot (E →ₗ.[R] F) where
   bot := ⊥
@@ -254,7 +254,7 @@ theorem le_of_eq_locus_ge {f g : E →ₗ.[R] F} (H : f.domain ≤ f.eqLocus g) 
 #align linear_pmap.le_of_eq_locus_ge LinearPmap.le_of_eq_locus_ge
 
 theorem domain_mono : StrictMono (@domain R _ E _ _ F _ _) := fun f g hlt =>
-  lt_of_le_of_ne hlt.1.1 $ fun heq => ne_of_lt hlt $ eq_of_le_of_domain_eq (le_of_lt hlt) HEq
+  (lt_of_le_of_ne hlt.1.1) fun heq => ne_of_lt hlt <| eq_of_le_of_domain_eq (le_of_lt hlt) HEq
 #align linear_pmap.domain_mono LinearPmap.domain_mono
 
 private theorem sup_aux (f g : E →ₗ.[R] F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
@@ -324,7 +324,7 @@ protected theorem sup_le {f g h : E →ₗ.[R] F} (H : ∀ (x : f.domain) (y : g
     (fh : f ≤ h) (gh : g ≤ h) : f.sup g H ≤ h :=
   have Hf : f ≤ f.sup g H ⊓ h := le_inf (f.left_le_sup g H) fh
   have Hg : g ≤ f.sup g H ⊓ h := le_inf (f.right_le_sup g H) gh
-  le_of_eq_locus_ge $ sup_le Hf.1 Hg.1
+  le_of_eq_locus_ge <| sup_le Hf.1 Hg.1
 #align linear_pmap.sup_le LinearPmap.sup_le
 
 /-- Hypothesis for `linear_pmap.sup` holds, if `f.domain` is disjoint with `g.domain`. -/
@@ -332,7 +332,7 @@ theorem sup_h_of_disjoint (f g : E →ₗ.[R] F) (h : Disjoint f.domain g.domain
     (hxy : (x : E) = y) : f x = g y := by
   rw [disjoint_def] at h
   have hy : y = 0 := Subtype.eq (h y (hxy ▸ x.2) y.2)
-  have hx : x = 0 := Subtype.eq (hxy.trans $ congr_arg _ hy)
+  have hx : x = 0 := Subtype.eq (hxy.trans <| congr_arg _ hy)
   simp [*]
 #align linear_pmap.sup_h_of_disjoint LinearPmap.sup_h_of_disjoint
 
@@ -360,15 +360,15 @@ theorem coe_smul (a : M) (f : E →ₗ.[R] F) : ⇑(a • f) = a • f :=
 #align linear_pmap.coe_smul LinearPmap.coe_smul
 
 instance [SmulCommClass M N F] : SmulCommClass M N (E →ₗ.[R] F) :=
-  ⟨fun a b f => ext' $ smul_comm a b f.toFun⟩
+  ⟨fun a b f => ext' <| smul_comm a b f.toFun⟩
 
 instance [HasSmul M N] [IsScalarTower M N F] : IsScalarTower M N (E →ₗ.[R] F) :=
-  ⟨fun a b f => ext' $ smul_assoc a b f.toFun⟩
+  ⟨fun a b f => ext' <| smul_assoc a b f.toFun⟩
 
 instance : MulAction M (E →ₗ.[R] F) where
   smul := (· • ·)
-  one_smul := fun ⟨s, f⟩ => ext' $ one_smul M f
-  mul_smul a b f := ext' $ mul_smul a b f.toFun
+  one_smul := fun ⟨s, f⟩ => ext' <| one_smul M f
+  mul_smul a b f := ext' <| mul_smul a b f.toFun
 
 end Smul
 
@@ -393,8 +393,8 @@ theorem coe_vadd (f : E →ₗ[R] F) (g : E →ₗ.[R] F) : ⇑(f +ᵥ g) = f.co
 
 instance : AddAction (E →ₗ[R] F) (E →ₗ.[R] F) where
   vadd := (· +ᵥ ·)
-  zero_vadd := fun ⟨s, f⟩ => ext' $ zero_add _
-  add_vadd := fun f₁ f₂ ⟨s, g⟩ => ext' $ LinearMap.ext $ fun x => add_assoc _ _ _
+  zero_vadd := fun ⟨s, f⟩ => ext' <| zero_add _
+  add_vadd := fun f₁ f₂ ⟨s, g⟩ => ext' <| LinearMap.ext fun x => add_assoc _ _ _
 
 end Vadd
 
@@ -404,8 +404,8 @@ variable {K : Type _} [DivisionRing K] [Module K E] [Module K F]
 
 /-- Extend a `linear_pmap` to `f.domain ⊔ K ∙ x`. -/
 noncomputable def supSpanSingleton (f : E →ₗ.[K] F) (x : E) (y : F) (hx : x ∉ f.domain) : E →ₗ.[K] F :=
-  f.sup (mkSpanSingleton x y fun h₀ => hx $ h₀.symm ▸ f.domain.zero_mem) $
-    sup_h_of_disjoint _ _ $ by simpa [disjoint_span_singleton]
+  f.sup (mkSpanSingleton x y fun h₀ => hx <| h₀.symm ▸ f.domain.zero_mem) <|
+    sup_h_of_disjoint _ _ <| by simpa [disjoint_span_singleton]
 #align linear_pmap.sup_span_singleton LinearPmap.supSpanSingleton
 
 @[simp]
@@ -456,7 +456,7 @@ private theorem Sup_aux (c : Set (E →ₗ.[R] F)) (hc : DirectedOn (· ≤ ·) 
     simp [f_eq (P x).1 (c • x) (c • ⟨x, (P x).2⟩) rfl, ← map_smul]
     
   · intro p hpc
-    refine' ⟨le_Sup $ mem_image_of_mem domain hpc, fun x y hxy => Eq.symm _⟩
+    refine' ⟨le_Sup <| mem_image_of_mem domain hpc, fun x y hxy => Eq.symm _⟩
     exact f_eq ⟨p, hpc⟩ _ _ hxy.symm
     
 #align linear_pmap.Sup_aux linear_pmap.Sup_aux
@@ -467,7 +467,7 @@ Case conversion may be inaccurate. Consider using '#align linear_pmap.Sup Linear
 /-- Glue a collection of partially defined linear maps to a linear map defined on `Sup`
 of these submodules. -/
 protected noncomputable def sup (c : Set (E →ₗ.[R] F)) (hc : DirectedOn (· ≤ ·) c) : E →ₗ.[R] F :=
-  ⟨_, Classical.choose $ Sup_aux c hc⟩
+  ⟨_, Classical.choose <| Sup_aux c hc⟩
 #align linear_pmap.Sup LinearPmap.sup
 -/
 
@@ -478,8 +478,8 @@ protected theorem le_Sup {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·)
 
 protected theorem Sup_le {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·) c) {g : E →ₗ.[R] F} (hg : ∀ f ∈ c, f ≤ g) :
     LinearPmap.sup c hc ≤ g :=
-  le_of_eq_locus_ge $
-    Sup_le $ fun _ ⟨f, hf, Eq⟩ =>
+  le_of_eq_locus_ge <|
+    Sup_le fun _ ⟨f, hf, Eq⟩ =>
       Eq ▸
         have : f ≤ LinearPmap.sup c hc ⊓ g := le_inf (LinearPmap.le_Sup _ hf) (hg f hf)
         this.1
@@ -529,7 +529,7 @@ def codRestrict (f : E →ₗ.[R] F) (p : Submodule R F) (H : ∀ x, f x ∈ p) 
 
 /-- Compose two `linear_pmap`s -/
 def comp (g : F →ₗ.[R] G) (f : E →ₗ.[R] F) (H : ∀ x : f.domain, f x ∈ g.domain) : E →ₗ.[R] G :=
-  g.toFun.compPmap $ f.codRestrict _ H
+  g.toFun.compPmap <| f.codRestrict _ H
 #align linear_pmap.comp LinearPmap.comp
 
 /-- `f.coprod g` is the partially defined linear map defined on `f.domain × g.domain`,

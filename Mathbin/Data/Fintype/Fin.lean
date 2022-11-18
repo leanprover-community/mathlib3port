@@ -67,7 +67,7 @@ theorem card_filter_univ_succ (p : Fin (n + 1) → Prop) [DecidablePred p] :
 #align fin.card_filter_univ_succ Fin.card_filter_univ_succ
 
 theorem card_filter_univ_eq_vector_nth_eq_count [DecidableEq α] (a : α) (v : Vector α n) :
-    (univ.filter $ fun i => a = v.nth i).card = v.toList.count a := by
+    (univ.filter fun i => a = v.nth i).card = v.toList.count a := by
   induction' v using Vector.inductionOn with n x xs hxs
   · simp
     

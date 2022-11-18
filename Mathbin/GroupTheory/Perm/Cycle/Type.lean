@@ -50,7 +50,7 @@ theorem cycle_type_def (σ : Perm α) : σ.cycleType = σ.cycleFactorsFinset.1.m
 #align equiv.perm.cycle_type_def Equiv.Perm.cycle_type_def
 
 theorem cycle_type_eq' {σ : Perm α} (s : Finset (Perm α)) (h1 : ∀ f : Perm α, f ∈ s → f.IsCycle)
-    (h2 : (s : Set (Perm α)).Pairwise Disjoint) (h0 : s.noncommProd id (h2.imp $ fun _ _ => Disjoint.commute) = σ) :
+    (h2 : (s : Set (Perm α)).Pairwise Disjoint) (h0 : s.noncommProd id (h2.imp fun _ _ => Disjoint.commute) = σ) :
     σ.cycleType = s.1.map (Finset.card ∘ support) := by
   rw [cycle_type_def]
   congr
@@ -186,7 +186,7 @@ theorem dvd_of_mem_cycle_type {σ : Perm α} {n : ℕ} (h : n ∈ σ.cycleType) 
 #align equiv.perm.dvd_of_mem_cycle_type Equiv.Perm.dvd_of_mem_cycle_type
 
 theorem order_of_cycle_of_dvd_order_of (f : Perm α) (x : α) : orderOf (cycleOf f x) ∣ orderOf f := by
-  by_cases hx:f x = x
+  by_cases hx : f x = x
   · rw [← cycle_of_eq_one_iff] at hx
     simp [hx]
     
@@ -203,7 +203,7 @@ theorem order_of_cycle_of_dvd_order_of (f : Perm α) (x : α) : orderOf (cycleOf
 theorem two_dvd_card_support {σ : Perm α} (hσ : σ ^ 2 = 1) : 2 ∣ σ.support.card :=
   (congr_arg (Dvd.Dvd 2) σ.sum_cycle_type).mp
     (Multiset.dvd_sum fun n hn => by
-      rw [le_antisymm (Nat.le_of_dvd zero_lt_two $ (dvd_of_mem_cycle_type hn).trans $ order_of_dvd_of_pow_eq_one hσ)
+      rw [le_antisymm (Nat.le_of_dvd zero_lt_two <| (dvd_of_mem_cycle_type hn).trans <| order_of_dvd_of_pow_eq_one hσ)
           (two_le_of_mem_cycle_type hn)])
 #align equiv.perm.two_dvd_card_support Equiv.Perm.two_dvd_card_support
 
@@ -308,9 +308,8 @@ theorem cycle_type_of_subtype {p : α → Prop} [DecidablePred p] {g : Perm (Sub
   cycle_type_extend_domain (Equiv.refl (Subtype p))
 #align equiv.perm.cycle_type_of_subtype Equiv.Perm.cycle_type_of_subtype
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (c τ) -/
 theorem mem_cycle_type_iff {n : ℕ} {σ : Perm α} :
-    n ∈ cycleType σ ↔ ∃ (c : Perm α) (τ : Perm α), σ = c * τ ∧ Disjoint c τ ∧ IsCycle c ∧ c.support.card = n := by
+    n ∈ cycleType σ ↔ ∃ c τ : Perm α, σ = c * τ ∧ Disjoint c τ ∧ IsCycle c ∧ c.support.card = n := by
   constructor
   · intro h
     obtain ⟨l, rfl, hlc, hld⟩ := trunc_cycle_factors σ
@@ -338,7 +337,7 @@ theorem le_card_support_of_mem_cycle_type {n : ℕ} {σ : Perm α} (h : n ∈ cy
 theorem cycle_type_of_card_le_mem_cycle_type_add_two {n : ℕ} {g : Perm α} (hn2 : Fintype.card α < n + 2)
     (hng : n ∈ g.cycleType) : g.cycleType = {n} := by
   obtain ⟨c, g', rfl, hd, hc, rfl⟩ := mem_cycle_type_iff.1 hng
-  by_cases g'1:g' = 1
+  by_cases g'1 : g' = 1
   · rw [hd.cycle_type, hc.cycle_type, coe_singleton, g'1, cycle_type_one, add_zero]
     
   contrapose! hn2
@@ -355,7 +354,7 @@ theorem card_compl_support_modeq [DecidableEq α] {p n : ℕ} [hp : Fact p.Prime
   refine' (congr_arg _ σ.sum_cycle_type).mp (Multiset.dvd_sum fun k hk => _)
   obtain ⟨m, -, hm⟩ := (Nat.dvd_prime_pow hp.out).mp (order_of_dvd_of_pow_eq_one hσ)
   obtain ⟨l, -, rfl⟩ := (Nat.dvd_prime_pow hp.out).mp ((congr_arg _ hm).mp (dvd_of_mem_cycle_type hk))
-  exact dvd_pow_self _ fun h => (one_lt_of_mem_cycle_type hk).Ne $ by rw [h, pow_zero]
+  exact dvd_pow_self _ fun h => (one_lt_of_mem_cycle_type hk).Ne <| by rw [h, pow_zero]
 #align equiv.perm.card_compl_support_modeq Equiv.Perm.card_compl_support_modeq
 
 theorem exists_fixed_point_of_prime {p n : ℕ} [hp : Fact p.Prime] (hα : ¬p ∣ Fintype.card α) {σ : Perm α}
@@ -605,12 +604,12 @@ theorem card_support (h : IsThreeCycle σ) : σ.support.card = 3 := by
 
 theorem _root_.card_support_eq_three_iff : σ.support.card = 3 ↔ σ.IsThreeCycle := by
   refine' ⟨fun h => _, is_three_cycle.card_support⟩
-  by_cases h0:σ.cycle_type = 0
+  by_cases h0 : σ.cycle_type = 0
   · rw [← sum_cycle_type, h0, sum_zero] at h
     exact (ne_of_lt zero_lt_three h).elim
     
   obtain ⟨n, hn⟩ := exists_mem_of_ne_zero h0
-  by_cases h1:σ.cycle_type.erase n = 0
+  by_cases h1 : σ.cycle_type.erase n = 0
   · rw [← sum_cycle_type, ← cons_erase hn, h1, cons_zero, Multiset.sum_singleton] at h
     rw [is_three_cycle, ← cons_erase hn, h1, h, ← cons_zero]
     
@@ -687,7 +686,7 @@ open Subgroup
 
 theorem swap_mul_swap_same_mem_closure_three_cycles {a b c : α} (ab : a ≠ b) (ac : a ≠ c) :
     swap a b * swap a c ∈ closure { σ : Perm α | IsThreeCycle σ } := by
-  by_cases bc:b = c
+  by_cases bc : b = c
   · subst bc
     simp [one_mem]
     
@@ -698,7 +697,7 @@ theorem IsSwap.mul_mem_closure_three_cycles {σ τ : Perm α} (hσ : IsSwap σ) 
     σ * τ ∈ closure { σ : Perm α | IsThreeCycle σ } := by
   obtain ⟨a, b, ab, rfl⟩ := hσ
   obtain ⟨c, d, cd, rfl⟩ := hτ
-  by_cases ac:a = c
+  by_cases ac : a = c
   · subst ac
     exact swap_mul_swap_same_mem_closure_three_cycles ab cd
     

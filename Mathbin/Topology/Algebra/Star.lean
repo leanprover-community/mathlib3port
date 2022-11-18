@@ -5,7 +5,8 @@ Authors: Eric Wieser
 -/
 import Mathbin.Algebra.Star.Pi
 import Mathbin.Algebra.Star.Prod
-import Mathbin.Topology.Algebra.Group
+import Mathbin.Topology.Algebra.Constructions
+import Mathbin.Topology.ContinuousFunction.Basic
 
 /-!
 # Continuity of `star`
@@ -92,7 +93,7 @@ instance {C : ι → Type _} [∀ i, TopologicalSpace (C i)] [∀ i, HasStar (C 
     HasContinuousStar (∀ i, C i) where continuous_star := continuous_pi fun i => Continuous.star (continuous_apply i)
 
 instance [HasStar R] [TopologicalSpace R] [HasContinuousStar R] : HasContinuousStar Rᵐᵒᵖ :=
-  ⟨MulOpposite.continuous_op.comp $ MulOpposite.continuous_unop.star⟩
+  ⟨MulOpposite.continuous_op.comp <| MulOpposite.continuous_unop.star⟩
 
 instance [Monoid R] [StarSemigroup R] [TopologicalSpace R] [HasContinuousStar R] : HasContinuousStar Rˣ :=
   ⟨continuous_induced_rng.2 Units.continuous_embed_product.star⟩

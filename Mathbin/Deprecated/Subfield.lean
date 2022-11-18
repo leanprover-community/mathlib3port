@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andreas Swerdlow
 -/
 import Mathbin.Deprecated.Subring
-import Mathbin.Algebra.GroupWithZero.Power
 
 /-!
 # Unbundled subfields (deprecated)
@@ -91,22 +90,22 @@ theorem closure.is_submonoid : IsSubmonoid (closure S) :=
         exact
           ⟨p * r, IsSubmonoid.mul_mem ring.closure.is_subring.to_is_submonoid hp hr, q * s,
             IsSubmonoid.mul_mem ring.closure.is_subring.to_is_submonoid hq hs, (div_mul_div_comm _ _ _ _).symm⟩,
-    one_mem := ring_closure_subset $ IsSubmonoid.one_mem Ring.closure.isSubring.to_is_submonoid }
+    one_mem := ring_closure_subset <| IsSubmonoid.one_mem Ring.closure.isSubring.to_is_submonoid }
 #align field.closure.is_submonoid Field.closure.is_submonoid
 
 theorem closure.isSubfield : IsSubfield (closure S) :=
   have h0 : (0 : F) ∈ closure S :=
-    ring_closure_subset $ Ring.closure.isSubring.to_is_add_subgroup.to_is_add_submonoid.zero_mem
+    ring_closure_subset <| Ring.closure.isSubring.to_is_add_subgroup.to_is_add_submonoid.zero_mem
   { closure.is_submonoid with
     add_mem := by
       intro a b ha hb
       rcases id ha with ⟨p, hp, q, hq, rfl⟩
       rcases id hb with ⟨r, hr, s, hs, rfl⟩
       classical
-      by_cases hq0:q = 0
+      by_cases hq0 : q = 0
       · simp [hb, hq0]
         
-      by_cases hs0:s = 0
+      by_cases hs0 : s = 0
       · simp [ha, hs0]
         
       exact
@@ -125,7 +124,7 @@ theorem closure.isSubfield : IsSubfield (closure S) :=
 #align field.closure.is_subfield Field.closure.isSubfield
 
 theorem mem_closure {a : F} (ha : a ∈ S) : a ∈ closure S :=
-  ring_closure_subset $ Ring.mem_closure ha
+  ring_closure_subset <| Ring.mem_closure ha
 #align field.mem_closure Field.mem_closure
 
 theorem subset_closure : S ⊆ closure S := fun _ => mem_closure
@@ -141,7 +140,7 @@ theorem closure_subset_iff {s t : Set F} (ht : IsSubfield t) : closure s ⊆ t �
 #align field.closure_subset_iff Field.closure_subset_iff
 
 theorem closure_mono {s t : Set F} (H : s ⊆ t) : closure s ⊆ closure t :=
-  closure_subset closure.isSubfield $ Set.Subset.trans H subset_closure
+  closure_subset closure.isSubfield <| Set.Subset.trans H subset_closure
 #align field.closure_mono Field.closure_mono
 
 end Field
@@ -167,6 +166,6 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_subfield.Inter IsSubfield.interₓ'. -/
 theorem IsSubfield.inter {ι : Sort _} {S : ι → Set F} (h : ∀ y : ι, IsSubfield (S y)) : IsSubfield (Set.inter S) :=
   { IsSubring.inter fun y => (h y).toIsSubring with
-    inv_mem := fun x hx => Set.mem_Inter.2 $ fun y => (h y).inv_mem $ Set.mem_Inter.1 hx y }
+    inv_mem := fun x hx => Set.mem_Inter.2 fun y => (h y).inv_mem <| Set.mem_Inter.1 hx y }
 #align is_subfield.Inter IsSubfield.inter
 

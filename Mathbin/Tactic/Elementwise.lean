@@ -97,7 +97,7 @@ unsafe def prove_elementwise (h : expr) : tactic (expr × expr × Option Name) :
             @coeFn (@Quiver.Hom $(C) $(H) $(X) $(Y)) _
               (@CategoryTheory.ConcreteCategory.hasCoeToFun $(C) $(S) $(CC) $(X) $(Y)) $(g) $(x))
   let c' := h.mk_app vs
-  let (_, pr) ← solve_aux t' (rewrite_target c'; reflexivity)
+  let (_, pr) ← solve_aux t' (andthen (rewrite_target c') reflexivity)
   let-- The codomain of forget lives in a new universe, which may be now a universe metavariable
     -- if we didn't synthesize an instance:
     [w, _, _]
@@ -139,7 +139,7 @@ unsafe def elementwise_lemma (n : Name) (n' : Name := n.appendSuffix "_apply") :
   let c := @expr.const true n d.univ_levels
   let (t'', pr', l') ← prove_elementwise c
   let params := l'.toList ++ d.univ_params
-  add_decl $ declaration.thm n' params t'' (pure pr')
+  add_decl <| declaration.thm n' params t'' (pure pr')
   copy_attribute `simp n n'
 #align tactic.elementwise_lemma tactic.elementwise_lemma
 
@@ -178,7 +178,7 @@ unsafe def elementwise_attr : user_attribute Unit (Option Name) where
     some fun n _ _ => do
       let some n' ← elementwise_attr.get_param n |
         elementwise_lemma n (n.appendSuffix "_apply")
-      elementwise_lemma n $ n ++ n'
+      elementwise_lemma n <| n ++ n'
 #align tactic.elementwise_attr tactic.elementwise_attr
 
 add_tactic_doc

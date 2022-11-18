@@ -7,7 +7,6 @@ import Mathbin.CategoryTheory.Limits.Constructions.Pullbacks
 import Mathbin.CategoryTheory.Preadditive.Biproducts
 import Mathbin.CategoryTheory.Limits.Shapes.Images
 import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
-import Mathbin.CategoryTheory.Limits.Constructions.EpiMono
 import Mathbin.CategoryTheory.Abelian.NonPreadditive
 
 /-!
@@ -335,11 +334,11 @@ section
 variable {f}
 
 theorem image_ι_comp_eq_zero {R : C} {g : Q ⟶ R} (h : f ≫ g = 0) : Abelian.image.ι f ≫ g = 0 :=
-  zero_of_epi_comp (Abelian.factorThruImage f) $ by simp [h]
+  zero_of_epi_comp (Abelian.factorThruImage f) <| by simp [h]
 #align category_theory.abelian.image_ι_comp_eq_zero CategoryTheory.Abelian.image_ι_comp_eq_zero
 
 theorem comp_coimage_π_eq_zero {R : C} {g : Q ⟶ R} (h : f ≫ g = 0) : f ≫ Abelian.coimage.π g = 0 :=
-  zero_of_comp_mono (Abelian.factorThruCoimage g) $ by simp [h]
+  zero_of_comp_mono (Abelian.factorThruCoimage g) <| by simp [h]
 #align category_theory.abelian.comp_coimage_π_eq_zero CategoryTheory.Abelian.comp_coimage_π_eq_zero
 
 end
@@ -372,7 +371,7 @@ section HasStrongEpiMonoFactorisations
 
 /-- An abelian category has strong epi-mono factorisations. -/
 instance (priority := 100) : HasStrongEpiMonoFactorisations C :=
-  has_strong_epi_mono_factorisations.mk $ fun X Y f => imageStrongEpiMonoFactorisation f
+  has_strong_epi_mono_factorisations.mk fun X Y f => imageStrongEpiMonoFactorisation f
 
 -- In particular, this means that it has well-behaved images.
 example : HasImages C := by infer_instance
@@ -518,7 +517,7 @@ abbrev pullbackToBiproduct : pullback f g ⟶ X ⊞ Y :=
     this may be that it induces an equalizer fork on the maps induced by `(f, 0)` and
     `(0, g)`. -/
 abbrev pullbackToBiproductFork : KernelFork (biprod.desc f (-g)) :=
-  KernelFork.ofι (pullbackToBiproduct f g) $ by rw [biprod.lift_desc, comp_neg, pullback.condition, add_right_neg]
+  KernelFork.ofι (pullbackToBiproduct f g) <| by rw [biprod.lift_desc, comp_neg, pullback.condition, add_right_neg]
 #align
   category_theory.abelian.pullback_to_biproduct_is_kernel.pullback_to_biproduct_fork CategoryTheory.Abelian.PullbackToBiproductIsKernel.pullbackToBiproductFork
 
@@ -527,8 +526,8 @@ abbrev pullbackToBiproductFork : KernelFork (biprod.desc f (-g)) :=
 def isLimitPullbackToBiproduct : IsLimit (pullbackToBiproductFork f g) :=
   Fork.IsLimit.mk _
     (fun s =>
-      pullback.lift (Fork.ι s ≫ biprod.fst) (Fork.ι s ≫ biprod.snd) $
-        sub_eq_zero.1 $ by
+      pullback.lift (Fork.ι s ≫ biprod.fst) (Fork.ι s ≫ biprod.snd) <|
+        sub_eq_zero.1 <| by
           rw [category.assoc, category.assoc, ← comp_sub, sub_eq_add_neg, ← comp_neg, ← biprod.desc_eq,
             kernel_fork.condition s])
     (fun s => by
@@ -556,7 +555,7 @@ abbrev biproductToPushout : Y ⊞ Z ⟶ pushout f g :=
 /-- The canonical map `Y ⊞ Z ⟶ pushout f g` induces a cokernel cofork on the map
     `X ⟶ Y ⊞ Z` induced by `f` and `-g`. -/
 abbrev biproductToPushoutCofork : CokernelCofork (biprod.lift f (-g)) :=
-  CokernelCofork.ofπ (biproductToPushout f g) $ by rw [biprod.lift_desc, neg_comp, pushout.condition, add_right_neg]
+  CokernelCofork.ofπ (biproductToPushout f g) <| by rw [biprod.lift_desc, neg_comp, pushout.condition, add_right_neg]
 #align
   category_theory.abelian.biproduct_to_pushout_is_cokernel.biproduct_to_pushout_cofork CategoryTheory.Abelian.BiproductToPushoutIsCokernel.biproductToPushoutCofork
 
@@ -565,8 +564,8 @@ abbrev biproductToPushoutCofork : CokernelCofork (biprod.lift f (-g)) :=
 def isColimitBiproductToPushout : IsColimit (biproductToPushoutCofork f g) :=
   Cofork.IsColimit.mk _
     (fun s =>
-      pushout.desc (biprod.inl ≫ Cofork.π s) (biprod.inr ≫ Cofork.π s) $
-        sub_eq_zero.1 $ by
+      pushout.desc (biprod.inl ≫ Cofork.π s) (biprod.inr ≫ Cofork.π s) <|
+        sub_eq_zero.1 <| by
           rw [← category.assoc, ← category.assoc, ← sub_comp, sub_eq_add_neg, ← neg_comp, ← biprod.lift_eq,
             cofork.condition s, zero_comp])
     (fun s => by ext <;> simp) fun s m h => by ext <;> simp [← h]
@@ -582,10 +581,10 @@ variable [Limits.HasPullbacks C] {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z)
 /-- In an abelian category, the pullback of an epimorphism is an epimorphism.
     Proof from [aluffi2016, IX.2.3], cf. [borceux-vol2, 1.7.6] -/
 instance epi_pullback_of_epi_f [Epi f] : Epi (pullback.snd : pullback f g ⟶ Y) :=
-  -- It will suffice to consider some morphism e : Y ⟶ R such that
+  (-- It will suffice to consider some morphism e : Y ⟶ R such that
       -- pullback.snd ≫ e = 0 and show that e = 0.
       epi_of_cancel_zero
-      _ $
+      _)
     fun R e h => by
     -- Consider the morphism u := (0, e) : X ⊞ Y⟶ R.
     let u := biprod.desc (0 : X ⟶ R) e
@@ -619,10 +618,10 @@ instance epi_pullback_of_epi_f [Epi f] : Epi (pullback.snd : pullback f g ⟶ Y)
 
 /-- In an abelian category, the pullback of an epimorphism is an epimorphism. -/
 instance epi_pullback_of_epi_g [Epi g] : Epi (pullback.fst : pullback f g ⟶ X) :=
-  -- It will suffice to consider some morphism e : X ⟶ R such that
+  (-- It will suffice to consider some morphism e : X ⟶ R such that
       -- pullback.fst ≫ e = 0 and show that e = 0.
       epi_of_cancel_zero
-      _ $
+      _)
     fun R e h => by
     -- Consider the morphism u := (e, 0) : X ⊞ Y ⟶ R.
     let u := biprod.desc e (0 : Y ⟶ R)
@@ -686,7 +685,7 @@ section MonoPushout
 variable [Limits.HasPushouts C] {W X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z)
 
 instance mono_pushout_of_mono_f [Mono f] : Mono (pushout.inr : Z ⟶ pushout f g) :=
-  mono_of_cancel_zero _ $ fun R e h => by
+  (mono_of_cancel_zero _) fun R e h => by
     let u := biprod.lift (0 : R ⟶ Y) e
     have hu : u ≫ biproduct_to_pushout_is_cokernel.biproduct_to_pushout f g = 0 := by simpa
     have := mono_is_kernel_of_cokernel _ (biproduct_to_pushout_is_cokernel.is_colimit_biproduct_to_pushout f g)
@@ -710,7 +709,7 @@ instance mono_pushout_of_mono_f [Mono f] : Mono (pushout.inr : Z ⟶ pushout f g
 #align category_theory.abelian.mono_pushout_of_mono_f CategoryTheory.Abelian.mono_pushout_of_mono_f
 
 instance mono_pushout_of_mono_g [Mono g] : Mono (pushout.inl : Y ⟶ pushout f g) :=
-  mono_of_cancel_zero _ $ fun R e h => by
+  (mono_of_cancel_zero _) fun R e h => by
     let u := biprod.lift e (0 : R ⟶ Z)
     have hu : u ≫ biproduct_to_pushout_is_cokernel.biproduct_to_pushout f g = 0 := by simpa
     have := mono_is_kernel_of_cokernel _ (biproduct_to_pushout_is_cokernel.is_colimit_biproduct_to_pushout f g)

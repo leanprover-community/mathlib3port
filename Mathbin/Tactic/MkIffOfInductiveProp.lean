@@ -48,7 +48,7 @@ TODO: this is a variant of `compact_relation` in `coinductive_predicates.lean`, 
 unsafe def compact_relation : List expr → List (expr × expr) → List (Option expr) × List (expr × expr)
   | [], ps => ([], ps)
   | b :: bs, ps =>
-    match ps.span fun ap : expr × expr => ¬ap.2 =ₐ b with
+    match ps.span fun ap : expr × expr => ¬ap.2 == b with
     | (_, []) =>
       let (bs, ps) := compact_relation bs ps
       (b :: bs, ps)
@@ -61,10 +61,10 @@ unsafe def compact_relation : List expr → List (expr × expr) → List (Option
 -- TODO: document
 @[nolint doc_blame]
 unsafe def constr_to_prop (univs : List level) (g : List expr) (idxs : List expr) (c : Name) :
-    tactic ((List (Option expr) × (expr ⊕ ℕ)) × expr) := do
+    tactic ((List (Option expr) × Sum expr ℕ) × expr) := do
   let e ← get_env
   let decl ← get_decl c
-  let some type' ← return $ decl.instantiate_type_univ_params univs
+  let some type' ← return <| decl.instantiate_type_univ_params univs
   let type ← drop_pis g type'
   let (args, res) ← open_pis type
   let idxs_inst := res.get_app_args.drop g.length
@@ -97,21 +97,21 @@ unsafe def constr_to_prop (univs : List level) (g : List expr) (idxs : List expr
 
 -- TODO: document
 @[nolint doc_blame]
-unsafe def to_cases (s : List $ List (Option expr) × (expr ⊕ ℕ)) : tactic Unit := do
+unsafe def to_cases (s : List <| List (Option expr) × Sum expr ℕ) : tactic Unit := do
   let h ← intro1
   let i ← induction h
   focus
-      ((s i).enum.map $ fun ⟨p, (shape, t), _, vars, _⟩ => do
+      ((s i).enum.map fun ⟨p, (shape, t), _, vars, _⟩ => do
         let si := (shape vars).filterMap fun ⟨c, v⟩ => c >>= fun _ => some v
         select p (s - 1)
         match t with
           | Sum.inl e => do
             si existsi
-            let some v ← return $ vars (shape - 1)
+            let some v ← return <| vars (shape - 1)
             exact v
           | Sum.inr n => do
             si existsi
-            iterate_exactly (n - 1) (split >> constructor >> skip) >> constructor >> skip
+            (iterate_exactly (n - 1) ((split >> constructor) >> skip) >> constructor) >> skip
         done)
   done
 #align mk_iff.to_cases mk_iff.to_cases
@@ -134,14 +134,14 @@ def listOptionMerge {α : Type _} {β : Type _} : List (Option α) → List β �
 
 -- TODO: document
 @[nolint doc_blame]
-unsafe def to_inductive (cs : List Name) (gs : List expr) (s : List (List (Option expr) × (expr ⊕ ℕ))) (h : expr) :
+unsafe def to_inductive (cs : List Name) (gs : List expr) (s : List (List (Option expr) × Sum expr ℕ)) (h : expr) :
     tactic Unit :=
   match s.length with
   | 0 => induction h >> skip
   | n + 1 => do
     let r ← elim_gen_sum n h
     focus
-        ((cs (r s)).map $ fun ⟨constr_name, h, bs, e⟩ => do
+        ((cs (r s)).map fun ⟨constr_name, h, bs, e⟩ => do
           let n := (bs id).length
           match e with
             | Sum.inl e => elim_gen_prod (n - 1) h [] [] >> skip
@@ -302,7 +302,7 @@ unsafe def mk_iff_attr : user_attribute Unit (Option Name) where
   descr := "Generate an `iff` lemma for an inductive `Prop`."
   parser := parser.optional ident
   after_set :=
-    some $ fun n _ _ => do
+    some fun n _ _ => do
       let tgt ← mk_iff_attr.get_param n
       tactic.mk_iff_of_inductive_prop n (tgt (n "_iff"))
 #align mk_iff_attr mk_iff_attr

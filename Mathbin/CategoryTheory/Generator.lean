@@ -199,19 +199,19 @@ theorem is_codetecting_iff_is_coseparating [HasCoequalizers C] [Balanced C] {�
 section Mono
 
 theorem IsSeparating.mono {𝒢 : Set C} (h𝒢 : IsSeparating 𝒢) {ℋ : Set C} (h𝒢ℋ : 𝒢 ⊆ ℋ) : IsSeparating ℋ :=
-  fun X Y f g hfg => h𝒢 _ _ $ fun G hG h => hfg _ (h𝒢ℋ hG) _
+  fun X Y f g hfg => (h𝒢 _ _) fun G hG h => hfg _ (h𝒢ℋ hG) _
 #align category_theory.is_separating.mono CategoryTheory.IsSeparating.mono
 
 theorem IsCoseparating.mono {𝒢 : Set C} (h𝒢 : IsCoseparating 𝒢) {ℋ : Set C} (h𝒢ℋ : 𝒢 ⊆ ℋ) : IsCoseparating ℋ :=
-  fun X Y f g hfg => h𝒢 _ _ $ fun G hG h => hfg _ (h𝒢ℋ hG) _
+  fun X Y f g hfg => (h𝒢 _ _) fun G hG h => hfg _ (h𝒢ℋ hG) _
 #align category_theory.is_coseparating.mono CategoryTheory.IsCoseparating.mono
 
 theorem IsDetecting.mono {𝒢 : Set C} (h𝒢 : IsDetecting 𝒢) {ℋ : Set C} (h𝒢ℋ : 𝒢 ⊆ ℋ) : IsDetecting ℋ := fun X Y f hf =>
-  h𝒢 _ $ fun G hG h => hf _ (h𝒢ℋ hG) _
+  (h𝒢 _) fun G hG h => hf _ (h𝒢ℋ hG) _
 #align category_theory.is_detecting.mono CategoryTheory.IsDetecting.mono
 
 theorem IsCodetecting.mono {𝒢 : Set C} (h𝒢 : IsCodetecting 𝒢) {ℋ : Set C} (h𝒢ℋ : 𝒢 ⊆ ℋ) : IsCodetecting ℋ :=
-  fun X Y f hf => h𝒢 _ $ fun G hG h => hf _ (h𝒢ℋ hG) _
+  fun X Y f hf => (h𝒢 _) fun G hG h => hf _ (h𝒢ℋ hG) _
 #align category_theory.is_codetecting.mono CategoryTheory.IsCodetecting.mono
 
 end Mono
@@ -219,7 +219,7 @@ end Mono
 section Empty
 
 theorem thin_of_is_separating_empty (h : IsSeparating (∅ : Set C)) : Quiver.IsThin C := fun _ _ =>
-  ⟨fun f g => h _ _ $ fun G => False.elim⟩
+  ⟨fun f g => (h _ _) fun G => False.elim⟩
 #align category_theory.thin_of_is_separating_empty CategoryTheory.thin_of_is_separating_empty
 
 theorem is_separating_empty_of_thin [Quiver.IsThin C] : IsSeparating (∅ : Set C) := fun X Y f g hfg =>
@@ -227,7 +227,7 @@ theorem is_separating_empty_of_thin [Quiver.IsThin C] : IsSeparating (∅ : Set 
 #align category_theory.is_separating_empty_of_thin CategoryTheory.is_separating_empty_of_thin
 
 theorem thin_of_is_coseparating_empty (h : IsCoseparating (∅ : Set C)) : Quiver.IsThin C := fun _ _ =>
-  ⟨fun f g => h _ _ $ fun G => False.elim⟩
+  ⟨fun f g => (h _ _) fun G => False.elim⟩
 #align category_theory.thin_of_is_coseparating_empty CategoryTheory.thin_of_is_coseparating_empty
 
 theorem is_coseparating_empty_of_thin [Quiver.IsThin C] : IsCoseparating (∅ : Set C) := fun X Y f g hfg =>
@@ -235,7 +235,7 @@ theorem is_coseparating_empty_of_thin [Quiver.IsThin C] : IsCoseparating (∅ : 
 #align category_theory.is_coseparating_empty_of_thin CategoryTheory.is_coseparating_empty_of_thin
 
 theorem groupoid_of_is_detecting_empty (h : IsDetecting (∅ : Set C)) {X Y : C} (f : X ⟶ Y) : IsIso f :=
-  h _ $ fun G => False.elim
+  (h _) fun G => False.elim
 #align category_theory.groupoid_of_is_detecting_empty CategoryTheory.groupoid_of_is_detecting_empty
 
 theorem is_detecting_empty_of_groupoid [∀ {X Y : C} (f : X ⟶ Y), IsIso f] : IsDetecting (∅ : Set C) := fun X Y f hf =>
@@ -243,7 +243,7 @@ theorem is_detecting_empty_of_groupoid [∀ {X Y : C} (f : X ⟶ Y), IsIso f] : 
 #align category_theory.is_detecting_empty_of_groupoid CategoryTheory.is_detecting_empty_of_groupoid
 
 theorem groupoid_of_is_codetecting_empty (h : IsCodetecting (∅ : Set C)) {X Y : C} (f : X ⟶ Y) : IsIso f :=
-  h _ $ fun G => False.elim
+  (h _) fun G => False.elim
 #align category_theory.groupoid_of_is_codetecting_empty CategoryTheory.groupoid_of_is_codetecting_empty
 
 theorem is_codetecting_empty_of_groupoid [∀ {X Y : C} (f : X ⟶ Y), IsIso f] : IsCodetecting (∅ : Set C) :=
@@ -252,10 +252,10 @@ theorem is_codetecting_empty_of_groupoid [∀ {X Y : C} (f : X ⟶ Y), IsIso f] 
 
 end Empty
 
-theorem is_separating_iff_epi (𝒢 : Set C) [∀ A : C, HasCoproduct fun f : Σ G : 𝒢, (G : C) ⟶ A => (f.1 : C)] :
+theorem is_separating_iff_epi (𝒢 : Set C) [∀ A : C, HasCoproduct fun f : ΣG : 𝒢, (G : C) ⟶ A => (f.1 : C)] :
     IsSeparating 𝒢 ↔ ∀ A : C, Epi (Sigma.desc (@Sigma.snd 𝒢 fun G => (G : C) ⟶ A)) := by
   refine' ⟨fun h A => ⟨fun Z u v huv => h _ _ fun G hG f => _⟩, fun h X Y f g hh => _⟩
-  · simpa using sigma.ι (fun f : Σ G : 𝒢, (G : C) ⟶ A => (f.1 : C)) ⟨⟨G, hG⟩, f⟩ ≫= huv
+  · simpa using sigma.ι (fun f : ΣG : 𝒢, (G : C) ⟶ A => (f.1 : C)) ⟨⟨G, hG⟩, f⟩ ≫= huv
     
   · haveI := h X
     refine' (cancel_epi (sigma.desc (@Sigma.snd 𝒢 fun G => (G : C) ⟶ X))).1 (colimit.hom_ext fun j => _)
@@ -263,10 +263,10 @@ theorem is_separating_iff_epi (𝒢 : Set C) [∀ A : C, HasCoproduct fun f : Σ
     
 #align category_theory.is_separating_iff_epi CategoryTheory.is_separating_iff_epi
 
-theorem is_coseparating_iff_mono (𝒢 : Set C) [∀ A : C, HasProduct fun f : Σ G : 𝒢, A ⟶ (G : C) => (f.1 : C)] :
+theorem is_coseparating_iff_mono (𝒢 : Set C) [∀ A : C, HasProduct fun f : ΣG : 𝒢, A ⟶ (G : C) => (f.1 : C)] :
     IsCoseparating 𝒢 ↔ ∀ A : C, Mono (Pi.lift (@Sigma.snd 𝒢 fun G => A ⟶ (G : C))) := by
   refine' ⟨fun h A => ⟨fun Z u v huv => h _ _ fun G hG f => _⟩, fun h X Y f g hh => _⟩
-  · simpa using huv =≫ pi.π (fun f : Σ G : 𝒢, A ⟶ (G : C) => (f.1 : C)) ⟨⟨G, hG⟩, f⟩
+  · simpa using huv =≫ pi.π (fun f : ΣG : 𝒢, A ⟶ (G : C) => (f.1 : C)) ⟨⟨G, hG⟩, f⟩
     
   · haveI := h Y
     refine' (cancel_mono (pi.lift (@Sigma.snd 𝒢 fun G => Y ⟶ (G : C)))).1 (limit.hom_ext fun j => _)
@@ -282,12 +282,12 @@ theorem is_coseparating_iff_mono (𝒢 : Set C) [∀ A : C, HasProduct fun f : �
 theorem has_initial_of_is_coseparating [WellPowered C] [HasLimits C] {𝒢 : Set C} [Small.{v₁} 𝒢]
     (h𝒢 : IsCoseparating 𝒢) : HasInitial C := by
   haveI := has_products_of_shape_of_small C 𝒢
-  haveI := fun A => has_products_of_shape_of_small.{v₁} C (Σ G : 𝒢, A ⟶ (G : C))
+  haveI := fun A => has_products_of_shape_of_small.{v₁} C (ΣG : 𝒢, A ⟶ (G : C))
   letI := completeLatticeOfCompleteSemilatticeInf (subobject (pi_obj (coe : 𝒢 → C)))
   suffices ∀ A : C, Unique (((⊥ : subobject (pi_obj (coe : 𝒢 → C))) : C) ⟶ A) by
     exact has_initial_of_unique ((⊥ : subobject (pi_obj (coe : 𝒢 → C))) : C)
   refine' fun A => ⟨⟨_⟩, fun f => _⟩
-  · let s := pi.lift fun f : Σ G : 𝒢, A ⟶ (G : C) => id (pi.π (coe : 𝒢 → C)) f.1
+  · let s := pi.lift fun f : ΣG : 𝒢, A ⟶ (G : C) => id (pi.π (coe : 𝒢 → C)) f.1
     let t := pi.lift (@Sigma.snd 𝒢 fun G => A ⟶ (G : C))
     haveI : mono t := (is_coseparating_iff_mono 𝒢).1 h𝒢 A
     exact subobject.of_le_mk _ (pullback.fst : pullback s t ⟶ _) bot_le ≫ pullback.snd
@@ -339,9 +339,9 @@ theorem inf_eq_of_is_detecting [HasPullbacks C] {𝒢 : Set C} (h𝒢 : IsDetect
 theorem eq_of_is_detecting [HasPullbacks C] {𝒢 : Set C} (h𝒢 : IsDetecting 𝒢) {X : C} (P Q : Subobject X)
     (h : ∀ G ∈ 𝒢, ∀ {f : G ⟶ X}, P.Factors f ↔ Q.Factors f) : P = Q :=
   calc
-    P = P ⊓ Q := Eq.symm $ inf_eq_of_is_detecting h𝒢 _ _ $ fun G hG f hf => (h G hG).1 hf
+    P = P ⊓ Q := Eq.symm <| (inf_eq_of_is_detecting h𝒢 _ _) fun G hG f hf => (h G hG).1 hf
     _ = Q ⊓ P := inf_comm
-    _ = Q := inf_eq_of_is_detecting h𝒢 _ _ $ fun G hG f hf => (h G hG).2 hf
+    _ = Q := (inf_eq_of_is_detecting h𝒢 _ _) fun G hG f hf => (h G hG).2 hf
     
 #align category_theory.subobject.eq_of_is_detecting CategoryTheory.Subobject.eq_of_is_detecting
 
@@ -350,7 +350,7 @@ end Subobject
 /-- A category with pullbacks and a small detecting set is well-powered. -/
 theorem well_powered_of_is_detecting [HasPullbacks C] {𝒢 : Set C} [Small.{v₁} 𝒢] (h𝒢 : IsDetecting 𝒢) : WellPowered C :=
   ⟨fun X =>
-    (@small_of_injective _ _ _ fun P : Subobject X => { f : Σ G : 𝒢, G.1 ⟶ X | P.Factors f.2 }) $ fun P Q h =>
+    (@small_of_injective _ _ _ fun P : Subobject X => { f : ΣG : 𝒢, G.1 ⟶ X | P.Factors f.2 }) fun P Q h =>
       Subobject.eq_of_is_detecting h𝒢 _ _ (by simpa [Set.ext_iff] using h)⟩
 #align category_theory.well_powered_of_is_detecting CategoryTheory.well_powered_of_is_detecting
 
@@ -454,10 +454,10 @@ theorem IsCospearator.is_codetector [Balanced C] {G : C} : IsCoseparator G → I
 
 theorem is_separator_def (G : C) : IsSeparator G ↔ ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), (∀ h : G ⟶ X, h ≫ f = h ≫ g) → f = g :=
   ⟨fun hG X Y f g hfg =>
-    hG _ _ $ fun H hH h => by
+    (hG _ _) fun H hH h => by
       obtain rfl := Set.mem_singleton_iff.1 hH
       exact hfg h,
-    fun hG X Y f g hfg => hG _ _ $ fun h => hfg _ (Set.mem_singleton _) _⟩
+    fun hG X Y f g hfg => (hG _ _) fun h => hfg _ (Set.mem_singleton _) _⟩
 #align category_theory.is_separator_def CategoryTheory.is_separator_def
 
 theorem IsSeparator.def {G : C} : IsSeparator G → ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), (∀ h : G ⟶ X, h ≫ f = h ≫ g) → f = g :=
@@ -467,10 +467,10 @@ theorem IsSeparator.def {G : C} : IsSeparator G → ∀ ⦃X Y : C⦄ (f g : X �
 theorem is_coseparator_def (G : C) :
     IsCoseparator G ↔ ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), (∀ h : Y ⟶ G, f ≫ h = g ≫ h) → f = g :=
   ⟨fun hG X Y f g hfg =>
-    hG _ _ $ fun H hH h => by
+    (hG _ _) fun H hH h => by
       obtain rfl := Set.mem_singleton_iff.1 hH
       exact hfg h,
-    fun hG X Y f g hfg => hG _ _ $ fun h => hfg _ (Set.mem_singleton _) _⟩
+    fun hG X Y f g hfg => (hG _ _) fun h => hfg _ (Set.mem_singleton _) _⟩
 #align category_theory.is_coseparator_def CategoryTheory.is_coseparator_def
 
 theorem IsCoseparator.def {G : C} : IsCoseparator G → ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), (∀ h : Y ⟶ G, f ≫ h = g ≫ h) → f = g :=
@@ -479,10 +479,10 @@ theorem IsCoseparator.def {G : C} : IsCoseparator G → ∀ ⦃X Y : C⦄ (f g :
 
 theorem is_detector_def (G : C) : IsDetector G ↔ ∀ ⦃X Y : C⦄ (f : X ⟶ Y), (∀ h : G ⟶ Y, ∃! h', h' ≫ f = h) → IsIso f :=
   ⟨fun hG X Y f hf =>
-    hG _ $ fun H hH h => by
+    (hG _) fun H hH h => by
       obtain rfl := Set.mem_singleton_iff.1 hH
       exact hf h,
-    fun hG X Y f hf => hG _ $ fun h => hf _ (Set.mem_singleton _) _⟩
+    fun hG X Y f hf => (hG _) fun h => hf _ (Set.mem_singleton _) _⟩
 #align category_theory.is_detector_def CategoryTheory.is_detector_def
 
 theorem IsDetector.def {G : C} : IsDetector G → ∀ ⦃X Y : C⦄ (f : X ⟶ Y), (∀ h : G ⟶ Y, ∃! h', h' ≫ f = h) → IsIso f :=
@@ -492,10 +492,10 @@ theorem IsDetector.def {G : C} : IsDetector G → ∀ ⦃X Y : C⦄ (f : X ⟶ Y
 theorem is_codetector_def (G : C) :
     IsCodetector G ↔ ∀ ⦃X Y : C⦄ (f : X ⟶ Y), (∀ h : X ⟶ G, ∃! h', f ≫ h' = h) → IsIso f :=
   ⟨fun hG X Y f hf =>
-    hG _ $ fun H hH h => by
+    (hG _) fun H hH h => by
       obtain rfl := Set.mem_singleton_iff.1 hH
       exact hf h,
-    fun hG X Y f hf => hG _ $ fun h => hf _ (Set.mem_singleton _) _⟩
+    fun hG X Y f hf => (hG _) fun h => hf _ (Set.mem_singleton _) _⟩
 #align category_theory.is_codetector_def CategoryTheory.is_codetector_def
 
 theorem IsCodetector.def {G : C} :
@@ -505,12 +505,12 @@ theorem IsCodetector.def {G : C} :
 
 theorem is_separator_iff_faithful_coyoneda_obj (G : C) : IsSeparator G ↔ Faithful (coyoneda.obj (op G)) :=
   ⟨fun hG => ⟨fun X Y f g hfg => hG.def _ _ (congr_fun hfg)⟩, fun h =>
-    (is_separator_def _).2 $ fun X Y f g hfg => (coyoneda.obj (op G)).map_injective (funext hfg)⟩
+    (is_separator_def _).2 fun X Y f g hfg => (coyoneda.obj (op G)).map_injective (funext hfg)⟩
 #align category_theory.is_separator_iff_faithful_coyoneda_obj CategoryTheory.is_separator_iff_faithful_coyoneda_obj
 
 theorem is_coseparator_iff_faithful_yoneda_obj (G : C) : IsCoseparator G ↔ Faithful (yoneda.obj G) :=
   ⟨fun hG => ⟨fun X Y f g hfg => Quiver.Hom.unop_inj (hG.def _ _ (congr_fun hfg))⟩, fun h =>
-    (is_coseparator_def _).2 $ fun X Y f g hfg => Quiver.Hom.op_inj $ (yoneda.obj G).map_injective (funext hfg)⟩
+    (is_coseparator_def _).2 fun X Y f g hfg => Quiver.Hom.op_inj <| (yoneda.obj G).map_injective (funext hfg)⟩
 #align category_theory.is_coseparator_iff_faithful_yoneda_obj CategoryTheory.is_coseparator_iff_faithful_yoneda_obj
 
 theorem is_separator_iff_epi (G : C) [∀ A : C, HasCoproduct fun f : G ⟶ A => G] :
@@ -561,12 +561,12 @@ theorem is_separator_coprod (G H : C) [HasBinaryCoproduct G H] : IsSeparator (G 
 
 theorem is_separator_coprod_of_is_separator_left (G H : C) [HasBinaryCoproduct G H] (hG : IsSeparator G) :
     IsSeparator (G ⨿ H) :=
-  (is_separator_coprod _ _).2 $ IsSeparating.mono hG $ by simp
+  (is_separator_coprod _ _).2 <| IsSeparating.mono hG <| by simp
 #align category_theory.is_separator_coprod_of_is_separator_left CategoryTheory.is_separator_coprod_of_is_separator_left
 
 theorem is_separator_coprod_of_is_separator_right (G H : C) [HasBinaryCoproduct G H] (hH : IsSeparator H) :
     IsSeparator (G ⨿ H) :=
-  (is_separator_coprod _ _).2 $ IsSeparating.mono hH $ by simp
+  (is_separator_coprod _ _).2 <| IsSeparating.mono hH <| by simp
 #align
   category_theory.is_separator_coprod_of_is_separator_right CategoryTheory.is_separator_coprod_of_is_separator_right
 
@@ -583,7 +583,7 @@ theorem is_separator_sigma {β : Type w} (f : β → C) [HasCoproduct f] : IsSep
 
 theorem is_separator_sigma_of_is_separator {β : Type w} (f : β → C) [HasCoproduct f] (b : β) (hb : IsSeparator (f b)) :
     IsSeparator (∐ f) :=
-  (is_separator_sigma _).2 $ IsSeparating.mono hb $ by simp
+  (is_separator_sigma _).2 <| IsSeparating.mono hb <| by simp
 #align category_theory.is_separator_sigma_of_is_separator CategoryTheory.is_separator_sigma_of_is_separator
 
 theorem is_coseparator_prod (G H : C) [HasBinaryProduct G H] :
@@ -606,13 +606,13 @@ theorem is_coseparator_prod (G H : C) [HasBinaryProduct G H] :
 
 theorem is_coseparator_prod_of_is_coseparator_left (G H : C) [HasBinaryProduct G H] (hG : IsCoseparator G) :
     IsCoseparator (G ⨯ H) :=
-  (is_coseparator_prod _ _).2 $ IsCoseparating.mono hG $ by simp
+  (is_coseparator_prod _ _).2 <| IsCoseparating.mono hG <| by simp
 #align
   category_theory.is_coseparator_prod_of_is_coseparator_left CategoryTheory.is_coseparator_prod_of_is_coseparator_left
 
 theorem is_coseparator_prod_of_is_coseparator_right (G H : C) [HasBinaryProduct G H] (hH : IsCoseparator H) :
     IsCoseparator (G ⨯ H) :=
-  (is_coseparator_prod _ _).2 $ IsCoseparating.mono hH $ by simp
+  (is_coseparator_prod _ _).2 <| IsCoseparating.mono hH <| by simp
 #align
   category_theory.is_coseparator_prod_of_is_coseparator_right CategoryTheory.is_coseparator_prod_of_is_coseparator_right
 
@@ -629,7 +629,7 @@ theorem is_coseparator_pi {β : Type w} (f : β → C) [HasProduct f] :
 
 theorem is_coseparator_pi_of_is_coseparator {β : Type w} (f : β → C) [HasProduct f] (b : β) (hb : IsCoseparator (f b)) :
     IsCoseparator (∏ f) :=
-  (is_coseparator_pi _).2 $ IsCoseparating.mono hb $ by simp
+  (is_coseparator_pi _).2 <| IsCoseparating.mono hb <| by simp
 #align category_theory.is_coseparator_pi_of_is_coseparator CategoryTheory.is_coseparator_pi_of_is_coseparator
 
 end ZeroMorphisms

@@ -83,25 +83,25 @@ instance reflects_epimorphisms_comp (F : C ⥤ D) (G : D ⥤ E) [ReflectsEpimorp
 
 theorem preserves_epimorphisms_of_preserves_of_reflects (F : C ⥤ D) (G : D ⥤ E) [PreservesEpimorphisms (F ⋙ G)]
     [ReflectsEpimorphisms G] : PreservesEpimorphisms F :=
-  ⟨fun X Y f hf => G.epi_of_epi_map $ show Epi ((F ⋙ G).map f) from inferInstance⟩
+  ⟨fun X Y f hf => G.epi_of_epi_map <| show Epi ((F ⋙ G).map f) from inferInstance⟩
 #align
   category_theory.functor.preserves_epimorphisms_of_preserves_of_reflects CategoryTheory.Functor.preserves_epimorphisms_of_preserves_of_reflects
 
 theorem preserves_monomorphisms_of_preserves_of_reflects (F : C ⥤ D) (G : D ⥤ E) [PreservesMonomorphisms (F ⋙ G)]
     [ReflectsMonomorphisms G] : PreservesMonomorphisms F :=
-  ⟨fun X Y f hf => G.mono_of_mono_map $ show Mono ((F ⋙ G).map f) from inferInstance⟩
+  ⟨fun X Y f hf => G.mono_of_mono_map <| show Mono ((F ⋙ G).map f) from inferInstance⟩
 #align
   category_theory.functor.preserves_monomorphisms_of_preserves_of_reflects CategoryTheory.Functor.preserves_monomorphisms_of_preserves_of_reflects
 
 theorem reflects_epimorphisms_of_preserves_of_reflects (F : C ⥤ D) (G : D ⥤ E) [PreservesEpimorphisms G]
     [ReflectsEpimorphisms (F ⋙ G)] : ReflectsEpimorphisms F :=
-  ⟨fun X Y f hf => (F ⋙ G).epi_of_epi_map $ show Epi (G.map (F.map f)) from inferInstance⟩
+  ⟨fun X Y f hf => (F ⋙ G).epi_of_epi_map <| show Epi (G.map (F.map f)) from inferInstance⟩
 #align
   category_theory.functor.reflects_epimorphisms_of_preserves_of_reflects CategoryTheory.Functor.reflects_epimorphisms_of_preserves_of_reflects
 
 theorem reflects_monomorphisms_of_preserves_of_reflects (F : C ⥤ D) (G : D ⥤ E) [PreservesMonomorphisms G]
     [ReflectsMonomorphisms (F ⋙ G)] : ReflectsMonomorphisms F :=
-  ⟨fun X Y f hf => (F ⋙ G).mono_of_mono_map $ show Mono (G.map (F.map f)) from inferInstance⟩
+  ⟨fun X Y f hf => (F ⋙ G).mono_of_mono_map <| show Mono (G.map (F.map f)) from inferInstance⟩
 #align
   category_theory.functor.reflects_monomorphisms_of_preserves_of_reflects CategoryTheory.Functor.reflects_monomorphisms_of_preserves_of_reflects
 

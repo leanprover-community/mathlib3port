@@ -3,7 +3,8 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
-import Mathbin.MeasureTheory.Function.ConditionalExpectation.Real
+import Mathbin.Probability.ProbabilityMassFunction.Basic
+import Mathbin.MeasureTheory.Function.ConditionalExpectation.Basic
 
 /-! # Notations for probability theory
 
@@ -44,7 +45,7 @@ scoped[ProbabilityTheory] notation:50 X " =ₐₛ " Y:50 => X =ᵐ[MeasureTheory
 scoped[ProbabilityTheory] notation:50 X " ≤ₐₛ " Y:50 => X ≤ᵐ[MeasureTheory.MeasureSpace.volume] Y
 
 -- mathport name: rn_deriv
-scoped[ProbabilityTheory] notation "∂" P "/∂" Q:50 => P.rnDeriv Q
+scoped[ProbabilityTheory] notation "∂" P "/∂" Q:50 => P.rn_deriv Q
 
 -- mathport name: measure_space.volume
 scoped[ProbabilityTheory] notation "ℙ" => MeasureTheory.MeasureSpace.volume

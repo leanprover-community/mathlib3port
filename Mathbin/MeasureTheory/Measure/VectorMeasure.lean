@@ -125,7 +125,7 @@ theorem ext_iff (v w : VectorMeasure α M) : v = w ↔ ∀ i : Set α, Measurabl
     
   · rw [ext_iff']
     intro h i
-    by_cases hi:MeasurableSet i
+    by_cases hi : MeasurableSet i
     · exact h i hi
       
     · simp_rw [not_measurable _ hi]
@@ -144,7 +144,7 @@ theorem has_sum_of_disjoint_Union [Countable β] {f : β → Set α} (hf₁ : �
     (hf₂ : Pairwise (Disjoint on f)) : HasSum (fun i => v (f i)) (v (⋃ i, f i)) := by
   cases nonempty_encodable β
   set g := fun i : ℕ => ⋃ (b : β) (H : b ∈ Encodable.decode₂ β i), f b with hg
-  have hg₁ : ∀ i, MeasurableSet (g i) := fun _ => MeasurableSet.union fun b => MeasurableSet.union $ fun _ => hf₁ b
+  have hg₁ : ∀ i, MeasurableSet (g i) := fun _ => MeasurableSet.union fun b => MeasurableSet.union fun _ => hf₁ b
   have hg₂ : Pairwise (Disjoint on g) := Encodable.Union_decode₂_disjoint_on hf₂
   have := v.of_disjoint_Union_nat hg₁ hg₂
   rw [hg, Encodable.Union_decode₂] at this
@@ -358,7 +358,7 @@ def neg (v : VectorMeasure α M) : VectorMeasure α M where
   measureOf' := -v
   empty' := by simp
   not_measurable' _ hi := by simp [v.not_measurable hi]
-  m_Union' f hf₁ hf₂ := HasSum.neg $ v.m_Union hf₁ hf₂
+  m_Union' f hf₁ hf₂ := HasSum.neg <| v.m_Union hf₁ hf₂
 #align measure_theory.vector_measure.neg MeasureTheory.VectorMeasure.neg
 
 instance : Neg (VectorMeasure α M) :=
@@ -626,7 +626,7 @@ theorem map_id : v.map id = v :=
 
 @[simp]
 theorem map_zero (f : α → β) : (0 : VectorMeasure α M).map f = 0 := by
-  by_cases hf:Measurable f
+  by_cases hf : Measurable f
   · ext (i hi)
     rw [map_apply _ hf hi, zero_apply, zero_apply]
     
@@ -713,7 +713,7 @@ def restrict (v : VectorMeasure α M) (i : Set α) : VectorMeasure α M :=
       not_measurable' := fun i hi => if_neg hi,
       m_Union' := by
         intro f hf₁ hf₂
-        convert v.m_Union (fun n => (hf₁ n).inter hi) (hf₂.mono $ fun i j => Disjoint.mono inf_le_left inf_le_left)
+        convert v.m_Union (fun n => (hf₁ n).inter hi) (hf₂.mono fun i j => Disjoint.mono inf_le_left inf_le_left)
         · ext n
           rw [if_pos (hf₁ n)]
           
@@ -748,7 +748,7 @@ theorem restrict_univ : v.restrict univ = v :=
 
 @[simp]
 theorem restrict_zero {i : Set α} : (0 : VectorMeasure α M).restrict i = 0 := by
-  by_cases hi:MeasurableSet i
+  by_cases hi : MeasurableSet i
   · ext (j hj)
     rw [restrict_apply 0 hi hj]
     rfl
@@ -762,7 +762,7 @@ section HasContinuousAdd
 variable [HasContinuousAdd M]
 
 theorem map_add (v w : VectorMeasure α M) (f : α → β) : (v + w).map f = v.map f + w.map f := by
-  by_cases hf:Measurable f
+  by_cases hf : Measurable f
   · ext (i hi)
     simp [map_apply _ hf hi]
     
@@ -779,7 +779,7 @@ def mapGm (f : α → β) : VectorMeasure α M →+ VectorMeasure β M where
 #align measure_theory.vector_measure.map_gm MeasureTheory.VectorMeasure.mapGm
 
 theorem restrict_add (v w : VectorMeasure α M) (i : Set α) : (v + w).restrict i = v.restrict i + w.restrict i := by
-  by_cases hi:MeasurableSet i
+  by_cases hi : MeasurableSet i
   · ext (j hj)
     simp [restrict_apply _ hi hj]
     
@@ -811,7 +811,7 @@ include m
 
 @[simp]
 theorem map_smul {v : VectorMeasure α M} {f : α → β} (c : R) : (c • v).map f = c • v.map f := by
-  by_cases hf:Measurable f
+  by_cases hf : Measurable f
   · ext (i hi)
     simp [map_apply _ hf hi]
     
@@ -824,7 +824,7 @@ theorem map_smul {v : VectorMeasure α M} {f : α → β} (c : R) : (c • v).ma
 
 @[simp]
 theorem restrict_smul {v : VectorMeasure α M} {i : Set α} (c : R) : (c • v).restrict i = c • v.restrict i := by
-  by_cases hi:MeasurableSet i
+  by_cases hi : MeasurableSet i
   · ext (j hj)
     simp [restrict_apply _ hi hj]
     
@@ -888,7 +888,7 @@ theorem le_iff : v ≤ w ↔ ∀ i, MeasurableSet i → v i ≤ w i :=
 
 theorem le_iff' : v ≤ w ↔ ∀ i, v i ≤ w i := by
   refine' ⟨fun h i => _, fun h i hi => h i⟩
-  by_cases hi:MeasurableSet i
+  by_cases hi : MeasurableSet i
   · exact h i hi
     
   · rw [v.not_measurable hi, w.not_measurable hi]
@@ -917,7 +917,7 @@ theorem restrict_le_restrict_iff {i : Set α} (hi : MeasurableSet i) :
 
 theorem subset_le_of_restrict_le_restrict {i : Set α} (hi : MeasurableSet i) (hi₂ : v ≤[i] w) {j : Set α} (hj : j ⊆ i) :
     v j ≤ w j := by
-  by_cases hj₁:MeasurableSet j
+  by_cases hj₁ : MeasurableSet j
   · exact (restrict_le_restrict_iff _ _ hi).1 hi₂ hj₁ hj
     
   · rw [v.not_measurable hj₁, w.not_measurable hj₁]
@@ -926,7 +926,7 @@ theorem subset_le_of_restrict_le_restrict {i : Set α} (hi : MeasurableSet i) (h
   measure_theory.vector_measure.subset_le_of_restrict_le_restrict MeasureTheory.VectorMeasure.subset_le_of_restrict_le_restrict
 
 theorem restrict_le_restrict_of_subset_le {i : Set α} (h : ∀ ⦃j⦄, MeasurableSet j → j ⊆ i → v j ≤ w j) : v ≤[i] w := by
-  by_cases hi:MeasurableSet i
+  by_cases hi : MeasurableSet i
   · exact (restrict_le_restrict_iff _ _ hi).2 h
     
   · rw [restrict_not_measurable v hi, restrict_not_measurable w hi]
@@ -1054,7 +1054,7 @@ variable {M : Type _} [TopologicalSpace M] [OrderedAddCommMonoid M]
 variable (v w : VectorMeasure α M) {i j : Set α}
 
 theorem nonneg_of_zero_le_restrict (hi₂ : 0 ≤[i] v) : 0 ≤ v i := by
-  by_cases hi₁:MeasurableSet i
+  by_cases hi₁ : MeasurableSet i
   · exact (restrict_le_restrict_iff _ _ hi₁).1 hi₂ hi₁ Set.Subset.rfl
     
   · rw [v.not_measurable hi₁]
@@ -1062,7 +1062,7 @@ theorem nonneg_of_zero_le_restrict (hi₂ : 0 ≤[i] v) : 0 ≤ v i := by
 #align measure_theory.vector_measure.nonneg_of_zero_le_restrict MeasureTheory.VectorMeasure.nonneg_of_zero_le_restrict
 
 theorem nonpos_of_restrict_le_zero (hi₂ : v ≤[i] 0) : v i ≤ 0 := by
-  by_cases hi₁:MeasurableSet i
+  by_cases hi₁ : MeasurableSet i
   · exact (restrict_le_restrict_iff _ _ hi₁).1 hi₂ hi₁ Set.Subset.rfl
     
   · rw [v.not_measurable hi₁]
@@ -1162,7 +1162,7 @@ variable {v : VectorMeasure α M} {w : VectorMeasure α N}
 
 theorem mk (h : ∀ ⦃s : Set α⦄, MeasurableSet s → w s = 0 → v s = 0) : v ≪ᵥ w := by
   intro s hs
-  by_cases hmeas:MeasurableSet s
+  by_cases hmeas : MeasurableSet s
   · exact h hmeas hs
     
   · exact not_measurable v hmeas
@@ -1179,7 +1179,7 @@ theorem refl (v : VectorMeasure α M) : v ≪ᵥ v :=
 
 @[trans]
 theorem trans {u : VectorMeasure α L} {v : VectorMeasure α M} {w : VectorMeasure α N} (huv : u ≪ᵥ v) (hvw : v ≪ᵥ w) :
-    u ≪ᵥ w := fun _ hs => huv $ hvw hs
+    u ≪ᵥ w := fun _ hs => huv <| hvw hs
 #align measure_theory.vector_measure.absolutely_continuous.trans MeasureTheory.VectorMeasure.AbsolutelyContinuous.trans
 
 theorem zero (v : VectorMeasure α N) : (0 : VectorMeasure α M) ≪ᵥ v := fun s _ => VectorMeasure.zero_apply s
@@ -1213,7 +1213,7 @@ theorem smul {R : Type _} [Semiring R] [DistribMulAction R M] [HasContinuousCons
 #align measure_theory.vector_measure.absolutely_continuous.smul MeasureTheory.VectorMeasure.AbsolutelyContinuous.smul
 
 theorem map [MeasureSpace β] (h : v ≪ᵥ w) (f : α → β) : v.map f ≪ᵥ w.map f := by
-  by_cases hf:Measurable f
+  by_cases hf : Measurable f
   · refine' mk fun s hs hws => _
     rw [map_apply _ hf hs] at hws⊢
     exact h hws
@@ -1230,7 +1230,7 @@ theorem ennreal_to_measure {μ : VectorMeasure α ℝ≥0∞} : (∀ ⦃s : Set 
     rw [← hs, ennreal_to_measure_apply hmeas]
     
   · intro s hs
-    by_cases hmeas:MeasurableSet s
+    by_cases hmeas : MeasurableSet s
     · rw [ennreal_to_measure_apply hmeas] at hs
       exact h hs
       
@@ -1266,7 +1266,7 @@ variable {v v₁ v₂ : VectorMeasure α M} {w w₁ w₂ : VectorMeasure α N}
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(s)) -/
 theorem mk (s : Set α) (hs : MeasurableSet s) (h₁ : ∀ (t) (_ : t ⊆ s), MeasurableSet t → v t = 0)
     (h₂ : ∀ (t) (_ : t ⊆ sᶜ), MeasurableSet t → w t = 0) : v ⊥ᵥ w := by
-  refine' ⟨s, hs, fun t hst => _, fun t hst => _⟩ <;> by_cases ht:MeasurableSet t
+  refine' ⟨s, hs, fun t hst => _, fun t hst => _⟩ <;> by_cases ht : MeasurableSet t
   · exact h₁ t hst ht
     
   · exact not_measurable v ht
@@ -1308,7 +1308,7 @@ theorem addLeft [T2Space N] [HasContinuousAdd M] (h₁ : v₁ ⊥ᵥ w) (h₂ : 
     · exact Disjoint.mono (inter_subset_left _ _) (inter_subset_left _ _) disjoint_diff
       
     · apply subset.antisymm <;> intro x hx
-      · by_cases hxu':x ∈ uᶜ
+      · by_cases hxu' : x ∈ uᶜ
         · exact Or.inl ⟨hxu', hx⟩
           
         rcases ht hx with (hxu | hxv)
@@ -1466,7 +1466,7 @@ theorem to_measure_of_zero_le_apply (hi : 0 ≤[i] s) (hi₁ : MeasurableSet i) 
 /-- Given a signed measure `s` and a negative measurable set `i`, `to_measure_of_le_zero`
 provides the measure, mapping measurable sets `j` to `-s (i ∩ j)`. -/
 def toMeasureOfLeZero (s : SignedMeasure α) (i : Set α) (hi₁ : MeasurableSet i) (hi₂ : s ≤[i] 0) : Measure α :=
-  toMeasureOfZeroLe (-s) i hi₁ $ @neg_zero (VectorMeasure α ℝ) _ ▸ neg_le_neg _ _ hi₁ hi₂
+  toMeasureOfZeroLe (-s) i hi₁ <| @neg_zero (VectorMeasure α ℝ) _ ▸ neg_le_neg _ _ hi₁ hi₂
 #align measure_theory.signed_measure.to_measure_of_le_zero MeasureTheory.SignedMeasure.toMeasureOfLeZero
 
 theorem to_measure_of_le_zero_apply (hi : s ≤[i] 0) (hi₁ : MeasurableSet i) (hj₁ : MeasurableSet j) :

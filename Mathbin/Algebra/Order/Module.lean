@@ -112,7 +112,7 @@ theorem smul_add_smul_le_smul_add_smul [ContravariantClass M M (· + ·) (· ≤
   obtain ⟨d, rfl⟩ := exists_add_of_le hcd
   rw [smul_add, add_right_comm, smul_add, ← add_assoc, add_smul _ _ d]
   rw [le_add_iff_nonneg_right] at hab hcd
-  exact add_le_add_left (le_add_of_nonneg_right $ smul_nonneg hab hcd) _
+  exact add_le_add_left (le_add_of_nonneg_right <| smul_nonneg hab hcd) _
 #align smul_add_smul_le_smul_add_smul smul_add_smul_le_smul_add_smul
 
 /-- Binary **rearrangement inequality**. -/
@@ -129,7 +129,7 @@ theorem smul_add_smul_lt_smul_add_smul [CovariantClass M M (· + ·) (· < ·)] 
   obtain ⟨d, rfl⟩ := exists_add_of_le hcd.le
   rw [smul_add, add_right_comm, smul_add, ← add_assoc, add_smul _ _ d]
   rw [lt_add_iff_pos_right] at hab hcd
-  exact add_lt_add_left (lt_add_of_pos_right _ $ smul_pos hab hcd) _
+  exact add_lt_add_left (lt_add_of_pos_right _ <| smul_pos hab hcd) _
 #align smul_add_smul_lt_smul_add_smul smul_add_smul_lt_smul_add_smul
 
 /-- Binary strict **rearrangement inequality**. -/

@@ -3,8 +3,8 @@ Copyright (c) 2021 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Ashvni Narayanan
 -/
+import Mathbin.Algebra.Order.Group.TypeTags
 import Mathbin.FieldTheory.Ratfunc
-import Mathbin.RingTheory.Algebraic
 import Mathbin.RingTheory.DedekindDomain.IntegralClosure
 import Mathbin.RingTheory.IntegrallyClosed
 import Mathbin.Topology.Algebra.ValuedField
@@ -162,16 +162,16 @@ theorem InftyValuation.map_zero' : inftyValuationDef Fq 0 = 0 :=
 #align function_field.infty_valuation.map_zero' FunctionField.InftyValuation.map_zero'
 
 theorem InftyValuation.map_one' : inftyValuationDef Fq 1 = 1 :=
-  (if_neg one_ne_zero).trans $ by rw [Ratfunc.int_degree_one, of_add_zero, WithZero.coe_one]
+  (if_neg one_ne_zero).trans <| by rw [Ratfunc.int_degree_one, of_add_zero, WithZero.coe_one]
 #align function_field.infty_valuation.map_one' FunctionField.InftyValuation.map_one'
 
 theorem InftyValuation.map_mul' (x y : Ratfunc Fq) :
     inftyValuationDef Fq (x * y) = inftyValuationDef Fq x * inftyValuationDef Fq y := by
   rw [infty_valuation_def, infty_valuation_def, infty_valuation_def]
-  by_cases hx:x = 0
+  by_cases hx : x = 0
   · rw [hx, zero_mul, if_pos (Eq.refl _), zero_mul]
     
-  · by_cases hy:y = 0
+  · by_cases hy : y = 0
     · rw [hy, mul_zero, if_pos (Eq.refl _), mul_zero]
       
     · rw [if_neg hx, if_neg hy, if_neg (mul_ne_zero hx hy), ← WithZero.coe_mul, WithZero.coe_inj, ← of_add_add,
@@ -182,19 +182,19 @@ theorem InftyValuation.map_mul' (x y : Ratfunc Fq) :
 
 theorem InftyValuation.map_add_le_max' (x y : Ratfunc Fq) :
     inftyValuationDef Fq (x + y) ≤ max (inftyValuationDef Fq x) (inftyValuationDef Fq y) := by
-  by_cases hx:x = 0
+  by_cases hx : x = 0
   · rw [hx, zero_add]
     conv_rhs => rw [infty_valuation_def, if_pos (Eq.refl _)]
     rw [max_eq_right (WithZero.zero_le (infty_valuation_def Fq y))]
     exact le_refl _
     
-  · by_cases hy:y = 0
+  · by_cases hy : y = 0
     · rw [hy, add_zero]
       conv_rhs => rw [max_comm, infty_valuation_def, if_pos (Eq.refl _)]
       rw [max_eq_right (WithZero.zero_le (infty_valuation_def Fq x))]
       exact le_refl _
       
-    · by_cases hxy:x + y = 0
+    · by_cases hxy : x + y = 0
       · rw [infty_valuation_def, if_pos hxy]
         exact zero_le'
         
@@ -248,7 +248,7 @@ theorem inftyValuation.polynomial {p : Fq[X]} (hp : p ≠ 0) :
 
 /-- The valued field `Fq(t)` with the valuation at infinity. -/
 def inftyValuedFqt : Valued (Ratfunc Fq) ℤₘ₀ :=
-  Valued.mk' $ inftyValuation Fq
+  Valued.mk' <| inftyValuation Fq
 #align function_field.infty_valued_Fqt FunctionField.inftyValuedFqt
 
 theorem inftyValuedFqt.def {x : Ratfunc Fq} :
@@ -258,7 +258,7 @@ theorem inftyValuedFqt.def {x : Ratfunc Fq} :
 
 /-- The completion `Fq((t⁻¹))`  of `Fq(t)` with respect to the valuation at infinity. -/
 def FqtInfty :=
-  @UniformSpace.Completion (Ratfunc Fq) $ (inftyValuedFqt Fq).toUniformSpace
+  @UniformSpace.Completion (Ratfunc Fq) <| (inftyValuedFqt Fq).toUniformSpace
 #align function_field.Fqt_infty FunctionField.FqtInfty
 
 instance : Field (FqtInfty Fq) :=

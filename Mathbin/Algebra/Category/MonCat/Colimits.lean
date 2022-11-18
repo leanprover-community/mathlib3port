@@ -5,7 +5,7 @@ Authors: Scott Morrison
 -/
 import Mathbin.Algebra.Category.MonCat.Basic
 import Mathbin.CategoryTheory.Limits.HasLimits
-import Mathbin.CategoryTheory.Limits.ConcreteCategory
+import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
 
 /-!
 # The category of monoids has all colimits.

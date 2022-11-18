@@ -54,7 +54,7 @@ protected def listen : WriterT ω m α → WriterT ω m (α × ω)
 
 @[inline]
 protected def pass : WriterT ω m (α × (ω → ω)) → WriterT ω m α
-  | ⟨cmd⟩ => ⟨uncurry (uncurry $ fun x (f : ω → ω) w => (x, f w)) <$> cmd⟩
+  | ⟨cmd⟩ => ⟨uncurry (uncurry fun x (f : ω → ω) w => (x, f w)) <$> cmd⟩
 #align writer_t.pass WriterTₓ.pass
 
 @[inline]
@@ -222,7 +222,7 @@ instance [Monad m] : MonadWriterAdapter ω ω' (WriterT ω m) (WriterT ω' m) :=
 end
 
 instance (ω : Type u) (m out) [MonadRun out m] : MonadRun (fun α => out (α × ω)) (WriterT ω m) :=
-  ⟨fun α x => run $ x.run⟩
+  ⟨fun α x => run <| x.run⟩
 
 /-- reduce the equivalence between two writer monads to the equivalence between
 their underlying monad -/
@@ -230,7 +230,7 @@ def WriterT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v�
     (F : m₁ (α₁ × ω₁) ≃ m₂ (α₂ × ω₂)) : WriterT ω₁ m₁ α₁ ≃ WriterT ω₂ m₂ α₂ where
   toFun := fun ⟨f⟩ => ⟨F f⟩
   invFun := fun ⟨f⟩ => ⟨F.symm f⟩
-  left_inv := fun ⟨f⟩ => congr_arg WriterT.mk $ F.left_inv _
-  right_inv := fun ⟨f⟩ => congr_arg WriterT.mk $ F.right_inv _
+  left_inv := fun ⟨f⟩ => congr_arg WriterT.mk <| F.left_inv _
+  right_inv := fun ⟨f⟩ => congr_arg WriterT.mk <| F.right_inv _
 #align writer_t.equiv WriterTₓ.equiv
 

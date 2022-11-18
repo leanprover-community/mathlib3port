@@ -28,7 +28,7 @@ variable {R S : Type _} [Ring R] [Ring S]
 
 /-- The power series for `1 / (u - x)`. -/
 def invUnitsSub (u : Rˣ) : PowerSeries R :=
-  mk $ fun n => 1 /ₚ u ^ (n + 1)
+  mk fun n => 1 /ₚ u ^ (n + 1)
 #align power_series.inv_units_sub PowerSeries.invUnitsSub
 
 @[simp]
@@ -69,17 +69,17 @@ open Nat
 
 /-- Power series for the exponential function at zero. -/
 def exp : PowerSeries A :=
-  mk $ fun n => algebraMap ℚ A (1 / n !)
+  mk fun n => algebraMap ℚ A (1 / n !)
 #align power_series.exp PowerSeries.exp
 
 /-- Power series for the sine function at zero. -/
 def sin : PowerSeries A :=
-  mk $ fun n => if Even n then 0 else algebraMap ℚ A ((-1) ^ (n / 2) / n !)
+  mk fun n => if Even n then 0 else algebraMap ℚ A ((-1) ^ (n / 2) / n !)
 #align power_series.sin PowerSeries.sin
 
 /-- Power series for the cosine function at zero. -/
 def cos : PowerSeries A :=
-  mk $ fun n => if Even n then algebraMap ℚ A ((-1) ^ (n / 2) / n !) else 0
+  mk fun n => if Even n then algebraMap ℚ A ((-1) ^ (n / 2) / n !) else 0
 #align power_series.cos PowerSeries.cos
 
 variable {A A'} (n : ℕ) (f : A →+* A')
@@ -156,7 +156,7 @@ theorem exp_mul_exp_eq_exp_add [Algebra ℚ A] (a b : A) :
   congr 1
   rw [← map_nat_cast (algebraMap ℚ A) (n.choose x), ← map_mul, ← map_mul]
   refine' RingHom.congr_arg _ _
-  rw [mul_one_div (↑(n.choose x)) _, one_div_mul_one_div]
+  rw [mul_one_div ↑(n.choose x) _, one_div_mul_one_div]
   symm
   rw [div_eq_iff, div_mul_eq_mul_div, one_mul, choose_eq_factorial_div_factorial]
   norm_cast

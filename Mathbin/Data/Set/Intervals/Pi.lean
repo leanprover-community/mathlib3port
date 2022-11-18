@@ -25,17 +25,17 @@ variable [∀ i, Preorder (α i)] (x y : ∀ i, α i)
 
 @[simp]
 theorem pi_univ_Ici : (pi univ fun i => ici (x i)) = ici x :=
-  ext $ fun y => by simp [Pi.le_def]
+  ext fun y => by simp [Pi.le_def]
 #align set.pi_univ_Ici Set.pi_univ_Ici
 
 @[simp]
 theorem pi_univ_Iic : (pi univ fun i => iic (x i)) = iic x :=
-  ext $ fun y => by simp [Pi.le_def]
+  ext fun y => by simp [Pi.le_def]
 #align set.pi_univ_Iic Set.pi_univ_Iic
 
 @[simp]
 theorem pi_univ_Icc : (pi univ fun i => icc (x i) (y i)) = icc x y :=
-  ext $ fun y => by simp [Pi.le_def, forall_and]
+  ext fun y => by simp [Pi.le_def, forall_and]
 #align set.pi_univ_Icc Set.pi_univ_Icc
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (i «expr ∉ » s) -/
@@ -56,7 +56,7 @@ section Nonempty
 variable [Nonempty ι]
 
 theorem pi_univ_Ioi_subset : (pi univ fun i => ioi (x i)) ⊆ ioi x := fun z hz =>
-  ⟨fun i => le_of_lt $ hz i trivial, fun h => Nonempty.elim ‹Nonempty ι› $ fun i => (h i).not_lt (hz i trivial)⟩
+  ⟨fun i => le_of_lt <| hz i trivial, fun h => (Nonempty.elim ‹Nonempty ι›) fun i => (h i).not_lt (hz i trivial)⟩
 #align set.pi_univ_Ioi_subset Set.pi_univ_Ioi_subset
 
 theorem pi_univ_Iio_subset : (pi univ fun i => iio (x i)) ⊆ iio x :=
@@ -64,15 +64,15 @@ theorem pi_univ_Iio_subset : (pi univ fun i => iio (x i)) ⊆ iio x :=
 #align set.pi_univ_Iio_subset Set.pi_univ_Iio_subset
 
 theorem pi_univ_Ioo_subset : (pi univ fun i => ioo (x i) (y i)) ⊆ ioo x y := fun x hx =>
-  ⟨pi_univ_Ioi_subset _ $ fun i hi => (hx i hi).1, pi_univ_Iio_subset _ $ fun i hi => (hx i hi).2⟩
+  ⟨(pi_univ_Ioi_subset _) fun i hi => (hx i hi).1, (pi_univ_Iio_subset _) fun i hi => (hx i hi).2⟩
 #align set.pi_univ_Ioo_subset Set.pi_univ_Ioo_subset
 
 theorem pi_univ_Ioc_subset : (pi univ fun i => ioc (x i) (y i)) ⊆ ioc x y := fun x hx =>
-  ⟨pi_univ_Ioi_subset _ $ fun i hi => (hx i hi).1, fun i => (hx i trivial).2⟩
+  ⟨(pi_univ_Ioi_subset _) fun i hi => (hx i hi).1, fun i => (hx i trivial).2⟩
 #align set.pi_univ_Ioc_subset Set.pi_univ_Ioc_subset
 
 theorem pi_univ_Ico_subset : (pi univ fun i => ico (x i) (y i)) ⊆ ico x y := fun x hx =>
-  ⟨fun i => (hx i trivial).1, pi_univ_Iio_subset _ $ fun i hi => (hx i hi).2⟩
+  ⟨fun i => (hx i trivial).1, (pi_univ_Iio_subset _) fun i hi => (hx i hi).2⟩
 #align set.pi_univ_Ico_subset Set.pi_univ_Ico_subset
 
 end Nonempty

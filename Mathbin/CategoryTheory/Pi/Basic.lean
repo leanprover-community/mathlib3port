@@ -113,7 +113,7 @@ lean 3 declaration is
 but is expected to have type
   forall {I : Type.{w₀}} (C : I -> Type.{u₁}) [_inst_1 : forall (i : I), CategoryTheory.Category.{v₁ u₁} (C i)] {J : Type.{w₀}} {D : J -> Type.{u₁}} [_inst_2 : forall (j : J), CategoryTheory.Category.{v₁ u₁} (D j)] (s : Sum.{w₀ w₀} I J), CategoryTheory.Category.{v₁ u₁} (Sum.elim.{w₀ w₀ succ (succ u₁)} I J Type.{u₁} C D s)
 Case conversion may be inaccurate. Consider using '#align category_theory.pi.sum_elim_category CategoryTheory.pi.sumElimCategoryₓ'. -/
-instance sumElimCategory : ∀ s : I ⊕ J, Category.{v₁} (Sum.elim C D s)
+instance sumElimCategory : ∀ s : Sum I J, Category.{v₁} (Sum.elim C D s)
   | Sum.inl i => by
     dsimp
     infer_instance
@@ -126,7 +126,7 @@ instance sumElimCategory : ∀ s : I ⊕ J, Category.{v₁} (Sum.elim C D s)
 to obtain an `I ⊕ J`-indexed family of objects.
 -/
 @[simps]
-def sum : (∀ i, C i) ⥤ (∀ j, D j) ⥤ ∀ s : I ⊕ J, Sum.elim C D s where
+def sum : (∀ i, C i) ⥤ (∀ j, D j) ⥤ ∀ s : Sum I J, Sum.elim C D s where
   obj f := { obj := fun g s => Sum.rec f g s, map := fun g g' α s => Sum.rec (fun i => 𝟙 (f i)) α s }
   map f f' α := { app := fun g s => Sum.rec α (fun j => 𝟙 (g j)) s }
 #align category_theory.pi.sum CategoryTheory.pi.sum

@@ -86,7 +86,7 @@ theorem self_empty {n : ℕ} : ico n n = [] :=
 
 @[simp]
 theorem eq_empty_iff {n m : ℕ} : ico n m = [] ↔ m ≤ n :=
-  Iff.intro (fun h => tsub_eq_zero_iff_le.mp $ by rw [← length, h, List.length]) eq_nil_of_le
+  Iff.intro (fun h => tsub_eq_zero_iff_le.mp <| by rw [← length, h, List.length]) eq_nil_of_le
 #align list.Ico.eq_empty_iff List.ico.eq_empty_iff
 
 theorem append_consecutive {n m l : ℕ} (hnm : n ≤ m) (hml : m ≤ l) : ico n m ++ ico m l = ico n l := by
@@ -151,11 +151,11 @@ theorem not_mem_top {n m : ℕ} : m ∉ ico n m := by simp
 #align list.Ico.not_mem_top List.ico.not_mem_top
 
 theorem filter_lt_of_top_le {n m l : ℕ} (hml : m ≤ l) : ((ico n m).filter fun x => x < l) = ico n m :=
-  filter_eq_self.2 $ fun k hk => lt_of_lt_of_le (mem.1 hk).2 hml
+  filter_eq_self.2 fun k hk => lt_of_lt_of_le (mem.1 hk).2 hml
 #align list.Ico.filter_lt_of_top_le List.ico.filter_lt_of_top_le
 
 theorem filter_lt_of_le_bot {n m l : ℕ} (hln : l ≤ n) : ((ico n m).filter fun x => x < l) = [] :=
-  filter_eq_nil.2 $ fun k hk => not_lt_of_le $ le_trans hln $ (mem.1 hk).1
+  filter_eq_nil.2 fun k hk => not_lt_of_le <| le_trans hln <| (mem.1 hk).1
 #align list.Ico.filter_lt_of_le_bot List.ico.filter_lt_of_le_bot
 
 theorem filter_lt_of_ge {n m l : ℕ} (hlm : l ≤ m) : ((ico n m).filter fun x => x < l) = ico n l := by
@@ -177,11 +177,11 @@ theorem filter_lt (n m l : ℕ) : ((ico n m).filter fun x => x < l) = ico n (min
 #align list.Ico.filter_lt List.ico.filter_lt
 
 theorem filter_le_of_le_bot {n m l : ℕ} (hln : l ≤ n) : ((ico n m).filter fun x => l ≤ x) = ico n m :=
-  filter_eq_self.2 $ fun k hk => le_trans hln (mem.1 hk).1
+  filter_eq_self.2 fun k hk => le_trans hln (mem.1 hk).1
 #align list.Ico.filter_le_of_le_bot List.ico.filter_le_of_le_bot
 
 theorem filter_le_of_top_le {n m l : ℕ} (hml : m ≤ l) : ((ico n m).filter fun x => l ≤ x) = [] :=
-  filter_eq_nil.2 $ fun k hk => not_le_of_gt (lt_of_lt_of_le (mem.1 hk).2 hml)
+  filter_eq_nil.2 fun k hk => not_le_of_gt (lt_of_lt_of_le (mem.1 hk).2 hml)
 #align list.Ico.filter_le_of_top_le List.ico.filter_le_of_top_le
 
 theorem filter_le_of_le {n m l : ℕ} (hnl : n ≤ l) : ((ico n m).filter fun x => l ≤ x) = ico l m := by
@@ -219,12 +219,12 @@ theorem filter_le_of_bot {n m : ℕ} (hnm : n < m) : ((ico n m).filter fun x => 
 3. n ∈ Ico a b
 -/
 theorem trichotomy (n a b : ℕ) : n < a ∨ b ≤ n ∨ n ∈ ico a b := by
-  by_cases h₁:n < a
+  by_cases h₁ : n < a
   · left
     exact h₁
     
   · right
-    by_cases h₂:n ∈ Ico a b
+    by_cases h₂ : n ∈ Ico a b
     · right
       exact h₂
       

@@ -106,7 +106,7 @@ theorem lift_alternating_apply_ι_multi {n : ℕ} (f : ∀ i, AlternatingMap R M
 @[simp]
 theorem lift_alternating_comp_ι_multi {n : ℕ} (f : ∀ i, AlternatingMap R M N (Fin i)) :
     (liftAlternating f).compAlternatingMap (ιMulti R n) = f n :=
-  AlternatingMap.ext $ lift_alternating_apply_ι_multi f
+  AlternatingMap.ext <| lift_alternating_apply_ι_multi f
 #align exterior_algebra.lift_alternating_comp_ι_multi ExteriorAlgebra.lift_alternating_comp_ι_multi
 
 @[simp]
@@ -146,8 +146,8 @@ def liftAlternatingEquiv : (∀ i, AlternatingMap R M N (Fin i)) ≃ₗ[R] Exter
   map_add' := map_add _
   map_smul' := map_smul _
   invFun F i := F.compAlternatingMap (ιMulti R i)
-  left_inv f := funext $ fun i => lift_alternating_comp_ι_multi _
-  right_inv F := (lift_alternating_comp _ _).trans $ by rw [lift_alternating_ι_multi, LinearMap.comp_id]
+  left_inv f := funext fun i => lift_alternating_comp_ι_multi _
+  right_inv F := (lift_alternating_comp _ _).trans <| by rw [lift_alternating_ι_multi, LinearMap.comp_id]
 #align exterior_algebra.lift_alternating_equiv ExteriorAlgebra.liftAlternatingEquiv
 
 /-- To show that two linear maps from the exterior algebra agree, it suffices to show they agree on
@@ -157,7 +157,7 @@ See note [partially-applied ext lemmas] -/
 @[ext.1]
 theorem lhom_ext ⦃f g : ExteriorAlgebra R M →ₗ[R] N⦄
     (h : ∀ i, f.compAlternatingMap (ιMulti R i) = g.compAlternatingMap (ιMulti R i)) : f = g :=
-  liftAlternatingEquiv.symm.Injective $ funext h
+  liftAlternatingEquiv.symm.Injective <| funext h
 #align exterior_algebra.lhom_ext ExteriorAlgebra.lhom_ext
 
 end ExteriorAlgebra

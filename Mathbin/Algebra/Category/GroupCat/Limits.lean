@@ -6,9 +6,8 @@ Authors: Scott Morrison
 import Mathbin.Algebra.Category.MonCat.Limits
 import Mathbin.Algebra.Category.GroupCat.Preadditive
 import Mathbin.CategoryTheory.Over
-import Mathbin.CategoryTheory.Limits.ConcreteCategory
-import Mathbin.CategoryTheory.Limits.Shapes.ConcreteCategory
 import Mathbin.GroupTheory.Subgroup.Basic
+import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
 
 /-!
 # The category of (commutative) (additive) groups has all limits

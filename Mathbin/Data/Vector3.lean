@@ -89,12 +89,12 @@ def tail (v : Vector3 α (succ n)) : Vector3 α n := fun i => v (fs i)
 #align vector3.tail Vector3.tail
 
 theorem eq_nil (v : Vector3 α 0) : v = [] :=
-  funext $ fun i => nomatch i
+  funext fun i => nomatch i
 #align vector3.eq_nil Vector3.eq_nil
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem cons_head_tail (v : Vector3 α (succ n)) : (head v::tail v) = v :=
-  funext $ fun i => Fin2.cases' rfl (fun _ => rfl) i
+  funext fun i => Fin2.cases' rfl (fun _ => rfl) i
 #align vector3.cons_head_tail Vector3.cons_head_tail
 
 /-- Eliminator for an empty vector. -/
@@ -135,7 +135,7 @@ theorem rec_on_cons {C H0 Hs n a v} :
 
 /-- Append two vectors -/
 def append (v : Vector3 α m) (w : Vector3 α n) : Vector3 α (n + m) :=
-  Nat.recOn m (fun _ => w) (fun m IH v => v.consElim $ fun a t => @Fin2.cases' (n + m) (fun _ => α) a (IH t)) v
+  Nat.recOn m (fun _ => w) (fun m IH v => v.consElim fun a t => @Fin2.cases' (n + m) (fun _ => α) a (IH t)) v
 #align vector3.append Vector3.append
 
 -- mathport name: «expr +-+ »
@@ -180,7 +180,7 @@ theorem insert_fz (a : α) (v : Vector3 α n) : insert a v fz = a::v := by
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem insert_fs (a : α) (b : α) (v : Vector3 α n) (i : Fin2 (succ n)) : insert a (b::v) (fs i) = b::insert a v i :=
-  funext $ fun j => by
+  funext fun j => by
     refine' j.cases' _ fun j => _ <;> simp [insert, insert_perm]
     refine' Fin2.cases' _ _ (insert_perm i j) <;> simp [insert_perm]
 #align vector3.insert_fs Vector3.insert_fs
@@ -228,9 +228,8 @@ theorem exists_vector_zero (f : Vector3 α 0 → Prop) : Exists f ↔ f [] :=
   ⟨fun ⟨v, fv⟩ => by rw [← eq_nil v] <;> exact fv, fun f0 => ⟨[], f0⟩⟩
 #align exists_vector_zero exists_vector_zero
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x v) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem exists_vector_succ (f : Vector3 α (succ n) → Prop) : Exists f ↔ ∃ (x) (v), f (x::v) :=
+theorem exists_vector_succ (f : Vector3 α (succ n) → Prop) : Exists f ↔ ∃ x v, f (x::v) :=
   ⟨fun ⟨v, fv⟩ => ⟨_, _, by rw [cons_head_tail v] <;> exact fv⟩, fun ⟨x, v, fxv⟩ => ⟨_, fxv⟩⟩
 #align exists_vector_succ exists_vector_succ
 
@@ -292,7 +291,7 @@ theorem vector_allp_iff_forall (p : α → Prop) (v : Vector3 α n) : VectorAllp
 #align vector_allp_iff_forall vector_allp_iff_forall
 
 theorem VectorAllp.imp {p q : α → Prop} (h : ∀ x, p x → q x) {v : Vector3 α n} (al : VectorAllp p v) : VectorAllp q v :=
-  (vector_allp_iff_forall _ _).2 fun i => h _ $ (vector_allp_iff_forall _ _).1 al _
+  (vector_allp_iff_forall _ _).2 fun i => h _ <| (vector_allp_iff_forall _ _).1 al _
 #align vector_allp.imp VectorAllp.imp
 
 end Vector3

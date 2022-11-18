@@ -109,23 +109,23 @@ theorem _root_.filter.eventually_eq.trans_is_Theta {f₁ f₂ : α → E} {g : �
 #align asymptotics._root_.filter.eventually_eq.trans_is_Theta asymptotics._root_.filter.eventually_eq.trans_is_Theta
 
 @[simp]
-theorem is_Theta_norm_left : (fun x => ∥f' x∥) =Θ[l] g ↔ f' =Θ[l] g := by simp [is_Theta]
+theorem is_Theta_norm_left : (fun x => ‖f' x‖) =Θ[l] g ↔ f' =Θ[l] g := by simp [is_Theta]
 #align asymptotics.is_Theta_norm_left Asymptotics.is_Theta_norm_left
 
 @[simp]
-theorem is_Theta_norm_right : (f =Θ[l] fun x => ∥g' x∥) ↔ f =Θ[l] g' := by simp [is_Theta]
+theorem is_Theta_norm_right : (f =Θ[l] fun x => ‖g' x‖) ↔ f =Θ[l] g' := by simp [is_Theta]
 #align asymptotics.is_Theta_norm_right Asymptotics.is_Theta_norm_right
 
 alias is_Theta_norm_left ↔ is_Theta.of_norm_left is_Theta.norm_left
 
 alias is_Theta_norm_right ↔ is_Theta.of_norm_right is_Theta.norm_right
 
-theorem is_Theta_of_norm_eventually_eq (h : (fun x => ∥f x∥) =ᶠ[l] fun x => ∥g x∥) : f =Θ[l] g :=
-  ⟨IsO.of_bound 1 $ by simpa only [one_mul] using h.le, IsO.of_bound 1 $ by simpa only [one_mul] using h.symm.le⟩
+theorem is_Theta_of_norm_eventually_eq (h : (fun x => ‖f x‖) =ᶠ[l] fun x => ‖g x‖) : f =Θ[l] g :=
+  ⟨IsO.of_bound 1 <| by simpa only [one_mul] using h.le, IsO.of_bound 1 <| by simpa only [one_mul] using h.symm.le⟩
 #align asymptotics.is_Theta_of_norm_eventually_eq Asymptotics.is_Theta_of_norm_eventually_eq
 
-theorem is_Theta_of_norm_eventually_eq' {g : α → ℝ} (h : (fun x => ∥f' x∥) =ᶠ[l] g) : f' =Θ[l] g :=
-  is_Theta_of_norm_eventually_eq $ h.mono $ fun x hx => by simp only [← hx, norm_norm]
+theorem is_Theta_of_norm_eventually_eq' {g : α → ℝ} (h : (fun x => ‖f' x‖) =ᶠ[l] g) : f' =Θ[l] g :=
+  is_Theta_of_norm_eventually_eq <| h.mono fun x hx => by simp only [← hx, norm_norm]
 #align asymptotics.is_Theta_of_norm_eventually_eq' Asymptotics.is_Theta_of_norm_eventually_eq'
 
 theorem IsTheta.is_o_congr_left (h : f' =Θ[l] g') : f' =o[l] k ↔ g' =o[l] k :=
@@ -158,7 +158,7 @@ theorem is_Theta_sup : f' =Θ[l ⊔ l'] g' ↔ f' =Θ[l] g' ∧ f' =Θ[l'] g' :=
 #align asymptotics.is_Theta_sup Asymptotics.is_Theta_sup
 
 theorem IsTheta.eq_zero_iff (h : f'' =Θ[l] g'') : ∀ᶠ x in l, f'' x = 0 ↔ g'' x = 0 :=
-  h.1.eq_zero_imp.mp $ h.2.eq_zero_imp.mono $ fun x => Iff.intro
+  h.1.eq_zero_imp.mp <| h.2.eq_zero_imp.mono fun x => Iff.intro
 #align asymptotics.is_Theta.eq_zero_iff Asymptotics.IsTheta.eq_zero_iff
 
 theorem IsTheta.tendsto_zero_iff (h : f'' =Θ[l] g'') : Tendsto f'' l (𝓝 0) ↔ Tendsto g'' l (𝓝 0) := by
@@ -166,12 +166,12 @@ theorem IsTheta.tendsto_zero_iff (h : f'' =Θ[l] g'') : Tendsto f'' l (𝓝 0) �
 #align asymptotics.is_Theta.tendsto_zero_iff Asymptotics.IsTheta.tendsto_zero_iff
 
 theorem IsTheta.tendsto_norm_at_top_iff (h : f' =Θ[l] g') : Tendsto (norm ∘ f') l atTop ↔ Tendsto (norm ∘ g') l atTop :=
-  by simp only [← is_o_const_left_of_ne (@one_ne_zero ℝ _ _), h.is_o_congr_right]
+  by simp only [← is_o_const_left_of_ne (one_ne_zero' ℝ), h.is_o_congr_right]
 #align asymptotics.is_Theta.tendsto_norm_at_top_iff Asymptotics.IsTheta.tendsto_norm_at_top_iff
 
 theorem IsTheta.is_bounded_under_le_iff (h : f' =Θ[l] g') :
     IsBoundedUnder (· ≤ ·) l (norm ∘ f') ↔ IsBoundedUnder (· ≤ ·) l (norm ∘ g') := by
-  simp only [← is_O_const_of_ne (@one_ne_zero ℝ _ _), h.is_O_congr_left]
+  simp only [← is_O_const_of_ne (one_ne_zero' ℝ), h.is_O_congr_left]
 #align asymptotics.is_Theta.is_bounded_under_le_iff Asymptotics.IsTheta.is_bounded_under_le_iff
 
 theorem IsTheta.smul [NormedSpace 𝕜 E'] [NormedSpace 𝕜' F'] {f₁ : α → 𝕜} {f₂ : α → 𝕜'} {g₁ : α → E'} {g₂ : α → F'}

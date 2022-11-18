@@ -3,7 +3,6 @@ Copyright (c) 2022 Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
-import Mathbin.Data.Finite.Basic
 import Mathbin.SetTheory.Cardinal.Finite
 
 /-!
@@ -161,7 +160,7 @@ theorem card_eq_zero_of_embedding [Nonempty α] (f : α ↪ β) (h : Nat.card α
   card_eq_zero_of_injective f.2 h
 #align finite.card_eq_zero_of_embedding Finite.card_eq_zero_of_embedding
 
-theorem card_sum [Finite α] [Finite β] : Nat.card (α ⊕ β) = Nat.card α + Nat.card β := by
+theorem card_sum [Finite α] [Finite β] : Nat.card (Sum α β) = Nat.card α + Nat.card β := by
   haveI := Fintype.ofFinite α
   haveI := Fintype.ofFinite β
   simp

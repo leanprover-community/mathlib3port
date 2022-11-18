@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob Scholbach
 -/
 import Mathbin.Algebra.CharP.Basic
-import Mathbin.Algebra.CharZero
 import Mathbin.Data.Nat.Prime
 
 /-!
@@ -115,7 +114,7 @@ theorem char_prime_of_ne_zero {p : ℕ} [hp : CharP R p] (p_ne_zero : p ≠ 0) :
 
 /-- The exponential characteristic is a prime number or one. -/
 theorem exp_char_is_prime_or_one (q : ℕ) [hq : ExpChar R q] : Nat.Prime q ∨ q = 1 :=
-  or_iff_not_imp_right.mpr $ fun h => by
+  or_iff_not_imp_right.mpr fun h => by
     cases' CharP.exists R with p hp
     have p_ne_zero : p ≠ 0 := by
       intro p_zero

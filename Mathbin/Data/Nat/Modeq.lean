@@ -198,7 +198,7 @@ theorem modeq_one : a ≡ b [MOD 1] :=
 #align nat.modeq_one Nat.modeq_one
 
 theorem modeq_sub (h : b ≤ a) : a ≡ b [MOD a - b] :=
-  (modeq_of_dvd $ by rw [Int.ofNat_sub h]).symm
+  (modeq_of_dvd <| by rw [Int.ofNat_sub h]).symm
 #align nat.modeq_sub Nat.modeq_sub
 
 @[simp]
@@ -407,7 +407,7 @@ theorem div_mod_eq_mod_mul_div (a b c : ℕ) : a / b % c = a % (b * c) / b :=
 #align nat.div_mod_eq_mod_mul_div Nat.div_mod_eq_mod_mul_div
 
 theorem add_mod_add_ite (a b c : ℕ) : ((a + b) % c + if c ≤ a % c + b % c then c else 0) = a % c + b % c :=
-  have : (a + b) % c = (a % c + b % c) % c := ((mod_modeq _ _).add $ mod_modeq _ _).symm
+  have : (a + b) % c = (a % c + b % c) % c := ((mod_modeq _ _).add <| mod_modeq _ _).symm
   if hc0 : c = 0 then by simp [hc0]
   else by
     rw [this]
@@ -471,7 +471,7 @@ theorem add_div_le_add_div (a b c : ℕ) : a / c + b / c ≤ (a + b) / c :=
 #align nat.add_div_le_add_div Nat.add_div_le_add_div
 
 theorem le_mod_add_mod_of_dvd_add_of_not_dvd {a b c : ℕ} (h : c ∣ a + b) (ha : ¬c ∣ a) : c ≤ a % c + b % c :=
-  by_contradiction $ fun hc => by
+  by_contradiction fun hc => by
     have : (a + b) % c = a % c + b % c := add_mod_of_add_mod_lt (lt_of_not_ge hc)
     simp_all [dvd_iff_mod_eq_zero]
 #align nat.le_mod_add_mod_of_dvd_add_of_not_dvd Nat.le_mod_add_mod_of_dvd_add_of_not_dvd
@@ -482,7 +482,7 @@ theorem odd_mul_odd {n m : ℕ} : n % 2 = 1 → m % 2 = 1 → n * m % 2 = 1 := b
 theorem odd_mul_odd_div_two {m n : ℕ} (hm1 : m % 2 = 1) (hn1 : n % 2 = 1) : m * n / 2 = m * (n / 2) + m / 2 :=
   have hm0 : 0 < m := Nat.pos_of_ne_zero fun h => by simp_all
   have hn0 : 0 < n := Nat.pos_of_ne_zero fun h => by simp_all
-  mul_right_injective₀ two_ne_zero $ by
+  mul_right_injective₀ two_ne_zero <| by
     rw [mul_add, two_mul_odd_div_two hm1, mul_left_comm, two_mul_odd_div_two hn1,
       two_mul_odd_div_two (Nat.odd_mul_odd hm1 hn1), mul_tsub, mul_one, ← add_tsub_assoc_of_le (succ_le_of_lt hm0),
       tsub_add_cancel_of_le (le_mul_of_one_le_right (Nat.zero_le _) hn0)]
@@ -498,8 +498,8 @@ theorem odd_of_mod_four_eq_three {n : ℕ} : n % 4 = 3 → n % 2 = 1 := by
 
 /-- A natural number is odd iff it has residue `1` or `3` mod `4`-/
 theorem odd_mod_four_iff {n : ℕ} : n % 2 = 1 ↔ n % 4 = 1 ∨ n % 4 = 3 :=
-  have help : ∀ m : ℕ, m < 4 → m % 2 = 1 → m = 1 ∨ m = 3 := dec_trivial
-  ⟨fun hn => help (n % 4) (mod_lt n (by norm_num)) $ (mod_mod_of_dvd n (by norm_num : 2 ∣ 4)).trans hn, fun h =>
+  have help : ∀ m : ℕ, m < 4 → m % 2 = 1 → m = 1 ∨ m = 3 := by decide
+  ⟨fun hn => help (n % 4) (mod_lt n (by norm_num)) <| (mod_mod_of_dvd n (by norm_num : 2 ∣ 4)).trans hn, fun h =>
     Or.dcases_on h odd_of_mod_four_eq_one odd_of_mod_four_eq_three⟩
 #align nat.odd_mod_four_iff Nat.odd_mod_four_iff
 
@@ -509,17 +509,14 @@ namespace List
 
 variable {α : Type _}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem nth_rotate : ∀ {l : List α} {n m : ℕ} (hml : m < l.length), (l.rotate n).nth m = l.nth ((m + n) % l.length)
   | [], n, m, hml => (Nat.not_lt_zero _ hml).elim
   | l, 0, m, hml => by simp [Nat.mod_eq_of_lt hml]
-  | a::l, n + 1, m, hml =>
+  | a :: l, n + 1, m, hml =>
     have h₃ : m < List.length (l ++ [a]) := by simpa using hml
-    (lt_or_eq_of_le (Nat.le_of_lt_succ $ Nat.mod_lt (m + n) (lt_of_le_of_lt (Nat.zero_le _) hml))).elim
+    (lt_or_eq_of_le (Nat.le_of_lt_succ <| Nat.mod_lt (m + n) (lt_of_le_of_lt (Nat.zero_le _) hml))).elim
       (fun hml' => by
-        have h₁ : (m + (n + 1)) % (a::l : List α).length = (m + n) % (a::l : List α).length + 1 :=
+        have h₁ : (m + (n + 1)) % (a :: l : List α).length = (m + n) % (a :: l : List α).length + 1 :=
           calc
             (m + (n + 1)) % (l.length + 1) = ((m + n) % (l.length + 1) + 1) % (l.length + 1) :=
               add_assoc m n 1 ▸ Nat.Modeq.add_right 1 (Nat.mod_mod _ _).symm
@@ -539,27 +536,23 @@ theorem nth_rotate : ∀ {l : List α} {n m : ℕ} (hml : m < l.length), (l.rota
         rfl
 #align list.nth_rotate List.nth_rotate
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem rotate_eq_self_iff_eq_repeat [hα : Nonempty α] :
     ∀ {l : List α}, (∀ n, l.rotate n = l) ↔ ∃ a, l = List.repeat a l.length
   | [] => ⟨fun h => Nonempty.elim hα fun a => ⟨a, by simp⟩, by simp⟩
-  | a::l =>
+  | a :: l =>
     ⟨fun h =>
       ⟨a,
-        List.ext_le (by simp) $ fun n hn h₁ => by
+        (List.ext_le (by simp)) fun n hn h₁ => by
           rw [← Option.some_inj, ← List.nth_le_nth]
           conv =>
           lhs
-          rw [← h (List.length (a::l) - n)]
+          rw [← h (List.length (a :: l) - n)]
           rw [nth_rotate hn, add_tsub_cancel_of_le (le_of_lt hn), Nat.mod_self, nth_le_repeat]
           rfl⟩,
       fun ⟨a, ha⟩ n =>
       ha.symm ▸
         List.ext_le (by simp) fun m hm h => by
-          have hm' : (m + n) % (List.repeat a (List.length (a::l))).length < List.length (a::l) := by
+          have hm' : (m + n) % (List.repeat a (List.length (a :: l))).length < List.length (a :: l) := by
             rw [List.length_repeat] <;> exact Nat.mod_lt _ (Nat.succ_pos _)
           rw [nth_le_repeat, ← Option.some_inj, ← List.nth_le_nth, nth_rotate h, List.nth_le_nth, nth_le_repeat] <;>
             simp_all⟩

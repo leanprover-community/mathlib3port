@@ -97,7 +97,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
         
       · have h_copy := h
         simp only [mem_Ioc, not_and, not_le] at h
-        by_cases h':0 < s
+        by_cases h' : 0 < s
         · simp only [h_copy, h h', indicator_of_not_mem, not_false_iff, mem_Ici, not_le, mul_zero]
           
         · have : s ∉ Ioi (0 : ℝ) := h'

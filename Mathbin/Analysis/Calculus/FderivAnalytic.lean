@@ -34,7 +34,7 @@ variable {f : E → F} {x : E} {s : Set E}
 theorem HasFpowerSeriesAt.hasStrictFderivAt (h : HasFpowerSeriesAt f p x) :
     HasStrictFderivAt f (continuousMultilinearCurryFin1 𝕜 E F (p 1)) x := by
   refine' h.is_O_image_sub_norm_mul_norm_sub.trans_is_o (is_o.of_norm_right _)
-  refine' is_o_iff_exists_eq_mul.2 ⟨fun y => ∥y - (x, x)∥, _, eventually_eq.rfl⟩
+  refine' is_o_iff_exists_eq_mul.2 ⟨fun y => ‖y - (x, x)‖, _, eventually_eq.rfl⟩
   refine' (continuous_id.sub continuous_const).norm.tendsto' _ _ _
   rw [_root_.id, sub_self, norm_zero]
 #align has_fpower_series_at.has_strict_fderiv_at HasFpowerSeriesAt.hasStrictFderivAt
@@ -70,12 +70,12 @@ theorem AnalyticOn.differentiableOn (h : AnalyticOn 𝕜 f s) : DifferentiableOn
 #align analytic_on.differentiable_on AnalyticOn.differentiableOn
 
 theorem HasFpowerSeriesOnBall.hasFderivAt [CompleteSpace F] (h : HasFpowerSeriesOnBall f p x r) {y : E}
-    (hy : (∥y∥₊ : ℝ≥0∞) < r) : HasFderivAt f (continuousMultilinearCurryFin1 𝕜 E F (p.changeOrigin y 1)) (x + y) :=
+    (hy : (‖y‖₊ : ℝ≥0∞) < r) : HasFderivAt f (continuousMultilinearCurryFin1 𝕜 E F (p.changeOrigin y 1)) (x + y) :=
   (h.changeOrigin hy).HasFpowerSeriesAt.HasFderivAt
 #align has_fpower_series_on_ball.has_fderiv_at HasFpowerSeriesOnBall.hasFderivAt
 
 theorem HasFpowerSeriesOnBall.fderiv_eq [CompleteSpace F] (h : HasFpowerSeriesOnBall f p x r) {y : E}
-    (hy : (∥y∥₊ : ℝ≥0∞) < r) : fderiv 𝕜 f (x + y) = continuousMultilinearCurryFin1 𝕜 E F (p.changeOrigin y 1) :=
+    (hy : (‖y‖₊ : ℝ≥0∞) < r) : fderiv 𝕜 f (x + y) = continuousMultilinearCurryFin1 𝕜 E F (p.changeOrigin y 1) :=
   (h.HasFderivAt hy).fderiv
 #align has_fpower_series_on_ball.fderiv_eq HasFpowerSeriesOnBall.fderiv_eq
 

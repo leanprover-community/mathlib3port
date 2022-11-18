@@ -146,7 +146,7 @@ theorem nth_mem_of_infinite_aux (hp : (setOf p).Infinite) (n : ℕ) : nth p n �
   · ext i
     simp
     
-  refine' (hp.diff $ (Set.finite_lt_nat _).bUnion _).Nonempty
+  refine' (hp.diff <| (Set.finite_lt_nat _).bUnion _).Nonempty
   exact fun k h => Set.finite_le_nat _
 #align nat.nth_mem_of_infinite_aux Nat.nth_mem_of_infinite_aux
 
@@ -252,7 +252,7 @@ theorem filter_range_nth_eq_insert_of_infinite (hp : (setOf p).Infinite) (k : �
   constructor
   · rintro ⟨ha, hpa⟩
     rw [nth] at ha
-    refine' or_iff_not_imp_left.mpr fun hne => ⟨(le_of_not_lt $ fun h => _).lt_of_ne hne, hpa⟩
+    refine' or_iff_not_imp_left.mpr fun hne => ⟨(le_of_not_lt fun h => _).lt_of_ne hne, hpa⟩
     exact ha.not_le (Nat.Inf_le ⟨hpa, fun b hb => (nth_monotone p hp (le_of_lt_succ hb)).trans_lt h⟩)
     
   · rintro (rfl | ⟨ha, hpa⟩)
@@ -348,7 +348,7 @@ theorem count_le_iff_le_nth (hp : (setOf p).Infinite) {a b : ℕ} : count p a �
 #align nat.count_le_iff_le_nth Nat.count_le_iff_le_nth
 
 theorem lt_nth_iff_count_lt (hp : (setOf p).Infinite) {a b : ℕ} : a < count p b ↔ nth p a < b :=
-  lt_iff_lt_of_le_iff_le $ count_le_iff_le_nth p hp
+  lt_iff_lt_of_le_iff_le <| count_le_iff_le_nth p hp
 #align nat.lt_nth_iff_count_lt Nat.lt_nth_iff_count_lt
 
 theorem nth_lt_of_lt_count (n k : ℕ) (h : k < count p n) : nth p k < n := by
@@ -377,9 +377,9 @@ theorem nth_zero_of_nth_zero (h₀ : ¬p 0) {a b : ℕ} (hab : a ≤ b) (ha : nt
   cases ha
   · exact (h₀ ha.1).elim
     
-  · refine' Or.inr (Set.eq_empty_of_subset_empty $ fun x hx => _)
+  · refine' Or.inr (Set.eq_empty_of_subset_empty fun x hx => _)
     rw [← ha]
-    exact ⟨hx.1, fun k hk => hx.2 k $ hk.trans_le hab⟩
+    exact ⟨hx.1, fun k hk => hx.2 k <| hk.trans_le hab⟩
     
 #align nat.nth_zero_of_nth_zero Nat.nth_zero_of_nth_zero
 

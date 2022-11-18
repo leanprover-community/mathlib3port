@@ -5,8 +5,6 @@ Authors: Oliver Nash, Antoine Labelle
 -/
 import Mathbin.LinearAlgebra.Dual
 import Mathbin.LinearAlgebra.Matrix.ToLin
-import Mathbin.LinearAlgebra.TensorProductBasis
-import Mathbin.LinearAlgebra.FreeModule.Finite.Rank
 
 /-!
 # Contractions
@@ -125,7 +123,7 @@ theorem to_matrix_dual_tensor_hom {m : Type _} {n : Type _} [Fintype m] [Fintype
     (bM : Basis m R M) (bN : Basis n R N) (j : m) (i : n) :
     toMatrix bM bN (dualTensorHom R M N (bM.Coord j ⊗ₜ bN i)) = stdBasisMatrix i j 1 := by
   ext (i' j')
-  by_cases hij:i = i' ∧ j = j' <;> simp [LinearMap.to_matrix_apply, Finsupp.single_eq_pi_single, hij]
+  by_cases hij : i = i' ∧ j = j' <;> simp [LinearMap.to_matrix_apply, Finsupp.single_eq_pi_single, hij]
   rw [and_iff_not_or_not, not_not] at hij
   cases hij <;> simp [hij]
 #align to_matrix_dual_tensor_hom to_matrix_dual_tensor_hom

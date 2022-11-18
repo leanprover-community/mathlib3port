@@ -91,7 +91,7 @@ instance liftHomTensor {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] [LiftOb
     [LiftHom g] : LiftHom (f ⊗ g) where lift := LiftHom.lift f ⊗ LiftHom.lift g
 #align category_theory.monoidal_category.lift_hom_tensor CategoryTheory.MonoidalCategory.liftHomTensor
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`Hom] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`Hom] [] -/
 -- We could likely turn this into a `Prop` valued existential if that proves useful.
 /-- A typeclass carrying a choice of monoidal structural isomorphism between two objects.
 Used by the `⊗≫` monoidal composition operator, and the `coherence` tactic.
@@ -298,7 +298,7 @@ unsafe def mk_project_map_expr (e : expr) : tactic expr :=
     :=
       do
         let o ← get_options
-          set_options $ o `class.instance_max_depth 128
+          set_options <| o `class.instance_max_depth 128
           try sorry
           let q( $ ( lhs ) = $ ( rhs ) ) ← target
           let project_map_lhs ← mk_project_map_expr lhs
@@ -363,8 +363,8 @@ which are "liftable" (i.e. expressible as compositions of unitors and associator
 -/
 unsafe def liftable_prefixes : tactic Unit := do
   let o ← get_options
-  set_options $ o `class.instance_max_depth 128
-  try sorry >> sorry >> try sorry
+  set_options <| o `class.instance_max_depth 128
+  (try sorry >> sorry) >> try sorry
 #align tactic.coherence.liftable_prefixes tactic.coherence.liftable_prefixes
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic tactic.coherence.liftable_prefixes -/

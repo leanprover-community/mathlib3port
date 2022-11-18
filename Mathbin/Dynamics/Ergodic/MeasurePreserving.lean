@@ -114,7 +114,7 @@ variable {μ : Measure α} {f : α → α} {s : Set α}
 /-- If `μ univ < n * μ s` and `f` is a map preserving measure `μ`,
 then for some `x ∈ s` and `0 < m < n`, `f^[m] x ∈ s`. -/
 theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f μ μ) (hs : MeasurableSet s) {n : ℕ}
-    (hvol : μ (univ : Set α) < n * μ s) : ∃ (x ∈ s) (m ∈ ioo 0 n), (f^[m]) x ∈ s := by
+    (hvol : μ (univ : Set α) < n * μ s) : ∃ x ∈ s, ∃ m ∈ ioo 0 n, (f^[m]) x ∈ s := by
   have A : ∀ m, MeasurableSet (f^[m] ⁻¹' s) := fun m => (hf.iterate m).Measurable hs
   have B : ∀ m, μ (f^[m] ⁻¹' s) = μ s := fun m => (hf.iterate m).measure_preimage hs
   have : μ (univ : Set α) < (Finset.range n).Sum fun m => μ (f^[m] ⁻¹' s) := by
@@ -138,7 +138,7 @@ theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f �
 infinitely many times, see `measure_theory.measure_preserving.conservative` and theorems about
 `measure_theory.conservative`. -/
 theorem exists_mem_image_mem [IsFiniteMeasure μ] (hf : MeasurePreserving f μ μ) (hs : MeasurableSet s) (hs' : μ s ≠ 0) :
-    ∃ (x ∈ s) (m) (_ : m ≠ 0), (f^[m]) x ∈ s := by
+    ∃ x ∈ s, ∃ (m : _)(_ : m ≠ 0), (f^[m]) x ∈ s := by
   rcases Ennreal.exists_nat_mul_gt hs' (measure_ne_top μ (univ : Set α)) with ⟨N, hN⟩
   rcases hf.exists_mem_image_mem_of_volume_lt_mul_volume hs hN with ⟨x, hx, m, hm, hmx⟩
   exact ⟨x, hx, m, hm.1.ne', hmx⟩

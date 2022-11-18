@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 -/
 import Mathbin.Algebra.Category.GroupCat.EquivalenceGroupAddGroup
-import Mathbin.CategoryTheory.EpiMono
 import Mathbin.GroupTheory.QuotientGroup
 
 /-!
@@ -66,17 +65,17 @@ variable {A B : GroupCat.{u}} (f : A ⟶ B)
 
 @[to_additive AddGroupCat.ker_eq_bot_of_mono]
 theorem ker_eq_bot_of_mono [Mono f] : f.ker = ⊥ :=
-  MonoidHom.ker_eq_bot_of_cancel $ fun u v => (@cancel_mono _ _ _ _ _ f _ (show GroupCat.of f.ker ⟶ A from u) _).1
+  MonoidHom.ker_eq_bot_of_cancel fun u v => (@cancel_mono _ _ _ _ _ f _ (show GroupCat.of f.ker ⟶ A from u) _).1
 #align Group.ker_eq_bot_of_mono GroupCat.ker_eq_bot_of_mono
 
 @[to_additive AddGroupCat.mono_iff_ker_eq_bot]
 theorem mono_iff_ker_eq_bot : Mono f ↔ f.ker = ⊥ :=
-  ⟨fun h => @ker_eq_bot_of_mono f h, fun h => ConcreteCategory.mono_of_injective _ $ (MonoidHom.ker_eq_bot_iff f).1 h⟩
+  ⟨fun h => @ker_eq_bot_of_mono f h, fun h => ConcreteCategory.mono_of_injective _ <| (MonoidHom.ker_eq_bot_iff f).1 h⟩
 #align Group.mono_iff_ker_eq_bot GroupCat.mono_iff_ker_eq_bot
 
 @[to_additive AddGroupCat.mono_iff_injective]
 theorem mono_iff_injective : Mono f ↔ Function.Injective f :=
-  Iff.trans (mono_iff_ker_eq_bot f) $ MonoidHom.ker_eq_bot_iff f
+  Iff.trans (mono_iff_ker_eq_bot f) <| MonoidHom.ker_eq_bot_iff f
 #align Group.mono_iff_injective GroupCat.mono_iff_injective
 
 namespace SurjectiveOfEpiAuxs
@@ -271,7 +270,7 @@ theorem agree : f.range.carrier = { x | h x = g x } := by
     change h (f a) = g (f a)
     ext ⟨⟨_, ⟨y, rfl⟩⟩⟩
     · rw [g_apply_from_coset]
-      by_cases m:y ∈ f.range
+      by_cases m : y ∈ f.range
       · rw [h_apply_from_coset' _ _ _ m, from_coset_eq_of_mem_range _ m]
         change from_coset _ = from_coset ⟨f a *l (y *l _), _⟩
         simpa only [← from_coset_eq_of_mem_range _ (Subgroup.mul_mem _ ⟨a, rfl⟩ m), left_coset_assoc]
@@ -294,7 +293,7 @@ theorem agree : f.range.carrier = { x | h x = g x } := by
 #align Group.surjective_of_epi_auxs.agree GroupCat.SurjectiveOfEpiAuxs.agree
 
 theorem comp_eq : (f ≫ show B ⟶ GroupCat.of SX' from g) = f ≫ h :=
-  FunLike.ext _ _ $ fun a => by
+  (FunLike.ext _ _) fun a => by
     simp only [comp_apply, show h (f a) = _ from (by simp [← agree] : f a ∈ { b | h b = g b })]
 #align Group.surjective_of_epi_auxs.comp_eq GroupCat.SurjectiveOfEpiAuxs.comp_eq
 
@@ -371,29 +370,29 @@ variable {A B : CommGroupCat.{u}} (f : A ⟶ B)
 
 @[to_additive AddCommGroupCat.ker_eq_bot_of_mono]
 theorem ker_eq_bot_of_mono [Mono f] : f.ker = ⊥ :=
-  MonoidHom.ker_eq_bot_of_cancel $ fun u v => (@cancel_mono _ _ _ _ _ f _ (show CommGroupCat.of f.ker ⟶ A from u) _).1
+  MonoidHom.ker_eq_bot_of_cancel fun u v => (@cancel_mono _ _ _ _ _ f _ (show CommGroupCat.of f.ker ⟶ A from u) _).1
 #align CommGroup.ker_eq_bot_of_mono CommGroupCat.ker_eq_bot_of_mono
 
 @[to_additive AddCommGroupCat.mono_iff_ker_eq_bot]
 theorem mono_iff_ker_eq_bot : Mono f ↔ f.ker = ⊥ :=
-  ⟨fun h => @ker_eq_bot_of_mono f h, fun h => ConcreteCategory.mono_of_injective _ $ (MonoidHom.ker_eq_bot_iff f).1 h⟩
+  ⟨fun h => @ker_eq_bot_of_mono f h, fun h => ConcreteCategory.mono_of_injective _ <| (MonoidHom.ker_eq_bot_iff f).1 h⟩
 #align CommGroup.mono_iff_ker_eq_bot CommGroupCat.mono_iff_ker_eq_bot
 
 @[to_additive AddCommGroupCat.mono_iff_injective]
 theorem mono_iff_injective : Mono f ↔ Function.Injective f :=
-  Iff.trans (mono_iff_ker_eq_bot f) $ MonoidHom.ker_eq_bot_iff f
+  Iff.trans (mono_iff_ker_eq_bot f) <| MonoidHom.ker_eq_bot_iff f
 #align CommGroup.mono_iff_injective CommGroupCat.mono_iff_injective
 
 @[to_additive]
 theorem range_eq_top_of_epi [Epi f] : f.range = ⊤ :=
-  MonoidHom.range_eq_top_of_cancel $ fun u v h =>
+  MonoidHom.range_eq_top_of_cancel fun u v h =>
     (@cancel_epi _ _ _ _ _ f _ (show B ⟶ ⟨B ⧸ MonoidHom.range f⟩ from u) v).1 h
 #align CommGroup.range_eq_top_of_epi CommGroupCat.range_eq_top_of_epi
 
 @[to_additive]
 theorem epi_iff_range_eq_top : Epi f ↔ f.range = ⊤ :=
   ⟨fun hf => range_eq_top_of_epi _, fun hf =>
-    ConcreteCategory.epi_of_surjective _ $ MonoidHom.range_top_iff_surjective.mp hf⟩
+    ConcreteCategory.epi_of_surjective _ <| MonoidHom.range_top_iff_surjective.mp hf⟩
 #align CommGroup.epi_iff_range_eq_top CommGroupCat.epi_iff_range_eq_top
 
 @[to_additive]

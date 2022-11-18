@@ -142,8 +142,8 @@ between sheaf categories. -/
 def sheafCompose : SheafCat J A ⥤ SheafCat J B where
   obj G := ⟨G.val ⋙ F, Presheaf.IsSheaf.comp _ G.2⟩
   map G H η := ⟨whiskerRight η.val _⟩
-  map_id' G := SheafCat.Hom.ext _ _ $ whisker_right_id _
-  map_comp' G H W f g := SheafCat.Hom.ext _ _ $ whisker_right_comp _ _ _
+  map_id' G := SheafCat.Hom.ext _ _ <| whisker_right_id _
+  map_comp' G H W f g := SheafCat.Hom.ext _ _ <| whisker_right_comp _ _ _
 #align category_theory.Sheaf_compose CategoryTheory.sheafCompose
 
 end CategoryTheory

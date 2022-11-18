@@ -18,10 +18,10 @@ intervals as finsets and fintypes.
 open Finset Int
 
 instance : LocallyFiniteOrder ℤ where
-  finsetIcc a b := (Finset.range (b + 1 - a).toNat).map $ Nat.castEmbedding.trans $ addLeftEmbedding a
-  finsetIco a b := (Finset.range (b - a).toNat).map $ Nat.castEmbedding.trans $ addLeftEmbedding a
-  finsetIoc a b := (Finset.range (b - a).toNat).map $ Nat.castEmbedding.trans $ addLeftEmbedding (a + 1)
-  finsetIoo a b := (Finset.range (b - a - 1).toNat).map $ Nat.castEmbedding.trans $ addLeftEmbedding (a + 1)
+  finsetIcc a b := (Finset.range (b + 1 - a).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding a
+  finsetIco a b := (Finset.range (b - a).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding a
+  finsetIoc a b := (Finset.range (b - a).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)
+  finsetIoo a b := (Finset.range (b - a - 1).toNat).map <| Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)
   finset_mem_Icc a b x := by
     simp_rw [mem_map, exists_prop, mem_range, Int.lt_to_nat, Function.Embedding.trans_apply, Nat.cast_embedding_apply,
       add_left_embedding_apply]
@@ -80,21 +80,22 @@ namespace Int
 variable (a b : ℤ)
 
 theorem Icc_eq_finset_map :
-    icc a b = (Finset.range (b + 1 - a).toNat).map (Nat.castEmbedding.trans $ addLeftEmbedding a) :=
+    icc a b = (Finset.range (b + 1 - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding a) :=
   rfl
 #align int.Icc_eq_finset_map Int.Icc_eq_finset_map
 
-theorem Ico_eq_finset_map : ico a b = (Finset.range (b - a).toNat).map (Nat.castEmbedding.trans $ addLeftEmbedding a) :=
+theorem Ico_eq_finset_map :
+    ico a b = (Finset.range (b - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding a) :=
   rfl
 #align int.Ico_eq_finset_map Int.Ico_eq_finset_map
 
 theorem Ioc_eq_finset_map :
-    ioc a b = (Finset.range (b - a).toNat).map (Nat.castEmbedding.trans $ addLeftEmbedding (a + 1)) :=
+    ioc a b = (Finset.range (b - a).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)) :=
   rfl
 #align int.Ioc_eq_finset_map Int.Ioc_eq_finset_map
 
 theorem Ioo_eq_finset_map :
-    ioo a b = (Finset.range (b - a - 1).toNat).map (Nat.castEmbedding.trans $ addLeftEmbedding (a + 1)) :=
+    ioo a b = (Finset.range (b - a - 1).toNat).map (Nat.castEmbedding.trans <| addLeftEmbedding (a + 1)) :=
   rfl
 #align int.Ioo_eq_finset_map Int.Ioo_eq_finset_map
 

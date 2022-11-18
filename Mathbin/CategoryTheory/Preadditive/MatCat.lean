@@ -168,7 +168,7 @@ instance has_finite_biproducts :
         C) where HasBiproductsOfShape J 𝒟 :=
     { HasBiproduct := fun f =>
         has_biproduct_of_total
-          { x := ⟨Σ j : J, (f j).ι, fun p => (f p.1).x p.2⟩,
+          { x := ⟨Σj : J, (f j).ι, fun p => (f p.1).x p.2⟩,
             π := fun j x y => by
               dsimp at x⊢
               refine' if h : x.1 = j then _ else 0
@@ -217,7 +217,7 @@ instance has_finite_biproducts :
                 Finset.sum_dite_irrel, Finset.sum_dite_eq, Finset.mem_univ, Finset.sum_const_zero, Finset.sum_congr,
                 Finset.sum_dite_eq, Finset.sum_apply, limits.comp_zero, limits.zero_comp, eq_to_hom_trans,
                 Mat_.id_apply]
-              by_cases h:j₁ = j₂
+              by_cases h : j₁ = j₂
               · subst h
                 simp
                 
@@ -406,7 +406,7 @@ def lift (F : C ⥤ D) [Functor.Additive F] : Mat_ C ⥤ D where
   map X Y f := biproduct.matrix fun i j => F.map (f i j)
   map_id' X := by
     ext (i j)
-    by_cases h:i = j
+    by_cases h : i = j
     · subst h
       simp
       

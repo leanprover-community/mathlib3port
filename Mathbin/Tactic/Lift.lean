@@ -19,7 +19,7 @@ lift, tactic
 
 /-- A class specifying that you can lift elements from `α` to `β` assuming `cond` is true.
   Used by the tactic `lift`. -/
-class CanLift (α β : Sort _) (coe : outParam $ β → α) (cond : outParam $ α → Prop) where
+class CanLift (α β : Sort _) (coe : outParam <| β → α) (cond : outParam <| α → Prop) where
   prf : ∀ x : α, cond x → ∃ y : β, coe y = x
 #align can_lift CanLift
 
@@ -35,7 +35,7 @@ instance Pi.canLift (ι : Sort _) (α β : ι → Sort _) (coe : ∀ i, β i →
           (f
             i) where prf f hf :=
     ⟨fun i => Classical.choose (CanLift.prf (f i) (hf i)),
-      funext $ fun i => Classical.choose_spec (CanLift.prf (f i) (hf i))⟩
+      funext fun i => Classical.choose_spec (CanLift.prf (f i) (hf i))⟩
 #align pi.can_lift Pi.canLift
 
 theorem Subtype.exists_pi_extension {ι : Sort _} {α : ι → Sort _} [ne : ∀ i, Nonempty (α i)] {p : ι → Prop}
@@ -152,7 +152,7 @@ unsafe def get_lift_prf (h : Option pexpr) (e P : expr) : tactic (expr × Bool) 
           let temp_nm ← get_unused_name
           let temp_e ← note temp_nm none prf_ex
           dsimp_hyp temp_e none [ ] { failIfUnchanged := ff }
-          rcases none ( pexpr.of_expr temp_e ) $ rcases_patt.tuple ( [ new_nm , eq_nm ] . map rcases_patt.one )
+          rcases none ( pexpr.of_expr temp_e ) <| rcases_patt.tuple ( [ new_nm , eq_nm ] . map rcases_patt.one )
           when
             ( ¬ e )
               (

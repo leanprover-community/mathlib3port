@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Mario Carneiro, Reid Barton, Andrew Yang
 -/
 import Mathbin.CategoryTheory.Limits.KanExtension
-import Mathbin.CategoryTheory.Adjunction.Default
 import Mathbin.Topology.Category.TopCat.Opens
+import Mathbin.CategoryTheory.Adjunction.Opposites
 
 /-!
 # Presheaves on a topological space
@@ -58,7 +58,7 @@ unsafe def restrict_attr : user_attribute (tactic Unit → tactic Unit) Unit whe
   descr := "tag lemmas to use in `Top.presheaf.restrict_tac`"
   cache_cfg :=
     { mk_cache := fun ns =>
-        pure $ fun t => do
+        pure fun t => do
           let ctx ← tactic.local_context
           ctx (tactic.focus1 ∘ (tactic.apply' >=> fun _ => tactic.done) >=> fun _ => t) <|>
               ns
@@ -351,7 +351,7 @@ def pushforward {X Y : TopCat.{w}} (f : X ⟶ Y) : X.Presheaf C ⥤ Y.Presheaf C
 
 @[simp]
 theorem pushforward_map_app' {X Y : TopCat.{w}} (f : X ⟶ Y) {ℱ 𝒢 : X.Presheaf C} (α : ℱ ⟶ 𝒢) {U : (Opens Y)ᵒᵖ} :
-    ((pushforward C f).map α).app U = α.app (op $ (Opens.map f).obj U.unop) :=
+    ((pushforward C f).map α).app U = α.app (op <| (Opens.map f).obj U.unop) :=
   rfl
 #align Top.presheaf.pushforward_map_app' TopCat.Presheaf.pushforward_map_app'
 

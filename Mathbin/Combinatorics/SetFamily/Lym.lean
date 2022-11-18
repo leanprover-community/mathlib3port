@@ -7,7 +7,6 @@ import Mathbin.Algebra.BigOperators.Ring
 import Mathbin.Combinatorics.DoubleCounting
 import Mathbin.Combinatorics.SetFamily.Shadow
 import Mathbin.Data.Rat.Order
-import Mathbin.Tactic.Linarith.Default
 
 /-!
 # Lubell-Yamamoto-Meshalkin inequality and Sperner's theorem
@@ -124,7 +123,7 @@ variable [DecidableEq α] (k : ℕ) (𝒜 : Finset (Finset α))
 
 /-- `falling k 𝒜` is all the finsets of cardinality `k` which are a subset of something in `𝒜`. -/
 def falling : Finset (Finset α) :=
-  𝒜.sup $ powersetLen k
+  𝒜.sup <| powersetLen k
 #align finset.falling Finset.falling
 
 variable {𝒜 k} {s : Finset α}
@@ -139,11 +138,11 @@ theorem sized_falling : (falling k 𝒜 : Set (Finset α)).Sized k := fun s hs =
 #align finset.sized_falling Finset.sized_falling
 
 theorem slice_subset_falling : 𝒜 # k ⊆ falling k 𝒜 := fun s hs =>
-  mem_falling.2 $ (mem_slice.1 hs).imp_left $ fun h => ⟨s, h, Subset.refl _⟩
+  mem_falling.2 <| (mem_slice.1 hs).imp_left fun h => ⟨s, h, Subset.refl _⟩
 #align finset.slice_subset_falling Finset.slice_subset_falling
 
 theorem falling_zero_subset : falling 0 𝒜 ⊆ {∅} :=
-  subset_singleton_iff'.2 $ fun t ht => card_eq_zero.1 $ sized_falling _ _ ht
+  subset_singleton_iff'.2 fun t ht => card_eq_zero.1 <| sized_falling _ _ ht
 #align finset.falling_zero_subset Finset.falling_zero_subset
 
 theorem slice_union_shadow_falling_succ : 𝒜 # k ∪ (∂ ) (falling (k + 1) 𝒜) = falling k 𝒜 := by
@@ -173,7 +172,7 @@ variable {𝒜 k}
 antichain property. -/
 theorem _root_.is_antichain.disjoint_slice_shadow_falling {m n : ℕ} (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) :
     Disjoint (𝒜 # m) ((∂ ) (falling n 𝒜)) :=
-  disjoint_right.2 $ fun s h₁ h₂ => by
+  disjoint_right.2 fun s h₁ h₂ => by
     simp_rw [mem_shadow_iff, exists_prop, mem_falling] at h₁
     obtain ⟨s, ⟨⟨t, ht, hst⟩, hs⟩, a, ha, rfl⟩ := h₁
     refine' h𝒜 (slice_subset h₂) ht _ ((erase_subset _ _).trans hst)
@@ -197,8 +196,8 @@ theorem le_card_falling_div_choose [Fintype α] (hk : k ≤ Fintype.card α)
   rw [← tsub_tsub, tsub_add_cancel_of_le (le_tsub_of_add_le_left hk)]
   exact
     add_le_add_left
-      ((ih $ le_of_succ_le hk).trans $
-        card_div_choose_le_card_shadow_div_choose (tsub_pos_iff_lt.2 $ Nat.succ_le_iff.1 hk).ne' $ sized_falling _ _)
+      ((ih <| le_of_succ_le hk).trans <|
+        card_div_choose_le_card_shadow_div_choose (tsub_pos_iff_lt.2 <| Nat.succ_le_iff.1 hk).ne' <| sized_falling _ _)
       _
 #align finset.le_card_falling_div_choose Finset.le_card_falling_div_choose
 
@@ -235,7 +234,7 @@ theorem _root_.is_antichain.sperner [Fintype α] {𝒜 : Finset (Finset α)}
     norm_cast
     exact choose_pos (Nat.div_le_self _ _)
   rw [Iic_eq_Icc, ← Ico_succ_right, bot_eq_zero, Ico_zero_eq_range]
-  refine' (sum_le_sum $ fun r hr => _).trans (sum_card_slice_div_choose_le_one h𝒜)
+  refine' (sum_le_sum fun r hr => _).trans (sum_card_slice_div_choose_le_one h𝒜)
   rw [mem_range] at hr
   refine' div_le_div_of_le_left _ _ _ <;> norm_cast
   · exact Nat.zero_le _

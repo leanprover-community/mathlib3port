@@ -148,7 +148,7 @@ theorem comap_eq_of_scalar_tower_quotient [Algebra R S] [Algebra (R ⧸ p) (S �
 
 /-- If `P` lies over `p`, then `R / p` has a canonical map to `S / P`. -/
 def Quotient.algebraQuotientOfLeComap (h : p ≤ comap f P) : Algebra (R ⧸ p) (S ⧸ P) :=
-  RingHom.toAlgebra $ quotientMap _ f h
+  RingHom.toAlgebra <| quotientMap _ f h
 #align ideal.quotient.algebra_quotient_of_le_comap Ideal.Quotient.algebraQuotientOfLeComap
 
 /-- `R / p` has a canonical map to `S / pS`. -/
@@ -169,14 +169,14 @@ theorem Quotient.mk_smul_mk_quotient_map_quotient (x : R) (y : S) :
 #align ideal.quotient.mk_smul_mk_quotient_map_quotient Ideal.Quotient.mk_smul_mk_quotient_map_quotient
 
 instance Quotient.tower_quotient_map_quotient [Algebra R S] : IsScalarTower R (R ⧸ p) (S ⧸ map (algebraMap R S) p) :=
-  IsScalarTower.of_algebra_map_eq $ fun x => by
+  IsScalarTower.of_algebra_map_eq fun x => by
     rw [quotient.algebra_map_eq, quotient.algebra_map_quotient_map_quotient, quotient.mk_algebra_map]
 #align ideal.quotient.tower_quotient_map_quotient Ideal.Quotient.tower_quotient_map_quotient
 
 instance QuotientMapQuotient.is_noetherian [Algebra R S] [IsNoetherian R S] (I : Ideal R) :
     IsNoetherian (R ⧸ I) (S ⧸ Ideal.map (algebraMap R S) I) :=
-  is_noetherian_of_tower R $
-    is_noetherian_of_surjective S (Ideal.Quotient.mkₐ R _).toLinearMap $
+  is_noetherian_of_tower R <|
+    is_noetherian_of_surjective S (Ideal.Quotient.mkₐ R _).toLinearMap <|
       LinearMap.range_eq_top.mpr Ideal.Quotient.mk_surjective
 #align ideal.quotient_map_quotient.is_noetherian Ideal.QuotientMapQuotient.is_noetherian
 
@@ -245,7 +245,7 @@ theorem is_maximal_of_is_integral_of_is_maximal_comap [Algebra R S] (hRS : Algeb
     [I.IsPrime] (hI : IsMaximal (I.comap (algebraMap R S))) : IsMaximal I :=
   ⟨⟨mt comap_eq_top_iff.mpr hI.1.1, fun J I_lt_J =>
       let ⟨I_le_J, x, hxJ, hxI⟩ := SetLike.lt_iff_le_and_exists.mp I_lt_J
-      comap_eq_top_iff.1 $ hI.1.2 _ (comap_lt_comap_of_integral_mem_sdiff I_le_J ⟨hxJ, hxI⟩ (hRS x))⟩⟩
+      comap_eq_top_iff.1 <| hI.1.2 _ (comap_lt_comap_of_integral_mem_sdiff I_le_J ⟨hxJ, hxI⟩ (hRS x))⟩⟩
 #align ideal.is_maximal_of_is_integral_of_is_maximal_comap Ideal.is_maximal_of_is_integral_of_is_maximal_comap
 
 theorem is_maximal_of_is_integral_of_is_maximal_comap' (f : R →+* S) (hf : f.IsIntegral) (I : Ideal S) [hI' : I.IsPrime]
@@ -269,7 +269,7 @@ theorem comap_ne_bot_of_integral_mem [Nontrivial R] [IsDomain S] {x : S} (x_ne_z
 theorem eq_bot_of_comap_eq_bot [Nontrivial R] [IsDomain S] (hRS : Algebra.IsIntegral R S)
     (hI : I.comap (algebraMap R S) = ⊥) : I = ⊥ := by
   refine' eq_bot_iff.2 fun x hx => _
-  by_cases hx0:x = 0
+  by_cases hx0 : x = 0
   · exact hx0.symm ▸ Ideal.zero_mem ⊥
     
   · exact absurd hI (comap_ne_bot_of_integral_mem hx0 hx (hRS x))

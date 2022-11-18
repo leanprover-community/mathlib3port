@@ -30,13 +30,13 @@ theorem ord_connected_component_mem_nhds : ordConnectedComponent s a ∈ 𝓝 a 
 #align set.ord_connected_component_mem_nhds Set.ord_connected_component_mem_nhds
 
 theorem compl_section_ord_separating_set_mem_nhds_within_Ici (hd : Disjoint s (closure t)) (ha : a ∈ s) :
-    (ord_connected_section $ ordSeparatingSet s t)ᶜ ∈ 𝓝[≥] a := by
+    (ord_connected_section <| ordSeparatingSet s t)ᶜ ∈ 𝓝[≥] a := by
   have hmem : tᶜ ∈ 𝓝[≥] a := by
     refine' mem_nhds_within_of_mem_nhds _
     rw [← mem_interior_iff_mem_nhds, interior_compl]
     exact disjoint_left.1 hd ha
   rcases exists_Icc_mem_subset_of_mem_nhds_within_Ici hmem with ⟨b, hab, hmem', hsub⟩
-  by_cases H:Disjoint (Icc a b) (ord_connected_section $ ord_separating_set s t)
+  by_cases H : Disjoint (Icc a b) (ord_connected_section <| ord_separating_set s t)
   · exact mem_of_superset hmem' (disjoint_left.1 H)
     
   · simp only [Set.disjoint_left, not_forall, not_not] at H
@@ -44,8 +44,8 @@ theorem compl_section_ord_separating_set_mem_nhds_within_Ici (hd : Disjoint s (c
     have hsub' : Icc a b ⊆ ord_connected_component (tᶜ) a := subset_ord_connected_component (left_mem_Icc.2 hab) hsub
     replace hac : a < c :=
       hac.lt_of_ne
-        (Ne.symm $
-          ne_of_mem_of_not_mem hc $
+        (Ne.symm <|
+          ne_of_mem_of_not_mem hc <|
             disjoint_left.1 (disjoint_left_ord_separating_set.mono_right ord_connected_section_subset) ha)
     refine' mem_of_superset (Ico_mem_nhds_within_Ici (left_mem_Ico.2 hac)) fun x hx hx' => _
     refine' hx.2.Ne (eq_of_mem_ord_connected_section_of_interval_subset hx' hc _)
@@ -66,15 +66,15 @@ theorem compl_section_ord_separating_set_mem_nhds_within_Ici (hd : Disjoint s (c
 #align set.compl_section_ord_separating_set_mem_nhds_within_Ici Set.compl_section_ord_separating_set_mem_nhds_within_Ici
 
 theorem compl_section_ord_separating_set_mem_nhds_within_Iic (hd : Disjoint s (closure t)) (ha : a ∈ s) :
-    (ord_connected_section $ ordSeparatingSet s t)ᶜ ∈ 𝓝[≤] a := by
-  have hd' : Disjoint (of_dual ⁻¹' s) (closure $ of_dual ⁻¹' t) := hd
+    (ord_connected_section <| ordSeparatingSet s t)ᶜ ∈ 𝓝[≤] a := by
+  have hd' : Disjoint (of_dual ⁻¹' s) (closure <| of_dual ⁻¹' t) := hd
   have ha' : toDual a ∈ of_dual ⁻¹' s := ha
   simpa only [dual_ord_separating_set, dual_ord_connected_section] using
     compl_section_ord_separating_set_mem_nhds_within_Ici hd' ha'
 #align set.compl_section_ord_separating_set_mem_nhds_within_Iic Set.compl_section_ord_separating_set_mem_nhds_within_Iic
 
 theorem compl_section_ord_separating_set_mem_nhds (hd : Disjoint s (closure t)) (ha : a ∈ s) :
-    (ord_connected_section $ ordSeparatingSet s t)ᶜ ∈ 𝓝 a := by
+    (ord_connected_section <| ordSeparatingSet s t)ᶜ ∈ 𝓝 a := by
   rw [← nhds_left_sup_nhds_right, mem_sup]
   exact
     ⟨compl_section_ord_separating_set_mem_nhds_within_Iic hd ha,
@@ -82,8 +82,8 @@ theorem compl_section_ord_separating_set_mem_nhds (hd : Disjoint s (closure t)) 
 #align set.compl_section_ord_separating_set_mem_nhds Set.compl_section_ord_separating_set_mem_nhds
 
 theorem ord_t5_nhd_mem_nhds_set (hd : Disjoint s (closure t)) : ordT5Nhd s t ∈ 𝓝ˢ s :=
-  bUnion_mem_nhds_set $ fun x hx =>
-    ord_connected_component_mem_nhds.2 $
+  bUnion_mem_nhds_set fun x hx =>
+    ord_connected_component_mem_nhds.2 <|
       inter_mem
         (by
           rw [← mem_interior_iff_mem_nhds, interior_compl]

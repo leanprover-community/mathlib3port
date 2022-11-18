@@ -59,7 +59,7 @@ theorem boundary_top : ∂ (⊤ : α) = ⊥ := by rw [boundary, hnot_top, inf_bo
 #align coheyting.boundary_top Coheyting.boundary_top
 
 theorem boundary_hnot_le (a : α) : ∂ (￢a) ≤ ∂ a :=
-  inf_comm.trans_le $ inf_le_inf_right _ hnot_hnot_le
+  inf_comm.trans_le <| inf_le_inf_right _ hnot_hnot_le
 #align coheyting.boundary_hnot_le Coheyting.boundary_hnot_le
 
 @[simp]
@@ -77,12 +77,12 @@ theorem boundary_inf (a b : α) : ∂ (a ⊓ b) = ∂ a ⊓ b ⊔ a ⊓ ∂ b :=
 #align coheyting.boundary_inf Coheyting.boundary_inf
 
 theorem boundary_inf_le : ∂ (a ⊓ b) ≤ ∂ a ⊔ ∂ b :=
-  (boundary_inf _ _).trans_le $ sup_le_sup inf_le_left inf_le_right
+  (boundary_inf _ _).trans_le <| sup_le_sup inf_le_left inf_le_right
 #align coheyting.boundary_inf_le Coheyting.boundary_inf_le
 
 theorem boundary_sup_le : ∂ (a ⊔ b) ≤ ∂ a ⊔ ∂ b := by
   rw [boundary, inf_sup_right]
-  exact sup_le_sup (inf_le_inf_left _ $ hnot_anti le_sup_left) (inf_le_inf_left _ $ hnot_anti le_sup_right)
+  exact sup_le_sup (inf_le_inf_left _ <| hnot_anti le_sup_left) (inf_le_inf_left _ <| hnot_anti le_sup_right)
 #align coheyting.boundary_sup_le Coheyting.boundary_sup_le
 
 /- The intuitionistic version of `coheyting.boundary_le_boundary_sup_sup_boundary_inf_left`. Either
@@ -93,7 +93,7 @@ example (a b : Prop) : (a ∧ b ∨ ¬(a ∧ b)) ∧ ((a ∨ b) ∨ ¬(a ∨ b))
   rintro ⟨⟨ha, hb⟩ | hnab, (ha | hb) | hnab⟩ <;> try exact Or.inl ha
   · exact Or.inr fun ha => hnab ⟨ha, hb⟩
     
-  · exact Or.inr fun ha => hnab $ Or.inl ha
+  · exact Or.inr fun ha => hnab <| Or.inl ha
     
 
 theorem boundary_le_boundary_sup_sup_boundary_inf_left : ∂ a ≤ ∂ (a ⊔ b) ⊔ ∂ (a ⊓ b) := by
@@ -115,7 +115,7 @@ theorem boundary_le_boundary_sup_sup_boundary_inf_right : ∂ b ≤ ∂ (a ⊔ b
   coheyting.boundary_le_boundary_sup_sup_boundary_inf_right Coheyting.boundary_le_boundary_sup_sup_boundary_inf_right
 
 theorem boundary_sup_sup_boundary_inf (a b : α) : ∂ (a ⊔ b) ⊔ ∂ (a ⊓ b) = ∂ a ⊔ ∂ b :=
-  le_antisymm (sup_le boundary_sup_le boundary_inf_le) $
+  le_antisymm (sup_le boundary_sup_le boundary_inf_le) <|
     sup_le boundary_le_boundary_sup_sup_boundary_inf_left boundary_le_boundary_sup_sup_boundary_inf_right
 #align coheyting.boundary_sup_sup_boundary_inf Coheyting.boundary_sup_sup_boundary_inf
 

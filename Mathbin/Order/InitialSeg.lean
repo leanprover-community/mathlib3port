@@ -173,9 +173,9 @@ theorem antisymm_symm [IsWellOrder α r] [IsWellOrder β s] (f : r ≼i s) (g : 
 #align initial_seg.antisymm_symm InitialSeg.antisymm_symm
 
 theorem eq_or_principal [IsWellOrder β s] (f : r ≼i s) : Surjective f ∨ ∃ b, ∀ x, s x b ↔ ∃ y, f y = x :=
-  or_iff_not_imp_right.2 $ fun h b =>
-    Acc.recOn (IsWellFounded.wf.apply b : Acc s b) $ fun x H IH =>
-      not_forall_not.1 $ fun hn =>
+  or_iff_not_imp_right.2 fun h b =>
+    (Acc.recOn (IsWellFounded.wf.apply b : Acc s b)) fun x H IH =>
+      not_forall_not.1 fun hn =>
         h
           ⟨x, fun y =>
             ⟨IH _, fun ⟨a, e⟩ => by
@@ -267,7 +267,7 @@ theorem lt_top (f : r ≺i s) (a : α) : s (f a) f.top :=
 #align principal_seg.lt_top PrincipalSeg.lt_top
 
 theorem init [IsTrans β s] (f : r ≺i s) {a : α} {b : β} (h : s b (f a)) : ∃ a', f a' = b :=
-  f.down.1 $ trans h $ f.lt_top _
+  f.down.1 <| trans h <| f.lt_top _
 #align principal_seg.init PrincipalSeg.init
 
 /-- A principal segment is in particular an initial segment. -/
@@ -395,7 +395,7 @@ theorem of_element_top {α : Type _} (r : α → α → Prop) (a : α) : (ofElem
 /-- Restrict the codomain of a principal segment -/
 def codRestrict (p : Set β) (f : r ≺i s) (H : ∀ a, f a ∈ p) (H₂ : f.top ∈ p) : r ≺i Subrel s p :=
   ⟨RelEmbedding.codRestrict p f H, ⟨f.top, H₂⟩, fun ⟨b, h⟩ =>
-    f.down.trans $ exists_congr $ fun a => show (⟨f a, H a⟩ : p).1 = _ ↔ _ from ⟨Subtype.eq, congr_arg _⟩⟩
+    f.down.trans <| exists_congr fun a => show (⟨f a, H a⟩ : p).1 = _ ↔ _ from ⟨Subtype.eq, congr_arg _⟩⟩
 #align principal_seg.cod_restrict PrincipalSeg.codRestrict
 
 @[simp]
@@ -421,7 +421,7 @@ theorem of_is_empty_top (r : α → α → Prop) [IsEmpty α] {b : β} (H : ∀ 
 /-- Principal segment from the empty relation on `pempty` to the empty relation on `punit`. -/
 @[reducible]
 def pemptyToPunit : @EmptyRelation PEmpty ≺i @EmptyRelation PUnit :=
-  @ofIsEmpty _ _ EmptyRelation _ _ PUnit.unit $ fun x => not_false
+  (@ofIsEmpty _ _ EmptyRelation _ _ PUnit.unit) fun x => not_false
 #align principal_seg.pempty_to_punit PrincipalSeg.pemptyToPunit
 
 end PrincipalSeg
@@ -432,8 +432,8 @@ end PrincipalSeg
 /-- To an initial segment taking values in a well order, one can associate either a principal
 segment (if the range is not everything, hence one can take as top the minimum of the complement
 of the range) or an order isomorphism (if the range is everything). -/
-noncomputable def InitialSeg.ltOrEq [IsWellOrder β s] (f : r ≼i s) : (r ≺i s) ⊕ (r ≃r s) := by
-  by_cases h:surjective f
+noncomputable def InitialSeg.ltOrEq [IsWellOrder β s] (f : r ≼i s) : Sum (r ≺i s) (r ≃r s) := by
+  by_cases h : surjective f
   · exact Sum.inr (RelIso.ofSurjective f h)
     
   · have h' : _ := (InitialSeg.eq_or_principal f).resolve_left h
@@ -473,11 +473,11 @@ namespace RelEmbedding
 gaps, to obtain an initial segment. Here, we construct the collapsed order embedding pointwise,
 but the proof of the fact that it is an initial segment will be given in `collapse`. -/
 noncomputable def collapseF [IsWellOrder β s] (f : r ↪r s) : ∀ a, { b // ¬s (f a) b } :=
-  (RelEmbedding.well_founded f $ IsWellFounded.wf).fix $ fun a IH => by
+  (RelEmbedding.well_founded f <| IsWellFounded.wf).fix fun a IH => by
     let S := { b | ∀ a h, s (IH a h).1 b }
     have : f a ∈ S := fun a' h =>
-      ((trichotomous _ _).resolve_left $ fun h' => (IH a' h).2 $ trans (f.map_rel_iff.2 h) h').resolve_left $ fun h' =>
-        (IH a' h).2 $ h' ▸ f.map_rel_iff.2 h
+      ((trichotomous _ _).resolve_left fun h' => (IH a' h).2 <| trans (f.map_rel_iff.2 h) h').resolve_left fun h' =>
+        (IH a' h).2 <| h' ▸ f.map_rel_iff.2 h
     exact ⟨is_well_founded.wf.min S ⟨_, this⟩, is_well_founded.wf.not_lt_min _ _ this⟩
 #align rel_embedding.collapse_F RelEmbedding.collapseF
 

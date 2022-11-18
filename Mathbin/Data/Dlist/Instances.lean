@@ -5,7 +5,6 @@ Authors: Simon Hudon
 -/
 import Mathbin.Control.Traversable.Equiv
 import Mathbin.Control.Traversable.Instances
-import Leanbin.Data.Dlist
 
 /-!
 # Traversable instance for dlists

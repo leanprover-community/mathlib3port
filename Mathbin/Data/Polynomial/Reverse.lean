@@ -182,7 +182,7 @@ theorem reflect_mul_induction (cf cg : ℕ) :
       
     -- second induction (right): induction step
     · intro N O f g Cf Cg Nf Og
-      by_cases g0:g = 0
+      by_cases g0 : g = 0
       · rw [g0, reflect_zero, mul_zero, mul_zero, reflect_zero]
         
       rw [← erase_lead_add_C_mul_X_pow g, mul_add, reflect_add, reflect_add, mul_add, hcg, hcg] <;> try assumption
@@ -198,7 +198,7 @@ theorem reflect_mul_induction (cf cg : ℕ) :
     
   --first induction (left): induction step
   · intro N O f g Cf Cg Nf Og
-    by_cases f0:f = 0
+    by_cases f0 : f = 0
     · rw [f0, reflect_zero, zero_mul, zero_mul, reflect_zero]
       
     rw [← erase_lead_add_C_mul_X_pow f, add_mul, reflect_add, reflect_add, add_mul, hcf, hcf] <;> try assumption
@@ -285,7 +285,7 @@ theorem reverse_nat_degree_le (f : R[X]) : f.reverse.natDegree ≤ f.natDegree :
 
 theorem nat_degree_eq_reverse_nat_degree_add_nat_trailing_degree (f : R[X]) :
     f.natDegree = f.reverse.natDegree + f.natTrailingDegree := by
-  by_cases hf:f = 0
+  by_cases hf : f = 0
   · rw [hf, reverse_zero, nat_degree_zero, nat_trailing_degree_zero]
     
   apply le_antisymm
@@ -312,7 +312,7 @@ theorem reverse_leading_coeff (f : R[X]) : f.reverse.leadingCoeff = f.trailingCo
 #align polynomial.reverse_leading_coeff Polynomial.reverse_leading_coeff
 
 theorem reverse_nat_trailing_degree (f : R[X]) : f.reverse.natTrailingDegree = 0 := by
-  by_cases hf:f = 0
+  by_cases hf : f = 0
   · rw [hf, reverse_zero, nat_trailing_degree_zero]
     
   · rw [← le_zero_iff]
@@ -335,10 +335,10 @@ theorem reverse_mul {f g : R[X]} (fg : f.leadingCoeff * g.leadingCoeff ≠ 0) : 
 @[simp]
 theorem reverse_mul_of_domain {R : Type _} [Ring R] [NoZeroDivisors R] (f g : R[X]) :
     reverse (f * g) = reverse f * reverse g := by
-  by_cases f0:f = 0
+  by_cases f0 : f = 0
   · simp only [f0, zero_mul, reverse_zero]
     
-  by_cases g0:g = 0
+  by_cases g0 : g = 0
   · rw [g0, mul_zero, reverse_zero, mul_zero]
     
   simp [reverse_mul, *]

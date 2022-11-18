@@ -7,7 +7,6 @@ import Mathbin.Algebra.Hom.Iterate
 import Mathbin.Data.Int.Modeq
 import Mathbin.Data.Nat.Choose.Dvd
 import Mathbin.Data.Nat.Choose.Sum
-import Mathbin.Data.Zmod.Defs
 import Mathbin.GroupTheory.OrderOfElement
 import Mathbin.RingTheory.Nilpotent
 
@@ -20,7 +19,7 @@ universe u v
 
 variable (R : Type u)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`cast_eq_zero_iff] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`cast_eq_zero_iff] [] -/
 /-- The generator of the kernel of the unique homomorphism ℕ → R for a semiring R.
 
 *Warning*: for a semiring `R`, `char_p R 0` and `char_zero R` need not coincide.
@@ -86,16 +85,16 @@ theorem CharP.exists [NonAssocSemiring R] : ∃ p, CharP R p :=
       ⟨fun x =>
         ⟨fun H1 =>
           Nat.dvd_of_mod_eq_zero
-            (by_contradiction $ fun H2 =>
+            (by_contradiction fun H2 =>
               Nat.find_min (not_forall.1 H)
-                (Nat.mod_lt x $ Nat.pos_of_ne_zero $ not_of_not_imp $ Nat.find_spec (not_forall.1 H))
+                (Nat.mod_lt x <| Nat.pos_of_ne_zero <| not_of_not_imp <| Nat.find_spec (not_forall.1 H))
                 (not_imp_of_and_not
                   ⟨by
                     rwa [← Nat.mod_add_div x (Nat.find (not_forall.1 H)), Nat.cast_add, Nat.cast_mul,
-                      of_not_not (not_not_of_not_imp $ Nat.find_spec (not_forall.1 H)), zero_mul, add_zero] at H1,
+                      of_not_not (not_not_of_not_imp <| Nat.find_spec (not_forall.1 H)), zero_mul, add_zero] at H1,
                     H2⟩)),
           fun H1 => by
-          rw [← Nat.mul_div_cancel' H1, Nat.cast_mul, of_not_not (not_not_of_not_imp $ Nat.find_spec (not_forall.1 H)),
+          rw [← Nat.mul_div_cancel' H1, Nat.cast_mul, of_not_not (not_not_of_not_imp <| Nat.find_spec (not_forall.1 H)),
             zero_mul]⟩⟩⟩
 #align char_p.exists CharP.exists
 
@@ -235,7 +234,7 @@ theorem CharP.neg_one_ne_one [Ring R] (p : ℕ) [CharP R p] [Fact (2 < p)] : (-1
   intro h
   rw [show (2 : R) = (2 : ℕ) by norm_cast] at h
   have := (CharP.cast_eq_zero_iff R p 2).mp h
-  have := Nat.le_of_dvd dec_trivial this
+  have := Nat.le_of_dvd (by decide) this
   rw [fact_iff] at *
   linarith
 #align char_p.neg_one_ne_one CharP.neg_one_ne_one
@@ -391,7 +390,7 @@ section
 variable [NonAssocRing R]
 
 theorem char_p_to_char_zero (R : Type _) [AddGroupWithOne R] [CharP R 0] : CharZero R :=
-  char_zero_of_inj_zero $ fun n h0 => eq_zero_of_zero_dvd ((cast_eq_zero_iff R 0 n).mp h0)
+  char_zero_of_inj_zero fun n h0 => eq_zero_of_zero_dvd ((cast_eq_zero_iff R 0 n).mp h0)
 #align char_p.char_p_to_char_zero CharP.char_p_to_char_zero
 
 theorem cast_eq_mod (p : ℕ) [CharP R p] (k : ℕ) : (k : R) = (k % p : ℕ) :=
@@ -483,7 +482,7 @@ theorem char_is_prime_or_zero (p : ℕ) [hc : CharP R p] : Nat.Prime p ∨ p = 0
 #align char_p.char_is_prime_or_zero CharP.char_is_prime_or_zero
 
 theorem char_is_prime_of_pos (p : ℕ) [NeZero p] [CharP R p] : Fact p.Prime :=
-  ⟨(CharP.char_is_prime_or_zero R _).resolve_right $ NeZero.ne p⟩
+  ⟨(CharP.char_is_prime_or_zero R _).resolve_right <| NeZero.ne p⟩
 #align char_p.char_is_prime_of_pos CharP.char_is_prime_of_pos
 
 end Nontrivial
@@ -508,7 +507,7 @@ variable {R} [NonAssocSemiring R]
 
 -- see Note [lower instance priority]
 instance (priority := 100) [CharP R 1] : Subsingleton R :=
-  Subsingleton.intro $
+  Subsingleton.intro <|
     suffices ∀ r : R, r = 0 from fun a b => show a = b by rw [this a, this b]
     fun r =>
     calc
@@ -524,13 +523,13 @@ theorem false_of_nontrivial_of_char_one [Nontrivial R] [CharP R 1] : False :=
 
 theorem ring_char_ne_one [Nontrivial R] : ringChar R ≠ 1 := by
   intro h
-  apply @zero_ne_one R
+  apply zero_ne_one' R
   symm
   rw [← Nat.cast_one, ringChar.spec, h]
 #align char_p.ring_char_ne_one CharP.ring_char_ne_one
 
 theorem nontrivial_of_char_ne_one {v : ℕ} (hv : v ≠ 1) [hr : CharP R v] : Nontrivial R :=
-  ⟨⟨(1 : ℕ), 0, fun h => hv $ by rwa [CharP.cast_eq_zero_iff _ v, Nat.dvd_one] at h <;> assumption⟩⟩
+  ⟨⟨(1 : ℕ), 0, fun h => hv <| by rwa [CharP.cast_eq_zero_iff _ v, Nat.dvd_one] at h <;> assumption⟩⟩
 #align char_p.nontrivial_of_char_ne_one CharP.nontrivial_of_char_ne_one
 
 theorem ring_char_of_prime_eq_zero [Nontrivial R] {p : ℕ} (hprime : Nat.Prime p) (hp0 : (p : R) = 0) : ringChar R = p :=
@@ -543,8 +542,6 @@ end CharP
 
 section
 
--- Note: there is `two_ne_zero` (assuming `[ordered_semiring]`)
--- and `two_ne_zero'`(assuming `[char_zero]`), which both don't fit the needs here.
 /-- We have `2 ≠ 0` in a nontrivial ring whose characteristic is not `2`. -/
 @[protected]
 theorem Ring.two_ne_zero {R : Type _} [NonAssocSemiring R] [Nontrivial R] (hR : ringChar R ≠ 2) : (2 : R) ≠ 0 := by
@@ -562,7 +559,7 @@ theorem Ring.neg_one_ne_one_of_char_ne_two {R : Type _} [NonAssocRing R] [Nontri
 /-- Characteristic `≠ 2` in a domain implies that `-a = a` iff `a = 0`. -/
 theorem Ring.eq_self_iff_eq_zero_of_char_ne_two {R : Type _} [NonAssocRing R] [Nontrivial R] [NoZeroDivisors R]
     (hR : ringChar R ≠ 2) {a : R} : -a = a ↔ a = 0 :=
-  ⟨fun h => (mul_eq_zero.mp $ (two_mul a).trans $ neg_eq_iff_add_eq_zero.mp h).resolve_left (Ring.two_ne_zero hR),
+  ⟨fun h => (mul_eq_zero.mp <| (two_mul a).trans <| neg_eq_iff_add_eq_zero.mp h).resolve_left (Ring.two_ne_zero hR),
     fun h => ((congr_arg (fun x => -x) h).trans neg_zero).trans h.symm⟩
 #align ring.eq_self_iff_eq_zero_of_char_ne_two Ring.eq_self_iff_eq_zero_of_char_ne_two
 

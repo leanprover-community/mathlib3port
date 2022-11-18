@@ -37,7 +37,7 @@ unsafe instance :
     | success x => success x
     | exception msg => g
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`of_json] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`of_json] [] -/
 /-- A class to indicate that a type is json serializable -/
 unsafe class json_serializable (α : Type) where
   to_json : α → json
@@ -113,7 +113,7 @@ unsafe instance {α} [json_serializable α] : non_null_json_serializable (List �
     l (of_json α)
 
 unsafe instance {α} [json_serializable α] : non_null_json_serializable (Rbmap String α) where
-  to_json m := json.object (m.toList.map $ fun x => (x.1, to_json x.2))
+  to_json m := json.object (m.toList.map fun x => (x.1, to_json x.2))
   of_json j := do
     let json.object l ← success j |
       exception fun _ => f! "object expected, got {j.typename}"
@@ -200,7 +200,7 @@ unsafe def get_constructor_and_projections (t : expr) : tactic (Name × (Name ×
   let ctor ←
     do
       let d ← get_decl ctor
-      let a := @expr.const true ctor $ d.univ_params.map level.param
+      let a := @expr.const true ctor <| d.univ_params.map level.param
       pure (ctor, a args)
   let ctor_type ← infer_type ctor.2
   let tt ← pure ctor_type.is_pi |
@@ -208,9 +208,9 @@ unsafe def get_constructor_and_projections (t : expr) : tactic (Name × (Name ×
   let some fields ← pure (env.structure_fields I) |
     throwError"Not a structure"
   let projs ←
-    fields.mmap $ fun f => do
+    fields.mmap fun f => do
         let d ← get_decl (I ++ f)
-        let a := @expr.const true (I ++ f) $ d.univ_params.map level.param
+        let a := @expr.const true (I ++ f) <| d.univ_params.map level.param
         pure (f, a args)
   pure (I, ctor, projs)
 #align get_constructor_and_projections get_constructor_and_projections
@@ -235,8 +235,7 @@ unsafe def of_json_helper (struct_name : Name) (t : expr) :
     let new_vars := vars.concat (fname, to_pexpr f_binder)
     let with_field ← of_json_helper new_vars js >>= tactic.lambdas [f_binder]
     let without_field ←
-      of_json_helper vars js <|>
-          to_expr ``((exception $ fun o => f!"field {$(q(fname))} is required" : exceptional $(t)))
+      of_json_helper vars js <|> to_expr ``((exception fun o => f!"field {$(q(fname))} is required" : exceptional $(t)))
     to_expr ``((Option.mapM (of_json _) $(fj) >>= Option.elim' $(without_field) $(with_field) : exceptional $(t)))
   | vars,
     (fname, none) :: js =>-- try a default value
@@ -250,7 +249,7 @@ unsafe def of_json_helper (struct_name : Name) (t : expr) :
       let f_binder ← mk_local' fname BinderInfo.default ft
       let new_vars := vars.concat (fname, to_pexpr f_binder)
       let with_field ← of_json_helper new_vars js >>= tactic.lambdas [f_binder]
-      to_expr ``(dite _ $(with_field) fun _ => exception $ fun _ => f!"condition does not hold")
+      to_expr ``(dite _ $(with_field) fun _ => exception fun _ => f!"condition does not hold")
 #align of_json_helper of_json_helper
 
 /-- A derive handler to serialize structures by their fields.
@@ -283,7 +282,7 @@ do
 -/
 @[derive_handler]
 unsafe def non_null_json_serializable_handler : derive_handler :=
-  instance_derive_handler `` non_null_json_serializable $ do
+  instance_derive_handler `` non_null_json_serializable <| do
     intros
     let q(non_null_json_serializable $(e)) ← target >>= whnf
     let (struct_name, (ctor_name, ctor), fields) ← get_constructor_and_projections e

@@ -29,7 +29,7 @@ for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem has_fderiv_at_integral_of_dominated_loc_of_lip {F : H → ℝ → E} {F' : ℝ → H →L[𝕜] E} {x₀ : H} (ε_pos : 0 < ε)
     (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) (μ.restrict (Ι a b))) (hF_int : IntervalIntegrable (F x₀) μ a b)
     (hF'_meas : AeStronglyMeasurable F' (μ.restrict (Ι a b)))
-    (h_lip : ∀ᵐ t ∂μ, t ∈ Ι a b → LipschitzOnWith (Real.nnabs $ bound t) (fun x => F x t) (ball x₀ ε))
+    (h_lip : ∀ᵐ t ∂μ, t ∈ Ι a b → LipschitzOnWith (Real.nnabs <| bound t) (fun x => F x t) (ball x₀ ε))
     (bound_integrable : IntervalIntegrable bound μ a b)
     (h_diff : ∀ᵐ t ∂μ, t ∈ Ι a b → HasFderivAt (fun x => F x t) (F' t) x₀) :
     IntervalIntegrable F' μ a b ∧ HasFderivAt (fun x => ∫ t in a..b, F x t ∂μ) (∫ t in a..b, F' t ∂μ) x₀ := by
@@ -47,7 +47,7 @@ and `F x` is ae-measurable for `x` in a possibly smaller neighborhood of `x₀`.
 theorem hasFderivAtIntegralOfDominatedOfFderivLe {F : H → ℝ → E} {F' : H → ℝ → H →L[𝕜] E} {x₀ : H} (ε_pos : 0 < ε)
     (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) (μ.restrict (Ι a b))) (hF_int : IntervalIntegrable (F x₀) μ a b)
     (hF'_meas : AeStronglyMeasurable (F' x₀) (μ.restrict (Ι a b)))
-    (h_bound : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀ x ∈ ball x₀ ε, ∥F' x t∥ ≤ bound t)
+    (h_bound : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀ x ∈ ball x₀ ε, ‖F' x t‖ ≤ bound t)
     (bound_integrable : IntervalIntegrable bound μ a b)
     (h_diff : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀ x ∈ ball x₀ ε, HasFderivAt (fun x => F x t) (F' x t) x) :
     HasFderivAt (fun x => ∫ t in a..b, F x t ∂μ) (∫ t in a..b, F' x₀ t ∂μ) x₀ := by
@@ -66,7 +66,7 @@ ae-measurable for `x` in a possibly smaller neighborhood of `x₀`. -/
 theorem has_deriv_at_integral_of_dominated_loc_of_lip {F : 𝕜 → ℝ → E} {F' : ℝ → E} {x₀ : 𝕜} (ε_pos : 0 < ε)
     (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) (μ.restrict (Ι a b))) (hF_int : IntervalIntegrable (F x₀) μ a b)
     (hF'_meas : AeStronglyMeasurable F' (μ.restrict (Ι a b)))
-    (h_lipsch : ∀ᵐ t ∂μ, t ∈ Ι a b → LipschitzOnWith (Real.nnabs $ bound t) (fun x => F x t) (ball x₀ ε))
+    (h_lipsch : ∀ᵐ t ∂μ, t ∈ Ι a b → LipschitzOnWith (Real.nnabs <| bound t) (fun x => F x t) (ball x₀ ε))
     (bound_integrable : IntervalIntegrable (bound : ℝ → ℝ) μ a b)
     (h_diff : ∀ᵐ t ∂μ, t ∈ Ι a b → HasDerivAt (fun x => F x t) (F' t) x₀) :
     IntervalIntegrable F' μ a b ∧ HasDerivAt (fun x => ∫ t in a..b, F x t ∂μ) (∫ t in a..b, F' t ∂μ) x₀ := by
@@ -84,7 +84,7 @@ function, and `F x` is ae-measurable for `x` in a possibly smaller neighborhood 
 theorem has_deriv_at_integral_of_dominated_loc_of_deriv_le {F : 𝕜 → ℝ → E} {F' : 𝕜 → ℝ → E} {x₀ : 𝕜} (ε_pos : 0 < ε)
     (hF_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (F x) (μ.restrict (Ι a b))) (hF_int : IntervalIntegrable (F x₀) μ a b)
     (hF'_meas : AeStronglyMeasurable (F' x₀) (μ.restrict (Ι a b)))
-    (h_bound : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀ x ∈ ball x₀ ε, ∥F' x t∥ ≤ bound t)
+    (h_bound : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀ x ∈ ball x₀ ε, ‖F' x t‖ ≤ bound t)
     (bound_integrable : IntervalIntegrable bound μ a b)
     (h_diff : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀ x ∈ ball x₀ ε, HasDerivAt (fun x => F x t) (F' x t) x) :
     IntervalIntegrable (F' x₀) μ a b ∧ HasDerivAt (fun x => ∫ t in a..b, F x t ∂μ) (∫ t in a..b, F' x₀ t ∂μ) x₀ := by

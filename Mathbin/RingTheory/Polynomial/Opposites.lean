@@ -3,7 +3,6 @@ Copyright (c) 2022 Damiano Testa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
-import Mathbin.Data.Polynomial.Induction
 import Mathbin.Data.Polynomial.Degree.Definitions
 
 /-!  #  Interactions between `R[X]` and `Rᵐᵒᵖ[X]`
@@ -100,7 +99,7 @@ theorem support_op_ring_equiv (p : R[X]ᵐᵒᵖ) : (opRingEquiv R p).support = 
 
 @[simp]
 theorem nat_degree_op_ring_equiv (p : R[X]ᵐᵒᵖ) : (opRingEquiv R p).natDegree = (unop p).natDegree := by
-  by_cases p0:p = 0
+  by_cases p0 : p = 0
   · simp only [p0, _root_.map_zero, nat_degree_zero, unop_zero]
     
   · simp only [p0, nat_degree_eq_support_max', Ne.def, AddEquivClass.map_eq_zero_iff, not_false_iff,

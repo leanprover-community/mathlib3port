@@ -272,7 +272,6 @@ unsafe def mk_sigma_elim_eq : ℕ → expr → tactic Unit
   | 0, x => reflexivity
 #align tactic.derive_fintype.mk_sigma_elim_eq tactic.derive_fintype.mk_sigma_elim_eq
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Prove the goal `|- finset_above T enum k`, where `T` is the inductive type and `enum` is the
 discriminant function. The arguments are `args`, the parameters to the inductive type (and all
 constructors), `k`, the index of the current variant, and `cs`, the list of constructor names.
@@ -280,7 +279,7 @@ This uses `finset_above.cons` for basic variants and `finset_above.union` for va
 arguments, using the auxiliary functions `mk_sigma`, `mk_sigma_elim`, `mk_sigma_elim_inj`,
 `mk_sigma_elim_eq` to close subgoals. -/
 unsafe def mk_finset (ls : List level) (args : List expr) : ℕ → List Name → tactic Unit
-  | k, c::cs => do
+  | k, c :: cs => do
     let e := (expr.const c ls).mk_app args
     let t ← infer_type e
     if is_pi t then do
@@ -299,14 +298,12 @@ unsafe def mk_finset (ls : List level) (args : List expr) : ℕ → List Name �
   | k, [] => applyc `` finset_above.nil
 #align tactic.derive_fintype.mk_finset tactic.derive_fintype.mk_finset
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Prove the goal `|- Σ' (a:A) (b: B a) (c:C a b), unit` given a list of terms `a, b, c`. -/
 unsafe def mk_sigma_mem : List expr → tactic Unit
-  | x::xs => fconstructor >> exact x >> mk_sigma_mem xs
+  | x :: xs => (fconstructor >> exact x) >> mk_sigma_mem xs
   | [] => fconstructor $> ()
 #align tactic.derive_fintype.mk_sigma_mem tactic.derive_fintype.mk_sigma_mem
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- This function is called to prove `a : T |- a ∈ S.1` where `S` is the `finset_above` constructed
 by `mk_finset`, after the initial cases on `a : T`, producing a list of subgoals. For each case,
 we have to navigate past all the variants that don't apply (which is what the `tac` input tactic
@@ -315,7 +312,7 @@ does), and then call either `finset_above.mem_cons_self` for trivial variants or
 is quite simple. -/
 unsafe def mk_finset_total : tactic Unit → List (Name × List expr) → tactic Unit
   | tac, [] => done
-  | tac, (_, xs)::gs => do
+  | tac, (_, xs) :: gs => do
     tac
     let b ← succeeds (applyc `` finset_above.mem_cons_self)
     if b then mk_finset_total (tac >> applyc `` finset_above.mem_cons_of_mem) gs
@@ -340,10 +337,10 @@ unsafe def mk_fintype_instance : tactic Unit := do
   let env ← get_env
   let cs := env.constructors_of I
   guard (env I = 0) <|> fail "@[derive fintype]: inductive indices are not supported"
-  guard (¬env I) <|>
+  guard ¬env I <|>
       fail ("@[derive fintype]: recursive inductive types are " ++ "not supported (they are also usually infinite)")
   applyc `` mk_fintype { NewGoals := new_goals.all }
-  intro1 >>= cases >>= fun gs => gs $ fun ⟨i, _⟩ => exact (reflect i)
+  intro1 >>= cases >>= fun gs => gs fun ⟨i, _⟩ => exact (reflect i)
   mk_finset ls args 0 cs
   intro1 >>= cases >>= mk_finset_total skip
 #align tactic.mk_fintype_instance tactic.mk_fintype_instance

@@ -3,11 +3,12 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
+import Mathbin.RingTheory.Ideal.LocalRing
 import Mathbin.RingTheory.Noetherian
 import Mathbin.RingTheory.ReesAlgebra
 import Mathbin.RingTheory.Finiteness
 import Mathbin.Data.Polynomial.Module
-import Mathbin.Order.Hom.CompleteLattice
+import Mathbin.Order.Hom.Lattice
 
 /-!
 
@@ -88,7 +89,7 @@ def _root_.ideal.trivial_filtration (I : Ideal R) (N : Submodule R M) : I.Filtra
 instance : HasSup (I.Filtration M) :=
   ⟨fun F F' =>
     ⟨F.n ⊔ F'.n, fun i => sup_le_sup (F.mono i) (F'.mono i), fun i =>
-      (le_of_eq (Submodule.smul_sup _ _ _)).trans $ sup_le_sup (F.smul_le i) (F'.smul_le i)⟩⟩
+      (le_of_eq (Submodule.smul_sup _ _ _)).trans <| sup_le_sup (F.smul_le i) (F'.smul_le i)⟩⟩
 
 /-- The `Sup` of a family of `I.filtration`s is an `I.filtration`. -/
 instance : HasSup (I.Filtration M) :=
@@ -108,7 +109,7 @@ instance : HasSup (I.Filtration M) :=
 instance : HasInf (I.Filtration M) :=
   ⟨fun F F' =>
     ⟨F.n ⊓ F'.n, fun i => inf_le_inf (F.mono i) (F'.mono i), fun i =>
-      (Submodule.smul_inf_le _ _ _).trans $ inf_le_inf (F.smul_le i) (F'.smul_le i)⟩⟩
+      (Submodule.smul_inf_le _ _ _).trans <| inf_le_inf (F.smul_le i) (F'.smul_le i)⟩⟩
 
 /-- The `Inf` of a family of `I.filtration`s is an `I.filtration`. -/
 instance : HasInf (I.Filtration M) :=
@@ -310,7 +311,7 @@ theorem submodule_closure_single :
     rw [← f.sum_single]
     apply AddSubmonoid.sum_mem _ _
     rintro c -
-    exact AddSubmonoid.subset_closure (Set.subset_Union _ c $ Set.mem_image_of_mem _ (hf c))
+    exact AddSubmonoid.subset_closure (Set.subset_Union _ c <| Set.mem_image_of_mem _ (hf c))
     
 #align ideal.filtration.submodule_closure_single Ideal.Filtration.submodule_closure_single
 
@@ -341,7 +342,7 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
     have e : n' ≤ n := by linarith
     have := F.pow_smul_le_pow_smul (n - n') n' 1
     rw [tsub_add_cancel_of_le e, pow_one, add_comm _ 1, ← add_tsub_assoc_of_le e, add_comm] at this
-    exact this (Submodule.smul_mem_smul ((l _).2 $ n + 1 - n') hm)
+    exact this (Submodule.smul_mem_smul ((l _).2 <| n + 1 - n') hm)
     
   · let F' := Submodule.span (reesAlgebra I) (⋃ i ≤ n₀, single R i '' (F.N i : Set M))
     intro hF i
@@ -350,7 +351,7 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
     induction' i with j hj
     · exact this _ (zero_le _)
       
-    by_cases hj':j.succ ≤ n₀
+    by_cases hj' : j.succ ≤ n₀
     · exact this _ hj'
       
     simp only [not_le, Nat.lt_succ_iff] at hj'
@@ -359,7 +360,7 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
     apply Submodule.smul_induction_on hm
     · intro r hr m' hm'
       rw [add_comm, ← monomial_smul_single]
-      exact F'.smul_mem ⟨_, rees_algebra.monomial_mem.mpr (by rwa [pow_one])⟩ (hj $ Set.mem_image_of_mem _ hm')
+      exact F'.smul_mem ⟨_, rees_algebra.monomial_mem.mpr (by rwa [pow_one])⟩ (hj <| Set.mem_image_of_mem _ hm')
       
     · intro x y hx hy
       rw [map_add]
@@ -450,7 +451,7 @@ theorem Ideal.mem_infi_smul_pow_eq_bot_iff [IsNoetherianRing R] [hM : Module.Fin
   let N := (⨅ i : ℕ, I ^ i • ⊤ : Submodule R M)
   have hN : ∀ k, (I.stable_filtration ⊤ ⊓ I.trivial_filtration N).n k = N := by
     intro k
-    exact inf_eq_right.mpr ((infi_le _ k).trans $ le_of_eq $ by simp)
+    exact inf_eq_right.mpr ((infi_le _ k).trans <| le_of_eq <| by simp)
   constructor
   · haveI := is_noetherian_of_fg_of_noetherian' hM.out
     obtain ⟨r, hr₁, hr₂⟩ := Submodule.exists_mem_and_smul_eq_self_of_fg_of_le_smul I N (IsNoetherian.noetherian N) _

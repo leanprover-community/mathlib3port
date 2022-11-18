@@ -80,7 +80,7 @@ unsafe def tactic.interactive.reflect_name : tactic Unit := do
   let levels ←
     levels.mmap fun l => do
         let inst ← tactic.mk_instance (expr.const `reflected_univ [l])
-        pure $ expr.app (expr.const `reflect_univ [l]) inst
+        pure <| expr.app (expr.const `reflect_univ [l]) inst
   let levels := List.foldr (fun a l => q(@List.cons level $(a) $(l))) q(@List.nil level) levels
   let e := q(@expr.const true $(q(Name)) $(levels))
   let e2 := ``((reflected.of $(e) : $(tgt)))

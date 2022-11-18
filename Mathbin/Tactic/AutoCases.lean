@@ -76,8 +76,8 @@ unsafe def auto_cases_at (hyp : expr) : tactic String := do
 @[hint_tactic]
 unsafe def auto_cases : tactic String := do
   let l ← local_context
-  let results ← successes $ l.reverse.map auto_cases_at
-  when (results results.empty) $ fail "`auto_cases` did not find any hypotheses to apply `cases` or `induction` to"
+  let results ← successes <| l.reverse.map auto_cases_at
+  when (results results.empty) <| fail "`auto_cases` did not find any hypotheses to apply `cases` or `induction` to"
   return (String.intercalate ", " results)
 #align tactic.auto_cases tactic.auto_cases
 

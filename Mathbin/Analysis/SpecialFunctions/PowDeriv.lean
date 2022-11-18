@@ -311,7 +311,7 @@ theorem deriv_rpow_const {x p : ℝ} (h : x ≠ 0 ∨ 1 ≤ p) : deriv (fun x : 
 #align real.deriv_rpow_const Real.deriv_rpow_const
 
 theorem deriv_rpow_const' {p : ℝ} (h : 1 ≤ p) : (deriv fun x : ℝ => x ^ p) = fun x => p * x ^ (p - 1) :=
-  funext $ fun x => deriv_rpow_const (Or.inr h)
+  funext fun x => deriv_rpow_const (Or.inr h)
 #align real.deriv_rpow_const' Real.deriv_rpow_const'
 
 theorem contDiffAtRpowConstOfNe {x p : ℝ} {n : ℕ∞} (h : x ≠ 0) : ContDiffAt ℝ n (fun x => x ^ p) x :=
@@ -451,7 +451,7 @@ theorem ContDiffOn.rpow (hf : ContDiffOn ℝ n f s) (hg : ContDiffOn ℝ n g s) 
 
 theorem ContDiff.rpow (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (h : ∀ x, f x ≠ 0) :
     ContDiff ℝ n fun x => f x ^ g x :=
-  cont_diff_iff_cont_diff_at.mpr $ fun x => hf.ContDiffAt.rpow hg.ContDiffAt (h x)
+  cont_diff_iff_cont_diff_at.mpr fun x => hf.ContDiffAt.rpow hg.ContDiffAt (h x)
 #align cont_diff.rpow ContDiff.rpow
 
 theorem ContDiffWithinAt.rpowConstOfNe (hf : ContDiffWithinAt ℝ n f s x) (h : f x ≠ 0) :
@@ -488,7 +488,7 @@ theorem ContDiffOn.rpowConstOfLe (hf : ContDiffOn ℝ m f s) (h : ↑m ≤ p) : 
 #align cont_diff_on.rpow_const_of_le ContDiffOn.rpowConstOfLe
 
 theorem ContDiff.rpowConstOfLe (hf : ContDiff ℝ m f) (h : ↑m ≤ p) : ContDiff ℝ m fun x => f x ^ p :=
-  cont_diff_iff_cont_diff_at.mpr $ fun x => hf.ContDiffAt.rpowConstOfLe h
+  cont_diff_iff_cont_diff_at.mpr fun x => hf.ContDiffAt.rpowConstOfLe h
 #align cont_diff.rpow_const_of_le ContDiff.rpowConstOfLe
 
 end fderiv

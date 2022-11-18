@@ -8,6 +8,7 @@ import Mathbin.LinearAlgebra.Matrix.Trace
 import Mathbin.LinearAlgebra.Contraction
 import Mathbin.LinearAlgebra.TensorProductBasis
 import Mathbin.LinearAlgebra.FreeModule.StrongRankCondition
+import Mathbin.LinearAlgebra.FreeModule.Finite.Rank
 import Mathbin.LinearAlgebra.Projection
 
 /-!
@@ -59,7 +60,7 @@ theorem trace_aux_def (b : Basis ι R M) (f : M →ₗ[R] M) : traceAux R b f = 
 #align linear_map.trace_aux_def LinearMap.trace_aux_def
 
 theorem trace_aux_eq : traceAux R b = traceAux R c :=
-  LinearMap.ext $ fun f =>
+  LinearMap.ext fun f =>
     calc
       Matrix.trace (LinearMap.toMatrix b b f) =
           Matrix.trace (LinearMap.toMatrix b b ((LinearMap.id.comp f).comp LinearMap.id)) :=
@@ -136,7 +137,7 @@ theorem trace_eq_contract_of_basis [Finite ι] (b : Basis ι R M) :
   rintro ⟨i, j⟩
   simp only [Function.comp_apply, Basis.tensor_product_apply, Basis.coe_dual_basis, coe_comp]
   rw [trace_eq_matrix_trace R b, to_matrix_dual_tensor_hom]
-  by_cases hij:i = j
+  by_cases hij : i = j
   · rw [hij]
     simp
     

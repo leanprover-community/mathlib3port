@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Gin-ge Chen, Yaël Dillies
 -/
 import Mathbin.Algebra.PunitInstances
-import Mathbin.Order.Heyting.Hom
 import Mathbin.Tactic.Abel
 import Mathbin.Tactic.Ring
+import Mathbin.Order.Hom.Lattice
 
 /-!
 # Boolean rings

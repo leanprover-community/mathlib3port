@@ -39,7 +39,7 @@ noncomputable def eigenvalues₀ : Fin (Fintype.card n) → ℝ :=
 #align matrix.is_hermitian.eigenvalues₀ Matrix.IsHermitian.eigenvalues₀
 
 /-- The eigenvalues of a hermitian matrix, reusing the index `n` of the matrix entries. -/
-noncomputable def eigenvalues : n → ℝ := fun i => hA.eigenvalues₀ $ (Fintype.equivOfCardEq (Fintype.card_fin _)).symm i
+noncomputable def eigenvalues : n → ℝ := fun i => hA.eigenvalues₀ <| (Fintype.equivOfCardEq (Fintype.card_fin _)).symm i
 #align matrix.is_hermitian.eigenvalues Matrix.IsHermitian.eigenvalues
 
 /-- A choice of an orthonormal basis of eigenvectors of a hermitian matrix. -/

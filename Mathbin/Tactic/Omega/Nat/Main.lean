@@ -119,7 +119,7 @@ unsafe def prove_univ_close (m : Nat) (p : Preform) : tactic expr := do
     | q( $ ( x ) * $ ( y ) ) => do let m ← eval_expr' Nat y return ( exprterm.exp m x )
       | q( $ ( t1x ) + $ ( t2x ) ) => do let t1 ← to_exprterm t1x let t2 ← to_exprterm t2x return ( exprterm.add t1 t2 )
       | q( $ ( t1x ) - $ ( t2x ) ) => do let t1 ← to_exprterm t1x let t2 ← to_exprterm t2x return ( exprterm.sub t1 t2 )
-      | x => ( do let m ← eval_expr' Nat x return ( exprterm.cst m ) ) <|> ( return $ exprterm.exp 1 x )
+      | x => ( do let m ← eval_expr' Nat x return ( exprterm.cst m ) ) <|> ( return <| exprterm.exp 1 x )
 #align omega.nat.to_exprterm omega.nat.to_exprterm
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -133,7 +133,7 @@ unsafe def prove_univ_close (m : Nat) (p : Preform) : tactic expr := do
       | q( $ ( px ) ∨ $ ( qx ) ) => do let p ← to_exprform px let q ← to_exprform qx return ( exprform.or p q )
       | q( $ ( px ) ∧ $ ( qx ) ) => do let p ← to_exprform px let q ← to_exprform qx return ( exprform.and p q )
       | q( _ → $ ( px ) ) => to_exprform px
-      | x => trace "Cannot reify expr : " >> trace x >> failed
+      | x => ( trace "Cannot reify expr : " >> trace x ) >> failed
 #align omega.nat.to_exprform omega.nat.to_exprform
 
 /-- List of all unreified exprs -/
@@ -271,6 +271,6 @@ open Omega.Nat
 
 /-- The core omega tactic for natural numbers. -/
 unsafe def omega_nat (is_manual : Bool) : tactic Unit :=
-  (desugar; if is_manual then skip else preprocess); prove >>= apply >> skip
+  andthen (andthen desugar (if is_manual then skip else preprocess)) ((prove >>= apply) >> skip)
 #align omega_nat omega_nat
 

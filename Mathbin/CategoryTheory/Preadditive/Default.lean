@@ -119,19 +119,19 @@ instance (X : C) : Ring (EndCat X) :=
 
 /-- Composition by a fixed left argument as a group homomorphism -/
 def leftComp {P Q : C} (R : C) (f : P ⟶ Q) : (Q ⟶ R) →+ (P ⟶ R) :=
-  (mk' fun g => f ≫ g) $ fun g g' => by simp
+  (mk' fun g => f ≫ g) fun g g' => by simp
 #align category_theory.preadditive.left_comp CategoryTheory.Preadditive.leftComp
 
 /-- Composition by a fixed right argument as a group homomorphism -/
 def rightComp (P : C) {Q R : C} (g : Q ⟶ R) : (P ⟶ Q) →+ (P ⟶ R) :=
-  (mk' fun f => f ≫ g) $ fun f f' => by simp
+  (mk' fun f => f ≫ g) fun f f' => by simp
 #align category_theory.preadditive.right_comp CategoryTheory.Preadditive.rightComp
 
 variable {P Q R : C} (f f' : P ⟶ Q) (g g' : Q ⟶ R)
 
 /-- Composition as a bilinear group homomorphism -/
 def compHom : (P ⟶ Q) →+ (Q ⟶ R) →+ (P ⟶ R) :=
-  (AddMonoidHom.mk' fun f => leftComp _ f) $ fun f₁ f₂ => AddMonoidHom.ext $ fun g => (rightComp _ g).map_add f₁ f₂
+  (AddMonoidHom.mk' fun f => leftComp _ f) fun f₁ f₂ => AddMonoidHom.ext fun g => (rightComp _ g).map_add f₁ f₂
 #align category_theory.preadditive.comp_hom CategoryTheory.Preadditive.compHom
 
 @[simp, reassoc]
@@ -208,7 +208,7 @@ instance moduleEndRight {X Y : C} : Module (EndCat Y) (X ⟶ Y) where
 #align category_theory.preadditive.module_End_right CategoryTheory.Preadditive.moduleEndRight
 
 theorem mono_of_cancel_zero {Q R : C} (f : Q ⟶ R) (h : ∀ {P : C} (g : P ⟶ Q), g ≫ f = 0 → g = 0) : Mono f :=
-  ⟨fun P g g' hg => sub_eq_zero.1 $ h _ $ (map_sub (rightComp P f) g g').trans $ sub_eq_zero.2 hg⟩
+  ⟨fun P g g' hg => sub_eq_zero.1 <| h _ <| (map_sub (rightComp P f) g g').trans <| sub_eq_zero.2 hg⟩
 #align category_theory.preadditive.mono_of_cancel_zero CategoryTheory.Preadditive.mono_of_cancel_zero
 
 theorem mono_iff_cancel_zero {Q R : C} (f : Q ⟶ R) : Mono f ↔ ∀ (P : C) (g : P ⟶ Q), g ≫ f = 0 → g = 0 :=
@@ -220,7 +220,7 @@ theorem mono_of_kernel_zero {X Y : C} {f : X ⟶ Y} [HasLimit (parallelPair f 0)
 #align category_theory.preadditive.mono_of_kernel_zero CategoryTheory.Preadditive.mono_of_kernel_zero
 
 theorem epi_of_cancel_zero {P Q : C} (f : P ⟶ Q) (h : ∀ {R : C} (g : Q ⟶ R), f ≫ g = 0 → g = 0) : Epi f :=
-  ⟨fun R g g' hg => sub_eq_zero.1 $ h _ $ (map_sub (leftComp R f) g g').trans $ sub_eq_zero.2 hg⟩
+  ⟨fun R g g' hg => sub_eq_zero.1 <| h _ <| (map_sub (leftComp R f) g g').trans <| sub_eq_zero.2 hg⟩
 #align category_theory.preadditive.epi_of_cancel_zero CategoryTheory.Preadditive.epi_of_cancel_zero
 
 theorem epi_iff_cancel_zero {P Q : C} (f : P ⟶ Q) : Epi f ↔ ∀ (R : C) (g : Q ⟶ R), f ≫ g = 0 → g = 0 :=
@@ -268,7 +268,7 @@ variable {X Y : C} {f : X ⟶ Y} {g : X ⟶ Y}
 /-- Map a kernel cone on the difference of two morphisms to the equalizer fork. -/
 @[simps x]
 def forkOfKernelFork (c : KernelFork (f - g)) : Fork f g :=
-  Fork.ofι c.ι $ by rw [← sub_eq_zero, ← comp_sub, c.condition]
+  Fork.ofι c.ι <| by rw [← sub_eq_zero, ← comp_sub, c.condition]
 #align category_theory.preadditive.fork_of_kernel_fork CategoryTheory.Preadditive.forkOfKernelFork
 
 @[simp]
@@ -278,7 +278,7 @@ theorem fork_of_kernel_fork_ι (c : KernelFork (f - g)) : (forkOfKernelFork c).�
 
 /-- Map any equalizer fork to a cone on the difference of the two morphisms. -/
 def kernelForkOfFork (c : Fork f g) : KernelFork (f - g) :=
-  Fork.ofι c.ι $ by rw [comp_sub, comp_zero, sub_eq_zero, c.condition]
+  Fork.ofι c.ι <| by rw [comp_sub, comp_zero, sub_eq_zero, c.condition]
 #align category_theory.preadditive.kernel_fork_of_fork CategoryTheory.Preadditive.kernelForkOfFork
 
 @[simp]
@@ -294,7 +294,7 @@ theorem kernel_fork_of_fork_of_ι {P : C} (ι : P ⟶ X) (w : ι ≫ f = ι ≫ 
 
 /-- A kernel of `f - g` is an equalizer of `f` and `g`. -/
 def isLimitForkOfKernelFork {c : KernelFork (f - g)} (i : IsLimit c) : IsLimit (forkOfKernelFork c) :=
-  Fork.IsLimit.mk' _ $ fun s =>
+  (Fork.IsLimit.mk' _) fun s =>
     ⟨i.lift (kernelForkOfFork s), i.fac _ _, fun m h => by apply fork.is_limit.hom_ext i <;> tidy⟩
 #align category_theory.preadditive.is_limit_fork_of_kernel_fork CategoryTheory.Preadditive.isLimitForkOfKernelFork
 
@@ -307,7 +307,7 @@ theorem is_limit_fork_of_kernel_fork_lift {c : KernelFork (f - g)} (i : IsLimit 
 
 /-- An equalizer of `f` and `g` is a kernel of `f - g`. -/
 def isLimitKernelForkOfFork {c : Fork f g} (i : IsLimit c) : IsLimit (kernelForkOfFork c) :=
-  Fork.IsLimit.mk' _ $ fun s =>
+  (Fork.IsLimit.mk' _) fun s =>
     ⟨i.lift (forkOfKernelFork s), i.fac _ _, fun m h => by apply fork.is_limit.hom_ext i <;> tidy⟩
 #align category_theory.preadditive.is_limit_kernel_fork_of_fork CategoryTheory.Preadditive.isLimitKernelForkOfFork
 
@@ -330,7 +330,7 @@ variable {f g}
 /-- Map a cokernel cocone on the difference of two morphisms to the coequalizer cofork. -/
 @[simps x]
 def coforkOfCokernelCofork (c : CokernelCofork (f - g)) : Cofork f g :=
-  Cofork.ofπ c.π $ by rw [← sub_eq_zero, ← sub_comp, c.condition]
+  Cofork.ofπ c.π <| by rw [← sub_eq_zero, ← sub_comp, c.condition]
 #align category_theory.preadditive.cofork_of_cokernel_cofork CategoryTheory.Preadditive.coforkOfCokernelCofork
 
 @[simp]
@@ -340,7 +340,7 @@ theorem cofork_of_cokernel_cofork_π (c : CokernelCofork (f - g)) : (coforkOfCok
 
 /-- Map any coequalizer cofork to a cocone on the difference of the two morphisms. -/
 def cokernelCoforkOfCofork (c : Cofork f g) : CokernelCofork (f - g) :=
-  Cofork.ofπ c.π $ by rw [sub_comp, zero_comp, sub_eq_zero, c.condition]
+  Cofork.ofπ c.π <| by rw [sub_comp, zero_comp, sub_eq_zero, c.condition]
 #align category_theory.preadditive.cokernel_cofork_of_cofork CategoryTheory.Preadditive.cokernelCoforkOfCofork
 
 @[simp]
@@ -358,7 +358,7 @@ theorem cokernel_cofork_of_cofork_of_π {P : C} (π : Y ⟶ P) (w : f ≫ π = g
 /-- A cokernel of `f - g` is a coequalizer of `f` and `g`. -/
 def isColimitCoforkOfCokernelCofork {c : CokernelCofork (f - g)} (i : IsColimit c) :
     IsColimit (coforkOfCokernelCofork c) :=
-  Cofork.IsColimit.mk' _ $ fun s =>
+  (Cofork.IsColimit.mk' _) fun s =>
     ⟨i.desc (cokernelCoforkOfCofork s), i.fac _ _, fun m h => by apply cofork.is_colimit.hom_ext i <;> tidy⟩
 #align
   category_theory.preadditive.is_colimit_cofork_of_cokernel_cofork CategoryTheory.Preadditive.isColimitCoforkOfCokernelCofork
@@ -372,7 +372,7 @@ theorem is_colimit_cofork_of_cokernel_cofork_desc {c : CokernelCofork (f - g)} (
 
 /-- A coequalizer of `f` and `g` is a cokernel of `f - g`. -/
 def isColimitCokernelCoforkOfCofork {c : Cofork f g} (i : IsColimit c) : IsColimit (cokernelCoforkOfCofork c) :=
-  Cofork.IsColimit.mk' _ $ fun s =>
+  (Cofork.IsColimit.mk' _) fun s =>
     ⟨i.desc (coforkOfCokernelCofork s), i.fac _ _, fun m h => by apply cofork.is_colimit.hom_ext i <;> tidy⟩
 #align
   category_theory.preadditive.is_colimit_cokernel_cofork_of_cofork CategoryTheory.Preadditive.isColimitCokernelCoforkOfCofork

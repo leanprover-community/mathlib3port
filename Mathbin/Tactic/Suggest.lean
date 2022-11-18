@@ -152,7 +152,7 @@ unsafe def library_defs (hs : name_set) : tactic (List decl_data) := do
   let-- Sort by length; people like short proofs
   defs := defs.qsort fun d₁ d₂ => d₁.l ≤ d₂.l
   trace_if_enabled `suggest f! "Found {defs} relevant lemmas:"
-  trace_if_enabled `suggest $ defs fun ⟨d, n, m, l⟩ => (n, m)
+  trace_if_enabled `suggest <| defs fun ⟨d, n, m, l⟩ => (n, m)
   return defs
 #align tactic.suggest.library_defs tactic.suggest.library_defs
 
@@ -186,7 +186,7 @@ use everything in `compulsory_hyps`.
 unsafe def suggest_opt.mk_accept (o : suggest_opt) : opt :=
   { o with
     accept := fun gs =>
-      o.accept gs >> (guard $ o.compulsory_hyps.all fun h => gs.any fun g => g.contains_expr_or_mvar h) }
+      o.accept gs >> (guard <| o.compulsory_hyps.all fun h => gs.any fun g => g.contains_expr_or_mvar h) }
 #align tactic.suggest.suggest_opt.mk_accept tactic.suggest.suggest_opt.mk_accept
 
 -- Implementation note: as this is used by both `library_search` and `suggest`,
@@ -227,7 +227,7 @@ unsafe def apply_and_solve (close_goals : Bool) (opt : suggest_opt := {  }) (e :
               any_goals (success_if_fail independent_goal) >> skip) >>
             solve_by_elim { opt with backtrack_all_goals := tt } <|>-- and fail unless `close_goals = ff`
             guard
-            (¬close_goals)
+            ¬close_goals
       let ng' ← num_goals
       return (ng - ng')
 #align tactic.suggest.apply_and_solve tactic.suggest.apply_and_solve
@@ -278,14 +278,14 @@ private unsafe def apply_declaration_script (g : expr) (hyps : List expr) (opt :
     tactic application :=
   -- (This tactic block is only executed when we evaluate the mllist,
     -- so we need to do the `focus1` here.)
-    retrieve $
-    focus1 $ do
+    retrieve <|
+    focus1 <| do
       apply_declaration ff opt d
       let g
         ←-- This `instantiate_mvars` is necessary so that we count used hypotheses correctly.
             instantiate_mvars
             g
-      guard $ opt fun h => h g
+      guard <| opt fun h => h g
       let ng ← num_goals
       let s ← read
       let m ← tactic_statement g
@@ -302,12 +302,12 @@ private unsafe def suggest_core' (opt : suggest_opt := {  }) : tactic (mllist ta
         -- This `instantiate_mvars` is necessary so that we count used hypotheses correctly.
         retrieve
         do
-        focus1 $ solve_by_elim opt
+        focus1 <| solve_by_elim opt
         let s ← read
         let m ← tactic_statement g
         let g ← instantiate_mvars g
         guard (opt fun h => h g)
-        return $
+        return <|
             mllist.of_list
               [⟨s, m, none, 0, hyps fun h => h g⟩]) <|>-- Otherwise, let's actually try applying library lemmas.
     do
@@ -315,7 +315,7 @@ private unsafe def suggest_core' (opt : suggest_opt := {  }) : tactic (mllist ta
         ←-- Collect all definitions with the correct head symbol
             infer_type
             g
-      let defs ← unpack_iff_both <$> library_defs (name_set.of_list $ allowed_head_symbols t)
+      let defs ← unpack_iff_both <$> library_defs (name_set.of_list <| allowed_head_symbols t)
       let defs : mllist tactic _ := mllist.of_list defs
       let-- Try applying each lemma against the goal,
       -- recording the tactic script as a string,
@@ -325,11 +325,11 @@ private unsafe def suggest_core' (opt : suggest_opt := {  }) : tactic (mllist ta
       let symm_state
         ←-- Now call `symmetry` and try again.
             -- (Because we are using `mllist`, this is essentially free if we've already found a lemma.)
-            retrieve $
-            try_core $ symmetry >> read
+            retrieve <|
+            try_core <| symmetry >> read
       let results_symm :=
         match symm_state with
-        | some s => defs fun d => retrieve $ set_state s >> apply_declaration_script g hyps opt d
+        | some s => defs fun d => retrieve <| set_state s >> apply_declaration_script g hyps opt d
         | none => mllist.nil
       return (results results_symm)
 #align tactic.suggest_core' tactic.suggest_core'
@@ -364,7 +364,7 @@ unsafe def suggest (limit : Option ℕ := none) (opt : suggest_opt := {  }) : ta
         if h : limit.isSome then results.take (Option.get h)
       else results.force
   -- Sort by number of remaining goals, then by number of hypotheses used.
-      return $
+      return <|
       L fun d₁ d₂ => d₁ < d₂ ∨ d₁ = d₂ ∧ d₁ ≥ d₂
 #align tactic.suggest tactic.suggest
 
@@ -374,7 +374,7 @@ from the library.
 -/
 unsafe def suggest_scripts (limit : Option ℕ := none) (opt : suggest_opt := {  }) : tactic (List String) := do
   let L ← suggest limit opt
-  return $ L application.script
+  return <| L application.script
 #align tactic.suggest_scripts tactic.suggest_scripts
 
 /-- Returns a string of the form `Try this: exact ...`, which closes the current goal.
@@ -420,7 +420,7 @@ end
 You can also use `suggest with attr` to include all lemmas with the attribute `attr`.
 -/
 unsafe def suggest (n : parse (parser.optional (with_desc "n" small_nat))) (hs : parse simp_arg_list)
-    (attr_names : parse with_ident_list) (use : parse $ tk "using" *> many ident_ <|> return [])
+    (attr_names : parse with_ident_list) (use : parse <| tk "using" *> many ident_ <|> return [])
     (opt : suggest_opt := {  }) : tactic Unit := do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set false hs attr_names
   let use ← use.mmap get_local
@@ -504,8 +504,8 @@ end
 ```
 You can also use `library_search with attr` to include all lemmas with the attribute `attr`.
 -/
-unsafe def library_search (semireducible : parse $ optional (tk "!")) (hs : parse simp_arg_list)
-    (attr_names : parse with_ident_list) (use : parse $ tk "using" *> many ident_ <|> return [])
+unsafe def library_search (semireducible : parse <| optional (tk "!")) (hs : parse simp_arg_list)
+    (attr_names : parse with_ident_list) (use : parse <| tk "using" *> many ident_ <|> return [])
     (opt : suggest_opt := {  }) : tactic Unit := do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set false hs attr_names
   let use ← use.mmap get_local

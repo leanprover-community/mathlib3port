@@ -151,7 +151,7 @@ theorem coe_fn_injective : Injective fun (h : M ≃ₘ^n⟮I, I'⟯ M') (x : M) 
 
 @[ext.1]
 theorem ext {h h' : M ≃ₘ^n⟮I, I'⟯ M'} (Heq : ∀ x, h x = h' x) : h = h' :=
-  coe_fn_injective $ funext Heq
+  coe_fn_injective <| funext Heq
 #align diffeomorph.ext Diffeomorph.ext
 
 section
@@ -186,12 +186,12 @@ protected def trans (h₁ : M ≃ₘ^n⟮I, I'⟯ M') (h₂ : M' ≃ₘ^n⟮I', 
 
 @[simp]
 theorem trans_refl (h : M ≃ₘ^n⟮I, I'⟯ M') : h.trans (Diffeomorph.refl I' M' n) = h :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 #align diffeomorph.trans_refl Diffeomorph.trans_refl
 
 @[simp]
 theorem refl_trans (h : M ≃ₘ^n⟮I, I'⟯ M') : (Diffeomorph.refl I M n).trans h = h :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 #align diffeomorph.refl_trans Diffeomorph.refl_trans
 
 @[simp]
@@ -218,7 +218,7 @@ theorem symm_apply_apply (h : M ≃ₘ^n⟮I, J⟯ N) (x : M) : h.symm (h x) = x
 
 @[simp]
 theorem symm_refl : (Diffeomorph.refl I M n).symm = Diffeomorph.refl I M n :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 #align diffeomorph.symm_refl Diffeomorph.symm_refl
 
 @[simp]
@@ -311,7 +311,7 @@ theorem cont_mdiff_within_at_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I, J⟯ 
 @[simp]
 theorem cont_mdiff_on_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I, J⟯ N) {f : N → M'} {s} (hm : m ≤ n) :
     ContMdiffOn I I' m (f ∘ h) s ↔ ContMdiffOn J I' m f (h.symm ⁻¹' s) :=
-  h.toEquiv.forall_congr $ fun x => by
+  h.toEquiv.forall_congr fun x => by
     simp only [hm, coe_to_equiv, symm_apply_apply, cont_mdiff_within_at_comp_diffeomorph_iff, mem_preimage]
 #align diffeomorph.cont_mdiff_on_comp_diffeomorph_iff Diffeomorph.cont_mdiff_on_comp_diffeomorph_iff
 
@@ -324,7 +324,7 @@ theorem cont_mdiff_at_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I, J⟯ N) {f :
 @[simp]
 theorem cont_mdiff_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I, J⟯ N) {f : N → M'} (hm : m ≤ n) :
     ContMdiff I I' m (f ∘ h) ↔ ContMdiff J I' m f :=
-  h.toEquiv.forall_congr $ fun x => h.cont_mdiff_at_comp_diffeomorph_iff hm
+  h.toEquiv.forall_congr fun x => h.cont_mdiff_at_comp_diffeomorph_iff hm
 #align diffeomorph.cont_mdiff_comp_diffeomorph_iff Diffeomorph.cont_mdiff_comp_diffeomorph_iff
 
 @[simp]
@@ -344,13 +344,13 @@ theorem cont_mdiff_at_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I, J⟯ N) {f :
 @[simp]
 theorem cont_mdiff_on_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I, J⟯ N) {f : M' → M} (hm : m ≤ n) {s} :
     ContMdiffOn I' J m (h ∘ f) s ↔ ContMdiffOn I' I m f s :=
-  forall₂_congr $ fun x hx => h.cont_mdiff_within_at_diffeomorph_comp_iff hm
+  forall₂_congr fun x hx => h.cont_mdiff_within_at_diffeomorph_comp_iff hm
 #align diffeomorph.cont_mdiff_on_diffeomorph_comp_iff Diffeomorph.cont_mdiff_on_diffeomorph_comp_iff
 
 @[simp]
 theorem cont_mdiff_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I, J⟯ N) {f : M' → M} (hm : m ≤ n) :
     ContMdiff I' J m (h ∘ f) ↔ ContMdiff I' I m f :=
-  forall_congr' $ fun x => h.cont_mdiff_within_at_diffeomorph_comp_iff hm
+  forall_congr' fun x => h.cont_mdiff_within_at_diffeomorph_comp_iff hm
 #align diffeomorph.cont_mdiff_diffeomorph_comp_iff Diffeomorph.cont_mdiff_diffeomorph_comp_iff
 
 theorem toLocalHomeomorphMdifferentiable (h : M ≃ₘ^n⟮I, J⟯ N) (hn : 1 ≤ n) :

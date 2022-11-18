@@ -8,7 +8,6 @@ import Mathbin.Algebra.Module.Torsion
 import Mathbin.Algebra.Ring.Idempotents
 import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.RingTheory.Ideal.LocalRing
-import Mathbin.RingTheory.Nakayama
 
 /-!
 # The module `I ⧸ I ^ 2`
@@ -94,8 +93,8 @@ theorem cotangent_subsingleton_iff : Subsingleton I.Cotangent ↔ IsIdempotentEl
     
   · exact fun e =>
       ⟨fun x y =>
-        Quotient.inductionOn₂' x y $ fun x y =>
-          I.to_cotangent_eq.mpr $ ((pow_two I).trans e).symm ▸ I.sub_mem x.Prop y.Prop⟩
+        (Quotient.inductionOn₂' x y) fun x y =>
+          I.to_cotangent_eq.mpr <| ((pow_two I).trans e).symm ▸ I.sub_mem x.Prop y.Prop⟩
     
 #align ideal.cotangent_subsingleton_iff Ideal.cotangent_subsingleton_iff
 
@@ -110,7 +109,7 @@ def cotangentToQuotientSquare : I.Cotangent →ₗ[R] R ⧸ I ^ 2 :=
 
 theorem to_quotient_square_comp_to_cotangent :
     I.cotangentToQuotientSquare.comp I.toCotangent = (I ^ 2).mkq.comp (Submodule.subtype I) :=
-  LinearMap.ext $ fun _ => rfl
+  LinearMap.ext fun _ => rfl
 #align ideal.to_quotient_square_comp_to_cotangent Ideal.to_quotient_square_comp_to_cotangent
 
 @[simp]
@@ -214,7 +213,7 @@ theorem _root_.alg_hom.ker_ker_sqare_lift (f : A →ₐ[R] B) :
 def quotCotangent : (R ⧸ I ^ 2) ⧸ I.cotangentIdeal ≃+* R ⧸ I := by
   refine' (Ideal.quotEquivOfEq (Ideal.map_eq_submodule_map _ _).symm).trans _
   refine' (DoubleQuot.quotQuotEquivQuotSup _ _).trans _
-  exact Ideal.quotEquivOfEq (sup_eq_right.mpr $ Ideal.pow_le_self two_ne_zero)
+  exact Ideal.quotEquivOfEq (sup_eq_right.mpr <| Ideal.pow_le_self two_ne_zero)
 #align ideal.quot_cotangent Ideal.quotCotangent
 
 end Ideal

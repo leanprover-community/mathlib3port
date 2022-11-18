@@ -99,7 +99,7 @@ def Submonoid.unitSphere (𝕜 : Type _) [NormedDivisionRing 𝕜] : Submonoid �
 #align submonoid.unit_sphere Submonoid.unitSphere
 
 instance [NormedDivisionRing 𝕜] : Inv (sphere (0 : 𝕜) 1) :=
-  ⟨fun x => ⟨x⁻¹, mem_sphere_zero_iff_norm.2 $ by rw [norm_inv, mem_sphere_zero_iff_norm.1 x.coe_prop, inv_one]⟩⟩
+  ⟨fun x => ⟨x⁻¹, mem_sphere_zero_iff_norm.2 <| by rw [norm_inv, mem_sphere_zero_iff_norm.1 x.coe_prop, inv_one]⟩⟩
 
 @[simp, norm_cast]
 theorem coe_inv_unit_sphere [NormedDivisionRing 𝕜] (x : sphere (0 : 𝕜) 1) : ↑x⁻¹ = (x⁻¹ : 𝕜) :=
@@ -109,7 +109,7 @@ theorem coe_inv_unit_sphere [NormedDivisionRing 𝕜] (x : sphere (0 : 𝕜) 1) 
 instance [NormedDivisionRing 𝕜] : Div (sphere (0 : 𝕜) 1) :=
   ⟨fun x y =>
     ⟨x / y,
-      mem_sphere_zero_iff_norm.2 $ by
+      mem_sphere_zero_iff_norm.2 <| by
         rw [norm_div, mem_sphere_zero_iff_norm.1 x.coe_prop, mem_sphere_zero_iff_norm.1 y.coe_prop, div_one]⟩⟩
 
 @[simp, norm_cast]
@@ -145,7 +145,7 @@ theorem coe_pow_unit_sphere [NormedDivisionRing 𝕜] (x : sphere (0 : 𝕜) 1) 
 
 /-- Monoid homomorphism from the unit sphere to the group of units. -/
 def unitSphereToUnits (𝕜 : Type _) [NormedDivisionRing 𝕜] : sphere (0 : 𝕜) 1 →* Units 𝕜 :=
-  Units.liftRight (Submonoid.unitSphere 𝕜).Subtype (fun x => Units.mk0 x $ ne_zero_of_mem_unit_sphere _) fun x => rfl
+  Units.liftRight (Submonoid.unitSphere 𝕜).Subtype (fun x => Units.mk0 x <| ne_zero_of_mem_unit_sphere _) fun x => rfl
 #align unit_sphere_to_units unitSphereToUnits
 
 @[simp]
@@ -155,12 +155,12 @@ theorem unit_sphere_to_units_apply_coe [NormedDivisionRing 𝕜] (x : sphere (0 
 #align unit_sphere_to_units_apply_coe unit_sphere_to_units_apply_coe
 
 theorem unit_sphere_to_units_injective [NormedDivisionRing 𝕜] : Function.Injective (unitSphereToUnits 𝕜) := fun x y h =>
-  Subtype.eq $ by convert congr_arg Units.val h
+  Subtype.eq <| by convert congr_arg Units.val h
 #align unit_sphere_to_units_injective unit_sphere_to_units_injective
 
 instance [NormedDivisionRing 𝕜] : Group (sphere (0 : 𝕜) 1) :=
   unit_sphere_to_units_injective.Group (unitSphereToUnits 𝕜) (Units.ext rfl) (fun x y => Units.ext rfl)
-    (fun x => Units.ext rfl) (fun x y => Units.ext $ div_eq_mul_inv _ _)
+    (fun x => Units.ext rfl) (fun x y => Units.ext <| div_eq_mul_inv _ _)
     (fun x n => Units.ext (Units.coe_pow (unitSphereToUnits 𝕜 x) n).symm) fun x n =>
     Units.ext (Units.coe_zpow (unitSphereToUnits 𝕜 x) n).symm
 

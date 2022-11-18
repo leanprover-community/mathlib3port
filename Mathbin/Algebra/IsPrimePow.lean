@@ -18,16 +18,16 @@ variable {R : Type _} [CommMonoidWithZero R] (n p : R) (k : ℕ)
 /-- `n` is a prime power if there is a prime `p` and a positive natural `k` such that `n` can be
 written as `p^k`. -/
 def IsPrimePow : Prop :=
-  ∃ (p : R) (k : ℕ), Prime p ∧ 0 < k ∧ p ^ k = n
+  ∃ (p : R)(k : ℕ), Prime p ∧ 0 < k ∧ p ^ k = n
 #align is_prime_pow IsPrimePow
 
-theorem is_prime_pow_def : IsPrimePow n ↔ ∃ (p : R) (k : ℕ), Prime p ∧ 0 < k ∧ p ^ k = n :=
+theorem is_prime_pow_def : IsPrimePow n ↔ ∃ (p : R)(k : ℕ), Prime p ∧ 0 < k ∧ p ^ k = n :=
   Iff.rfl
 #align is_prime_pow_def is_prime_pow_def
 
 /-- An equivalent definition for prime powers: `n` is a prime power iff there is a prime `p` and a
 natural `k` such that `n` can be written as `p^(k+1)`. -/
-theorem is_prime_pow_iff_pow_succ : IsPrimePow n ↔ ∃ (p : R) (k : ℕ), Prime p ∧ p ^ (k + 1) = n :=
+theorem is_prime_pow_iff_pow_succ : IsPrimePow n ↔ ∃ (p : R)(k : ℕ), Prime p ∧ p ^ (k + 1) = n :=
   (is_prime_pow_def _).trans
     ⟨fun ⟨p, k, hp, hk, hn⟩ => ⟨_, _, hp, by rwa [Nat.sub_add_cancel hk]⟩, fun ⟨p, k, hp, hn⟩ =>
       ⟨_, _, hp, Nat.succ_pos', hn⟩⟩
@@ -64,8 +64,7 @@ theorem IsPrimePow.ne_one {n : R} (h : IsPrimePow n) : n ≠ 1 := fun t => Eq.nd
 
 section Nat
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (p k) -/
-theorem is_prime_pow_nat_iff (n : ℕ) : IsPrimePow n ↔ ∃ (p : ℕ) (k : ℕ), Nat.Prime p ∧ 0 < k ∧ p ^ k = n := by
+theorem is_prime_pow_nat_iff (n : ℕ) : IsPrimePow n ↔ ∃ p k : ℕ, Nat.Prime p ∧ 0 < k ∧ p ^ k = n := by
   simp only [is_prime_pow_def, Nat.prime_iff]
 #align is_prime_pow_nat_iff is_prime_pow_nat_iff
 

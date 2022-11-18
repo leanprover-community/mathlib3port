@@ -102,7 +102,7 @@ variable {Ω : Type _} [MeasurableSpace Ω]
 theorem le_measure_compl_liminf_of_limsup_measure_le {ι : Type _} {L : Filter ι} {μ : Measure Ω} {μs : ι → Measure Ω}
     [IsProbabilityMeasure μ] [∀ i, IsProbabilityMeasure (μs i)] {E : Set Ω} (E_mble : MeasurableSet E)
     (h : (L.limsup fun i => μs i E) ≤ μ E) : μ (Eᶜ) ≤ L.liminf fun i => μs i (Eᶜ) := by
-  by_cases L_bot:L = ⊥
+  by_cases L_bot : L = ⊥
   · simp only [L_bot, le_top, show liminf (fun i => μs i (Eᶜ)) ⊥ = ⊤ by simp only [liminf, Filter.map_bot, Liminf_bot]]
     
   have : L.ne_bot := { ne' := L_bot }
@@ -130,7 +130,7 @@ theorem le_measure_liminf_of_limsup_measure_compl_le {ι : Type _} {L : Filter �
 theorem limsup_measure_compl_le_of_le_liminf_measure {ι : Type _} {L : Filter ι} {μ : Measure Ω} {μs : ι → Measure Ω}
     [IsProbabilityMeasure μ] [∀ i, IsProbabilityMeasure (μs i)] {E : Set Ω} (E_mble : MeasurableSet E)
     (h : μ E ≤ L.liminf fun i => μs i E) : (L.limsup fun i => μs i (Eᶜ)) ≤ μ (Eᶜ) := by
-  by_cases L_bot:L = ⊥
+  by_cases L_bot : L = ⊥
   · simp only [L_bot, bot_le, show limsup (fun i => μs i (Eᶜ)) ⊥ = ⊥ by simp only [limsup, Filter.map_bot, Limsup_bot]]
     
   have : L.ne_bot := { ne' := L_bot }
@@ -214,7 +214,7 @@ theorem tendsto_measure_of_le_liminf_measure_of_limsup_measure_le {ι : Type _} 
       _ ≤ L.liminf fun i => μs i E := _
       
     · refine' liminf_le_liminf (eventually_of_forall fun _ => measure_mono E₀_subset) _
-      infer_auto_param
+      infer_param
       
     
   · have E_ae_eq_E₁ : E =ᵐ[μ] E₁ :=
@@ -225,7 +225,7 @@ theorem tendsto_measure_of_le_liminf_measure_of_limsup_measure_le {ι : Type _} 
       _ = μ E := measure_congr E_ae_eq_E₁.symm
       
     · refine' limsup_le_limsup (eventually_of_forall fun _ => measure_mono subset_E₁) _
-      infer_auto_param
+      infer_param
       
     
 #align

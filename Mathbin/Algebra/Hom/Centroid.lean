@@ -3,7 +3,6 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christopher Hoskin
 -/
-import Mathbin.Algebra.Group.Pi
 import Mathbin.Algebra.GroupPower.Lemmas
 import Mathbin.Algebra.Hom.GroupInstances
 
@@ -59,7 +58,7 @@ attribute [nolint doc_blame] CentroidHom.toAddMonoidHom
 /-- `centroid_hom_class F α` states that `F` is a type of centroid homomorphisms.
 
 You should extend this class when you extend `centroid_hom`. -/
-class CentroidHomClass (F : Type _) (α : outParam $ Type _) [NonUnitalNonAssocSemiring α] extends
+class CentroidHomClass (F : Type _) (α : outParam <| Type _) [NonUnitalNonAssocSemiring α] extends
   AddMonoidHomClass F α α where
   map_mul_left (f : F) (a b : α) : f (a * b) = a * f b
   map_mul_right (f : F) (a b : α) : f (a * b) = f a * b
@@ -116,7 +115,7 @@ theorem to_add_monoid_hom_eq_coe (f : CentroidHom α) : f.toAddMonoidHom = f :=
 #align centroid_hom.to_add_monoid_hom_eq_coe CentroidHom.to_add_monoid_hom_eq_coe
 
 theorem coe_to_add_monoid_hom_injective : Injective (coe : CentroidHom α → α →+ α) := fun f g h =>
-  ext $ fun a =>
+  ext fun a =>
     haveI := FunLike.congr_fun h a
     this
 #align centroid_hom.coe_to_add_monoid_hom_injective CentroidHom.coe_to_add_monoid_hom_injective
@@ -133,7 +132,7 @@ theorem to_End_injective : Injective (CentroidHom.toEnd : CentroidHom α → Add
 /-- Copy of a `centroid_hom` with a new `to_fun` equal to the old one. Useful to fix
 definitional equalities. -/
 protected def copy (f : CentroidHom α) (f' : α → α) (h : f' = f) : CentroidHom α :=
-  { f.toAddMonoidHom.copy f' $ h with toFun := f', map_mul_left' := fun a b => by simp_rw [h, map_mul_left],
+  { f.toAddMonoidHom.copy f' <| h with toFun := f', map_mul_left' := fun a b => by simp_rw [h, map_mul_left],
     map_mul_right' := fun a b => by simp_rw [h, map_mul_right] }
 #align centroid_hom.copy CentroidHom.copy
 
@@ -167,8 +166,8 @@ theorem id_apply (a : α) : CentroidHom.id α a = a :=
 /-- Composition of `centroid_hom`s as a `centroid_hom`. -/
 def comp (g f : CentroidHom α) : CentroidHom α :=
   { g.toAddMonoidHom.comp f.toAddMonoidHom with
-    map_mul_left' := fun a b => (congr_arg g $ f.map_mul_left' _ _).trans $ g.map_mul_left' _ _,
-    map_mul_right' := fun a b => (congr_arg g $ f.map_mul_right' _ _).trans $ g.map_mul_right' _ _ }
+    map_mul_left' := fun a b => (congr_arg g <| f.map_mul_left' _ _).trans <| g.map_mul_left' _ _,
+    map_mul_right' := fun a b => (congr_arg g <| f.map_mul_right' _ _).trans <| g.map_mul_right' _ _ }
 #align centroid_hom.comp CentroidHom.comp
 
 @[simp, norm_cast]
@@ -193,20 +192,20 @@ theorem comp_assoc (h g f : CentroidHom α) : (h.comp g).comp f = h.comp (g.comp
 
 @[simp]
 theorem comp_id (f : CentroidHom α) : f.comp (CentroidHom.id α) = f :=
-  ext $ fun a => rfl
+  ext fun a => rfl
 #align centroid_hom.comp_id CentroidHom.comp_id
 
 @[simp]
 theorem id_comp (f : CentroidHom α) : (CentroidHom.id α).comp f = f :=
-  ext $ fun a => rfl
+  ext fun a => rfl
 #align centroid_hom.id_comp CentroidHom.id_comp
 
 theorem cancel_right {g₁ g₂ f : CentroidHom α} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext $ hf.forall.2 $ FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 #align centroid_hom.cancel_right CentroidHom.cancel_right
 
 theorem cancel_left {g f₁ f₂ : CentroidHom α} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => ext $ fun a => hg $ by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align centroid_hom.cancel_left CentroidHom.cancel_left
 
 instance : Zero (CentroidHom α) :=
@@ -459,7 +458,7 @@ def commRing (h : ∀ a b : α, (∀ r : α, a * r * b = 0) → a = 0 ∨ b = 0)
   { CentroidHom.ring with
     mul_comm := fun f g => by
       ext
-      refine' sub_eq_zero.1 ((or_self_iff _).1 $ h _ _ $ fun r => _)
+      refine' sub_eq_zero.1 ((or_self_iff _).1 <| (h _ _) fun r => _)
       rw [mul_assoc, sub_mul, sub_eq_zero, ← map_mul_right, ← map_mul_right, coe_mul, coe_mul, comp_mul_comm] }
 #align centroid_hom.comm_ring CentroidHom.commRing
 

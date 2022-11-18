@@ -3,7 +3,7 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Fintype.Basic
+import Mathbin.Data.Fintype.Lattice
 import Mathbin.Data.List.MinMax
 import Mathbin.Logic.Encodable.Basic
 
@@ -37,7 +37,7 @@ variable {α : Type _} {β : Type _} [Denumerable α] [Denumerable β]
 open Encodable
 
 theorem decode_is_some (α) [Denumerable α] (n : ℕ) : (decode α n).isSome :=
-  Option.isSome_iff_exists.2 $ (decode_inv n).imp $ fun a => Exists.fst
+  Option.isSome_iff_exists.2 <| (decode_inv n).imp fun a => Exists.fst
 #align denumerable.decode_is_some Denumerable.decode_is_some
 
 /-- Returns the `n`-th element of `α` indexed by the decoding. -/
@@ -52,7 +52,7 @@ theorem decode_eq_of_nat (α) [Denumerable α] (n : ℕ) : decode α n = some (o
 
 @[simp]
 theorem of_nat_of_decode {n b} (h : decode α n = some b) : ofNat α n = b :=
-  Option.some.inj $ (decode_eq_of_nat _ _).symm.trans h
+  Option.some.inj <| (decode_eq_of_nat _ _).symm.trans h
 #align denumerable.of_nat_of_decode Denumerable.of_nat_of_decode
 
 @[simp]
@@ -122,7 +122,7 @@ instance option : Denumerable (Option α) :=
 #align denumerable.option Denumerable.option
 
 /-- If `α` and `β` are denumerable, then so is their sum. -/
-instance sum : Denumerable (α ⊕ β) :=
+instance sum : Denumerable (Sum α β) :=
   ⟨fun n => by
     suffices ∃ a ∈ @decode_sum α β _ _ n, encode_sum a = bit (bodd n) (div2 n) by simpa [bit_decomp]
     simp [decode_sum] <;> cases bodd n <;> simp [decode_sum, bit, encode_sum]⟩
@@ -139,7 +139,7 @@ instance sigma : Denumerable (Sigma γ) :=
 
 @[simp]
 theorem sigma_of_nat_val (n : ℕ) : ofNat (Sigma γ) n = ⟨ofNat α (unpair n).1, ofNat (γ _) (unpair n).2⟩ :=
-  Option.some.inj $ by rw [← decode_eq_of_nat, decode_sigma_val] <;> simp <;> rfl
+  Option.some.inj <| by rw [← decode_eq_of_nat, decode_sigma_val] <;> simp <;> rfl
 #align denumerable.sigma_of_nat_val Denumerable.sigma_of_nat_val
 
 end Sigma
@@ -198,7 +198,7 @@ section Classical
 open Classical
 
 theorem exists_succ (x : s) : ∃ n, ↑x + n + 1 ∈ s :=
-  Classical.by_contradiction $ fun h =>
+  Classical.by_contradiction fun h =>
     have : ∀ (a : ℕ) (ha : a ∈ s), a < succ x := fun a ha =>
       lt_of_not_ge fun hax => h ⟨a - (x + 1), by rwa [add_right_comm, add_tsub_cancel_of_le hax]⟩
     Fintype.false
@@ -227,8 +227,8 @@ theorem succ_le_of_lt {x y : s} (h : y < x) : succ y ≤ x :=
 theorem le_succ_of_forall_lt_le {x y : s} (h : ∀ z < x, z ≤ y) : x ≤ succ y :=
   have hx : ∃ m, ↑y + m + 1 ∈ s := exists_succ _
   show ↑x ≤ ↑y + Nat.find hx + 1 from
-    le_of_not_gt $ fun hxy =>
-      (h ⟨_, Nat.find_spec hx⟩ hxy).not_lt $
+    le_of_not_gt fun hxy =>
+      (h ⟨_, Nat.find_spec hx⟩ hxy).not_lt <|
         calc
           ↑y ≤ ↑y + Nat.find hx := le_add_of_nonneg_right (Nat.zero_le _)
           _ < ↑y + Nat.find hx + 1 := Nat.lt_succ_self _
@@ -261,12 +261,12 @@ theorem of_nat_surjective_aux : ∀ {x : ℕ} (hx : x ∈ s), ∃ n, ofNat s n =
     · exact
         ⟨0,
           le_antisymm bot_le
-            (le_of_not_gt fun h => List.not_mem_nil (⊥ : s) $ by rw [← List.maximum_eq_none.1 hmax, hmt] <;> exact h)⟩
+            (le_of_not_gt fun h => List.not_mem_nil (⊥ : s) <| by rw [← List.maximum_eq_none.1 hmax, hmt] <;> exact h)⟩
       
     cases' of_nat_surjective_aux m.2 with a ha
     exact
       ⟨a + 1,
-        le_antisymm (by rw [of_nat] <;> exact succ_le_of_lt (by rw [ha] <;> exact wf _ hmax)) $ by
+        le_antisymm (by rw [of_nat] <;> exact succ_le_of_lt (by rw [ha] <;> exact wf _ hmax)) <| by
           rw [of_nat] <;>
             exact
               le_succ_of_forall_lt_le fun z hz => by

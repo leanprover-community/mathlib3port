@@ -5,6 +5,7 @@ Authors: David Loeffler
 -/
 import Mathbin.MeasureTheory.Integral.ExpDecay
 import Mathbin.Analysis.Calculus.ParametricIntegral
+import Mathbin.Analysis.SpecialFunctions.Integrals
 
 /-!
 # The Gamma function
@@ -110,7 +111,7 @@ theorem gammaIntegralConvergent {s : ℂ} (hs : 0 < s.re) :
     refine' has_finite_integral.congr (Real.gammaIntegralConvergent hs).2 _
     refine' (ae_restrict_iff' measurableSetIoi).mpr (ae_of_all _ fun x hx => _)
     dsimp only
-    rw [norm_eq_abs, map_mul, abs_of_nonneg $ le_of_lt $ exp_pos $ -x, abs_cpow_eq_rpow_re_of_pos hx _]
+    rw [norm_eq_abs, map_mul, abs_of_nonneg <| le_of_lt <| exp_pos <| -x, abs_cpow_eq_rpow_re_of_pos hx _]
     simp
     
 #align complex.Gamma_integral_convergent Complex.gammaIntegralConvergent
@@ -153,7 +154,7 @@ def partialGamma (s : ℂ) (X : ℝ) : ℂ :=
 #align complex.partial_Gamma Complex.partialGamma
 
 theorem tendsto_partial_Gamma {s : ℂ} (hs : 0 < s.re) :
-    Tendsto (fun X : ℝ => partialGamma s X) atTop (𝓝 $ gammaIntegral s) :=
+    Tendsto (fun X : ℝ => partialGamma s X) atTop (𝓝 <| gammaIntegral s) :=
   interval_integral_tendsto_integral_Ioi 0 (gammaIntegralConvergent hs) tendsto_id
 #align complex.tendsto_partial_Gamma Complex.tendsto_partial_Gamma
 
@@ -252,7 +253,7 @@ theorem partial_Gamma_add_one {s : ℂ} (hs : 0 < s.re) {X : ℝ} (hX : 0 ≤ X)
 
 /-- The recurrence relation for the `Γ` integral. -/
 theorem Gamma_integral_add_one {s : ℂ} (hs : 0 < s.re) : gammaIntegral (s + 1) = s * gammaIntegral s := by
-  suffices tendsto (s + 1).partialGamma at_top (𝓝 $ s * Gamma_integral s) by
+  suffices tendsto (s + 1).partialGamma at_top (𝓝 <| s * Gamma_integral s) by
     refine' tendsto_nhds_unique _ this
     apply tendsto_partial_Gamma
     rw [add_re, one_re]
@@ -266,7 +267,7 @@ theorem Gamma_integral_add_one {s : ℂ} (hs : 0 < s.re) : gammaIntegral (s + 1)
   suffices tendsto (fun X => -X ^ s * (-X).exp : ℝ → ℂ) at_top (𝓝 0) by
     simpa using tendsto.add (tendsto.const_mul s (tendsto_partial_Gamma hs)) this
   rw [tendsto_zero_iff_norm_tendsto_zero]
-  have : (fun e : ℝ => ∥-(e : ℂ) ^ s * (-e).exp∥) =ᶠ[at_top] fun e : ℝ => e ^ s.re * (-1 * e).exp := by
+  have : (fun e : ℝ => ‖-(e : ℂ) ^ s * (-e).exp‖) =ᶠ[at_top] fun e : ℝ => e ^ s.re * (-1 * e).exp := by
     refine' eventually_eq_of_mem (Ioi_mem_at_top 0) _
     intro x hx
     dsimp only
@@ -347,7 +348,7 @@ theorem Gamma_eq_Gamma_aux (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) : gamma s = g
       rw [← Nat.cast_zero, Nat.cast_le]
       exact Nat.zero_le k
       
-  convert (u $ n - ⌊1 - s.re⌋₊).symm
+  convert (u <| n - ⌊1 - s.re⌋₊).symm
   rw [Nat.add_sub_of_le]
   by_cases 0 ≤ 1 - s.re
   · apply Nat.le_of_lt_succ
@@ -385,7 +386,7 @@ theorem Gamma_nat_eq_factorial (n : ℕ) : gamma (n + 1) = Nat.factorial n := by
     simpa using Gamma_integral_one
     simp
     
-  rw [Gamma_add_one n.succ $ nat.cast_ne_zero.mpr $ Nat.succ_ne_zero n]
+  rw [Gamma_add_one n.succ <| nat.cast_ne_zero.mpr <| Nat.succ_ne_zero n]
   · simp only [Nat.cast_succ, Nat.factorial_succ, Nat.cast_mul]
     congr
     exact hn
@@ -441,7 +442,7 @@ theorem dGamma_integrand_is_o_at_top (s : ℝ) :
 /-- Absolute convergence of the integral which will give the derivative of the `Γ` function on
 `1 < re s`. -/
 theorem dGammaIntegralAbsConvergent (s : ℝ) (hs : 1 < s) :
-    IntegrableOn (fun x : ℝ => ∥exp (-x) * log x * x ^ (s - 1)∥) (ioi 0) := by
+    IntegrableOn (fun x : ℝ => ‖exp (-x) * log x * x ^ (s - 1)‖) (ioi 0) := by
   rw [← Ioc_union_Ioi_eq_Ioi (@zero_le_one ℝ _ _ _ _), integrable_on_union]
   refine' ⟨⟨_, _⟩, _⟩
   · refine' ContinuousOn.aeStronglyMeasurable (ContinuousOn.mul _ _).norm measurableSetIoc
@@ -483,7 +484,7 @@ theorem dGammaIntegralAbsConvergent (s : ℝ) (hs : 1 < s) :
 
 /-- A uniform bound for the `s`-derivative of the `Γ` integrand for `s` in vertical strips. -/
 theorem loc_unif_bound_dGamma_integrand {t : ℂ} {s1 s2 x : ℝ} (ht1 : s1 ≤ t.re) (ht2 : t.re ≤ s2) (hx : 0 < x) :
-    ∥dGammaIntegrand t x∥ ≤ dGammaIntegrandReal s1 x + dGammaIntegrandReal s2 x := by
+    ‖dGammaIntegrand t x‖ ≤ dGammaIntegrandReal s1 x + dGammaIntegrandReal s2 x := by
   rcases le_or_lt 1 x with (h | h)
   · -- case 1 ≤ x
     refine' le_add_of_nonneg_of_le (abs_nonneg _) _
@@ -540,11 +541,11 @@ theorem has_deriv_at_Gamma_integral {s : ℂ} (hs : 1 < s.re) :
     rw [this]
     refine' ContinuousOn.mul (cont s) (ContinuousAt.continuous_on _)
     exact fun x hx => continuous_of_real.continuous_at.comp (continuous_at_log (mem_Ioi.mp hx).ne')
-  have h_bound : ∀ᵐ x : ℝ ∂μ, ∀ t : ℂ, t ∈ Metric.ball s ε → ∥dGammaIntegrand t x∥ ≤ bound x := by
+  have h_bound : ∀ᵐ x : ℝ ∂μ, ∀ t : ℂ, t ∈ Metric.ball s ε → ‖dGammaIntegrand t x‖ ≤ bound x := by
     refine' (ae_restrict_iff' measurableSetIoi).mpr (ae_of_all _ fun x hx => _)
     intro t ht
     rw [Metric.mem_ball, Complex.dist_eq] at ht
-    replace ht := lt_of_le_of_lt (Complex.abs_re_le_abs $ t - s) ht
+    replace ht := lt_of_le_of_lt (Complex.abs_re_le_abs <| t - s) ht
     rw [Complex.sub_re, @abs_sub_lt_iff ℝ _ t.re s.re ((s.re - 1) / 2)] at ht
     refine' loc_unif_bound_dGamma_integrand _ _ hx
     all_goals

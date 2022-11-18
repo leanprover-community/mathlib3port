@@ -70,7 +70,7 @@ theorem ne_cons_iff (a : α) (v : Vector α n.succ) (v' : Vector α n) : v ≠ a
   rw [Ne.def, eq_cons_iff a v v', not_and_or]
 #align vector.ne_cons_iff Vector.ne_cons_iff
 
-theorem exists_eq_cons (v : Vector α n.succ) : ∃ (a : α) (as : Vector α n), v = a ::ᵥ as :=
+theorem exists_eq_cons (v : Vector α n.succ) : ∃ (a : α)(as : Vector α n), v = a ::ᵥ as :=
   ⟨v.head, v.tail, (eq_cons_iff v.head v v.tail).2 ⟨rfl, rfl⟩⟩
 #align vector.exists_eq_cons Vector.exists_eq_cons
 
@@ -134,7 +134,7 @@ theorem of_fn_nth (v : Vector α n) : ofFn (nth v) = v := by
 
 /-- The natural equivalence between length-`n` vectors and functions from `fin n`. -/
 def _root_.equiv.vector_equiv_fin (α : Type _) (n : ℕ) : Vector α n ≃ (Fin n → α) :=
-  ⟨Vector.nth, Vector.ofFn, Vector.of_fn_nth, fun f => funext $ Vector.nth_of_fn f⟩
+  ⟨Vector.nth, Vector.ofFn, Vector.of_fn_nth, fun f => funext <| Vector.nth_of_fn f⟩
 #align vector._root_.equiv.vector_equiv_fin vector._root_.equiv.vector_equiv_fin
 
 theorem nth_tail (x : Vector α n) (i) : x.tail.nth i = x.nth ⟨i.1 + 1, lt_tsub_iff_right.mp i.2⟩ := by
@@ -165,7 +165,7 @@ theorem singleton_tail (v : Vector α 1) : v.tail = Vector.nil := by
 
 @[simp]
 theorem tail_of_fn {n : ℕ} (f : Fin n.succ → α) : tail (ofFn f) = ofFn fun i => f i.succ :=
-  (of_fn_nth _).symm.trans $ by
+  (of_fn_nth _).symm.trans <| by
     congr
     funext i
     cases i
@@ -532,7 +532,7 @@ theorem remove_nth_val {i : Fin n} : ∀ {v : Vector α n}, (removeNth i v).val 
 #align vector.remove_nth_val Vector.remove_nth_val
 
 theorem remove_nth_insert_nth {v : Vector α n} {i : Fin (n + 1)} : removeNth i (insertNth a i v) = v :=
-  Subtype.eq $ List.remove_nth_insert_nth i.1 v.1
+  Subtype.eq <| List.remove_nth_insert_nth i.1 v.1
 #align vector.remove_nth_insert_nth Vector.remove_nth_insert_nth
 
 theorem remove_nth_insert_nth' {v : Vector α (n + 1)} :
@@ -650,7 +650,7 @@ private def traverse_aux {α β : Type u} (f : α → F β) : ∀ x : List α, F
 
 /-- Apply an applicative function to each component of a vector. -/
 protected def traverse {α β : Type u} (f : α → F β) : Vector α n → F (Vector β n)
-  | ⟨v, Hv⟩ => cast (by rw [Hv]) $ traverseAux f v
+  | ⟨v, Hv⟩ => cast (by rw [Hv]) <| traverseAux f v
 #align vector.traverse Vector.traverse
 
 section

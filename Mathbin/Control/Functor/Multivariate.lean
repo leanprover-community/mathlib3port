@@ -5,8 +5,6 @@ Authors: Jeremy Avigad, Mario Carneiro, Simon Hudon
 -/
 import Mathbin.Data.Fin.Fin2
 import Mathbin.Data.Typevec
-import Mathbin.Logic.Function.Basic
-import Mathbin.Tactic.Basic
 
 /-!
 
@@ -85,12 +83,12 @@ variable (p : α ⟹ repeat n Prop) (r : α ⊗ α ⟹ repeat n Prop)
 
 /-- adapt `mvfunctor.liftp` to accept predicates as arrows -/
 def Liftp' : F α → Prop :=
-  Mvfunctor.Liftp $ fun i x => of_repeat $ p i x
+  Mvfunctor.Liftp fun i x => of_repeat <| p i x
 #align mvfunctor.liftp' Mvfunctor.Liftp'
 
 /-- adapt `mvfunctor.liftp` to accept relations as arrows -/
 def Liftr' : F α → F α → Prop :=
-  Mvfunctor.Liftr $ fun i x y => of_repeat $ r i $ Typevec.prod.mk _ x y
+  Mvfunctor.Liftr fun i x y => of_repeat <| r i <| Typevec.prod.mk _ x y
 #align mvfunctor.liftr' Mvfunctor.Liftr'
 
 variable [IsLawfulMvfunctor F]
@@ -106,7 +104,7 @@ theorem id_map' (x : F α) : (fun i a => a) <$$> x = x :=
 #align mvfunctor.id_map' Mvfunctor.id_map'
 
 theorem map_map (g : α ⟹ β) (h : β ⟹ γ) (x : F α) : h <$$> g <$$> x = (h ⊚ g) <$$> x :=
-  Eq.symm $ comp_map _ _ _
+  Eq.symm <| comp_map _ _ _
 #align mvfunctor.map_map Mvfunctor.map_map
 
 section Liftp'

@@ -62,7 +62,7 @@ def multiforkEvaluationCone (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPre
   x := S.x
   π :=
     { app := fun k =>
-        (Presheaf.isLimitOfIsSheaf J (F.obj k).1 W (F.obj k).2).lift $
+        (Presheaf.isLimitOfIsSheaf J (F.obj k).1 W (F.obj k).2).lift <|
           Multifork.ofι _ S.x (fun i => S.ι i ≫ (E.π.app k).app (op i.y))
             (by
               intro i
@@ -96,7 +96,7 @@ This is used below in `is_sheaf_of_is_limit` to show that the limit presheaf is 
 def isLimitMultiforkOfIsLimit (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPresheaf J D)) (hE : IsLimit E) (X : C)
     (W : J.cover X) : IsLimit (W.Multifork E.x) :=
   Multifork.IsLimit.mk _
-    (fun S => (isLimitOfPreserves ((evaluation Cᵒᵖ D).obj (op X)) hE).lift $ multifork_evaluation_cone F E X W S)
+    (fun S => (isLimitOfPreserves ((evaluation Cᵒᵖ D).obj (op X)) hE).lift <| multifork_evaluation_cone F E X W S)
     (by
       intro S i
       apply (is_limit_of_preserves ((evaluation Cᵒᵖ D).obj (op i.Y)) hE).hom_ext
@@ -137,12 +137,12 @@ theorem isSheafOfIsLimit (F : K ⥤ SheafCat J D) (E : Cone (F ⋙ sheafToPreshe
 #align category_theory.Sheaf.is_sheaf_of_is_limit CategoryTheory.SheafCat.isSheafOfIsLimit
 
 instance (F : K ⥤ SheafCat J D) : CreatesLimit F (sheafToPresheaf J D) :=
-  creates_limit_of_reflects_iso $ fun E hE =>
+  creates_limit_of_reflects_iso fun E hE =>
     { liftedCone :=
         ⟨⟨E.x, is_sheaf_of_is_limit _ _ hE⟩,
-          ⟨fun t => ⟨E.π.app _⟩, fun u v e => SheafCat.Hom.ext _ _ $ E.π.naturality _⟩⟩,
+          ⟨fun t => ⟨E.π.app _⟩, fun u v e => SheafCat.Hom.ext _ _ <| E.π.naturality _⟩⟩,
       validLift :=
-        Cones.ext (eqToIso rfl) $ fun j => by
+        (Cones.ext (eqToIso rfl)) fun j => by
           dsimp
           simp,
       makesLimit :=

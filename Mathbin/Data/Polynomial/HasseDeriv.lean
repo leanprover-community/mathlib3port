@@ -6,7 +6,6 @@ Authors: Johan Commelin
 import Mathbin.Algebra.Polynomial.BigOperators
 import Mathbin.Data.Nat.Choose.Cast
 import Mathbin.Data.Nat.Choose.Vandermonde
-import Mathbin.Data.Polynomial.Degree.Lemmas
 import Mathbin.Data.Polynomial.Derivative
 
 /-!
@@ -67,7 +66,7 @@ theorem hasse_deriv_coeff (n : ℕ) : (hasseDeriv k f).coeff n = (n + k).choose 
     
   · intro i hi hink
     rw [coeff_monomial]
-    by_cases hik:i < k
+    by_cases hik : i < k
     · simp only [Nat.choose_eq_zero_of_lt hik, if_t_t, Nat.cast_zero, zero_mul]
       
     · push_neg  at hik
@@ -87,7 +86,7 @@ theorem hasse_deriv_zero' : hasseDeriv 0 f = f := by
 
 @[simp]
 theorem hasse_deriv_zero : @hasseDeriv R _ 0 = LinearMap.id :=
-  LinearMap.ext $ hasse_deriv_zero'
+  LinearMap.ext <| hasse_deriv_zero'
 #align polynomial.hasse_deriv_zero Polynomial.hasse_deriv_zero
 
 theorem hasse_deriv_eq_zero_of_lt_nat_degree (p : R[X]) (n : ℕ) (h : p.natDegree < n) : hasseDeriv n p = 0 := by
@@ -102,20 +101,20 @@ theorem hasse_deriv_one' : hasseDeriv 1 f = derivative f := by
 
 @[simp]
 theorem hasse_deriv_one : @hasseDeriv R _ 1 = derivative :=
-  LinearMap.ext $ hasse_deriv_one'
+  LinearMap.ext <| hasse_deriv_one'
 #align polynomial.hasse_deriv_one Polynomial.hasse_deriv_one
 
 @[simp]
 theorem hasse_deriv_monomial (n : ℕ) (r : R) : hasseDeriv k (monomial n r) = monomial (n - k) (↑(n.choose k) * r) := by
   ext i
   simp only [hasse_deriv_coeff, coeff_monomial]
-  by_cases hnik:n = i + k
+  by_cases hnik : n = i + k
   · rw [if_pos hnik, if_pos, ← hnik]
     apply tsub_eq_of_eq_add_rev
     rwa [add_comm]
     
   · rw [if_neg hnik, mul_zero]
-    by_cases hkn:k ≤ n
+    by_cases hkn : k ≤ n
     · rw [← tsub_eq_iff_eq_add_of_le hkn] at hnik
       rw [if_neg hnik]
       
@@ -173,9 +172,9 @@ theorem hasse_deriv_comp (k l : ℕ) : (@hasseDeriv R _ k).comp (hasseDeriv l) =
     monomial_eq_zero_iff, sum_monomial_index, mul_zero, ← tsub_add_eq_tsub_tsub, add_comm l k]
   rw_mod_cast [nsmul_eq_mul]
   congr 2
-  by_cases hikl:i < k + l
+  by_cases hikl : i < k + l
   · rw [choose_eq_zero_of_lt hikl, mul_zero]
-    by_cases hil:i < l
+    by_cases hil : i < l
     · rw [choose_eq_zero_of_lt hil, mul_zero]
       
     · push_neg  at hil
@@ -262,10 +261,10 @@ theorem hasse_deriv_mul (f g : R[X]) :
     intro x hx
     rw [Finset.Nat.mem_antidiagonal] at hx
     subst hx
-    by_cases hm:m < x.1
+    by_cases hm : m < x.1
     · simp only [Nat.choose_eq_zero_of_lt hm, Nat.cast_zero, zero_mul, monomial_zero_right]
       
-    by_cases hn:n < x.2
+    by_cases hn : n < x.2
     · simp only [Nat.choose_eq_zero_of_lt hn, Nat.cast_zero, zero_mul, mul_zero, monomial_zero_right]
       
     push_neg  at hm hn

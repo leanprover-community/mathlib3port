@@ -48,9 +48,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} {p : (PProd.{u_1 u_2} α β) -> Prop}, Iff (Exists.{(max (max 1 u_1) u_2)} (PProd.{u_1 u_2} α β) (fun (x : PProd.{u_1 u_2} α β) => p x)) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} β (fun (b : β) => p (PProd.mk.{u_1 u_2} α β a b))))
 Case conversion may be inaccurate. Consider using '#align pprod.exists PProd.existsₓ'. -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 @[simp]
-theorem exists {p : PProd α β → Prop} : (∃ x, p x) ↔ ∃ (a) (b), p ⟨a, b⟩ :=
+theorem exists {p : PProd α β → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b⟩ :=
   ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
 #align pprod.exists PProd.exists
 
@@ -70,8 +69,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} {p : α -> β -> Prop}, Iff (Exists.{(max (max 1 u_1) u_2)} (PProd.{u_1 u_2} α β) (fun (x : PProd.{u_1 u_2} α β) => p (PProd.fst.{u_1 u_2} α β x) (PProd.snd.{u_1 u_2} α β x))) (Exists.{u_1} α (fun (a : α) => Exists.{u_2} β (fun (b : β) => p a b)))
 Case conversion may be inaccurate. Consider using '#align pprod.exists' PProd.exists'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
-theorem exists' {p : α → β → Prop} : (∃ x : PProd α β, p x.1 x.2) ↔ ∃ (a) (b), p a b :=
+theorem exists' {p : α → β → Prop} : (∃ x : PProd α β, p x.1 x.2) ↔ ∃ a b, p a b :=
   PProd.exists
 #align pprod.exists' PProd.exists'
 

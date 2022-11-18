@@ -115,7 +115,7 @@ theorem elim_of_mem (hl : (i :: l).Nodup) (hj : j ∈ l) (v : Tprod α (i :: l))
 
 theorem elim_mk : ∀ (l : List ι) (f : ∀ i, α i) {i : ι} (hi : i ∈ l), (Tprod.mk l f).elim hi = f i
   | i :: is, f, j, hj => by
-    by_cases hji:j = i
+    by_cases hji : j = i
     · subst hji
       simp
       
@@ -146,7 +146,7 @@ theorem mk_elim (hnd : l.Nodup) (h : ∀ i, i ∈ l) (v : Tprod α l) : Tprod.mk
 
 /-- Pi-types are equivalent to iterated products. -/
 def piEquivTprod (hnd : l.Nodup) (h : ∀ i, i ∈ l) : (∀ i, α i) ≃ Tprod α l :=
-  ⟨Tprod.mk l, Tprod.elim' h, fun f => funext $ fun i => elim_mk l f (h i), mk_elim hnd h⟩
+  ⟨Tprod.mk l, Tprod.elim' h, fun f => funext fun i => elim_mk l f (h i), mk_elim hnd h⟩
 #align list.tprod.pi_equiv_tprod List.Tprod.piEquivTprod
 
 end Tprod

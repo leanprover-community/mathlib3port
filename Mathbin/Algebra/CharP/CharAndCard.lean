@@ -50,7 +50,7 @@ theorem is_unit_iff_not_dvd_char_of_ring_char_ne_zero (R : Type _) [CommRing R] 
 iff it does not divide the characteristic. -/
 theorem is_unit_iff_not_dvd_char (R : Type _) [CommRing R] (p : ℕ) [Fact p.Prime] [Finite R] :
     IsUnit (p : R) ↔ ¬p ∣ ringChar R :=
-  is_unit_iff_not_dvd_char_of_ring_char_ne_zero R p $ CharP.char_ne_zero_of_finite R (ringChar R)
+  is_unit_iff_not_dvd_char_of_ring_char_ne_zero R p <| CharP.char_ne_zero_of_finite R (ringChar R)
 #align is_unit_iff_not_dvd_char is_unit_iff_not_dvd_char
 
 /-- The prime divisors of the characteristic of a finite commutative ring are exactly
@@ -59,9 +59,10 @@ theorem prime_dvd_char_iff_dvd_card {R : Type _} [CommRing R] [Fintype R] (p : �
     p ∣ ringChar R ↔ p ∣ Fintype.card R := by
   refine'
     ⟨fun h =>
-      h.trans $
-        int.coe_nat_dvd.mp $
-          (CharP.int_cast_eq_zero_iff R (ringChar R) (Fintype.card R)).mp $ by exact_mod_cast CharP.cast_card_eq_zero R,
+      h.trans <|
+        int.coe_nat_dvd.mp <|
+          (CharP.int_cast_eq_zero_iff R (ringChar R) (Fintype.card R)).mp <| by
+            exact_mod_cast CharP.cast_card_eq_zero R,
       fun h => _⟩
   by_contra h₀
   rcases exists_prime_add_order_of_dvd_card p h with ⟨r, hr⟩

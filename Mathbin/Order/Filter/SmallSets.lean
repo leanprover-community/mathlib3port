@@ -61,21 +61,21 @@ theorem eventually_small_sets {p : Set α → Prop} : (∀ᶠ s in l.smallSets, 
 
 theorem eventually_small_sets' {p : Set α → Prop} (hp : ∀ ⦃s t⦄, s ⊆ t → p t → p s) :
     (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, p s :=
-  eventually_small_sets.trans $ exists₂_congr $ fun s hsf => ⟨fun H => H s Subset.rfl, fun hs t ht => hp ht hs⟩
+  eventually_small_sets.trans <| exists₂_congr fun s hsf => ⟨fun H => H s Subset.rfl, fun hs t ht => hp ht hs⟩
 #align filter.eventually_small_sets' Filter.eventually_small_sets'
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (s «expr ⊆ » t) -/
-theorem frequently_small_sets {p : Set α → Prop} : (∃ᶠ s in l.smallSets, p s) ↔ ∀ t ∈ l, ∃ (s) (_ : s ⊆ t), p s :=
+theorem frequently_small_sets {p : Set α → Prop} : (∃ᶠ s in l.smallSets, p s) ↔ ∀ t ∈ l, ∃ (s : _)(_ : s ⊆ t), p s :=
   l.has_basis_small_sets.frequently_iff
 #align filter.frequently_small_sets Filter.frequently_small_sets
 
 theorem frequently_small_sets_mem (l : Filter α) : ∃ᶠ s in l.smallSets, s ∈ l :=
-  frequently_small_sets.2 $ fun t ht => ⟨t, Subset.rfl, ht⟩
+  frequently_small_sets.2 fun t ht => ⟨t, Subset.rfl, ht⟩
 #align filter.frequently_small_sets_mem Filter.frequently_small_sets_mem
 
 theorem HasAntitoneBasis.tendsto_small_sets {ι} [Preorder ι] {s : ι → Set α} (hl : l.HasAntitoneBasis s) :
     Tendsto s atTop l.smallSets :=
-  tendsto_small_sets_iff.2 $ fun t ht => hl.eventually_subset ht
+  tendsto_small_sets_iff.2 fun t ht => hl.eventually_subset ht
 #align filter.has_antitone_basis.tendsto_small_sets Filter.HasAntitoneBasis.tendsto_small_sets
 
 @[mono]
@@ -114,13 +114,13 @@ theorem small_sets_inf (l₁ l₂ : Filter α) : (l₁ ⊓ l₂).smallSets = l�
 #align filter.small_sets_inf Filter.small_sets_inf
 
 instance smallSetsNeBot (l : Filter α) : NeBot l.smallSets :=
-  (lift'_ne_bot_iff monotone_powerset).2 $ fun _ _ => powerset_nonempty
+  (lift'_ne_bot_iff monotone_powerset).2 fun _ _ => powerset_nonempty
 #align filter.small_sets_ne_bot Filter.smallSetsNeBot
 
 theorem Tendsto.small_sets_mono {s t : α → Set β} (ht : Tendsto t la lb.smallSets) (hst : ∀ᶠ x in la, s x ⊆ t x) :
     Tendsto s la lb.smallSets := by
   rw [tendsto_small_sets_iff] at ht⊢
-  exact fun u hu => (ht u hu).mp (hst.mono $ fun a hst ht => subset.trans hst ht)
+  exact fun u hu => (ht u hu).mp (hst.mono fun a hst ht => subset.trans hst ht)
 #align filter.tendsto.small_sets_mono Filter.Tendsto.small_sets_mono
 
 /-- Generalized **squeeze theorem** (also known as **sandwich theorem**). If `s : α → set β` is a
@@ -132,16 +132,15 @@ If `s x` is the closed interval `[g x, h x]` for some functions `g`, `h` that te
 `tendsto_of_tendsto_of_tendsto_of_le_of_le'`. -/
 theorem Tendsto.of_small_sets {s : α → Set β} {f : α → β} (hs : Tendsto s la lb.smallSets)
     (hf : ∀ᶠ x in la, f x ∈ s x) : Tendsto f la lb := fun t ht =>
-  hf.mp $ (tendsto_small_sets_iff.mp hs t ht).mono $ fun x h₁ h₂ => h₁ h₂
+  hf.mp <| (tendsto_small_sets_iff.mp hs t ht).mono fun x h₁ h₂ => h₁ h₂
 #align filter.tendsto.of_small_sets Filter.Tendsto.of_small_sets
 
 @[simp]
 theorem eventually_small_sets_eventually {p : α → Prop} :
     (∀ᶠ s in l.smallSets, ∀ᶠ x in l', x ∈ s → p x) ↔ ∀ᶠ x in l ⊓ l', p x :=
   calc
-    _ ↔ ∃ s ∈ l, ∀ᶠ x in l', x ∈ s → p x :=
-      eventually_small_sets' $ fun s t hst ht => ht.mono $ fun x hx hs => hx (hst hs)
-    _ ↔ ∃ (s ∈ l) (t ∈ l'), ∀ x, x ∈ t → x ∈ s → p x := by simp only [eventually_iff_exists_mem]
+    _ ↔ ∃ s ∈ l, ∀ᶠ x in l', x ∈ s → p x := eventually_small_sets' fun s t hst ht => ht.mono fun x hx hs => hx (hst hs)
+    _ ↔ ∃ s ∈ l, ∃ t ∈ l', ∀ x, x ∈ t → x ∈ s → p x := by simp only [eventually_iff_exists_mem]
     _ ↔ ∀ᶠ x in l ⊓ l', p x := by simp only [eventually_inf, and_comm', mem_inter_iff, ← and_imp]
     
 #align filter.eventually_small_sets_eventually Filter.eventually_small_sets_eventually

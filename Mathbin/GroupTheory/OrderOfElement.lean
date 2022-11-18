@@ -5,7 +5,6 @@ Authors: Johannes Hölzl, Julian Kuelshammer
 -/
 import Mathbin.Algebra.Hom.Iterate
 import Mathbin.Data.Nat.Modeq
-import Mathbin.Data.Int.Order.Units
 import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.Dynamics.PeriodicPts
 import Mathbin.GroupTheory.Index
@@ -89,8 +88,8 @@ theorem is_of_fin_order_iff_coe (H : Submonoid G) (x : H) : IsOfFinOrder x ↔ I
 @[to_additive AddMonoidHom.is_of_fin_order
       "The image of an element of finite additive order has finite additive order."]
 theorem MonoidHom.is_of_fin_order {H : Type v} [Monoid H] (f : G →* H) {x : G} (h : IsOfFinOrder x) :
-    IsOfFinOrder $ f x :=
-  (is_of_fin_order_iff_pow_eq_one _).mpr $ by
+    IsOfFinOrder <| f x :=
+  (is_of_fin_order_iff_pow_eq_one _).mpr <| by
     rcases(is_of_fin_order_iff_pow_eq_one _).mp h with ⟨n, npos, hn⟩
     exact ⟨n, npos, by rw [← f.map_pow, hn, f.map_one]⟩
 #align monoid_hom.is_of_fin_order MonoidHom.is_of_fin_order
@@ -206,11 +205,11 @@ theorem order_of_map_dvd {H : Type _} [Monoid H] (ψ : G →* H) (x : G) : order
 
 @[to_additive]
 theorem exists_pow_eq_self_of_coprime (h : n.Coprime (orderOf x)) : ∃ m : ℕ, (x ^ n) ^ m = x := by
-  by_cases h0:orderOf x = 0
+  by_cases h0 : orderOf x = 0
   · rw [h0, coprime_zero_right] at h
     exact ⟨1, by rw [h, pow_one, pow_one]⟩
     
-  by_cases h1:orderOf x = 1
+  by_cases h1 : orderOf x = 1
   · exact ⟨0, by rw [order_of_eq_one_iff.mp h1, one_pow, one_pow]⟩
     
   obtain ⟨m, hm⟩ := exists_mul_mod_eq_one_of_coprime h (one_lt_iff_ne_zero_and_ne_one.mpr ⟨h0, h1⟩)
@@ -283,7 +282,7 @@ theorem order_of_pow'' (h : IsOfFinOrder x) : orderOf (x ^ n) = orderOf x / gcd 
 
 @[to_additive add_order_of_nsmul_coprime]
 theorem order_of_pow_coprime (h : (orderOf y).Coprime m) : orderOf (y ^ m) = orderOf y := by
-  by_cases hg:orderOf y = 0
+  by_cases hg : orderOf y = 0
   · rw [m.coprime_zero_left.mp (hg ▸ h), pow_one]
     
   · rw [order_of_pow'' y m (hg.imp_symm order_of_eq_zero), h.gcd_eq_one, Nat.div_one]
@@ -313,8 +312,8 @@ theorem Commute.order_of_mul_eq_mul_order_of_of_coprime {x y : G} (h : Commute x
 @[to_additive "Commuting elements of finite additive order are closed under addition."]
 theorem Commute.is_of_fin_order_mul {x} (h : Commute x y) (hx : IsOfFinOrder x) (hy : IsOfFinOrder y) :
     IsOfFinOrder (x * y) :=
-  order_of_pos_iff.mp $
-    pos_of_dvd_of_pos h.order_of_mul_dvd_mul_order_of $ mul_pos (order_of_pos' hx) (order_of_pos' hy)
+  order_of_pos_iff.mp <|
+    pos_of_dvd_of_pos h.order_of_mul_dvd_mul_order_of <| mul_pos (order_of_pos' hx) (order_of_pos' hy)
 #align commute.is_of_fin_order_mul Commute.is_of_fin_order_mul
 
 section PPrime
@@ -339,12 +338,6 @@ theorem exists_order_of_eq_prime_pow_iff : (∃ k : ℕ, orderOf x = p ^ k) ↔ 
     obtain ⟨k, _, hk⟩ := (Nat.dvd_prime_pow hp.elim).mp (order_of_dvd_of_pow_eq_one hm)
     exact ⟨k, hk⟩⟩
 #align exists_order_of_eq_prime_pow_iff exists_order_of_eq_prime_pow_iff
-
-omit hp
-
--- An example on how to determine the order of an element of a finite group.
-example : orderOf (-1 : ℤˣ) = 2 :=
-  order_of_eq_prime (Int.units_sq _) dec_trivial
 
 end PPrime
 
@@ -385,7 +378,7 @@ variable [Group G] [AddGroup A] {x a} {i : ℤ}
 /-- Inverses of elements of finite order have finite order. -/
 @[to_additive "Inverses of elements of finite additive order have finite additive order."]
 theorem IsOfFinOrder.inv {x : G} (hx : IsOfFinOrder x) : IsOfFinOrder x⁻¹ :=
-  (is_of_fin_order_iff_pow_eq_one _).mpr $ by
+  (is_of_fin_order_iff_pow_eq_one _).mpr <| by
     rcases(is_of_fin_order_iff_pow_eq_one x).mp hx with ⟨n, npos, hn⟩
     refine' ⟨n, npos, by simp_rw [inv_pow, hn, inv_one]⟩
 #align is_of_fin_order.inv IsOfFinOrder.inv
@@ -452,7 +445,7 @@ theorem pow_inj_mod {n m : ℕ} : x ^ n = x ^ m ↔ n % orderOf x = m % orderOf 
 
 @[simp, to_additive zsmul_smul_order_of]
 theorem zpow_pow_order_of : (x ^ i) ^ orderOf x = 1 := by
-  by_cases h:IsOfFinOrder x
+  by_cases h : IsOfFinOrder x
   · rw [← zpow_coe_nat, ← zpow_mul, mul_comm, zpow_mul, zpow_coe_nat, pow_order_of_eq_one, one_zpow]
     
   · rw [order_of_eq_zero h, pow_zero]
@@ -543,12 +536,11 @@ section FiniteCancelMonoid
 -- TODO: Of course everything also works for right_cancel_monoids.
 variable [LeftCancelMonoid G] [AddLeftCancelMonoid A]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 -- TODO: Use this to show that a finite left cancellative monoid is a group.
 @[to_additive]
 theorem exists_pow_eq_one [Finite G] (x : G) : IsOfFinOrder x := by
   refine' (is_of_fin_order_iff_pow_eq_one _).mpr _
-  obtain ⟨i, j, a_eq, ne⟩ : ∃ (i : ℕ) (j : ℕ), x ^ i = x ^ j ∧ i ≠ j := by
+  obtain ⟨i, j, a_eq, ne⟩ : ∃ i j : ℕ, x ^ i = x ^ j ∧ i ≠ j := by
     simpa only [not_forall, exists_prop, injective] using not_injective_infinite_finite fun i : ℕ => x ^ i
   wlog h'' : j ≤ i
   refine' ⟨i - j, tsub_pos_of_lt (lt_of_le_of_ne h'' Ne.symm), mul_right_injective (x ^ j) _⟩
@@ -639,7 +631,7 @@ section FiniteGroup
 variable [Group G] [AddGroup A]
 
 @[to_additive]
-theorem exists_zpow_eq_one [Finite G] (x : G) : ∃ (i : ℤ) (H : i ≠ 0), x ^ (i : ℤ) = 1 := by
+theorem exists_zpow_eq_one [Finite G] (x : G) : ∃ (i : ℤ)(H : i ≠ 0), x ^ (i : ℤ) = 1 := by
   rcases exists_pow_eq_one x with ⟨w, hw1, hw2⟩
   refine' ⟨w, int.coe_nat_ne_zero.mpr (ne_of_gt hw1), _⟩
   rw [zpow_coe_nat]
@@ -658,7 +650,7 @@ theorem mem_powers_iff_mem_zpowers [Finite G] : y ∈ Submonoid.powers x ↔ y �
 
 @[to_additive multiples_eq_zmultiples]
 theorem powers_eq_zpowers [Finite G] (x : G) : (Submonoid.powers x : Set G) = zpowers x :=
-  Set.ext $ fun x => mem_powers_iff_mem_zpowers
+  Set.ext fun x => mem_powers_iff_mem_zpowers
 #align powers_eq_zpowers powers_eq_zpowers
 
 @[to_additive mem_zmultiples_iff_mem_range_add_order_of]
@@ -727,13 +719,13 @@ theorem order_of_dvd_card_univ : orderOf x ∣ Fintype.card G := by classical
   have eq₁ : Fintype.card G = @Fintype.card _ ft_cosets * @Fintype.card _ ft_s :=
     calc
       Fintype.card G = @Fintype.card _ ft_prod := @Fintype.card_congr _ _ _ ft_prod group_equiv_quotient_times_subgroup
-      _ = @Fintype.card _ (@Prod.fintype _ _ ft_cosets ft_s) := congr_arg (@Fintype.card _) $ Subsingleton.elim _ _
+      _ = @Fintype.card _ (@Prod.fintype _ _ ft_cosets ft_s) := congr_arg (@Fintype.card _) <| Subsingleton.elim _ _
       _ = @Fintype.card _ ft_cosets * @Fintype.card _ ft_s := @Fintype.card_prod _ _ ft_cosets ft_s
       
   have eq₂ : orderOf x = @Fintype.card _ ft_s :=
     calc
       orderOf x = _ := order_eq_card_zpowers
-      _ = _ := congr_arg (@Fintype.card _) $ Subsingleton.elim _ _
+      _ = _ := congr_arg (@Fintype.card _) <| Subsingleton.elim _ _
       
   exact Dvd.intro (@Fintype.card (G ⧸ Subgroup.zpowers x) ft_cosets) (by rw [eq₁, eq₂, mul_comm])
 #align order_of_dvd_card_univ order_of_dvd_card_univ
@@ -820,7 +812,7 @@ theorem image_range_order_of [DecidableEq G] :
 /-- TODO: Generalise to `finite` + `cancel_monoid`. -/
 @[to_additive gcd_nsmul_card_eq_zero_iff "TODO: Generalise to `finite` + `cancel_add_monoid`"]
 theorem pow_gcd_card_eq_one_iff : x ^ n = 1 ↔ x ^ gcd n (Fintype.card G) = 1 :=
-  ⟨fun h => pow_gcd_eq_one _ h $ pow_card_eq_one, fun h => by
+  ⟨fun h => pow_gcd_eq_one _ h <| pow_card_eq_one, fun h => by
     let ⟨m, hm⟩ := gcd_dvd_left n (Fintype.card G)
     rw [hm, pow_mul, h, one_pow]⟩
 #align pow_gcd_card_eq_one_iff pow_gcd_card_eq_one_iff
@@ -890,7 +882,7 @@ theorem order_of_abs_ne_one (h : |x| ≠ 1) : orderOf x = 0 := by
 #align order_of_abs_ne_one order_of_abs_ne_one
 
 theorem LinearOrderedRing.order_of_le_two : orderOf x ≤ 2 := by
-  cases' ne_or_eq |x| 1 with h h
+  cases' ne_or_eq (|x|) 1 with h h
   · simp [order_of_abs_ne_one h]
     
   rcases eq_or_eq_neg_of_abs_eq h with (rfl | rfl)

@@ -72,8 +72,8 @@ theorem to_dual_map_apply {x y : E} : toDualMap 𝕜 E x y = ⟪x, y⟫ :=
   rfl
 #align inner_product_space.to_dual_map_apply InnerProductSpace.to_dual_map_apply
 
-theorem innerSL_norm [Nontrivial E] : ∥(innerSL : E →L⋆[𝕜] E →L[𝕜] 𝕜)∥ = 1 :=
-  show ∥(toDualMap 𝕜 E).toContinuousLinearMap∥ = 1 from LinearIsometry.norm_to_continuous_linear_map _
+theorem innerSL_norm [Nontrivial E] : ‖(innerSL : E →L⋆[𝕜] E →L[𝕜] 𝕜)‖ = 1 :=
+  show ‖(toDualMap 𝕜 E).toContinuousLinearMap‖ = 1 from LinearIsometry.norm_to_continuous_linear_map _
 #align inner_product_space.innerSL_norm InnerProductSpace.innerSL_norm
 
 variable {𝕜}
@@ -105,7 +105,7 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
     (by
       intro ℓ
       set Y := LinearMap.ker ℓ with hY
-      by_cases htriv:Y = ⊤
+      by_cases htriv : Y = ⊤
       · have hℓ : ℓ = 0 := by
           have h' := linear_map.ker_eq_top.mp htriv
           rw [← ContinuousLinearMap.coe_zero] at h'

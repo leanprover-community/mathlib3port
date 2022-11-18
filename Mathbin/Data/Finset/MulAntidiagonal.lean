@@ -69,12 +69,12 @@ theorem mem_mul_antidiagonal : x ∈ mulAntidiagonal hs ht a ↔ x.1 ∈ s ∧ x
 
 @[to_additive]
 theorem mul_antidiagonal_mono_left (h : u ⊆ s) : mulAntidiagonal hu ht a ⊆ mulAntidiagonal hs ht a :=
-  Set.Finite.to_finset_subset.2 $ Set.mul_antidiagonal_mono_left h
+  Set.Finite.to_finset_subset.2 <| Set.mul_antidiagonal_mono_left h
 #align finset.mul_antidiagonal_mono_left Finset.mul_antidiagonal_mono_left
 
 @[to_additive]
 theorem mul_antidiagonal_mono_right (h : u ⊆ t) : mulAntidiagonal hs hu a ⊆ mulAntidiagonal hs ht a :=
-  Set.Finite.to_finset_subset.2 $ Set.mul_antidiagonal_mono_right h
+  Set.Finite.to_finset_subset.2 <| Set.mul_antidiagonal_mono_right h
 #align finset.mul_antidiagonal_mono_right Finset.mul_antidiagonal_mono_right
 
 @[simp, to_additive]
@@ -101,7 +101,7 @@ theorem mul_antidiagonal_min_mul_min {α} [LinearOrderedCancelCommMonoid α] {s 
   simp only [mem_mul_antidiagonal, mem_singleton, Prod.ext_iff]
   constructor
   · rintro ⟨has, hat, hst⟩
-    obtain rfl := (hs.min_le hns has).eq_of_not_lt fun hlt => (mul_lt_mul_of_lt_of_le hlt $ ht.min_le hnt hat).ne' hst
+    obtain rfl := (hs.min_le hns has).eq_of_not_lt fun hlt => (mul_lt_mul_of_lt_of_le hlt <| ht.min_le hnt hat).ne' hst
     exact ⟨rfl, mul_left_cancel hst⟩
     
   · rintro ⟨rfl, rfl⟩

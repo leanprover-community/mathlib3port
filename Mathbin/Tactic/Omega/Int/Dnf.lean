@@ -207,7 +207,7 @@ def dnfCore : Preform → List Clause
 
 /-- DNF transformation -/
 def dnf (p : Preform) : List Clause :=
-  dnf_core $ neg_elim $ nnf p
+  dnf_core <| neg_elim <| nnf p
 #align omega.int.dnf Omega.Int.dnf
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic omega.int.preform.induce -/

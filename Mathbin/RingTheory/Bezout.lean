@@ -82,8 +82,7 @@ theorem dvd_gcd {x y z : R} (hx : z ∣ x) (hy : z ∣ y) : z ∣ gcd x y := by
   exact ⟨hx, hy⟩
 #align is_bezout.dvd_gcd IsBezout.dvd_gcd
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
-theorem gcd_eq_sum (x y : R) : ∃ (a : R) (b : R), a * x + b * y = gcd x y :=
+theorem gcd_eq_sum (x y : R) : ∃ a b : R, a * x + b * y = gcd x y :=
   Ideal.mem_span_pair.mp
     (by
       rw [← span_gcd]
@@ -138,7 +137,7 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
         ":"
         (Term.app
          `Tfae
-         [(Init.Core.«term[_,»
+         [(«term[_]»
            "["
            [(Term.app `IsNoetherianRing [`R])
             ","
@@ -236,14 +235,13 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
                           ":"
                           («term{_:_//_}» "{" `J [":" (Term.app `Ideal [`R])] "//" (Term.proj `J "." `Fg) "}"))]
                         ","
-                        (Init.Logic.«term∃_,_»
+                        («term∃_,_»
                          "∃"
-                         (Std.ExtendedBinder.extBinders
-                          (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) [(group ":" `R)]))
-                         ", "
-                         (Init.Core.«term_=_»
+                         (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] [":" `R]))
+                         ","
+                         («term_=_»
                           (Term.typeAscription "(" `I ":" [(Term.app `Ideal [`R])] ")")
-                          " = "
+                          "="
                           (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])))))]
                      ":="
                      (Term.fun
@@ -416,14 +414,13 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
                          ":"
                          («term{_:_//_}» "{" `J [":" (Term.app `Ideal [`R])] "//" (Term.proj `J "." `Fg) "}"))]
                        ","
-                       (Init.Logic.«term∃_,_»
+                       («term∃_,_»
                         "∃"
-                        (Std.ExtendedBinder.extBinders
-                         (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) [(group ":" `R)]))
-                        ", "
-                        (Init.Core.«term_=_»
+                        (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] [":" `R]))
+                        ","
+                        («term_=_»
                          (Term.typeAscription "(" `I ":" [(Term.app `Ideal [`R])] ")")
-                         " = "
+                         "="
                          (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])))))]
                     ":="
                     (Term.fun
@@ -584,14 +581,13 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
                      ":"
                      («term{_:_//_}» "{" `J [":" (Term.app `Ideal [`R])] "//" (Term.proj `J "." `Fg) "}"))]
                    ","
-                   (Init.Logic.«term∃_,_»
+                   («term∃_,_»
                     "∃"
-                    (Std.ExtendedBinder.extBinders
-                     (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) [(group ":" `R)]))
-                    ", "
-                    (Init.Core.«term_=_»
+                    (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] [":" `R]))
+                    ","
+                    («term_=_»
                      (Term.typeAscription "(" `I ":" [(Term.app `Ideal [`R])] ")")
-                     " = "
+                     "="
                      (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])))))]
                 ":="
                 (Term.fun
@@ -715,13 +711,13 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
                  ":"
                  («term{_:_//_}» "{" `J [":" (Term.app `Ideal [`R])] "//" (Term.proj `J "." `Fg) "}"))]
                ","
-               (Init.Logic.«term∃_,_»
+               («term∃_,_»
                 "∃"
-                (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) [(group ":" `R)]))
-                ", "
-                (Init.Core.«term_=_»
+                (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] [":" `R]))
+                ","
+                («term_=_»
                  (Term.typeAscription "(" `I ":" [(Term.app `Ideal [`R])] ")")
-                 " = "
+                 "="
                  (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])))))]
             ":="
             (Term.fun
@@ -1107,13 +1103,13 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
             [`I]
             [(Term.typeSpec ":" («term{_:_//_}» "{" `J [":" (Term.app `Ideal [`R])] "//" (Term.proj `J "." `Fg) "}"))]
             ","
-            (Init.Logic.«term∃_,_»
+            («term∃_,_»
              "∃"
-             (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) [(group ":" `R)]))
-             ", "
-             (Init.Core.«term_=_»
+             (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] [":" `R]))
+             ","
+             («term_=_»
               (Term.typeAscription "(" `I ":" [(Term.app `Ideal [`R])] ")")
-              " = "
+              "="
               (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])))))]
          ":="
          (Term.fun
@@ -1170,27 +1166,27 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
        [`I]
        [(Term.typeSpec ":" («term{_:_//_}» "{" `J [":" (Term.app `Ideal [`R])] "//" (Term.proj `J "." `Fg) "}"))]
        ","
-       (Init.Logic.«term∃_,_»
+       («term∃_,_»
         "∃"
-        (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) [(group ":" `R)]))
-        ", "
-        (Init.Core.«term_=_»
+        (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] [":" `R]))
+        ","
+        («term_=_»
          (Term.typeAscription "(" `I ":" [(Term.app `Ideal [`R])] ")")
-         " = "
+         "="
          (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Logic.«term∃_,_»
+      («term∃_,_»
        "∃"
-       (Std.ExtendedBinder.extBinders (Std.ExtendedBinder.extBinder (Lean.binderIdent `x) [(group ":" `R)]))
-       ", "
-       (Init.Core.«term_=_»
+       (Lean.explicitBinders (Lean.unbracketedExplicitBinders [(Lean.binderIdent `x)] [":" `R]))
+       ","
+       («term_=_»
         (Term.typeAscription "(" `I ":" [(Term.app `Ideal [`R])] ")")
-        " = "
+        "="
         (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Init.Core.«term_=_»
+      («term_=_»
        (Term.typeAscription "(" `I ":" [(Term.app `Ideal [`R])] ")")
-       " = "
+       "="
        (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.app `Ideal.span [(«term{_}» "{" [`x] "}")])
@@ -1222,8 +1218,9 @@ instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsB
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `I
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] ...precedences are 50 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'Lean.bracketedExplicitBinders'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `R
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])

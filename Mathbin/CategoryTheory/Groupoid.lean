@@ -7,7 +7,6 @@ import Mathbin.CategoryTheory.FullSubcategory
 import Mathbin.CategoryTheory.Products.Basic
 import Mathbin.CategoryTheory.Pi.Basic
 import Mathbin.CategoryTheory.Category.Basic
-import Mathbin.Tactic.NthRewrite.Default
 import Mathbin.Combinatorics.Quiver.ConnectedComponent
 
 /-!
@@ -72,7 +71,7 @@ instance (priority := 100) IsIso.of_groupoid (f : X ⟶ Y) : IsIso f :=
 
 @[simp]
 theorem Groupoid.inv_eq_inv (f : X ⟶ Y) : Groupoid.inv f = inv f :=
-  is_iso.eq_inv_of_hom_inv_id $ Groupoid.comp_inv f
+  is_iso.eq_inv_of_hom_inv_id <| Groupoid.comp_inv f
 #align category_theory.groupoid.inv_eq_inv CategoryTheory.Groupoid.inv_eq_inv
 
 /-- `groupoid.inv` is involutive. -/

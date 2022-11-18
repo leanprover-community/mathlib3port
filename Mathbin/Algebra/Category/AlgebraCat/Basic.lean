@@ -113,7 +113,7 @@ variable (R)
 @[simps]
 def free : Type u ⥤ AlgebraCat.{u} R where
   obj S := { carrier := FreeAlgebra R S, isRing := Algebra.semiringToRing R }
-  map S T f := FreeAlgebra.lift _ $ FreeAlgebra.ι _ ∘ f
+  map S T f := FreeAlgebra.lift _ <| FreeAlgebra.ι _ ∘ f
   -- obviously can fill the next two goals, but it is slow
   map_id' := by
     intro X

@@ -78,10 +78,10 @@ theorem coe_mul_self_eq (s : Submonoid M) : (s : Set M) * s = s := by
 
 @[to_additive]
 theorem closure_mul_le (S T : Set M) : closure (S * T) ≤ closure S ⊔ closure T :=
-  Inf_le $ fun x ⟨s, t, hs, ht, hx⟩ =>
+  Inf_le fun x ⟨s, t, hs, ht, hx⟩ =>
     hx ▸
-      (closure S ⊔ closure T).mul_mem (SetLike.le_def.mp le_sup_left $ subset_closure hs)
-        (SetLike.le_def.mp le_sup_right $ subset_closure ht)
+      (closure S ⊔ closure T).mul_mem (SetLike.le_def.mp le_sup_left <| subset_closure hs)
+        (SetLike.le_def.mp le_sup_right <| subset_closure ht)
 #align submonoid.closure_mul_le Submonoid.closure_mul_le
 
 @[to_additive]
@@ -143,7 +143,7 @@ theorem mem_inv {g : G} {S : Submonoid G} : g ∈ S⁻¹ ↔ g⁻¹ ∈ S :=
 
 @[to_additive]
 instance : HasInvolutiveInv (Submonoid G) :=
-  SetLike.coe_injective.HasInvolutiveInv _ $ fun _ => rfl
+  (SetLike.coe_injective.HasInvolutiveInv _) fun _ => rfl
 
 @[simp, to_additive]
 theorem inv_le_inv (S T : Submonoid G) : S⁻¹ ≤ T⁻¹ ↔ S ≤ T :=
@@ -185,12 +185,12 @@ theorem inv_sup (S T : Submonoid G) : (S ⊔ T)⁻¹ = S⁻¹ ⊔ T⁻¹ :=
 
 @[simp, to_additive]
 theorem inv_bot : (⊥ : Submonoid G)⁻¹ = ⊥ :=
-  SetLike.coe_injective $ (Set.inv_singleton 1).trans $ congr_arg _ inv_one
+  SetLike.coe_injective <| (Set.inv_singleton 1).trans <| congr_arg _ inv_one
 #align submonoid.inv_bot Submonoid.inv_bot
 
 @[simp, to_additive]
 theorem inv_top : (⊤ : Submonoid G)⁻¹ = ⊤ :=
-  SetLike.coe_injective $ Set.inv_univ
+  SetLike.coe_injective <| Set.inv_univ
 #align submonoid.inv_top Submonoid.inv_top
 
 @[simp, to_additive]
@@ -242,7 +242,7 @@ theorem mem_smul_pointwise_iff_exists (m : M) (a : α) (S : Submonoid M) : m ∈
 
 instance pointwise_central_scalar [MulDistribMulAction αᵐᵒᵖ M] [IsCentralScalar α M] :
     IsCentralScalar α (Submonoid M) :=
-  ⟨fun a S => (congr_arg fun f : Monoid.EndCat M => S.map f) $ MonoidHom.ext $ op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_arg fun f : Monoid.EndCat M => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
 #align submonoid.pointwise_central_scalar Submonoid.pointwise_central_scalar
 
 end Monoid
@@ -355,7 +355,7 @@ theorem smul_mem_pointwise_smul (m : A) (a : α) (S : AddSubmonoid A) : m ∈ S 
 
 instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ A] [IsCentralScalar α A] :
     IsCentralScalar α (AddSubmonoid A) :=
-  ⟨fun a S => (congr_arg fun f : AddMonoid.EndCat A => S.map f) $ AddMonoidHom.ext $ op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_arg fun f : AddMonoid.EndCat A => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
 #align add_submonoid.pointwise_central_scalar AddSubmonoid.pointwise_central_scalar
 
 end Monoid
@@ -484,15 +484,15 @@ variable [NonUnitalNonAssocSemiring R]
 /-- Multiplication of additive submonoids of a semiring R. The additive submonoid `S * T` is the
 smallest R-submodule of `R` containing the elements `s * t` for `s ∈ S` and `t ∈ T`. -/
 instance : Mul (AddSubmonoid R) :=
-  ⟨fun M N => ⨆ s : M, N.map $ AddMonoidHom.mul s.1⟩
+  ⟨fun M N => ⨆ s : M, N.map <| AddMonoidHom.mul s.1⟩
 
 theorem mul_mem_mul {M N : AddSubmonoid R} {m n : R} (hm : m ∈ M) (hn : n ∈ N) : m * n ∈ M * N :=
   (le_supr _ ⟨m, hm⟩ : _ ≤ M * N) ⟨n, hn, rfl⟩
 #align add_submonoid.mul_mem_mul AddSubmonoid.mul_mem_mul
 
 theorem mul_le {M N P : AddSubmonoid R} : M * N ≤ P ↔ ∀ m ∈ M, ∀ n ∈ N, m * n ∈ P :=
-  ⟨fun H m hm n hn => H $ mul_mem_mul hm hn, fun H =>
-    supr_le $ fun ⟨m, hm⟩ => map_le_iff_le_comap.2 $ fun n hn => H m hm n hn⟩
+  ⟨fun H m hm n hn => H <| mul_mem_mul hm hn, fun H =>
+    supr_le fun ⟨m, hm⟩ => map_le_iff_le_comap.2 fun n hn => H m hm n hn⟩
 #align add_submonoid.mul_le AddSubmonoid.mul_le
 
 @[elab_as_elim]
@@ -533,17 +533,17 @@ theorem mul_eq_closure_mul_set (M N : AddSubmonoid R) : M * N = closure (M * N) 
 
 @[simp]
 theorem mul_bot (S : AddSubmonoid R) : S * ⊥ = ⊥ :=
-  eq_bot_iff.2 $ mul_le.2 $ fun m hm n hn => by rw [AddSubmonoid.mem_bot] at hn⊢ <;> rw [hn, mul_zero]
+  eq_bot_iff.2 <| mul_le.2 fun m hm n hn => by rw [AddSubmonoid.mem_bot] at hn⊢ <;> rw [hn, mul_zero]
 #align add_submonoid.mul_bot AddSubmonoid.mul_bot
 
 @[simp]
 theorem bot_mul (S : AddSubmonoid R) : ⊥ * S = ⊥ :=
-  eq_bot_iff.2 $ mul_le.2 $ fun m hm n hn => by rw [AddSubmonoid.mem_bot] at hm⊢ <;> rw [hm, zero_mul]
+  eq_bot_iff.2 <| mul_le.2 fun m hm n hn => by rw [AddSubmonoid.mem_bot] at hm⊢ <;> rw [hm, zero_mul]
 #align add_submonoid.bot_mul AddSubmonoid.bot_mul
 
 @[mono]
 theorem mul_le_mul {M N P Q : AddSubmonoid R} (hmp : M ≤ P) (hnq : N ≤ Q) : M * N ≤ P * Q :=
-  mul_le.2 $ fun m hm n hn => mul_mem_mul (hmp hm) (hnq hn)
+  mul_le.2 fun m hm n hn => mul_mem_mul (hmp hm) (hnq hn)
 #align add_submonoid.mul_le_mul AddSubmonoid.mul_le_mul
 
 theorem mul_le_mul_left {M N P : AddSubmonoid R} (h : M ≤ N) : M * P ≤ N * P :=
@@ -571,16 +571,14 @@ This is available as an instance in the `pointwise` locale. -/
 protected def hasDistribNeg : HasDistribNeg (AddSubmonoid R) :=
   { AddSubmonoid.hasInvolutiveNeg with neg := Neg.neg,
     neg_mul := fun x y => by
-      refine'
-          le_antisymm (mul_le.2 $ fun m hm n hn => _) ((AddSubmonoid.neg_le _ _).2 $ mul_le.2 $ fun m hm n hn => _) <;>
+      refine' le_antisymm (mul_le.2 fun m hm n hn => _) ((AddSubmonoid.neg_le _ _).2 <| mul_le.2 fun m hm n hn => _) <;>
         simp only [AddSubmonoid.mem_neg, ← neg_mul] at *
       · exact mul_mem_mul hm hn
         
       · exact mul_mem_mul (neg_mem_neg.2 hm) hn
         ,
     mul_neg := fun x y => by
-      refine'
-          le_antisymm (mul_le.2 $ fun m hm n hn => _) ((AddSubmonoid.neg_le _ _).2 $ mul_le.2 $ fun m hm n hn => _) <;>
+      refine' le_antisymm (mul_le.2 fun m hm n hn => _) ((AddSubmonoid.neg_le _ _).2 <| mul_le.2 fun m hm n hn => _) <;>
         simp only [AddSubmonoid.mem_neg, ← mul_neg] at *
       · exact mul_mem_mul hm hn
         
@@ -612,13 +610,13 @@ instance : Semigroup (AddSubmonoid R) where
   mul := (· * ·)
   mul_assoc M N P :=
     le_antisymm
-      (mul_le.2 $ fun mn hmn p hp =>
+      (mul_le.2 fun mn hmn p hp =>
         suffices M * N ≤ (M * (N * P)).comap (AddMonoidHom.mulRight p) from this hmn
-        mul_le.2 $ fun m hm n hn =>
+        mul_le.2 fun m hm n hn =>
           show m * n * p ∈ M * (N * P) from (mul_assoc m n p).symm ▸ mul_mem_mul hm (mul_mem_mul hn hp))
-      (mul_le.2 $ fun m hm np hnp =>
+      (mul_le.2 fun m hm np hnp =>
         suffices N * P ≤ (M * N * P).comap (AddMonoidHom.mulLeft m) from this hnp
-        mul_le.2 $ fun n hn p hp =>
+        mul_le.2 fun n hn p hp =>
           show m * (n * p) ∈ M * N * P from mul_assoc m n p ▸ mul_mem_mul (mul_mem_mul hm hn) hp)
 
 end NonUnitalSemiring
@@ -655,7 +653,7 @@ variable [OrderedCancelCommMonoid α] {s : Set α}
 theorem submonoid_closure (hpos : ∀ x : α, x ∈ s → 1 ≤ x) (h : s.IsPwo) : IsPwo (Submonoid.closure s : Set α) := by
   rw [Submonoid.closure_eq_image_prod]
   refine' (h.partially_well_ordered_on_sublist_forall₂ (· ≤ ·)).image_of_monotone_on _
-  exact fun l1 hl1 l2 hl2 h12 => h12.prod_le_prod' fun x hx => hpos x $ hl2 x hx
+  exact fun l1 hl1 l2 hl2 h12 => h12.prod_le_prod' fun x hx => hpos x <| hl2 x hx
 #align set.is_pwo.submonoid_closure Set.IsPwo.submonoid_closure
 
 end Set.IsPwo

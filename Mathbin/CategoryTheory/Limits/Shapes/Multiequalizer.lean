@@ -6,7 +6,6 @@ Authors: Adam Topaz
 import Mathbin.CategoryTheory.Limits.Shapes.Products
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.ConeCategory
-import Mathbin.CategoryTheory.Adjunction.Default
 
 /-!
 

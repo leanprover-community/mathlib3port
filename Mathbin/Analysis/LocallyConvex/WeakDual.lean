@@ -11,12 +11,12 @@ import Mathbin.Analysis.LocallyConvex.WithSeminorms
 # Weak Dual in Topological Vector Spaces
 
 We prove that the weak topology induced by a bilinear form `B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜` is locally
-convex and we explicit give a neighborhood basis in terms of the family of seminorms `λ x, ∥B x y∥`
+convex and we explicit give a neighborhood basis in terms of the family of seminorms `λ x, ‖B x y‖`
 for `y : F`.
 
 ## Main definitions
 
-* `linear_map.to_seminorm`: turn a linear form `f : E →ₗ[𝕜] 𝕜` into a seminorm `λ x, ∥f x∥`.
+* `linear_map.to_seminorm`: turn a linear form `f : E →ₗ[𝕜] 𝕜` into a seminorm `λ x, ‖f x‖`.
 * `linear_map.to_seminorm_family`: turn a bilinear form `B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜` into a map
 `F → seminorm 𝕜 E`.
 
@@ -49,21 +49,21 @@ namespace LinearMap
 variable [NormedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [AddCommGroup F] [Module 𝕜 F]
 
 /-- Construct a seminorm from a linear form `f : E →ₗ[𝕜] 𝕜` over a normed field `𝕜` by
-`λ x, ∥f x∥` -/
+`λ x, ‖f x‖` -/
 def toSeminorm (f : E →ₗ[𝕜] 𝕜) : Seminorm 𝕜 E :=
   (normSeminorm 𝕜 𝕜).comp f
 #align linear_map.to_seminorm LinearMap.toSeminorm
 
-theorem coe_to_seminorm {f : E →ₗ[𝕜] 𝕜} : ⇑f.toSeminorm = fun x => ∥f x∥ :=
+theorem coe_to_seminorm {f : E →ₗ[𝕜] 𝕜} : ⇑f.toSeminorm = fun x => ‖f x‖ :=
   rfl
 #align linear_map.coe_to_seminorm LinearMap.coe_to_seminorm
 
 @[simp]
-theorem to_seminorm_apply {f : E →ₗ[𝕜] 𝕜} {x : E} : f.toSeminorm x = ∥f x∥ :=
+theorem to_seminorm_apply {f : E →ₗ[𝕜] 𝕜} {x : E} : f.toSeminorm x = ‖f x‖ :=
   rfl
 #align linear_map.to_seminorm_apply LinearMap.to_seminorm_apply
 
-theorem to_seminorm_ball_zero {f : E →ₗ[𝕜] 𝕜} {r : ℝ} : Seminorm.ball f.toSeminorm 0 r = { x : E | ∥f x∥ < r } := by
+theorem to_seminorm_ball_zero {f : E →ₗ[𝕜] 𝕜} {r : ℝ} : Seminorm.ball f.toSeminorm 0 r = { x : E | ‖f x‖ < r } := by
   simp only [Seminorm.ball_zero_eq, to_seminorm_apply]
 #align linear_map.to_seminorm_ball_zero LinearMap.to_seminorm_ball_zero
 
@@ -77,7 +77,7 @@ def toSeminormFamily (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) : SeminormFamily �
 #align linear_map.to_seminorm_family LinearMap.toSeminormFamily
 
 @[simp]
-theorem to_seminorm_family_apply {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜} {x y} : (B.toSeminormFamily y) x = ∥B x y∥ :=
+theorem to_seminorm_family_apply {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜} {x y} : (B.toSeminormFamily y) x = ‖B x y‖ :=
   rfl
 #align linear_map.to_seminorm_family_apply LinearMap.to_seminorm_family_apply
 
@@ -106,11 +106,11 @@ theorem LinearMap.has_basis_weak_bilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) 
     cases' hU with hU₁ hU₂
     simp only [id.def]
     let U' := hU₁.to_finset
-    by_cases hU₃:U.fst.nonempty
+    by_cases hU₃ : U.fst.nonempty
     · have hU₃' : U'.nonempty := hU₁.nonempty_to_finset.mpr hU₃
       refine'
-        ⟨(U'.sup p).ball 0 $ U'.inf' hU₃' U.snd,
-          p.basis_sets_mem _ $ (Finset.lt_inf'_iff _).2 $ fun y hy => hU₂ y $ hU₁.mem_to_finset.mp hy, fun x hx y hy =>
+        ⟨(U'.sup p).ball 0 <| U'.inf' hU₃' U.snd,
+          p.basis_sets_mem _ <| (Finset.lt_inf'_iff _).2 fun y hy => hU₂ y <| hU₁.mem_to_finset.mp hy, fun x hx y hy =>
           _⟩
       simp only [Set.mem_preimage, Set.mem_pi, mem_ball_zero_iff]
       rw [Seminorm.mem_ball_zero] at hx

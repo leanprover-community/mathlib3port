@@ -3,7 +3,7 @@ Copyright (c) 2022 Rishikesh Vaishnav. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rishikesh Vaishnav
 -/
-import Mathbin.Probability.Independence
+import Mathbin.MeasureTheory.Measure.MeasureSpace
 
 /-!
 # Conditional Probability
@@ -83,7 +83,7 @@ scoped notation:60 μ "[|" t "]" => ProbabilityTheory.cond μ t
 
 /-- The conditional probability measure of any finite measure on any set of positive measure
 is a probability measure. -/
-theorem condIsProbabilityMeasure [IsFiniteMeasure μ] (hcs : μ s ≠ 0) : is_probability_measure $ μ[|s] :=
+theorem condIsProbabilityMeasure [IsFiniteMeasure μ] (hcs : μ s ≠ 0) : is_probability_measure <| μ[|s] :=
   ⟨by
     rw [cond, measure.smul_apply, measure.restrict_apply MeasurableSet.univ, Set.univ_inter]
     exact Ennreal.inv_mul_cancel hcs (measure_ne_top _ s)⟩
@@ -159,7 +159,7 @@ theorem cond_add_cond_compl_eq [IsFiniteMeasure μ] (hms : MeasurableSet s) (hcs
 /-- **Bayes' Theorem** -/
 theorem cond_eq_inv_mul_cond_mul [IsFiniteMeasure μ] (hms : MeasurableSet s) (hmt : MeasurableSet t) :
     μ[t|s] = (μ s)⁻¹ * μ[s|t] * μ t := by
-  by_cases ht:μ t = 0
+  by_cases ht : μ t = 0
   · simp [cond, ht, measure.restrict_apply hmt, Or.inr (measure_inter_null_of_null_left s ht)]
     
   · rw [mul_assoc, cond_mul_eq_inter μ hmt ht s, Set.inter_comm, cond_apply _ hms]

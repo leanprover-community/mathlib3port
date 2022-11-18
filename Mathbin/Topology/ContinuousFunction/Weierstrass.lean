@@ -50,7 +50,7 @@ our proof of that relies on the fact that `abs` is in the closure of polynomials
 so we may as well get this done first.)
 -/
 theorem polynomial_functions_closure_eq_top (a b : ℝ) : (polynomialFunctions (Set.icc a b)).topologicalClosure = ⊤ := by
-  by_cases h:a < b
+  by_cases h : a < b
   -- (Otherwise it's easy; we'll deal with that later.)
   · -- We can pullback continuous functions on `[a,b]` to continuous functions on `[0,1]`,
     -- by precomposing with an affine map.
@@ -97,7 +97,7 @@ for those who like their epsilons.
 Every real-valued continuous function on `[a,b]` is within any `ε > 0` of some polynomial.
 -/
 theorem exists_polynomial_near_continuous_map (a b : ℝ) (f : C(Set.icc a b, ℝ)) (ε : ℝ) (pos : 0 < ε) :
-    ∃ p : ℝ[X], ∥p.toContinuousMapOn _ - f∥ < ε := by
+    ∃ p : ℝ[X], ‖p.toContinuousMapOn _ - f‖ < ε := by
   have w := mem_closure_iff_frequently.mp (continuous_map_mem_polynomial_functions_closure _ _ f)
   rw [metric.nhds_basis_ball.frequently_iff] at w
   obtain ⟨-, H, ⟨m, ⟨-, rfl⟩⟩⟩ := w ε Pos

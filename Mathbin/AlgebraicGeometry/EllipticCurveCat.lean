@@ -161,8 +161,8 @@ theorem twoTorsionPolynomial.disc_eq : (twoTorsionPolynomial E A).disc = 16 * al
 
 theorem twoTorsionPolynomial.disc_ne_zero {K : Type u} [Field K] [Invertible (2 : K)] (E : EllipticCurveCat K)
     (A : Type v) [CommRing A] [Nontrivial A] [Algebra K A] : (twoTorsionPolynomial E A).disc ≠ 0 := fun hdisc =>
-  E.Δ.NeZero $
-    mul_left_cancel₀ (pow_ne_zero 4 $ nonzero_of_invertible (2 : K)) $
+  E.Δ.NeZero <|
+    mul_left_cancel₀ (pow_ne_zero 4 <| nonzero_of_invertible (2 : K)) <|
       (algebraMap K A).Injective
         (by
           simp only [map_mul, map_pow, map_bit0, map_one, map_zero]

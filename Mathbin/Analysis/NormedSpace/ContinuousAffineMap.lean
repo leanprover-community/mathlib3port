@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
 import Mathbin.Topology.Algebra.ContinuousAffineMap
-import Mathbin.Analysis.NormedSpace.AddTorsor
 import Mathbin.Analysis.NormedSpace.AffineIsometry
 import Mathbin.Analysis.NormedSpace.OperatorNorm
 
@@ -16,7 +15,7 @@ spaces.
 
 In the particular case that the affine spaces are just normed vector spaces `V`, `W`, we define a
 norm on the space of continuous affine maps by defining the norm of `f : V →A[𝕜] W` to be
-`∥f∥ = max ∥f 0∥ ∥f.cont_linear∥`. This is chosen so that we have a linear isometry:
+`‖f‖ = max ‖f 0‖ ‖f.cont_linear‖`. This is chosen so that we have a linear isometry:
 `(V →A[𝕜] W) ≃ₗᵢ[𝕜] W × (V →L[𝕜] W)`.
 
 The abstract picture is that for an affine space `P` modelled on a vector space `V`, together with
@@ -28,7 +27,7 @@ take `P = V`, using `0 : V` as the base point provides a splitting, and we prove
 isometric decomposition.
 
 On the other hand, choosing a base point breaks the affine invariance so the norm fails to be
-submultiplicative: for a composition of maps, we have only `∥f.comp g∥ ≤ ∥f∥ * ∥g∥ + ∥f 0∥`.
+submultiplicative: for a composition of maps, we have only `‖f.comp g‖ ≤ ‖f‖ * ‖g‖ + ‖f 0‖`.
 
 ## Main definitions:
 
@@ -172,35 +171,35 @@ section NormedSpaceStructure
 variable (f : V →A[𝕜] W)
 
 /-- Note that unlike the operator norm for linear maps, this norm is _not_ submultiplicative:
-we do _not_ necessarily have `∥f.comp g∥ ≤ ∥f∥ * ∥g∥`. See `norm_comp_le` for what we can say. -/
+we do _not_ necessarily have `‖f.comp g‖ ≤ ‖f‖ * ‖g‖`. See `norm_comp_le` for what we can say. -/
 noncomputable instance hasNorm : HasNorm (V →A[𝕜] W) :=
-  ⟨fun f => max ∥f 0∥ ∥f.contLinear∥⟩
+  ⟨fun f => max ‖f 0‖ ‖f.contLinear‖⟩
 #align continuous_affine_map.has_norm ContinuousAffineMap.hasNorm
 
-theorem norm_def : ∥f∥ = max ∥f 0∥ ∥f.contLinear∥ :=
+theorem norm_def : ‖f‖ = max ‖f 0‖ ‖f.contLinear‖ :=
   rfl
 #align continuous_affine_map.norm_def ContinuousAffineMap.norm_def
 
-theorem norm_cont_linear_le : ∥f.contLinear∥ ≤ ∥f∥ :=
+theorem norm_cont_linear_le : ‖f.contLinear‖ ≤ ‖f‖ :=
   le_max_right _ _
 #align continuous_affine_map.norm_cont_linear_le ContinuousAffineMap.norm_cont_linear_le
 
-theorem norm_image_zero_le : ∥f 0∥ ≤ ∥f∥ :=
+theorem norm_image_zero_le : ‖f 0‖ ≤ ‖f‖ :=
   le_max_left _ _
 #align continuous_affine_map.norm_image_zero_le ContinuousAffineMap.norm_image_zero_le
 
 @[simp]
-theorem norm_eq (h : f 0 = 0) : ∥f∥ = ∥f.contLinear∥ :=
+theorem norm_eq (h : f 0 = 0) : ‖f‖ = ‖f.contLinear‖ :=
   calc
-    ∥f∥ = max ∥f 0∥ ∥f.contLinear∥ := by rw [norm_def]
-    _ = max 0 ∥f.contLinear∥ := by rw [h, norm_zero]
-    _ = ∥f.contLinear∥ := max_eq_right (norm_nonneg _)
+    ‖f‖ = max ‖f 0‖ ‖f.contLinear‖ := by rw [norm_def]
+    _ = max 0 ‖f.contLinear‖ := by rw [h, norm_zero]
+    _ = ‖f.contLinear‖ := max_eq_right (norm_nonneg _)
     
 #align continuous_affine_map.norm_eq ContinuousAffineMap.norm_eq
 
 noncomputable instance : NormedAddCommGroup (V →A[𝕜] W) :=
   AddGroupNorm.toNormedAddCommGroup
-    { toFun := fun f => max ∥f 0∥ ∥f.contLinear∥, map_zero' := by simp, neg' := fun f => by simp,
+    { toFun := fun f => max ‖f 0‖ ‖f.contLinear‖, map_zero' := by simp, neg' := fun f => by simp,
       add_le' := fun f g => by
         simp only [Pi.add_apply, add_cont_linear, coe_add, max_le_iff]
         exact
@@ -227,24 +226,24 @@ instance :
         W) where norm_smul_le t f := by
     simp only [norm_def, smul_cont_linear, coe_smul, Pi.smul_apply, norm_smul, ← mul_max_of_nonneg _ _ (norm_nonneg t)]
 
-theorem norm_comp_le (g : W₂ →A[𝕜] V) : ∥f.comp g∥ ≤ ∥f∥ * ∥g∥ + ∥f 0∥ := by
+theorem norm_comp_le (g : W₂ →A[𝕜] V) : ‖f.comp g‖ ≤ ‖f‖ * ‖g‖ + ‖f 0‖ := by
   rw [norm_def, max_le_iff]
   constructor
   · calc
-      ∥f.comp g 0∥ = ∥f (g 0)∥ := by simp
-      _ = ∥f.cont_linear (g 0) + f 0∥ := by
+      ‖f.comp g 0‖ = ‖f (g 0)‖ := by simp
+      _ = ‖f.cont_linear (g 0) + f 0‖ := by
         rw [f.decomp]
         simp
-      _ ≤ ∥f.cont_linear∥ * ∥g 0∥ + ∥f 0∥ := (norm_add_le _ _).trans (add_le_add_right (f.cont_linear.le_op_norm _) _)
-      _ ≤ ∥f∥ * ∥g∥ + ∥f 0∥ :=
+      _ ≤ ‖f.cont_linear‖ * ‖g 0‖ + ‖f 0‖ := (norm_add_le _ _).trans (add_le_add_right (f.cont_linear.le_op_norm _) _)
+      _ ≤ ‖f‖ * ‖g‖ + ‖f 0‖ :=
         add_le_add_right (mul_le_mul f.norm_cont_linear_le g.norm_image_zero_le (norm_nonneg _) (norm_nonneg _)) _
       
     
   · calc
-      ∥(f.comp g).contLinear∥ ≤ ∥f.cont_linear∥ * ∥g.cont_linear∥ :=
+      ‖(f.comp g).contLinear‖ ≤ ‖f.cont_linear‖ * ‖g.cont_linear‖ :=
         (g.comp_cont_linear f).symm ▸ f.cont_linear.op_norm_comp_le _
-      _ ≤ ∥f∥ * ∥g∥ := mul_le_mul f.norm_cont_linear_le g.norm_cont_linear_le (norm_nonneg _) (norm_nonneg _)
-      _ ≤ ∥f∥ * ∥g∥ + ∥f 0∥ := by
+      _ ≤ ‖f‖ * ‖g‖ := mul_le_mul f.norm_cont_linear_le g.norm_cont_linear_le (norm_nonneg _) (norm_nonneg _)
+      _ ≤ ‖f‖ * ‖g‖ + ‖f 0‖ := by
         rw [le_add_iff_nonneg_right]
         apply norm_nonneg
       

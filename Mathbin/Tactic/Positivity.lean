@@ -284,7 +284,7 @@ unsafe def attr : user_attribute (expr → tactic strictness) Unit where
                 let t' ← eval_expr (expr → tactic strictness) (expr.const n [])
                 pure fun e => t' e ≤|≥ t e)
               fun _ => failed
-        pure $ fun e =>
+        pure fun e =>
             -- run all the extensions on `e`
                 t
                 e ≤|≥-- directly try `norm_num` on `e`
@@ -337,7 +337,7 @@ namespace Interactive
     : tactic Unit
     :=
       focus1
-        $
+        <|
         do
           let t ← target >>= instantiate_mvars
             let

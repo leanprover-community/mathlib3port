@@ -59,10 +59,10 @@ def equivalenceReflectsNormalMono {D : Type u₂} [Category.{v₁} D] [HasZeroMo
     {X Y : C} {f : X ⟶ Y} (hf : NormalMono (F.map f)) : NormalMono f where
   z := F.objPreimage hf.z
   g := Full.preimage (hf.g ≫ (F.objObjPreimageIso hf.z).inv)
-  w := Faithful.map_injective F $ by simp [reassoc_of hf.w]
+  w := Faithful.map_injective F <| by simp [reassoc_of hf.w]
   IsLimit :=
-    reflects_limit.reflects $
-      IsLimit.ofConeEquiv (Cones.postcomposeEquivalence (compNatIso F : _)) $
+    reflects_limit.reflects <|
+      IsLimit.ofConeEquiv (Cones.postcomposeEquivalence (compNatIso F : _)) <|
         IsLimit.ofIsoLimit
           (is_limit.of_iso_limit (is_kernel.of_comp_iso _ _ (F.obj_obj_preimage_iso hf.Z) (by simp) hf.is_limit)
             (of_ι_congr (category.comp_id _).symm))
@@ -164,10 +164,10 @@ def equivalenceReflectsNormalEpi {D : Type u₂} [Category.{v₁} D] [HasZeroMor
     {X Y : C} {f : X ⟶ Y} (hf : NormalEpi (F.map f)) : NormalEpi f where
   w := F.objPreimage hf.w
   g := Full.preimage ((F.objObjPreimageIso hf.w).Hom ≫ hf.g)
-  w := Faithful.map_injective F $ by simp [hf.w]
+  w := Faithful.map_injective F <| by simp [hf.w]
   IsColimit :=
-    reflects_colimit.reflects $
-      IsColimit.ofCoconeEquiv (Cocones.precomposeEquivalence (compNatIso F).symm) $
+    reflects_colimit.reflects <|
+      IsColimit.ofCoconeEquiv (Cocones.precomposeEquivalence (compNatIso F).symm) <|
         IsColimit.ofIsoColimit
           (is_colimit.of_iso_colimit
             (is_cokernel.of_iso_comp _ _ (F.obj_obj_preimage_iso hf.W).symm (by simp) hf.is_colimit)

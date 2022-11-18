@@ -3,13 +3,10 @@ Copyright (c) 2019 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Algebra.Associated
 import Mathbin.Algebra.Regular.Basic
 import Mathbin.LinearAlgebra.Matrix.MvPolynomial
 import Mathbin.LinearAlgebra.Matrix.Polynomial
 import Mathbin.RingTheory.Polynomial.Basic
-import Mathbin.Tactic.Linarith.Default
-import Mathbin.Tactic.RingExp
 
 /-!
 # Cramer's rule and adjugate matrices
@@ -139,7 +136,7 @@ theorem cramer_one : cramer (1 : Matrix n n α) = 1 := by
 #align matrix.cramer_one Matrix.cramer_one
 
 theorem cramer_smul (r : α) (A : Matrix n n α) : cramer (r • A) = r ^ (Fintype.card n - 1) • cramer A :=
-  LinearMap.ext $ fun b => funext $ fun _ => det_update_column_smul' _ _ _ _
+  LinearMap.ext fun b => funext fun _ => det_update_column_smul' _ _ _ _
 #align matrix.cramer_smul Matrix.cramer_smul
 
 @[simp]
@@ -495,7 +492,7 @@ theorem adjugate_adjugate (A : Matrix n n α) (h : Fintype.card n ≠ 1) :
 /-- A weaker version of `matrix.adjugate_adjugate` that uses `nontrivial`. -/
 theorem adjugate_adjugate' (A : Matrix n n α) [Nontrivial n] :
     adjugate (adjugate A) = det A ^ (Fintype.card n - 2) • A :=
-  adjugate_adjugate _ $ Fintype.one_lt_card.ne'
+  adjugate_adjugate _ <| Fintype.one_lt_card.ne'
 #align matrix.adjugate_adjugate' Matrix.adjugate_adjugate'
 
 end Adjugate

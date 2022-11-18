@@ -75,7 +75,7 @@ theorem finiteTypeOfLocalizationSpanTarget : OfLocalizationSpanTarget @FiniteTyp
     exact Or.inl (Or.inr hx)
     
   · intro i
-    by_cases h:l i = 0
+    by_cases h : l i = 0
     · rw [h]
       exact zero_mem _
       

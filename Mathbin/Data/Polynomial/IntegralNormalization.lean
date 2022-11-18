@@ -75,7 +75,7 @@ theorem integral_normalization_coeff_ne_nat_degree {f : R[X]} {i : ℕ} (hi : i 
 
 theorem monic_integral_normalization {f : R[X]} (hf : f ≠ 0) : Monic (integralNormalization f) :=
   monic_of_degree_le f.natDegree
-    (Finset.sup_le $ fun i h => WithBot.coe_le_coe.2 $ le_nat_degree_of_mem_supp i $ integral_normalization_support h)
+    (Finset.sup_le fun i h => WithBot.coe_le_coe.2 <| le_nat_degree_of_mem_supp i <| integral_normalization_support h)
     (integral_normalization_coeff_nat_degree hf)
 #align polynomial.monic_integral_normalization Polynomial.monic_integral_normalization
 
@@ -87,7 +87,7 @@ variable [Ring R] [IsDomain R]
 
 @[simp]
 theorem support_integral_normalization {f : R[X]} : (integralNormalization f).support = f.support := by
-  by_cases hf:f = 0
+  by_cases hf : f = 0
   · simp [hf]
     
   ext i
@@ -115,13 +115,13 @@ theorem integral_normalization_eval₂_eq_zero {p : R[X]} (f : R →+* S) {z : S
       simp only [mul_comm z, mul_pow, mul_assoc, RingHom.map_pow, RingHom.map_mul]
       exact finset.sum_attach.symm
     _ = p.support.attach.Sum fun i => f (coeff p i.1 * p.leadingCoeff ^ (natDegree p - 1)) * z ^ i.1 := by
-      by_cases hp:p = 0
+      by_cases hp : p = 0
       · simp [hp]
         
       have one_le_deg : 1 ≤ nat_degree p := Nat.succ_le_of_lt (nat_degree_pos_of_eval₂_root hp f hz inj)
       congr with i
       congr 2
-      by_cases hi:i.1 = nat_degree p
+      by_cases hi : i.1 = nat_degree p
       · rw [hi, integral_normalization_coeff_degree, one_mul, leading_coeff, ← pow_succ,
           tsub_add_cancel_of_le one_le_deg]
         exact degree_eq_nat_degree hp

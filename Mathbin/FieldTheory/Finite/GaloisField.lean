@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Alex J. Best, Johan Commelin, Eric Rodriguez, Ruben Van de Velde
 -/
 import Mathbin.Algebra.CharP.Algebra
+import Mathbin.Data.Zmod.Algebra
 import Mathbin.FieldTheory.Finite.Basic
 import Mathbin.FieldTheory.Galois
 
@@ -213,7 +214,7 @@ def ringEquivOfCardEq (hKK' : Fintype.card K = Fintype.card K') : K ≃+* K' := 
     -- := eq_prime_of_eq_prime_pow
     by_contra hne
     have h2 := Nat.coprime_pow_primes n n' hp hp' hne
-    rw [(Eq.congr hK hK').mp hKK', Nat.coprime_self, pow_eq_one_iff (Pnat.ne_zero n')] at h2
+    rw [(Eq.congr hK hK').mp hKK', Nat.coprime_self, pow_eq_one_iff (PNat.ne_zero n')] at h2
     exact Nat.Prime.ne_one hp' h2
     all_goals infer_instance
   rw [← hpp'] at *

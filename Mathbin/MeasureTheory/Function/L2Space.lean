@@ -39,7 +39,7 @@ theorem Memℒp.integrableSq {f : α → ℝ} (h : Memℒp f 2 μ) : Integrable 
 #align measure_theory.mem_ℒp.integrable_sq MeasureTheory.Memℒp.integrableSq
 
 theorem mem_ℒp_two_iff_integrable_sq_norm {f : α → F} (hf : AeStronglyMeasurable f μ) :
-    Memℒp f 2 μ ↔ Integrable (fun x => ∥f x∥ ^ 2) μ := by
+    Memℒp f 2 μ ↔ Integrable (fun x => ‖f x‖ ^ 2) μ := by
   rw [← mem_ℒp_one_iff_integrable]
   convert (mem_ℒp_norm_rpow_iff hf Ennreal.two_ne_zero Ennreal.two_ne_top).symm
   · simp
@@ -65,15 +65,15 @@ variable {α E F 𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace α] {μ : Measure
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
-theorem snorm_rpow_two_norm_lt_top (f : lp F 2 μ) : snorm (fun x => ∥f x∥ ^ (2 : ℝ)) 1 μ < ∞ := by
+theorem snorm_rpow_two_norm_lt_top (f : lp F 2 μ) : snorm (fun x => ‖f x‖ ^ (2 : ℝ)) 1 μ < ∞ := by
   have h_two : Ennreal.ofReal (2 : ℝ) = 2 := by simp [zero_le_one]
   rw [snorm_norm_rpow f zero_lt_two, one_mul, h_two]
   exact Ennreal.rpow_lt_top_of_nonneg zero_le_two (Lp.snorm_ne_top f)
 #align measure_theory.L2.snorm_rpow_two_norm_lt_top MeasureTheory.L2Cat.snorm_rpow_two_norm_lt_top
 
 theorem snorm_inner_lt_top (f g : α →₂[μ] E) : snorm (fun x : α => ⟪f x, g x⟫) 1 μ < ∞ := by
-  have h : ∀ x, IsROrC.abs ⟪f x, g x⟫ ≤ ∥f x∥ * ∥g x∥ := fun x => abs_inner_le_norm _ _
-  have h' : ∀ x, IsROrC.abs ⟪f x, g x⟫ ≤ IsROrC.abs (∥f x∥ ^ 2 + ∥g x∥ ^ 2) := by
+  have h : ∀ x, IsROrC.abs ⟪f x, g x⟫ ≤ ‖f x‖ * ‖g x‖ := fun x => abs_inner_le_norm _ _
+  have h' : ∀ x, IsROrC.abs ⟪f x, g x⟫ ≤ IsROrC.abs (‖f x‖ ^ 2 + ‖g x‖ ^ 2) := by
     refine' fun x => le_trans (h x) _
     rw [IsROrC.abs_to_real, abs_eq_self.mpr]
     swap
@@ -106,7 +106,7 @@ theorem inner_def (f g : α →₂[μ] E) : ⟪f, g⟫ = ∫ a : α, ⟪f a, g a
 #align measure_theory.L2.inner_def MeasureTheory.L2Cat.inner_def
 
 theorem integral_inner_eq_sq_snorm (f : α →₂[μ] E) :
-    (∫ a, ⟪f a, f a⟫ ∂μ) = Ennreal.toReal (∫⁻ a, (∥f a∥₊ : ℝ≥0∞) ^ (2 : ℝ) ∂μ) := by
+    (∫ a, ⟪f a, f a⟫ ∂μ) = Ennreal.toReal (∫⁻ a, (‖f a‖₊ : ℝ≥0∞) ^ (2 : ℝ) ∂μ) := by
   simp_rw [inner_self_eq_norm_sq_to_K]
   norm_cast
   rw [integral_eq_lintegral_of_nonneg_ae]
@@ -123,7 +123,7 @@ theorem integral_inner_eq_sq_snorm (f : α →₂[μ] E) :
   norm_cast
 #align measure_theory.L2.integral_inner_eq_sq_snorm MeasureTheory.L2Cat.integral_inner_eq_sq_snorm
 
-private theorem norm_sq_eq_inner' (f : α →₂[μ] E) : ∥f∥ ^ 2 = IsROrC.re ⟪f, f⟫ := by
+private theorem norm_sq_eq_inner' (f : α →₂[μ] E) : ‖f‖ ^ 2 = IsROrC.re ⟪f, f⟫ := by
   have h_two : (2 : ℝ≥0∞).toReal = 2 := by simp
   rw [inner_def, integral_inner_eq_sq_snorm, norm_def, ← Ennreal.to_real_pow, IsROrC.of_real_re,
     Ennreal.to_real_eq_to_real (Ennreal.pow_ne_top (Lp.snorm_ne_top f)) _]

@@ -64,9 +64,8 @@ noncomputable def normBound : ℤ :=
   Nat.factorial n • (n • m) ^ n
 #align class_group.norm_bound ClassGroup.normBound
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j k) -/
 theorem norm_bound_pos : 0 < normBound abv bS := by
-  obtain ⟨i, j, k, hijk⟩ : ∃ (i) (j) (k), Algebra.leftMulMatrix bS (bS i) j k ≠ 0 := by
+  obtain ⟨i, j, k, hijk⟩ : ∃ i j k, Algebra.leftMulMatrix bS (bS i) j k ≠ 0 := by
     by_contra' h
     obtain ⟨i⟩ := bS.index_nonempty
     apply bS.ne_zero i
@@ -177,17 +176,16 @@ variable [DecidableEq R]
 /-- `finset_approx` is a finite set such that each fractional ideal in the integral closure
 contains an element close to `finset_approx`. -/
 noncomputable def finsetApprox : Finset R :=
-  (Finset.univ.image $ fun xy : _ × _ => distinctElems bS adm xy.1 - distinctElems bS adm xy.2).erase 0
+  (Finset.univ.image fun xy : _ × _ => distinctElems bS adm xy.1 - distinctElems bS adm xy.2).erase 0
 #align class_group.finset_approx ClassGroup.finsetApprox
 
 theorem finsetApprox.zero_not_mem : (0 : R) ∉ finsetApprox bS adm :=
   Finset.not_mem_erase _ _
 #align class_group.finset_approx.zero_not_mem ClassGroup.finsetApprox.zero_not_mem
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem mem_finset_approx {x : R} :
-    x ∈ finsetApprox bS adm ↔ ∃ (i) (j), i ≠ j ∧ distinctElems bS adm i - distinctElems bS adm j = x := by
+    x ∈ finsetApprox bS adm ↔ ∃ i j, i ≠ j ∧ distinctElems bS adm i - distinctElems bS adm j = x := by
   simp only [finset_approx, Finset.mem_erase, Finset.mem_image]
   constructor
   · rintro ⟨hx, ⟨i, j⟩, _, rfl⟩
@@ -210,8 +208,8 @@ attribute [-instance] Real.decidableEq
 
 /-- We can approximate `a / b : L` with `q / r`, where `r` has finitely many options for `L`. -/
 theorem exists_mem_finset_approx (a : S) {b} (hb : b ≠ (0 : R)) :
-    ∃ (q : S) (r ∈ finsetApprox bS adm),
-      abv (Algebra.norm R (r • a - b • q)) < abv (Algebra.norm R (algebraMap R S b)) :=
+    ∃ q : S,
+      ∃ r ∈ finsetApprox bS adm, abv (Algebra.norm R (r • a - b • q)) < abv (Algebra.norm R (algebraMap R S b)) :=
   by
   have dim_pos := fintype.card_pos_iff.mpr bS.index_nonempty
   set ε : ℝ := norm_bound abv bS ^ (-1 / Fintype.card ι : ℝ) with ε_eq
@@ -272,7 +270,7 @@ include ist iic
 
 /-- We can approximate `a / b : L` with `q / r`, where `r` has finitely many options for `L`. -/
 theorem exists_mem_finset_approx' (h : Algebra.IsAlgebraic R L) (a : S) {b : S} (hb : b ≠ 0) :
-    ∃ (q : S) (r ∈ finsetApprox bS adm), abv (Algebra.norm R (r • a - q * b)) < abv (Algebra.norm R b) := by
+    ∃ q : S, ∃ r ∈ finsetApprox bS adm, abv (Algebra.norm R (r • a - q * b)) < abv (Algebra.norm R b) := by
   have inj : Function.Injective (algebraMap R L) := by
     rw [IsScalarTower.algebra_map_eq R S L]
     exact (IsIntegralClosure.algebra_map_injective S R L).comp bS.algebra_map_injective

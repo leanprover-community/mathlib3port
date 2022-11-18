@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.Algebra.Star.Basic
-import Mathbin.Analysis.SpecialFunctions.Pow
+import Mathbin.Data.Complex.IsROrC
 
 /-!
 # The Clauser-Horne-Shimony-Holt inequality and Tsirelson's inequality.

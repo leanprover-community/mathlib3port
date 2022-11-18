@@ -65,7 +65,7 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
       convert hμ
       ext i
       rw [Pi.add_apply, Submodule.coe_add, Submodule.coe_mk]
-      by_cases hi:i = h.some
+      by_cases hi : i = h.some
       · rw [hi, Pi.single_eq_same, Pi.single_eq_same, Submodule.coe_mk]
         
       · rw [Pi.single_eq_of_ne hi, Pi.single_eq_of_ne hi, Submodule.coe_zero]
@@ -91,9 +91,9 @@ theorem supr_infi_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
     obtain ⟨μ, hμ⟩ := ih.mpr hs
     obtain ⟨u, hu, v, hv, huv⟩ :=
       submodule.mem_sup.mp
-        ((eq_top_iff_one _).mp $
-          sup_infi_eq_top $ fun b hb =>
-            Hb b hb $ by
+        ((eq_top_iff_one _).mp <|
+          sup_infi_eq_top fun b hb =>
+            Hb b hb <| by
               rintro rfl
               exact hat hb)
     refine' ⟨fun i => if hi : i = a then ⟨v, _⟩ else ⟨u * μ i, _⟩, _⟩

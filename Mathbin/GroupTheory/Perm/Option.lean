@@ -3,6 +3,7 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
+import Mathbin.Data.Fintype.Perm
 import Mathbin.GroupTheory.Perm.Sign
 import Mathbin.Logic.Equiv.Option
 
@@ -24,9 +25,9 @@ theorem Equiv.option_congr_swap {α : Type _} [DecidableEq α] (x y : α) :
   ext (_ | i)
   · simp [swap_apply_of_ne_of_ne]
     
-  · by_cases hx:i = x
+  · by_cases hx : i = x
     simp [hx, swap_apply_of_ne_of_ne]
-    by_cases hy:i = y <;> simp [hx, hy, swap_apply_of_ne_of_ne]
+    by_cases hy : i = y <;> simp [hx, hy, swap_apply_of_ne_of_ne]
     
 #align equiv.option_congr_swap Equiv.option_congr_swap
 
@@ -84,8 +85,8 @@ theorem Equiv.Perm.decompose_option_symm_sign {α : Type _} [DecidableEq α] [Fi
 /-- The set of all permutations of `option α` can be constructed by augmenting the set of
 permutations of `α` by each element of `option α` in turn. -/
 theorem Finset.univ_perm_option {α : Type _} [DecidableEq α] [Fintype α] :
-    @Finset.univ (perm $ Option α) _ =
-      (Finset.univ : Finset $ Option α × Perm α).map Equiv.Perm.decomposeOption.symm.toEmbedding :=
+    @Finset.univ (perm <| Option α) _ =
+      (Finset.univ : Finset <| Option α × Perm α).map Equiv.Perm.decomposeOption.symm.toEmbedding :=
   (Finset.univ_map_equiv_to_embedding _).symm
 #align finset.univ_perm_option Finset.univ_perm_option
 

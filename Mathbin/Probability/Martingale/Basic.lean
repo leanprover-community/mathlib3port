@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Kexing Ying
 -/
 import Mathbin.Probability.Notation
-import Mathbin.Probability.Process.HittingTime
+import Mathbin.Probability.Process.Stopping
 
 /-!
 # Martingales
@@ -75,8 +75,8 @@ theorem martingaleConst (ℱ : Filtration ι m0) (μ : Measure Ω) [IsFiniteMeas
 
 theorem martingaleConstFun [OrderBot ι] (ℱ : Filtration ι m0) (μ : Measure Ω) [IsFiniteMeasure μ] {f : Ω → E}
     (hf : strongly_measurable[ℱ ⊥] f) (hfint : Integrable f μ) : Martingale (fun _ => f) ℱ μ := by
-  refine' ⟨fun i => hf.mono $ ℱ.mono bot_le, fun i j hij => _⟩
-  rw [condexp_of_strongly_measurable (ℱ.le _) (hf.mono $ ℱ.mono bot_le) hfint]
+  refine' ⟨fun i => hf.mono <| ℱ.mono bot_le, fun i j hij => _⟩
+  rw [condexp_of_strongly_measurable (ℱ.le _) (hf.mono <| ℱ.mono bot_le) hfint]
   infer_instance
 #align measure_theory.martingale_const_fun MeasureTheory.martingaleConstFun
 
@@ -307,9 +307,9 @@ theorem submartingaleOfSetIntegralLe [IsFiniteMeasure μ] {f : ι → Ω → ℝ
     rwa [← sub_nonneg]
   refine'
     ae_nonneg_of_forall_set_integral_nonneg
-      ((integrable_condexp.sub (hint i)).trim _ (strongly_measurable_condexp.sub $ hadp i)) fun s hs h's => _
+      ((integrable_condexp.sub (hint i)).trim _ (strongly_measurable_condexp.sub <| hadp i)) fun s hs h's => _
   specialize hf i j hij s hs
-  rwa [← set_integral_trim _ (strongly_measurable_condexp.sub $ hadp i) hs,
+  rwa [← set_integral_trim _ (strongly_measurable_condexp.sub <| hadp i) hs,
     integral_sub' integrable_condexp.integrable_on (hint i).IntegrableOn, sub_nonneg,
     set_integral_condexp (ℱ.le i) (hint j) hs]
 #align measure_theory.submartingale_of_set_integral_le MeasureTheory.submartingaleOfSetIntegralLe
@@ -324,7 +324,7 @@ theorem submartingaleOfCondexpSubNonneg [IsFiniteMeasure μ] {f : ι → Ω → 
 
 theorem Submartingale.condexp_sub_nonneg {f : ι → Ω → ℝ} (hf : Submartingale f ℱ μ) {i j : ι} (hij : i ≤ j) :
     0 ≤ᵐ[μ] μ[f j - f i|ℱ i] := by
-  by_cases h:sigma_finite (μ.trim (ℱ.le i))
+  by_cases h : sigma_finite (μ.trim (ℱ.le i))
   swap
   · rw [condexp_of_not_sigma_finite (ℱ.le i) h]
     
@@ -374,7 +374,7 @@ theorem smulNonpos {f : ι → Ω → F} {c : ℝ} (hc : c ≤ 0) (hf : Supermar
     (by
       ext (i x)
       simp : - -c • f = -(-c • f))]
-  exact (hf.smul_nonneg $ neg_nonneg.2 hc).neg
+  exact (hf.smul_nonneg <| neg_nonneg.2 hc).neg
 #align measure_theory.supermartingale.smul_nonpos MeasureTheory.Supermartingale.smulNonpos
 
 end
@@ -400,7 +400,7 @@ theorem smulNonpos {f : ι → Ω → F} {c : ℝ} (hc : c ≤ 0) (hf : Submarti
     (by
       ext (i x)
       simp : - -c • f = -(-c • f))]
-  exact (hf.smul_nonneg $ neg_nonneg.2 hc).neg
+  exact (hf.smul_nonneg <| neg_nonneg.2 hc).neg
 #align measure_theory.submartingale.smul_nonpos MeasureTheory.Submartingale.smulNonpos
 
 end
@@ -437,8 +437,8 @@ theorem martingaleOfSetIntegralEqSucc [IsFiniteMeasure μ] {f : ℕ → Ω → �
     (hf : ∀ i, ∀ s : Set Ω, measurable_set[𝒢 i] s → (∫ ω in s, f i ω ∂μ) = ∫ ω in s, f (i + 1) ω ∂μ) :
     Martingale f 𝒢 μ :=
   martingale_iff.2
-    ⟨supermartingaleOfSetIntegralSuccLe hadp hint $ fun i s hs => (hf i s hs).ge,
-      submartingaleOfSetIntegralLeSucc hadp hint $ fun i s hs => (hf i s hs).le⟩
+    ⟨(supermartingaleOfSetIntegralSuccLe hadp hint) fun i s hs => (hf i s hs).ge,
+      (submartingaleOfSetIntegralLeSucc hadp hint) fun i s hs => (hf i s hs).le⟩
 #align measure_theory.martingale_of_set_integral_eq_succ MeasureTheory.martingaleOfSetIntegralEqSucc
 
 theorem submartingaleNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f) (hint : ∀ i, Integrable (f i) μ)
@@ -454,14 +454,14 @@ theorem supermartingaleNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp :
     (hf : ∀ i, μ[f (i + 1)|𝒢 i] ≤ᵐ[μ] f i) : Supermartingale f 𝒢 μ := by
   rw [← neg_neg f]
   refine'
-    ((submartingale_nat hadp.neg fun i => (hint i).neg) $ fun i => eventually_le.trans _ (condexp_neg _).symm.le).neg
+    ((submartingale_nat hadp.neg fun i => (hint i).neg) fun i => eventually_le.trans _ (condexp_neg _).symm.le).neg
   filter_upwards [hf i] with x hx using neg_le_neg hx
 #align measure_theory.supermartingale_nat MeasureTheory.supermartingaleNat
 
 theorem martingaleNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f) (hint : ∀ i, Integrable (f i) μ)
     (hf : ∀ i, f i =ᵐ[μ] μ[f (i + 1)|𝒢 i]) : Martingale f 𝒢 μ :=
   martingale_iff.2
-    ⟨supermartingaleNat hadp hint $ fun i => (hf i).symm.le, submartingaleNat hadp hint $ fun i => (hf i).le⟩
+    ⟨(supermartingaleNat hadp hint) fun i => (hf i).symm.le, (submartingaleNat hadp hint) fun i => (hf i).le⟩
 #align measure_theory.martingale_nat MeasureTheory.martingaleNat
 
 theorem submartingaleOfCondexpSubNonnegNat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
@@ -483,8 +483,8 @@ theorem martingaleOfCondexpSubEqZeroNat [IsFiniteMeasure μ] {f : ℕ → Ω →
     (hint : ∀ i, Integrable (f i) μ) (hf : ∀ i, μ[f (i + 1) - f i|𝒢 i] =ᵐ[μ] 0) : Martingale f 𝒢 μ := by
   refine'
     martingale_iff.2
-      ⟨supermartingale_of_condexp_sub_nonneg_nat hadp hint $ fun i => _,
-        submartingale_of_condexp_sub_nonneg_nat hadp hint $ fun i => (hf i).symm.le⟩
+      ⟨(supermartingale_of_condexp_sub_nonneg_nat hadp hint) fun i => _,
+        (submartingale_of_condexp_sub_nonneg_nat hadp hint) fun i => (hf i).symm.le⟩
   rw [← neg_sub]
   refine' (eventually_eq.trans _ (condexp_neg _).symm).le
   filter_upwards [hf i] with x hx
@@ -501,8 +501,8 @@ theorem Submartingale.zero_le_of_predictable [Preorder E] [SigmaFiniteFiltration
     
   · exact
       ih.trans
-        ((hfmgle.2.1 k (k + 1) k.le_succ).trans_eq $
-          germ.coe_eq.mp $ congr_arg coe $ condexp_of_strongly_measurable (𝒢.le _) (hfadp _) $ hfmgle.integrable _)
+        ((hfmgle.2.1 k (k + 1) k.le_succ).trans_eq <|
+          germ.coe_eq.mp <| congr_arg coe <| condexp_of_strongly_measurable (𝒢.le _) (hfadp _) <| hfmgle.integrable _)
     
 #align measure_theory.submartingale.zero_le_of_predictable MeasureTheory.Submartingale.zero_le_of_predictable
 
@@ -513,8 +513,9 @@ theorem Supermartingale.le_zero_of_predictable [Preorder E] [SigmaFiniteFiltrati
   · rfl
     
   · exact
-      ((germ.coe_eq.mp $
-                  congr_arg coe $ condexp_of_strongly_measurable (𝒢.le _) (hfadp _) $ hfmgle.integrable _).symm.trans_le
+      ((germ.coe_eq.mp <|
+                  congr_arg coe <|
+                    condexp_of_strongly_measurable (𝒢.le _) (hfadp _) <| hfmgle.integrable _).symm.trans_le
             (hfmgle.2.1 k (k + 1) k.le_succ)).trans
         ih
     
@@ -528,7 +529,7 @@ theorem Martingale.eq_zero_of_predictable [SigmaFiniteFiltration μ 𝒢] {f : �
     
   · exact
       ((germ.coe_eq.mp
-                  (congr_arg coe $ condexp_of_strongly_measurable (𝒢.le _) (hfadp _) (hfmgle.integrable _))).symm.trans
+                  (congr_arg coe <| condexp_of_strongly_measurable (𝒢.le _) (hfadp _) (hfmgle.integrable _))).symm.trans
             (hfmgle.2 k (k + 1) k.le_succ)).trans
         ih
     

@@ -3,6 +3,8 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Scott Morrison
 -/
+import Mathbin.Data.Fintype.Prod
+import Mathbin.Data.Fintype.Sigma
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Products
@@ -43,9 +45,9 @@ variable {J : Type w} [SmallCategory J]
 -- We hide the "implementation details" inside a namespace
 namespace HasLimitOfHasProductsOfHasEqualizers
 
-variable {F : J ⥤ C} {c₁ : Fan F.obj} {c₂ : Fan fun f : Σ p : J × J, p.1 ⟶ p.2 => F.obj f.1.2} (s t : c₁.x ⟶ c₂.x)
-  (hs : ∀ f : Σ p : J × J, p.1 ⟶ p.2, s ≫ c₂.π.app ⟨f⟩ = c₁.π.app ⟨f.1.1⟩ ≫ F.map f.2)
-  (ht : ∀ f : Σ p : J × J, p.1 ⟶ p.2, t ≫ c₂.π.app ⟨f⟩ = c₁.π.app ⟨f.1.2⟩) (i : Fork s t)
+variable {F : J ⥤ C} {c₁ : Fan F.obj} {c₂ : Fan fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.2} (s t : c₁.x ⟶ c₂.x)
+  (hs : ∀ f : Σp : J × J, p.1 ⟶ p.2, s ≫ c₂.π.app ⟨f⟩ = c₁.π.app ⟨f.1.1⟩ ≫ F.map f.2)
+  (ht : ∀ f : Σp : J × J, p.1 ⟶ p.2, t ≫ c₂.π.app ⟨f⟩ = c₁.π.app ⟨f.1.2⟩) (i : Fork s t)
 
 include hs ht
 
@@ -98,7 +100,7 @@ we can construct a limit cone for `F`.
 (This assumes the existence of all equalizers, which is technically stronger than needed.)
 -/
 noncomputable def limitConeOfEqualizerAndProduct (F : J ⥤ C) [HasLimit (Discrete.functor F.obj)]
-    [HasLimit (Discrete.functor fun f : Σ p : J × J, p.1 ⟶ p.2 => F.obj f.1.2)] [HasEqualizers C] : LimitCone F where
+    [HasLimit (Discrete.functor fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.2)] [HasEqualizers C] : LimitCone F where
   Cone := _
   IsLimit :=
     buildIsLimit (Pi.lift fun f => limit.π (Discrete.functor F.obj) ⟨_⟩ ≫ F.map f.2)
@@ -111,14 +113,14 @@ noncomputable def limitConeOfEqualizerAndProduct (F : J ⥤ C) [HasLimit (Discre
 (This assumes the existence of all equalizers, which is technically stronger than needed.)
 -/
 theorem has_limit_of_equalizer_and_product (F : J ⥤ C) [HasLimit (Discrete.functor F.obj)]
-    [HasLimit (Discrete.functor fun f : Σ p : J × J, p.1 ⟶ p.2 => F.obj f.1.2)] [HasEqualizers C] : HasLimit F :=
+    [HasLimit (Discrete.functor fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.2)] [HasEqualizers C] : HasLimit F :=
   HasLimit.mk (limitConeOfEqualizerAndProduct F)
 #align
   category_theory.limits.has_limit_of_equalizer_and_product CategoryTheory.Limits.has_limit_of_equalizer_and_product
 
 /-- A limit can be realised as a subobject of a product. -/
 noncomputable def limitSubobjectProduct [HasLimitsOfSize.{w, w} C] (F : J ⥤ C) : limit F ⟶ ∏ fun j => F.obj j :=
-  (limit.isoLimitCone (limitConeOfEqualizerAndProduct F)).Hom ≫ equalizer.ι _ _
+  (limit.isoLimitCone (limitConeOfEqualizerAndProduct F)).hom ≫ equalizer.ι _ _
 #align category_theory.limits.limit_subobject_product CategoryTheory.Limits.limitSubobjectProduct
 
 instance limit_subobject_product_mono [HasLimitsOfSize.{w, w} C] (F : J ⥤ C) : Mono (limitSubobjectProduct F) :=
@@ -150,16 +152,16 @@ noncomputable section
 
 section
 
-variable [HasLimitsOfShape (Discrete J) C] [HasLimitsOfShape (Discrete (Σ p : J × J, p.1 ⟶ p.2)) C] [HasEqualizers C]
+variable [HasLimitsOfShape (Discrete J) C] [HasLimitsOfShape (Discrete (Σp : J × J, p.1 ⟶ p.2)) C] [HasEqualizers C]
 
 variable (G : C ⥤ D) [PreservesLimitsOfShape WalkingParallelPair G] [PreservesLimitsOfShape (Discrete.{w} J) G]
-  [PreservesLimitsOfShape (Discrete.{w} (Σ p : J × J, p.1 ⟶ p.2)) G]
+  [PreservesLimitsOfShape (Discrete.{w} (Σp : J × J, p.1 ⟶ p.2)) G]
 
 /-- If a functor preserves equalizers and the appropriate products, it preserves limits. -/
 def preservesLimitOfPreservesEqualizersAndProduct :
     PreservesLimitsOfShape J G where PreservesLimit K := by
     let P := ∏ K.obj
-    let Q := ∏ fun f : Σ p : J × J, p.fst ⟶ p.snd => K.obj f.1.2
+    let Q := ∏ fun f : Σp : J × J, p.fst ⟶ p.snd => K.obj f.1.2
     let s : P ⟶ Q := pi.lift fun f => limit.π (discrete.functor K.obj) ⟨_⟩ ≫ K.map f.2
     let t : P ⟶ Q := pi.lift fun f => limit.π (discrete.functor K.obj) ⟨f.1.2⟩
     let I := equalizer s t
@@ -251,9 +253,9 @@ We now dualize the above constructions, resorting to copy-paste.
 -- We hide the "implementation details" inside a namespace
 namespace HasColimitOfHasCoproductsOfHasCoequalizers
 
-variable {F : J ⥤ C} {c₁ : Cofan fun f : Σ p : J × J, p.1 ⟶ p.2 => F.obj f.1.1} {c₂ : Cofan F.obj} (s t : c₁.x ⟶ c₂.x)
-  (hs : ∀ f : Σ p : J × J, p.1 ⟶ p.2, c₁.ι.app ⟨f⟩ ≫ s = F.map f.2 ≫ c₂.ι.app ⟨f.1.2⟩)
-  (ht : ∀ f : Σ p : J × J, p.1 ⟶ p.2, c₁.ι.app ⟨f⟩ ≫ t = c₂.ι.app ⟨f.1.1⟩) (i : Cofork s t)
+variable {F : J ⥤ C} {c₁ : Cofan fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.1} {c₂ : Cofan F.obj} (s t : c₁.x ⟶ c₂.x)
+  (hs : ∀ f : Σp : J × J, p.1 ⟶ p.2, c₁.ι.app ⟨f⟩ ≫ s = F.map f.2 ≫ c₂.ι.app ⟨f.1.2⟩)
+  (ht : ∀ f : Σp : J × J, p.1 ⟶ p.2, c₁.ι.app ⟨f⟩ ≫ t = c₂.ι.app ⟨f.1.1⟩) (i : Cofork s t)
 
 include hs ht
 
@@ -307,7 +309,7 @@ we can construct a colimit cocone for `F`.
 (This assumes the existence of all coequalizers, which is technically stronger than needed.)
 -/
 noncomputable def colimitCoconeOfCoequalizerAndCoproduct (F : J ⥤ C) [HasColimit (Discrete.functor F.obj)]
-    [HasColimit (Discrete.functor fun f : Σ p : J × J, p.1 ⟶ p.2 => F.obj f.1.1)] [HasCoequalizers C] :
+    [HasColimit (Discrete.functor fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.1)] [HasCoequalizers C] :
     ColimitCocone F where
   Cocone := _
   IsColimit :=
@@ -322,7 +324,7 @@ we know a colimit of `F` exists.
 (This assumes the existence of all coequalizers, which is technically stronger than needed.)
 -/
 theorem has_colimit_of_coequalizer_and_coproduct (F : J ⥤ C) [HasColimit (Discrete.functor F.obj)]
-    [HasColimit (Discrete.functor fun f : Σ p : J × J, p.1 ⟶ p.2 => F.obj f.1.1)] [HasCoequalizers C] : HasColimit F :=
+    [HasColimit (Discrete.functor fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.1)] [HasCoequalizers C] : HasColimit F :=
   HasColimit.mk (colimitCoconeOfCoequalizerAndCoproduct F)
 #align
   category_theory.limits.has_colimit_of_coequalizer_and_coproduct CategoryTheory.Limits.has_colimit_of_coequalizer_and_coproduct
@@ -361,17 +363,17 @@ noncomputable section
 
 section
 
-variable [HasColimitsOfShape (Discrete.{w} J) C] [HasColimitsOfShape (Discrete.{w} (Σ p : J × J, p.1 ⟶ p.2)) C]
+variable [HasColimitsOfShape (Discrete.{w} J) C] [HasColimitsOfShape (Discrete.{w} (Σp : J × J, p.1 ⟶ p.2)) C]
   [HasCoequalizers C]
 
 variable (G : C ⥤ D) [PreservesColimitsOfShape WalkingParallelPair G] [PreservesColimitsOfShape (Discrete.{w} J) G]
-  [PreservesColimitsOfShape (Discrete.{w} (Σ p : J × J, p.1 ⟶ p.2)) G]
+  [PreservesColimitsOfShape (Discrete.{w} (Σp : J × J, p.1 ⟶ p.2)) G]
 
 /-- If a functor preserves coequalizers and the appropriate coproducts, it preserves colimits. -/
 def preservesColimitOfPreservesCoequalizersAndCoproduct :
     PreservesColimitsOfShape J G where PreservesColimit K := by
     let P := ∐ K.obj
-    let Q := ∐ fun f : Σ p : J × J, p.fst ⟶ p.snd => K.obj f.1.1
+    let Q := ∐ fun f : Σp : J × J, p.fst ⟶ p.snd => K.obj f.1.1
     let s : Q ⟶ P := sigma.desc fun f => K.map f.2 ≫ colimit.ι (discrete.functor K.obj) ⟨_⟩
     let t : Q ⟶ P := sigma.desc fun f => colimit.ι (discrete.functor K.obj) ⟨f.1.1⟩
     let I := coequalizer s t

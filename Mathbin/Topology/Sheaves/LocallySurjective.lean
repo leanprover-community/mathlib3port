@@ -61,7 +61,7 @@ def IsLocallySurjective (T : ℱ ⟶ 𝒢) :=
 #align Top.presheaf.is_locally_surjective TopCat.Presheaf.IsLocallySurjective
 
 theorem is_locally_surjective_iff (T : ℱ ⟶ 𝒢) :
-    IsLocallySurjective T ↔ ∀ (U t), ∀ x ∈ U, ∃ (V) (ι : V ⟶ U), (∃ s, T.app _ s = t |_ₕ ι) ∧ x ∈ V :=
+    IsLocallySurjective T ↔ ∀ (U t), ∀ x ∈ U, ∃ (V : _)(ι : V ⟶ U), (∃ s, T.app _ s = t |_ₕ ι) ∧ x ∈ V :=
   Iff.rfl
 #align Top.presheaf.is_locally_surjective_iff TopCat.Presheaf.is_locally_surjective_iff
 

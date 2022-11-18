@@ -84,8 +84,8 @@ section PartialOrder
 variable [PartialOrder α] [Zero α] [LocallyFiniteOrder α] (f g : ι →₀ α)
 
 instance : LocallyFiniteOrder (ι →₀ α) :=
-  LocallyFiniteOrder.ofIcc (ι →₀ α) (fun f g => (f.support ∪ g.support).Finsupp $ f.rangeIcc g) fun f g x => by
-    refine' (mem_finsupp_iff_of_support_subset $ Finset.subset_of_eq $ range_Icc_support _ _).trans _
+  LocallyFiniteOrder.ofIcc (ι →₀ α) (fun f g => (f.support ∪ g.support).Finsupp <| f.rangeIcc g) fun f g x => by
+    refine' (mem_finsupp_iff_of_support_subset <| Finset.subset_of_eq <| range_Icc_support _ _).trans _
     simp_rw [mem_range_Icc_apply_iff]
     exact forall_and
 

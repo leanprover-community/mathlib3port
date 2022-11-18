@@ -3,9 +3,8 @@ Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathbin.Data.Finset.Basic
-import Mathbin.Data.Set.Pairwise
 import Mathbin.Logic.Encodable.Basic
+import Mathbin.Logic.Pairwise
 
 /-!
 # Lattice operations on encodable types

@@ -3,7 +3,6 @@ Copyright (c) 2022 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.RingTheory.Localization.Integral
 import Mathbin.RingTheory.Localization.AtPrime
 import Mathbin.Order.Minimal
 
@@ -60,13 +59,13 @@ theorem Ideal.exists_minimal_primes_le [J.IsPrime] (e : I ≤ J) : ∃ p ∈ I.m
     
   rintro (c : Set (Ideal R)) hc hc' J' hJ'
   refine' ⟨OrderDual.toDual (Inf c), ⟨Ideal.Inf_is_prime_of_is_chain ⟨J', hJ'⟩ hc'.symm fun x hx => (hc hx).1, _⟩, _⟩
-  · rw [OrderDual.of_dual_to_dual]
+  · rw [OrderDual.ofDual_toDual]
     convert le_Inf _
     intro x hx
     exact (hc hx).2
     
   · rintro z hz
-    rw [OrderDual.le_to_dual]
+    rw [OrderDual.le_toDual]
     exact Inf_le hz
     
 #align ideal.exists_minimal_primes_le Ideal.exists_minimal_primes_le
@@ -104,7 +103,7 @@ theorem Ideal.exists_comap_eq_of_mem_minimal_primes_of_injective {f : R →+* S}
     refine' ⟨⟨1, 0, _⟩⟩
     convert
       (IsLocalization.map_injective_of_injective p.prime_compl (Localization.AtPrime p)
-            (Localization $ p.prime_compl.map f) hf).Ne
+            (Localization <| p.prime_compl.map f) hf).Ne
         one_ne_zero
     · rw [map_one]
       
@@ -112,7 +111,7 @@ theorem Ideal.exists_comap_eq_of_mem_minimal_primes_of_injective {f : R →+* S}
       
   obtain ⟨M, hM⟩ := Ideal.exists_maximal (Localization (Submonoid.map f p.prime_compl))
   skip
-  refine' ⟨M.comap (algebraMap S $ Localization (Submonoid.map f p.prime_compl)), inferInstance, _⟩
+  refine' ⟨M.comap (algebraMap S <| Localization (Submonoid.map f p.prime_compl)), inferInstance, _⟩
   rw [Ideal.comap_comap, ←
     @IsLocalization.map_comp _ _ _ _ Localization.isLocalization _ p.prime_compl.le_comap_map _
       Localization.isLocalization,

@@ -62,11 +62,11 @@ theorem Valuation.inversion_estimate {x y : K} {γ : Γ₀ˣ} (y_ne : y ≠ 0) (
       show x⁻¹ * x = 1 from inv_mul_cancel x_ne, mul_one, one_mul]
   calc
     v (x⁻¹ - y⁻¹) = v (x⁻¹ * (y - x) * y⁻¹) := by rw [decomp]
-    _ = v x⁻¹ * (v $ y - x) * v y⁻¹ := by repeat' rw [Valuation.map_mul]
-    _ = (v x)⁻¹ * (v $ y - x) * (v y)⁻¹ := by rw [map_inv₀, map_inv₀]
-    _ = (v $ y - x) * (v y * v y)⁻¹ := by rw [mul_assoc, mul_comm, key, mul_assoc, mul_inv_rev]
-    _ = (v $ y - x) * (v y * v y)⁻¹ := rfl
-    _ = (v $ x - y) * (v y * v y)⁻¹ := by rw [Valuation.map_sub_swap]
+    _ = v x⁻¹ * (v <| y - x) * v y⁻¹ := by repeat' rw [Valuation.map_mul]
+    _ = (v x)⁻¹ * (v <| y - x) * (v y)⁻¹ := by rw [map_inv₀, map_inv₀]
+    _ = (v <| y - x) * (v y * v y)⁻¹ := by rw [mul_assoc, mul_comm, key, mul_assoc, mul_inv_rev]
+    _ = (v <| y - x) * (v y * v y)⁻¹ := rfl
+    _ = (v <| x - y) * (v y * v y)⁻¹ := by rw [Valuation.map_sub_swap]
     _ < γ := hyp1'
     
 #align valuation.inversion_estimate Valuation.inversion_estimate
@@ -85,7 +85,7 @@ instance (priority := 100) Valued.topologicalDivisionRing [Valued K Γ₀] : Top
       clear s_in
       rw [mem_map, Valued.mem_nhds]
       change ∃ γ : Γ₀ˣ, { y : K | (v (y - x) : Γ₀) < γ } ⊆ { x : K | x⁻¹ ∈ s }
-      have vx_ne := (Valuation.ne_zero_iff $ v).mpr x_ne
+      have vx_ne := (Valuation.ne_zero_iff <| v).mpr x_ne
       let γ' := Units.mk0 _ vx_ne
       use min (γ * (γ' * γ')) γ'
       intro y y_in
@@ -102,7 +102,7 @@ instance (priority := 100) ValuedRing.separated [Valued K Γ₀] : SeparatedSpac
   intro x x_ne
   refine' ⟨{ k | v k < v x }, _, fun h => lt_irrefl _ h⟩
   rw [Valued.mem_nhds]
-  have vx_ne := (Valuation.ne_zero_iff $ v).mpr x_ne
+  have vx_ne := (Valuation.ne_zero_iff <| v).mpr x_ne
   let γ' := Units.mk0 _ vx_ne
   exact ⟨γ', fun y hy => by simpa using hy⟩
 #align valued_ring.separated ValuedRing.separated
@@ -150,7 +150,7 @@ instance (priority := 100) completable : CompletableTopField K :=
   { ValuedRing.separated with
     nice := by
       rintro F hF h0
-      have : ∃ (γ₀ : Γ₀ˣ) (M ∈ F), ∀ x ∈ M, (γ₀ : Γ₀) ≤ v x := by
+      have : ∃ γ₀ : Γ₀ˣ, ∃ M ∈ F, ∀ x ∈ M, (γ₀ : Γ₀) ≤ v x := by
         rcases filter.inf_eq_bot_iff.mp h0 with ⟨U, U_in, M, M_in, H⟩
         rcases valued.mem_nhds_zero.mp U_in with ⟨γ₀, hU⟩
         exists γ₀, M, M_in
@@ -237,7 +237,7 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
         convert continuous_at_inv₀ (zero_ne_one.symm : 1 ≠ (0 : hat K))
         exact inv_one.symm
       rcases tendsto_prod_self_iff.mp this V V_in with ⟨U, U_in, hU⟩
-      let hatKstar := ({0}ᶜ : Set $ hat K)
+      let hatKstar := ({0}ᶜ : Set <| hat K)
       have : hatKstar ∈ 𝓝 (1 : hat K) := compl_singleton_mem_nhds zero_ne_one.symm
       use U ∩ hatKstar, Filter.inter_mem U_in this
       constructor
@@ -260,7 +260,7 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
       rw [image_eq_preimage_of_inverse l r]
       rw [← mul_inv_cancel h] at V'_in
       exact c.continuous_at V'_in
-    have : ∃ (z₀ : K) (y₀ ∈ V'), coe z₀ = y₀ * x₀ ∧ z₀ ≠ 0 := by
+    have : ∃ z₀ : K, ∃ y₀ ∈ V', coe z₀ = y₀ * x₀ ∧ z₀ ≠ 0 := by
       rcases completion.dense_range_coe.mem_nhds nhds_right with ⟨z₀, y₀, y₀_in, H : y₀ * x₀ = z₀⟩
       refine' ⟨z₀, y₀, y₀_in, ⟨H.symm, _⟩⟩
       rintro rfl
@@ -318,8 +318,8 @@ noncomputable def extensionValuation : Valuation (hat K) Γ₀ where
     apply completion.induction_on₂ x y
     · have cont : Continuous (Valued.extension : hat K → Γ₀) := Valued.continuous_extension
       exact
-        (isClosedLe (cont.comp continuous_add) $ cont.comp continuous_fst).union
-          (isClosedLe (cont.comp continuous_add) $ cont.comp continuous_snd)
+        (isClosedLe (cont.comp continuous_add) <| cont.comp continuous_fst).union
+          (isClosedLe (cont.comp continuous_add) <| cont.comp continuous_snd)
       
     · intro x y
       dsimp

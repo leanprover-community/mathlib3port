@@ -3,8 +3,8 @@ Copyright (c) 2022 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.MeasureTheory.Measure.MeasureSpace
 import Mathbin.Analysis.SpecialFunctions.Log.Base
+import Mathbin.MeasureTheory.Measure.MeasureSpaceDef
 
 /-!
 # Doubling measures
@@ -29,7 +29,7 @@ open Set Filter Metric MeasureTheory TopologicalSpace
 
 open Nnreal TopologicalSpace
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`exists_measure_closed_ball_le_mul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`exists_measure_closed_ball_le_mul] [] -/
 /-- A measure `μ` is said to be a doubling measure if there exists a constant `C` such that for
 all sufficiently small radii `ε`, and for any centre, the measure of a ball of radius `2 * ε` is
 bounded by `C` times the measure of the concentric ball of radius `ε`.
@@ -51,12 +51,12 @@ variable {α : Type _} [MetricSpace α] [MeasurableSpace α] (μ : Measure α) [
 
 See also `is_doubling_measure.scaling_constant_of`. -/
 def doublingConstant : ℝ≥0 :=
-  Classical.choose $ exists_measure_closed_ball_le_mul μ
+  Classical.choose <| exists_measure_closed_ball_le_mul μ
 #align is_doubling_measure.doubling_constant IsDoublingMeasure.doublingConstant
 
 theorem exists_measure_closed_ball_le_mul' :
     ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (closedBall x (2 * ε)) ≤ doublingConstant μ * μ (closedBall x ε) :=
-  Classical.choose_spec $ exists_measure_closed_ball_le_mul μ
+  Classical.choose_spec <| exists_measure_closed_ball_le_mul μ
 #align is_doubling_measure.exists_measure_closed_ball_le_mul' IsDoublingMeasure.exists_measure_closed_ball_le_mul'
 
 theorem exists_eventually_forall_measure_closed_ball_le_mul (K : ℝ) :
@@ -80,12 +80,12 @@ theorem exists_eventually_forall_measure_closed_ball_le_mul (K : ℝ) :
     simp only [Ennreal.coe_one, one_mul]
     exact
       eventually_mem_nhds_within.mono fun ε hε x t ht =>
-        measure_mono $ closed_ball_subset_closed_ball (by nlinarith [mem_Ioi.mp hε])
+        measure_mono <| closed_ball_subset_closed_ball (by nlinarith [mem_Ioi.mp hε])
     
   · refine'
       ⟨C ^ ⌈Real.logb 2 K⌉₊,
         ((hμ ⌈Real.logb 2 K⌉₊).And eventually_mem_nhds_within).mono fun ε hε x t ht =>
-          le_trans (measure_mono $ closed_ball_subset_closed_ball _) (hε.1 x)⟩
+          le_trans (measure_mono <| closed_ball_subset_closed_ball _) (hε.1 x)⟩
     refine' mul_le_mul_of_nonneg_right (ht.trans _) (mem_Ioi.mp hε.2).le
     conv_lhs => rw [← Real.rpow_logb two_pos (by norm_num) (by linarith : 0 < K)]
     rw [← Real.rpow_nat_cast]
@@ -97,7 +97,7 @@ theorem exists_eventually_forall_measure_closed_ball_le_mul (K : ℝ) :
 /-- A variant of `is_doubling_measure.doubling_constant` which allows for scaling the radius by
 values other than `2`. -/
 def scalingConstantOf (K : ℝ) : ℝ≥0 :=
-  max (Classical.choose $ exists_eventually_forall_measure_closed_ball_le_mul μ K) 1
+  max (Classical.choose <| exists_eventually_forall_measure_closed_ball_le_mul μ K) 1
 #align is_doubling_measure.scaling_constant_of IsDoublingMeasure.scalingConstantOf
 
 theorem eventually_measure_mul_le_scaling_constant_of_mul (K : ℝ) :

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Frédéric Dupuis, Heather Macbeth
 -/
 import Mathbin.Analysis.InnerProductSpace.Basic
+import Mathbin.Analysis.NormedSpace.Banach
+import Mathbin.LinearAlgebra.SesquilinearForm
 
 /-!
 # Symmetric linear maps in an inner product space

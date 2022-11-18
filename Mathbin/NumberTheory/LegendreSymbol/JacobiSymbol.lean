@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
 import Mathbin.NumberTheory.LegendreSymbol.QuadraticReciprocity
-import Mathbin.Data.Zmod.Coprime
 
 /-!
 # The Jacobi Symbol
@@ -120,7 +119,7 @@ theorem mul_right (a : ℤ) (b₁ b₂ : ℕ) [NeZero b₁] [NeZero b₂] : J(a 
 
 /-- The Jacobi symbol takes only the values `0`, `1` and `-1`. -/
 theorem trichotomy (a : ℤ) (b : ℕ) : J(a | b) = 0 ∨ J(a | b) = 1 ∨ J(a | b) = -1 :=
-  ((@SignType.castHom ℤ _ _).toMonoidHom.mrange.copy {0, 1, -1} $ by
+  ((@SignType.castHom ℤ _ _).toMonoidHom.mrange.copy {0, 1, -1} <| by
         rw [Set.pair_comm]
         exact (SignType.range_eq SignType.castHom).symm).list_prod_mem
     (by
@@ -171,26 +170,26 @@ theorem eq_zero_iff {a : ℤ} {b : ℕ} : J(a | b) = 0 ↔ b ≠ 0 ∧ a.gcd b �
     · rw [hb, zero_right] at h
       cases h
       
-    exact ⟨hb, mt jacobiSym.ne_zero $ not_not.2 h⟩, fun ⟨hb, h⟩ => by
+    exact ⟨hb, mt jacobiSym.ne_zero <| not_not.2 h⟩, fun ⟨hb, h⟩ => by
     rw [← neZero_iff] at hb
     exact eq_zero_iff_not_coprime.2 h⟩
 #align jacobi_sym.eq_zero_iff jacobiSym.eq_zero_iff
 
 /-- The symbol `J(0 | b)` vanishes when `b > 1`. -/
 theorem zero_left {b : ℕ} (hb : 1 < b) : J(0 | b) = 0 :=
-  (@eq_zero_iff_not_coprime 0 b ⟨ne_zero_of_lt hb⟩).mpr $ by
+  (@eq_zero_iff_not_coprime 0 b ⟨ne_zero_of_lt hb⟩).mpr <| by
     rw [Int.gcd_zero_left, Int.natAbs_ofNat]
     exact hb.ne'
 #align jacobi_sym.zero_left jacobiSym.zero_left
 
 /-- The symbol `J(a | b)` takes the value `1` or `-1` if `a` and `b` are coprime. -/
 theorem eq_one_or_neg_one {a : ℤ} {b : ℕ} (h : a.gcd b = 1) : J(a | b) = 1 ∨ J(a | b) = -1 :=
-  (trichotomy a b).resolve_left $ jacobiSym.ne_zero h
+  (trichotomy a b).resolve_left <| jacobiSym.ne_zero h
 #align jacobi_sym.eq_one_or_neg_one jacobiSym.eq_one_or_neg_one
 
 /-- We have that `J(a^e | b) = J(a | b)^e`. -/
 theorem pow_left (a : ℤ) (e b : ℕ) : J(a ^ e | b) = J(a | b) ^ e :=
-  Nat.recOn e (by rw [pow_zero, pow_zero, one_left]) $ fun _ ih => by rw [pow_succ, pow_succ, mul_left, ih]
+  (Nat.recOn e (by rw [pow_zero, pow_zero, one_left])) fun _ ih => by rw [pow_succ, pow_succ, mul_left, ih]
 #align jacobi_sym.pow_left jacobiSym.pow_left
 
 /-- We have that `J(a | b^e) = J(a | b)^e`. -/
@@ -217,12 +216,12 @@ theorem sq_one' {a : ℤ} {b : ℕ} (h : a.gcd b = 1) : J(a ^ 2 | b) = 1 := by r
 
 /-- The symbol `J(a | b)` depends only on `a` mod `b`. -/
 theorem mod_left (a : ℤ) (b : ℕ) : J(a | b) = J(a % b | b) :=
-  congr_arg List.prod $
+  congr_arg List.prod <|
     List.pmap_congr _
       (by
         rintro p hp _ _
         conv_rhs =>
-          rw [legendreSym.mod, Int.mod_mod_of_dvd _ (Int.coe_nat_dvd.2 $ dvd_of_mem_factors hp), ← legendreSym.mod])
+          rw [legendreSym.mod, Int.mod_mod_of_dvd _ (Int.coe_nat_dvd.2 <| dvd_of_mem_factors hp), ← legendreSym.mod])
 #align jacobi_sym.mod_left jacobiSym.mod_left
 
 /-- The symbol `J(a | b)` depends only on `a` mod `b`. -/
@@ -253,7 +252,8 @@ theorem nonsquare_iff_jacobi_sym_eq_neg_one {a : ℤ} {p : ℕ} [Fact p.Prime] :
 
 /-- If `p` is prime and `J(a | p) = 1`, then `a` is q square mod `p`. -/
 theorem is_square_of_jacobi_sym_eq_one {a : ℤ} {p : ℕ} [Fact p.Prime] (h : J(a | p) = 1) : IsSquare (a : Zmod p) :=
-  not_not.mp $ mt nonsquare_iff_jacobi_sym_eq_neg_one.mpr $ fun hf => one_ne_zero $ neg_eq_self_iff.mp $ hf.symm.trans h
+  not_not.mp <|
+    (mt nonsquare_iff_jacobi_sym_eq_neg_one.mpr) fun hf => one_ne_zero <| neg_eq_self_iff.mp <| hf.symm.trans h
 #align zmod.is_square_of_jacobi_sym_eq_one Zmod.is_square_of_jacobi_sym_eq_one
 
 end Zmod

@@ -391,17 +391,17 @@ theorem edge_set_top : (⊤ : Subgraph G).edgeSet = G.edgeSet :=
 
 @[simp]
 theorem edge_set_bot : (⊥ : Subgraph G).edgeSet = ∅ :=
-  Set.ext $ Sym2.ind (by simp)
+  Set.ext <| Sym2.ind (by simp)
 #align simple_graph.subgraph.edge_set_bot SimpleGraph.Subgraph.edge_set_bot
 
 @[simp]
 theorem edge_set_inf {H₁ H₂ : Subgraph G} : (H₁ ⊓ H₂).edgeSet = H₁.edgeSet ∩ H₂.edgeSet :=
-  Set.ext $ Sym2.ind (by simp)
+  Set.ext <| Sym2.ind (by simp)
 #align simple_graph.subgraph.edge_set_inf SimpleGraph.Subgraph.edge_set_inf
 
 @[simp]
 theorem edge_set_sup {H₁ H₂ : Subgraph G} : (H₁ ⊔ H₂).edgeSet = H₁.edgeSet ∪ H₂.edgeSet :=
-  Set.ext $ Sym2.ind (by simp)
+  Set.ext <| Sym2.ind (by simp)
 #align simple_graph.subgraph.edge_set_sup SimpleGraph.Subgraph.edge_set_sup
 
 @[simp]
@@ -461,7 +461,7 @@ theorem edge_set_mono {H₁ H₂ : Subgraph G} (h : H₁ ≤ H₂) : H₁.edgeSe
 #align simple_graph.subgraph.edge_set_mono SimpleGraph.Subgraph.edge_set_mono
 
 theorem _root_.disjoint.edge_set {H₁ H₂ : Subgraph G} (h : Disjoint H₁ H₂) : Disjoint H₁.edgeSet H₂.edgeSet :=
-  disjoint_iff_inf_le.mpr $ by simpa using edge_set_mono h.le_bot
+  disjoint_iff_inf_le.mpr <| by simpa using edge_set_mono h.le_bot
 #align simple_graph.subgraph._root_.disjoint.edge_set simple_graph.subgraph._root_.disjoint.edge_set
 
 /-- Graph homomorphisms induce a covariant function on subgraphs. -/

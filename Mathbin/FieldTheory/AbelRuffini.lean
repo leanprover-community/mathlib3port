@@ -88,7 +88,7 @@ theorem gal_is_solvable_tower (p q : F[X]) (hpq : p.Splits (algebraMap F q.Split
 section GalXPowSubC
 
 theorem gal_X_pow_sub_one_is_solvable (n : ℕ) : IsSolvable (X ^ n - 1 : F[X]).Gal := by
-  by_cases hn:n = 0
+  by_cases hn : n = 0
   · rw [hn, pow_zero, sub_self]
     exact gal_zero_is_solvable
     
@@ -115,13 +115,13 @@ theorem gal_X_pow_sub_one_is_solvable (n : ℕ) : IsSolvable (X ^ n - 1 : F[X]).
 
 theorem gal_X_pow_sub_C_is_solvable_aux (n : ℕ) (a : F) (h : (X ^ n - 1 : F[X]).Splits (RingHom.id F)) :
     IsSolvable (X ^ n - c a).Gal := by
-  by_cases ha:a = 0
+  by_cases ha : a = 0
   · rw [ha, C_0, sub_zero]
     exact gal_X_pow_is_solvable n
     
   have ha' : algebraMap F (X ^ n - C a).SplittingField a ≠ 0 :=
     mt ((injective_iff_map_eq_zero _).mp (RingHom.injective _) a) ha
-  by_cases hn:n = 0
+  by_cases hn : n = 0
   · rw [hn, pow_zero, ← C_1, ← C_sub]
     exact gal_C_is_solvable (1 - a)
     
@@ -158,7 +158,7 @@ theorem gal_X_pow_sub_C_is_solvable_aux (n : ℕ) (a : F) (h : (X ^ n - 1 : F[X]
 theorem splitsXPowSubOneOfXPowSubC {F : Type _} [Field F] {E : Type _} [Field E] (i : F →+* E) (n : ℕ) {a : F}
     (ha : a ≠ 0) (h : (X ^ n - c a).Splits i) : (X ^ n - 1).Splits i := by
   have ha' : i a ≠ 0 := mt ((injective_iff_map_eq_zero i).mp i.injective a) ha
-  by_cases hn:n = 0
+  by_cases hn : n = 0
   · rw [hn, pow_zero, sub_self]
     exact splits_zero i
     
@@ -190,7 +190,7 @@ theorem splitsXPowSubOneOfXPowSubC {F : Type _} [Field F] {E : Type _} [Field E]
 #align splits_X_pow_sub_one_of_X_pow_sub_C splitsXPowSubOneOfXPowSubC
 
 theorem gal_X_pow_sub_C_is_solvable (n : ℕ) (x : F) : IsSolvable (X ^ n - c x).Gal := by
-  by_cases hx:x = 0
+  by_cases hx : x = 0
   · rw [hx, C_0, sub_zero]
     exact gal_X_pow_is_solvable n
     

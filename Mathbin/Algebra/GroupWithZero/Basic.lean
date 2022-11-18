@@ -90,7 +90,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_ne_zero mul_ne_zeroₓ'. -/
 @[field_simps]
 theorem mul_ne_zero (ha : a ≠ 0) (hb : b ≠ 0) : a * b ≠ 0 :=
-  mt eq_zero_or_eq_zero_of_mul_eq_zero $ not_or.mpr ⟨ha, hb⟩
+  mt eq_zero_or_eq_zero_of_mul_eq_zero <| not_or.mpr ⟨ha, hb⟩
 #align mul_ne_zero mul_ne_zero
 
 end Mul
@@ -146,11 +146,11 @@ section
 variable [MulZeroOneClass M₀] [Nontrivial M₀] {a b : M₀}
 
 theorem left_ne_zero_of_mul_eq_one (h : a * b = 1) : a ≠ 0 :=
-  left_ne_zero_of_mul $ ne_zero_of_eq_one h
+  left_ne_zero_of_mul <| ne_zero_of_eq_one h
 #align left_ne_zero_of_mul_eq_one left_ne_zero_of_mul_eq_one
 
 theorem right_ne_zero_of_mul_eq_one (h : a * b = 1) : b ≠ 0 :=
-  right_ne_zero_of_mul $ ne_zero_of_eq_one h
+  right_ne_zero_of_mul <| ne_zero_of_eq_one h
 #align right_ne_zero_of_mul_eq_one right_ne_zero_of_mul_eq_one
 
 end
@@ -181,12 +181,12 @@ theorem mul_right_inj' (ha : a ≠ 0) : a * b = a * c ↔ b = c :=
 
 @[simp]
 theorem mul_eq_mul_right_iff : a * c = b * c ↔ a = b ∨ c = 0 := by
-  by_cases hc:c = 0 <;> [simp [hc], simp [mul_left_inj', hc]]
+  by_cases hc : c = 0 <;> [simp [hc], simp [mul_left_inj', hc]]
 #align mul_eq_mul_right_iff mul_eq_mul_right_iff
 
 @[simp]
 theorem mul_eq_mul_left_iff : a * b = a * c ↔ b = c ∨ a = 0 := by
-  by_cases ha:a = 0 <;> [simp [ha], simp [mul_right_inj', ha]]
+  by_cases ha : a = 0 <;> [simp [ha], simp [mul_right_inj', ha]]
 #align mul_eq_mul_left_iff mul_eq_mul_left_iff
 
 theorem mul_right_eq_self₀ : a * b = a ↔ b = 1 ∨ a = 0 :=
@@ -206,13 +206,13 @@ theorem mul_left_eq_self₀ : a * b = b ↔ a = 1 ∨ b = 0 :=
 /-- An element of a `cancel_monoid_with_zero` fixed by right multiplication by an element other
 than one must be zero. -/
 theorem eq_zero_of_mul_eq_self_right (h₁ : b ≠ 1) (h₂ : a * b = a) : a = 0 :=
-  Classical.by_contradiction $ fun ha => h₁ $ mul_left_cancel₀ ha $ h₂.symm ▸ (mul_one a).symm
+  Classical.by_contradiction fun ha => h₁ <| mul_left_cancel₀ ha <| h₂.symm ▸ (mul_one a).symm
 #align eq_zero_of_mul_eq_self_right eq_zero_of_mul_eq_self_right
 
 /-- An element of a `cancel_monoid_with_zero` fixed by left multiplication by an element other
 than one must be zero. -/
 theorem eq_zero_of_mul_eq_self_left (h₁ : b ≠ 1) (h₂ : b * a = a) : a = 0 :=
-  Classical.by_contradiction $ fun ha => h₁ $ mul_right_cancel₀ ha $ h₂.symm ▸ (one_mul a).symm
+  Classical.by_contradiction fun ha => h₁ <| mul_right_cancel₀ ha <| h₂.symm ▸ (one_mul a).symm
 #align eq_zero_of_mul_eq_self_left eq_zero_of_mul_eq_self_left
 
 end CancelMonoidWithZero
@@ -281,16 +281,16 @@ private theorem inv_eq_of_mul (h : a * b = 1) : a⁻¹ = b := by
 instance (priority := 100) GroupWithZero.toDivisionMonoid : DivisionMonoid G₀ :=
   { ‹GroupWithZero G₀› with inv := Inv.inv,
     inv_inv := fun a => by
-      by_cases h:a = 0
+      by_cases h : a = 0
       · simp [h]
         
-      · exact left_inv_eq_right_inv (inv_mul_cancel $ inv_ne_zero h) (inv_mul_cancel h)
+      · exact left_inv_eq_right_inv (inv_mul_cancel <| inv_ne_zero h) (inv_mul_cancel h)
         ,
     mul_inv_rev := fun a b => by
-      by_cases ha:a = 0
+      by_cases ha : a = 0
       · simp [ha]
         
-      by_cases hb:b = 0
+      by_cases hb : b = 0
       · simp [hb]
         
       refine' inv_eq_of_mul _
@@ -316,7 +316,7 @@ theorem div_zero (a : G₀) : a / 0 = 0 := by rw [div_eq_mul_inv, inv_zero, mul_
 (whether or not `a` is zero). -/
 @[simp]
 theorem mul_self_mul_inv (a : G₀) : a * a * a⁻¹ = a := by
-  by_cases h:a = 0
+  by_cases h : a = 0
   · rw [h, inv_zero, mul_zero]
     
   · rw [mul_assoc, mul_inv_cancel h, mul_one]
@@ -327,7 +327,7 @@ theorem mul_self_mul_inv (a : G₀) : a * a * a⁻¹ = a := by
 (whether or not `a` is zero). -/
 @[simp]
 theorem mul_inv_mul_self (a : G₀) : a * a⁻¹ * a = a := by
-  by_cases h:a = 0
+  by_cases h : a = 0
   · rw [h, inv_zero, mul_zero]
     
   · rw [mul_inv_cancel h, one_mul]
@@ -338,7 +338,7 @@ theorem mul_inv_mul_self (a : G₀) : a * a⁻¹ * a = a := by
 is zero). -/
 @[simp]
 theorem inv_mul_mul_self (a : G₀) : a⁻¹ * a * a = a := by
-  by_cases h:a = 0
+  by_cases h : a = 0
   · rw [h, inv_zero, mul_zero]
     
   · rw [inv_mul_cancel h, one_mul]
@@ -376,7 +376,7 @@ theorem inv_eq_zero {a : G₀} : a⁻¹ = 0 ↔ a = 0 := by rw [inv_eq_iff_inv_e
 
 @[simp]
 theorem zero_eq_inv {a : G₀} : 0 = a⁻¹ ↔ 0 = a :=
-  eq_comm.trans $ inv_eq_zero.trans eq_comm
+  eq_comm.trans <| inv_eq_zero.trans eq_comm
 #align zero_eq_inv zero_eq_inv
 
 /-- Dividing `a` by the result of dividing `a` by itself results in

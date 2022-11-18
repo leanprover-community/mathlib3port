@@ -111,7 +111,7 @@ theorem derivative_of_nat_degree_zero {p : R[X]} (hp : p.natDegree = 0) : p.deri
 
 @[simp]
 theorem derivative_X : derivative (x : R[X]) = 1 :=
-  (derivative_monomial _ _).trans $ by simp
+  (derivative_monomial _ _).trans <| by simp
 #align polynomial.derivative_X Polynomial.derivative_X
 
 @[simp]
@@ -165,17 +165,17 @@ theorem iterate_derivative_C_mul (a : R) (p : R[X]) (k : ℕ) : (derivative^[k])
 #align polynomial.iterate_derivative_C_mul Polynomial.iterate_derivative_C_mul
 
 theorem of_mem_support_derivative {p : R[X]} {n : ℕ} (h : n ∈ p.derivative.support) : n + 1 ∈ p.support :=
-  mem_support_iff.2 $ fun h1 : p.coeff (n + 1) = 0 =>
-    mem_support_iff.1 h $ show p.derivative.coeff n = 0 by rw [coeff_derivative, h1, zero_mul]
+  mem_support_iff.2 fun h1 : p.coeff (n + 1) = 0 =>
+    mem_support_iff.1 h <| show p.derivative.coeff n = 0 by rw [coeff_derivative, h1, zero_mul]
 #align polynomial.of_mem_support_derivative Polynomial.of_mem_support_derivative
 
 theorem degree_derivative_lt {p : R[X]} (hp : p ≠ 0) : p.derivative.degree < p.degree :=
-  (Finset.sup_lt_iff $ bot_lt_iff_ne_bot.2 $ mt degree_eq_bot.1 hp).2 $ fun n hp =>
-    lt_of_lt_of_le (WithBot.some_lt_some.2 n.lt_succ_self) $ Finset.le_sup $ of_mem_support_derivative hp
+  (Finset.sup_lt_iff <| bot_lt_iff_ne_bot.2 <| mt degree_eq_bot.1 hp).2 fun n hp =>
+    lt_of_lt_of_le (WithBot.some_lt_some.2 n.lt_succ_self) <| Finset.le_sup <| of_mem_support_derivative hp
 #align polynomial.degree_derivative_lt Polynomial.degree_derivative_lt
 
 theorem degree_derivative_le {p : R[X]} : p.derivative.degree ≤ p.degree :=
-  if H : p = 0 then le_of_eq $ by rw [H, derivative_zero] else (degree_derivative_lt H).le
+  if H : p = 0 then le_of_eq <| by rw [H, derivative_zero] else (degree_derivative_lt H).le
 #align polynomial.degree_derivative_le Polynomial.degree_derivative_le
 
 theorem nat_degree_derivative_lt {p : R[X]} (hp : p.natDegree ≠ 0) : p.derivative.natDegree < p.natDegree := by
@@ -189,7 +189,7 @@ theorem nat_degree_derivative_lt {p : R[X]} (hp : p.natDegree ≠ 0) : p.derivat
 #align polynomial.nat_degree_derivative_lt Polynomial.nat_degree_derivative_lt
 
 theorem nat_degree_derivative_le (p : R[X]) : p.derivative.natDegree ≤ p.natDegree - 1 := by
-  by_cases p0:p.nat_degree = 0
+  by_cases p0 : p.nat_degree = 0
   · simp [p0, derivative_of_nat_degree_zero]
     
   · exact Nat.le_pred_of_lt (nat_degree_derivative_lt p0)
@@ -207,16 +207,16 @@ theorem iterate_derivative_eq_zero {p : R[X]} {x : ℕ} (hx : p.natDegree < x) :
   subst h
   obtain ⟨t, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (pos_of_gt hx).ne'
   rw [Function.iterate_succ_apply]
-  by_cases hp:p.nat_degree = 0
+  by_cases hp : p.nat_degree = 0
   · rw [derivative_of_nat_degree_zero hp, iterate_derivative_zero]
     
   have := nat_degree_derivative_lt hp
-  exact ih _ this (this.trans_le $ Nat.le_of_lt_succ hx) rfl
+  exact ih _ this (this.trans_le <| Nat.le_of_lt_succ hx) rfl
 #align polynomial.iterate_derivative_eq_zero Polynomial.iterate_derivative_eq_zero
 
 @[simp]
 theorem iterate_derivative_C {k} (h : 0 < k) : (derivative^[k]) (c a : R[X]) = 0 :=
-  iterate_derivative_eq_zero $ (nat_degree_C _).trans_lt h
+  iterate_derivative_eq_zero <| (nat_degree_C _).trans_lt h
 #align polynomial.iterate_derivative_C Polynomial.iterate_derivative_C
 
 @[simp]
@@ -226,7 +226,7 @@ theorem iterate_derivative_one {k} (h : 0 < k) : (derivative^[k]) (1 : R[X]) = 0
 
 @[simp]
 theorem iterate_derivative_X {k} (h : 1 < k) : (derivative^[k]) (x : R[X]) = 0 :=
-  iterate_derivative_eq_zero $ nat_degree_X_le.trans_lt h
+  iterate_derivative_eq_zero <| nat_degree_X_le.trans_lt h
 #align polynomial.iterate_derivative_X Polynomial.iterate_derivative_X
 
 theorem nat_degree_eq_zero_of_derivative_eq_zero [NoZeroSmulDivisors ℕ R] {f : R[X]} (h : f.derivative = 0) :
@@ -248,7 +248,7 @@ theorem nat_degree_eq_zero_of_derivative_eq_zero [NoZeroSmulDivisors ℕ R] {f :
 #align polynomial.nat_degree_eq_zero_of_derivative_eq_zero Polynomial.nat_degree_eq_zero_of_derivative_eq_zero
 
 theorem eq_C_of_derivative_eq_zero [NoZeroSmulDivisors ℕ R] {f : R[X]} (h : f.derivative = 0) : f = c (f.coeff 0) :=
-  eq_C_of_nat_degree_eq_zero $ nat_degree_eq_zero_of_derivative_eq_zero h
+  eq_C_of_nat_degree_eq_zero <| nat_degree_eq_zero_of_derivative_eq_zero h
 #align polynomial.eq_C_of_derivative_eq_zero Polynomial.eq_C_of_derivative_eq_zero
 
 @[simp]
@@ -277,8 +277,8 @@ theorem derivative_mul {f g : R[X]} : derivative (f * g) = derivative f * g + f 
     _ =
         f.Sum fun n a =>
           g.Sum fun m b => n • (c a * X ^ (n - 1)) * (c b * X ^ m) + c a * X ^ n * m • (c b * X ^ (m - 1)) :=
-      sum_congr rfl $ fun n hn =>
-        sum_congr rfl $ fun m hm => by
+      (sum_congr rfl) fun n hn =>
+        (sum_congr rfl) fun m hm => by
           cases n <;>
             cases m <;>
               simp_rw [add_smul, mul_smul_comm, smul_mul_assoc, X_pow_mul_assoc, ← mul_assoc, ← C_mul, mul_assoc, ←
@@ -451,13 +451,13 @@ section CommSemiring
 variable [CommSemiring R]
 
 theorem derivative_pow_succ (p : R[X]) (n : ℕ) : (p ^ (n + 1)).derivative = (n + 1) * p ^ n * p.derivative :=
-  Nat.recOn n (by rw [pow_one, Nat.cast_zero, zero_add, one_mul, pow_zero, one_mul]) $ fun n ih => by
+  (Nat.recOn n (by rw [pow_one, Nat.cast_zero, zero_add, one_mul, pow_zero, one_mul])) fun n ih => by
     rw [pow_succ', derivative_mul, ih, mul_right_comm, ← add_mul, add_mul (n.succ : R[X]), one_mul, pow_succ',
       mul_assoc, n.cast_succ]
 #align polynomial.derivative_pow_succ Polynomial.derivative_pow_succ
 
 theorem derivative_pow (p : R[X]) (n : ℕ) : (p ^ n).derivative = n * p ^ (n - 1) * p.derivative :=
-  Nat.casesOn n (by rw [pow_zero, derivative_one, Nat.cast_zero, zero_mul, zero_mul]) $ fun n => by
+  (Nat.casesOn n (by rw [pow_zero, derivative_one, Nat.cast_zero, zero_mul, zero_mul])) fun n => by
     rw [p.derivative_pow_succ n, n.succ_sub_one, n.cast_succ]
 #align polynomial.derivative_pow Polynomial.derivative_pow
 
@@ -538,7 +538,7 @@ theorem derivative_prod {s : Multiset ι} {f : ι → R[X]} :
   simp only [Function.comp_apply, Multiset.map_map]
   refine' congr_arg _ (Multiset.map_congr rfl fun j hj => _)
   rw [← mul_assoc, ← Multiset.prod_cons, ← Multiset.map_cons]
-  by_cases hij:i = j
+  by_cases hij : i = j
   · simp [hij, ← Multiset.prod_cons, ← Multiset.map_cons, Multiset.cons_erase hj]
     
   · simp [hij]

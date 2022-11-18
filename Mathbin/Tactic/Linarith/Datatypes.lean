@@ -32,7 +32,7 @@ unsafe def linarith_trace {α} [has_to_tactic_format α] (s : α) : tactic Unit 
 when the `trace.linarith` option is set to true.
 -/
 unsafe def linarith_trace_proofs (s : String := "") (l : List expr) : tactic Unit :=
-  tactic.when_tracing `linarith $ do
+  tactic.when_tracing `linarith <| do
     tactic.trace s
     l tactic.infer_type >>= tactic.trace
 #align linarith.linarith_trace_proofs linarith.linarith_trace_proofs
@@ -54,41 +54,33 @@ def Linexp : Type :=
 
 namespace Linexp
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Add two `linexp`s together componentwise.
 Preserves sorting and uniqueness of the first argument.
 -/
 unsafe def add : Linexp → Linexp → Linexp
   | [], a => a
   | a, [] => a
-  | a@(n1, z1)::t1, b@(n2, z2)::t2 =>
-    if n1 < n2 then b::add (a::t1) t2
+  | a@(n1, z1) :: t1, b@(n2, z2) :: t2 =>
+    if n1 < n2 then b :: add (a :: t1) t2
     else
-      if n2 < n1 then a::add t1 (b::t2)
+      if n2 < n1 then a :: add t1 (b :: t2)
       else
         let sum := z1 + z2
-        if Sum = 0 then add t1 t2 else (n1, Sum)::add t1 t2
+        if Sum = 0 then add t1 t2 else (n1, Sum) :: add t1 t2
 #align linarith.linexp.add linarith.linexp.add
 
 /-- `l.scale c` scales the values in `l` by `c` without modifying the order or keys. -/
 def scale (c : ℤ) (l : Linexp) : Linexp :=
-  if c = 0 then [] else if c = 1 then l else l.map $ fun ⟨n, z⟩ => (n, z * c)
+  if c = 0 then [] else if c = 1 then l else l.map fun ⟨n, z⟩ => (n, z * c)
 #align linarith.linexp.scale Linarith.Linexp.scale
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `l.get n` returns the value in `l` associated with key `n`, if it exists, and `none` otherwise.
 This function assumes that `l` is sorted in decreasing order of the first argument,
 that is, it will return `none` as soon as it finds a key smaller than `n`.
 -/
 def get (n : ℕ) : Linexp → Option ℤ
   | [] => none
-  | (a, b)::t => if a < n then none else if a = n then some b else get t
+  | (a, b) :: t => if a < n then none else if a = n then some b else get t
 #align linarith.linexp.get Linarith.Linexp.get
 
 /-- `l.contains n` is true iff `n` is the first element of a pair in `l`.
@@ -110,15 +102,13 @@ def vars (l : Linexp) : List ℕ :=
   l.map Prod.fst
 #align linarith.linexp.vars Linarith.Linexp.vars
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Defines a lex ordering on `linexp`. This function is performance critical.
 -/
 def cmp : Linexp → Linexp → Ordering
   | [], [] => Ordering.eq
   | [], _ => Ordering.lt
   | _, [] => Ordering.gt
-  | (n1, z1)::t1, (n2, z2)::t2 =>
+  | (n1, z1) :: t1, (n2, z2) :: t2 =>
     if n1 < n2 then Ordering.lt
     else if n2 < n1 then Ordering.gt else if z1 < z2 then Ordering.lt else if z2 < z1 then Ordering.gt else cmp t1 t2
 #align linarith.linexp.cmp Linarith.Linexp.cmp
@@ -313,8 +303,8 @@ tracing the result if `trace.linarith` is on.
 unsafe def global_branching_preprocessor.process (pp : global_branching_preprocessor) (l : List expr) :
     tactic (List branch) := do
   let l ← pp.transform l
-  when (l > 1) $ linarith_trace f! "Preprocessing: {pp} has branched, with branches:"
-  l $ fun l => tactic.set_goals [l.1] >> linarith_trace_proofs (toString f! "Preprocessing: {pp}") l.2
+  when (l > 1) <| linarith_trace f! "Preprocessing: {pp} has branched, with branches:"
+  l fun l => tactic.set_goals [l.1] >> linarith_trace_proofs (toString f! "Preprocessing: {pp}") l.2
   return l
 #align linarith.global_branching_preprocessor.process linarith.global_branching_preprocessor.process
 
@@ -420,7 +410,7 @@ open Tactic
     :=
       do
         let tp ← infer_type h
-          let some ( iq , e ) ← return $ parse_into_comp_and_expr tp
+          let some ( iq , e ) ← return <| parse_into_comp_and_expr tp
           if
             c = 0
             then

@@ -33,14 +33,15 @@ def energy : ℚ :=
 #align finpartition.energy Finpartition.energy
 
 theorem energy_nonneg : 0 ≤ P.energy G :=
-  div_nonneg (Finset.sum_nonneg $ fun _ _ => sq_nonneg _) $ sq_nonneg _
+  div_nonneg (Finset.sum_nonneg fun _ _ => sq_nonneg _) <| sq_nonneg _
 #align finpartition.energy_nonneg Finpartition.energy_nonneg
 
 theorem energy_le_one : P.energy G ≤ 1 :=
-  div_le_of_nonneg_of_le_mul (sq_nonneg _) zero_le_one $
+  div_le_of_nonneg_of_le_mul (sq_nonneg _) zero_le_one <|
     calc
       (∑ uv in P.parts.offDiag, G.edgeDensity uv.1 uv.2 ^ 2) ≤ P.parts.offDiag.card • 1 :=
-        sum_le_card_nsmul _ _ 1 $ fun uv _ => (sq_le_one_iff $ G.edge_density_nonneg _ _).2 $ G.edge_density_le_one _ _
+        (sum_le_card_nsmul _ _ 1) fun uv _ =>
+          (sq_le_one_iff <| G.edge_density_nonneg _ _).2 <| G.edge_density_le_one _ _
       _ = P.parts.offDiag.card := Nat.smul_one_eq_coe _
       _ ≤ _ := by
         rw [off_diag_card, one_mul, ← Nat.cast_pow, Nat.cast_le, sq]

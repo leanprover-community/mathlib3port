@@ -56,12 +56,12 @@ instance : HasSubset (Opens α) where Subset U V := (U : Set α) ⊆ V
 instance : Membership α (Opens α) where Mem a U := a ∈ (U : Set α)
 
 @[simp]
-theorem subset_coe {U V : Opens α} : (U : Set α) ⊆ (V : Set α) = (U ⊆ V) :=
+theorem subset_coe {U V : Opens α} : ((U : Set α) ⊆ (V : Set α)) = (U ⊆ V) :=
   rfl
 #align topological_space.opens.subset_coe TopologicalSpace.Opens.subset_coe
 
 @[simp]
-theorem mem_coe {x : α} {U : Opens α} : x ∈ (U : Set α) = (x ∈ U) :=
+theorem mem_coe {x : α} {U : Opens α} : (x ∈ (U : Set α)) = (x ∈ U) :=
   rfl
 #align topological_space.opens.mem_coe TopologicalSpace.Opens.mem_coe
 
@@ -96,7 +96,7 @@ open OrderDual (ofDual toDual)
 
 /-- The galois coinsertion between sets and opens. -/
 def gi : GaloisCoinsertion Subtype.val (@interior α _) where
-  choice s hs := ⟨s, interior_eq_iff_is_open.mp $ le_antisymm interior_subset hs⟩
+  choice s hs := ⟨s, interior_eq_iff_is_open.mp <| le_antisymm interior_subset hs⟩
   gc := gc
   u_l_le _ := interior_subset
   choice_eq s hs := le_antisymm hs interior_subset
@@ -116,10 +116,10 @@ instance : CompleteLattice (Opens α) :=
     rfl
     (-- inf
     fun U V => ⟨↑U ∩ ↑V, U.2.inter V.2⟩)
-    (funext $ fun U => funext $ fun V => ext (U.2.inter V.2).interior_eq.symm)
+    (funext fun U => funext fun V => ext (U.2.inter V.2).interior_eq.symm)
     (-- Sup
-    fun S => ⟨⋃ s ∈ S, ↑s, is_open_bUnion $ fun s _ => s.2⟩)
-    (funext $ fun S => ext Sup_image.symm)-- Inf
+    fun S => ⟨⋃ s ∈ S, ↑s, is_open_bUnion fun s _ => s.2⟩)
+    (funext fun S => ext Sup_image.symm)-- Inf
     _
     rfl
 
@@ -195,7 +195,7 @@ theorem empty_eq : (∅ : Opens α) = ⊥ :=
   rfl
 #align topological_space.opens.empty_eq TopologicalSpace.Opens.empty_eq
 
-theorem supr_def {ι} (s : ι → Opens α) : (⨆ i, s i) = ⟨⋃ i, s i, is_open_Union $ fun i => (s i).2⟩ := by
+theorem supr_def {ι} (s : ι → Opens α) : (⨆ i, s i) = ⟨⋃ i, s i, is_open_Union fun i => (s i).2⟩ := by
   ext
   simp only [supr, coe_Sup, bUnion_range]
   rfl
@@ -224,7 +224,7 @@ theorem mem_Sup {Us : Set (Opens α)} {x : α} : x ∈ sup Us ↔ ∃ u ∈ Us, 
 
 instance : Frame (Opens α) :=
   { Opens.completeLattice with sup := sup,
-    inf_Sup_le_supr_inf := fun a s => (ext $ by simp only [coe_inf, coe_supr, coe_Sup, Set.inter_Union₂]).le }
+    inf_Sup_le_supr_inf := fun a s => (ext <| by simp only [coe_inf, coe_supr, coe_Sup, Set.inter_Union₂]).le }
 
 theorem open_embedding_of_le {U V : Opens α} (i : U ≤ V) : OpenEmbedding (Set.inclusion i) :=
   { inj := Set.inclusion_injective i, induced := (@induced_compose _ _ _ _ (Set.inclusion i) coe).symm,
@@ -275,7 +275,7 @@ theorem is_basis_iff_nbhd {B : Set (Opens α)} : IsBasis B ↔ ∀ {U : Opens α
 #align topological_space.opens.is_basis_iff_nbhd TopologicalSpace.Opens.is_basis_iff_nbhd
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
-theorem is_basis_iff_cover {B : Set (Opens α)} : IsBasis B ↔ ∀ U : Opens α, ∃ (Us) (_ : Us ⊆ B), U = sup Us := by
+theorem is_basis_iff_cover {B : Set (Opens α)} : IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _)(_ : Us ⊆ B), U = sup Us := by
   constructor
   · intro hB U
     refine' ⟨{ V : opens α | V ∈ B ∧ V ⊆ U }, fun U hU => hU.left, _⟩
@@ -330,14 +330,14 @@ theorem is_compact_element_iff (s : Opens α) : CompleteLattice.IsCompactElement
 def comap (f : C(α, β)) : FrameHom (Opens β) (Opens α) where
   toFun s := ⟨f ⁻¹' s, s.2.Preimage f.Continuous⟩
   map_Sup' s :=
-    ext $ by simp only [coe_Sup, preimage_Union, coe_mk, mem_image, Union_exists, bUnion_and', Union_Union_eq_right]
+    ext <| by simp only [coe_Sup, preimage_Union, coe_mk, mem_image, Union_exists, bUnion_and', Union_Union_eq_right]
   map_inf' a b := rfl
   map_top' := rfl
 #align topological_space.opens.comap TopologicalSpace.Opens.comap
 
 @[simp]
 theorem comap_id : comap (ContinuousMap.id α) = FrameHom.id _ :=
-  FrameHom.ext $ fun a => ext rfl
+  FrameHom.ext fun a => ext rfl
 #align topological_space.opens.comap_id TopologicalSpace.Opens.comap_id
 
 theorem comap_mono (f : C(α, β)) {s t : Opens β} (h : s ≤ t) : comap f s ≤ comap f t :=
@@ -363,9 +363,9 @@ protected theorem comap_comap (g : C(β, γ)) (f : C(α, β)) (U : Opens γ) : c
 #align topological_space.opens.comap_comap TopologicalSpace.Opens.comap_comap
 
 theorem comap_injective [T0Space β] : Injective (comap : C(α, β) → FrameHom (Opens β) (Opens α)) := fun f g h =>
-  ContinuousMap.ext $ fun a =>
-    Inseparable.eq $
-      inseparable_iff_forall_open.2 $ fun s hs =>
+  ContinuousMap.ext fun a =>
+    Inseparable.eq <|
+      inseparable_iff_forall_open.2 fun s hs =>
         have : comap f ⟨s, hs⟩ = comap g ⟨s, hs⟩ := FunLike.congr_fun h ⟨_, hs⟩
         show a ∈ f ⁻¹' s ↔ a ∈ g ⁻¹' s from Set.ext_iff.1 (ext_iff.2 this) a
 #align topological_space.opens.comap_injective TopologicalSpace.Opens.comap_injective

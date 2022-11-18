@@ -50,17 +50,17 @@ theorem subset_ε_closure (S : Set σ) : S ⊆ M.εClosure S :=
 
 @[simp]
 theorem ε_closure_empty : M.εClosure ∅ = ∅ :=
-  eq_empty_of_forall_not_mem $ fun s hs => by induction' hs with t ht _ _ _ _ ih <;> assumption
+  eq_empty_of_forall_not_mem fun s hs => by induction' hs with t ht _ _ _ _ ih <;> assumption
 #align ε_NFA.ε_closure_empty εNFA.ε_closure_empty
 
 @[simp]
 theorem ε_closure_univ : M.εClosure univ = univ :=
-  eq_univ_of_univ_subset $ subset_ε_closure _ _
+  eq_univ_of_univ_subset <| subset_ε_closure _ _
 #align ε_NFA.ε_closure_univ εNFA.ε_closure_univ
 
 /-- `M.step_set S a` is the union of the ε-closure of `M.step s a` for all `s ∈ S`. -/
 def stepSet (S : Set σ) (a : α) : Set σ :=
-  ⋃ s ∈ S, M.εClosure $ M.step s a
+  ⋃ s ∈ S, M.εClosure <| M.step s a
 #align ε_NFA.step_set εNFA.stepSet
 
 variable {M}
@@ -155,9 +155,8 @@ theorem to_NFA_correct : M.toNFA.accepts = M.accepts := by
   rfl
 #align ε_NFA.to_NFA_correct εNFA.to_NFA_correct
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b c) -/
 theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts) (hlen : Fintype.card (Set σ) ≤ List.length x) :
-    ∃ (a) (b) (c),
+    ∃ a b c,
       x = a ++ b ++ c ∧
         a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * Language.star {b} * {c} ≤ M.accepts :=
   by
@@ -193,7 +192,7 @@ theorem to_ε_NFA_eval_from_match (M : NFA α σ) (start : Set σ) : M.toεNFA.e
   rw [eval_from, εNFA.evalFrom, to_ε_NFA_ε_closure]
   congr
   ext (S s)
-  simp only [step_set, εNFA.stepSet, exists_prop, Set.mem_Union, Set.bind_def]
+  simp only [step_set, εNFA.stepSet, exists_prop, Set.mem_Union]
   apply exists_congr
   simp only [and_congr_right_iff]
   intro t ht

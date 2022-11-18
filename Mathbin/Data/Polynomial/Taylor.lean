@@ -5,6 +5,7 @@ Authors: Johan Commelin
 -/
 import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Polynomial.HasseDeriv
+import Mathbin.Data.Polynomial.Degree.Lemmas
 
 /-!
 # Taylor expansions of polynomials

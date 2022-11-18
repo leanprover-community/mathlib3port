@@ -148,9 +148,9 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' (h_meas_f : AeMe
 /-- The product of two independent, integrable, real_valued random variables is integrable. -/
 theorem IndepFun.integrableMul {β : Type _} [MeasurableSpace β] {X Y : Ω → β} [NormedDivisionRing β] [BorelSpace β]
     (hXY : IndepFun X Y μ) (hX : Integrable X μ) (hY : Integrable Y μ) : Integrable (X * Y) μ := by
-  let nX : Ω → Ennreal := fun a => ∥X a∥₊
-  let nY : Ω → Ennreal := fun a => ∥Y a∥₊
-  have hXY' : indep_fun (fun a => ∥X a∥₊) (fun a => ∥Y a∥₊) μ := hXY.comp measurableNnnorm measurableNnnorm
+  let nX : Ω → Ennreal := fun a => ‖X a‖₊
+  let nY : Ω → Ennreal := fun a => ‖Y a‖₊
+  have hXY' : indep_fun (fun a => ‖X a‖₊) (fun a => ‖Y a‖₊) μ := hXY.comp measurableNnnorm measurableNnnorm
   have hXY'' : indep_fun nX nY μ := hXY'.comp measurableCoeNnrealEnnreal measurableCoeNnrealEnnreal
   have hnX : AeMeasurable nX μ := hX.1.AeMeasurable.nnnorm.coeNnrealEnnreal
   have hnY : AeMeasurable nY μ := hY.1.AeMeasurable.nnnorm.coeNnrealEnnreal
@@ -167,17 +167,17 @@ theorem IndepFun.integrableLeftOfIntegrableMul {β : Type _} [MeasurableSpace β
     [BorelSpace β] (hXY : IndepFun X Y μ) (h'XY : Integrable (X * Y) μ) (hX : AeStronglyMeasurable X μ)
     (hY : AeStronglyMeasurable Y μ) (h'Y : ¬Y =ᵐ[μ] 0) : Integrable X μ := by
   refine' ⟨hX, _⟩
-  have I : (∫⁻ ω, ∥Y ω∥₊ ∂μ) ≠ 0 := by
+  have I : (∫⁻ ω, ‖Y ω‖₊ ∂μ) ≠ 0 := by
     intro H
-    have I : (fun ω => ↑∥Y ω∥₊) =ᵐ[μ] 0 := (lintegral_eq_zero_iff' hY.ennnorm).1 H
+    have I : (fun ω => ↑‖Y ω‖₊) =ᵐ[μ] 0 := (lintegral_eq_zero_iff' hY.ennnorm).1 H
     apply h'Y
     filter_upwards [I] with ω hω
     simpa using hω
   apply lt_top_iff_ne_top.2 fun H => _
-  have J : indep_fun (fun ω => ↑∥X ω∥₊) (fun ω => ↑∥Y ω∥₊) μ := by
-    have M : Measurable fun x : β => (∥x∥₊ : ℝ≥0∞) := measurable_nnnorm.coe_nnreal_ennreal
+  have J : indep_fun (fun ω => ↑‖X ω‖₊) (fun ω => ↑‖Y ω‖₊) μ := by
+    have M : Measurable fun x : β => (‖x‖₊ : ℝ≥0∞) := measurable_nnnorm.coe_nnreal_ennreal
     apply indep_fun.comp hXY M M
-  have A : (∫⁻ ω, ∥X ω * Y ω∥₊ ∂μ) < ∞ := h'XY.2
+  have A : (∫⁻ ω, ‖X ω * Y ω‖₊ ∂μ) < ∞ := h'XY.2
   simp only [nnnorm_mul, Ennreal.coe_mul] at A
   rw [lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' hX.ennnorm hY.ennnorm J, H] at A
   simpa [Ennreal.top_mul, I] using A
@@ -190,17 +190,17 @@ theorem IndepFun.integrableRightOfIntegrableMul {β : Type _} [MeasurableSpace �
     [BorelSpace β] (hXY : IndepFun X Y μ) (h'XY : Integrable (X * Y) μ) (hX : AeStronglyMeasurable X μ)
     (hY : AeStronglyMeasurable Y μ) (h'X : ¬X =ᵐ[μ] 0) : Integrable Y μ := by
   refine' ⟨hY, _⟩
-  have I : (∫⁻ ω, ∥X ω∥₊ ∂μ) ≠ 0 := by
+  have I : (∫⁻ ω, ‖X ω‖₊ ∂μ) ≠ 0 := by
     intro H
-    have I : (fun ω => ↑∥X ω∥₊) =ᵐ[μ] 0 := (lintegral_eq_zero_iff' hX.ennnorm).1 H
+    have I : (fun ω => ↑‖X ω‖₊) =ᵐ[μ] 0 := (lintegral_eq_zero_iff' hX.ennnorm).1 H
     apply h'X
     filter_upwards [I] with ω hω
     simpa using hω
   apply lt_top_iff_ne_top.2 fun H => _
-  have J : indep_fun (fun ω => ↑∥X ω∥₊) (fun ω => ↑∥Y ω∥₊) μ := by
-    have M : Measurable fun x : β => (∥x∥₊ : ℝ≥0∞) := measurable_nnnorm.coe_nnreal_ennreal
+  have J : indep_fun (fun ω => ↑‖X ω‖₊) (fun ω => ↑‖Y ω‖₊) μ := by
+    have M : Measurable fun x : β => (‖x‖₊ : ℝ≥0∞) := measurable_nnnorm.coe_nnreal_ennreal
     apply indep_fun.comp hXY M M
-  have A : (∫⁻ ω, ∥X ω * Y ω∥₊ ∂μ) < ∞ := h'XY.2
+  have A : (∫⁻ ω, ‖X ω * Y ω‖₊ ∂μ) < ∞ := h'XY.2
   simp only [nnnorm_mul, Ennreal.coe_mul] at A
   rw [lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' hX.ennnorm hY.ennnorm J, H] at A
   simpa [Ennreal.top_mul, I] using A
@@ -275,21 +275,21 @@ theorem IndepFun.integral_mul_of_integrable (hXY : IndepFun X Y μ) (hX : Integr
   variables is the product of their integrals. -/
 theorem IndepFun.integral_mul (hXY : IndepFun X Y μ) (hX : AeStronglyMeasurable X μ) (hY : AeStronglyMeasurable Y μ) :
     integral μ (X * Y) = integral μ X * integral μ Y := by
-  by_cases h'X:X =ᵐ[μ] 0
+  by_cases h'X : X =ᵐ[μ] 0
   · have h' : X * Y =ᵐ[μ] 0 := by
       filter_upwards [h'X] with ω hω
       simp [hω]
     simp only [integral_congr_ae h'X, integral_congr_ae h', Pi.zero_apply, integral_const, Algebra.id.smul_eq_mul,
       mul_zero, zero_mul]
     
-  by_cases h'Y:Y =ᵐ[μ] 0
+  by_cases h'Y : Y =ᵐ[μ] 0
   · have h' : X * Y =ᵐ[μ] 0 := by
       filter_upwards [h'Y] with ω hω
       simp [hω]
     simp only [integral_congr_ae h'Y, integral_congr_ae h', Pi.zero_apply, integral_const, Algebra.id.smul_eq_mul,
       mul_zero, zero_mul]
     
-  by_cases h:integrable (X * Y) μ
+  by_cases h : integrable (X * Y) μ
   · have HX : integrable X μ := hXY.integrable_left_of_integrable_mul h hX hY h'Y
     have HY : integrable Y μ := hXY.integrable_right_of_integrable_mul h hX hY h'X
     exact hXY.integral_mul_of_integrable HX HY

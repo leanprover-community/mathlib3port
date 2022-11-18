@@ -224,11 +224,11 @@ theorem length_sublists (l : List α) : length (sublists l) = 2 ^ length l := by
 #align list.length_sublists List.length_sublists
 
 theorem map_ret_sublist_sublists (l : List α) : map List.ret l <+ sublists l :=
-  reverseRecOn l (nil_sublist _) $ fun l a IH => by
+  (reverseRecOn l (nil_sublist _)) fun l a IH => by
     simp only [map, map_append, sublists_concat] <;>
       exact
-        ((append_sublist_append_left _).2 $
-              singleton_sublist.2 $ mem_map.2 ⟨[], mem_sublists.2 (nil_sublist _), by rfl⟩).trans
+        ((append_sublist_append_left _).2 <|
+              singleton_sublist.2 <| mem_map.2 ⟨[], mem_sublists.2 (nil_sublist _), by rfl⟩).trans
           ((append_sublist_append_right _).2 IH)
 #align list.map_ret_sublist_sublists List.map_ret_sublist_sublists
 
@@ -351,8 +351,8 @@ theorem mem_sublists_len {α : Type _} {n} {l l' : List α} : l' ∈ sublistsLen
 #align list.mem_sublists_len List.mem_sublists_len
 
 theorem sublists_len_of_length_lt {n} {l : List α} (h : l.length < n) : sublistsLen n l = [] :=
-  eq_nil_iff_forall_not_mem.mpr $ fun x =>
-    mem_sublists_len.Not.mpr $ fun ⟨hs, hl⟩ => (h.trans_eq hl.symm).not_le (Sublist.length_le hs)
+  eq_nil_iff_forall_not_mem.mpr fun x =>
+    mem_sublists_len.Not.mpr fun ⟨hs, hl⟩ => (h.trans_eq hl.symm).not_le (Sublist.length_le hs)
 #align list.sublists_len_of_length_lt List.sublists_len_of_length_lt
 
 @[simp]

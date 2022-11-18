@@ -52,11 +52,11 @@ end Int
 namespace Int
 
 theorem abs_eq_nat_abs : ∀ a : ℤ, |a| = natAbs a
-  | (n : ℕ) => abs_of_nonneg $ ofNat_zero_le _
-  | -[1+ n] => abs_of_nonpos $ le_of_lt $ negSucc_lt_zero _
+  | (n : ℕ) => abs_of_nonneg <| ofNat_zero_le _
+  | -[n+1] => abs_of_nonpos <| le_of_lt <| negSucc_lt_zero _
 #align int.abs_eq_nat_abs Int.abs_eq_nat_abs
 
-theorem nat_abs_abs (a : ℤ) : natAbs |a| = natAbs a := by rw [abs_eq_nat_abs] <;> rfl
+theorem nat_abs_abs (a : ℤ) : natAbs (|a|) = natAbs a := by rw [abs_eq_nat_abs] <;> rfl
 #align int.nat_abs_abs Int.nat_abs_abs
 
 theorem sign_mul_abs (a : ℤ) : sign a * |a| = a := by rw [abs_eq_nat_abs, sign_mul_nat_abs]
@@ -209,20 +209,20 @@ but is expected to have type
   forall {a : Int} {b : Int}, (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a) -> (LE.le.{0} Int Int.instLEInt b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (LE.le.{0} Int Int.instLEInt (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) a b) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
 Case conversion may be inaccurate. Consider using '#align int.div_nonpos Int.div_nonposₓ'. -/
 protected theorem div_nonpos {a b : ℤ} (Ha : 0 ≤ a) (Hb : b ≤ 0) : a / b ≤ 0 :=
-  nonpos_of_neg_nonneg $ by rw [← Int.div_neg] <;> exact Int.div_nonneg Ha (neg_nonneg_of_nonpos Hb)
+  nonpos_of_neg_nonneg <| by rw [← Int.div_neg] <;> exact Int.div_nonneg Ha (neg_nonneg_of_nonpos Hb)
 #align int.div_nonpos Int.div_nonpos
 
 theorem div_eq_zero_of_lt_abs {a b : ℤ} (H1 : 0 ≤ a) (H2 : a < |b|) : a / b = 0 :=
   match b, |b|, abs_eq_nat_abs b, H2 with
   | (n : ℕ), _, rfl, H2 => div_eq_zero_of_lt H1 H2
-  | -[1+ n], _, rfl, H2 => neg_injective $ by rw [← Int.div_neg] <;> exact div_eq_zero_of_lt H1 H2
+  | -[n+1], _, rfl, H2 => neg_injective <| by rw [← Int.div_neg] <;> exact div_eq_zero_of_lt H1 H2
 #align int.div_eq_zero_of_lt_abs Int.div_eq_zero_of_lt_abs
 
 protected theorem add_mul_div_right (a b : ℤ) {c : ℤ} (H : c ≠ 0) : (a + b * c) / c = a / c + b :=
   have : ∀ {k n : ℕ} {a : ℤ}, (a + n * k.succ) / k.succ = a / k.succ + n := fun k n a =>
     match a with
-    | (m : ℕ) => congr_arg ofNat $ Nat.add_mul_div_right _ _ k.succ_pos
-    | -[1+ m] =>
+    | (m : ℕ) => congr_arg ofNat <| Nat.add_mul_div_right _ _ k.succ_pos
+    | -[m+1] =>
       show ((n * k.succ : ℕ) - m.succ : ℤ) / k.succ = n - (m / k.succ + 1 : ℕ) by
         cases' lt_or_ge m (n * k.succ) with h h
         · rw [← Int.ofNat_sub h, ← Int.ofNat_sub ((Nat.div_lt_iff_lt_mul k.succ_pos).2 h)]
@@ -241,11 +241,11 @@ protected theorem add_mul_div_right (a b : ℤ) {c : ℤ} (H : c ≠ 0) : (a + b
   have : ∀ {a b c : ℤ}, 0 < c → (a + b * c) / c = a / c + b := fun a b c H =>
     match c, eq_succ_of_zero_lt H, b with
     | _, ⟨k, rfl⟩, (n : ℕ) => this
-    | _, ⟨k, rfl⟩, -[1+ n] =>
-      show (a - n.succ * k.succ) / k.succ = a / k.succ - n.succ from eq_sub_of_add_eq $ by rw [← this, sub_add_cancel]
+    | _, ⟨k, rfl⟩, -[n+1] =>
+      show (a - n.succ * k.succ) / k.succ = a / k.succ - n.succ from eq_sub_of_add_eq <| by rw [← this, sub_add_cancel]
   match lt_trichotomy c 0 with
   | Or.inl hlt =>
-    neg_inj.1 $ by rw [← Int.div_neg, neg_add, ← Int.div_neg, ← neg_mul_neg] <;> apply this (neg_pos_of_neg hlt)
+    neg_inj.1 <| by rw [← Int.div_neg, neg_add, ← Int.div_neg, ← neg_mul_neg] <;> apply this (neg_pos_of_neg hlt)
   | Or.inr (Or.inl HEq) => absurd HEq H
   | Or.inr (Or.inr hgt) => this hgt
 #align int.add_mul_div_right Int.add_mul_div_right
@@ -290,7 +290,7 @@ protected theorem div_self {a : ℤ} (H : a ≠ 0) : a / a = 1 := by
 attribute [local simp] Int.zero_div Int.div_zero
 
 protected theorem add_div_of_dvd_right {a b c : ℤ} (H : c ∣ b) : (a + b) / c = a / c + b / c := by
-  by_cases h1:c = 0
+  by_cases h1 : c = 0
   · simp [h1]
     
   cases' H with k hk
@@ -320,7 +320,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.mod_nonneg Int.mod_nonnegₓ'. -/
 theorem mod_nonneg : ∀ (a : ℤ) {b : ℤ}, b ≠ 0 → 0 ≤ a % b
   | (m : ℕ), n, H => ofNat_zero_le _
-  | -[1+ m], n, H => sub_nonneg_of_le $ coe_nat_le_coe_nat_of_le $ Nat.mod_lt _ (natAbs_pos_of_ne_zero H)
+  | -[m+1], n, H => sub_nonneg_of_le <| coe_nat_le_coe_nat_of_le <| Nat.mod_lt _ (natAbs_pos_of_ne_zero H)
 #align int.mod_nonneg Int.mod_nonneg
 
 /- warning: int.mod_lt_of_pos -> Int.mod_lt_of_pos is a dubious translation:
@@ -332,7 +332,7 @@ Case conversion may be inaccurate. Consider using '#align int.mod_lt_of_pos Int.
 theorem mod_lt_of_pos (a : ℤ) {b : ℤ} (H : 0 < b) : a % b < b :=
   match a, b, eq_succ_of_zero_lt H with
   | (m : ℕ), _, ⟨n, rfl⟩ => ofNat_lt_ofNat_of_lt (Nat.mod_lt _ (Nat.succ_pos _))
-  | -[1+ m], _, ⟨n, rfl⟩ => sub_lt_self _ (coe_nat_lt_coe_nat_of_lt $ Nat.succ_pos _)
+  | -[m+1], _, ⟨n, rfl⟩ => sub_lt_self _ (coe_nat_lt_coe_nat_of_lt <| Nat.succ_pos _)
 #align int.mod_lt_of_pos Int.mod_lt_of_pos
 
 theorem mod_lt (a : ℤ) {b : ℤ} (H : b ≠ 0) : a % b < |b| := by rw [← mod_abs] <;> exact mod_lt_of_pos _ (abs_pos.2 H)
@@ -464,7 +464,7 @@ protected theorem div_mod_unique {a b r q : ℤ} (h : 0 < b) : a / b = q ∧ a %
 attribute [local simp] Int.zero_mod
 
 theorem mod_eq_mod_iff_mod_sub_eq_zero {m n k : ℤ} : m % n = k % n ↔ (m - k) % n = 0 :=
-  (mod_sub_cancel_right k).symm.trans $ by simp
+  (mod_sub_cancel_right k).symm.trans <| by simp
 #align int.mod_eq_mod_iff_mod_sub_eq_zero Int.mod_eq_mod_iff_mod_sub_eq_zero
 
 @[simp]
@@ -499,8 +499,8 @@ theorem abs_div_le_abs : ∀ a b : ℤ, |a / b| ≤ |a| :=
       coe_nat_le_coe_nat_of_le
         (match a, n with
         | (m : ℕ), n => Nat.div_le_self _ _
-        | -[1+ m], 0 => Nat.zero_le _
-        | -[1+ m], n + 1 => Nat.succ_le_succ (Nat.div_le_self _ _))
+        | -[m+1], 0 => Nat.zero_le _
+        | -[m+1], n + 1 => Nat.succ_le_succ (Nat.div_le_self _ _))
 #align int.abs_div_le_abs Int.abs_div_le_abs
 
 theorem div_le_self {a : ℤ} (b : ℤ) (Ha : 0 ≤ a) : a / b ≤ a := by
@@ -508,13 +508,13 @@ theorem div_le_self {a : ℤ} (b : ℤ) (Ha : 0 ≤ a) : a / b ≤ a := by
 #align int.div_le_self Int.div_le_self
 
 theorem mod_two_eq_zero_or_one (n : ℤ) : n % 2 = 0 ∨ n % 2 = 1 :=
-  have h : n % 2 < 2 := abs_of_nonneg (show 0 ≤ (2 : ℤ) from dec_trivial) ▸ Int.mod_lt _ dec_trivial
-  have h₁ : 0 ≤ n % 2 := Int.mod_nonneg _ dec_trivial
+  have h : n % 2 < 2 := abs_of_nonneg (show 0 ≤ (2 : ℤ) by decide) ▸ Int.mod_lt _ (by decide)
+  have h₁ : 0 ≤ n % 2 := Int.mod_nonneg _ (by decide)
   match n % 2, h, h₁ with
   | (0 : ℕ) => fun _ _ => Or.inl rfl
   | (1 : ℕ) => fun _ _ => Or.inr rfl
-  | (k + 2 : ℕ) => fun h _ => absurd h dec_trivial
-  | -[1+ a] => fun _ h₁ => absurd h₁ dec_trivial
+  | (k + 2 : ℕ) => fun h _ => absurd h (by decide)
+  | -[a+1] => fun _ h₁ => absurd h₁ (by decide)
 #align int.mod_two_eq_zero_or_one Int.mod_two_eq_zero_or_one
 
 /-! ### dvd -/
@@ -633,7 +633,7 @@ but is expected to have type
   forall {a : Int} {b : Int} {c : Int}, (Ne.{1} Int a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a b) c) -> (Eq.{1} Int b (HDiv.hDiv.{0 0 0} Int Int Int (instHDiv.{0} Int Int.instDivInt) c a))
 Case conversion may be inaccurate. Consider using '#align int.eq_div_of_mul_eq_right Int.eq_div_of_mul_eq_rightₓ'. -/
 protected theorem eq_div_of_mul_eq_right {a b c : ℤ} (H1 : a ≠ 0) (H2 : a * b = c) : b = c / a :=
-  Eq.symm $ Int.div_eq_of_eq_mul_right H1 H2.symm
+  Eq.symm <| Int.div_eq_of_eq_mul_right H1 H2.symm
 #align int.eq_div_of_mul_eq_right Int.eq_div_of_mul_eq_right
 
 /- warning: int.div_eq_iff_eq_mul_right -> Int.div_eq_iff_eq_mul_right is a dubious translation:
@@ -775,7 +775,7 @@ protected theorem sign_eq_div_abs (a : ℤ) : sign a = a / |a| :=
 
 
 protected theorem div_mul_le (a : ℤ) {b : ℤ} (H : b ≠ 0) : a / b * b ≤ a :=
-  le_of_sub_nonneg $ by rw [mul_comm, ← mod_def] <;> apply mod_nonneg _ H
+  le_of_sub_nonneg <| by rw [mul_comm, ← mod_def] <;> apply mod_nonneg _ H
 #align int.div_mul_le Int.div_mul_le
 
 protected theorem div_le_of_le_mul {a b c : ℤ} (H : 0 < c) (H' : a ≤ b * c) : a / c ≤ b :=
@@ -783,7 +783,7 @@ protected theorem div_le_of_le_mul {a b c : ℤ} (H : 0 < c) (H' : a ≤ b * c) 
 #align int.div_le_of_le_mul Int.div_le_of_le_mul
 
 protected theorem mul_lt_of_lt_div {a b c : ℤ} (H : 0 < c) (H3 : a < b / c) : a * c < b :=
-  lt_of_not_ge $ mt (Int.div_le_of_le_mul H) (not_le_of_gt H3)
+  lt_of_not_ge <| mt (Int.div_le_of_le_mul H) (not_le_of_gt H3)
 #align int.mul_lt_of_lt_div Int.mul_lt_of_lt_div
 
 protected theorem mul_le_of_le_div {a b c : ℤ} (H1 : 0 < c) (H2 : a ≤ b / c) : a * c ≤ b :=
@@ -791,7 +791,7 @@ protected theorem mul_le_of_le_div {a b c : ℤ} (H1 : 0 < c) (H2 : a ≤ b / c)
 #align int.mul_le_of_le_div Int.mul_le_of_le_div
 
 protected theorem le_div_of_mul_le {a b c : ℤ} (H1 : 0 < c) (H2 : a * c ≤ b) : a ≤ b / c :=
-  le_of_lt_add_one $ lt_of_mul_lt_mul_right (lt_of_le_of_lt H2 (lt_div_add_one_mul_self _ H1)) (le_of_lt H1)
+  le_of_lt_add_one <| lt_of_mul_lt_mul_right (lt_of_le_of_lt H2 (lt_div_add_one_mul_self _ H1)) (le_of_lt H1)
 #align int.le_div_of_mul_le Int.le_div_of_mul_le
 
 protected theorem le_div_iff_mul_le {a b c : ℤ} (H : 0 < c) : a ≤ b / c ↔ a * c ≤ b :=
@@ -803,11 +803,11 @@ protected theorem div_le_div {a b c : ℤ} (H : 0 < c) (H' : a ≤ b) : a / c �
 #align int.div_le_div Int.div_le_div
 
 protected theorem div_lt_of_lt_mul {a b c : ℤ} (H : 0 < c) (H' : a < b * c) : a / c < b :=
-  lt_of_not_ge $ mt (Int.mul_le_of_le_div H) (not_le_of_gt H')
+  lt_of_not_ge <| mt (Int.mul_le_of_le_div H) (not_le_of_gt H')
 #align int.div_lt_of_lt_mul Int.div_lt_of_lt_mul
 
 protected theorem lt_mul_of_div_lt {a b c : ℤ} (H1 : 0 < c) (H2 : a / c < b) : a < b * c :=
-  lt_of_not_ge $ mt (Int.le_div_of_mul_le H1) (not_le_of_gt H2)
+  lt_of_not_ge <| mt (Int.le_div_of_mul_le H1) (not_le_of_gt H2)
 #align int.lt_mul_of_div_lt Int.lt_mul_of_div_lt
 
 protected theorem div_lt_iff_lt_mul {a b c : ℤ} (H : 0 < c) : a / c < b ↔ a < b * c :=
@@ -819,7 +819,7 @@ protected theorem le_mul_of_div_le {a b c : ℤ} (H1 : 0 ≤ b) (H2 : b ∣ a) (
 #align int.le_mul_of_div_le Int.le_mul_of_div_le
 
 protected theorem lt_div_of_mul_lt {a b c : ℤ} (H1 : 0 ≤ b) (H2 : b ∣ c) (H3 : a * b < c) : a < c / b :=
-  lt_of_not_ge $ mt (Int.le_mul_of_div_le H1 H2) (not_le_of_gt H3)
+  lt_of_not_ge <| mt (Int.le_mul_of_div_le H1 H2) (not_le_of_gt H3)
 #align int.lt_div_of_mul_lt Int.lt_div_of_mul_lt
 
 protected theorem lt_div_iff_mul_lt {a b : ℤ} (c : ℤ) (H : 0 < c) (H' : c ∣ b) : a < b / c ↔ a * c < b :=
@@ -836,7 +836,8 @@ theorem nat_abs_eq_of_dvd_dvd {s t : ℤ} (hst : s ∣ t) (hts : t ∣ s) : natA
 
 theorem div_eq_div_of_mul_eq_mul {a b c d : ℤ} (H2 : d ∣ c) (H3 : b ≠ 0) (H4 : d ≠ 0) (H5 : a * d = b * c) :
     a / b = c / d :=
-  Int.div_eq_of_eq_mul_right H3 $ by rw [← Int.mul_div_assoc _ H2] <;> exact (Int.div_eq_of_eq_mul_left H4 H5.symm).symm
+  Int.div_eq_of_eq_mul_right H3 <| by
+    rw [← Int.mul_div_assoc _ H2] <;> exact (Int.div_eq_of_eq_mul_left H4 H5.symm).symm
 #align int.div_eq_div_of_mul_eq_mul Int.div_eq_div_of_mul_eq_mul
 
 theorem div_dvd_of_dvd {s t : ℤ} (hst : s ∣ t) : t / s ∣ t := by
@@ -881,7 +882,7 @@ theorem to_nat_lt_to_nat {a b : ℤ} (hb : 0 < b) : toNat a < toNat b ↔ a < b 
 #align int.to_nat_lt_to_nat Int.to_nat_lt_to_nat
 
 theorem lt_of_to_nat_lt {a b : ℤ} (h : toNat a < toNat b) : a < b :=
-  (to_nat_lt_to_nat $ lt_to_nat.1 $ lt_of_le_of_lt (Nat.zero_le _) h).1 h
+  (to_nat_lt_to_nat <| lt_to_nat.1 <| lt_of_le_of_lt (Nat.zero_le _) h).1 h
 #align int.lt_of_to_nat_lt Int.lt_of_to_nat_lt
 
 @[simp]
@@ -896,7 +897,7 @@ theorem to_nat_eq_zero : ∀ {n : ℤ}, n.toNat = 0 ↔ n ≤ 0
       _ ↔ n = 0 := ⟨(toNat_coe_nat n).symm.trans, (toNat_coe_nat n).trans⟩
       _ ↔ _ := coe_nat_nonpos_iff.symm
       
-  | -[1+ n] =>
+  | -[n+1] =>
     show (-((n : ℤ) + 1)).toNat = 0 ↔ (-(n + 1) : ℤ) ≤ 0 from
       calc
         _ ↔ True := ⟨fun _ => trivial, fun h => to_nat_neg_nat _⟩
@@ -911,5 +912,5 @@ theorem to_nat_sub_of_le {a b : ℤ} (h : b ≤ a) : (toNat (a - b) : ℤ) = a -
 
 end Int
 
-/- ./././Mathport/Syntax/Translate/Command.lean:702:14: unsupported user command assert_not_exists -/
+/- ./././Mathport/Syntax/Translate/Command.lean:687:14: unsupported user command assert_not_exists -/
 -- We should need only a minimal development of sets in order to get here.

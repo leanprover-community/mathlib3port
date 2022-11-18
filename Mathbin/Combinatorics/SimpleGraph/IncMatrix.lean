@@ -99,7 +99,7 @@ theorem inc_matrix_apply_eq_zero_iff : G.incMatrix R a e = 0 ↔ e ∉ G.inciden
 
 theorem inc_matrix_apply_eq_one_iff : G.incMatrix R a e = 1 ↔ e ∈ G.incidenceSet a := by
   convert one_ne_zero.ite_eq_left_iff
-  assumption
+  infer_instance
 #align simple_graph.inc_matrix_apply_eq_one_iff SimpleGraph.inc_matrix_apply_eq_one_iff
 
 end MulZeroOneClass
@@ -130,7 +130,7 @@ theorem sum_inc_matrix_apply_of_mem_edge_set : e ∈ G.edgeSet → (∑ a, G.inc
 #align simple_graph.sum_inc_matrix_apply_of_mem_edge_set SimpleGraph.sum_inc_matrix_apply_of_mem_edge_set
 
 theorem sum_inc_matrix_apply_of_not_mem_edge_set (h : e ∉ G.edgeSet) : (∑ a, G.incMatrix R a e) = 0 :=
-  sum_eq_zero $ fun a _ => G.inc_matrix_of_not_mem_incidence_set $ fun he => h he.1
+  sum_eq_zero fun a _ => G.inc_matrix_of_not_mem_incidence_set fun he => h he.1
 #align simple_graph.sum_inc_matrix_apply_of_not_mem_edge_set SimpleGraph.sum_inc_matrix_apply_of_not_mem_edge_set
 
 theorem inc_matrix_transpose_mul_diag [DecidableRel G.Adj] :

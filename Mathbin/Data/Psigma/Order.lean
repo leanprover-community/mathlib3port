@@ -87,7 +87,7 @@ instance preorder [Preorder ι] [∀ i, Preorder (α i)] : Preorder (Σₗ' i, �
       · rintro ⟨⟨j, b, hij⟩ | ⟨i, hab⟩, hba⟩
         · exact lex.left _ _ hij
           
-        · exact lex.right _ (hab.lt_of_not_le $ fun h => hba $ lex.right _ h)
+        · exact lex.right _ (hab.lt_of_not_le fun h => hba <| lex.right _ h)
           
          }
 #align psigma.lex.preorder PSigma.Lex.preorder
@@ -97,7 +97,7 @@ instance partialOrder [PartialOrder ι] [∀ i, PartialOrder (α i)] : PartialOr
   { Lex.preorder with
     le_antisymm := by
       rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ (⟨_, _, hlt₁⟩ | ⟨_, hlt₁⟩) (⟨_, _, hlt₂⟩ | ⟨_, hlt₂⟩)
-      · exact (lt_irrefl a₁ $ hlt₁.trans hlt₂).elim
+      · exact (lt_irrefl a₁ <| hlt₁.trans hlt₂).elim
         
       · exact (lt_irrefl a₁ hlt₁).elim
         

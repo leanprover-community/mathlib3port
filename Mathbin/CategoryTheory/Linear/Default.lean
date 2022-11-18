@@ -6,7 +6,6 @@ Authors: Scott Morrison
 import Mathbin.CategoryTheory.Preadditive.Default
 import Mathbin.Algebra.Module.LinearMap
 import Mathbin.Algebra.Invertible
-import Mathbin.LinearAlgebra.Basic
 import Mathbin.Algebra.Algebra.Basic
 
 /-!

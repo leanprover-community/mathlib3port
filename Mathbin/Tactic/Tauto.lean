@@ -24,14 +24,13 @@ open Tactic.Interactive (casesm constructor_matching)
       do
         let hs ← local_context
           hs
-            $
             fun
               h
                 =>
                 all_goals'
-                  $
+                  <|
                   iterate_at_most' 3
-                    $
+                    <|
                     do
                       let h ← get_local h
                         let e ← infer_type h
@@ -74,7 +73,7 @@ open Tactic.Interactive (casesm constructor_matching)
 
 
 unsafe def tauto_state :=
-  ref $ expr_map (Option (expr × expr))
+  ref <| expr_map (Option (expr × expr))
 #align tactic.tauto_state tactic.tauto_state
 
 unsafe def modify_ref {α : Type} (r : ref α) (f : α → α) :=
@@ -84,7 +83,7 @@ unsafe def modify_ref {α : Type} (r : ref α) (f : α → α) :=
 unsafe def add_refl (r : tauto_state) (e : expr) : tactic (expr × expr) := do
   let m ← read_ref r
   let p ← mk_mapp `rfl [none, e]
-  write_ref r $ m e none
+  write_ref r <| m e none
   return (e, p)
 #align tactic.add_refl tactic.add_refl
 
@@ -101,15 +100,18 @@ unsafe def add_refl (r : tauto_state) (e : expr) : tactic (expr × expr) := do
       do
         let env ← get_env
           let rel := e . get_app_fn . const_name
-          let some symm ← pure $ environment.symm_for env rel | add_refl r e
+          let some symm ← pure <| environment.symm_for env rel | add_refl r e
           (
               do
                 let e' ← mk_meta_var q( Prop )
                   let iff_t ← to_expr ` `( $ ( e ) = $ ( e' ) )
-                  let ( _ , p ) ← solve_aux iff_t ( applyc `iff.to_eq ; ( ) <$ split ; applyc symm )
+                  let
+                    ( _ , p )
+                      ←
+                      solve_aux iff_t ( andthen ( andthen ( applyc `iff.to_eq ) ( ( ) <$ split ) ) ( applyc symm ) )
                   let e' ← instantiate_mvars e'
                   let m ← read_ref r
-                  write_ref r $ ( m e ( e' , p ) ) . insert e' none
+                  write_ref r <| ( m e ( e' , p ) ) . insert e' none
                   return ( e' , p )
               )
             <|>
@@ -117,7 +119,7 @@ unsafe def add_refl (r : tauto_state) (e : expr) : tactic (expr × expr) := do
 #align tactic.add_symm_proof tactic.add_symm_proof
 
 unsafe def add_edge (r : tauto_state) (x y p : expr) : tactic Unit :=
-  modify_ref r $ fun m => m.insert x (y, p)
+  (modify_ref r) fun m => m.insert x (y, p)
 #align tactic.add_edge tactic.add_edge
 
 /-- Retrieve the root of the hypothesis `e` from the proof forest.
@@ -135,7 +137,7 @@ unsafe def root (r : tauto_state) : expr → tactic (expr × expr)
             return (e, p)) <|>
           add_refl r e
       | _ => add_refl r e
-    let some e' ← pure $ m.find e |
+    let some e' ← pure <| m.find e |
       record_e
     match e' with
       | some (e', p') => do
@@ -240,7 +242,7 @@ unsafe def root (r : tauto_state) : expr → tactic (expr × expr)
                         |
                           ( _ , _ )
                           =>
-                          do guard $ a' ∧ a' = b' let ( a'' , pa' ) ← add_symm_proof r a' guard $ a'' =ₐ b' pure pa'
+                          do guard <| a' ∧ a' = b' let ( a'' , pa' ) ← add_symm_proof r a' guard <| a'' == b' pure pa'
                 let p' ← mk_eq_trans pa p
                 add_edge r a' b' p'
                 mk_eq_symm pb >>= mk_eq_trans p'
@@ -311,25 +313,32 @@ unsafe structure tauto_cfg where
 #align tactic.tauto_cfg tactic.tauto_cfg
 
 unsafe def tautology (cfg : tauto_cfg := {  }) : tactic Unit :=
-  focus1 $
+  focus1 <|
     let basic_tauto_tacs : List (tactic Unit) :=
       [reflexivity, solve_by_elim, constructor_matching none [``(_ ∧ _), ``(_ ↔ _), ``(Exists _), ``(True)]]
     let tauto_core (r : tauto_state) : tactic Unit := do
-      try (contradiction_with r); try (assumption_with r);
-          repeat do
+      andthen (andthen (try (contradiction_with r)) (try (assumption_with r)))
+          (repeat do
             let gs ← get_goals
-            repeat (() <$ tactic.intro1); distrib_not; casesm (some ()) [``(_ ∧ _), ``(_ ∨ _), ``(Exists _), ``(False)];
-                          try (contradiction_with r);
-                        try (target >>= match_or >> refine ``(or_iff_not_imp_left.mpr _));
-                      try (target >>= match_or >> refine ``(or_iff_not_imp_right.mpr _));
-                    repeat (() <$ tactic.intro1);
-                  constructor_matching (some ()) [``(_ ∧ _), ``(_ ↔ _), ``(True)];
-                try (assumption_with r)
+            andthen
+                (andthen
+                  (andthen
+                    (andthen
+                      (andthen
+                        (andthen
+                          (andthen (andthen (repeat (() <$ tactic.intro1)) distrib_not)
+                            (casesm (some ()) [``(_ ∧ _), ``(_ ∨ _), ``(Exists _), ``(False)]))
+                          (try (contradiction_with r)))
+                        (try ((target >>= match_or) >> refine ``(or_iff_not_imp_left.mpr _))))
+                      (try ((target >>= match_or) >> refine ``(or_iff_not_imp_right.mpr _))))
+                    (repeat (() <$ tactic.intro1)))
+                  (constructor_matching (some ()) [``(_ ∧ _), ``(_ ↔ _), ``(True)]))
+                (try (assumption_with r))
             let gs' ← get_goals
-            guard (gs ≠ gs')
+            guard (gs ≠ gs'))
     do
     when cfg (classical tt)
-    using_new_ref (expr_map.mk _) tauto_core; repeat (first basic_tauto_tacs); cfg
+    andthen (andthen (using_new_ref (expr_map.mk _) tauto_core) (repeat (first basic_tauto_tacs))) cfg
     done
 #align tactic.tautology tactic.tautology
 
@@ -348,8 +357,8 @@ The variant `tautology!` uses the law of excluded middle.
 `tautology {closer := tac}` will use `tac` on any subgoals created by `tautology`
 that it is unable to solve before failing.
 -/
-unsafe def tautology (c : parse $ (tk "!")?) (cfg : tactic.tauto_cfg := {  }) :=
-  tactic.tautology $ { cfg with classical := c.isSome }
+unsafe def tautology (c : parse <| (tk "!")?) (cfg : tactic.tauto_cfg := {  }) :=
+  tactic.tautology <| { cfg with classical := c.isSome }
 #align tactic.interactive.tautology tactic.interactive.tautology
 
 -- Now define a shorter name for the tactic `tautology`.
@@ -362,7 +371,7 @@ The variant `tauto!` uses the law of excluded middle.
 `tauto {closer := tac}` will use `tac` on any subgoals created by `tauto`
 that it is unable to solve before failing.
 -/
-unsafe def tauto (c : parse $ (tk "!")?) (cfg : tactic.tauto_cfg := {  }) : tactic Unit :=
+unsafe def tauto (c : parse <| (tk "!")?) (cfg : tactic.tauto_cfg := {  }) : tactic Unit :=
   tautology c cfg
 #align tactic.interactive.tauto tactic.interactive.tauto
 

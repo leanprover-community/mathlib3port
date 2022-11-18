@@ -6,6 +6,7 @@ Authors: Kyle Miller
 import Mathbin.Data.Fin.Basic
 import Mathbin.Data.Finset.Sort
 import Mathbin.Data.Prod.Lex
+import Mathbin.GroupTheory.Perm.Basic
 
 /-!
 
@@ -110,7 +111,7 @@ variable {n : ℕ} {α : Type _}
 /-- If two permutations of a tuple `f` are both monotone, then they are equal. -/
 theorem unique_monotone [PartialOrder α] {f : Fin n → α} {σ τ : Equiv.Perm (Fin n)} (hfσ : Monotone (f ∘ σ))
     (hfτ : Monotone (f ∘ τ)) : f ∘ σ = f ∘ τ :=
-  of_fn_injective $
+  of_fn_injective <|
     eq_of_perm_of_sorted ((σ.of_fn_comp_perm f).trans (τ.of_fn_comp_perm f).symm) hfσ.of_fn_sorted hfτ.of_fn_sorted
 #align tuple.unique_monotone Tuple.unique_monotone
 
@@ -118,12 +119,12 @@ variable [LinearOrder α] {f : Fin n → α} {σ : Equiv.Perm (Fin n)}
 
 /-- A permutation `σ` equals `sort f` if and only if the map `i ↦ (f (σ i), σ i)` is
 strictly monotone (w.r.t. the lexicographic ordering on the target). -/
-theorem eq_sort_iff' : σ = sort f ↔ StrictMono (σ.trans $ graphEquiv₁ f) := by
+theorem eq_sort_iff' : σ = sort f ↔ StrictMono (σ.trans <| graphEquiv₁ f) := by
   constructor <;> intro h
   · rw [h, sort, Equiv.trans_assoc, Equiv.symm_trans_self]
     exact (graph_equiv₂ f).StrictMono
     
-  · have := Subsingleton.elim (graph_equiv₂ f) (h.order_iso_of_surjective _ $ Equiv.surjective _)
+  · have := Subsingleton.elim (graph_equiv₂ f) (h.order_iso_of_surjective _ <| Equiv.surjective _)
     ext1
     exact (graph_equiv₁ f).apply_eq_iff_eq_symm_apply.1 (FunLike.congr_fun this x).symm
     
@@ -135,7 +136,7 @@ smallest permutation `σ` such that `f ∘ σ` is monotone. -/
 theorem eq_sort_iff : σ = sort f ↔ Monotone (f ∘ σ) ∧ ∀ i j, i < j → f (σ i) = f (σ j) → σ i < σ j := by
   rw [eq_sort_iff']
   refine' ⟨fun h => ⟨(monotone_proj f).comp h.Monotone, fun i j hij hfij => _⟩, fun h i j hij => _⟩
-  · exact (((Prod.Lex.lt_iff _ _).1 $ h hij).resolve_left hfij.not_lt).2
+  · exact (((Prod.Lex.lt_iff _ _).1 <| h hij).resolve_left hfij.not_lt).2
     
   · obtain he | hl := (h.1 hij.le).eq_or_lt <;> apply (Prod.Lex.lt_iff _ _).2
     exacts[Or.inr ⟨he, h.2 i j hij he⟩, Or.inl hl]
@@ -160,18 +161,16 @@ theorem comp_perm_comp_sort_eq_comp_sort : (f ∘ σ) ∘ sort (f ∘ σ) = f �
   exact unique_monotone (monotone_sort (f ∘ σ)) (monotone_sort f)
 #align tuple.comp_perm_comp_sort_eq_comp_sort Tuple.comp_perm_comp_sort_eq_comp_sort
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- If a permutation `f ∘ σ` of the tuple `f` is not the same as `f ∘ sort f`, then `f ∘ σ`
 has a pair of strictly decreasing entries. -/
-theorem antitone_pair_of_not_sorted' (h : f ∘ σ ≠ f ∘ sort f) : ∃ (i) (j), i < j ∧ (f ∘ σ) j < (f ∘ σ) i := by
+theorem antitone_pair_of_not_sorted' (h : f ∘ σ ≠ f ∘ sort f) : ∃ i j, i < j ∧ (f ∘ σ) j < (f ∘ σ) i := by
   contrapose! h
   exact comp_sort_eq_comp_iff_monotone.mpr (monotone_iff_forall_lt.mpr h)
 #align tuple.antitone_pair_of_not_sorted' Tuple.antitone_pair_of_not_sorted'
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- If the tuple `f` is not the same as `f ∘ sort f`, then `f` has a pair of strictly decreasing
 entries. -/
-theorem antitone_pair_of_not_sorted (h : f ≠ f ∘ sort f) : ∃ (i) (j), i < j ∧ f j < f i :=
+theorem antitone_pair_of_not_sorted (h : f ≠ f ∘ sort f) : ∃ i j, i < j ∧ f j < f i :=
   antitone_pair_of_not_sorted' (id h : f ∘ Equiv.refl _ ≠ _)
 #align tuple.antitone_pair_of_not_sorted Tuple.antitone_pair_of_not_sorted
 

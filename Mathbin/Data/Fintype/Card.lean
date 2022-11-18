@@ -4,258 +4,2317 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Mathbin.Data.Fintype.Basic
-import Mathbin.Algebra.BigOperators.Ring
-import Mathbin.Algebra.BigOperators.Option
+import Mathbin.Data.Finset.Card
+import Mathbin.Data.List.NodupEquivFin
+import Mathbin.Tactic.Wlog
 
 /-!
-Results about "big operations" over a `fintype`, and consequent
-results about cardinalities of certain types.
+# Cardinalities of finite types
 
-## Implementation note
-This content had previously been in `data.fintype.basic`, but was moved here to avoid
-requiring `algebra.big_operators` (and hence many other imports) as a
-dependency of `fintype`.
+## Main declarations
 
-However many of the results here really belong in `algebra.big_operators.basic`
-and should be moved at some point.
+* `fintype.card α`: Cardinality of a fintype. Equal to `finset.univ.card`.
+* `fintype.trunc_equiv_fin`: A fintype `α` is computably equivalent to `fin (card α)`. The
+  `trunc`-free, noncomputable version is `fintype.equiv_fin`.
+* `fintype.trunc_equiv_of_card_eq` `fintype.equiv_of_card_eq`: Two fintypes of same cardinality are
+  equivalent. See above.
+* `fin.equiv_iff_eq`: `fin m ≃ fin n` iff `m = n`.
+* `infinite.nat_embedding`: An embedding of `ℕ` into an infinite type.
+
+We also provide the following versions of the pigeonholes principle.
+* `fintype.exists_ne_map_eq_of_card_lt` and `is_empty_of_card_lt`: Finitely many pigeons and
+  pigeonholes. Weak formulation.
+* `finite.exists_ne_map_eq_of_infinite`: Infinitely many pigeons in finitely many pigeonholes.
+  Weak formulation.
+* `finite.exists_infinite_fiber`: Infinitely many pigeons in finitely many pigeonholes. Strong
+  formulation.
+
+Some more pigeonhole-like statements can be found in `data.fintype.card_embedding`.
+
+Types which have an injection from/a surjection to an `infinite` type are themselves `infinite`.
+See `infinite.of_injective` and `infinite.of_surjective`.
+
+
 -/
 
 
+open Function
+
+open Nat
+
 universe u v
 
-variable {α : Type _} {β : Type _} {γ : Type _}
+variable {α β γ : Type _}
 
-open BigOperators
+open Finset Function
 
 namespace Fintype
 
-@[to_additive]
-theorem prod_bool [CommMonoid α] (f : Bool → α) : (∏ b, f b) = f true * f false := by simp
-#align fintype.prod_bool Fintype.prod_bool
+/-- `card α` is the number of elements in `α`, defined when `α` is a fintype. -/
+def card (α) [Fintype α] : ℕ :=
+  (@univ α _).card
+#align fintype.card Fintype.card
 
-theorem card_eq_sum_ones {α} [Fintype α] : Fintype.card α = ∑ a : α, 1 :=
-  Finset.card_eq_sum_ones _
-#align fintype.card_eq_sum_ones Fintype.card_eq_sum_ones
+/-- There is (computably) an equivalence between `α` and `fin (card α)`.
 
-section
+Since it is not unique and depends on which permutation
+of the universe list is used, the equivalence is wrapped in `trunc` to
+preserve computability.
 
-open Finset
+See `fintype.equiv_fin` for the noncomputable version,
+and `fintype.trunc_equiv_fin_of_card_eq` and `fintype.equiv_fin_of_card_eq`
+for an equiv `α ≃ fin n` given `fintype.card α = n`.
 
-variable {ι : Type _} [DecidableEq ι] [Fintype ι]
+See `fintype.trunc_fin_bijection` for a version without `[decidable_eq α]`.
+-/
+def truncEquivFin (α) [DecidableEq α] [Fintype α] : Trunc (α ≃ Fin (card α)) := by
+  unfold card Finset.card
+  exact
+    Quot.recOnSubsingleton (@univ α _).1
+      (fun l (h : ∀ x : α, x ∈ l) (nd : l.Nodup) => Trunc.mk (nd.nthLeEquivOfForallMemList _ h).symm) mem_univ_val
+      univ.2
+#align fintype.trunc_equiv_fin Fintype.truncEquivFin
 
-@[to_additive]
-theorem prod_extend_by_one [CommMonoid α] (s : Finset ι) (f : ι → α) :
-    (∏ i, if i ∈ s then f i else 1) = ∏ i in s, f i := by rw [← prod_filter, filter_mem_eq_inter, univ_inter]
-#align fintype.prod_extend_by_one Fintype.prod_extend_by_one
+/-- There is (noncomputably) an equivalence between `α` and `fin (card α)`.
 
-end
+See `fintype.trunc_equiv_fin` for the computable version,
+and `fintype.trunc_equiv_fin_of_card_eq` and `fintype.equiv_fin_of_card_eq`
+for an equiv `α ≃ fin n` given `fintype.card α = n`.
+-/
+noncomputable def equivFin (α) [Fintype α] : α ≃ Fin (card α) :=
+  letI := Classical.decEq α
+  (trunc_equiv_fin α).out
+#align fintype.equiv_fin Fintype.equivFin
 
-section
+/-- There is (computably) a bijection between `fin (card α)` and `α`.
 
-variable {M : Type _} [Fintype α] [CommMonoid M]
+Since it is not unique and depends on which permutation
+of the universe list is used, the bijection is wrapped in `trunc` to
+preserve computability.
 
-@[to_additive]
-theorem prod_eq_one (f : α → M) (h : ∀ a, f a = 1) : (∏ a, f a) = 1 :=
-  Finset.prod_eq_one $ fun a ha => h a
-#align fintype.prod_eq_one Fintype.prod_eq_one
+See `fintype.trunc_equiv_fin` for a version that gives an equivalence
+given `[decidable_eq α]`.
+-/
+def truncFinBijection (α) [Fintype α] : Trunc { f : Fin (card α) → α // Bijective f } := by
+  dsimp only [card, Finset.card]
+  exact
+    Quot.recOnSubsingleton (@univ α _).1
+      (fun l (h : ∀ x : α, x ∈ l) (nd : l.Nodup) => Trunc.mk (nd.nthLeBijectionOfForallMemList _ h)) mem_univ_val univ.2
+#align fintype.trunc_fin_bijection Fintype.truncFinBijection
 
-@[to_additive]
-theorem prod_congr (f g : α → M) (h : ∀ a, f a = g a) : (∏ a, f a) = ∏ a, g a :=
-  Finset.prod_congr rfl $ fun a ha => h a
-#align fintype.prod_congr Fintype.prod_congr
+theorem subtype_card {p : α → Prop} (s : Finset α) (H : ∀ x : α, x ∈ s ↔ p x) :
+    @card { x // p x } (Fintype.subtype s H) = s.card :=
+  Multiset.card_pmap _ _ _
+#align fintype.subtype_card Fintype.subtype_card
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x «expr ≠ » a) -/
-@[to_additive]
-theorem prod_eq_single {f : α → M} (a : α) (h : ∀ (x) (_ : x ≠ a), f x = 1) : (∏ x, f x) = f a :=
-  (Finset.prod_eq_single a fun x _ hx => h x hx) $ fun ha => (ha (Finset.mem_univ a)).elim
-#align fintype.prod_eq_single Fintype.prod_eq_single
+theorem card_of_subtype {p : α → Prop} (s : Finset α) (H : ∀ x : α, x ∈ s ↔ p x) [Fintype { x // p x }] :
+    card { x // p x } = s.card := by
+  rw [← subtype_card s H]
+  congr
+#align fintype.card_of_subtype Fintype.card_of_subtype
 
-@[to_additive]
-theorem prod_eq_mul {f : α → M} (a b : α) (h₁ : a ≠ b) (h₂ : ∀ x, x ≠ a ∧ x ≠ b → f x = 1) : (∏ x, f x) = f a * f b :=
-  by apply Finset.prod_eq_mul a b h₁ fun x _ hx => h₂ x hx <;> exact fun hc => (hc (Finset.mem_univ _)).elim
-#align fintype.prod_eq_mul Fintype.prod_eq_mul
+@[simp]
+theorem card_of_finset {p : Set α} (s : Finset α) (H : ∀ x, x ∈ s ↔ x ∈ p) : @Fintype.card p (ofFinset s H) = s.card :=
+  Fintype.subtype_card s H
+#align fintype.card_of_finset Fintype.card_of_finset
 
-/-- If a product of a `finset` of a subsingleton type has a given
-value, so do the terms in that product. -/
-@[to_additive "If a sum of a `finset` of a subsingleton type has a given\nvalue, so do the terms in that sum."]
-theorem eq_of_subsingleton_of_prod_eq {ι : Type _} [Subsingleton ι] {s : Finset ι} {f : ι → M} {b : M}
-    (h : (∏ i in s, f i) = b) : ∀ i ∈ s, f i = b :=
-  Finset.eq_of_card_le_one_of_prod_eq (Finset.card_le_one_of_subsingleton s) h
-#align fintype.eq_of_subsingleton_of_prod_eq Fintype.eq_of_subsingleton_of_prod_eq
-
-end
+theorem card_of_finset' {p : Set α} (s : Finset α) (H : ∀ x, x ∈ s ↔ x ∈ p) [Fintype p] : Fintype.card p = s.card := by
+  rw [← card_of_finset s H] <;> congr
+#align fintype.card_of_finset' Fintype.card_of_finset'
 
 end Fintype
 
-open Finset
+namespace Fintype
+
+theorem of_equiv_card [Fintype α] (f : α ≃ β) : @card β (ofEquiv α f) = card α :=
+  Multiset.card_map _ _
+#align fintype.of_equiv_card Fintype.of_equiv_card
+
+theorem card_congr {α β} [Fintype α] [Fintype β] (f : α ≃ β) : card α = card β := by rw [← of_equiv_card f] <;> congr
+#align fintype.card_congr Fintype.card_congr
+
+@[congr]
+theorem card_congr' {α β} [Fintype α] [Fintype β] (h : α = β) : card α = card β :=
+  card_congr (by rw [h])
+#align fintype.card_congr' Fintype.card_congr'
 
 section
 
-variable {M : Type _} [Fintype α] [CommMonoid M]
+variable [Fintype α] [Fintype β]
 
-@[simp, to_additive]
-theorem Fintype.prod_option (f : Option α → M) : (∏ i, f i) = f none * ∏ i, f (some i) :=
-  Finset.prod_insert_none f univ
-#align fintype.prod_option Fintype.prod_option
+/-- If the cardinality of `α` is `n`, there is computably a bijection between `α` and `fin n`.
+
+See `fintype.equiv_fin_of_card_eq` for the noncomputable definition,
+and `fintype.trunc_equiv_fin` and `fintype.equiv_fin` for the bijection `α ≃ fin (card α)`.
+-/
+def truncEquivFinOfCardEq [DecidableEq α] {n : ℕ} (h : Fintype.card α = n) : Trunc (α ≃ Fin n) :=
+  (truncEquivFin α).map fun e => e.trans (Fin.cast h).toEquiv
+#align fintype.trunc_equiv_fin_of_card_eq Fintype.truncEquivFinOfCardEq
+
+/-- If the cardinality of `α` is `n`, there is noncomputably a bijection between `α` and `fin n`.
+
+See `fintype.trunc_equiv_fin_of_card_eq` for the computable definition,
+and `fintype.trunc_equiv_fin` and `fintype.equiv_fin` for the bijection `α ≃ fin (card α)`.
+-/
+noncomputable def equivFinOfCardEq {n : ℕ} (h : Fintype.card α = n) : α ≃ Fin n :=
+  letI := Classical.decEq α
+  (trunc_equiv_fin_of_card_eq h).out
+#align fintype.equiv_fin_of_card_eq Fintype.equivFinOfCardEq
+
+/-- Two `fintype`s with the same cardinality are (computably) in bijection.
+
+See `fintype.equiv_of_card_eq` for the noncomputable version,
+and `fintype.trunc_equiv_fin_of_card_eq` and `fintype.equiv_fin_of_card_eq` for
+the specialization to `fin`.
+-/
+def truncEquivOfCardEq [DecidableEq α] [DecidableEq β] (h : card α = card β) : Trunc (α ≃ β) :=
+  (truncEquivFinOfCardEq h).bind fun e => (truncEquivFin β).map fun e' => e.trans e'.symm
+#align fintype.trunc_equiv_of_card_eq Fintype.truncEquivOfCardEq
+
+/-- Two `fintype`s with the same cardinality are (noncomputably) in bijection.
+
+See `fintype.trunc_equiv_of_card_eq` for the computable version,
+and `fintype.trunc_equiv_fin_of_card_eq` and `fintype.equiv_fin_of_card_eq` for
+the specialization to `fin`.
+-/
+noncomputable def equivOfCardEq (h : card α = card β) : α ≃ β := by
+  letI := Classical.decEq α
+  letI := Classical.decEq β
+  exact (trunc_equiv_of_card_eq h).out
+#align fintype.equiv_of_card_eq Fintype.equivOfCardEq
 
 end
 
-open Finset
+theorem card_eq {α β} [F : Fintype α] [G : Fintype β] : card α = card β ↔ Nonempty (α ≃ β) :=
+  ⟨fun h =>
+    haveI := Classical.propDecidable
+    (trunc_equiv_of_card_eq h).Nonempty,
+    fun ⟨f⟩ => card_congr f⟩
+#align fintype.card_eq Fintype.card_eq
 
+/-- Note: this lemma is specifically about `fintype.of_subsingleton`. For a statement about
+arbitrary `fintype` instances, use either `fintype.card_le_one_iff_subsingleton` or
+`fintype.card_unique`. -/
 @[simp]
-theorem Fintype.card_sigma {α : Type _} (β : α → Type _) [Fintype α] [∀ a, Fintype (β a)] :
-    Fintype.card (Sigma β) = ∑ a, Fintype.card (β a) :=
-  card_sigma _ _
-#align fintype.card_sigma Fintype.card_sigma
-
-@[simp]
-theorem Finset.card_pi [DecidableEq α] {δ : α → Type _} (s : Finset α) (t : ∀ a, Finset (δ a)) :
-    (s.pi t).card = ∏ a in s, card (t a) :=
-  Multiset.card_pi _ _
-#align finset.card_pi Finset.card_pi
-
-@[simp]
-theorem Fintype.card_pi_finset [DecidableEq α] [Fintype α] {δ : α → Type _} (t : ∀ a, Finset (δ a)) :
-    (Fintype.piFinset t).card = ∏ a, card (t a) := by simp [Fintype.piFinset, card_map]
-#align fintype.card_pi_finset Fintype.card_pi_finset
-
-@[simp]
-theorem Fintype.card_pi {β : α → Type _} [DecidableEq α] [Fintype α] [f : ∀ a, Fintype (β a)] :
-    Fintype.card (∀ a, β a) = ∏ a, Fintype.card (β a) :=
-  Fintype.card_pi_finset _
-#align fintype.card_pi Fintype.card_pi
-
--- FIXME ouch, this should be in the main file.
-@[simp]
-theorem Fintype.card_fun [DecidableEq α] [Fintype α] [Fintype β] :
-    Fintype.card (α → β) = Fintype.card β ^ Fintype.card α := by rw [Fintype.card_pi, Finset.prod_const] <;> rfl
-#align fintype.card_fun Fintype.card_fun
-
-@[simp]
-theorem card_vector [Fintype α] (n : ℕ) : Fintype.card (Vector α n) = Fintype.card α ^ n := by
-  rw [Fintype.of_equiv_card] <;> simp
-#align card_vector card_vector
-
-@[simp, to_additive]
-theorem Finset.prod_attach_univ [Fintype α] [CommMonoid β] (f : { a : α // a ∈ @univ α _ } → β) :
-    (∏ x in univ.attach, f x) = ∏ x, f ⟨x, mem_univ _⟩ :=
-  Fintype.prod_equiv (Equiv.subtypeUnivEquiv fun x => mem_univ _) _ _ fun x => by simp
-#align finset.prod_attach_univ Finset.prod_attach_univ
-
-/-- Taking a product over `univ.pi t` is the same as taking the product over `fintype.pi_finset t`.
-  `univ.pi t` and `fintype.pi_finset t` are essentially the same `finset`, but differ
-  in the type of their element, `univ.pi t` is a `finset (Π a ∈ univ, t a)` and
-  `fintype.pi_finset t` is a `finset (Π a, t a)`. -/
-@[to_additive
-      "Taking a sum over `univ.pi t` is the same as taking the sum over\n  `fintype.pi_finset t`. `univ.pi t` and `fintype.pi_finset t` are essentially the same `finset`,\n  but differ in the type of their element, `univ.pi t` is a `finset (Π a ∈ univ, t a)` and\n  `fintype.pi_finset t` is a `finset (Π a, t a)`."]
-theorem Finset.prod_univ_pi [DecidableEq α] [Fintype α] [CommMonoid β] {δ : α → Type _} {t : ∀ a : α, Finset (δ a)}
-    (f : (∀ a : α, a ∈ (univ : Finset α) → δ a) → β) :
-    (∏ x in univ.pi t, f x) = ∏ x in Fintype.piFinset t, f fun a _ => x a :=
-  prod_bij (fun x _ a => x a (mem_univ _)) (by simp) (by simp)
-    (by simp (config := { contextual := true }) [Function.funext_iff]) fun x hx => ⟨fun a _ => x a, by simp_all⟩
-#align finset.prod_univ_pi Finset.prod_univ_pi
-
-/-- The product over `univ` of a sum can be written as a sum over the product of sets,
-  `fintype.pi_finset`. `finset.prod_sum` is an alternative statement when the product is not
-  over `univ` -/
-theorem Finset.prod_univ_sum [DecidableEq α] [Fintype α] [CommSemiring β] {δ : α → Type u_1}
-    [∀ a : α, DecidableEq (δ a)] {t : ∀ a : α, Finset (δ a)} {f : ∀ a : α, δ a → β} :
-    (∏ a, ∑ b in t a, f a b) = ∑ p in Fintype.piFinset t, ∏ x, f x (p x) := by
-  simp only [Finset.prod_attach_univ, prod_sum, Finset.sum_univ_pi]
-#align finset.prod_univ_sum Finset.prod_univ_sum
-
-/-- Summing `a^s.card * b^(n-s.card)` over all finite subsets `s` of a fintype of cardinality `n`
-gives `(a + b)^n`. The "good" proof involves expanding along all coordinates using the fact that
-`x^n` is multilinear, but multilinear maps are only available now over rings, so we give instead
-a proof reducing to the usual binomial theorem to have a result over semirings. -/
-theorem Fintype.sum_pow_mul_eq_add_pow (α : Type _) [Fintype α] {R : Type _} [CommSemiring R] (a b : R) :
-    (∑ s : Finset α, a ^ s.card * b ^ (Fintype.card α - s.card)) = (a + b) ^ Fintype.card α :=
-  Finset.sum_pow_mul_eq_add_pow _ _ _
-#align fintype.sum_pow_mul_eq_add_pow Fintype.sum_pow_mul_eq_add_pow
-
-@[to_additive]
-theorem Function.Bijective.prod_comp [Fintype α] [Fintype β] [CommMonoid γ] {f : α → β} (hf : Function.Bijective f)
-    (g : β → γ) : (∏ i, g (f i)) = ∏ i, g i :=
-  Fintype.prod_bijective f hf _ _ fun x => rfl
-#align function.bijective.prod_comp Function.Bijective.prod_comp
-
-@[to_additive]
-theorem Equiv.prod_comp [Fintype α] [Fintype β] [CommMonoid γ] (e : α ≃ β) (f : β → γ) : (∏ i, f (e i)) = ∏ i, f i :=
-  e.Bijective.prod_comp f
-#align equiv.prod_comp Equiv.prod_comp
-
-@[to_additive]
-theorem Equiv.prod_comp' [Fintype α] [Fintype β] [CommMonoid γ] (e : α ≃ β) (f : α → γ) (g : β → γ)
-    (h : ∀ i, f i = g (e i)) : (∏ i, f i) = ∏ i, g i :=
-  (show f = g ∘ e from funext h).symm ▸ e.prod_comp _
-#align equiv.prod_comp' Equiv.prod_comp'
-
-/-- It is equivalent to sum a function over `fin n` or `finset.range n`. -/
-@[to_additive]
-theorem Fin.prod_univ_eq_prod_range [CommMonoid α] (f : ℕ → α) (n : ℕ) : (∏ i : Fin n, f i) = ∏ i in range n, f i :=
-  calc
-    (∏ i : Fin n, f i) = ∏ i : { x // x ∈ range n }, f i :=
-      (Fin.equivSubtype.trans (Equiv.subtypeEquivRight (by simp))).prod_comp' _ _ (by simp)
-    _ = ∏ i in range n, f i := by rw [← attach_eq_univ, prod_attach]
-    
-#align fin.prod_univ_eq_prod_range Fin.prod_univ_eq_prod_range
-
-@[to_additive]
-theorem Finset.prod_fin_eq_prod_range [CommMonoid β] {n : ℕ} (c : Fin n → β) :
-    (∏ i, c i) = ∏ i in Finset.range n, if h : i < n then c ⟨i, h⟩ else 1 := by
-  rw [← Fin.prod_univ_eq_prod_range, Finset.prod_congr rfl]
-  rintro ⟨i, hi⟩ _
-  simp only [Fin.coe_eq_val, hi, dif_pos]
-#align finset.prod_fin_eq_prod_range Finset.prod_fin_eq_prod_range
-
-@[to_additive]
-theorem Finset.prod_to_finset_eq_subtype {M : Type _} [CommMonoid M] [Fintype α] (p : α → Prop) [DecidablePred p]
-    (f : α → M) : (∏ a in { x | p x }.toFinset, f a) = ∏ a : Subtype p, f a := by
-  rw [← Finset.prod_subtype]
-  simp
-#align finset.prod_to_finset_eq_subtype Finset.prod_to_finset_eq_subtype
-
-@[to_additive]
-theorem Finset.prod_fiberwise [DecidableEq β] [Fintype β] [CommMonoid γ] (s : Finset α) (f : α → β) (g : α → γ) :
-    (∏ b : β, ∏ a in s.filter fun a => f a = b, g a) = ∏ a in s, g a :=
-  Finset.prod_fiberwise_of_maps_to (fun x _ => mem_univ _) _
-#align finset.prod_fiberwise Finset.prod_fiberwise
-
-@[to_additive]
-theorem Fintype.prod_fiberwise [Fintype α] [DecidableEq β] [Fintype β] [CommMonoid γ] (f : α → β) (g : α → γ) :
-    (∏ b : β, ∏ a : { a // f a = b }, g (a : α)) = ∏ a, g a := by
-  rw [← (Equiv.sigmaFiberEquiv f).prod_comp, ← univ_sigma_univ, prod_sigma]
+theorem card_of_subsingleton (a : α) [Subsingleton α] : @Fintype.card _ (ofSubsingleton a) = 1 :=
   rfl
-#align fintype.prod_fiberwise Fintype.prod_fiberwise
+#align fintype.card_of_subsingleton Fintype.card_of_subsingleton
 
-theorem Fintype.prod_dite [Fintype α] {p : α → Prop} [DecidablePred p] [CommMonoid β] (f : ∀ (a : α) (ha : p a), β)
-    (g : ∀ (a : α) (ha : ¬p a), β) :
-    (∏ a, dite (p a) (f a) (g a)) = (∏ a : { a // p a }, f a a.2) * ∏ a : { a // ¬p a }, g a a.2 := by
-  simp only [prod_dite, attach_eq_univ]
-  congr 1
-  · convert (Equiv.subtypeEquivRight _).prod_comp fun x : { x // p x } => f x x.2
-    simp
+@[simp]
+theorem card_unique [Unique α] [h : Fintype α] : Fintype.card α = 1 :=
+  Subsingleton.elim (ofSubsingleton default) h ▸ card_of_subsingleton _
+#align fintype.card_unique Fintype.card_unique
+
+/-- Note: this lemma is specifically about `fintype.of_is_empty`. For a statement about
+arbitrary `fintype` instances, use `fintype.card_eq_zero_iff`. -/
+@[simp]
+theorem card_of_is_empty [IsEmpty α] : Fintype.card α = 0 :=
+  rfl
+#align fintype.card_of_is_empty Fintype.card_of_is_empty
+
+end Fintype
+
+namespace Set
+
+variable {s t : Set α}
+
+-- We use an arbitrary `[fintype s]` instance here,
+-- not necessarily coming from a `[fintype α]`.
+@[simp]
+theorem to_finset_card {α : Type _} (s : Set α) [Fintype s] : s.toFinset.card = Fintype.card s :=
+  Multiset.card_map Subtype.val Finset.univ.val
+#align set.to_finset_card Set.to_finset_card
+
+end Set
+
+theorem Finset.card_univ [Fintype α] : (Finset.univ : Finset α).card = Fintype.card α :=
+  rfl
+#align finset.card_univ Finset.card_univ
+
+theorem Finset.eq_univ_of_card [Fintype α] (s : Finset α) (hs : s.card = Fintype.card α) : s = univ :=
+  eq_of_subset_of_card_le (subset_univ _) <| by rw [hs, Finset.card_univ]
+#align finset.eq_univ_of_card Finset.eq_univ_of_card
+
+theorem Finset.card_eq_iff_eq_univ [Fintype α] (s : Finset α) : s.card = Fintype.card α ↔ s = Finset.univ :=
+  ⟨s.eq_univ_of_card, by
+    rintro rfl
+    exact Finset.card_univ⟩
+#align finset.card_eq_iff_eq_univ Finset.card_eq_iff_eq_univ
+
+theorem Finset.card_le_univ [Fintype α] (s : Finset α) : s.card ≤ Fintype.card α :=
+  card_le_of_subset (subset_univ s)
+#align finset.card_le_univ Finset.card_le_univ
+
+theorem Finset.card_lt_univ_of_not_mem [Fintype α] {s : Finset α} {x : α} (hx : x ∉ s) : s.card < Fintype.card α :=
+  card_lt_card ⟨subset_univ s, not_forall.2 ⟨x, fun hx' => hx (hx' <| mem_univ x)⟩⟩
+#align finset.card_lt_univ_of_not_mem Finset.card_lt_univ_of_not_mem
+
+theorem Finset.card_lt_iff_ne_univ [Fintype α] (s : Finset α) : s.card < Fintype.card α ↔ s ≠ Finset.univ :=
+  s.card_le_univ.lt_iff_ne.trans (not_congr s.card_eq_iff_eq_univ)
+#align finset.card_lt_iff_ne_univ Finset.card_lt_iff_ne_univ
+
+theorem Finset.card_compl_lt_iff_nonempty [Fintype α] [DecidableEq α] (s : Finset α) :
+    sᶜ.card < Fintype.card α ↔ s.Nonempty :=
+  sᶜ.card_lt_iff_ne_univ.trans s.compl_ne_univ_iff_nonempty
+#align finset.card_compl_lt_iff_nonempty Finset.card_compl_lt_iff_nonempty
+
+theorem Finset.card_univ_diff [DecidableEq α] [Fintype α] (s : Finset α) :
+    (Finset.univ \ s).card = Fintype.card α - s.card :=
+  Finset.card_sdiff (subset_univ s)
+#align finset.card_univ_diff Finset.card_univ_diff
+
+theorem Finset.card_compl [DecidableEq α] [Fintype α] (s : Finset α) : sᶜ.card = Fintype.card α - s.card :=
+  Finset.card_univ_diff s
+#align finset.card_compl Finset.card_compl
+
+theorem Fintype.card_compl_set [Fintype α] (s : Set α) [Fintype s] [Fintype ↥(sᶜ)] :
+    Fintype.card ↥(sᶜ) = Fintype.card α - Fintype.card s := by
+  classical rw [← Set.to_finset_card, ← Set.to_finset_card, ← Finset.card_compl, Set.to_finset_compl]
+#align fintype.card_compl_set Fintype.card_compl_set
+
+@[simp]
+theorem Fintype.card_fin (n : ℕ) : Fintype.card (Fin n) = n :=
+  List.length_fin_range n
+#align fintype.card_fin Fintype.card_fin
+
+@[simp]
+theorem Finset.card_fin (n : ℕ) : Finset.card (Finset.univ : Finset (Fin n)) = n := by
+  rw [Finset.card_univ, Fintype.card_fin]
+#align finset.card_fin Finset.card_fin
+
+/-- `fin` as a map from `ℕ` to `Type` is injective. Note that since this is a statement about
+equality of types, using it should be avoided if possible. -/
+theorem fin_injective : Function.Injective Fin := fun m n h =>
+  (Fintype.card_fin m).symm.trans <| (Fintype.card_congr <| Equiv.cast h).trans (Fintype.card_fin n)
+#align fin_injective fin_injective
+
+/-- A reversed version of `fin.cast_eq_cast` that is easier to rewrite with. -/
+theorem Fin.cast_eq_cast' {n m : ℕ} (h : Fin n = Fin m) : cast h = ⇑(Fin.cast <| fin_injective h) :=
+  (Fin.cast_eq_cast _).symm
+#align fin.cast_eq_cast' Fin.cast_eq_cast'
+
+theorem card_finset_fin_le {n : ℕ} (s : Finset (Fin n)) : s.card ≤ n := by
+  simpa only [Fintype.card_fin] using s.card_le_univ
+#align card_finset_fin_le card_finset_fin_le
+
+theorem Fin.equiv_iff_eq {m n : ℕ} : Nonempty (Fin m ≃ Fin n) ↔ m = n :=
+  ⟨fun ⟨h⟩ => by simpa using Fintype.card_congr h, fun h => ⟨Equiv.cast <| h ▸ rfl⟩⟩
+#align fin.equiv_iff_eq Fin.equiv_iff_eq
+
+@[simp]
+theorem Fintype.card_subtype_eq (y : α) [Fintype { x // x = y }] : Fintype.card { x // x = y } = 1 :=
+  Fintype.card_unique
+#align fintype.card_subtype_eq Fintype.card_subtype_eq
+
+@[simp]
+theorem Fintype.card_subtype_eq' (y : α) [Fintype { x // y = x }] : Fintype.card { x // y = x } = 1 :=
+  Fintype.card_unique
+#align fintype.card_subtype_eq' Fintype.card_subtype_eq'
+
+@[simp]
+theorem Fintype.card_empty : Fintype.card Empty = 0 :=
+  rfl
+#align fintype.card_empty Fintype.card_empty
+
+@[simp]
+theorem Fintype.card_pempty : Fintype.card PEmpty = 0 :=
+  rfl
+#align fintype.card_pempty Fintype.card_pempty
+
+theorem Fintype.card_unit : Fintype.card Unit = 1 :=
+  rfl
+#align fintype.card_unit Fintype.card_unit
+
+@[simp]
+theorem Fintype.card_punit : Fintype.card PUnit = 1 :=
+  rfl
+#align fintype.card_punit Fintype.card_punit
+
+@[simp]
+theorem Fintype.card_bool : Fintype.card Bool = 2 :=
+  rfl
+#align fintype.card_bool Fintype.card_bool
+
+@[simp]
+theorem Fintype.card_ulift (α : Type _) [Fintype α] : Fintype.card (ULift α) = Fintype.card α :=
+  Fintype.of_equiv_card _
+#align fintype.card_ulift Fintype.card_ulift
+
+@[simp]
+theorem Fintype.card_plift (α : Type _) [Fintype α] : Fintype.card (PLift α) = Fintype.card α :=
+  Fintype.of_equiv_card _
+#align fintype.card_plift Fintype.card_plift
+
+@[simp]
+theorem Fintype.card_order_dual (α : Type _) [Fintype α] : Fintype.card αᵒᵈ = Fintype.card α :=
+  rfl
+#align fintype.card_order_dual Fintype.card_order_dual
+
+@[simp]
+theorem Fintype.card_lex (α : Type _) [Fintype α] : Fintype.card (Lex α) = Fintype.card α :=
+  rfl
+#align fintype.card_lex Fintype.card_lex
+
+/-- Given that `α ⊕ β` is a fintype, `α` is also a fintype. This is non-computable as it uses
+that `sum.inl` is an injection, but there's no clear inverse if `α` is empty. -/
+noncomputable def Fintype.sumLeft {α β} [Fintype (Sum α β)] : Fintype α :=
+  Fintype.ofInjective (Sum.inl : α → Sum α β) Sum.inl_injective
+#align fintype.sum_left Fintype.sumLeft
+
+/-- Given that `α ⊕ β` is a fintype, `β` is also a fintype. This is non-computable as it uses
+that `sum.inr` is an injection, but there's no clear inverse if `β` is empty. -/
+noncomputable def Fintype.sumRight {α β} [Fintype (Sum α β)] : Fintype β :=
+  Fintype.ofInjective (Sum.inr : β → Sum α β) Sum.inr_injective
+#align fintype.sum_right Fintype.sumRight
+
+/-!
+### Relation to `finite`
+
+In this section we prove that `α : Type*` is `finite` if and only if `fintype α` is nonempty.
+-/
+
+
+@[nolint fintype_finite]
+protected theorem Fintype.finite {α : Type _} (h : Fintype α) : Finite α :=
+  ⟨Fintype.equivFin α⟩
+#align fintype.finite Fintype.finite
+
+/-- For efficiency reasons, we want `finite` instances to have higher
+priority than ones coming from `fintype` instances. -/
+@[nolint fintype_finite]
+instance (priority := 900) Finite.of_fintype (α : Type _) [Fintype α] : Finite α :=
+  Fintype.finite ‹_›
+#align finite.of_fintype Finite.of_fintype
+
+theorem finite_iff_nonempty_fintype (α : Type _) : Finite α ↔ Nonempty (Fintype α) :=
+  ⟨fun h =>
+    let ⟨k, ⟨e⟩⟩ := @Finite.exists_equiv_fin α h
+    ⟨Fintype.ofEquiv _ e.symm⟩,
+    fun ⟨_⟩ => inferInstance⟩
+#align finite_iff_nonempty_fintype finite_iff_nonempty_fintype
+
+theorem nonempty_fintype (α : Type _) [Finite α] : Nonempty (Fintype α) :=
+  (finite_iff_nonempty_fintype α).mp ‹_›
+#align nonempty_fintype nonempty_fintype
+
+/-- Noncomputably get a `fintype` instance from a `finite` instance. This is not an
+instance because we want `fintype` instances to be useful for computations. -/
+noncomputable def Fintype.ofFinite (α : Type _) [Finite α] : Fintype α :=
+  (nonempty_fintype α).some
+#align fintype.of_finite Fintype.ofFinite
+
+theorem Finite.of_injective {α β : Sort _} [Finite β] (f : α → β) (H : Injective f) : Finite α := by
+  cases nonempty_fintype (PLift β)
+  rw [← Equiv.injective_comp Equiv.plift f, ← Equiv.comp_injective _ equiv.plift.symm] at H
+  haveI := Fintype.ofInjective _ H
+  exact Finite.of_equiv _ Equiv.plift
+#align finite.of_injective Finite.of_injective
+
+theorem Finite.of_surjective {α β : Sort _} [Finite α] (f : α → β) (H : Surjective f) : Finite β :=
+  Finite.of_injective _ <| injective_surjInv H
+#align finite.of_surjective Finite.of_surjective
+
+theorem Finite.exists_univ_list (α) [Finite α] : ∃ l : List α, l.Nodup ∧ ∀ x : α, x ∈ l := by
+  cases nonempty_fintype α
+  obtain ⟨l, e⟩ := Quotient.exists_rep (@univ α _).1
+  have := And.intro univ.2 mem_univ_val
+  exact ⟨_, by rwa [← e] at this⟩
+#align finite.exists_univ_list Finite.exists_univ_list
+
+theorem List.Nodup.length_le_card {α : Type _} [Fintype α] {l : List α} (h : l.Nodup) : l.length ≤ Fintype.card α := by
+  classical exact List.to_finset_card_of_nodup h ▸ l.to_finset.card_le_univ
+#align list.nodup.length_le_card List.Nodup.length_le_card
+
+namespace Fintype
+
+variable [Fintype α] [Fintype β]
+
+theorem card_le_of_injective (f : α → β) (hf : Function.Injective f) : card α ≤ card β :=
+  Finset.card_le_card_of_inj_on f (fun _ _ => Finset.mem_univ _) fun _ _ _ _ h => hf h
+#align fintype.card_le_of_injective Fintype.card_le_of_injective
+
+theorem card_le_of_embedding (f : α ↪ β) : card α ≤ card β :=
+  card_le_of_injective f f.2
+#align fintype.card_le_of_embedding Fintype.card_le_of_embedding
+
+theorem card_lt_of_injective_of_not_mem (f : α → β) (h : Function.Injective f) {b : β} (w : b ∉ Set.range f) :
+    card α < card β :=
+  calc
+    card α = (univ.map ⟨f, h⟩).card := (card_map _).symm
+    _ < card β := Finset.card_lt_univ_of_not_mem <| by rwa [← mem_coe, coe_map, coe_univ, Set.image_univ]
     
-  · convert (Equiv.subtypeEquivRight _).prod_comp fun x : { x // ¬p x } => g x x.2
-    simp
-    
-#align fintype.prod_dite Fintype.prod_dite
+#align fintype.card_lt_of_injective_of_not_mem Fintype.card_lt_of_injective_of_not_mem
+
+theorem card_lt_of_injective_not_surjective (f : α → β) (h : Function.Injective f) (h' : ¬Function.Surjective f) :
+    card α < card β :=
+  let ⟨y, hy⟩ := not_forall.1 h'
+  card_lt_of_injective_of_not_mem f h hy
+#align fintype.card_lt_of_injective_not_surjective Fintype.card_lt_of_injective_not_surjective
+
+theorem card_le_of_surjective (f : α → β) (h : Function.Surjective f) : card β ≤ card α :=
+  card_le_of_injective _ (Function.injective_surjInv h)
+#align fintype.card_le_of_surjective Fintype.card_le_of_surjective
+
+theorem card_range_le {α β : Type _} (f : α → β) [Fintype α] [Fintype (Set.range f)] :
+    Fintype.card (Set.range f) ≤ Fintype.card α :=
+  Fintype.card_le_of_surjective (fun a => ⟨f a, by simp⟩) fun ⟨_, a, ha⟩ => ⟨a, by simpa using ha⟩
+#align fintype.card_range_le Fintype.card_range_le
+
+theorem card_range {α β F : Type _} [EmbeddingLike F α β] (f : F) [Fintype α] [Fintype (Set.range f)] :
+    Fintype.card (Set.range f) = Fintype.card α :=
+  Eq.symm <| Fintype.card_congr <| Equiv.ofInjective _ <| EmbeddingLike.injective f
+#align fintype.card_range Fintype.card_range
+
+/-- The pigeonhole principle for finitely many pigeons and pigeonholes.
+This is the `fintype` version of `finset.exists_ne_map_eq_of_card_lt_of_maps_to`.
+-/
+theorem exists_ne_map_eq_of_card_lt (f : α → β) (h : Fintype.card β < Fintype.card α) : ∃ x y, x ≠ y ∧ f x = f y :=
+  let ⟨x, _, y, _, h⟩ := Finset.exists_ne_map_eq_of_card_lt_of_maps_to h fun x _ => mem_univ (f x)
+  ⟨x, y, h⟩
+#align fintype.exists_ne_map_eq_of_card_lt Fintype.exists_ne_map_eq_of_card_lt
+
+theorem card_eq_one_iff : card α = 1 ↔ ∃ x : α, ∀ y, y = x := by
+  rw [← card_unit, card_eq] <;>
+    exact
+      ⟨fun ⟨a⟩ => ⟨a.symm (), fun y => a.Injective (Subsingleton.elim _ _)⟩, fun ⟨x, hx⟩ =>
+        ⟨⟨fun _ => (), fun _ => x, fun _ => (hx _).trans (hx _).symm, fun _ => Subsingleton.elim _ _⟩⟩⟩
+#align fintype.card_eq_one_iff Fintype.card_eq_one_iff
+
+theorem card_eq_zero_iff : card α = 0 ↔ IsEmpty α := by rw [card, Finset.card_eq_zero, univ_eq_empty_iff]
+#align fintype.card_eq_zero_iff Fintype.card_eq_zero_iff
+
+theorem card_eq_zero [IsEmpty α] : card α = 0 :=
+  card_eq_zero_iff.2 ‹_›
+#align fintype.card_eq_zero Fintype.card_eq_zero
+
+theorem card_eq_one_iff_nonempty_unique : card α = 1 ↔ Nonempty (Unique α) :=
+  ⟨fun h =>
+    let ⟨d, h⟩ := Fintype.card_eq_one_iff.mp h
+    ⟨{ default := d, uniq := h }⟩,
+    fun ⟨h⟩ => Fintype.card_unique⟩
+#align fintype.card_eq_one_iff_nonempty_unique Fintype.card_eq_one_iff_nonempty_unique
+
+/-- A `fintype` with cardinality zero is equivalent to `empty`. -/
+def cardEqZeroEquivEquivEmpty : card α = 0 ≃ (α ≃ Empty) :=
+  (Equiv.ofIff card_eq_zero_iff).trans (Equiv.equivEmptyEquiv α).symm
+#align fintype.card_eq_zero_equiv_equiv_empty Fintype.cardEqZeroEquivEquivEmpty
+
+theorem card_pos_iff : 0 < card α ↔ Nonempty α :=
+  pos_iff_ne_zero.trans <| not_iff_comm.mp <| not_nonempty_iff.trans card_eq_zero_iff.symm
+#align fintype.card_pos_iff Fintype.card_pos_iff
+
+theorem card_pos [h : Nonempty α] : 0 < card α :=
+  card_pos_iff.mpr h
+#align fintype.card_pos Fintype.card_pos
+
+theorem card_ne_zero [Nonempty α] : card α ≠ 0 :=
+  ne_of_gt card_pos
+#align fintype.card_ne_zero Fintype.card_ne_zero
+
+theorem card_le_one_iff : card α ≤ 1 ↔ ∀ a b : α, a = b :=
+  let n := card α
+  have hn : n = card α := rfl
+  match n, hn with
+  | 0 => fun ha => ⟨fun h => fun a => (card_eq_zero_iff.1 ha.symm).elim a, fun _ => ha ▸ Nat.le_succ _⟩
+  | 1 => fun ha =>
+    ⟨fun h => fun a b => by
+      let ⟨x, hx⟩ := card_eq_one_iff.1 ha.symm
+      rw [hx a, hx b], fun _ => ha ▸ le_rfl⟩
+  | n + 2 => fun ha =>
+    ⟨fun h => by rw [← ha] at h <;> exact absurd h (by decide), fun h =>
+      card_unit ▸ card_le_of_injective (fun _ => ()) fun _ _ _ => h _ _⟩
+#align fintype.card_le_one_iff Fintype.card_le_one_iff
+
+theorem card_le_one_iff_subsingleton : card α ≤ 1 ↔ Subsingleton α :=
+  card_le_one_iff.trans subsingleton_iff.symm
+#align fintype.card_le_one_iff_subsingleton Fintype.card_le_one_iff_subsingleton
+
+theorem one_lt_card_iff_nontrivial : 1 < card α ↔ Nontrivial α := by classical
+  rw [← not_iff_not]
+  push_neg
+  rw [not_nontrivial_iff_subsingleton, card_le_one_iff_subsingleton]
+#align fintype.one_lt_card_iff_nontrivial Fintype.one_lt_card_iff_nontrivial
+
+theorem exists_ne_of_one_lt_card (h : 1 < card α) (a : α) : ∃ b : α, b ≠ a :=
+  haveI : Nontrivial α := one_lt_card_iff_nontrivial.1 h
+  exists_ne a
+#align fintype.exists_ne_of_one_lt_card Fintype.exists_ne_of_one_lt_card
+
+theorem exists_pair_of_one_lt_card (h : 1 < card α) : ∃ a b : α, a ≠ b :=
+  haveI : Nontrivial α := one_lt_card_iff_nontrivial.1 h
+  exists_pair_ne α
+#align fintype.exists_pair_of_one_lt_card Fintype.exists_pair_of_one_lt_card
+
+theorem card_eq_one_of_forall_eq {i : α} (h : ∀ j, j = i) : card α = 1 :=
+  Fintype.card_eq_one_iff.2 ⟨i, h⟩
+#align fintype.card_eq_one_of_forall_eq Fintype.card_eq_one_of_forall_eq
+
+theorem one_lt_card [h : Nontrivial α] : 1 < Fintype.card α :=
+  Fintype.one_lt_card_iff_nontrivial.mpr h
+#align fintype.one_lt_card Fintype.one_lt_card
+
+theorem one_lt_card_iff : 1 < card α ↔ ∃ a b : α, a ≠ b :=
+  one_lt_card_iff_nontrivial.trans nontrivial_iff
+#align fintype.one_lt_card_iff Fintype.one_lt_card_iff
+
+theorem two_lt_card_iff : 2 < card α ↔ ∃ a b c : α, a ≠ b ∧ a ≠ c ∧ b ≠ c := by
+  simp_rw [← Finset.card_univ, two_lt_card_iff, mem_univ, true_and_iff]
+#align fintype.two_lt_card_iff Fintype.two_lt_card_iff
+
+theorem card_of_bijective {f : α → β} (hf : Bijective f) : card α = card β :=
+  card_congr (Equiv.ofBijective f hf)
+#align fintype.card_of_bijective Fintype.card_of_bijective
+
+end Fintype
+
+namespace Finite
+
+variable [Finite α]
+
+theorem injective_iff_surjective {f : α → α} : Injective f ↔ Surjective f := by
+  haveI := Classical.propDecidable <;>
+    cases nonempty_fintype α <;>
+      exact
+        have : ∀ {f : α → α}, injective f → surjective f := fun f hinj x =>
+          have h₁ : image f univ = univ :=
+            eq_of_subset_of_card_le (subset_univ _) ((card_image_of_injective univ hinj).symm ▸ le_rfl)
+          have h₂ : x ∈ image f univ := h₁.symm ▸ mem_univ _
+          exists_of_bex (mem_image.1 h₂)
+        ⟨this, fun hsurj =>
+          has_left_inverse.injective
+            ⟨surj_inv hsurj,
+              left_inverse_of_surjective_of_right_inverse (this (injective_surj_inv _)) (right_inverse_surj_inv _)⟩⟩
+#align finite.injective_iff_surjective Finite.injective_iff_surjective
+
+theorem injective_iff_bijective {f : α → α} : Injective f ↔ Bijective f := by simp [bijective, injective_iff_surjective]
+#align finite.injective_iff_bijective Finite.injective_iff_bijective
+
+theorem surjective_iff_bijective {f : α → α} : Surjective f ↔ Bijective f := by
+  simp [bijective, injective_iff_surjective]
+#align finite.surjective_iff_bijective Finite.surjective_iff_bijective
+
+theorem injective_iff_surjective_of_equiv {f : α → β} (e : α ≃ β) : Injective f ↔ Surjective f :=
+  have : Injective (e.symm ∘ f) ↔ Surjective (e.symm ∘ f) := injective_iff_surjective
+  ⟨fun hinj => by simpa [Function.comp] using e.surjective.comp (this.1 (e.symm.injective.comp hinj)), fun hsurj => by
+    simpa [Function.comp] using e.injective.comp (this.2 (e.symm.surjective.comp hsurj))⟩
+#align finite.injective_iff_surjective_of_equiv Finite.injective_iff_surjective_of_equiv
+
+alias injective_iff_bijective ↔ _root_.function.injective.bijective_of_finite _
+
+alias surjective_iff_bijective ↔ _root_.function.surjective.bijective_of_finite _
+
+alias injective_iff_surjective_of_equiv ↔
+  _root_.function.injective.surjective_of_fintype _root_.function.surjective.injective_of_fintype
+
+end Finite
+
+namespace Fintype
+
+variable [Fintype α] [Fintype β]
+
+theorem bijective_iff_injective_and_card (f : α → β) : Bijective f ↔ Injective f ∧ card α = card β :=
+  ⟨fun h => ⟨h.1, card_of_bijective h⟩, fun h => ⟨h.1, h.1.surjective_of_fintype <| equivOfCardEq h.2⟩⟩
+#align fintype.bijective_iff_injective_and_card Fintype.bijective_iff_injective_and_card
+
+theorem bijective_iff_surjective_and_card (f : α → β) : Bijective f ↔ Surjective f ∧ card α = card β :=
+  ⟨fun h => ⟨h.2, card_of_bijective h⟩, fun h => ⟨h.1.injective_of_fintype <| equivOfCardEq h.2, h.1⟩⟩
+#align fintype.bijective_iff_surjective_and_card Fintype.bijective_iff_surjective_and_card
+
+theorem _root_.function.left_inverse.right_inverse_of_card_le {f : α → β} {g : β → α} (hfg : LeftInverse f g)
+    (hcard : card α ≤ card β) : RightInverse f g :=
+  have hsurj : Surjective f := surjective_iff_hasRightInverse.2 ⟨g, hfg⟩
+  rightInverse_of_injective_of_leftInverse
+    ((bijective_iff_surjective_and_card _).2 ⟨hsurj, le_antisymm hcard (card_le_of_surjective f hsurj)⟩).1 hfg
+#align
+  fintype._root_.function.left_inverse.right_inverse_of_card_le fintype._root_.function.left_inverse.right_inverse_of_card_le
+
+theorem _root_.function.right_inverse.left_inverse_of_card_le {f : α → β} {g : β → α} (hfg : RightInverse f g)
+    (hcard : card β ≤ card α) : LeftInverse f g :=
+  Function.LeftInverse.right_inverse_of_card_le hfg hcard
+#align
+  fintype._root_.function.right_inverse.left_inverse_of_card_le fintype._root_.function.right_inverse.left_inverse_of_card_le
+
+end Fintype
+
+namespace Equiv
+
+variable [Fintype α] [Fintype β]
+
+open Fintype
+
+/-- Construct an equivalence from functions that are inverse to each other. -/
+@[simps]
+def ofLeftInverseOfCardLe (hβα : card β ≤ card α) (f : α → β) (g : β → α) (h : LeftInverse g f) : α ≃ β where
+  toFun := f
+  invFun := g
+  left_inv := h
+  right_inv := h.right_inverse_of_card_le hβα
+#align equiv.of_left_inverse_of_card_le Equiv.ofLeftInverseOfCardLe
+
+/-- Construct an equivalence from functions that are inverse to each other. -/
+@[simps]
+def ofRightInverseOfCardLe (hαβ : card α ≤ card β) (f : α → β) (g : β → α) (h : RightInverse g f) : α ≃ β where
+  toFun := f
+  invFun := g
+  left_inv := h.left_inverse_of_card_le hαβ
+  right_inv := h
+#align equiv.of_right_inverse_of_card_le Equiv.ofRightInverseOfCardLe
+
+end Equiv
+
+@[simp]
+theorem Fintype.card_coe (s : Finset α) [Fintype s] : Fintype.card s = s.card :=
+  Fintype.card_of_finset' s fun _ => Iff.rfl
+#align fintype.card_coe Fintype.card_coe
+
+/-- Noncomputable equivalence between a finset `s` coerced to a type and `fin s.card`. -/
+noncomputable def Finset.equivFin (s : Finset α) : s ≃ Fin s.card :=
+  Fintype.equivFinOfCardEq (Fintype.card_coe _)
+#align finset.equiv_fin Finset.equivFin
+
+/-- Noncomputable equivalence between a finset `s` as a fintype and `fin n`, when there is a
+proof that `s.card = n`. -/
+noncomputable def Finset.equivFinOfCardEq {s : Finset α} {n : ℕ} (h : s.card = n) : s ≃ Fin n :=
+  Fintype.equivFinOfCardEq ((Fintype.card_coe _).trans h)
+#align finset.equiv_fin_of_card_eq Finset.equivFinOfCardEq
+
+/-- Noncomputable equivalence between two finsets `s` and `t` as fintypes when there is a proof
+that `s.card = t.card`.-/
+noncomputable def Finset.equivOfCardEq {s t : Finset α} (h : s.card = t.card) : s ≃ t :=
+  Fintype.equivOfCardEq ((Fintype.card_coe _).trans (h.trans (Fintype.card_coe _).symm))
+#align finset.equiv_of_card_eq Finset.equivOfCardEq
+
+@[simp]
+theorem Fintype.card_Prop : Fintype.card Prop = 2 :=
+  rfl
+#align fintype.card_Prop Fintype.card_Prop
+
+theorem set_fintype_card_le_univ [Fintype α] (s : Set α) [Fintype ↥s] : Fintype.card ↥s ≤ Fintype.card α :=
+  Fintype.card_le_of_embedding (Function.Embedding.subtype s)
+#align set_fintype_card_le_univ set_fintype_card_le_univ
+
+theorem set_fintype_card_eq_univ_iff [Fintype α] (s : Set α) [Fintype ↥s] :
+    Fintype.card s = Fintype.card α ↔ s = Set.univ := by
+  rw [← Set.to_finset_card, Finset.card_eq_iff_eq_univ, ← Set.to_finset_univ, Set.to_finset_inj]
+#align set_fintype_card_eq_univ_iff set_fintype_card_eq_univ_iff
+
+namespace Function.Embedding
+
+/-- An embedding from a `fintype` to itself can be promoted to an equivalence. -/
+noncomputable def equivOfFintypeSelfEmbedding [Finite α] (e : α ↪ α) : α ≃ α :=
+  Equiv.ofBijective e e.2.bijective_of_finite
+#align function.embedding.equiv_of_fintype_self_embedding Function.Embedding.equivOfFintypeSelfEmbedding
+
+@[simp]
+theorem equiv_of_fintype_self_embedding_to_embedding [Finite α] (e : α ↪ α) :
+    e.equivOfFintypeSelfEmbedding.toEmbedding = e := by
+  ext
+  rfl
+#align
+  function.embedding.equiv_of_fintype_self_embedding_to_embedding Function.Embedding.equiv_of_fintype_self_embedding_to_embedding
+
+/-- If `‖β‖ < ‖α‖` there are no embeddings `α ↪ β`.
+This is a formulation of the pigeonhole principle.
+
+Note this cannot be an instance as it needs `h`. -/
+@[simp]
+theorem is_empty_of_card_lt [Fintype α] [Fintype β] (h : Fintype.card β < Fintype.card α) : IsEmpty (α ↪ β) :=
+  ⟨fun f =>
+    let ⟨x, y, Ne, feq⟩ := Fintype.exists_ne_map_eq_of_card_lt f h
+    Ne <| f.Injective feq⟩
+#align function.embedding.is_empty_of_card_lt Function.Embedding.is_empty_of_card_lt
+
+/-- A constructive embedding of a fintype `α` in another fintype `β` when `card α ≤ card β`. -/
+def truncOfCardLe [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β] (h : Fintype.card α ≤ Fintype.card β) :
+    Trunc (α ↪ β) :=
+  (Fintype.truncEquivFin α).bind fun ea =>
+    (Fintype.truncEquivFin β).map fun eb => ea.toEmbedding.trans ((Fin.castLe h).toEmbedding.trans eb.symm.toEmbedding)
+#align function.embedding.trunc_of_card_le Function.Embedding.truncOfCardLe
+
+theorem nonempty_of_card_le [Fintype α] [Fintype β] (h : Fintype.card α ≤ Fintype.card β) : Nonempty (α ↪ β) := by
+  classical exact (trunc_of_card_le h).Nonempty
+#align function.embedding.nonempty_of_card_le Function.Embedding.nonempty_of_card_le
+
+theorem nonempty_iff_card_le [Fintype α] [Fintype β] : Nonempty (α ↪ β) ↔ Fintype.card α ≤ Fintype.card β :=
+  ⟨fun ⟨e⟩ => Fintype.card_le_of_embedding e, nonempty_of_card_le⟩
+#align function.embedding.nonempty_iff_card_le Function.Embedding.nonempty_iff_card_le
+
+theorem exists_of_card_le_finset [Fintype α] {s : Finset β} (h : Fintype.card α ≤ s.card) :
+    ∃ f : α ↪ β, Set.range f ⊆ s := by
+  rw [← Fintype.card_coe] at h
+  rcases nonempty_of_card_le h with ⟨f⟩
+  exact ⟨f.trans (embedding.subtype _), by simp [Set.range_subset_iff]⟩
+#align function.embedding.exists_of_card_le_finset Function.Embedding.exists_of_card_le_finset
+
+end Function.Embedding
+
+@[simp]
+theorem Finset.univ_map_embedding {α : Type _} [Fintype α] (e : α ↪ α) : univ.map e = univ := by
+  rw [← e.equiv_of_fintype_self_embedding_to_embedding, univ_map_equiv_to_embedding]
+#align finset.univ_map_embedding Finset.univ_map_embedding
+
+namespace Fintype
+
+theorem card_lt_of_surjective_not_injective [Fintype α] [Fintype β] (f : α → β) (h : Function.Surjective f)
+    (h' : ¬Function.Injective f) : card β < card α :=
+  (card_lt_of_injective_not_surjective _ (Function.injective_surjInv h)) fun hg =>
+    have w : Function.Bijective (Function.surjInv h) := ⟨Function.injective_surjInv h, hg⟩
+    h' <| h.injective_of_fintype (Equiv.ofBijective _ w).symm
+#align fintype.card_lt_of_surjective_not_injective Fintype.card_lt_of_surjective_not_injective
+
+end Fintype
+
+theorem Fintype.card_subtype_le [Fintype α] (p : α → Prop) [DecidablePred p] :
+    Fintype.card { x // p x } ≤ Fintype.card α :=
+  Fintype.card_le_of_embedding (Function.Embedding.subtype _)
+#align fintype.card_subtype_le Fintype.card_subtype_le
+
+theorem Fintype.card_subtype_lt [Fintype α] {p : α → Prop} [DecidablePred p] {x : α} (hx : ¬p x) :
+    Fintype.card { x // p x } < Fintype.card α :=
+  Fintype.card_lt_of_injective_of_not_mem coe Subtype.coe_injective <| by rwa [Subtype.range_coe_subtype]
+#align fintype.card_subtype_lt Fintype.card_subtype_lt
+
+theorem Fintype.card_subtype [Fintype α] (p : α → Prop) [DecidablePred p] :
+    Fintype.card { x // p x } = ((Finset.univ : Finset α).filter p).card := by
+  refine' Fintype.card_of_subtype _ _
+  simp
+#align fintype.card_subtype Fintype.card_subtype
+
+@[simp]
+theorem Fintype.card_subtype_compl [Fintype α] (p : α → Prop) [Fintype { x // p x }] [Fintype { x // ¬p x }] :
+    Fintype.card { x // ¬p x } = Fintype.card α - Fintype.card { x // p x } := by
+  classical rw [Fintype.card_of_subtype (Set.toFinset (pᶜ)), Set.to_finset_compl p, Finset.card_compl,
+        Fintype.card_of_subtype (Set.toFinset p)] <;>
+      intro <;> simp only [Set.mem_to_finset, Set.mem_compl_iff] <;> rfl
+#align fintype.card_subtype_compl Fintype.card_subtype_compl
+
+theorem Fintype.card_subtype_mono (p q : α → Prop) (h : p ≤ q) [Fintype { x // p x }] [Fintype { x // q x }] :
+    Fintype.card { x // p x } ≤ Fintype.card { x // q x } :=
+  Fintype.card_le_of_embedding (Subtype.impEmbedding _ _ h)
+#align fintype.card_subtype_mono Fintype.card_subtype_mono
+
+/-- If two subtypes of a fintype have equal cardinality, so do their complements. -/
+theorem Fintype.card_compl_eq_card_compl [Finite α] (p q : α → Prop) [Fintype { x // p x }] [Fintype { x // ¬p x }]
+    [Fintype { x // q x }] [Fintype { x // ¬q x }] (h : Fintype.card { x // p x } = Fintype.card { x // q x }) :
+    Fintype.card { x // ¬p x } = Fintype.card { x // ¬q x } := by
+  cases nonempty_fintype α
+  simp only [Fintype.card_subtype_compl, h]
+#align fintype.card_compl_eq_card_compl Fintype.card_compl_eq_card_compl
+
+theorem Fintype.card_quotient_le [Fintype α] (s : Setoid α) [DecidableRel ((· ≈ ·) : α → α → Prop)] :
+    Fintype.card (Quotient s) ≤ Fintype.card α :=
+  Fintype.card_le_of_surjective _ (surjective_quotient_mk _)
+#align fintype.card_quotient_le Fintype.card_quotient_le
+
+theorem Fintype.card_quotient_lt [Fintype α] {s : Setoid α} [DecidableRel ((· ≈ ·) : α → α → Prop)] {x y : α}
+    (h1 : x ≠ y) (h2 : x ≈ y) : Fintype.card (Quotient s) < Fintype.card α :=
+  (Fintype.card_lt_of_surjective_not_injective _ (surjective_quotient_mk _)) fun w => h1 (w <| Quotient.eq.mpr h2)
+#align fintype.card_quotient_lt Fintype.card_quotient_lt
+
+theorem univ_eq_singleton_of_card_one {α} [Fintype α] (x : α) (h : Fintype.card α = 1) : (univ : Finset α) = {x} := by
+  symm
+  apply eq_of_subset_of_card_le (subset_univ {x})
+  apply le_of_eq
+  simp [h, Finset.card_univ]
+#align univ_eq_singleton_of_card_one univ_eq_singleton_of_card_one
+
+namespace Finite
+
+variable [Finite α]
+
+/- failed to parenthesize: parenthesize: uncaught backtrack exception
+[PrettyPrinter.parenthesize.input] (Command.declaration
+     (Command.declModifiers [] [] [] [] [] [])
+     (Command.theorem
+      "theorem"
+      (Command.declId `well_founded_of_trans_of_irrefl [])
+      (Command.declSig
+       [(Term.explicitBinder "(" [`r] [":" (Term.arrow `α "→" (Term.arrow `α "→" (Term.prop "Prop")))] [] ")")
+        (Term.instBinder "[" [] (Term.app `IsTrans [`α `r]) "]")
+        (Term.instBinder "[" [] (Term.app `IsIrrefl [`α `r]) "]")]
+       (Term.typeSpec ":" (Term.app `WellFounded [`r])))
+      (Command.declValSimple
+       ":="
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.«tactic_<;>_»
+            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+            "<;>"
+            (Tactic.«tactic_<;>_»
+             (Tactic.cases "cases" [(Tactic.casesTarget [] (Term.app `nonempty_fintype [`α]))] [] [])
+             "<;>"
+             (Tactic.exact
+              "exact"
+              (Term.have
+               "have"
+               (Term.haveDecl
+                (Term.haveIdDecl
+                 []
+                 [(Term.typeSpec
+                   ":"
+                   (Term.forall
+                    "∀"
+                    [`x `y]
+                    []
+                    ","
+                    (Term.arrow
+                     (Term.app `r [`x `y])
+                     "→"
+                     («term_<_»
+                      (Term.proj
+                       (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `x])))])
+                       "."
+                       `card)
+                      "<"
+                      (Term.proj
+                       (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `y])))])
+                       "."
+                       `card)))))]
+                 ":="
+                 (Term.fun
+                  "fun"
+                  (Term.basicFun
+                   [`x `y `hxy]
+                   []
+                   "=>"
+                   («term_<|_»
+                    `Finset.card_lt_card
+                    "<|"
+                    (Term.byTactic
+                     "by"
+                     (Tactic.tacticSeq
+                      (Tactic.tacticSeq1Indented
+                       [(Tactic.«tactic_<;>_»
+                         (Tactic.simp
+                          "simp"
+                          []
+                          []
+                          ["only"]
+                          ["["
+                           [(Tactic.simpLemma [] [] `finset.lt_iff_ssubset.symm)
+                            ","
+                            (Tactic.simpLemma [] [] `lt_iff_le_not_le)
+                            ","
+                            (Tactic.simpLemma [] [] `Finset.le_iff_subset)
+                            ","
+                            (Tactic.simpLemma [] [] `Finset.subset_iff)
+                            ","
+                            (Tactic.simpLemma [] [] `mem_filter)
+                            ","
+                            (Tactic.simpLemma [] [] `true_and_iff)
+                            ","
+                            (Tactic.simpLemma [] [] `mem_univ)
+                            ","
+                            (Tactic.simpLemma [] [] `hxy)]
+                           "]"]
+                          [])
+                         "<;>"
+                         (Tactic.exact
+                          "exact"
+                          (Term.anonymousCtor
+                           "⟨"
+                           [(Term.fun "fun" (Term.basicFun [`z `hzx] [] "=>" (Term.app `trans [`hzx `hxy])))
+                            ","
+                            (Term.app
+                             `not_forall_of_exists_not
+                             [(Term.anonymousCtor
+                               "⟨"
+                               [`x
+                                ","
+                                (Term.app
+                                 (Term.proj `not_imp "." (fieldIdx "2"))
+                                 [(Term.anonymousCtor "⟨" [`hxy "," (Term.app `irrefl [`x])] "⟩")])]
+                               "⟩")])]
+                           "⟩")))]))))))))
+               []
+               (Term.app `Subrelation.wf [`this (Term.app `measure_wf [(Term.hole "_")])])))))])))
+       [])
+      []
+      []))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.«tactic_<;>_»
+           (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+           "<;>"
+           (Tactic.«tactic_<;>_»
+            (Tactic.cases "cases" [(Tactic.casesTarget [] (Term.app `nonempty_fintype [`α]))] [] [])
+            "<;>"
+            (Tactic.exact
+             "exact"
+             (Term.have
+              "have"
+              (Term.haveDecl
+               (Term.haveIdDecl
+                []
+                [(Term.typeSpec
+                  ":"
+                  (Term.forall
+                   "∀"
+                   [`x `y]
+                   []
+                   ","
+                   (Term.arrow
+                    (Term.app `r [`x `y])
+                    "→"
+                    («term_<_»
+                     (Term.proj
+                      (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `x])))])
+                      "."
+                      `card)
+                     "<"
+                     (Term.proj
+                      (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `y])))])
+                      "."
+                      `card)))))]
+                ":="
+                (Term.fun
+                 "fun"
+                 (Term.basicFun
+                  [`x `y `hxy]
+                  []
+                  "=>"
+                  («term_<|_»
+                   `Finset.card_lt_card
+                   "<|"
+                   (Term.byTactic
+                    "by"
+                    (Tactic.tacticSeq
+                     (Tactic.tacticSeq1Indented
+                      [(Tactic.«tactic_<;>_»
+                        (Tactic.simp
+                         "simp"
+                         []
+                         []
+                         ["only"]
+                         ["["
+                          [(Tactic.simpLemma [] [] `finset.lt_iff_ssubset.symm)
+                           ","
+                           (Tactic.simpLemma [] [] `lt_iff_le_not_le)
+                           ","
+                           (Tactic.simpLemma [] [] `Finset.le_iff_subset)
+                           ","
+                           (Tactic.simpLemma [] [] `Finset.subset_iff)
+                           ","
+                           (Tactic.simpLemma [] [] `mem_filter)
+                           ","
+                           (Tactic.simpLemma [] [] `true_and_iff)
+                           ","
+                           (Tactic.simpLemma [] [] `mem_univ)
+                           ","
+                           (Tactic.simpLemma [] [] `hxy)]
+                          "]"]
+                         [])
+                        "<;>"
+                        (Tactic.exact
+                         "exact"
+                         (Term.anonymousCtor
+                          "⟨"
+                          [(Term.fun "fun" (Term.basicFun [`z `hzx] [] "=>" (Term.app `trans [`hzx `hxy])))
+                           ","
+                           (Term.app
+                            `not_forall_of_exists_not
+                            [(Term.anonymousCtor
+                              "⟨"
+                              [`x
+                               ","
+                               (Term.app
+                                (Term.proj `not_imp "." (fieldIdx "2"))
+                                [(Term.anonymousCtor "⟨" [`hxy "," (Term.app `irrefl [`x])] "⟩")])]
+                              "⟩")])]
+                          "⟩")))]))))))))
+              []
+              (Term.app `Subrelation.wf [`this (Term.app `measure_wf [(Term.hole "_")])])))))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.«tactic_<;>_»
+       (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+       "<;>"
+       (Tactic.«tactic_<;>_»
+        (Tactic.cases "cases" [(Tactic.casesTarget [] (Term.app `nonempty_fintype [`α]))] [] [])
+        "<;>"
+        (Tactic.exact
+         "exact"
+         (Term.have
+          "have"
+          (Term.haveDecl
+           (Term.haveIdDecl
+            []
+            [(Term.typeSpec
+              ":"
+              (Term.forall
+               "∀"
+               [`x `y]
+               []
+               ","
+               (Term.arrow
+                (Term.app `r [`x `y])
+                "→"
+                («term_<_»
+                 (Term.proj
+                  (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `x])))])
+                  "."
+                  `card)
+                 "<"
+                 (Term.proj
+                  (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `y])))])
+                  "."
+                  `card)))))]
+            ":="
+            (Term.fun
+             "fun"
+             (Term.basicFun
+              [`x `y `hxy]
+              []
+              "=>"
+              («term_<|_»
+               `Finset.card_lt_card
+               "<|"
+               (Term.byTactic
+                "by"
+                (Tactic.tacticSeq
+                 (Tactic.tacticSeq1Indented
+                  [(Tactic.«tactic_<;>_»
+                    (Tactic.simp
+                     "simp"
+                     []
+                     []
+                     ["only"]
+                     ["["
+                      [(Tactic.simpLemma [] [] `finset.lt_iff_ssubset.symm)
+                       ","
+                       (Tactic.simpLemma [] [] `lt_iff_le_not_le)
+                       ","
+                       (Tactic.simpLemma [] [] `Finset.le_iff_subset)
+                       ","
+                       (Tactic.simpLemma [] [] `Finset.subset_iff)
+                       ","
+                       (Tactic.simpLemma [] [] `mem_filter)
+                       ","
+                       (Tactic.simpLemma [] [] `true_and_iff)
+                       ","
+                       (Tactic.simpLemma [] [] `mem_univ)
+                       ","
+                       (Tactic.simpLemma [] [] `hxy)]
+                      "]"]
+                     [])
+                    "<;>"
+                    (Tactic.exact
+                     "exact"
+                     (Term.anonymousCtor
+                      "⟨"
+                      [(Term.fun "fun" (Term.basicFun [`z `hzx] [] "=>" (Term.app `trans [`hzx `hxy])))
+                       ","
+                       (Term.app
+                        `not_forall_of_exists_not
+                        [(Term.anonymousCtor
+                          "⟨"
+                          [`x
+                           ","
+                           (Term.app
+                            (Term.proj `not_imp "." (fieldIdx "2"))
+                            [(Term.anonymousCtor "⟨" [`hxy "," (Term.app `irrefl [`x])] "⟩")])]
+                          "⟩")])]
+                      "⟩")))]))))))))
+          []
+          (Term.app `Subrelation.wf [`this (Term.app `measure_wf [(Term.hole "_")])])))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.«tactic_<;>_»
+       (Tactic.cases "cases" [(Tactic.casesTarget [] (Term.app `nonempty_fintype [`α]))] [] [])
+       "<;>"
+       (Tactic.exact
+        "exact"
+        (Term.have
+         "have"
+         (Term.haveDecl
+          (Term.haveIdDecl
+           []
+           [(Term.typeSpec
+             ":"
+             (Term.forall
+              "∀"
+              [`x `y]
+              []
+              ","
+              (Term.arrow
+               (Term.app `r [`x `y])
+               "→"
+               («term_<_»
+                (Term.proj
+                 (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `x])))])
+                 "."
+                 `card)
+                "<"
+                (Term.proj
+                 (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `y])))])
+                 "."
+                 `card)))))]
+           ":="
+           (Term.fun
+            "fun"
+            (Term.basicFun
+             [`x `y `hxy]
+             []
+             "=>"
+             («term_<|_»
+              `Finset.card_lt_card
+              "<|"
+              (Term.byTactic
+               "by"
+               (Tactic.tacticSeq
+                (Tactic.tacticSeq1Indented
+                 [(Tactic.«tactic_<;>_»
+                   (Tactic.simp
+                    "simp"
+                    []
+                    []
+                    ["only"]
+                    ["["
+                     [(Tactic.simpLemma [] [] `finset.lt_iff_ssubset.symm)
+                      ","
+                      (Tactic.simpLemma [] [] `lt_iff_le_not_le)
+                      ","
+                      (Tactic.simpLemma [] [] `Finset.le_iff_subset)
+                      ","
+                      (Tactic.simpLemma [] [] `Finset.subset_iff)
+                      ","
+                      (Tactic.simpLemma [] [] `mem_filter)
+                      ","
+                      (Tactic.simpLemma [] [] `true_and_iff)
+                      ","
+                      (Tactic.simpLemma [] [] `mem_univ)
+                      ","
+                      (Tactic.simpLemma [] [] `hxy)]
+                     "]"]
+                    [])
+                   "<;>"
+                   (Tactic.exact
+                    "exact"
+                    (Term.anonymousCtor
+                     "⟨"
+                     [(Term.fun "fun" (Term.basicFun [`z `hzx] [] "=>" (Term.app `trans [`hzx `hxy])))
+                      ","
+                      (Term.app
+                       `not_forall_of_exists_not
+                       [(Term.anonymousCtor
+                         "⟨"
+                         [`x
+                          ","
+                          (Term.app
+                           (Term.proj `not_imp "." (fieldIdx "2"))
+                           [(Term.anonymousCtor "⟨" [`hxy "," (Term.app `irrefl [`x])] "⟩")])]
+                         "⟩")])]
+                     "⟩")))]))))))))
+         []
+         (Term.app `Subrelation.wf [`this (Term.app `measure_wf [(Term.hole "_")])]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.have
+        "have"
+        (Term.haveDecl
+         (Term.haveIdDecl
+          []
+          [(Term.typeSpec
+            ":"
+            (Term.forall
+             "∀"
+             [`x `y]
+             []
+             ","
+             (Term.arrow
+              (Term.app `r [`x `y])
+              "→"
+              («term_<_»
+               (Term.proj
+                (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `x])))])
+                "."
+                `card)
+               "<"
+               (Term.proj
+                (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `y])))])
+                "."
+                `card)))))]
+          ":="
+          (Term.fun
+           "fun"
+           (Term.basicFun
+            [`x `y `hxy]
+            []
+            "=>"
+            («term_<|_»
+             `Finset.card_lt_card
+             "<|"
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq
+               (Tactic.tacticSeq1Indented
+                [(Tactic.«tactic_<;>_»
+                  (Tactic.simp
+                   "simp"
+                   []
+                   []
+                   ["only"]
+                   ["["
+                    [(Tactic.simpLemma [] [] `finset.lt_iff_ssubset.symm)
+                     ","
+                     (Tactic.simpLemma [] [] `lt_iff_le_not_le)
+                     ","
+                     (Tactic.simpLemma [] [] `Finset.le_iff_subset)
+                     ","
+                     (Tactic.simpLemma [] [] `Finset.subset_iff)
+                     ","
+                     (Tactic.simpLemma [] [] `mem_filter)
+                     ","
+                     (Tactic.simpLemma [] [] `true_and_iff)
+                     ","
+                     (Tactic.simpLemma [] [] `mem_univ)
+                     ","
+                     (Tactic.simpLemma [] [] `hxy)]
+                    "]"]
+                   [])
+                  "<;>"
+                  (Tactic.exact
+                   "exact"
+                   (Term.anonymousCtor
+                    "⟨"
+                    [(Term.fun "fun" (Term.basicFun [`z `hzx] [] "=>" (Term.app `trans [`hzx `hxy])))
+                     ","
+                     (Term.app
+                      `not_forall_of_exists_not
+                      [(Term.anonymousCtor
+                        "⟨"
+                        [`x
+                         ","
+                         (Term.app
+                          (Term.proj `not_imp "." (fieldIdx "2"))
+                          [(Term.anonymousCtor "⟨" [`hxy "," (Term.app `irrefl [`x])] "⟩")])]
+                        "⟩")])]
+                    "⟩")))]))))))))
+        []
+        (Term.app `Subrelation.wf [`this (Term.app `measure_wf [(Term.hole "_")])])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.have
+       "have"
+       (Term.haveDecl
+        (Term.haveIdDecl
+         []
+         [(Term.typeSpec
+           ":"
+           (Term.forall
+            "∀"
+            [`x `y]
+            []
+            ","
+            (Term.arrow
+             (Term.app `r [`x `y])
+             "→"
+             («term_<_»
+              (Term.proj
+               (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `x])))])
+               "."
+               `card)
+              "<"
+              (Term.proj
+               (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `y])))])
+               "."
+               `card)))))]
+         ":="
+         (Term.fun
+          "fun"
+          (Term.basicFun
+           [`x `y `hxy]
+           []
+           "=>"
+           («term_<|_»
+            `Finset.card_lt_card
+            "<|"
+            (Term.byTactic
+             "by"
+             (Tactic.tacticSeq
+              (Tactic.tacticSeq1Indented
+               [(Tactic.«tactic_<;>_»
+                 (Tactic.simp
+                  "simp"
+                  []
+                  []
+                  ["only"]
+                  ["["
+                   [(Tactic.simpLemma [] [] `finset.lt_iff_ssubset.symm)
+                    ","
+                    (Tactic.simpLemma [] [] `lt_iff_le_not_le)
+                    ","
+                    (Tactic.simpLemma [] [] `Finset.le_iff_subset)
+                    ","
+                    (Tactic.simpLemma [] [] `Finset.subset_iff)
+                    ","
+                    (Tactic.simpLemma [] [] `mem_filter)
+                    ","
+                    (Tactic.simpLemma [] [] `true_and_iff)
+                    ","
+                    (Tactic.simpLemma [] [] `mem_univ)
+                    ","
+                    (Tactic.simpLemma [] [] `hxy)]
+                   "]"]
+                  [])
+                 "<;>"
+                 (Tactic.exact
+                  "exact"
+                  (Term.anonymousCtor
+                   "⟨"
+                   [(Term.fun "fun" (Term.basicFun [`z `hzx] [] "=>" (Term.app `trans [`hzx `hxy])))
+                    ","
+                    (Term.app
+                     `not_forall_of_exists_not
+                     [(Term.anonymousCtor
+                       "⟨"
+                       [`x
+                        ","
+                        (Term.app
+                         (Term.proj `not_imp "." (fieldIdx "2"))
+                         [(Term.anonymousCtor "⟨" [`hxy "," (Term.app `irrefl [`x])] "⟩")])]
+                       "⟩")])]
+                   "⟩")))]))))))))
+       []
+       (Term.app `Subrelation.wf [`this (Term.app `measure_wf [(Term.hole "_")])]))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `Subrelation.wf [`this (Term.app `measure_wf [(Term.hole "_")])])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `measure_wf [(Term.hole "_")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.hole "_")
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `measure_wf
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" (Term.app `measure_wf [(Term.hole "_")]) ")")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `this
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `Subrelation.wf
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun
+       "fun"
+       (Term.basicFun
+        [`x `y `hxy]
+        []
+        "=>"
+        («term_<|_»
+         `Finset.card_lt_card
+         "<|"
+         (Term.byTactic
+          "by"
+          (Tactic.tacticSeq
+           (Tactic.tacticSeq1Indented
+            [(Tactic.«tactic_<;>_»
+              (Tactic.simp
+               "simp"
+               []
+               []
+               ["only"]
+               ["["
+                [(Tactic.simpLemma [] [] `finset.lt_iff_ssubset.symm)
+                 ","
+                 (Tactic.simpLemma [] [] `lt_iff_le_not_le)
+                 ","
+                 (Tactic.simpLemma [] [] `Finset.le_iff_subset)
+                 ","
+                 (Tactic.simpLemma [] [] `Finset.subset_iff)
+                 ","
+                 (Tactic.simpLemma [] [] `mem_filter)
+                 ","
+                 (Tactic.simpLemma [] [] `true_and_iff)
+                 ","
+                 (Tactic.simpLemma [] [] `mem_univ)
+                 ","
+                 (Tactic.simpLemma [] [] `hxy)]
+                "]"]
+               [])
+              "<;>"
+              (Tactic.exact
+               "exact"
+               (Term.anonymousCtor
+                "⟨"
+                [(Term.fun "fun" (Term.basicFun [`z `hzx] [] "=>" (Term.app `trans [`hzx `hxy])))
+                 ","
+                 (Term.app
+                  `not_forall_of_exists_not
+                  [(Term.anonymousCtor
+                    "⟨"
+                    [`x
+                     ","
+                     (Term.app
+                      (Term.proj `not_imp "." (fieldIdx "2"))
+                      [(Term.anonymousCtor "⟨" [`hxy "," (Term.app `irrefl [`x])] "⟩")])]
+                    "⟩")])]
+                "⟩")))]))))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<|_»
+       `Finset.card_lt_card
+       "<|"
+       (Term.byTactic
+        "by"
+        (Tactic.tacticSeq
+         (Tactic.tacticSeq1Indented
+          [(Tactic.«tactic_<;>_»
+            (Tactic.simp
+             "simp"
+             []
+             []
+             ["only"]
+             ["["
+              [(Tactic.simpLemma [] [] `finset.lt_iff_ssubset.symm)
+               ","
+               (Tactic.simpLemma [] [] `lt_iff_le_not_le)
+               ","
+               (Tactic.simpLemma [] [] `Finset.le_iff_subset)
+               ","
+               (Tactic.simpLemma [] [] `Finset.subset_iff)
+               ","
+               (Tactic.simpLemma [] [] `mem_filter)
+               ","
+               (Tactic.simpLemma [] [] `true_and_iff)
+               ","
+               (Tactic.simpLemma [] [] `mem_univ)
+               ","
+               (Tactic.simpLemma [] [] `hxy)]
+              "]"]
+             [])
+            "<;>"
+            (Tactic.exact
+             "exact"
+             (Term.anonymousCtor
+              "⟨"
+              [(Term.fun "fun" (Term.basicFun [`z `hzx] [] "=>" (Term.app `trans [`hzx `hxy])))
+               ","
+               (Term.app
+                `not_forall_of_exists_not
+                [(Term.anonymousCtor
+                  "⟨"
+                  [`x
+                   ","
+                   (Term.app
+                    (Term.proj `not_imp "." (fieldIdx "2"))
+                    [(Term.anonymousCtor "⟨" [`hxy "," (Term.app `irrefl [`x])] "⟩")])]
+                  "⟩")])]
+              "⟩")))]))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.byTactic
+       "by"
+       (Tactic.tacticSeq
+        (Tactic.tacticSeq1Indented
+         [(Tactic.«tactic_<;>_»
+           (Tactic.simp
+            "simp"
+            []
+            []
+            ["only"]
+            ["["
+             [(Tactic.simpLemma [] [] `finset.lt_iff_ssubset.symm)
+              ","
+              (Tactic.simpLemma [] [] `lt_iff_le_not_le)
+              ","
+              (Tactic.simpLemma [] [] `Finset.le_iff_subset)
+              ","
+              (Tactic.simpLemma [] [] `Finset.subset_iff)
+              ","
+              (Tactic.simpLemma [] [] `mem_filter)
+              ","
+              (Tactic.simpLemma [] [] `true_and_iff)
+              ","
+              (Tactic.simpLemma [] [] `mem_univ)
+              ","
+              (Tactic.simpLemma [] [] `hxy)]
+             "]"]
+            [])
+           "<;>"
+           (Tactic.exact
+            "exact"
+            (Term.anonymousCtor
+             "⟨"
+             [(Term.fun "fun" (Term.basicFun [`z `hzx] [] "=>" (Term.app `trans [`hzx `hxy])))
+              ","
+              (Term.app
+               `not_forall_of_exists_not
+               [(Term.anonymousCtor
+                 "⟨"
+                 [`x
+                  ","
+                  (Term.app
+                   (Term.proj `not_imp "." (fieldIdx "2"))
+                   [(Term.anonymousCtor "⟨" [`hxy "," (Term.app `irrefl [`x])] "⟩")])]
+                 "⟩")])]
+             "⟩")))])))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.«tactic_<;>_»
+       (Tactic.simp
+        "simp"
+        []
+        []
+        ["only"]
+        ["["
+         [(Tactic.simpLemma [] [] `finset.lt_iff_ssubset.symm)
+          ","
+          (Tactic.simpLemma [] [] `lt_iff_le_not_le)
+          ","
+          (Tactic.simpLemma [] [] `Finset.le_iff_subset)
+          ","
+          (Tactic.simpLemma [] [] `Finset.subset_iff)
+          ","
+          (Tactic.simpLemma [] [] `mem_filter)
+          ","
+          (Tactic.simpLemma [] [] `true_and_iff)
+          ","
+          (Tactic.simpLemma [] [] `mem_univ)
+          ","
+          (Tactic.simpLemma [] [] `hxy)]
+         "]"]
+        [])
+       "<;>"
+       (Tactic.exact
+        "exact"
+        (Term.anonymousCtor
+         "⟨"
+         [(Term.fun "fun" (Term.basicFun [`z `hzx] [] "=>" (Term.app `trans [`hzx `hxy])))
+          ","
+          (Term.app
+           `not_forall_of_exists_not
+           [(Term.anonymousCtor
+             "⟨"
+             [`x
+              ","
+              (Term.app
+               (Term.proj `not_imp "." (fieldIdx "2"))
+               [(Term.anonymousCtor "⟨" [`hxy "," (Term.app `irrefl [`x])] "⟩")])]
+             "⟩")])]
+         "⟩")))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Tactic.exact
+       "exact"
+       (Term.anonymousCtor
+        "⟨"
+        [(Term.fun "fun" (Term.basicFun [`z `hzx] [] "=>" (Term.app `trans [`hzx `hxy])))
+         ","
+         (Term.app
+          `not_forall_of_exists_not
+          [(Term.anonymousCtor
+            "⟨"
+            [`x
+             ","
+             (Term.app
+              (Term.proj `not_imp "." (fieldIdx "2"))
+              [(Term.anonymousCtor "⟨" [`hxy "," (Term.app `irrefl [`x])] "⟩")])]
+            "⟩")])]
+        "⟩"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [(Term.fun "fun" (Term.basicFun [`z `hzx] [] "=>" (Term.app `trans [`hzx `hxy])))
+        ","
+        (Term.app
+         `not_forall_of_exists_not
+         [(Term.anonymousCtor
+           "⟨"
+           [`x
+            ","
+            (Term.app
+             (Term.proj `not_imp "." (fieldIdx "2"))
+             [(Term.anonymousCtor "⟨" [`hxy "," (Term.app `irrefl [`x])] "⟩")])]
+           "⟩")])]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       `not_forall_of_exists_not
+       [(Term.anonymousCtor
+         "⟨"
+         [`x
+          ","
+          (Term.app
+           (Term.proj `not_imp "." (fieldIdx "2"))
+           [(Term.anonymousCtor "⟨" [`hxy "," (Term.app `irrefl [`x])] "⟩")])]
+         "⟩")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor
+       "⟨"
+       [`x
+        ","
+        (Term.app
+         (Term.proj `not_imp "." (fieldIdx "2"))
+         [(Term.anonymousCtor "⟨" [`hxy "," (Term.app `irrefl [`x])] "⟩")])]
+       "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app
+       (Term.proj `not_imp "." (fieldIdx "2"))
+       [(Term.anonymousCtor "⟨" [`hxy "," (Term.app `irrefl [`x])] "⟩")])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.anonymousCtor', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.anonymousCtor "⟨" [`hxy "," (Term.app `irrefl [`x])] "⟩")
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `irrefl [`x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `irrefl
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hxy
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      (Term.proj `not_imp "." (fieldIdx "2"))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `not_imp
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `not_forall_of_exists_not
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun "fun" (Term.basicFun [`z `hzx] [] "=>" (Term.app `trans [`hzx `hxy])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `trans [`hzx `hxy])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hxy
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `hzx
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `trans
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hzx
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `z
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Tactic.simp
+       "simp"
+       []
+       []
+       ["only"]
+       ["["
+        [(Tactic.simpLemma [] [] `finset.lt_iff_ssubset.symm)
+         ","
+         (Tactic.simpLemma [] [] `lt_iff_le_not_le)
+         ","
+         (Tactic.simpLemma [] [] `Finset.le_iff_subset)
+         ","
+         (Tactic.simpLemma [] [] `Finset.subset_iff)
+         ","
+         (Tactic.simpLemma [] [] `mem_filter)
+         ","
+         (Tactic.simpLemma [] [] `true_and_iff)
+         ","
+         (Tactic.simpLemma [] [] `mem_univ)
+         ","
+         (Tactic.simpLemma [] [] `hxy)]
+        "]"]
+       [])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hxy
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `mem_univ
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `true_and_iff
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `mem_filter
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Finset.subset_iff
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `Finset.le_iff_subset
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `lt_iff_le_not_le
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `finset.lt_iff_ssubset.symm
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1
+[PrettyPrinter.parenthesize] ...precedences are 10 >? 1022, (some 0, tactic) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 10, term))
+      `Finset.card_lt_card
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 10, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 10, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `hxy
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `y
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.forall
+       "∀"
+       [`x `y]
+       []
+       ","
+       (Term.arrow
+        (Term.app `r [`x `y])
+        "→"
+        («term_<_»
+         (Term.proj
+          (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `x])))])
+          "."
+          `card)
+         "<"
+         (Term.proj
+          (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `y])))])
+          "."
+          `card))))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.arrow
+       (Term.app `r [`x `y])
+       "→"
+       («term_<_»
+        (Term.proj
+         (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `x])))])
+         "."
+         `card)
+        "<"
+        (Term.proj
+         (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `y])))])
+         "."
+         `card)))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      («term_<_»
+       (Term.proj
+        (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `x])))])
+        "."
+        `card)
+       "<"
+       (Term.proj
+        (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `y])))])
+        "."
+        `card))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.proj
+       (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `y])))])
+       "."
+       `card)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `y])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `y])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `r [`z `y])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `y
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `z
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `r
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `z
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `univ.filter
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `y])))])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
+      (Term.proj
+       (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `x])))])
+       "."
+       `card)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `x])))])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `x])))
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `r [`z `x])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `z
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `r
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.strictImplicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.implicitBinder'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.instBinder'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `z
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `univ.filter
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren
+     "("
+     (Term.app `univ.filter [(Term.fun "fun" (Term.basicFun [`z] [] "=>" (Term.app `r [`z `x])))])
+     ")")
+[PrettyPrinter.parenthesize] ...precedences are 51 >? 1024, (none, [anonymous]) <=? (some 50, term)
+[PrettyPrinter.parenthesize] ...precedences are 25 >? 50, (some 51, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 25, term))
+      (Term.app `r [`x `y])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `y
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
+      `x
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `r
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 25, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 25, (some 25, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Tactic.cases "cases" [(Tactic.casesTarget [] (Term.app `nonempty_fintype [`α]))] [] [])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      (Term.app `nonempty_fintype [`α])
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+      `α
+[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
+      `nonempty_fintype
+[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
+      (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.skip', expected 'Lean.Parser.Tactic.tacticSeq'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValEqns'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.whereStructInst'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.opaque'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.instance'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.axiom'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.example'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
+theorem
+  well_founded_of_trans_of_irrefl
+  ( r : α → α → Prop ) [ IsTrans α r ] [ IsIrrefl α r ] : WellFounded r
+  :=
+    by
+      skip
+        <;>
+        cases nonempty_fintype α
+          <;>
+          exact
+            have
+              : ∀ x y , r x y → univ.filter fun z => r z x . card < univ.filter fun z => r z y . card
+                :=
+                fun
+                  x y hxy
+                    =>
+                    Finset.card_lt_card
+                      <|
+                      by
+                        simp
+                            only
+                            [
+                              finset.lt_iff_ssubset.symm
+                                ,
+                                lt_iff_le_not_le
+                                ,
+                                Finset.le_iff_subset
+                                ,
+                                Finset.subset_iff
+                                ,
+                                mem_filter
+                                ,
+                                true_and_iff
+                                ,
+                                mem_univ
+                                ,
+                                hxy
+                              ]
+                          <;>
+                          exact
+                            ⟨
+                              fun z hzx => trans hzx hxy
+                                ,
+                                not_forall_of_exists_not ⟨ x , not_imp . 2 ⟨ hxy , irrefl x ⟩ ⟩
+                              ⟩
+              Subrelation.wf this measure_wf _
+#align finite.well_founded_of_trans_of_irrefl Finite.well_founded_of_trans_of_irrefl
+
+theorem Preorder.well_founded_lt [Preorder α] : WellFounded ((· < ·) : α → α → Prop) :=
+  well_founded_of_trans_of_irrefl _
+#align finite.preorder.well_founded_lt Finite.Preorder.well_founded_lt
+
+theorem Preorder.well_founded_gt [Preorder α] : WellFounded ((· > ·) : α → α → Prop) :=
+  well_founded_of_trans_of_irrefl _
+#align finite.preorder.well_founded_gt Finite.Preorder.well_founded_gt
+
+instance (priority := 10) LinearOrder.is_well_order_lt [LinearOrder α] :
+    IsWellOrder α (· < ·) where wf := Preorder.well_founded_lt
+#align finite.linear_order.is_well_order_lt Finite.LinearOrder.is_well_order_lt
+
+instance (priority := 10) LinearOrder.is_well_order_gt [LinearOrder α] :
+    IsWellOrder α (· > ·) where wf := Preorder.well_founded_gt
+#align finite.linear_order.is_well_order_gt Finite.LinearOrder.is_well_order_gt
+
+end Finite
+
+@[nolint fintype_finite]
+protected theorem Fintype.false [Infinite α] (h : Fintype α) : False :=
+  not_finite α
+#align fintype.false Fintype.false
+
+@[simp]
+theorem is_empty_fintype {α : Type _} : IsEmpty (Fintype α) ↔ Infinite α :=
+  ⟨fun ⟨h⟩ => ⟨fun h' => (@nonempty_fintype α h').elim h⟩, fun ⟨h⟩ => ⟨fun h' => h h'.Finite⟩⟩
+#align is_empty_fintype is_empty_fintype
+
+/-- A non-infinite type is a fintype. -/
+noncomputable def fintypeOfNotInfinite {α : Type _} (h : ¬Infinite α) : Fintype α :=
+  @Fintype.ofFinite _ (not_infinite_iff_finite.mp h)
+#align fintype_of_not_infinite fintypeOfNotInfinite
 
 section
 
-open Finset
+open Classical
 
-variable {α₁ : Type _} {α₂ : Type _} {M : Type _} [Fintype α₁] [Fintype α₂] [CommMonoid M]
+/-- Any type is (classically) either a `fintype`, or `infinite`.
 
-@[to_additive]
-theorem Fintype.prod_sum_elim (f : α₁ → M) (g : α₂ → M) : (∏ x, Sum.elim f g x) = (∏ a₁, f a₁) * ∏ a₂, g a₂ :=
-  prod_disj_sum _ _ _
-#align fintype.prod_sum_elim Fintype.prod_sum_elim
-
-@[simp, to_additive]
-theorem Fintype.prod_sum_type (f : α₁ ⊕ α₂ → M) : (∏ x, f x) = (∏ a₁, f (Sum.inl a₁)) * ∏ a₂, f (Sum.inr a₂) :=
-  prod_disj_sum _ _ _
-#align fintype.prod_sum_type Fintype.prod_sum_type
+One can obtain the relevant typeclasses via `cases fintype_or_infinite α; resetI`.
+-/
+noncomputable def fintypeOrInfinite (α : Type _) : PSum (Fintype α) (Infinite α) :=
+  if h : Infinite α then PSum.inr h else PSum.inl (fintypeOfNotInfinite h)
+#align fintype_or_infinite fintypeOrInfinite
 
 end
+
+theorem Finset.exists_minimal {α : Type _} [Preorder α] (s : Finset α) (h : s.Nonempty) : ∃ m ∈ s, ∀ x ∈ s, ¬x < m := by
+  obtain ⟨c, hcs : c ∈ s⟩ := h
+  have : WellFounded (@LT.lt { x // x ∈ s } _) := Finite.well_founded_of_trans_of_irrefl _
+  obtain ⟨⟨m, hms : m ∈ s⟩, -, H⟩ := this.has_min Set.univ ⟨⟨c, hcs⟩, trivial⟩
+  exact ⟨m, hms, fun x hx hxm => H ⟨x, hx⟩ trivial hxm⟩
+#align finset.exists_minimal Finset.exists_minimal
+
+theorem Finset.exists_maximal {α : Type _} [Preorder α] (s : Finset α) (h : s.Nonempty) : ∃ m ∈ s, ∀ x ∈ s, ¬m < x :=
+  @Finset.exists_minimal αᵒᵈ _ s h
+#align finset.exists_maximal Finset.exists_maximal
+
+namespace Infinite
+
+theorem of_not_fintype (h : Fintype α → False) : Infinite α :=
+  is_empty_fintype.mp ⟨h⟩
+#align infinite.of_not_fintype Infinite.of_not_fintype
+
+/-- If `s : set α` is a proper subset of `α` and `f : α → s` is injective, then `α` is infinite. -/
+theorem of_injective_to_set {s : Set α} (hs : s ≠ Set.univ) {f : α → s} (hf : Injective f) : Infinite α :=
+  of_not_fintype fun h => by
+    skip
+    classical
+    refine' lt_irrefl (Fintype.card α) _
+    calc
+      Fintype.card α ≤ Fintype.card s := Fintype.card_le_of_injective f hf
+      _ = s.to_finset.card := s.to_finset_card.symm
+      _ < Fintype.card α := Finset.card_lt_card <| by rwa [Set.to_finset_ssubset_univ, Set.ssubset_univ_iff]
+      
+#align infinite.of_injective_to_set Infinite.of_injective_to_set
+
+/-- If `s : set α` is a proper subset of `α` and `f : s → α` is surjective, then `α` is infinite. -/
+theorem of_surjective_from_set {s : Set α} (hs : s ≠ Set.univ) {f : s → α} (hf : Surjective f) : Infinite α :=
+  of_injective_to_set hs (injective_surjInv hf)
+#align infinite.of_surjective_from_set Infinite.of_surjective_from_set
+
+theorem exists_not_mem_finset [Infinite α] (s : Finset α) : ∃ x, x ∉ s :=
+  not_forall.1 fun h => Fintype.false ⟨s, h⟩
+#align infinite.exists_not_mem_finset Infinite.exists_not_mem_finset
+
+-- see Note [lower instance priority]
+instance (priority := 100) (α : Type _) [H : Infinite α] : Nontrivial α :=
+  ⟨let ⟨x, hx⟩ := exists_not_mem_finset (∅ : Finset α)
+    let ⟨y, hy⟩ := exists_not_mem_finset ({x} : Finset α)
+    ⟨y, x, by simpa only [mem_singleton] using hy⟩⟩
+
+protected theorem nonempty (α : Type _) [Infinite α] : Nonempty α := by infer_instance
+#align infinite.nonempty Infinite.nonempty
+
+theorem of_injective {α β} [Infinite β] (f : β → α) (hf : Injective f) : Infinite α :=
+  ⟨fun I => (Finite.of_injective f hf).False⟩
+#align infinite.of_injective Infinite.of_injective
+
+theorem of_surjective {α β} [Infinite β] (f : α → β) (hf : Surjective f) : Infinite α :=
+  ⟨fun I => (Finite.of_surjective f hf).False⟩
+#align infinite.of_surjective Infinite.of_surjective
+
+end Infinite
+
+instance Infinite.set [Infinite α] : Infinite (Set α) :=
+  Infinite.of_injective singleton fun a b => Set.singleton_eq_singleton_iff.1
+#align infinite.set Infinite.set
+
+instance [Infinite α] : Infinite (Finset α) :=
+  Infinite.of_injective singleton Finset.singleton_injective
+
+instance [Infinite α] : Infinite (Option α) :=
+  Infinite.of_injective some (Option.some_injective α)
+
+instance Sum.infinite_of_left [Infinite α] : Infinite (Sum α β) :=
+  Infinite.of_injective Sum.inl Sum.inl_injective
+#align sum.infinite_of_left Sum.infinite_of_left
+
+instance Sum.infinite_of_right [Infinite β] : Infinite (Sum α β) :=
+  Infinite.of_injective Sum.inr Sum.inr_injective
+#align sum.infinite_of_right Sum.infinite_of_right
+
+instance Prod.infinite_of_right [Nonempty α] [Infinite β] : Infinite (α × β) :=
+  Infinite.of_surjective Prod.snd Prod.snd_surjective
+#align prod.infinite_of_right Prod.infinite_of_right
+
+instance Prod.infinite_of_left [Infinite α] [Nonempty β] : Infinite (α × β) :=
+  Infinite.of_surjective Prod.fst Prod.fst_surjective
+#align prod.infinite_of_left Prod.infinite_of_left
+
+namespace Infinite
+
+private noncomputable def nat_embedding_aux (α : Type _) [Infinite α] : ℕ → α
+  | n =>
+    letI := Classical.decEq α
+    Classical.choose
+      (exists_not_mem_finset
+        ((Multiset.range n).pmap (fun m (hm : m < n) => nat_embedding_aux m) fun _ => Multiset.mem_range.1).toFinset)
+#align infinite.nat_embedding_aux infinite.nat_embedding_aux
+
+private theorem nat_embedding_aux_injective (α : Type _) [Infinite α] : Function.Injective (natEmbeddingAux α) := by
+  rintro m n h
+  letI := Classical.decEq α
+  wlog hmlen : m ≤ n using m n
+  by_contra hmn
+  have hmn : m < n := lt_of_le_of_ne hmlen hmn
+  refine'
+    (Classical.choose_spec
+        (exists_not_mem_finset
+          ((Multiset.range n).pmap (fun m (hm : m < n) => nat_embedding_aux α m) fun _ =>
+              Multiset.mem_range.1).toFinset))
+      _
+  refine' Multiset.mem_to_finset.2 (Multiset.mem_pmap.2 ⟨m, Multiset.mem_range.2 hmn, _⟩)
+  rw [h, nat_embedding_aux]
+#align infinite.nat_embedding_aux_injective infinite.nat_embedding_aux_injective
+
+/-- Embedding of `ℕ` into an infinite type. -/
+noncomputable def natEmbedding (α : Type _) [Infinite α] : ℕ ↪ α :=
+  ⟨_, nat_embedding_aux_injective α⟩
+#align infinite.nat_embedding Infinite.natEmbedding
+
+/-- See `infinite.exists_superset_card_eq` for a version that, for a `s : finset α`,
+provides a superset `t : finset α`, `s ⊆ t` such that `t.card` is fixed. -/
+theorem exists_subset_card_eq (α : Type _) [Infinite α] (n : ℕ) : ∃ s : Finset α, s.card = n :=
+  ⟨(range n).map (natEmbedding α), by rw [card_map, card_range]⟩
+#align infinite.exists_subset_card_eq Infinite.exists_subset_card_eq
+
+/-- See `infinite.exists_subset_card_eq` for a version that provides an arbitrary
+`s : finset α` for any cardinality. -/
+theorem exists_superset_card_eq [Infinite α] (s : Finset α) (n : ℕ) (hn : s.card ≤ n) :
+    ∃ t : Finset α, s ⊆ t ∧ t.card = n := by
+  induction' n with n IH generalizing s
+  · exact ⟨s, subset_refl _, Nat.eq_zero_of_le_zero hn⟩
+    
+  · cases' hn.eq_or_lt with hn' hn'
+    · exact ⟨s, subset_refl _, hn'⟩
+      
+    obtain ⟨t, hs, ht⟩ := IH _ (Nat.le_of_lt_succ hn')
+    obtain ⟨x, hx⟩ := exists_not_mem_finset t
+    refine' ⟨Finset.cons x t hx, hs.trans (Finset.subset_cons _), _⟩
+    simp [hx, ht]
+    
+#align infinite.exists_superset_card_eq Infinite.exists_superset_card_eq
+
+end Infinite
+
+/-- If every finset in a type has bounded cardinality, that type is finite. -/
+noncomputable def fintypeOfFinsetCardLe {ι : Type _} (n : ℕ) (w : ∀ s : Finset ι, s.card ≤ n) : Fintype ι := by
+  apply fintypeOfNotInfinite
+  intro i
+  obtain ⟨s, c⟩ := Infinite.exists_subset_card_eq ι (n + 1)
+  specialize w s
+  rw [c] at w
+  exact Nat.not_succ_le_self n w
+#align fintype_of_finset_card_le fintypeOfFinsetCardLe
+
+theorem not_injective_infinite_finite {α β} [Infinite α] [Finite β] (f : α → β) : ¬Injective f := fun hf =>
+  (Finite.of_injective f hf).False
+#align not_injective_infinite_finite not_injective_infinite_finite
+
+/-- The pigeonhole principle for infinitely many pigeons in finitely many pigeonholes. If there are
+infinitely many pigeons in finitely many pigeonholes, then there are at least two pigeons in the
+same pigeonhole.
+
+See also: `fintype.exists_ne_map_eq_of_card_lt`, `finite.exists_infinite_fiber`.
+-/
+theorem Finite.exists_ne_map_eq_of_infinite {α β} [Infinite α] [Finite β] (f : α → β) : ∃ x y : α, x ≠ y ∧ f x = f y :=
+  by simpa only [injective, not_forall, not_imp, and_comm] using not_injective_infinite_finite f
+#align finite.exists_ne_map_eq_of_infinite Finite.exists_ne_map_eq_of_infinite
+
+instance Function.Embedding.is_empty {α β} [Infinite α] [Finite β] : IsEmpty (α ↪ β) :=
+  ⟨fun f => not_injective_infinite_finite f f.2⟩
+#align function.embedding.is_empty Function.Embedding.is_empty
+
+/-- The strong pigeonhole principle for infinitely many pigeons in
+finitely many pigeonholes.  If there are infinitely many pigeons in
+finitely many pigeonholes, then there is a pigeonhole with infinitely
+many pigeons.
+
+See also: `finite.exists_ne_map_eq_of_infinite`
+-/
+theorem Finite.exists_infinite_fiber [Infinite α] [Finite β] (f : α → β) : ∃ y : β, Infinite (f ⁻¹' {y}) := by classical
+  by_contra' hf
+  cases nonempty_fintype β
+  haveI := fun y => fintypeOfNotInfinite <| hf y
+  let key : Fintype α := { elems := univ.bUnion fun y : β => (f ⁻¹' {y}).toFinset, complete := by simp }
+  exact key.false
+#align finite.exists_infinite_fiber Finite.exists_infinite_fiber
+
+theorem not_surjective_finite_infinite {α β} [Finite α] [Infinite β] (f : α → β) : ¬Surjective f := fun hf =>
+  (Infinite.of_surjective f hf).not_finite ‹_›
+#align not_surjective_finite_infinite not_surjective_finite_infinite
+
+section Trunc
+
+/-- A `fintype` with positive cardinality constructively contains an element.
+-/
+def truncOfCardPos {α} [Fintype α] (h : 0 < Fintype.card α) : Trunc α :=
+  letI := fintype.card_pos_iff.mp h
+  truncOfNonemptyFintype α
+#align trunc_of_card_pos truncOfCardPos
+
+end Trunc
+
+/-- A custom induction principle for fintypes. The base case is a subsingleton type,
+and the induction step is for non-trivial types, and one can assume the hypothesis for
+smaller types (via `fintype.card`).
+
+The major premise is `fintype α`, so to use this with the `induction` tactic you have to give a name
+to that instance and use that name.
+-/
+@[elab_as_elim]
+theorem Fintype.induction_subsingleton_or_nontrivial {P : ∀ (α) [Fintype α], Prop} (α : Type _) [Fintype α]
+    (hbase : ∀ (α) [Fintype α] [Subsingleton α], P α)
+    (hstep :
+      ∀ (α) [Fintype α] [Nontrivial α], ∀ ih : ∀ (β) [Fintype β], ∀ h : Fintype.card β < Fintype.card α, P β, P α) :
+    P α := by
+  obtain ⟨n, hn⟩ : ∃ n, Fintype.card α = n := ⟨Fintype.card α, rfl⟩
+  induction' n using Nat.strong_induction_on with n ih generalizing α
+  cases' subsingleton_or_nontrivial α with hsing hnontriv
+  · apply hbase
+    
+  · apply hstep
+    intro β _ hlt
+    rw [hn] at hlt
+    exact ih (Fintype.card β) hlt _ rfl
+    
+#align fintype.induction_subsingleton_or_nontrivial Fintype.induction_subsingleton_or_nontrivial
 

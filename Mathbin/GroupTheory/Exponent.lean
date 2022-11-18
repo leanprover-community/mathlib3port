@@ -7,7 +7,6 @@ import Mathbin.Data.Zmod.Quotient
 import Mathbin.GroupTheory.NoncommPiCoprod
 import Mathbin.GroupTheory.OrderOfElement
 import Mathbin.Algebra.GcdMonoid.Finset
-import Mathbin.Algebra.PunitInstances
 import Mathbin.Data.Nat.Factorization.Basic
 import Mathbin.Tactic.ByContra
 
@@ -86,7 +85,7 @@ theorem exponent_eq_zero_iff : exponent G = 0 ↔ ¬ExponentExists G := by simp 
 
 @[to_additive]
 theorem exponent_eq_zero_of_order_zero {g : G} (hg : orderOf g = 0) : exponent G = 0 :=
-  exponent_eq_zero_iff.mpr $ fun ⟨n, hn, hgn⟩ => order_of_eq_zero_iff'.mp hg n hn $ hgn g
+  exponent_eq_zero_iff.mpr fun ⟨n, hn, hgn⟩ => order_of_eq_zero_iff'.mp hg n hn <| hgn g
 #align monoid.exponent_eq_zero_of_order_zero Monoid.exponent_eq_zero_of_order_zero
 
 @[to_additive exponent_nsmul_eq_zero]
@@ -145,7 +144,7 @@ theorem exp_eq_one_of_subsingleton [Subsingleton G] : exponent G = 1 := by
 
 @[to_additive add_order_dvd_exponent]
 theorem order_dvd_exponent (g : G) : orderOf g ∣ exponent G :=
-  order_of_dvd_of_pow_eq_one $ pow_exponent_eq_one g
+  order_of_dvd_of_pow_eq_one <| pow_exponent_eq_one g
 #align monoid.order_dvd_exponent Monoid.order_dvd_exponent
 
 variable (G)
@@ -192,7 +191,8 @@ theorem _root_.nat.prime.exists_order_of_eq_pow_factorization_exponent {p : ℕ}
       
     exact fun hd =>
       hp.one_lt.not_le
-        ((mul_le_iff_le_one_left he).mp $ Nat.le_of_dvd he $ Nat.mul_dvd_of_dvd_div (Nat.dvd_of_mem_factorization h) hd)
+        ((mul_le_iff_le_one_left he).mp <|
+          Nat.le_of_dvd he <| Nat.mul_dvd_of_dvd_div (Nat.dvd_of_mem_factorization h) hd)
   obtain ⟨k, hk : exponent G = p ^ _ * k⟩ := Nat.ord_proj_dvd _ _
   obtain ⟨t, ht⟩ := Nat.exists_eq_succ_of_ne_zero (finsupp.mem_support_iff.mp h)
   refine' ⟨g ^ k, _⟩
@@ -271,7 +271,7 @@ variable [CommMonoid G]
 theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = ⨆ g : G, orderOf g := by
   rw [supr]
   rcases eq_or_ne (exponent G) 0 with (he | he)
-  · rw [he, Set.Infinite.Nat.Sup_eq_zero $ (exponent_eq_zero_iff_range_order_of_infinite h).1 he]
+  · rw [he, Set.Infinite.Nat.Sup_eq_zero <| (exponent_eq_zero_iff_range_order_of_infinite h).1 he]
     
   have hne : (Set.range (orderOf : G → ℕ)).Nonempty := ⟨1, 1, order_of_one⟩
   have hfin : (Set.range (orderOf : G → ℕ)).Finite := by rwa [← exponent_ne_zero_iff_range_order_of_finite h]
@@ -290,7 +290,7 @@ theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = 
   obtain ⟨g, hg⟩ := hp.exists_order_of_eq_pow_factorization_exponent G
   suffices orderOf t < orderOf (t ^ p ^ k * g) by
     rw [ht] at this
-    exact this.not_le (le_cSup hfin.bdd_above $ Set.mem_range_self _)
+    exact this.not_le (le_cSup hfin.bdd_above <| Set.mem_range_self _)
   have hpk : p ^ k ∣ orderOf t := Nat.ord_proj_dvd _ _
   have hpk' : orderOf (t ^ p ^ k) = orderOf t / p ^ k := by
     rw [order_of_pow' t (pow_ne_zero k hp.ne_zero), Nat.gcd_eq_right hpk]
@@ -299,11 +299,11 @@ theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = 
     rw [hg, Nat.coprime_pow_right_iff (pos_of_gt hpe), Nat.coprime_comm]
     apply Or.resolve_right (Nat.coprime_or_dvd_of_prime hp _)
     nth_rw 0 [← pow_one p]
-    convert Nat.pow_succ_factorization_not_dvd (h $ t ^ p ^ k).ne' hp
+    convert Nat.pow_succ_factorization_not_dvd (h <| t ^ p ^ k).ne' hp
     rw [hpk', Nat.factorization_div hpk]
     simp [hp]
   rw [(Commute.all _ g).order_of_mul_eq_mul_order_of_of_coprime hcoprime, hpk', hg, ha, ← ht, ← hk, pow_add, pow_add,
-    pow_one, ← mul_assoc, ← mul_assoc, Nat.div_mul_cancel, mul_assoc, lt_mul_iff_one_lt_right $ h t, ← pow_succ']
+    pow_one, ← mul_assoc, ← mul_assoc, Nat.div_mul_cancel, mul_assoc, lt_mul_iff_one_lt_right <| h t, ← pow_succ']
   exact one_lt_pow hp.one_lt a.succ_ne_zero
   exact hpk
 #align monoid.exponent_eq_supr_order_of Monoid.exponent_eq_supr_order_of
@@ -315,7 +315,7 @@ theorem exponent_eq_supr_order_of' : exponent G = if ∃ g : G, orderOf g = 0 th
     exact exponent_eq_zero_of_order_zero hg
     
   · have := not_exists.mp h
-    exact exponent_eq_supr_order_of fun g => Ne.bot_lt $ this g
+    exact exponent_eq_supr_order_of fun g => Ne.bot_lt <| this g
     
 #align monoid.exponent_eq_supr_order_of' Monoid.exponent_eq_supr_order_of'
 

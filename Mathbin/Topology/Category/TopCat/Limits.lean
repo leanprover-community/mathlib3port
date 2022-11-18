@@ -4,10 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison, Mario Carneiro, Andrew Yang
 -/
 import Mathbin.Topology.Category.TopCat.EpiMono
-import Mathbin.CategoryTheory.Limits.Preserves.Limits
 import Mathbin.CategoryTheory.Category.Ulift
-import Mathbin.CategoryTheory.Limits.Shapes.Types
 import Mathbin.CategoryTheory.Limits.ConcreteCategory
+import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
 
 /-!
 # The category of topological spaces has all limits and colimits
@@ -84,7 +83,7 @@ def limitConeInfiIsLimit (F : J ⥤ TopCat.{max v u}) : IsLimit (limitConeInfi F
   refine' is_limit.of_faithful forget (types.limit_cone_is_limit _) (fun s => ⟨_, _⟩) fun s => rfl
   exact
     continuous_iff_coinduced_le.mpr
-      (le_infi $ fun j => coinduced_le_iff_le_induced.mp $ (continuous_iff_coinduced_le.mp (s.π.app j).Continuous : _))
+      (le_infi fun j => coinduced_le_iff_le_induced.mp <| (continuous_iff_coinduced_le.mp (s.π.app j).Continuous : _))
 #align Top.limit_cone_infi_is_limit TopCat.limitConeInfiIsLimit
 
 instance Top_has_limits_of_size :
@@ -132,7 +131,7 @@ def colimitCoconeIsColimit (F : J ⥤ TopCat.{max v u}) : IsColimit (colimitCoco
   refine' is_colimit.of_faithful forget (types.colimit_cocone_is_colimit _) (fun s => ⟨_, _⟩) fun s => rfl
   exact
     continuous_iff_le_induced.mpr
-      (supr_le $ fun j => coinduced_le_iff_le_induced.mp $ (continuous_iff_coinduced_le.mp (s.ι.app j).Continuous : _))
+      (supr_le fun j => coinduced_le_iff_le_induced.mp <| (continuous_iff_coinduced_le.mp (s.ι.app j).Continuous : _))
 #align Top.colimit_cocone_is_colimit TopCat.colimitCoconeIsColimit
 
 instance Top_has_colimits_of_size :
@@ -212,21 +211,20 @@ theorem pi_iso_pi_hom_apply {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι
 #align Top.pi_iso_pi_hom_apply TopCat.pi_iso_pi_hom_apply
 
 /-- The inclusion to the coproduct as a bundled continous map. -/
-abbrev sigmaι {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) : α i ⟶ TopCat.of (Σ i, α i) :=
+abbrev sigmaι {ι : Type v} (α : ι → TopCat.{max v u}) (i : ι) : α i ⟶ TopCat.of (Σi, α i) :=
   ⟨Sigma.mk i⟩
 #align Top.sigma_ι TopCat.sigmaι
 
 /-- The explicit cofan of a family of topological spaces given by the sigma type. -/
 @[simps x ι_app]
 def sigmaCofan {ι : Type v} (α : ι → TopCat.{max v u}) : Cofan α :=
-  Cofan.mk (TopCat.of (Σ i, α i)) (sigmaι α)
+  Cofan.mk (TopCat.of (Σi, α i)) (sigmaι α)
 #align Top.sigma_cofan TopCat.sigmaCofan
 
 /-- The constructed cofan is indeed a colimit -/
 def sigmaCofanIsColimit {ι : Type v} (α : ι → TopCat.{max v u}) : IsColimit (sigmaCofan α) where
   desc S :=
-    { toFun := fun s => S.ι.app ⟨s.1⟩ s.2,
-      continuous_to_fun := continuous_sigma $ fun i => map_continuous (S.ι.app ⟨i⟩) }
+    { toFun := fun s => S.ι.app ⟨s.1⟩ s.2, continuous_to_fun := continuous_sigma fun i => map_continuous (S.ι.app ⟨i⟩) }
   uniq' := by
     intro S m h
     ext ⟨i, x⟩
@@ -238,7 +236,7 @@ def sigmaCofanIsColimit {ι : Type v} (α : ι → TopCat.{max v u}) : IsColimit
 
 /-- The coproduct is homeomorphic to the disjoint union of the topological spaces.
 -/
-def sigmaIsoSigma {ι : Type v} (α : ι → TopCat.{max v u}) : ∐ α ≅ TopCat.of (Σ i, α i) :=
+def sigmaIsoSigma {ι : Type v} (α : ι → TopCat.{max v u}) : ∐ α ≅ TopCat.of (Σi, α i) :=
   (colimit.isColimit _).coconePointUniqueUpToIso (sigmaCofanIsColimit α)
 #align Top.sigma_iso_sigma TopCat.sigmaIsoSigma
 
@@ -777,7 +775,7 @@ def initialIsoPempty : ⊥_ TopCat.{u} ≅ TopCat.of PEmpty :=
 
 /-- The binary coproduct cofan in `Top`. -/
 protected def binaryCofan (X Y : TopCat.{u}) : BinaryCofan X Y :=
-  BinaryCofan.mk (⟨Sum.inl⟩ : X ⟶ TopCat.of (X ⊕ Y)) ⟨Sum.inr⟩
+  BinaryCofan.mk (⟨Sum.inl⟩ : X ⟶ TopCat.of (Sum X Y)) ⟨Sum.inr⟩
 #align Top.binary_cofan TopCat.binaryCofan
 
 /-- The constructed binary coproduct cofan in `Top` is the coproduct. -/
@@ -807,13 +805,13 @@ theorem binary_cofan_is_colimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
       show _ = c.inr from h.comp_cocone_point_unique_up_to_iso_inv (binary_cofan_is_colimit X Y) ⟨walking_pair.right⟩]
     dsimp
     refine'
-      ⟨(homeo_of_iso $ h.cocone_point_unique_up_to_iso (binary_cofan_is_colimit X Y)).symm.OpenEmbedding.comp
+      ⟨(homeo_of_iso <| h.cocone_point_unique_up_to_iso (binary_cofan_is_colimit X Y)).symm.OpenEmbedding.comp
           open_embedding_inl,
-        (homeo_of_iso $ h.cocone_point_unique_up_to_iso (binary_cofan_is_colimit X Y)).symm.OpenEmbedding.comp
+        (homeo_of_iso <| h.cocone_point_unique_up_to_iso (binary_cofan_is_colimit X Y)).symm.OpenEmbedding.comp
           open_embedding_inr,
         _⟩
     erw [Set.range_comp, ← eq_compl_iff_is_compl, Set.range_comp _ Sum.inr, ←
-      Set.image_compl_eq (homeo_of_iso $ h.cocone_point_unique_up_to_iso (binary_cofan_is_colimit X Y)).symm.Bijective]
+      Set.image_compl_eq (homeo_of_iso <| h.cocone_point_unique_up_to_iso (binary_cofan_is_colimit X Y)).symm.Bijective]
     congr 1
     exact set.compl_range_inr.symm
     
@@ -943,14 +941,14 @@ of sets in the limit is, in fact, a topological basis.
 theorem is_topological_basis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j))) (hT : ∀ j, IsTopologicalBasis (T j))
     (univ : ∀ i : J, Set.univ ∈ T i) (inter : ∀ (i) (U1 U2 : Set (F.obj i)), U1 ∈ T i → U2 ∈ T i → U1 ∩ U2 ∈ T i)
     (compat : ∀ (i j : J) (f : i ⟶ j) (V : Set (F.obj j)) (hV : V ∈ T j), F.map f ⁻¹' V ∈ T i) :
-    IsTopologicalBasis { U : Set C.x | ∃ (j) (V : Set (F.obj j)), V ∈ T j ∧ U = C.π.app j ⁻¹' V } := by classical
+    IsTopologicalBasis { U : Set C.x | ∃ (j : _)(V : Set (F.obj j)), V ∈ T j ∧ U = C.π.app j ⁻¹' V } := by classical
   -- The limit cone for `F` whose topology is defined as an infimum.
   let D := limit_cone_infi F
   -- The isomorphism between the cone point of `C` and the cone point of `D`.
   let E : C.X ≅ D.X := hC.cone_point_unique_up_to_iso (limit_cone_infi_is_limit _)
   have hE : Inducing E.hom := (TopCat.homeoOfIso E).Inducing
   -- Reduce to the assertion of the theorem with `D` instead of `C`.
-  suffices is_topological_basis { U : Set D.X | ∃ (j) (V : Set (F.obj j)), V ∈ T j ∧ U = D.π.app j ⁻¹' V } by
+  suffices is_topological_basis { U : Set D.X | ∃ (j : _)(V : Set (F.obj j)), V ∈ T j ∧ U = D.π.app j ⁻¹' V } by
     convert this.inducing hE
     ext U0
     constructor
@@ -1063,13 +1061,12 @@ variable {J : Type u} [SmallCategory J]
 
 variable (F : J ⥤ TopCat.{u})
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (X Y) -/
 private abbrev finite_diagram_arrow {J : Type u} [SmallCategory J] (G : Finset J) :=
-  Σ' (X : J) (Y : J) (mX : X ∈ G) (mY : Y ∈ G), X ⟶ Y
+  Σ'(X Y : J)(mX : X ∈ G)(mY : Y ∈ G), X ⟶ Y
 #align Top.finite_diagram_arrow Top.finite_diagram_arrow
 
 private abbrev finite_diagram (J : Type u) [SmallCategory J] :=
-  Σ G : Finset J, Finset (FiniteDiagramArrow G)
+  ΣG : Finset J, Finset (FiniteDiagramArrow G)
 #align Top.finite_diagram Top.finite_diagram
 
 /-- Partial sections of a cofiltered limit are sections when restricted to

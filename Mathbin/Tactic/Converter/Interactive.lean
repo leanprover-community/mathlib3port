@@ -151,7 +151,7 @@ unsafe def old_conv (c : old_conv.interactive.itactic) : tactic Unit := do
 #align tactic.interactive.old_conv tactic.interactive.old_conv
 
 unsafe def find (p : parse lean.parser.pexpr) (c : old_conv.interactive.itactic) : tactic Unit :=
-  old_conv $ old_conv.interactive.find p c
+  old_conv <| old_conv.interactive.find p c
 #align tactic.interactive.find tactic.interactive.find
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/

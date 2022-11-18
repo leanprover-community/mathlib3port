@@ -32,15 +32,15 @@ def convexJoin (s t : Set E) : Set E :=
 
 variable {𝕜}
 
-theorem mem_convex_join : x ∈ convexJoin 𝕜 s t ↔ ∃ (a ∈ s) (b ∈ t), x ∈ segment 𝕜 a b := by simp [convexJoin]
+theorem mem_convex_join : x ∈ convexJoin 𝕜 s t ↔ ∃ a ∈ s, ∃ b ∈ t, x ∈ segment 𝕜 a b := by simp [convexJoin]
 #align mem_convex_join mem_convex_join
 
 theorem convex_join_comm (s t : Set E) : convexJoin 𝕜 s t = convexJoin 𝕜 t s :=
-  (Union₂_comm _).trans $ by simp_rw [convexJoin, segment_symm]
+  (Union₂_comm _).trans <| by simp_rw [convexJoin, segment_symm]
 #align convex_join_comm convex_join_comm
 
 theorem convex_join_mono (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : convexJoin 𝕜 s₁ t₁ ⊆ convexJoin 𝕜 s₂ t₂ :=
-  bUnion_mono hs $ fun x hx => bUnion_mono ht $ fun y hy => Subset.rfl
+  (bUnion_mono hs) fun x hx => (bUnion_mono ht) fun y hy => Subset.rfl
 #align convex_join_mono convex_join_mono
 
 theorem convex_join_mono_left (hs : s₁ ⊆ s₂) : convexJoin 𝕜 s₁ t ⊆ convexJoin 𝕜 s₂ t :=
@@ -100,21 +100,21 @@ theorem segment_subset_convex_join (hx : x ∈ s) (hy : y ∈ t) : segment 𝕜 
 
 theorem subset_convex_join_left (h : t.Nonempty) : s ⊆ convexJoin 𝕜 s t := fun x hx =>
   let ⟨y, hy⟩ := h
-  segment_subset_convex_join hx hy $ left_mem_segment _ _ _
+  segment_subset_convex_join hx hy <| left_mem_segment _ _ _
 #align subset_convex_join_left subset_convex_join_left
 
 theorem subset_convex_join_right (h : s.Nonempty) : t ⊆ convexJoin 𝕜 s t := fun y hy =>
   let ⟨x, hx⟩ := h
-  segment_subset_convex_join hx hy $ right_mem_segment _ _ _
+  segment_subset_convex_join hx hy <| right_mem_segment _ _ _
 #align subset_convex_join_right subset_convex_join_right
 
 theorem convex_join_subset (hs : s ⊆ u) (ht : t ⊆ u) (hu : Convex 𝕜 u) : convexJoin 𝕜 s t ⊆ u :=
-  Union₂_subset $ fun x hx => Union₂_subset $ fun y hy => hu.segment_subset (hs hx) (ht hy)
+  Union₂_subset fun x hx => Union₂_subset fun y hy => hu.segment_subset (hs hx) (ht hy)
 #align convex_join_subset convex_join_subset
 
 theorem convex_join_subset_convex_hull (s t : Set E) : convexJoin 𝕜 s t ⊆ convexHull 𝕜 (s ∪ t) :=
-  convex_join_subset ((subset_union_left _ _).trans $ subset_convex_hull _ _)
-      ((subset_union_right _ _).trans $ subset_convex_hull _ _) $
+  convex_join_subset ((subset_union_left _ _).trans <| subset_convex_hull _ _)
+      ((subset_union_right _ _).trans <| subset_convex_hull _ _) <|
     convex_convex_hull _ _
 #align convex_join_subset_convex_hull convex_join_subset_convex_hull
 
@@ -173,8 +173,8 @@ theorem convex_join_convex_join_convex_join_comm (s t u v : Set E) :
 theorem convex_hull_insert (hs : s.Nonempty) : convexHull 𝕜 (insert x s) = convexJoin 𝕜 {x} (convexHull 𝕜 s) := by
   classical
   refine'
-    (convex_join_subset ((singleton_subset_iff.2 $ mem_insert _ _).trans $ subset_convex_hull _ _)
-            (convex_hull_mono $ subset_insert _ _) $
+    (convex_join_subset ((singleton_subset_iff.2 <| mem_insert _ _).trans <| subset_convex_hull _ _)
+            (convex_hull_mono <| subset_insert _ _) <|
           convex_convex_hull _ _).antisymm'
       fun x hx => _
   rw [convex_hull_eq] at hx
@@ -187,7 +187,7 @@ theorem convex_hull_insert (hs : s.Nonempty) : convexHull 𝕜 (insert x s) = co
     refine' Finset.sum_congr rfl fun i hi => _
     rw [Pi.smul_apply', (Finset.mem_filter.1 hi).2]
   rw [← this]
-  have hw₀' : ∀ i ∈ t.filter fun i => z i ≠ x, 0 ≤ w i := fun i hi => hw₀ _ $ Finset.filter_subset _ _ hi
+  have hw₀' : ∀ i ∈ t.filter fun i => z i ≠ x, 0 ≤ w i := fun i hi => hw₀ _ <| Finset.filter_subset _ _ hi
   obtain hw | hw := (Finset.sum_nonneg hw₀').eq_or_gt
   · rw [← Finset.sum_filter_add_sum_filter_not _ fun i => z i = x, hw, add_zero] at hw₁
     rw [hw₁, one_smul, Finset.sum_eq_zero, add_zero]
@@ -199,9 +199,9 @@ theorem convex_hull_insert (hs : s.Nonempty) : convexHull 𝕜 (insert x s) = co
     
   refine'
     mem_convex_join.2
-      ⟨x, mem_singleton _, (t.filter $ fun i => z i ≠ x).centerMass w z,
+      ⟨x, mem_singleton _, (t.filter fun i => z i ≠ x).centerMass w z,
         Finset.center_mass_mem_convex_hull _ hw₀' hw fun i hi => _, ∑ i in t.filter fun i => z i = x, w i,
-        ∑ i in t.filter fun i => z i ≠ x, w i, Finset.sum_nonneg fun i hi => hw₀ _ $ Finset.filter_subset _ _ hi,
+        ∑ i in t.filter fun i => z i ≠ x, w i, Finset.sum_nonneg fun i hi => hw₀ _ <| Finset.filter_subset _ _ hi,
         Finset.sum_nonneg hw₀', _, _⟩
   · rw [Finset.mem_filter] at hi
     exact mem_of_mem_insert_of_ne (hz _ hi.1) hi.2
@@ -238,8 +238,8 @@ protected theorem Convex.convex_join (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) :
 
 protected theorem Convex.convex_hull_union (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) (hs₀ : s.Nonempty) (ht₀ : t.Nonempty) :
     convexHull 𝕜 (s ∪ t) = convexJoin 𝕜 s t :=
-  (convex_hull_min (union_subset (subset_convex_join_left ht₀) $ subset_convex_join_right hs₀) $
-        hs.convexJoin ht).antisymm $
+  (convex_hull_min (union_subset (subset_convex_join_left ht₀) <| subset_convex_join_right hs₀) <|
+        hs.convexJoin ht).antisymm <|
     convex_join_subset_convex_hull _ _
 #align convex.convex_hull_union Convex.convex_hull_union
 

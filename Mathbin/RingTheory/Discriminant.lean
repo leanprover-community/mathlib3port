@@ -245,7 +245,7 @@ theorem discr_power_basis_eq_norm [IsSeparable K L] :
       
     · simp only [true_and_iff, mem_univ, Ne.def, mem_sigma, mem_compl, mem_singleton] at hi
       rw [← PowerBasis.lift_equiv_apply_coe, ← PowerBasis.lift_equiv_apply_coe] at h
-      exact hi (e.injective $ pb.lift_equiv.injective $ Subtype.eq h.symm)
+      exact hi (e.injective <| pb.lift_equiv.injective <| Subtype.eq h.symm)
       
     
   · simp only [Equiv.apply_eq_iff_eq, heq_iff_eq] at hij
@@ -351,16 +351,16 @@ theorem discr_mul_is_integral_mem_adjoin [IsDomain R] [IsSeparable K L] [IsInteg
     cramer
   rw [← congr_fun cramer i, cramer_apply, det_apply]
   refine' Subalgebra.sum_mem _ fun σ _ => Subalgebra.zsmul_mem _ (Subalgebra.prod_mem _ fun j _ => _) _
-  by_cases hji:j = i
+  by_cases hji : j = i
   · simp only [update_column_apply, hji, eq_self_iff_true, PowerBasis.coe_basis]
     exact
-      mem_bot.2 (IsIntegrallyClosed.is_integral_iff.1 $ is_integral_trace $ isIntegralMul hz $ IsIntegral.pow hint _)
+      mem_bot.2 (IsIntegrallyClosed.is_integral_iff.1 <| is_integral_trace <| isIntegralMul hz <| IsIntegral.pow hint _)
     
   · simp only [update_column_apply, hji, PowerBasis.coe_basis]
     exact
       mem_bot.2
-        (IsIntegrallyClosed.is_integral_iff.1 $
-          is_integral_trace $ isIntegralMul (IsIntegral.pow hint _) (IsIntegral.pow hint _))
+        (IsIntegrallyClosed.is_integral_iff.1 <|
+          is_integral_trace <| isIntegralMul (IsIntegral.pow hint _) (IsIntegral.pow hint _))
     
 #align algebra.discr_mul_is_integral_mem_adjoin Algebra.discr_mul_is_integral_mem_adjoin
 

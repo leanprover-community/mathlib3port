@@ -22,19 +22,19 @@ open Rat
 theorem num_dvd (a) {b : ℤ} (b0 : b ≠ 0) : (a /. b).num ∣ a := by
   cases' e : a /. b with n d h c
   rw [Rat.num_denom', Rat.mk_eq b0 (ne_of_gt (Int.coe_nat_pos.2 h))] at e
-  refine' Int.nat_abs_dvd.1 $ Int.dvd_nat_abs.1 $ Int.coe_nat_dvd.2 $ c.dvd_of_dvd_mul_right _
+  refine' Int.nat_abs_dvd.1 <| Int.dvd_nat_abs.1 <| Int.coe_nat_dvd.2 <| c.dvd_of_dvd_mul_right _
   have := congr_arg Int.natAbs e
   simp only [Int.natAbs_mul, Int.natAbs_ofNat] at this
   simp [this]
 #align rat.num_dvd Rat.num_dvd
 
 theorem denom_dvd (a b : ℤ) : ((a /. b).denom : ℤ) ∣ b := by
-  by_cases b0:b = 0
+  by_cases b0 : b = 0
   · simp [b0]
     
   cases' e : a /. b with n d h c
   rw [num_denom', mk_eq b0 (ne_of_gt (Int.coe_nat_pos.2 h))] at e
-  refine' Int.dvd_nat_abs.1 $ Int.coe_nat_dvd.2 $ c.symm.dvd_of_dvd_mul_left _
+  refine' Int.dvd_nat_abs.1 <| Int.coe_nat_dvd.2 <| c.symm.dvd_of_dvd_mul_left _
   rw [← Int.natAbs_mul, ← Int.coe_nat_dvd, Int.dvd_nat_abs, ← e]
   simp
 #align rat.denom_dvd Rat.denom_dvd
@@ -69,12 +69,12 @@ theorem mk_pnat_denom (n : ℤ) (d : ℕ+) : (mkPnat n d).denom = d / Nat.gcd n.
 
 theorem num_mk (n d : ℤ) : (n /. d).num = d.sign * n / n.gcd d := by
   rcases d with ((_ | _) | _) <;>
-    simp [Rat.mk, mk_nat, mk_pnat, Nat.succPnat, Int.sign, Int.gcd, -Nat.cast_succ, -Int.ofNat_succ, Int.zero_div]
+    simp [Rat.mk, mk_nat, mk_pnat, Nat.succPNat, Int.sign, Int.gcd, -Nat.cast_succ, -Int.ofNat_succ, Int.zero_div]
 #align rat.num_mk Rat.num_mk
 
 theorem denom_mk (n d : ℤ) : (n /. d).denom = if d = 0 then 1 else d.natAbs / n.gcd d := by
   rcases d with ((_ | _) | _) <;>
-    simp [Rat.mk, mk_nat, mk_pnat, Nat.succPnat, Int.sign, Int.gcd, -Nat.cast_succ, -Int.ofNat_succ]
+    simp [Rat.mk, mk_nat, mk_pnat, Nat.succPNat, Int.sign, Int.gcd, -Nat.cast_succ, -Int.ofNat_succ]
 #align rat.denom_mk Rat.denom_mk
 
 theorem mk_pnat_denom_dvd (n : ℤ) (d : ℕ+) : (mkPnat n d).denom ∣ d.1 := by
@@ -213,14 +213,14 @@ theorem denom_div_cast_eq_one_iff (m n : ℤ) (hn : n ≠ 0) : ((m : ℚ) / n).d
 theorem num_div_eq_of_coprime {a b : ℤ} (hb0 : 0 < b) (h : Nat.Coprime a.natAbs b.natAbs) : (a / b : ℚ).num = a := by
   lift b to ℕ using le_of_lt hb0
   norm_cast  at hb0 h
-  rw [← Rat.mk_eq_div, ← Rat.mk_pnat_eq a b hb0, Rat.mk_pnat_num, Pnat.mk_coe, h.gcd_eq_one, Int.ofNat_one, Int.div_one]
+  rw [← Rat.mk_eq_div, ← Rat.mk_pnat_eq a b hb0, Rat.mk_pnat_num, PNat.mk_coe, h.gcd_eq_one, Int.ofNat_one, Int.div_one]
 #align rat.num_div_eq_of_coprime Rat.num_div_eq_of_coprime
 
 theorem denom_div_eq_of_coprime {a b : ℤ} (hb0 : 0 < b) (h : Nat.Coprime a.natAbs b.natAbs) :
     ((a / b : ℚ).denom : ℤ) = b := by
   lift b to ℕ using le_of_lt hb0
   norm_cast  at hb0 h
-  rw [← Rat.mk_eq_div, ← Rat.mk_pnat_eq a b hb0, Rat.mk_pnat_denom, Pnat.mk_coe, h.gcd_eq_one, Nat.div_one]
+  rw [← Rat.mk_eq_div, ← Rat.mk_pnat_eq a b hb0, Rat.mk_pnat_denom, PNat.mk_coe, h.gcd_eq_one, Nat.div_one]
 #align rat.denom_div_eq_of_coprime Rat.denom_div_eq_of_coprime
 
 theorem div_int_inj {a b c d : ℤ} (hb0 : 0 < b) (hd0 : 0 < d) (h1 : Nat.Coprime a.natAbs b.natAbs)
@@ -234,7 +234,7 @@ theorem div_int_inj {a b c d : ℤ} (hb0 : 0 < b) (hd0 : 0 < d) (h1 : Nat.Coprim
 
 @[norm_cast]
 theorem coe_int_div_self (n : ℤ) : ((n / n : ℤ) : ℚ) = n / n := by
-  by_cases hn:n = 0
+  by_cases hn : n = 0
   · subst hn
     simp only [Int.cast_zero, Int.zero_div, zero_div]
     
@@ -308,8 +308,7 @@ protected theorem forall {p : ℚ → Prop} : (∀ r, p r) ↔ ∀ a b : ℤ, p 
   ⟨fun h _ _ => h _, fun h q => show q = q.num / q.denom by simp [Rat.div_num_denom].symm ▸ h q.1 q.2⟩
 #align rat.forall Rat.forall
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
-protected theorem exists {p : ℚ → Prop} : (∃ r, p r) ↔ ∃ (a : ℤ) (b : ℤ), p (a / b) :=
+protected theorem exists {p : ℚ → Prop} : (∃ r, p r) ↔ ∃ a b : ℤ, p (a / b) :=
   ⟨fun ⟨r, hr⟩ => ⟨r.num, r.denom, by rwa [← mk_eq_div, num_denom]⟩, fun ⟨a, b, h⟩ => ⟨_, h⟩⟩
 #align rat.exists Rat.exists
 

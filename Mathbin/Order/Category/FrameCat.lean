@@ -85,12 +85,12 @@ end FrameCat
 @[simps]
 def topOpToFrame : TopCatᵒᵖ ⥤ FrameCat where
   obj X := FrameCat.of (Opens (unop X : TopCat))
-  map X Y f := opens.comap $ Quiver.Hom.unop f
+  map X Y f := opens.comap <| Quiver.Hom.unop f
   map_id' X := Opens.comap_id
 #align Top_op_to_Frame topOpToFrame
 
 -- Note, `CompHaus` is too strong. We only need `t0_space`.
 instance CompHausOpToFrame.faithful : Faithful (compHausToTop.op ⋙ topOpToFrame.{u}) :=
-  ⟨fun X Y f g h => Quiver.Hom.unop_inj $ Opens.comap_injective h⟩
+  ⟨fun X Y f g h => Quiver.Hom.unop_inj <| Opens.comap_injective h⟩
 #align CompHaus_op_to_Frame.faithful CompHausOpToFrame.faithful
 

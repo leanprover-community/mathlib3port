@@ -55,7 +55,7 @@ namespace DiffContOnCl
 
 theorem comp {g : G → E} {t : Set G} (hf : DiffContOnCl 𝕜 f s) (hg : DiffContOnCl 𝕜 g t) (h : MapsTo g t s) :
     DiffContOnCl 𝕜 (f ∘ g) t :=
-  ⟨hf.1.comp hg.1 h, hf.2.comp hg.2 $ h.closure_of_continuous_on hg.2⟩
+  ⟨hf.1.comp hg.1 h, hf.2.comp hg.2 <| h.closure_of_continuous_on hg.2⟩
 #align diff_cont_on_cl.comp DiffContOnCl.comp
 
 theorem continuous_on_ball [NormedSpace ℝ E] {x : E} {r : ℝ} (h : DiffContOnCl 𝕜 f (ball x r)) :
@@ -71,11 +71,11 @@ theorem continuous_on_ball [NormedSpace ℝ E] {x : E} {r : ℝ} (h : DiffContOn
 
 theorem mkBall {x : E} {r : ℝ} (hd : DifferentiableOn 𝕜 f (ball x r)) (hc : ContinuousOn f (closedBall x r)) :
     DiffContOnCl 𝕜 f (ball x r) :=
-  ⟨hd, hc.mono $ closure_ball_subset_closed_ball⟩
+  ⟨hd, hc.mono <| closure_ball_subset_closed_ball⟩
 #align diff_cont_on_cl.mk_ball DiffContOnCl.mkBall
 
 protected theorem differentiableAt (h : DiffContOnCl 𝕜 f s) (hs : IsOpen s) (hx : x ∈ s) : DifferentiableAt 𝕜 f x :=
-  h.DifferentiableOn.DifferentiableAt $ hs.mem_nhds hx
+  h.DifferentiableOn.DifferentiableAt <| hs.mem_nhds hx
 #align diff_cont_on_cl.differentiable_at DiffContOnCl.differentiableAt
 
 theorem differentiableAt' (h : DiffContOnCl 𝕜 f s) (hx : s ∈ 𝓝 x) : DifferentiableAt 𝕜 f x :=
@@ -132,7 +132,7 @@ theorem smulConst {𝕜' : Type _} [NontriviallyNormedField 𝕜'] [NormedAlgebr
 #align diff_cont_on_cl.smul_const DiffContOnCl.smulConst
 
 theorem inv {f : E → 𝕜} (hf : DiffContOnCl 𝕜 f s) (h₀ : ∀ x ∈ closure s, f x ≠ 0) : DiffContOnCl 𝕜 f⁻¹ s :=
-  ⟨differentiableOnInv.comp hf.1 $ fun x hx => h₀ _ (subset_closure hx), hf.2.inv₀ h₀⟩
+  ⟨(differentiableOnInv.comp hf.1) fun x hx => h₀ _ (subset_closure hx), hf.2.inv₀ h₀⟩
 #align diff_cont_on_cl.inv DiffContOnCl.inv
 
 end DiffContOnCl

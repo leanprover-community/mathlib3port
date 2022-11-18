@@ -38,7 +38,7 @@ We use notation `𝕎 R`, entered `\bbW`, for the Witt vectors over `R`.
 
 noncomputable section
 
-/- ./././Mathport/Syntax/Translate/Command.lean:390:34: infer kinds are unsupported in Lean 4: mk [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:382:34: infer kinds are unsupported in Lean 4: mk [] -/
 /-- `witt_vector p R` is the ring of `p`-typical Witt vectors over the commutative ring `R`,
 where `p` is a prime number.
 
@@ -174,7 +174,7 @@ ring operations on `𝕎 R`. For example, `witt_vector.witt_add` is such a `φ` 
 evaluating this at `(x₀, x₁)` gives us the sum of two Witt vectors `x₀ + x₁`.
 -/
 def eval {k : ℕ} (φ : ℕ → MvPolynomial (Fin k × ℕ) ℤ) (x : Fin k → 𝕎 R) : 𝕎 R :=
-  mk p $ fun n => peval (φ n) $ fun i => (x i).coeff
+  (mk p) fun n => (peval (φ n)) fun i => (x i).coeff
 #align witt_vector.eval WittVector.eval
 
 variable (R) [Fact p.Prime]

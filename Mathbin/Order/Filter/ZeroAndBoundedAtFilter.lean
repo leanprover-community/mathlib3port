@@ -3,7 +3,6 @@ Copyright (c) 2022 Chris Birkbeck. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck, David Loeffler
 -/
-import Mathbin.Order.Filter.Default
 import Mathbin.Algebra.Module.Submodule.Basic
 import Mathbin.Topology.Algebra.Monoid
 import Mathbin.Analysis.Asymptotics.Asymptotics

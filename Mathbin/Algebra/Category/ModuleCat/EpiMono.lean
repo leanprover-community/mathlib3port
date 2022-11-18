@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.LinearAlgebra.Quotient
-import Mathbin.Algebra.Category.GroupCat.EpiMono
 import Mathbin.Algebra.Category.ModuleCat.Basic
 
 /-!
@@ -30,22 +29,22 @@ variable {R : Type u} [Ring R] {X Y : ModuleCat.{v} R} (f : X ⟶ Y)
 variable {M : Type v} [AddCommGroup M] [Module R M]
 
 theorem ker_eq_bot_of_mono [Mono f] : f.ker = ⊥ :=
-  LinearMap.ker_eq_bot_of_cancel $ fun u v => (@cancel_mono _ _ _ _ _ f _ (↟u) (↟v)).1
+  LinearMap.ker_eq_bot_of_cancel fun u v => (@cancel_mono _ _ _ _ _ f _ (↟u) (↟v)).1
 #align Module.ker_eq_bot_of_mono ModuleCat.ker_eq_bot_of_mono
 
 theorem range_eq_top_of_epi [Epi f] : f.range = ⊤ :=
-  LinearMap.range_eq_top_of_cancel $ fun u v => (@cancel_epi _ _ _ _ _ f _ (↟u) (↟v)).1
+  LinearMap.range_eq_top_of_cancel fun u v => (@cancel_epi _ _ _ _ _ f _ (↟u) (↟v)).1
 #align Module.range_eq_top_of_epi ModuleCat.range_eq_top_of_epi
 
 theorem mono_iff_ker_eq_bot : Mono f ↔ f.ker = ⊥ :=
-  ⟨fun hf => ker_eq_bot_of_mono _, fun hf => ConcreteCategory.mono_of_injective _ $ LinearMap.ker_eq_bot.1 hf⟩
+  ⟨fun hf => ker_eq_bot_of_mono _, fun hf => ConcreteCategory.mono_of_injective _ <| LinearMap.ker_eq_bot.1 hf⟩
 #align Module.mono_iff_ker_eq_bot ModuleCat.mono_iff_ker_eq_bot
 
 theorem mono_iff_injective : Mono f ↔ Function.Injective f := by rw [mono_iff_ker_eq_bot, LinearMap.ker_eq_bot]
 #align Module.mono_iff_injective ModuleCat.mono_iff_injective
 
 theorem epi_iff_range_eq_top : Epi f ↔ f.range = ⊤ :=
-  ⟨fun hf => range_eq_top_of_epi _, fun hf => ConcreteCategory.epi_of_surjective _ $ LinearMap.range_eq_top.1 hf⟩
+  ⟨fun hf => range_eq_top_of_epi _, fun hf => ConcreteCategory.epi_of_surjective _ <| LinearMap.range_eq_top.1 hf⟩
 #align Module.epi_iff_range_eq_top ModuleCat.epi_iff_range_eq_top
 
 theorem epi_iff_surjective : Epi f ↔ Function.Surjective f := by rw [epi_iff_range_eq_top, LinearMap.range_eq_top]
@@ -61,7 +60,7 @@ instance mono_as_hom'_subtype (U : Submodule R X) : Mono (↾U.Subtype) :=
 #align Module.mono_as_hom'_subtype ModuleCat.mono_as_hom'_subtype
 
 instance epi_as_hom''_mkq (U : Submodule R X) : Epi (↿U.mkq) :=
-  (epi_iff_range_eq_top _).mpr $ Submodule.range_mkq _
+  (epi_iff_range_eq_top _).mpr <| Submodule.range_mkq _
 #align Module.epi_as_hom''_mkq ModuleCat.epi_as_hom''_mkq
 
 instance forget_preserves_epimorphisms :

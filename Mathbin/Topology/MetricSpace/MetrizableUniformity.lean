@@ -63,10 +63,10 @@ noncomputable def ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x 
     PseudoMetricSpace X where
   dist x y := ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0)
   dist_self x :=
-    (Nnreal.coe_eq_zero _).2 $
-      nonpos_iff_eq_zero.1 $ (cinfi_le (OrderBot.bdd_below _) []).trans_eq $ by simp [dist_self]
+    (Nnreal.coe_eq_zero _).2 <|
+      nonpos_iff_eq_zero.1 <| (cinfi_le (OrderBot.bdd_below _) []).trans_eq <| by simp [dist_self]
   dist_comm x y :=
-    Nnreal.coe_eq.2 $ by
+    Nnreal.coe_eq.2 <| by
       refine' reverse_surjective.infi_congr _ fun l => _
       rw [← sum_reverse, zip_with_distrib_reverse, reverse_append, reverse_reverse, reverse_singleton, singleton_append,
         reverse_cons, reverse_reverse, zip_with_comm _ dist_comm]
@@ -93,11 +93,10 @@ theorem dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 
 theorem dist_of_prenndist_le (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0) (dist_comm : ∀ x y, d x y = d y x)
     (x y : X) :
     @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x y ≤ d x y :=
-  Nnreal.coe_le_coe.2 $ (cinfi_le (OrderBot.bdd_below _) []).trans_eq $ by simp
+  Nnreal.coe_le_coe.2 <| (cinfi_le (OrderBot.bdd_below _) []).trans_eq <| by simp
 #align pseudo_metric_space.dist_of_prenndist_le PseudoMetricSpace.dist_of_prenndist_le
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (z z') -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Consider a function `d : X → X → ℝ≥0` such that `d x x = 0` and `d x y = d y x` for all `x`,
@@ -129,7 +128,7 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
   cases' eq_or_ne (d x y) 0 with hd₀ hd₀
   · simp only [hd₀, zero_le]
     
-  rsuffices ⟨z, z', hxz, hzz', hz'y⟩ : ∃ (z : X) (z' : X), d x z ≤ L.sum ∧ d z z' ≤ L.sum ∧ d z' y ≤ L.sum
+  rsuffices ⟨z, z', hxz, hzz', hz'y⟩ : ∃ z z' : X, d x z ≤ L.sum ∧ d z z' ≤ L.sum ∧ d z' y ≤ L.sum
   · exact (hd x z z' y).trans (mul_le_mul_left' (max_le hxz (max_le hzz' hz'y)) _)
     
   set s : Set ℕ := { m : ℕ | 2 * (take m L).Sum ≤ L.sum }
@@ -145,7 +144,7 @@ theorem le_two_mul_dist_of_prenndist (d : X → X → ℝ≥0) (dist_self : ∀ 
         [skip,
         · simp
           ]
-      exact hd₀ (hm.rel (mem_append.2 $ Or.inr $ mem_singleton_self _))
+      exact hd₀ (hm.rel (mem_append.2 <| Or.inr <| mem_singleton_self _))
     have hs_bdd : BddAbove s := ⟨length l, hs_ub⟩
     exact ⟨Sup s, cSup_le hsne hs_ub, ⟨Nat.Sup_mem hsne hs_bdd, fun k => le_cSup hs_bdd⟩⟩
   have hM_lt : M < length L := by rwa [hL_len, Nat.lt_succ_iff]
@@ -239,17 +238,17 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       
   have hd_le : ∀ x y, ↑(d x y) ≤ 2 * dist x y := by
     refine' PseudoMetricSpace.le_two_mul_dist_of_prenndist _ _ _ fun x₁ x₂ x₃ x₄ => _
-    by_cases H:∃ n, (x₁, x₄) ∉ U n
+    by_cases H : ∃ n, (x₁, x₄) ∉ U n
     · refine' (dif_pos H).trans_le _
       rw [← Nnreal.div_le_iff' two_ne_zero, ← mul_one_div (_ ^ _), ← pow_succ']
       simp only [le_max_iff, hle_d, ← not_and_or]
       rintro ⟨h₁₂, h₂₃, h₃₄⟩
-      refine' Nat.find_spec H (hU_comp (lt_add_one $ Nat.find H) _)
+      refine' Nat.find_spec H (hU_comp (lt_add_one <| Nat.find H) _)
       exact ⟨x₂, h₁₂, x₃, h₂₃, h₃₄⟩
       
     · exact (dif_neg H).trans_le (zero_le _)
       
-  refine' ⟨I, uniform_space_eq $ (uniformity_basis_dist_pow hr.1 hr.2).ext hB.to_has_basis _ _⟩
+  refine' ⟨I, uniform_space_eq <| (uniformity_basis_dist_pow hr.1 hr.2).ext hB.to_has_basis _ _⟩
   · refine' fun n hn => ⟨n, hn, fun x hx => (hdist_le _ _).trans_lt _⟩
     rwa [← Nnreal.coe_pow, Nnreal.coe_lt_coe, ← not_le, hle_d, not_not, Prod.mk.eta]
     
@@ -258,14 +257,14 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
     contrapose! hx
     refine' le_trans _ ((div_le_iff' (@two_pos ℝ _ _)).2 (hd_le x.1 x.2))
     rwa [← Nnreal.coe_two, ← Nnreal.coe_div, ← Nnreal.coe_pow, Nnreal.coe_le_coe, pow_succ', mul_one_div,
-      Nnreal.div_le_iff two_ne_zero, div_mul_cancel _ (@two_ne_zero ℝ≥0 _ _), hle_d, Prod.mk.eta]
+      Nnreal.div_le_iff two_ne_zero, div_mul_cancel _ (two_ne_zero' ℝ≥0), hle_d, Prod.mk.eta]
     
 #align uniform_space.metrizable_uniformity UniformSpace.metrizable_uniformity
 
 /-- A `pseudo_metric_space` instance compatible with a given `uniform_space` structure. -/
 protected noncomputable def UniformSpace.pseudoMetricSpace (X : Type _) [UniformSpace X] [IsCountablyGenerated (𝓤 X)] :
     PseudoMetricSpace X :=
-  (UniformSpace.metrizable_uniformity X).some.replaceUniformity $
+  (UniformSpace.metrizable_uniformity X).some.replaceUniformity <|
     congr_arg _ (UniformSpace.metrizable_uniformity X).some_spec.symm
 #align uniform_space.pseudo_metric_space UniformSpace.pseudoMetricSpace
 

@@ -43,7 +43,7 @@ theorem Prime.dvd_prod_iff {p : M} {L : List M} (pp : Prime p) : p ∣ L.Prod �
 #align prime.dvd_prod_iff Prime.dvd_prod_iff
 
 theorem Prime.not_dvd_prod {p : M} {L : List M} (pp : Prime p) (hL : ∀ a ∈ L, ¬p ∣ a) : ¬p ∣ L.Prod :=
-  mt (Prime.dvd_prod_iff pp).mp $ not_bex.mpr hL
+  mt (Prime.dvd_prod_iff pp).mp <| not_bex.mpr hL
 #align prime.not_dvd_prod Prime.not_dvd_prod
 
 end CommMonoidWithZero
@@ -84,7 +84,7 @@ theorem perm_of_prod_eq_prod :
       mem_list_primes_of_dvd_prod (hl₁ a (mem_cons_self _ _)) hl₂ (h ▸ by rw [prod_cons] <;> exact dvd_mul_right _ _)
     have hb : (b::l₂) ~ a::(b::l₂).erase a := perm_cons_erase ha
     have hl : Prod l₁ = Prod ((b::l₂).erase a) :=
-      (mul_right_inj' (hl₁ a (mem_cons_self _ _)).NeZero).1 $ by rwa [← prod_cons, ← prod_cons, ← hb.prod_eq]
+      (mul_right_inj' (hl₁ a (mem_cons_self _ _)).NeZero).1 <| by rwa [← prod_cons, ← prod_cons, ← hb.prod_eq]
     exact perm.trans ((perm_of_prod_eq_prod hl hl₁' hl₂').cons _) hb.symm
 #align perm_of_prod_eq_prod perm_of_prod_eq_prod
 

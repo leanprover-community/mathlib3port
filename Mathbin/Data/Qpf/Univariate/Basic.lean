@@ -93,8 +93,7 @@ section
 
 open Functor
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a f) -/
-theorem liftp_iff {α : Type u} (p : α → Prop) (x : F α) : Liftp p x ↔ ∃ (a) (f), x = abs ⟨a, f⟩ ∧ ∀ i, p (f i) := by
+theorem liftp_iff {α : Type u} (p : α → Prop) (x : F α) : Liftp p x ↔ ∃ a f, x = abs ⟨a, f⟩ ∧ ∀ i, p (f i) := by
   constructor
   · rintro ⟨y, hy⟩
     cases' h : repr y with a f
@@ -134,9 +133,8 @@ theorem liftp_iff' {α : Type u} (p : α → Prop) (x : F α) : Liftp p x ↔ �
   rfl
 #align qpf.liftp_iff' Qpf.liftp_iff'
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a f₀ f₁) -/
 theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : F α) :
-    Liftr r x y ↔ ∃ (a) (f₀) (f₁), x = abs ⟨a, f₀⟩ ∧ y = abs ⟨a, f₁⟩ ∧ ∀ i, r (f₀ i) (f₁ i) := by
+    Liftr r x y ↔ ∃ a f₀ f₁, x = abs ⟨a, f₀⟩ ∧ y = abs ⟨a, f₁⟩ ∧ ∀ i, r (f₀ i) (f₁ i) := by
   constructor
   · rintro ⟨u, xeq, yeq⟩
     cases' h : repr u with a f
@@ -505,12 +503,11 @@ theorem Cofix.bisim (r : Cofix F → Cofix F → Prop) (h : ∀ x y, r x y → L
   apply h'
 #align qpf.cofix.bisim Qpf.Cofix.bisim
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a f f') -/
 theorem Cofix.bisim' {α : Type _} (Q : α → Prop) (u v : α → Cofix F)
     (h :
       ∀ x,
         Q x →
-          ∃ (a) (f) (f'),
+          ∃ a f f',
             Cofix.dest (u x) = abs ⟨a, f⟩ ∧
               Cofix.dest (v x) = abs ⟨a, f'⟩ ∧ ∀ i, ∃ x', Q x' ∧ f i = u x' ∧ f' i = v x') :
     ∀ x, Q x → u x = v x := fun x Qx =>
@@ -651,10 +648,8 @@ theorem supp_eq {α : Type u} (x : F α) : supp x = { u | ∀ a f, abs ⟨a, f�
   ext <;> apply mem_supp
 #align qpf.supp_eq Qpf.supp_eq
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a f) -/
 theorem has_good_supp_iff {α : Type u} (x : F α) :
-    (∀ p, Liftp p x ↔ ∀ u ∈ supp x, p u) ↔
-      ∃ (a) (f), abs ⟨a, f⟩ = x ∧ ∀ a' f', abs ⟨a', f'⟩ = x → f '' univ ⊆ f' '' univ :=
+    (∀ p, Liftp p x ↔ ∀ u ∈ supp x, p u) ↔ ∃ a f, abs ⟨a, f⟩ = x ∧ ∀ a' f', abs ⟨a', f'⟩ = x → f '' univ ⊆ f' '' univ :=
   by
   constructor
   · intro h

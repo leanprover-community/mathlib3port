@@ -27,8 +27,8 @@ variable [Fact (finrank ℝ V = 2)] (o : Orientation ℝ V (Fin 2))
 
 /-- Angle at center of a circle equals twice angle at circumference, oriented vector angle
 form. -/
-theorem oangle_eq_two_zsmul_oangle_sub_of_norm_eq {x y z : V} (hxyne : x ≠ y) (hxzne : x ≠ z) (hxy : ∥x∥ = ∥y∥)
-    (hxz : ∥x∥ = ∥z∥) : o.oangle y z = (2 : ℤ) • o.oangle (y - x) (z - x) := by
+theorem oangle_eq_two_zsmul_oangle_sub_of_norm_eq {x y z : V} (hxyne : x ≠ y) (hxzne : x ≠ z) (hxy : ‖x‖ = ‖y‖)
+    (hxz : ‖x‖ = ‖z‖) : o.oangle y z = (2 : ℤ) • o.oangle (y - x) (z - x) := by
   have hy : y ≠ 0 := by
     rintro rfl
     rw [norm_zero, norm_eq_zero] at hxy
@@ -50,7 +50,7 @@ theorem oangle_eq_two_zsmul_oangle_sub_of_norm_eq {x y z : V} (hxyne : x ≠ y) 
 /-- Angle at center of a circle equals twice angle at circumference, oriented vector angle
 form with radius specified. -/
 theorem oangle_eq_two_zsmul_oangle_sub_of_norm_eq_real {x y z : V} (hxyne : x ≠ y) (hxzne : x ≠ z) {r : ℝ}
-    (hx : ∥x∥ = r) (hy : ∥y∥ = r) (hz : ∥z∥ = r) : o.oangle y z = (2 : ℤ) • o.oangle (y - x) (z - x) :=
+    (hx : ‖x‖ = r) (hy : ‖y‖ = r) (hz : ‖z‖ = r) : o.oangle y z = (2 : ℤ) • o.oangle (y - x) (z - x) :=
   o.oangle_eq_two_zsmul_oangle_sub_of_norm_eq hxyne hxzne (hy.symm ▸ hx) (hz.symm ▸ hx)
 #align
   orientation.oangle_eq_two_zsmul_oangle_sub_of_norm_eq_real Orientation.oangle_eq_two_zsmul_oangle_sub_of_norm_eq_real
@@ -59,7 +59,7 @@ theorem oangle_eq_two_zsmul_oangle_sub_of_norm_eq_real {x y z : V} (hxyne : x �
 a cyclic quadrilateral add to π", for oriented angles mod π (for which those are the same
 result), represented here as equality of twice the angles. -/
 theorem two_zsmul_oangle_sub_eq_two_zsmul_oangle_sub_of_norm_eq {x₁ x₂ y z : V} (hx₁yne : x₁ ≠ y) (hx₁zne : x₁ ≠ z)
-    (hx₂yne : x₂ ≠ y) (hx₂zne : x₂ ≠ z) {r : ℝ} (hx₁ : ∥x₁∥ = r) (hx₂ : ∥x₂∥ = r) (hy : ∥y∥ = r) (hz : ∥z∥ = r) :
+    (hx₂yne : x₂ ≠ y) (hx₂zne : x₂ ≠ z) {r : ℝ} (hx₁ : ‖x₁‖ = r) (hx₂ : ‖x₂‖ = r) (hy : ‖y‖ = r) (hz : ‖z‖ = r) :
     (2 : ℤ) • o.oangle (y - x₁) (z - x₁) = (2 : ℤ) • o.oangle (y - x₂) (z - x₂) :=
   o.oangle_eq_two_zsmul_oangle_sub_of_norm_eq_real hx₁yne hx₁zne hx₁ hy hz ▸
     o.oangle_eq_two_zsmul_oangle_sub_of_norm_eq_real hx₂yne hx₂zne hx₂ hy hz

@@ -6,7 +6,6 @@ Authors: Adam Topaz
 import Mathbin.CategoryTheory.Monad.Basic
 import Mathbin.CategoryTheory.Monoidal.EndCat
 import Mathbin.CategoryTheory.Monoidal.Mon_
-import Mathbin.CategoryTheory.Category.CatCat
 
 /-!
 

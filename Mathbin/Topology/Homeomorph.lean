@@ -92,7 +92,7 @@ theorem to_equiv_injective : Function.Injective (toEquiv : α ≃ₜ β → α �
 
 @[ext.1]
 theorem ext {h h' : α ≃ₜ β} (H : ∀ x, h x = h' x) : h = h' :=
-  to_equiv_injective $ Equiv.ext H
+  to_equiv_injective <| Equiv.ext H
 #align homeomorph.ext Homeomorph.ext
 
 /-- Identity map as a homeomorphism. -/
@@ -216,7 +216,7 @@ theorem preimage_image (h : α ≃ₜ β) (s : Set α) : h ⁻¹' (h '' s) = s :
 #align homeomorph.preimage_image Homeomorph.preimage_image
 
 protected theorem inducing (h : α ≃ₜ β) : Inducing h :=
-  inducing_of_inducing_compose h.Continuous h.symm.Continuous $ by simp only [symm_comp_self, inducing_id]
+  inducing_of_inducing_compose h.Continuous h.symm.Continuous <| by simp only [symm_comp_self, inducing_id]
 #align homeomorph.inducing Homeomorph.inducing
 
 theorem induced_eq (h : α ≃ₜ β) : TopologicalSpace.induced h ‹_› = ‹_› :=
@@ -224,7 +224,7 @@ theorem induced_eq (h : α ≃ₜ β) : TopologicalSpace.induced h ‹_› = ‹
 #align homeomorph.induced_eq Homeomorph.induced_eq
 
 protected theorem quotient_map (h : α ≃ₜ β) : QuotientMap h :=
-  QuotientMap.of_quotient_map_compose h.symm.Continuous h.Continuous $ by simp only [self_comp_symm, QuotientMap.id]
+  QuotientMap.of_quotient_map_compose h.symm.Continuous h.Continuous <| by simp only [self_comp_symm, QuotientMap.id]
 #align homeomorph.quotient_map Homeomorph.quotient_map
 
 theorem coinduced_eq (h : α ≃ₜ β) : TopologicalSpace.coinduced h ‹_› = ‹_› :=
@@ -257,8 +257,8 @@ theorem is_compact_preimage {s : Set β} (h : α ≃ₜ β) : IsCompact (h ⁻¹
 
 @[simp]
 theorem comap_cocompact (h : α ≃ₜ β) : comap h (cocompact β) = cocompact α :=
-  (comap_cocompact_le h.Continuous).antisymm $
-    (has_basis_cocompact.le_basis_iff (has_basis_cocompact.comap h)).2 $ fun K hK =>
+  (comap_cocompact_le h.Continuous).antisymm <|
+    (has_basis_cocompact.le_basis_iff (has_basis_cocompact.comap h)).2 fun K hK =>
       ⟨h ⁻¹' K, h.is_compact_preimage.2 hK, Subset.rfl⟩
 #align homeomorph.comap_cocompact Homeomorph.comap_cocompact
 
@@ -437,7 +437,7 @@ def setCongr {s t : Set α} (h : s = t) : s ≃ₜ t where
 #align homeomorph.set_congr Homeomorph.setCongr
 
 /-- Sum of two homeomorphisms. -/
-def sumCongr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : α ⊕ γ ≃ₜ β ⊕ δ where
+def sumCongr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : Sum α γ ≃ₜ Sum β δ where
   continuous_to_fun := h₁.Continuous.sum_map h₂.Continuous
   continuous_inv_fun := h₁.symm.Continuous.sum_map h₂.symm.Continuous
   toEquiv := h₁.toEquiv.sumCongr h₂.toEquiv
@@ -521,8 +521,8 @@ end
 @[simps apply toEquiv]
 def piCongrRight {ι : Type _} {β₁ β₂ : ι → Type _} [∀ i, TopologicalSpace (β₁ i)] [∀ i, TopologicalSpace (β₂ i)]
     (F : ∀ i, β₁ i ≃ₜ β₂ i) : (∀ i, β₁ i) ≃ₜ ∀ i, β₂ i where
-  continuous_to_fun := continuous_pi fun i => (F i).Continuous.comp $ continuous_apply i
-  continuous_inv_fun := continuous_pi fun i => (F i).symm.Continuous.comp $ continuous_apply i
+  continuous_to_fun := continuous_pi fun i => (F i).Continuous.comp <| continuous_apply i
+  continuous_inv_fun := continuous_pi fun i => (F i).symm.Continuous.comp <| continuous_apply i
   toEquiv := Equiv.piCongrRight fun i => (F i).toEquiv
 #align homeomorph.Pi_congr_right Homeomorph.piCongrRight
 
@@ -542,26 +542,26 @@ def ulift.{u, v} {α : Type u} [TopologicalSpace α] : ULift.{v, u} α ≃ₜ α
 section Distrib
 
 /-- `(α ⊕ β) × γ` is homeomorphic to `α × γ ⊕ β × γ`. -/
-def sumProdDistrib : (α ⊕ β) × γ ≃ₜ α × γ ⊕ β × γ :=
-  Homeomorph.symm $
+def sumProdDistrib : Sum α β × γ ≃ₜ Sum (α × γ) (β × γ) :=
+  Homeomorph.symm <|
     homeomorphOfContinuousOpen (Equiv.sumProdDistrib α β γ).symm
-        ((continuous_inl.prod_map continuous_id).sum_elim (continuous_inr.prod_map continuous_id)) $
+        ((continuous_inl.prod_map continuous_id).sum_elim (continuous_inr.prod_map continuous_id)) <|
       (is_open_map_inl.Prod IsOpenMap.id).sum_elim (is_open_map_inr.Prod IsOpenMap.id)
 #align homeomorph.sum_prod_distrib Homeomorph.sumProdDistrib
 
 /-- `α × (β ⊕ γ)` is homeomorphic to `α × β ⊕ α × γ`. -/
-def prodSumDistrib : α × (β ⊕ γ) ≃ₜ α × β ⊕ α × γ :=
-  (prodComm _ _).trans $ sumProdDistrib.trans $ sumCongr (prodComm _ _) (prodComm _ _)
+def prodSumDistrib : α × Sum β γ ≃ₜ Sum (α × β) (α × γ) :=
+  (prodComm _ _).trans <| sumProdDistrib.trans <| sumCongr (prodComm _ _) (prodComm _ _)
 #align homeomorph.prod_sum_distrib Homeomorph.prodSumDistrib
 
 variable {ι : Type _} {σ : ι → Type _} [∀ i, TopologicalSpace (σ i)]
 
 /-- `(Σ i, σ i) × β` is homeomorphic to `Σ i, (σ i × β)`. -/
-def sigmaProdDistrib : (Σ i, σ i) × β ≃ₜ Σ i, σ i × β :=
-  Homeomorph.symm $
+def sigmaProdDistrib : (Σi, σ i) × β ≃ₜ Σi, σ i × β :=
+  Homeomorph.symm <|
     homeomorphOfContinuousOpen (Equiv.sigmaProdDistrib σ β).symm
-      (continuous_sigma $ fun i => continuous_sigma_mk.fst'.prod_mk continuous_snd)
-      (is_open_map_sigma.2 $ fun i => is_open_map_sigma_mk.Prod IsOpenMap.id)
+      (continuous_sigma fun i => continuous_sigma_mk.fst'.prod_mk continuous_snd)
+      (is_open_map_sigma.2 fun i => is_open_map_sigma_mk.Prod IsOpenMap.id)
 #align homeomorph.sigma_prod_distrib Homeomorph.sigmaProdDistrib
 
 end Distrib
@@ -579,7 +579,7 @@ def funUnique (ι α : Type _) [Unique ι] [TopologicalSpace α] : (ι → α) �
 def piFinTwo.{u} (α : Fin 2 → Type u) [∀ i, TopologicalSpace (α i)] : (∀ i, α i) ≃ₜ α 0 × α 1 where
   toEquiv := piFinTwoEquiv α
   continuous_to_fun := (continuous_apply 0).prod_mk (continuous_apply 1)
-  continuous_inv_fun := continuous_pi $ Fin.forall_fin_two.2 ⟨continuous_fst, continuous_snd⟩
+  continuous_inv_fun := continuous_pi <| Fin.forall_fin_two.2 ⟨continuous_fst, continuous_snd⟩
 #align homeomorph.pi_fin_two Homeomorph.piFinTwo
 
 /-- Homeomorphism between `α² = fin 2 → α` and `α × α`. -/
@@ -626,7 +626,7 @@ def piEquivPiSubtypeProd (p : ι → Prop) (β : ι → Type _) [∀ i, Topologi
   toEquiv := Equiv.piEquivPiSubtypeProd p β
   continuous_to_fun := by apply Continuous.prod_mk <;> exact continuous_pi fun j => continuous_apply j
   continuous_inv_fun :=
-    continuous_pi $ fun j => by
+    continuous_pi fun j => by
       dsimp only [Equiv.piEquivPiSubtypeProd]
       split_ifs
       exacts[(continuous_apply _).comp continuous_fst, (continuous_apply _).comp continuous_snd]
@@ -639,9 +639,9 @@ variable [DecidableEq ι] (i : ι)
 @[simps]
 def piSplitAt (β : ι → Type _) [∀ j, TopologicalSpace (β j)] : (∀ j, β j) ≃ₜ β i × ∀ j : { j // j ≠ i }, β j where
   toEquiv := Equiv.piSplitAt i β
-  continuous_to_fun := (continuous_apply i).prod_mk (continuous_pi $ fun j => continuous_apply j)
+  continuous_to_fun := (continuous_apply i).prod_mk (continuous_pi fun j => continuous_apply j)
   continuous_inv_fun :=
-    continuous_pi $ fun j => by
+    continuous_pi fun j => by
       dsimp only [Equiv.piSplitAt]
       split_ifs
       subst h
@@ -663,7 +663,7 @@ end Homeomorph
 @[simps]
 def Equiv.toHomeomorphOfInducing [TopologicalSpace α] [TopologicalSpace β] (f : α ≃ β) (hf : Inducing f) : α ≃ₜ β :=
   { f with continuous_to_fun := hf.Continuous,
-    continuous_inv_fun := hf.continuous_iff.2 $ by simpa using continuous_id }
+    continuous_inv_fun := hf.continuous_iff.2 <| by simpa using continuous_id }
 #align equiv.to_homeomorph_of_inducing Equiv.toHomeomorphOfInducing
 
 namespace Continuous

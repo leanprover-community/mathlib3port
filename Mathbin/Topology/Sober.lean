@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import Mathbin.Topology.Separation
-import Mathbin.Topology.ContinuousFunction.Basic
 
 /-!
 # Sober spaces
@@ -163,7 +162,7 @@ noncomputable def irreducibleSetEquivPoints [QuasiSober α] [T0Space α] :
     { s : Set α | IsIrreducible s ∧ IsClosed s } ≃o α where
   toFun s := s.Prop.1.genericPoint
   invFun x := ⟨closure ({x} : Set α), is_irreducible_singleton.closure, isClosedClosure⟩
-  left_inv s := Subtype.eq $ Eq.trans s.Prop.1.generic_point_spec $ closure_eq_iff_is_closed.mpr s.2.2
+  left_inv s := Subtype.eq <| Eq.trans s.Prop.1.generic_point_spec <| closure_eq_iff_is_closed.mpr s.2.2
   right_inv x :=
     is_irreducible_singleton.closure.generic_point_spec.Eq
       (by
@@ -213,11 +212,11 @@ theorem OpenEmbedding.quasiSober {f : α → β} (hf : OpenEmbedding f) [QuasiSo
 
 /-- A space is quasi sober if it can be covered by open quasi sober subsets. -/
 theorem quasiSoberOfOpenCover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s : Set α)) [hS' : ∀ s : S, QuasiSober s]
-    (hS'' : ⋃₀ S = ⊤) : QuasiSober α := by
+    (hS'' : ⋃₀S = ⊤) : QuasiSober α := by
   rw [quasi_sober_iff]
   intro t h h'
   obtain ⟨x, hx⟩ := h.1
-  obtain ⟨U, hU, hU'⟩ : x ∈ ⋃₀ S := by
+  obtain ⟨U, hU, hU'⟩ : x ∈ ⋃₀S := by
     rw [hS'']
     trivial
   haveI : QuasiSober U := hS' ⟨U, hU⟩

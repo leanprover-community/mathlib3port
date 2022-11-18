@@ -84,9 +84,9 @@ attribute [local instance] QuotientGroup.leftRel
 instance : CommGroup (Abelianization G) :=
   { QuotientGroup.Quotient.group _ with
     mul_comm := fun x y =>
-      Quotient.inductionOn₂' x y $ fun a b =>
-        Quotient.sound' $
-          QuotientGroup.left_rel_apply.mpr $
+      (Quotient.inductionOn₂' x y) fun a b =>
+        Quotient.sound' <|
+          QuotientGroup.left_rel_apply.mpr <|
             Subgroup.subset_closure ⟨b⁻¹, Subgroup.mem_top b⁻¹, a⁻¹, Subgroup.mem_top a⁻¹, by group⟩ }
 
 instance : Inhabited (Abelianization G) :=
@@ -128,10 +128,10 @@ theorem commutator_subset_ker : commutator G ≤ f.ker := by
 /-- If `f : G → A` is a group homomorphism to an abelian group, then `lift f` is the unique map from
   the abelianization of a `G` to `A` that factors through `f`. -/
 def lift : (G →* A) ≃ (Abelianization G →* A) where
-  toFun f := QuotientGroup.lift _ f fun x h => f.mem_ker.2 $ commutator_subset_ker _ h
+  toFun f := QuotientGroup.lift _ f fun x h => f.mem_ker.2 <| commutator_subset_ker _ h
   invFun F := F.comp of
-  left_inv f := MonoidHom.ext $ fun x => rfl
-  right_inv F := MonoidHom.ext $ fun x => QuotientGroup.induction_on x $ fun z => rfl
+  left_inv f := MonoidHom.ext fun x => rfl
+  right_inv F := MonoidHom.ext fun x => (QuotientGroup.induction_on x) fun z => rfl
 #align abelianization.lift Abelianization.lift
 
 @[simp]
@@ -148,7 +148,7 @@ theorem lift.unique (φ : Abelianization G →* A)
 
 @[simp]
 theorem lift_of : lift of = MonoidHom.id (Abelianization G) :=
-  lift.apply_symm_apply $ MonoidHom.id _
+  lift.apply_symm_apply <| MonoidHom.id _
 #align abelianization.lift_of Abelianization.lift_of
 
 end lift
@@ -158,7 +158,7 @@ variable {A : Type v} [Monoid A]
 /-- See note [partially-applied ext lemmas]. -/
 @[ext.1]
 theorem hom_ext (φ ψ : Abelianization G →* A) (h : φ.comp of = ψ.comp of) : φ = ψ :=
-  MonoidHom.ext $ fun x => QuotientGroup.induction_on x $ MonoidHom.congr_fun h
+  MonoidHom.ext fun x => QuotientGroup.induction_on x <| MonoidHom.congr_fun h
 #align abelianization.hom_ext Abelianization.hom_ext
 
 section Map

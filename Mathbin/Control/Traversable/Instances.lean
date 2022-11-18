@@ -142,34 +142,34 @@ open Applicative Functor
 
 open List (cons)
 
-protected theorem traverse_map {α β γ : Type u} (g : α → β) (f : β → G γ) (x : σ ⊕ α) :
+protected theorem traverse_map {α β γ : Type u} (g : α → β) (f : β → G γ) (x : Sum σ α) :
     Sum.traverse f (g <$> x) = Sum.traverse (f ∘ g) x := by
   cases x <;> simp [Sum.traverse, id_map, functor_norm] <;> rfl
 #align sum.traverse_map Sum.traverse_map
 
 variable [LawfulApplicative F] [LawfulApplicative G]
 
-protected theorem id_traverse {σ α} (x : σ ⊕ α) : Sum.traverse id.mk x = x := by cases x <;> rfl
+protected theorem id_traverse {σ α} (x : Sum σ α) : Sum.traverse id.mk x = x := by cases x <;> rfl
 #align sum.id_traverse Sum.id_traverse
 
 @[nolint unused_arguments]
-protected theorem comp_traverse {α β γ} (f : β → F γ) (g : α → G β) (x : σ ⊕ α) :
+protected theorem comp_traverse {α β γ} (f : β → F γ) (g : α → G β) (x : Sum σ α) :
     Sum.traverse (comp.mk ∘ (· <$> ·) f ∘ g) x = Comp.mk (Sum.traverse f <$> Sum.traverse g x) := by
   cases x <;> simp! [Sum.traverse, map_id, functor_norm] <;> rfl
 #align sum.comp_traverse Sum.comp_traverse
 
-protected theorem traverse_eq_map_id {α β} (f : α → β) (x : σ ⊕ α) : Sum.traverse (id.mk ∘ f) x = id.mk (f <$> x) := by
-  induction x <;> simp! [*, functor_norm] <;> rfl
+protected theorem traverse_eq_map_id {α β} (f : α → β) (x : Sum σ α) : Sum.traverse (id.mk ∘ f) x = id.mk (f <$> x) :=
+  by induction x <;> simp! [*, functor_norm] <;> rfl
 #align sum.traverse_eq_map_id Sum.traverse_eq_map_id
 
-protected theorem map_traverse {α β γ} (g : α → G β) (f : β → γ) (x : σ ⊕ α) :
+protected theorem map_traverse {α β γ} (g : α → G β) (f : β → γ) (x : Sum σ α) :
     (· <$> ·) f <$> Sum.traverse g x = Sum.traverse ((· <$> ·) f ∘ g) x := by
   cases x <;> simp [Sum.traverse, id_map, functor_norm] <;> congr <;> rfl
 #align sum.map_traverse Sum.map_traverse
 
 variable (η : ApplicativeTransformation F G)
 
-protected theorem naturality {α β} (f : α → F β) (x : σ ⊕ α) : η (Sum.traverse f x) = Sum.traverse (@η _ ∘ f) x := by
+protected theorem naturality {α β} (f : α → F β) (x : Sum σ α) : η (Sum.traverse f x) = Sum.traverse (@η _ ∘ f) x := by
   cases x <;> simp! [Sum.traverse, functor_norm]
 #align sum.naturality Sum.naturality
 

@@ -56,16 +56,16 @@ theorem Fintype.nonempty_field_iff {α} [Fintype α] : Nonempty (Field α) ↔ I
 #align fintype.nonempty_field_iff Fintype.nonempty_field_iff
 
 theorem Fintype.not_is_field_of_card_not_prime_pow {α} [Fintype α] [Ring α] : ¬IsPrimePow ‖α‖ → ¬IsField α :=
-  mt $ fun h => Fintype.nonempty_field_iff.mp ⟨h.toField⟩
+  mt fun h => Fintype.nonempty_field_iff.mp ⟨h.toField⟩
 #align fintype.not_is_field_of_card_not_prime_pow Fintype.not_is_field_of_card_not_prime_pow
 
 /-- Any infinite type can be endowed a field structure. -/
 theorem Infinite.nonempty_field {α : Type u} [Infinite α] : Nonempty (Field α) := by
-  letI K := FractionRing (MvPolynomial α $ ULift.{u} ℚ)
+  letI K := FractionRing (MvPolynomial α <| ULift.{u} ℚ)
   suffices (#α) = (#K) by
     obtain ⟨e⟩ := Cardinal.eq.1 this
     exact ⟨e.field⟩
-  rw [← IsLocalization.card (MvPolynomial α $ ULift.{u} ℚ)⁰ K le_rfl]
+  rw [← IsLocalization.card (MvPolynomial α <| ULift.{u} ℚ)⁰ K le_rfl]
   apply le_antisymm
   · refine' ⟨⟨fun a => MvPolynomial.monomial (Finsupp.single a 1) (1 : ULift.{u} ℚ), fun x y h => _⟩⟩
     simpa [MvPolynomial.monomial_eq_monomial_iff, Finsupp.single_eq_single_iff] using h

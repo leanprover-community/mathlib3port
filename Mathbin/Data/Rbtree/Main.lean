@@ -29,8 +29,7 @@ theorem is_searchable_of_well_formed {t : Rbnode α} [IsStrictWeakOrder α lt] :
 
 open Color
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (c n) -/
-theorem is_red_black_of_well_formed {t : Rbnode α} : t.WellFormed lt → ∃ (c) (n), IsRedBlack t c n := by
+theorem is_red_black_of_well_formed {t : Rbnode α} : t.WellFormed lt → ∃ c n, IsRedBlack t c n := by
   intro h
   induction h
   · exists black
@@ -158,7 +157,7 @@ theorem find_insert_of_ne [IsStrictTotalOrder α lt] {x y : α} (t : Rbtree α l
 #align rbtree.find_insert_of_ne Rbtree.find_insert_of_ne
 
 theorem not_mem_of_find_none [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α lt} : t.find a = none → a ∉ t := fun h =>
-  Iff.mpr (not_congr (find_correct a t)) $ by
+  Iff.mpr (not_congr (find_correct a t)) <| by
     intro h
     cases' h with _ h
     cases' h with h₁ h₂

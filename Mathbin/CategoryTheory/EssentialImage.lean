@@ -64,7 +64,7 @@ theorem essImage.of_nat_iso {F' : C ⥤ D} (h : F ≅ F') {Y : D} (hY : Y ∈ es
 
 /-- Isomorphic functors have equal essential images. -/
 theorem ess_image_eq_of_nat_iso {F' : C ⥤ D} (h : F ≅ F') : essImage F = essImage F' :=
-  Set.ext $ fun A => ⟨essImage.of_nat_iso h, essImage.of_nat_iso h.symm⟩
+  Set.ext fun A => ⟨essImage.of_nat_iso h, essImage.of_nat_iso h.symm⟩
 #align category_theory.functor.ess_image_eq_of_nat_iso CategoryTheory.Functor.ess_image_eq_of_nat_iso
 
 /-- An object in the image is in the essential image. -/
@@ -103,7 +103,7 @@ def toEssImageCompEssentialImageInclusion (F : C ⥤ D) : F.toEssImage ⋙ F.ess
 
 end Functor
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`mem_ess_image] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`mem_ess_image] [] -/
 /-- A functor `F : C ⥤ D` is essentially surjective if every object of `D` is in the essential image
 of `F`. In other words, for every `Y : D`, there is some `X : C` with `F.obj X ≅ Y`.
 

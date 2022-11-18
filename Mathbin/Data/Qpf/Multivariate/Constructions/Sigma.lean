@@ -24,7 +24,7 @@ variable (F : A → Typevec.{u} n → Type u)
 /-- Dependent sum of of an `n`-ary functor. The sum can range over
 data types like `ℕ` or over `Type.{u-1}` -/
 def Sigma (v : Typevec.{u} n) : Type u :=
-  Σ α : A, F α v
+  Σα : A, F α v
 #align mvqpf.sigma Mvqpf.Sigma
 
 /-- Dependent product of of an `n`-ary functor. The sum can range over
@@ -41,17 +41,17 @@ instance Pi.inhabited {α} [∀ a, Inhabited (F a α)] : Inhabited (Pi F α) :=
   ⟨fun a => default⟩
 #align mvqpf.pi.inhabited Mvqpf.Pi.inhabited
 
-variable [∀ α, Mvfunctor $ F α]
+variable [∀ α, Mvfunctor <| F α]
 
 namespace Sigma
 
 instance : Mvfunctor (Sigma F) where map := fun α β f ⟨a, x⟩ => ⟨a, f <$$> x⟩
 
-variable [∀ α, Mvqpf $ F α]
+variable [∀ α, Mvqpf <| F α]
 
 /-- polynomial functor representation of a dependent sum -/
 protected def p : Mvpfunctor n :=
-  ⟨Σ a, (p (F a)).A, fun x => (p (F x.1)).B x.2⟩
+  ⟨Σa, (p (F a)).A, fun x => (p (F x.1)).B x.2⟩
 #align mvqpf.sigma.P Mvqpf.Sigma.p
 
 /-- abstraction function for dependent sums -/
@@ -81,11 +81,11 @@ namespace Pi
 
 instance : Mvfunctor (Pi F) where map α β f x a := f <$$> x a
 
-variable [∀ α, Mvqpf $ F α]
+variable [∀ α, Mvqpf <| F α]
 
 /-- polynomial functor representation of a dependent product -/
 protected def p : Mvpfunctor n :=
-  ⟨∀ a, (p (F a)).A, fun x i => Σ a : A, (p (F a)).B (x a) i⟩
+  ⟨∀ a, (p (F a)).A, fun x i => Σa : A, (p (F a)).B (x a) i⟩
 #align mvqpf.pi.P Mvqpf.Pi.p
 
 /-- abstraction function for dependent products -/

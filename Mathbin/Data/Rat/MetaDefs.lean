@@ -36,8 +36,8 @@ want to import `data.rat.basic` there.
 This function is similar to `expr.of_rat` but takes more hypotheses and is not tactic valued.
  -/
 unsafe def rat.mk_numeral (type has_zero has_one has_add has_neg has_div : expr) : ℚ → expr
-  | ⟨num, denom, _, _⟩ =>
-    let nume := num.mk_numeral type Zero One Add Neg
+  | ⟨Num, denom, _, _⟩ =>
+    let nume := Num.mk_numeral type Zero One Add Neg
     if denom = 1 then nume
     else
       let dene := denom.mk_numeral type Zero One Add
@@ -135,7 +135,7 @@ protected unsafe def expr.of_rat (α : expr) : ℚ → tactic expr
       else do
         let e₂ ← expr.of_nat α d
         tactic.mk_app `` Div.div [e₁, e₂]
-  | ⟨-[1+ n], d, h, c⟩ => do
+  | ⟨-[n+1], d, h, c⟩ => do
     let e₁ ← expr.of_nat α (n + 1)
     let e ←
       if d = 1 then return e₁
@@ -160,7 +160,7 @@ protected unsafe def of_rat (c : instance_cache) : ℚ → tactic (instance_cach
       let (c, e₁) ← c.ofNat n
       let (c, e₂) ← c.ofNat d
       c `` Div.div [e₁, e₂]
-  | ⟨-[1+ n], d, _, _⟩ => do
+  | ⟨-[n+1], d, _, _⟩ => do
     let (c, e) ←
       if d = 1 then c.ofNat (n + 1)
         else do

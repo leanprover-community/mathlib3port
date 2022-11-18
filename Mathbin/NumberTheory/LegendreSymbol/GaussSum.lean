@@ -100,7 +100,7 @@ private theorem gauss_sum_mul_aux {χ : MulChar R R'} (hχ : IsNontrivial χ) (�
     exact hχ.sum_eq_zero.symm
     
   · -- case `b ≠ 0`
-    refine' (Fintype.sum_bijective _ (mul_left_bijective₀ b hb) _ _ $ fun x => _).symm
+    refine' ((Fintype.sum_bijective _ (mul_left_bijective₀ b hb) _ _) fun x => _).symm
     rw [mul_assoc, mul_comm x, ← mul_assoc, mul_inv_cancel hb, one_mul, mul_sub, mul_one]
     
 #align gauss_sum_mul_aux gauss_sum_mul_aux
@@ -199,7 +199,7 @@ theorem Char.card_pow_char_pow {χ : MulChar R R'} (hχ : IsQuadratic χ) (ψ : 
     rw [hf, zero_pow (by norm_num : 0 < 2), eq_comm, mul_eq_zero] at hg
     exact
       not_is_unit_prime_of_dvd_card p
-        ((CharP.cast_eq_zero_iff R' p _).mp $ hg.resolve_left (is_unit_one.neg.map χ).NeZero) hp
+        ((CharP.cast_eq_zero_iff R' p _).mp <| hg.resolve_left (is_unit_one.neg.map χ).NeZero) hp
   rw [← hg]
   apply mul_right_cancel₀ this
   rw [← hχ.gauss_sum_frob_iter p n hp ψ, ← pow_mul, mul_comm, ← pow_succ,
@@ -224,7 +224,7 @@ theorem Char.card_pow_card {F : Type} [Field F] [Fintype F] {F' : Type} [Field F
   rw [Ne, ← Nat.prime_dvd_prime_iff_eq hp' hp, ← is_unit_iff_not_dvd_char, hchar] at hch₁
   exact
     Char.card_pow_char_pow (hχ₂.comp _) ψ.char (ringChar FF') n' hch₁ (hchar ▸ hch₂)
-      (gauss_sum_sq (hχ₁.comp $ RingHom.injective _) (hχ₂.comp _) ψ.prim)
+      (gauss_sum_sq (hχ₁.comp <| RingHom.injective _) (hχ₂.comp _) ψ.prim)
 #align char.card_pow_card Char.card_pow_card
 
 end GaussSumValues
@@ -283,7 +283,7 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
   -- we now show that the Gauss sum of `χ` and `ψ₈` has the relevant property
   have hg : gaussSum χ ψ₈.char ^ 2 = χ (-1) * Fintype.card (Zmod 8) := by
     rw [hχ, one_mul, card, gaussSum]
-    convert ← congr_arg (· ^ 2) (Fin.sum_univ_eight $ fun x => (χ₈ x : FF) * τ ^ x.val)
+    convert ← congr_arg (· ^ 2) (Fin.sum_univ_eight fun x => (χ₈ x : FF) * τ ^ x.val)
     · ext
       congr
       apply pow_one
@@ -305,7 +305,8 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
   rw [card, ← hchar, hχ, one_mul, ← hc, ← Nat.cast_pow (ringChar F), ← hc] at h
   -- finally, we change `2` to `8` on the left hand side
   convert_to (8 : F) ^ (Fintype.card F / 2) = _
-  · rw [(by norm_num : (8 : F) = 2 ^ 2 * 2), mul_pow, (FiniteField.is_square_iff hF $ hp2 2).mp ⟨2, pow_two 2⟩, one_mul]
+  · rw [(by norm_num : (8 : F) = 2 ^ 2 * 2), mul_pow, (FiniteField.is_square_iff hF <| hp2 2).mp ⟨2, pow_two 2⟩,
+      one_mul]
     
   apply (algebraMap F FF).Injective
   simp only [map_pow, map_bit0, map_one, map_int_cast]

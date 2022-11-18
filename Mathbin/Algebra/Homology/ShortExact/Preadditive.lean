@@ -97,7 +97,7 @@ variable [Preadditive 𝒜]
 
 Such a sequence is automatically short exact (i.e., `f` is mono and `g` is epi). -/
 structure Split : Prop where
-  split : ∃ (φ : B ⟶ A) (χ : C ⟶ B), f ≫ φ = 𝟙 A ∧ χ ≫ g = 𝟙 C ∧ f ≫ g = 0 ∧ χ ≫ φ = 0 ∧ φ ≫ f + g ≫ χ = 𝟙 B
+  split : ∃ (φ : B ⟶ A)(χ : C ⟶ B), f ≫ φ = 𝟙 A ∧ χ ≫ g = 𝟙 C ∧ f ≫ g = 0 ∧ χ ≫ φ = 0 ∧ φ ≫ f + g ≫ χ = 𝟙 B
 #align category_theory.split CategoryTheory.Split
 
 variable [HasKernels 𝒜] [HasImages 𝒜]

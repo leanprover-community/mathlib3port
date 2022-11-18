@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.Data.Finsupp.Defs
+import Mathbin.Algebra.Ring.Pi
 
 /-!
 # The pointwise product on `finsupp`.

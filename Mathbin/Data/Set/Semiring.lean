@@ -91,8 +91,8 @@ instance : NonUnitalNonAssocSemiring (SetSemiring α) :=
 
 instance : NoZeroDivisors (SetSemiring α) :=
   ⟨fun a b ab =>
-    a.eq_empty_or_nonempty.imp_right $ fun ha =>
-      b.eq_empty_or_nonempty.resolve_right $ fun hb => Nonempty.ne_empty ⟨_, mul_mem_mul ha.some_mem hb.some_mem⟩ ab⟩
+    a.eq_empty_or_nonempty.imp_right fun ha =>
+      b.eq_empty_or_nonempty.resolve_right fun hb => Nonempty.ne_empty ⟨_, mul_mem_mul ha.some_mem hb.some_mem⟩ ab⟩
 
 instance covariant_class_mul_left : CovariantClass (SetSemiring α) (SetSemiring α) (· * ·) (· ≤ ·) :=
   ⟨fun a b c => mul_subset_mul_left⟩

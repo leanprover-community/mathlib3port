@@ -92,7 +92,7 @@ instance liftHom₂WhiskerRight {f g : a ⟶ b} (η : f ⟶ g) [LiftHom f] [Lift
     LiftHom₂ (η ▷ h) where lift := LiftHom₂.lift η ▷ LiftHom.lift h
 #align category_theory.bicategory.lift_hom₂_whisker_right CategoryTheory.Bicategory.liftHom₂WhiskerRight
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`Hom] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`Hom] [] -/
 /-- A typeclass carrying a choice of bicategorical structural isomorphism between two objects.
 Used by the `⊗≫` bicategorical composition operator, and the `coherence` tactic.
 -/
@@ -233,10 +233,10 @@ namespace Tactic
     : tactic Unit
     :=
       focus1
-        $
+        <|
         do
           let o ← get_options
-            set_options $ o `class.instance_max_depth 128
+            set_options <| o `class.instance_max_depth 128
             try sorry
             let q( $ ( lhs ) = $ ( rhs ) ) ← target
             to_expr

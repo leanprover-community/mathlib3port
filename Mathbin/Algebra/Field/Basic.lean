@@ -3,10 +3,10 @@ Copyright (c) 2014 Robert Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Data.Rat.Defs
 import Mathbin.Algebra.Field.Defs
-import Mathbin.Algebra.Ring.Basic
 import Mathbin.Algebra.GroupWithZero.Units.Lemmas
+import Mathbin.Algebra.Hom.Ring
+import Mathbin.Algebra.Ring.InjSurj
 
 /-!
 # Lemmas about division (semi)rings and (semi)fields
@@ -52,7 +52,7 @@ theorem one_div_mul_add_mul_one_div_eq_one_div_add_one_div (ha : a ≠ 0) (hb : 
 #align one_div_mul_add_mul_one_div_eq_one_div_add_one_div one_div_mul_add_mul_one_div_eq_one_div_add_one_div
 
 theorem add_div_eq_mul_add_div (a b : α) (hc : c ≠ 0) : a + b / c = (a * c + b) / c :=
-  (eq_div_iff_mul_eq hc).2 $ by rw [right_distrib, div_mul_cancel _ hc]
+  (eq_div_iff_mul_eq hc).2 <| by rw [right_distrib, div_mul_cancel _ hc]
 #align add_div_eq_mul_add_div add_div_eq_mul_add_div
 
 @[field_simps]
@@ -216,7 +216,7 @@ end Field
 namespace RingHom
 
 protected theorem injective [DivisionRing α] [Semiring β] [Nontrivial β] (f : α →+* β) : Injective f :=
-  (injective_iff_map_eq_zero f).2 $ fun x => (map_eq_zero f).1
+  (injective_iff_map_eq_zero f).2 fun x => (map_eq_zero f).1
 #align ring_hom.injective RingHom.injective
 
 end RingHom

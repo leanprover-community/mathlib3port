@@ -3,8 +3,8 @@ Copyright (c) 2022 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 -/
-import Mathbin.CategoryTheory.Limits.Types
-import Mathbin.CategoryTheory.MorphismProperty
+import Mathbin.CategoryTheory.Limits.Shapes.RegularMono
+import Mathbin.CategoryTheory.Limits.Shapes.ZeroMorphisms
 
 /-!
 
@@ -77,7 +77,7 @@ theorem mono_inl_iff {A B : C} {c₁ c₂ : BinaryCofan A B} (hc₁ : IsColimit 
     mono_comp c₁.inl (hc₁.cocone_point_unique_up_to_iso hc₂).Hom
 #align category_theory.limits.mono_coprod.mono_inl_iff CategoryTheory.Limits.MonoCoprod.mono_inl_iff
 
-theorem mk' (h : ∀ A B : C, ∃ (c : BinaryCofan A B) (hc : IsColimit c), Mono c.inl) : MonoCoprod C :=
+theorem mk' (h : ∀ A B : C, ∃ (c : BinaryCofan A B)(hc : IsColimit c), Mono c.inl) : MonoCoprod C :=
   ⟨fun A B c' hc' => by
     obtain ⟨c, hc₁, hc₂⟩ := h A B
     simpa only [mono_inl_iff hc' hc₁] using hc₂⟩
@@ -85,7 +85,7 @@ theorem mk' (h : ∀ A B : C, ∃ (c : BinaryCofan A B) (hc : IsColimit c), Mono
 
 instance mono_coprod_type : MonoCoprod (Type u) :=
   MonoCoprod.mk' fun A B => by
-    refine' ⟨binary_cofan.mk (Sum.inl : A ⟶ A ⊕ B) Sum.inr, _, _⟩
+    refine' ⟨binary_cofan.mk (Sum.inl : A ⟶ Sum A B) Sum.inr, _, _⟩
     · refine'
         binary_cofan.is_colimit.mk _
           (fun Y f₁ f₂ x => by

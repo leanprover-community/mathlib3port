@@ -27,7 +27,11 @@ norm topology on `F →L[R] F`.
 If these conditions are satisfied, we register the typeclass `vector_bundle R F E`.
 
 We define constructions on vector bundles like pullbacks and direct sums in other files.
-Only the trivial bundle is defined in this file.
+
+## Implementation notes
+
+The implementation choices in the vector bundle definition are discussed in the "Implementation
+notes" section of `topology.fiber_bundle.basic`.
 
 ## Tags
 Vector bundle
@@ -68,10 +72,10 @@ variable [AddCommMonoid F] [Module R F] [∀ x, AddCommMonoid (E x)] [∀ x, Mod
 @[simps]
 protected def symmₗ (e : Pretrivialization F (π E)) [e.is_linear R] (b : B) : F →ₗ[R] E b := by
   refine' IsLinearMap.mk' (e.symm b) _
-  by_cases hb:b ∈ e.base_set
+  by_cases hb : b ∈ e.base_set
   · exact
       (((e.linear R hb).mk' _).inverse (e.symm b) (e.symm_apply_apply_mk hb) fun v =>
-          congr_arg Prod.snd $ e.apply_mk_symm hb v).is_linear
+          congr_arg Prod.snd <| e.apply_mk_symm hb v).is_linear
     
   · rw [e.coe_symm_of_not_mem hb]
     exact (0 : F →ₗ[R] E b).is_linear
@@ -248,7 +252,7 @@ def coordChangeL (e e' : Trivialization F (π E)) [e.is_linear R] [e'.is_linear 
   { if hb : b ∈ e.baseSet ∩ e'.baseSet then (e.linearEquivAt R b (hb.1 : _)).symm.trans (e'.linearEquivAt R b hb.2)
     else LinearEquiv.refl R F with
     continuous_to_fun := by
-      by_cases hb:b ∈ e.base_set ∩ e'.base_set
+      by_cases hb : b ∈ e.base_set ∩ e'.base_set
       · simp_rw [dif_pos hb]
         refine' (e'.continuous_on.comp_continuous _ _).snd
         exact e.continuous_on_symm.comp_continuous (Continuous.Prod.mk b) fun y => mk_mem_prod hb.1 (mem_univ y)
@@ -258,7 +262,7 @@ def coordChangeL (e e' : Trivialization F (π E)) [e.is_linear R] [e'.is_linear 
         exact continuous_id
         ,
     continuous_inv_fun := by
-      by_cases hb:b ∈ e.base_set ∩ e'.base_set
+      by_cases hb : b ∈ e.base_set ∩ e'.base_set
       · simp_rw [dif_pos hb]
         refine' (e.continuous_on.comp_continuous _ _).snd
         exact e'.continuous_on_symm.comp_continuous (Continuous.Prod.mk b) fun y => mk_mem_prod hb.2 (mem_univ y)
@@ -316,7 +320,7 @@ variable [NontriviallyNormedField R] [∀ x, AddCommMonoid (E x)] [∀ x, Module
   [NormedSpace R F] [TopologicalSpace B] [TopologicalSpace (TotalSpace E)] [∀ x, TopologicalSpace (E x)]
   [FiberBundle F E]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: #[`continuous_on_coord_change'] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`continuous_on_coord_change'] [] -/
 /-- The space `total_space E` (for `E : B → Type*` such that each `E x` is a topological vector
 space) has a topological vector space structure with fiber `F` (denoted with
 `vector_bundle R F E`) if around every point there is a fiber bundle trivialization
@@ -369,7 +373,7 @@ def symmL (e : Trivialization F (π E)) [e.is_linear R] (b : B) : F →L[R] E b 
       R b with
     toFun := e.symm b,
     cont := by
-      by_cases hb:b ∈ e.base_set
+      by_cases hb : b ∈ e.base_set
       · rw [(FiberBundle.total_space_mk_inducing F E b).continuous_iff]
         exact
           e.continuous_on_symm.comp_continuous (continuous_const.prod_mk continuous_id) fun x =>
@@ -467,97 +471,6 @@ theorem comp_continuous_linear_equiv_at_eq_coord_change (e e' : Trivialization F
   trivialization.comp_continuous_linear_equiv_at_eq_coord_change Trivialization.comp_continuous_linear_equiv_at_eq_coord_change
 
 end Trivialization
-
-namespace Bundle.Trivial
-
-variable (R B) (F' : Type _) [TopologicalSpace F']
-
-/-- Local trivialization for trivial bundle. -/
-def trivialization : Trivialization F' (π (Bundle.Trivial B F')) where
-  toFun x := (x.fst, x.snd)
-  invFun y := ⟨y.fst, y.snd⟩
-  source := univ
-  target := univ
-  map_source' x h := mem_univ (x.fst, x.snd)
-  map_target' y h := mem_univ ⟨y.fst, y.snd⟩
-  left_inv' x h := Sigma.eq rfl rfl
-  right_inv' x h := Prod.ext rfl rfl
-  open_source := is_open_univ
-  open_target := is_open_univ
-  continuous_to_fun := by
-    rw [← continuous_iff_continuous_on_univ, continuous_iff_le_induced]
-    simp only [Prod.topologicalSpace, induced_inf, induced_compose]
-    exact le_rfl
-  continuous_inv_fun := by
-    rw [← continuous_iff_continuous_on_univ, continuous_iff_le_induced]
-    simp only [Bundle.TotalSpace.topologicalSpace, induced_inf, induced_compose]
-    exact le_rfl
-  baseSet := univ
-  open_base_set := is_open_univ
-  source_eq := rfl
-  target_eq := by simp only [univ_prod_univ]
-  proj_to_fun y hy := rfl
-#align bundle.trivial.trivialization Bundle.Trivial.trivialization
-
-instance trivialization.is_linear :
-    (trivialization B F).is_linear R where linear x hx := ⟨fun y z => rfl, fun c y => rfl⟩
-#align bundle.trivial.trivialization.is_linear Bundle.Trivial.trivialization.is_linear
-
-variable {R}
-
-theorem trivialization.coord_changeL (b : B) :
-    (trivialization B F).coordChangeL R (trivialization B F) b = ContinuousLinearEquiv.refl R F := by
-  ext v
-  rw [Trivialization.coord_changeL_apply']
-  exacts[rfl, ⟨mem_univ _, mem_univ _⟩]
-#align bundle.trivial.trivialization.coord_changeL Bundle.Trivial.trivialization.coord_changeL
-
-@[simp]
-theorem trivialization_source : (trivialization B F').source = univ :=
-  rfl
-#align bundle.trivial.trivialization_source Bundle.Trivial.trivialization_source
-
-@[simp]
-theorem trivialization_target : (trivialization B F').target = univ :=
-  rfl
-#align bundle.trivial.trivialization_target Bundle.Trivial.trivialization_target
-
-/-- Fiber bundle instance on the trivial bundle. -/
-instance fiberBundle : FiberBundle F' (Bundle.Trivial B F') where
-  trivializationAtlas := {Bundle.Trivial.trivialization B F'}
-  trivializationAt x := Bundle.Trivial.trivialization B F'
-  mem_base_set_trivialization_at := mem_univ
-  trivialization_mem_atlas x := mem_singleton _
-  total_space_mk_inducing b :=
-    ⟨by
-      have : (fun x : trivial B F' b => x) = @id F' := by
-        ext x
-        rfl
-      simp only [total_space.topological_space, induced_inf, induced_compose, Function.comp, total_space.proj,
-        induced_const, top_inf_eq, trivial.proj_snd, id.def, trivial.topological_space, this, induced_id]⟩
-#align bundle.trivial.fiber_bundle Bundle.Trivial.fiberBundle
-
-theorem eq_trivialization (e : Trivialization F' (π (Bundle.Trivial B F'))) [i : MemTrivializationAtlas e] :
-    e = trivialization B F' :=
-  i.out
-#align bundle.trivial.eq_trivialization Bundle.Trivial.eq_trivialization
-
-variable (R)
-
-instance vectorBundle : VectorBundle R F (Bundle.Trivial B F) where
-  trivialization_linear' := by
-    intro e he
-    rw [eq_trivialization B F e]
-    infer_instance
-  continuous_on_coord_change' := by
-    intro e e' he he'
-    obtain rfl := eq_trivialization B F e
-    obtain rfl := eq_trivialization B F e'
-    simp_rw [Trivialization.coordChangeL]
-    exact continuous_const.continuous_on
-#align bundle.trivial.vector_bundle Bundle.Trivial.vectorBundle
-
-end Bundle.Trivial
 
 include R F
 

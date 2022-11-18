@@ -6,7 +6,8 @@ Authors: Rémy Degenne
 import Mathbin.Order.LocallyFinite
 import Mathbin.Order.SuccPred.Basic
 import Mathbin.Order.Hom.Basic
-import Mathbin.Data.Set.Countable
+import Mathbin.Data.Countable.Basic
+import Mathbin.Logic.Encodable.Basic
 
 /-!
 # Linear locally finite orders
@@ -123,8 +124,6 @@ noncomputable instance (priority := 100) [LocallyFiniteOrder ι] : PredOrder ι 
 
 end LinearLocallyFiniteOrder
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (n m) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (n m) -/
 instance (priority := 100) LinearLocallyFiniteOrder.is_succ_archimedean [LocallyFiniteOrder ι] :
     IsSuccArchimedean ι where exists_succ_iterate_of_le i j hij := by
     rw [le_iff_lt_or_eq] at hij
@@ -145,9 +144,9 @@ instance (priority := 100) LinearLocallyFiniteOrder.is_succ_archimedean [Locally
         exact succ_le_of_lt hn
         
     have h_mem : ∀ n, (succ^[n]) i ∈ Finset.icc i j := fun n => finset.mem_Icc.mpr ⟨le_succ_iterate n i, (h_lt n).le⟩
-    obtain ⟨n, m, hnm, h_eq⟩ : ∃ (n) (m), n < m ∧ (succ^[n]) i = (succ^[m]) i := by
+    obtain ⟨n, m, hnm, h_eq⟩ : ∃ n m, n < m ∧ (succ^[n]) i = (succ^[m]) i := by
       let f : ℕ → Finset.icc i j := fun n => ⟨(succ^[n]) i, h_mem n⟩
-      obtain ⟨n, m, hnm_ne, hfnm⟩ : ∃ (n) (m), n ≠ m ∧ f n = f m
+      obtain ⟨n, m, hnm_ne, hfnm⟩ : ∃ n m, n ≠ m ∧ f n = f m
       exact Finite.exists_ne_map_eq_of_infinite f
       have hnm_eq : (succ^[n]) i = (succ^[m]) i := by simpa only [Subtype.mk_eq_mk] using hfnm
       cases' le_total n m with h_le h_le
@@ -260,7 +259,7 @@ theorem to_Z_iterate_pred_ge (n : ℕ) : -(n : ℤ) ≤ toZ i0 ((pred^[n]) i0) :
 theorem to_Z_iterate_succ_of_not_is_max (n : ℕ) (hn : ¬IsMax ((succ^[n]) i0)) : toZ i0 ((succ^[n]) i0) = n := by
   let m := (toZ i0 ((succ^[n]) i0)).toNat
   have h_eq : (succ^[m]) i0 = (succ^[n]) i0 := iterate_succ_to_Z _ (le_succ_iterate _ _)
-  by_cases hmn:m = n
+  by_cases hmn : m = n
   · nth_rw 1 [← hmn]
     simp_rw [m]
     rw [Int.toNat_eq_max, to_Z_of_ge (le_succ_iterate _ _), max_eq_left]
@@ -281,7 +280,7 @@ theorem to_Z_iterate_pred_of_not_is_min (n : ℕ) (hn : ¬IsMin ((pred^[n]) i0))
     exact is_min_iterate_pred_of_eq_of_ne h_pred_eq_pred (Nat.succ_ne_zero n)
   let m := (-toZ i0 ((pred^[n.succ]) i0)).toNat
   have h_eq : (pred^[m]) i0 = (pred^[n.succ]) i0 := iterate_pred_to_Z _ this
-  by_cases hmn:m = n.succ
+  by_cases hmn : m = n.succ
   · nth_rw 1 [← hmn]
     simp_rw [m]
     rw [Int.toNat_eq_max, to_Z_of_lt this, max_eq_left, neg_neg]
@@ -310,10 +309,10 @@ theorem le_of_to_Z_le {j : ι} (h_le : toZ i0 i ≤ toZ i0 j) : i ≤ j := by
 #align le_of_to_Z_le le_of_to_Z_le
 
 theorem to_Z_mono {i j : ι} (h_le : i ≤ j) : toZ i0 i ≤ toZ i0 j := by
-  by_cases hi_max:IsMax i
+  by_cases hi_max : IsMax i
   · rw [le_antisymm h_le (hi_max h_le)]
     
-  by_cases hj_min:IsMin j
+  by_cases hj_min : IsMin j
   · rw [le_antisymm h_le (hj_min h_le)]
     
   cases' le_or_lt i0 i with hi hi <;> cases' le_or_lt i0 j with hj hj
@@ -325,7 +324,7 @@ theorem to_Z_mono {i j : ι} (h_le : i ≤ j) : toZ i0 i ≤ toZ i0 j := by
       rw [Function.iterate_add]
     by_contra h
     push_neg  at h
-    by_cases hm0:m = 0
+    by_cases hm0 : m = 0
     · rw [hm0, Function.iterate_zero, id.def] at hm
       rw [hm] at h
       exact lt_irrefl _ h
@@ -354,7 +353,7 @@ theorem to_Z_mono {i j : ι} (h_le : i ≤ j) : toZ i0 i ≤ toZ i0 j := by
       rw [Function.iterate_add]
     by_contra h
     push_neg  at h
-    by_cases hm0:m = 0
+    by_cases hm0 : m = 0
     · rw [hm0, Function.iterate_zero, id.def] at hm
       rw [hm] at h
       exact lt_irrefl _ h
@@ -466,7 +465,7 @@ def orderIsoRangeOfLinearSuccPredArch [OrderBot ι] [OrderTop ι] : ι ≃o Fins
     · rw [Int.to_nat_le]
       exact to_Z_iterate_succ_le _
       
-    by_cases hn_max:IsMax ((succ^[↑n]) (⊥ : ι))
+    by_cases hn_max : IsMax ((succ^[↑n]) (⊥ : ι))
     · rw [← is_top_iff_is_max, is_top_iff_eq_top] at hn_max
       rw [hn_max]
       exact nat.lt_succ_iff.mp (finset.mem_range.mp n.prop)

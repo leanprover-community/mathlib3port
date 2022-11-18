@@ -3,7 +3,6 @@ Copyright (c) 2021 Alex Kontorovich, Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth
 -/
-import Mathbin.Data.Real.Nnreal
 import Mathbin.Topology.Algebra.Constructions
 import Mathbin.Topology.Homeomorph
 import Mathbin.GroupTheory.GroupAction.Basic
@@ -109,12 +108,12 @@ theorem Continuous.const_smul (hg : Continuous g) (c : M) : Continuous fun x => 
 /-- If a scalar is central, then its right action is continuous when its left action is. -/
 @[to_additive "If an additive action is central, then its right action is continuous when its left\naction is."]
 instance HasContinuousConstSmul.op [HasSmul Mᵐᵒᵖ α] [IsCentralScalar M α] : HasContinuousConstSmul Mᵐᵒᵖ α :=
-  ⟨MulOpposite.rec $ fun c => by simpa only [op_smul_eq_smul] using continuous_const_smul c⟩
+  ⟨MulOpposite.rec fun c => by simpa only [op_smul_eq_smul] using continuous_const_smul c⟩
 #align has_continuous_const_smul.op HasContinuousConstSmul.op
 
 @[to_additive]
 instance MulOpposite.has_continuous_const_smul : HasContinuousConstSmul M αᵐᵒᵖ :=
-  ⟨fun c => MulOpposite.continuous_op.comp $ MulOpposite.continuous_unop.const_smul c⟩
+  ⟨fun c => MulOpposite.continuous_op.comp <| MulOpposite.continuous_unop.const_smul c⟩
 #align mul_opposite.has_continuous_const_smul MulOpposite.has_continuous_const_smul
 
 @[to_additive]
@@ -133,8 +132,9 @@ instance [HasSmul M β] [HasContinuousConstSmul M β] : HasContinuousConstSmul M
 @[to_additive]
 instance {ι : Type _} {γ : ι → Type _} [∀ i, TopologicalSpace (γ i)] [∀ i, HasSmul M (γ i)]
     [∀ i, HasContinuousConstSmul M (γ i)] : HasContinuousConstSmul M (∀ i, γ i) :=
-  ⟨fun _ => continuous_pi $ fun i => (continuous_apply i).const_smul _⟩
+  ⟨fun _ => continuous_pi fun i => (continuous_apply i).const_smul _⟩
 
+@[to_additive]
 theorem IsCompact.smul {α β} [HasSmul α β] [TopologicalSpace β] [HasContinuousConstSmul α β] (a : α) {s : Set β}
     (hs : IsCompact s) : IsCompact (a • s) :=
   hs.image (continuous_id'.const_smul a)
@@ -155,12 +155,12 @@ instance Units.has_continuous_const_smul :
 
 @[to_additive]
 theorem smul_closure_subset (c : M) (s : Set α) : c • closure s ⊆ closure (c • s) :=
-  ((Set.maps_to_image _ _).closure $ continuous_id.const_smul c).image_subset
+  ((Set.maps_to_image _ _).closure <| continuous_id.const_smul c).image_subset
 #align smul_closure_subset smul_closure_subset
 
 @[to_additive]
 theorem smul_closure_orbit_subset (c : M) (x : α) : c • closure (MulAction.orbit M x) ⊆ closure (MulAction.orbit M x) :=
-  (smul_closure_subset c _).trans $ closure_mono $ MulAction.smul_orbit_subset _ _
+  (smul_closure_subset c _).trans <| closure_mono <| MulAction.smul_orbit_subset _ _
 #align smul_closure_orbit_subset smul_closure_orbit_subset
 
 end Monoid
@@ -171,7 +171,7 @@ variable {G : Type _} [TopologicalSpace α] [Group G] [MulAction G α] [HasConti
 
 @[to_additive]
 theorem tendsto_const_smul_iff {f : β → α} {l : Filter β} {a : α} (c : G) :
-    Tendsto (fun x => c • f x) l (𝓝 $ c • a) ↔ Tendsto f l (𝓝 a) :=
+    Tendsto (fun x => c • f x) l (𝓝 <| c • a) ↔ Tendsto f l (𝓝 a) :=
   ⟨fun h => by simpa only [inv_smul_smul] using h.const_smul c⁻¹, fun h => h.const_smul _⟩
 #align tendsto_const_smul_iff tendsto_const_smul_iff
 
@@ -185,7 +185,7 @@ theorem continuous_within_at_const_smul_iff (c : G) :
 
 @[to_additive]
 theorem continuous_on_const_smul_iff (c : G) : ContinuousOn (fun x => c • f x) s ↔ ContinuousOn f s :=
-  forall₂_congr $ fun b hb => continuous_within_at_const_smul_iff c
+  forall₂_congr fun b hb => continuous_within_at_const_smul_iff c
 #align continuous_on_const_smul_iff continuous_on_const_smul_iff
 
 @[to_additive]
@@ -253,7 +253,7 @@ section GroupWithZero
 variable {G₀ : Type _} [TopologicalSpace α] [GroupWithZero G₀] [MulAction G₀ α] [HasContinuousConstSmul G₀ α]
 
 theorem tendsto_const_smul_iff₀ {f : β → α} {l : Filter β} {a : α} {c : G₀} (hc : c ≠ 0) :
-    Tendsto (fun x => c • f x) l (𝓝 $ c • a) ↔ Tendsto f l (𝓝 a) :=
+    Tendsto (fun x => c • f x) l (𝓝 <| c • a) ↔ Tendsto f l (𝓝 a) :=
   tendsto_const_smul_iff (Units.mk0 c hc)
 #align tendsto_const_smul_iff₀ tendsto_const_smul_iff₀
 
@@ -358,7 +358,7 @@ namespace IsUnit
 variable [Monoid M] [TopologicalSpace α] [MulAction M α] [HasContinuousConstSmul M α]
 
 theorem tendsto_const_smul_iff {f : β → α} {l : Filter β} {a : α} {c : M} (hc : IsUnit c) :
-    Tendsto (fun x => c • f x) l (𝓝 $ c • a) ↔ Tendsto f l (𝓝 a) :=
+    Tendsto (fun x => c • f x) l (𝓝 <| c • a) ↔ Tendsto f l (𝓝 a) :=
   let ⟨u, hu⟩ := hc
   hu ▸ tendsto_const_smul_iff u
 #align is_unit.tendsto_const_smul_iff IsUnit.tendsto_const_smul_iff
@@ -449,7 +449,7 @@ instance (priority := 100) t2SpaceOfProperlyDiscontinuousSmulOfT2Space [T2Space 
   let f : T → Q := Quotient.mk''
   have f_op : IsOpenMap f := is_open_map_quotient_mk_mul
   rintro ⟨x₀⟩ ⟨y₀⟩ (hxy : f x₀ ≠ f y₀)
-  show ∃ (U ∈ 𝓝 (f x₀)) (V ∈ 𝓝 (f y₀)), _
+  show ∃ U ∈ 𝓝 (f x₀), ∃ V ∈ 𝓝 (f y₀), _
   have hx₀y₀ : x₀ ≠ y₀ := ne_of_apply_ne _ hxy
   have hγx₀y₀ : ∀ γ : Γ, γ • x₀ ≠ y₀ := not_exists.mp (mt Quotient.sound hxy.symm : _)
   obtain ⟨K₀, L₀, K₀_in, L₀_in, hK₀, hL₀, hK₀L₀⟩ := t2_separation_compact_nhds hx₀y₀
@@ -461,13 +461,13 @@ instance (priority := 100) t2SpaceOfProperlyDiscontinuousSmulOfT2Space [T2Space 
   let V₀₀ := ⋂ γ ∈ bad_Γ_set, v γ
   let V₀ := V₀₀ ∩ L₀
   have U_nhds : f '' U₀ ∈ 𝓝 (f x₀) := by
-    apply f_op.image_mem_nhds (inter_mem ((bInter_mem bad_Γ_finite).mpr $ fun γ hγ => _) K₀_in)
+    apply f_op.image_mem_nhds (inter_mem ((bInter_mem bad_Γ_finite).mpr fun γ hγ => _) K₀_in)
     exact (continuous_const_smul _).ContinuousAt (hu γ)
   have V_nhds : f '' V₀ ∈ 𝓝 (f y₀) :=
-    f_op.image_mem_nhds (inter_mem ((bInter_mem bad_Γ_finite).mpr $ fun γ hγ => hv γ) L₀_in)
+    f_op.image_mem_nhds (inter_mem ((bInter_mem bad_Γ_finite).mpr fun γ hγ => hv γ) L₀_in)
   refine' ⟨f '' U₀, U_nhds, f '' V₀, V_nhds, MulAction.disjoint_image_image_iff.2 _⟩
   rintro x ⟨x_in_U₀₀, x_in_K₀⟩ γ
-  by_cases H:γ ∈ bad_Γ_set
+  by_cases H : γ ∈ bad_Γ_set
   · exact fun h => (u_v_disjoint γ).le_bot ⟨mem_Inter₂.mp x_in_U₀₀ γ H, mem_Inter₂.mp h.1 γ H⟩
     
   · rintro ⟨-, h'⟩

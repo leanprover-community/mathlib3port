@@ -59,7 +59,7 @@ protected theorem div_eq_zero_iff {a b : ℕ} (hb : 0 < b) : a / b = 0 ↔ a < b
 #align nat.div_eq_zero_iff Nat.div_eq_zero_iff
 
 protected theorem div_eq_zero {a b : ℕ} (hb : a < b) : a / b = 0 :=
-  (Nat.div_eq_zero_iff $ (zero_le a).trans_lt hb).mpr hb
+  (Nat.div_eq_zero_iff <| (zero_le a).trans_lt hb).mpr hb
 #align nat.div_eq_zero Nat.div_eq_zero
 
 /-! ### `mod`, `dvd` -/
@@ -102,15 +102,15 @@ theorem succ_div : ∀ a b : ℕ, (a + 1) / b = a / b + if b ∣ a + 1 then 1 el
   | a, 0 => by simp
   | 0, 1 => by simp
   | 0, b + 2 => by
-    have hb2 : b + 2 > 1 := dec_trivial
+    have hb2 : b + 2 > 1 := by decide
     simp [ne_of_gt hb2, div_eq_of_lt hb2]
   | a + 1, b + 1 => by
     rw [Nat.div_def]
     conv_rhs => rw [Nat.div_def]
-    by_cases hb_eq_a:b = a + 1
+    by_cases hb_eq_a : b = a + 1
     · simp [hb_eq_a, le_refl]
       
-    by_cases hb_le_a1:b ≤ a + 1
+    by_cases hb_le_a1 : b ≤ a + 1
     · have hb_le_a : b ≤ a := le_of_lt_succ (lt_of_le_of_ne hb_le_a1 hb_eq_a)
       have h₁ : 0 < b + 1 ∧ b + 1 ≤ a + 1 + 1 := ⟨succ_pos _, (add_le_add_iff_right _).2 hb_le_a1⟩
       have h₂ : 0 < b + 1 ∧ b + 1 ≤ a + 1 := ⟨succ_pos _, (add_le_add_iff_right _).2 hb_le_a⟩
@@ -216,7 +216,7 @@ theorem dvd_left_iff_eq {m n : ℕ} : (∀ a : ℕ, a ∣ m ↔ a ∣ n) ↔ m =
 
 /-- `dvd` is injective in the left argument -/
 theorem dvd_left_injective : Function.Injective ((· ∣ ·) : ℕ → ℕ → Prop) := fun m n h =>
-  dvd_right_iff_eq.mp $ fun a => iff_of_eq (congr_fun h a)
+  dvd_right_iff_eq.mp fun a => iff_of_eq (congr_fun h a)
 #align nat.dvd_left_injective Nat.dvd_left_injective
 
 theorem div_lt_div_of_lt_of_dvd {a b d : ℕ} (hdb : d ∣ b) (h : a < b) : a / d < b / d := by

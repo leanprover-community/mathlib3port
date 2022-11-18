@@ -54,7 +54,7 @@ with respect to a left-invariant measure. -/
       "Translating a function by left-addition does not change its\n`measure_theory.lintegral` with respect to a left-invariant measure."]
 theorem lintegral_mul_left_eq_self [IsMulLeftInvariant μ] (f : G → ℝ≥0∞) (g : G) :
     (∫⁻ x, f (g * x) ∂μ) = ∫⁻ x, f x ∂μ := by
-  convert (lintegral_map_equiv f $ MeasurableEquiv.mulLeft g).symm
+  convert (lintegral_map_equiv f <| MeasurableEquiv.mulLeft g).symm
   simp [map_mul_left_eq_self μ g]
 #align measure_theory.lintegral_mul_left_eq_self MeasureTheory.lintegral_mul_left_eq_self
 
@@ -64,7 +64,7 @@ with respect to a right-invariant measure. -/
       "Translating a function by right-addition does not change its\n`measure_theory.lintegral` with respect to a right-invariant measure."]
 theorem lintegral_mul_right_eq_self [IsMulRightInvariant μ] (f : G → ℝ≥0∞) (g : G) :
     (∫⁻ x, f (x * g) ∂μ) = ∫⁻ x, f x ∂μ := by
-  convert (lintegral_map_equiv f $ MeasurableEquiv.mulRight g).symm
+  convert (lintegral_map_equiv f <| MeasurableEquiv.mulRight g).symm
   simp [map_mul_right_eq_self μ g]
 #align measure_theory.lintegral_mul_right_eq_self MeasureTheory.lintegral_mul_right_eq_self
 
@@ -117,13 +117,13 @@ theorem integral_eq_zero_of_mul_right_eq_neg [IsMulRightInvariant μ] (hf' : ∀
 @[to_additive]
 theorem Integrable.compMulLeft {f : G → F} [IsMulLeftInvariant μ] (hf : Integrable f μ) (g : G) :
     Integrable (fun t => f (g * t)) μ :=
-  (hf.monoMeasure (map_mul_left_eq_self μ g).le).compMeasurable $ measurableConstMul g
+  (hf.monoMeasure (map_mul_left_eq_self μ g).le).compMeasurable <| measurableConstMul g
 #align measure_theory.integrable.comp_mul_left MeasureTheory.Integrable.compMulLeft
 
 @[to_additive]
 theorem Integrable.compMulRight {f : G → F} [IsMulRightInvariant μ] (hf : Integrable f μ) (g : G) :
     Integrable (fun t => f (t * g)) μ :=
-  (hf.monoMeasure (map_mul_right_eq_self μ g).le).compMeasurable $ measurableMulConst g
+  (hf.monoMeasure (map_mul_right_eq_self μ g).le).compMeasurable <| measurableMulConst g
 #align measure_theory.integrable.comp_mul_right MeasureTheory.Integrable.compMulRight
 
 @[to_additive]

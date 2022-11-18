@@ -71,9 +71,8 @@ theorem prod_of_bounded_is_bounded {f g : ℍ → ℂ} (hf : IsBoundedAtImInfty 
     IsBoundedAtImInfty (f * g) := by simpa only [Pi.one_apply, mul_one, norm_eq_abs] using hf.mul hg
 #align upper_half_plane.prod_of_bounded_is_bounded UpperHalfPlane.prod_of_bounded_is_bounded
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (M A) -/
 @[simp]
-theorem bounded_mem (f : ℍ → ℂ) : IsBoundedAtImInfty f ↔ ∃ (M : ℝ) (A : ℝ), ∀ z : ℍ, A ≤ im z → abs (f z) ≤ M := by
+theorem bounded_mem (f : ℍ → ℂ) : IsBoundedAtImInfty f ↔ ∃ M A : ℝ, ∀ z : ℍ, A ≤ im z → abs (f z) ≤ M := by
   simp [is_bounded_at_im_infty, bounded_at_filter, Asymptotics.is_O_iff, Filter.Eventually, at_im_infty_mem]
 #align upper_half_plane.bounded_mem UpperHalfPlane.bounded_mem
 

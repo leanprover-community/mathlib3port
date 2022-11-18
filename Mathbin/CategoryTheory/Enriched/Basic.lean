@@ -5,6 +5,7 @@ Authors: Scott Morrison
 -/
 import Mathbin.CategoryTheory.Monoidal.Types
 import Mathbin.CategoryTheory.Monoidal.Center
+import Mathbin.Tactic.ApplyFun
 
 /-!
 # Enriched categories
@@ -40,7 +41,7 @@ open MonoidalCategory
 
 variable (V : Type v) [Category.{w} V] [MonoidalCategory V]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:368:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:360:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] » -/

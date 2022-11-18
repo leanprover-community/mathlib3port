@@ -63,8 +63,8 @@ theorem form_perm_disjoint_iff (hl : Nodup l) (hl' : Nodup l') (hn : 2 ≤ l.len
     rcases h with (hl | hl') <;> linarith
     
   · intro h x
-    by_cases hx:x ∈ l
-    by_cases hx':x ∈ l'
+    by_cases hx : x ∈ l
+    by_cases hx' : x ∈ l'
     · exact (h hx hx').elim
       
     all_goals
@@ -272,7 +272,7 @@ theorem mem_to_list_iff {y : α} : y ∈ toList p x ↔ SameCycle p x y ∧ x �
 #align equiv.perm.mem_to_list_iff Equiv.Perm.mem_to_list_iff
 
 theorem nodup_to_list (p : Perm α) (x : α) : Nodup (toList p x) := by
-  by_cases hx:p x = x
+  by_cases hx : p x = x
   · rw [← not_mem_support, ← to_list_eq_nil_iff] at hx
     simp [hx]
     
@@ -329,7 +329,7 @@ theorem to_list_pow_apply_eq_rotate (p : Perm α) (x : α) (k : ℕ) : p.toList 
 #align equiv.perm.to_list_pow_apply_eq_rotate Equiv.Perm.to_list_pow_apply_eq_rotate
 
 theorem SameCycle.to_list_is_rotated {f : Perm α} {x y : α} (h : SameCycle f x y) : toList f x ~r toList f y := by
-  by_cases hx:x ∈ f.support
+  by_cases hx : x ∈ f.support
   · obtain ⟨_ | k, hk, hy⟩ := h.nat_of_mem_support _ hx
     · simp only [perm.coe_one, id.def, pow_zero] at hy
       simp [hy]
@@ -386,11 +386,11 @@ theorem to_list_form_perm_is_rotated_self (l : List α) (hl : 2 ≤ l.length) (h
 #align equiv.perm.to_list_form_perm_is_rotated_self Equiv.Perm.to_list_form_perm_is_rotated_self
 
 theorem form_perm_to_list (f : Perm α) (x : α) : formPerm (toList f x) = f.cycleOf x := by
-  by_cases hx:f x = x
+  by_cases hx : f x = x
   · rw [(cycle_of_eq_one_iff f).mpr hx, to_list_eq_nil_iff.mpr (not_mem_support.mpr hx), form_perm_nil]
     
   ext y
-  by_cases hy:same_cycle f x y
+  by_cases hy : same_cycle f x y
   · obtain ⟨k, hk, rfl⟩ := hy.nat_of_mem_support _ (mem_support.mpr hx)
     rw [cycle_of_apply_apply_pow_self, List.form_perm_apply_mem_eq_next (nodup_to_list f x), next_to_list_eq_apply,
       pow_succ, mul_apply]
@@ -537,7 +537,7 @@ def isoCycle' : { f : Perm α // IsCycle f } ≃ { s : Cycle α // s.Nodup ∧ s
 
 -- mathport name: «exprc[ ,]»
 notation3"c["(l", "* => foldr (h t => List.cons h t) List.nil)"]" =>
-  Cycle.formPerm (↑l) (Cycle.nodup_coe_iff.mpr dec_trivial)
+  Cycle.formPerm (↑l) (Cycle.nodup_coe_iff.mpr (by decide))
 
 instance reprPerm [Repr α] : Repr (Perm α) :=
   ⟨fun f =>

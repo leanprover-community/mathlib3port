@@ -73,7 +73,7 @@ theorem with_densityᵥ_zero : μ.withDensityᵥ (0 : α → E) = 0 := by
 
 @[simp]
 theorem with_densityᵥ_neg : μ.withDensityᵥ (-f) = -μ.withDensityᵥ f := by
-  by_cases hf:integrable f μ
+  by_cases hf : integrable f μ
   · ext1 i hi
     rw [vector_measure.neg_apply, with_densityᵥ_apply hf hi, ← integral_neg, with_densityᵥ_apply hf.neg hi]
     rfl
@@ -120,12 +120,12 @@ theorem with_densityᵥ_sub' (hf : Integrable f μ) (hg : Integrable g μ) :
 @[simp]
 theorem with_densityᵥ_smul {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E] [SmulCommClass ℝ 𝕜 E] (f : α → E)
     (r : 𝕜) : μ.withDensityᵥ (r • f) = r • μ.withDensityᵥ f := by
-  by_cases hf:integrable f μ
+  by_cases hf : integrable f μ
   · ext1 i hi
     rw [with_densityᵥ_apply (hf.smul r) hi, vector_measure.smul_apply, with_densityᵥ_apply hf hi, ← integral_smul r f]
     rfl
     
-  · by_cases hr:r = 0
+  · by_cases hr : r = 0
     · rw [hr, zero_smul, zero_smul, with_densityᵥ_zero]
       
     · rw [with_densityᵥ, with_densityᵥ, dif_neg hf, dif_neg, smul_zero]
@@ -141,7 +141,7 @@ theorem with_densityᵥ_smul' {𝕜 : Type _} [NontriviallyNormedField 𝕜] [No
 
 theorem Measure.withDensityᵥAbsolutelyContinuous (μ : Measure α) (f : α → ℝ) :
     μ.withDensityᵥ f ≪ᵥ μ.toEnnrealVectorMeasure := by
-  by_cases hf:integrable f μ
+  by_cases hf : integrable f μ
   · refine' vector_measure.absolutely_continuous.mk fun i hi₁ hi₂ => _
     rw [to_ennreal_vector_measure_apply_measurable hi₁] at hi₂
     rw [with_densityᵥ_apply hf hi₁, measure.restrict_zero_set hi₂, integral_zero_measure]
@@ -159,7 +159,7 @@ theorem Integrable.ae_eq_of_with_densityᵥ_eq {f g : α → E} (hf : Integrable
 #align measure_theory.integrable.ae_eq_of_with_densityᵥ_eq MeasureTheory.Integrable.ae_eq_of_with_densityᵥ_eq
 
 theorem WithDensityᵥEq.congr_ae {f g : α → E} (h : f =ᵐ[μ] g) : μ.withDensityᵥ f = μ.withDensityᵥ g := by
-  by_cases hf:integrable f μ
+  by_cases hf : integrable f μ
   · ext (i hi)
     rw [with_densityᵥ_apply hf hi, with_densityᵥ_apply (hf.congr h) hi]
     exact integral_congr_ae (ae_restrict_of_ae h)
@@ -192,8 +192,8 @@ theorem with_densityᵥ_to_real {f : α → ℝ≥0∞} (hfm : AeMeasurable f μ
 
 theorem with_densityᵥ_eq_with_density_pos_part_sub_with_density_neg_part {f : α → ℝ} (hfi : Integrable f μ) :
     μ.withDensityᵥ f =
-      @toSignedMeasure α _ (μ.withDensity fun x => Ennreal.ofReal $ f x) (isFiniteMeasureWithDensityOfReal hfi.2) -
-        @toSignedMeasure α _ (μ.withDensity fun x => Ennreal.ofReal $ -f x)
+      @toSignedMeasure α _ (μ.withDensity fun x => Ennreal.ofReal <| f x) (isFiniteMeasureWithDensityOfReal hfi.2) -
+        @toSignedMeasure α _ (μ.withDensity fun x => Ennreal.ofReal <| -f x)
           (isFiniteMeasureWithDensityOfReal hfi.neg.2) :=
   by
   ext (i hi)

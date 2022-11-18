@@ -3,6 +3,7 @@ Copyright (c) 2020 Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
+import Mathbin.CategoryTheory.Adjunction.Basic
 import Mathbin.CategoryTheory.Category.Preorder
 import Mathbin.CategoryTheory.IsomorphismClasses
 import Mathbin.CategoryTheory.Thin
@@ -139,7 +140,7 @@ instance ThinSkeleton.preorder : Preorder (ThinSkeleton C) where
   le_refl := by
     refine' Quotient.ind fun a => _
     exact ⟨𝟙 _⟩
-  le_trans a b c := Quotient.induction_on₃ a b c $ fun A B C => Nonempty.map2 (· ≫ ·)
+  le_trans a b c := (Quotient.induction_on₃ a b c) fun A B C => Nonempty.map2 (· ≫ ·)
 #align category_theory.thin_skeleton.preorder CategoryTheory.ThinSkeleton.preorder
 
 /-- The functor from a category to its thin skeleton. -/
@@ -169,8 +170,8 @@ variable {C} {D}
 /-- A functor `C ⥤ D` computably lowers to a functor `thin_skeleton C ⥤ thin_skeleton D`. -/
 @[simps]
 def map (F : C ⥤ D) : ThinSkeleton C ⥤ ThinSkeleton D where
-  obj := Quotient.map F.obj $ fun X₁ X₂ ⟨hX⟩ => ⟨F.mapIso hX⟩
-  map X Y := Quotient.recOnSubsingleton₂ X Y $ fun x y k => homOfLe (k.le.elim fun t => ⟨F.map t⟩)
+  obj := (Quotient.map F.obj) fun X₁ X₂ ⟨hX⟩ => ⟨F.mapIso hX⟩
+  map X Y := (Quotient.recOnSubsingleton₂ X Y) fun x y k => homOfLe (k.le.elim fun t => ⟨F.map t⟩)
 #align category_theory.thin_skeleton.map CategoryTheory.ThinSkeleton.map
 
 theorem comp_to_thin_skeleton (F : C ⥤ D) : F ⋙ toThinSkeleton D = toThinSkeleton C ⋙ map F :=
@@ -192,10 +193,10 @@ def map₂ (F : C ⥤ D ⥤ E) : ThinSkeleton C ⥤ ThinSkeleton D ⥤ ThinSkele
         Quotient.map₂ (fun X Y => (F.obj X).obj Y)
           (fun X₁ X₂ ⟨hX⟩ Y₁ Y₂ ⟨hY⟩ => ⟨(F.obj X₁).mapIso hY ≪≫ (F.mapIso hX).app Y₂⟩) x y,
       map := fun y₁ y₂ =>
-        Quotient.recOnSubsingleton x $ fun X =>
-          Quotient.recOnSubsingleton₂ y₁ y₂ $ fun Y₁ Y₂ hY => homOfLe (hY.le.elim fun g => ⟨(F.obj X).map g⟩) }
+        (Quotient.recOnSubsingleton x) fun X =>
+          (Quotient.recOnSubsingleton₂ y₁ y₂) fun Y₁ Y₂ hY => homOfLe (hY.le.elim fun g => ⟨(F.obj X).map g⟩) }
   map x₁ x₂ :=
-    Quotient.recOnSubsingleton₂ x₁ x₂ $ fun X₁ X₂ f =>
+    (Quotient.recOnSubsingleton₂ x₁ x₂) fun X₁ X₂ f =>
       { app := fun y => Quotient.recOnSubsingleton y fun Y => homOfLe (f.le.elim fun f' => ⟨(F.map f').app Y⟩) }
 #align category_theory.thin_skeleton.map₂ CategoryTheory.ThinSkeleton.map₂
 
@@ -213,7 +214,7 @@ instance to_thin_skeleton_faithful : Faithful (toThinSkeleton C) where
 noncomputable def fromThinSkeleton : ThinSkeleton C ⥤ C where
   obj := Quotient.out
   map x y :=
-    Quotient.recOnSubsingleton₂ x y $ fun X Y f =>
+    (Quotient.recOnSubsingleton₂ x y) fun X Y f =>
       (Nonempty.some (Quotient.mk_out X)).Hom ≫ f.le.some ≫ (Nonempty.some (Quotient.mk_out Y)).inv
 #align category_theory.thin_skeleton.from_thin_skeleton CategoryTheory.ThinSkeleton.fromThinSkeleton
 
@@ -249,15 +250,17 @@ instance thinSkeletonPartialOrder : PartialOrder (ThinSkeleton C) :=
 #align category_theory.thin_skeleton.thin_skeleton_partial_order CategoryTheory.ThinSkeleton.thinSkeletonPartialOrder
 
 theorem skeletal : Skeletal (ThinSkeleton C) := fun X Y =>
-  Quotient.induction_on₂ X Y $ fun x y h => h.elim $ fun i => i.1.le.antisymm i.2.le
+  (Quotient.induction_on₂ X Y) fun x y h => h.elim fun i => i.1.le.antisymm i.2.le
 #align category_theory.thin_skeleton.skeletal CategoryTheory.ThinSkeleton.skeletal
 
 theorem map_comp_eq (F : E ⥤ D) (G : D ⥤ C) : map (F ⋙ G) = map F ⋙ map G :=
-  Functor.eq_of_iso skeletal $ NatIso.ofComponents (fun X => Quotient.recOnSubsingleton X fun x => Iso.refl _) (by tidy)
+  Functor.eq_of_iso skeletal <|
+    NatIso.ofComponents (fun X => Quotient.recOnSubsingleton X fun x => Iso.refl _) (by tidy)
 #align category_theory.thin_skeleton.map_comp_eq CategoryTheory.ThinSkeleton.map_comp_eq
 
 theorem map_id_eq : map (𝟭 C) = 𝟭 (ThinSkeleton C) :=
-  Functor.eq_of_iso skeletal $ NatIso.ofComponents (fun X => Quotient.recOnSubsingleton X fun x => Iso.refl _) (by tidy)
+  Functor.eq_of_iso skeletal <|
+    NatIso.ofComponents (fun X => Quotient.recOnSubsingleton X fun x => Iso.refl _) (by tidy)
 #align category_theory.thin_skeleton.map_id_eq CategoryTheory.ThinSkeleton.map_id_eq
 
 theorem map_iso_eq {F₁ F₂ : D ⥤ C} (h : F₁ ≅ F₂) : map F₁ = map F₂ :=

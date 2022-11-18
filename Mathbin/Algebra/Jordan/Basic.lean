@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 -/
 import Mathbin.Algebra.Lie.OfAssociative
-import Mathbin.Algebra.Ring.Basic
 
 /-!
 # Jordan rings
@@ -136,27 +135,27 @@ variable {A} [NonUnitalNonAssocRing A] [IsJordan A]
 
 @[simp]
 theorem commute_lmul_rmul (a : A) : Commute (L a) (R a) :=
-  AddMonoidHom.ext $ fun b => (IsJordan.lmul_comm_rmul _ _).symm
+  AddMonoidHom.ext fun b => (IsJordan.lmul_comm_rmul _ _).symm
 #align commute_lmul_rmul commute_lmul_rmul
 
 @[simp]
 theorem commute_lmul_lmul_sq (a : A) : Commute (L a) (L (a * a)) :=
-  AddMonoidHom.ext $ fun b => (IsJordan.lmul_lmul_comm_lmul _ _).symm
+  AddMonoidHom.ext fun b => (IsJordan.lmul_lmul_comm_lmul _ _).symm
 #align commute_lmul_lmul_sq commute_lmul_lmul_sq
 
 @[simp]
 theorem commute_lmul_rmul_sq (a : A) : Commute (L a) (R (a * a)) :=
-  AddMonoidHom.ext $ fun b => (IsJordan.lmul_comm_rmul_rmul _ _).symm
+  AddMonoidHom.ext fun b => (IsJordan.lmul_comm_rmul_rmul _ _).symm
 #align commute_lmul_rmul_sq commute_lmul_rmul_sq
 
 @[simp]
 theorem commute_lmul_sq_rmul (a : A) : Commute (L (a * a)) (R a) :=
-  AddMonoidHom.ext $ fun b => IsJordan.lmul_lmul_comm_rmul _ _
+  AddMonoidHom.ext fun b => IsJordan.lmul_lmul_comm_rmul _ _
 #align commute_lmul_sq_rmul commute_lmul_sq_rmul
 
 @[simp]
 theorem commute_rmul_rmul_sq (a : A) : Commute (R a) (R (a * a)) :=
-  AddMonoidHom.ext $ fun b => (IsJordan.rmul_comm_rmul_rmul _ _).symm
+  AddMonoidHom.ext fun b => (IsJordan.rmul_comm_rmul_rmul _ _).symm
 #align commute_rmul_rmul_sq commute_rmul_rmul_sq
 
 end Commute

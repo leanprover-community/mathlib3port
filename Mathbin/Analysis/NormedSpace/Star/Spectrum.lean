@@ -5,8 +5,8 @@ Authors: Jireh Loreaux
 -/
 import Mathbin.Analysis.NormedSpace.Star.Basic
 import Mathbin.Analysis.NormedSpace.Spectrum
-import Mathbin.Algebra.Star.Module
 import Mathbin.Analysis.NormedSpace.Star.Exponential
+import Mathbin.Analysis.SpecialFunctions.Exponential
 import Mathbin.Algebra.Star.StarAlgHom
 
 /-! # Spectral properties in C⋆-algebras
@@ -36,7 +36,7 @@ theorem unitary.spectrum_subset_circle (u : unitary E) : spectrum 𝕜 (u : E) �
   · rw [← unitary.coe_to_units_apply u] at hk
     have hnk := ne_zero_of_mem_of_unit hk
     rw [← inv_inv (unitary.toUnits u), ← spectrum.map_inv, Set.mem_inv] at hk
-    have : ∥k∥⁻¹ ≤ ∥↑(unitary.toUnits u)⁻¹∥
+    have : ‖k‖⁻¹ ≤ ‖↑(unitary.toUnits u)⁻¹‖
     simpa only [norm_inv] using norm_le_norm_of_mem hk
     simpa using inv_le_of_inv_le (norm_pos_iff.mpr hnk) this
     
@@ -57,8 +57,8 @@ variable {A : Type _} [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpace A] [St
 -- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap ℂ A
 
-theorem IsSelfAdjoint.spectral_radius_eq_nnnorm {a : A} (ha : IsSelfAdjoint a) : spectralRadius ℂ a = ∥a∥₊ := by
-  have hconst : tendsto (fun n : ℕ => (∥a∥₊ : ℝ≥0∞)) at_top _ := tendsto_const_nhds
+theorem IsSelfAdjoint.spectral_radius_eq_nnnorm {a : A} (ha : IsSelfAdjoint a) : spectralRadius ℂ a = ‖a‖₊ := by
+  have hconst : tendsto (fun n : ℕ => (‖a‖₊ : ℝ≥0∞)) at_top _ := tendsto_const_nhds
   refine' tendsto_nhds_unique _ hconst
   convert
     (spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius (a : A)).comp
@@ -68,11 +68,11 @@ theorem IsSelfAdjoint.spectral_radius_eq_nnnorm {a : A} (ha : IsSelfAdjoint a) :
   simp
 #align is_self_adjoint.spectral_radius_eq_nnnorm IsSelfAdjoint.spectral_radius_eq_nnnorm
 
-theorem IsStarNormal.spectral_radius_eq_nnnorm (a : A) [IsStarNormal a] : spectralRadius ℂ a = ∥a∥₊ := by
+theorem IsStarNormal.spectral_radius_eq_nnnorm (a : A) [IsStarNormal a] : spectralRadius ℂ a = ‖a‖₊ := by
   refine' (Ennreal.pow_strict_mono two_ne_zero).Injective _
   have heq :
-    (fun n : ℕ => (∥(a⋆ * a) ^ n∥₊ ^ (1 / n : ℝ) : ℝ≥0∞)) =
-      (fun x => x ^ 2) ∘ fun n : ℕ => (∥a ^ n∥₊ ^ (1 / n : ℝ) : ℝ≥0∞) :=
+    (fun n : ℕ => (‖(a⋆ * a) ^ n‖₊ ^ (1 / n : ℝ) : ℝ≥0∞)) =
+      (fun x => x ^ 2) ∘ fun n : ℕ => (‖a ^ n‖₊ ^ (1 / n : ℝ) : ℝ≥0∞) :=
     by
     funext
     rw [Function.comp_apply, ← rpow_nat_cast, ← rpow_mul, mul_comm, rpow_mul, rpow_nat_cast, ← coe_pow, sq, ←
@@ -128,8 +128,8 @@ variable {F A B : Type _} [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpace A]
 include hF
 
 /-- A star algebra homomorphism of complex C⋆-algebras is norm contractive. -/
-theorem nnnorm_apply_le (a : A) : ∥(φ a : B)∥₊ ≤ ∥a∥₊ := by
-  suffices ∀ s : A, IsSelfAdjoint s → ∥φ s∥₊ ≤ ∥s∥₊ by
+theorem nnnorm_apply_le (a : A) : ‖(φ a : B)‖₊ ≤ ‖a‖₊ := by
+  suffices ∀ s : A, IsSelfAdjoint s → ‖φ s‖₊ ≤ ‖s‖₊ by
     exact
       nonneg_le_nonneg_of_sq_le_sq zero_le'
         (by simpa only [nnnorm_star_mul_self, map_star, map_mul] using this _ (IsSelfAdjoint.star_mul_self a))
@@ -140,7 +140,7 @@ theorem nnnorm_apply_le (a : A) : ∥(φ a : B)∥₊ ≤ ∥a∥₊ := by
 #align star_alg_hom.nnnorm_apply_le StarAlgHom.nnnorm_apply_le
 
 /-- A star algebra homomorphism of complex C⋆-algebras is norm contractive. -/
-theorem norm_apply_le (a : A) : ∥(φ a : B)∥ ≤ ∥a∥ :=
+theorem norm_apply_le (a : A) : ‖(φ a : B)‖ ≤ ‖a‖ :=
   nnnorm_apply_le φ a
 #align star_alg_hom.norm_apply_le StarAlgHom.norm_apply_le
 

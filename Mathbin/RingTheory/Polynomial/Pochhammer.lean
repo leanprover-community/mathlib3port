@@ -193,7 +193,7 @@ theorem factorial_mul_pochhammer (S : Type _) [Semiring S] (r n : ℕ) :
 theorem pochhammer_nat_eval_succ (r : ℕ) :
     ∀ n : ℕ, n * (pochhammer ℕ r).eval (n + 1) = (n + r) * (pochhammer ℕ r).eval n
   | 0 => by
-    by_cases h:r = 0
+    by_cases h : r = 0
     · simp only [h, zero_mul, zero_add]
       
     · simp only [pochhammer_eval_zero, zero_mul, if_neg h, mul_zero]

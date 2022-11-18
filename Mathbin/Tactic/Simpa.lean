@@ -30,17 +30,17 @@ local postfix:1024 "?" => optional
 * `simpa [rules, ...]` will simplify the goal and the type of a
   hypothesis `this` if present in the context, then try to close the goal using
   the `assumption` tactic. -/
-unsafe def simpa (use_iota_eqn : parse $ (tk "!")?) (trace_lemmas : parse $ (tk "?")?) (no_dflt : parse only_flag)
+unsafe def simpa (use_iota_eqn : parse <| (tk "!")?) (trace_lemmas : parse <| (tk "?")?) (no_dflt : parse only_flag)
     (hs : parse simp_arg_list) (attr_names : parse with_ident_list) (tgt : parse (tk "using" *> texpr)?)
     (cfg : simp_config_ext := {  }) : tactic Unit :=
   let simp_at (lc) (close_tac : tactic Unit) :=
-    focus1 $
+    focus1 <|
       simp use_iota_eqn trace_lemmas no_dflt hs attr_names (Loc.ns lc) { cfg with failIfUnchanged := false } >>
         ((close_tac <|> trivial) >> done <|> fail "simpa failed")
   match tgt with
   | none => get_local `this >> simp_at [some `this, none] assumption <|> simp_at [none] assumption
   | some e =>
-    focus1 $ do
+    focus1 <| do
       let e ←
         i_to_expr e <|> do
             let ty ← target

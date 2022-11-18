@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Mathbin.Data.Nat.Cast.Field
-import Mathbin.Data.Fintype.Basic
+import Mathbin.Data.Fintype.Lattice
+import Mathbin.Algebra.GroupPower.Lemmas
 
 /-!
 # Characteristic zero (additional theorems)
@@ -58,13 +59,11 @@ instance (priority := 100) CharZero.infinite : Infinite M :=
   Infinite.of_injective coe Nat.cast_injective
 #align char_zero.infinite CharZero.infinite
 
-variable {M}
-
-@[field_simps]
-theorem two_ne_zero' : (2 : M) ≠ 0 := by
-  have : ((2 : ℕ) : M) ≠ 0 := Nat.cast_ne_zero.2 dec_trivial
-  rwa [Nat.cast_two] at this
-#align two_ne_zero' two_ne_zero'
+instance CharZero.NeZero.two : NeZero (2 : M) :=
+  ⟨by
+    have : ((2 : ℕ) : M) ≠ 0 := Nat.cast_ne_zero.2 (by decide)
+    rwa [Nat.cast_two] at this⟩
+#align char_zero.ne_zero.two CharZero.NeZero.two
 
 end
 
@@ -74,7 +73,7 @@ variable {R : Type _} [NonAssocSemiring R] [NoZeroDivisors R] [CharZero R] {a : 
 
 @[simp]
 theorem add_self_eq_zero {a : R} : a + a = 0 ↔ a = 0 := by
-  simp only [(two_mul a).symm, mul_eq_zero, two_ne_zero', false_or_iff]
+  simp only [(two_mul a).symm, mul_eq_zero, two_ne_zero, false_or_iff]
 #align add_self_eq_zero add_self_eq_zero
 
 @[simp]
@@ -158,7 +157,7 @@ section
 variable {R : Type _} [DivisionRing R] [CharZero R]
 
 @[simp]
-theorem half_add_self (a : R) : (a + a) / 2 = a := by rw [← mul_two, mul_div_cancel a two_ne_zero']
+theorem half_add_self (a : R) : (a + a) / 2 = a := by rw [← mul_two, mul_div_cancel a two_ne_zero]
 #align half_add_self half_add_self
 
 @[simp]

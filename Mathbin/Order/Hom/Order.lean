@@ -62,7 +62,7 @@ instance [Preorder β] [OrderTop β] : OrderTop (α →o β) where
   le_top a x := le_top
 
 instance [CompleteLattice β] :
-    HasInf (α →o β) where inf s := ⟨fun x => ⨅ f ∈ s, (f : _) x, fun x y h => infi₂_mono $ fun f _ => f.mono h⟩
+    HasInf (α →o β) where inf s := ⟨fun x => ⨅ f ∈ s, (f : _) x, fun x y h => infi₂_mono fun f _ => f.mono h⟩
 
 @[simp]
 theorem Inf_apply [CompleteLattice β] (s : Set (α →o β)) (x : α) : inf s x = ⨅ f ∈ s, (f : _) x :=
@@ -75,7 +75,7 @@ theorem infi_apply {ι : Sort _} [CompleteLattice β] (f : ι → α →o β) (x
 
 @[simp, norm_cast]
 theorem coe_infi {ι : Sort _} [CompleteLattice β] (f : ι → α →o β) : ((⨅ i, f i : α →o β) : α → β) = ⨅ i, f i :=
-  funext $ fun x => (infi_apply f x).trans (@infi_apply _ _ _ _ (fun i => f i) _).symm
+  funext fun x => (infi_apply f x).trans (@infi_apply _ _ _ _ (fun i => f i) _).symm
 #align order_hom.coe_infi OrderHom.coe_infi
 
 instance [CompleteLattice β] :
@@ -92,7 +92,7 @@ theorem supr_apply {ι : Sort _} [CompleteLattice β] (f : ι → α →o β) (x
 
 @[simp, norm_cast]
 theorem coe_supr {ι : Sort _} [CompleteLattice β] (f : ι → α →o β) : ((⨆ i, f i : α →o β) : α → β) = ⨆ i, f i :=
-  funext $ fun x => (supr_apply f x).trans (@supr_apply _ _ _ _ (fun i => f i) _).symm
+  funext fun x => (supr_apply f x).trans (@supr_apply _ _ _ _ (fun i => f i) _).symm
 #align order_hom.coe_supr OrderHom.coe_supr
 
 instance [CompleteLattice β] : CompleteLattice (α →o β) :=

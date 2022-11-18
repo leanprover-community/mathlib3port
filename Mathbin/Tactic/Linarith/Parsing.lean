@@ -48,7 +48,7 @@ unsafe def monom.one : monom :=
 
 /-- Compare monomials by first comparing their keys and then their powers. -/
 @[reducible]
-unsafe def monom.lt : monom → monom → Prop := fun a b => (a.keys < b.keys) || (a.keys = b.keys) && (a.values < b.values)
+unsafe def monom.lt : monom → monom → Prop := fun a b => a.keys < b.keys || a.keys = b.keys && a.values < b.values
 #align linarith.monom.lt linarith.monom.lt
 
 unsafe instance : LT monom :=
@@ -67,12 +67,12 @@ unsafe def sum.one : sum :=
 
 /-- `sum.scale_by_monom s m` multiplies every monomial in `s` by `m`. -/
 unsafe def sum.scale_by_monom (s : sum) (m : monom) : sum :=
-  s.fold mk_rb_map $ fun m' coeff sm => sm.insert (m.add m') coeff
+  (s.fold mk_rb_map) fun m' coeff sm => sm.insert (m.add m') coeff
 #align linarith.sum.scale_by_monom linarith.sum.scale_by_monom
 
 /-- `sum.mul s1 s2` distributes the multiplication of two sums.` -/
 unsafe def sum.mul (s1 s2 : sum) : sum :=
-  s1.fold mk_rb_map $ fun mn coeff sm => sm.add $ (s2.scale_by_monom mn).scale coeff
+  (s1.fold mk_rb_map) fun mn coeff sm => sm.add <| (s2.scale_by_monom mn).scale coeff
 #align linarith.sum.mul linarith.sum.mul
 
 /-- The `n`th power of `s : sum` is the `n`-fold product of `s`, with `s.pow 0 = sum.one`. -/
@@ -107,7 +107,6 @@ unsafe def var (n : ℕ) : sum :=
 -- mathport name: exprexmap
 local notation "exmap" => List (expr × ℕ)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `linear_form_of_atom red map e` is the atomic case for `linear_form_of_expr`.
 If `e` appears with index `k` in `map`, it returns the singleton sum `var k`.
 Otherwise it updates `map`, adding `e` with index `n`, and returns the singleton sum `var n`.
@@ -117,7 +116,7 @@ unsafe def linear_form_of_atom (red : Transparency) (m : exmap) (e : expr) : tac
       let (_, k) ← m.find_defeq red e
       return (m, var k)) <|>
     let n := m.length + 1
-    return ((e, n)::m, var n)
+    return ((e, n) :: m, var n)
 #align linarith.linear_form_of_atom linarith.linear_form_of_atom
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -182,7 +181,7 @@ but each monomial key is replaced with its index according to `map`.
 If any new monomials are encountered, they are assigned variable numbers and `map` is updated.
  -/
 unsafe def sum_to_lf (s : sum) (m : rb_map monom ℕ) : rb_map monom ℕ × rb_map ℕ ℤ :=
-  s.fold (m, mk_rb_map) $ fun mn coeff ⟨map, out⟩ =>
+  (s.fold (m, mk_rb_map)) fun mn coeff ⟨map, out⟩ =>
     match map.find mn with
     | some n => ⟨map, out.insert n coeff⟩
     | none =>
@@ -204,18 +203,16 @@ unsafe def to_comp (red : Transparency) (e : expr) (e_map : exmap) (monom_map : 
   return ⟨⟨iq, mm'⟩, m', nm⟩
 #align linarith.to_comp linarith.to_comp
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `to_comp_fold red e_map exprs monom_map` folds `to_comp` over `exprs`,
 updating `e_map` and `monom_map` as it goes.
  -/
 unsafe def to_comp_fold (red : Transparency) :
     exmap → List expr → rb_map monom ℕ → tactic (List Comp × exmap × rb_map monom ℕ)
   | m, [], mm => return ([], m, mm)
-  | m, h::t, mm => do
+  | m, h :: t, mm => do
     let (c, m', mm') ← to_comp red h m mm
     let (l, mp, mm') ← to_comp_fold m' t mm'
-    return (c::l, mp, mm')
+    return (c :: l, mp, mm')
 #align linarith.to_comp_fold linarith.to_comp_fold
 
 /-- `linear_forms_and_vars red pfs` is the main interface for computing the linear forms of a list

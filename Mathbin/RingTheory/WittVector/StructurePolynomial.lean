@@ -3,7 +3,6 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 -/
-import Mathbin.Data.Fin.VecNotation
 import Mathbin.FieldTheory.Finite.Polynomial
 import Mathbin.NumberTheory.Basic
 import Mathbin.RingTheory.WittVector.WittPolynomial

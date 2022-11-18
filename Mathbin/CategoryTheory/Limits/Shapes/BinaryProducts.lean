@@ -232,7 +232,7 @@ def BinaryFan.IsLimit.mk {X Y : C} (s : BinaryFan X Y) (lift : ∀ {T : C} (f : 
 
 theorem BinaryFan.IsLimit.hom_ext {W X Y : C} {s : BinaryFan X Y} (h : IsLimit s) {f g : W ⟶ s.x}
     (h₁ : f ≫ s.fst = g ≫ s.fst) (h₂ : f ≫ s.snd = g ≫ s.snd) : f = g :=
-  h.hom_ext $ fun j => Discrete.recOn j fun j => WalkingPair.casesOn j h₁ h₂
+  h.hom_ext fun j => Discrete.recOn j fun j => WalkingPair.casesOn j h₁ h₂
 #align category_theory.limits.binary_fan.is_limit.hom_ext CategoryTheory.Limits.BinaryFan.IsLimit.hom_ext
 
 /-- A binary cofan is just a cocone on a diagram indexing a coproduct. -/
@@ -278,7 +278,7 @@ def BinaryCofan.IsColimit.mk {X Y : C} (s : BinaryCofan X Y) (desc : ∀ {T : C}
 
 theorem BinaryCofan.IsColimit.hom_ext {W X Y : C} {s : BinaryCofan X Y} (h : IsColimit s) {f g : s.x ⟶ W}
     (h₁ : s.inl ≫ f = s.inl ≫ g) (h₂ : s.inr ≫ f = s.inr ≫ g) : f = g :=
-  h.hom_ext $ fun j => Discrete.recOn j fun j => WalkingPair.casesOn j h₁ h₂
+  h.hom_ext fun j => Discrete.recOn j fun j => WalkingPair.casesOn j h₁ h₂
 #align category_theory.limits.binary_cofan.is_colimit.hom_ext CategoryTheory.Limits.BinaryCofan.IsColimit.hom_ext
 
 variable {X Y : C}
@@ -373,7 +373,7 @@ def BinaryCofan.isColimitMk {W : C} {inl : X ⟶ W} {inr : Y ⟶ W} (desc : ∀ 
 @[simps]
 def BinaryFan.IsLimit.lift' {W X Y : C} {s : BinaryFan X Y} (h : IsLimit s) (f : W ⟶ X) (g : W ⟶ Y) :
     { l : W ⟶ s.x // l ≫ s.fst = f ∧ l ≫ s.snd = g } :=
-  ⟨h.lift $ BinaryFan.mk f g, h.fac _ _, h.fac _ _⟩
+  ⟨h.lift <| BinaryFan.mk f g, h.fac _ _, h.fac _ _⟩
 #align category_theory.limits.binary_fan.is_limit.lift' CategoryTheory.Limits.BinaryFan.IsLimit.lift'
 
 /-- If `s` is a colimit binary cofan over `X` and `Y`,, then every pair of morphisms `f : X ⟶ W` and
@@ -382,7 +382,7 @@ def BinaryFan.IsLimit.lift' {W X Y : C} {s : BinaryFan X Y} (h : IsLimit s) (f :
 @[simps]
 def BinaryCofan.IsColimit.desc' {W X Y : C} {s : BinaryCofan X Y} (h : IsColimit s) (f : X ⟶ W) (g : Y ⟶ W) :
     { l : s.x ⟶ W // s.inl ≫ l = f ∧ s.inr ≫ l = g } :=
-  ⟨h.desc $ BinaryCofan.mk f g, h.fac _ _, h.fac _ _⟩
+  ⟨h.desc <| BinaryCofan.mk f g, h.fac _ _, h.fac _ _⟩
 #align category_theory.limits.binary_cofan.is_colimit.desc' CategoryTheory.Limits.BinaryCofan.IsColimit.desc'
 
 /-- Binary products are symmetric. -/
@@ -437,7 +437,7 @@ noncomputable def BinaryFan.isLimitCompLeftIso {X Y X' : C} (c : BinaryFan X Y) 
 /-- If `Y' ≅ Y`, then `X x Y` also is the product of `X` and `Y'`. -/
 noncomputable def BinaryFan.isLimitCompRightIso {X Y Y' : C} (c : BinaryFan X Y) (f : Y ⟶ Y') [IsIso f]
     (h : IsLimit c) : IsLimit (BinaryFan.mk c.fst (c.snd ≫ f)) :=
-  binary_fan.is_limit_flip $ BinaryFan.isLimitCompLeftIso _ f (BinaryFan.isLimitFlip h)
+  binary_fan.is_limit_flip <| BinaryFan.isLimitCompLeftIso _ f (BinaryFan.isLimitFlip h)
 #align category_theory.limits.binary_fan.is_limit_comp_right_iso CategoryTheory.Limits.BinaryFan.isLimitCompRightIso
 
 /-- Binary coproducts are symmetric. -/
@@ -499,7 +499,7 @@ noncomputable def BinaryCofan.isColimitCompLeftIso {X Y X' : C} (c : BinaryCofan
 /-- If `Y' ≅ Y`, then `X ⨿ Y` also is the coproduct of `X` and `Y'`. -/
 noncomputable def BinaryCofan.isColimitCompRightIso {X Y Y' : C} (c : BinaryCofan X Y) (f : Y' ⟶ Y) [IsIso f]
     (h : IsColimit c) : IsColimit (BinaryCofan.mk c.inl (f ≫ c.inr)) :=
-  binary_cofan.is_colimit_flip $ BinaryCofan.isColimitCompLeftIso _ f (BinaryCofan.isColimitFlip h)
+  binary_cofan.is_colimit_flip <| BinaryCofan.isColimitCompLeftIso _ f (BinaryCofan.isColimitFlip h)
 #align
   category_theory.limits.binary_cofan.is_colimit_comp_right_iso CategoryTheory.Limits.BinaryCofan.isColimitCompRightIso
 
@@ -630,22 +630,22 @@ theorem coprod.inr_desc {W X Y : C} [HasBinaryCoproduct X Y] (f : X ⟶ W) (g : 
 
 instance prod.mono_lift_of_mono_left {W X Y : C} [HasBinaryProduct X Y] (f : W ⟶ X) (g : W ⟶ Y) [Mono f] :
     Mono (prod.lift f g) :=
-  mono_of_mono_fac $ prod.lift_fst _ _
+  mono_of_mono_fac <| prod.lift_fst _ _
 #align category_theory.limits.prod.mono_lift_of_mono_left CategoryTheory.Limits.prod.mono_lift_of_mono_left
 
 instance prod.mono_lift_of_mono_right {W X Y : C} [HasBinaryProduct X Y] (f : W ⟶ X) (g : W ⟶ Y) [Mono g] :
     Mono (prod.lift f g) :=
-  mono_of_mono_fac $ prod.lift_snd _ _
+  mono_of_mono_fac <| prod.lift_snd _ _
 #align category_theory.limits.prod.mono_lift_of_mono_right CategoryTheory.Limits.prod.mono_lift_of_mono_right
 
 instance coprod.epi_desc_of_epi_left {W X Y : C} [HasBinaryCoproduct X Y] (f : X ⟶ W) (g : Y ⟶ W) [Epi f] :
     Epi (coprod.desc f g) :=
-  epi_of_epi_fac $ coprod.inl_desc _ _
+  epi_of_epi_fac <| coprod.inl_desc _ _
 #align category_theory.limits.coprod.epi_desc_of_epi_left CategoryTheory.Limits.coprod.epi_desc_of_epi_left
 
 instance coprod.epi_desc_of_epi_right {W X Y : C} [HasBinaryCoproduct X Y] (f : X ⟶ W) (g : Y ⟶ W) [Epi g] :
     Epi (coprod.desc f g) :=
-  epi_of_epi_fac $ coprod.inr_desc _ _
+  epi_of_epi_fac <| coprod.inr_desc _ _
 #align category_theory.limits.coprod.epi_desc_of_epi_right CategoryTheory.Limits.coprod.epi_desc_of_epi_right
 
 /-- If the product of `X` and `Y` exists, then every pair of morphisms `f : W ⟶ X` and `g : W ⟶ Y`

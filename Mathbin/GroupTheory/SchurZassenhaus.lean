@@ -91,8 +91,8 @@ theorem smul_diff' (h : H) : diff (MonoidHom.id H) α (op (h : G) • β) = diff
 
 theorem eq_one_of_smul_eq_one (hH : Nat.Coprime (Nat.card H) H.index) (α : H.QuotientDiff) (h : H) :
     h • α = α → h = 1 :=
-  Quotient.inductionOn' α $ fun α hα =>
-    (powCoprime hH).Injective $
+  (Quotient.inductionOn' α) fun α hα =>
+    (powCoprime hH).Injective <|
       calc
         h ^ H.index = diff (MonoidHom.id H) (op ((h⁻¹ : H) : G) • α) α := by
           rw [← diff_inv, smul_diff', diff_self, one_mul, inv_pow, inv_inv]
@@ -295,12 +295,12 @@ theorem exists_right_complement'_of_coprime_of_fintype [Fintype G] {N : Subgroup
   subgroup `K` which is a (right) complement of `H`. -/
 theorem exists_right_complement'_of_coprime {N : Subgroup G} [N.Normal] (hN : Nat.Coprime (Nat.card N) N.index) :
     ∃ H : Subgroup G, IsComplement' N H := by
-  by_cases hN1:Nat.card N = 0
+  by_cases hN1 : Nat.card N = 0
   · rw [hN1, Nat.coprime_zero_left, index_eq_one] at hN
     rw [hN]
     exact ⟨⊥, is_complement'_top_bot⟩
     
-  by_cases hN2:N.index = 0
+  by_cases hN2 : N.index = 0
   · rw [hN2, Nat.coprime_zero_right] at hN
     haveI := (cardinal.to_nat_eq_one_iff_unique.mp hN).1
     rw [N.eq_bot_of_subsingleton]

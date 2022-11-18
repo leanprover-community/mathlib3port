@@ -6,7 +6,6 @@ Authors: Sébastien Gouëzel
 import Mathbin.MeasureTheory.Covering.BesicovitchVectorSpace
 import Mathbin.MeasureTheory.Measure.HaarLebesgue
 import Mathbin.Analysis.NormedSpace.Pointwise
-import Mathbin.MeasureTheory.Covering.Differentiation
 import Mathbin.MeasureTheory.Constructions.Polish
 
 /-!
@@ -106,7 +105,7 @@ with countably many closed sets `t n` on which `f` is well approximated by linea
 theorem exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at [SecondCountableTopology F] (f : E → F)
     (s : Set E) (f' : E → E →L[ℝ] F) (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) (r : (E →L[ℝ] F) → ℝ≥0)
     (rpos : ∀ A, r A ≠ 0) :
-    ∃ (t : ℕ → Set E) (A : ℕ → E →L[ℝ] F),
+    ∃ (t : ℕ → Set E)(A : ℕ → E →L[ℝ] F),
       (∀ n, IsClosed (t n)) ∧
         (s ⊆ ⋃ n, t n) ∧
           (∀ n, ApproximatesLinearOn f (A n) (s ∩ t n) (r (A n))) ∧ (s.Nonempty → ∀ n, ∃ y ∈ s, A n = f' y) :=
@@ -135,9 +134,9 @@ theorem exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at [Seco
   -- `M n z` is the set of points `x` such that `f y - f x` is close to `f' z (y - x)` for `y`
   -- in the ball of radius `u n` around `x`.
   let M : ℕ → T → Set E := fun n z =>
-    { x | x ∈ s ∧ ∀ y ∈ s ∩ ball x (u n), ∥f y - f x - f' z (y - x)∥ ≤ r (f' z) * ∥y - x∥ }
+    { x | x ∈ s ∧ ∀ y ∈ s ∩ ball x (u n), ‖f y - f x - f' z (y - x)‖ ≤ r (f' z) * ‖y - x‖ }
   -- As `f` is differentiable everywhere on `s`, the sets `M n z` cover `s` by design.
-  have s_subset : ∀ x ∈ s, ∃ (n : ℕ) (z : T), x ∈ M n z := by
+  have s_subset : ∀ x ∈ s, ∃ (n : ℕ)(z : T), x ∈ M n z := by
     intro x xs
     obtain ⟨z, zT, hz⟩ : ∃ z ∈ T, f' x ∈ ball (f' (z : E)) (r (f' z)) := by
       have : f' x ∈ ⋃ z ∈ T, ball (f' (z : E)) (r (f' z)) := by
@@ -145,25 +144,25 @@ theorem exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at [Seco
         refine' mem_Union.2 ⟨⟨x, xs⟩, _⟩
         simpa only [mem_ball, Subtype.coe_mk, dist_self] using (rpos (f' x)).bot_lt
       rwa [mem_Union₂] at this
-    obtain ⟨ε, εpos, hε⟩ : ∃ ε : ℝ, 0 < ε ∧ ∥f' x - f' z∥ + ε ≤ r (f' z) := by
-      refine' ⟨r (f' z) - ∥f' x - f' z∥, _, le_of_eq (by abel)⟩
+    obtain ⟨ε, εpos, hε⟩ : ∃ ε : ℝ, 0 < ε ∧ ‖f' x - f' z‖ + ε ≤ r (f' z) := by
+      refine' ⟨r (f' z) - ‖f' x - f' z‖, _, le_of_eq (by abel)⟩
       simpa only [sub_pos] using mem_ball_iff_norm.mp hz
-    obtain ⟨δ, δpos, hδ⟩ : ∃ (δ : ℝ) (H : 0 < δ), ball x δ ∩ s ⊆ { y | ∥f y - f x - (f' x) (y - x)∥ ≤ ε * ∥y - x∥ } :=
+    obtain ⟨δ, δpos, hδ⟩ : ∃ (δ : ℝ)(H : 0 < δ), ball x δ ∩ s ⊆ { y | ‖f y - f x - (f' x) (y - x)‖ ≤ ε * ‖y - x‖ } :=
       Metric.mem_nhds_within_iff.1 (is_o.def (hf' x xs) εpos)
     obtain ⟨n, hn⟩ : ∃ n, u n < δ := ((tendsto_order.1 u_lim).2 _ δpos).exists
     refine' ⟨n, ⟨z, zT⟩, ⟨xs, _⟩⟩
     intro y hy
     calc
-      ∥f y - f x - (f' z) (y - x)∥ = ∥f y - f x - (f' x) (y - x) + (f' x - f' z) (y - x)∥ := by
+      ‖f y - f x - (f' z) (y - x)‖ = ‖f y - f x - (f' x) (y - x) + (f' x - f' z) (y - x)‖ := by
         congr 1
         simp only [ContinuousLinearMap.coe_sub', map_sub, Pi.sub_apply]
         abel
-      _ ≤ ∥f y - f x - (f' x) (y - x)∥ + ∥(f' x - f' z) (y - x)∥ := norm_add_le _ _
-      _ ≤ ε * ∥y - x∥ + ∥f' x - f' z∥ * ∥y - x∥ := by
+      _ ≤ ‖f y - f x - (f' x) (y - x)‖ + ‖(f' x - f' z) (y - x)‖ := norm_add_le _ _
+      _ ≤ ε * ‖y - x‖ + ‖f' x - f' z‖ * ‖y - x‖ := by
         refine' add_le_add (hδ _) (ContinuousLinearMap.le_op_norm _ _)
         rw [inter_comm]
         exact inter_subset_inter_right _ (ball_subset_ball hn.le) hy
-      _ ≤ r (f' z) * ∥y - x∥ := by
+      _ ≤ r (f' z) * ‖y - x‖ := by
         rw [← add_mul, add_comm]
         exact mul_le_mul_of_nonneg_right hε (norm_nonneg _)
       
@@ -173,7 +172,7 @@ theorem exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at [Seco
     rintro n z x ⟨xs, hx⟩
     refine' ⟨xs, fun y hy => _⟩
     obtain ⟨a, aM, a_lim⟩ : ∃ a : ℕ → E, (∀ k, a k ∈ M n z) ∧ tendsto a at_top (𝓝 x) := mem_closure_iff_seq_limit.1 hx
-    have L1 : tendsto (fun k : ℕ => ∥f y - f (a k) - (f' z) (y - a k)∥) at_top (𝓝 ∥f y - f x - (f' z) (y - x)∥) := by
+    have L1 : tendsto (fun k : ℕ => ‖f y - f (a k) - (f' z) (y - a k)‖) at_top (𝓝 ‖f y - f x - (f' z) (y - x)‖) := by
       apply tendsto.norm
       have L : tendsto (fun k => f (a k)) at_top (𝓝 (f x)) := by
         apply (hf' x xs).ContinuousWithinAt.Tendsto.comp
@@ -181,9 +180,9 @@ theorem exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at [Seco
         exact eventually_of_forall fun k => (aM k).1
       apply tendsto.sub (tendsto_const_nhds.sub L)
       exact ((f' z).Continuous.Tendsto _).comp (tendsto_const_nhds.sub a_lim)
-    have L2 : tendsto (fun k : ℕ => (r (f' z) : ℝ) * ∥y - a k∥) at_top (𝓝 (r (f' z) * ∥y - x∥)) :=
+    have L2 : tendsto (fun k : ℕ => (r (f' z) : ℝ) * ‖y - a k‖) at_top (𝓝 (r (f' z) * ‖y - x‖)) :=
       (tendsto_const_nhds.sub a_lim).norm.const_mul _
-    have I : ∀ᶠ k in at_top, ∥f y - f (a k) - (f' z) (y - a k)∥ ≤ r (f' z) * ∥y - a k∥ := by
+    have I : ∀ᶠ k in at_top, ‖f y - f (a k) - (f' z) (y - a k)‖ ≤ r (f' z) * ‖y - a k‖ := by
       have L : tendsto (fun k => dist y (a k)) at_top (𝓝 (dist y x)) := tendsto_const_nhds.dist a_lim
       filter_upwards [(tendsto_order.1 L).2 _ hy.2]
       intro k hk
@@ -225,7 +224,7 @@ theorem exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at [Seco
       K_approx _ _ _, fun h's q => ⟨(F q).2.1, (F q).2.1.1.2, rfl⟩⟩
   -- the only fact that needs further checking is that they cover `s`.
   -- we already know that any point `x ∈ s` belongs to a set `M n z`.
-  obtain ⟨n, z, hnz⟩ : ∃ (n : ℕ) (z : T), x ∈ M n z := s_subset x xs
+  obtain ⟨n, z, hnz⟩ : ∃ (n : ℕ)(z : T), x ∈ M n z := s_subset x xs
   -- by density, it also belongs to a ball `closed_ball (d p) (u n / 3)`.
   obtain ⟨p, hp⟩ : ∃ p : ℕ, x ∈ closed_ball (d p) (u n / 3) := by
     have : Set.Nonempty (ball x (u n / 3)) := by
@@ -249,7 +248,7 @@ of `s` with measurable sets `t n`) on which `f` is well approximated by linear m
 theorem exists_partition_approximates_linear_on_of_has_fderiv_within_at [SecondCountableTopology F] (f : E → F)
     (s : Set E) (f' : E → E →L[ℝ] F) (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) (r : (E →L[ℝ] F) → ℝ≥0)
     (rpos : ∀ A, r A ≠ 0) :
-    ∃ (t : ℕ → Set E) (A : ℕ → E →L[ℝ] F),
+    ∃ (t : ℕ → Set E)(A : ℕ → E →L[ℝ] F),
       Pairwise (Disjoint on t) ∧
         (∀ n, MeasurableSet (t n)) ∧
           (s ⊆ ⋃ n, t n) ∧
@@ -281,10 +280,10 @@ to the approximating linear map.
 
 /-- Let `f` be a function which is sufficiently close (in the Lipschitz sense) to a given linear
 map `A`. Then it expands the volume of any set by at most `m` for any `m > det A`. -/
-theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0} (hm : Ennreal.ofReal |A.det| < m) :
+theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0} (hm : Ennreal.ofReal (|A.det|) < m) :
     ∀ᶠ δ in 𝓝[>] (0 : ℝ≥0), ∀ (s : Set E) (f : E → E) (hf : ApproximatesLinearOn f A s δ), μ (f '' s) ≤ m * μ s := by
   apply nhds_within_le_nhds
-  let d := Ennreal.ofReal |A.det|
+  let d := Ennreal.ofReal (|A.det|)
   -- construct a small neighborhood of `A '' (closed_ball 0 1)` with measure comparable to
   -- the determinant of `A`.
   obtain ⟨ε, hε, εpos⟩ : ∃ ε : ℝ, μ (closed_ball 0 ε + A '' closed_ball 0 1) < m * μ (closed_ball 0 1) ∧ 0 < ε := by
@@ -322,7 +321,7 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0} (hm : 
         
       · rw [mem_closed_ball_iff_norm, add_sub_cancel]
         calc
-          ∥f z - f x - A (z - x)∥ ≤ δ * ∥z - x∥ := hf _ zs _ xs
+          ‖f z - f x - A (z - x)‖ ≤ δ * ‖z - x‖ := hf _ zs _ xs
           _ ≤ ε * r := mul_le_mul (le_of_lt hδ) (mem_closed_ball_iff_norm.1 zr) (norm_nonneg _) εpos.le
           
         
@@ -351,7 +350,7 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0} (hm : 
     filter_upwards [self_mem_nhds_within] with a ha
     change 0 < a at ha
     obtain ⟨t, r, t_count, ts, rpos, st, μt⟩ :
-      ∃ (t : Set E) (r : E → ℝ),
+      ∃ (t : Set E)(r : E → ℝ),
         t.Countable ∧
           t ⊆ s ∧
             (∀ x : E, x ∈ t → 0 < r x) ∧
@@ -382,7 +381,7 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0} (hm : 
 
 /-- Let `f` be a function which is sufficiently close (in the Lipschitz sense) to a given linear
 map `A`. Then it expands the volume of any set by at least `m` for any `m < det A`. -/
-theorem mul_le_add_haar_image_of_lt_det (A : E →L[ℝ] E) {m : ℝ≥0} (hm : (m : ℝ≥0∞) < Ennreal.ofReal |A.det|) :
+theorem mul_le_add_haar_image_of_lt_det (A : E →L[ℝ] E) {m : ℝ≥0} (hm : (m : ℝ≥0∞) < Ennreal.ofReal (|A.det|)) :
     ∀ᶠ δ in 𝓝[>] (0 : ℝ≥0),
       ∀ (s : Set E) (f : E → E) (hf : ApproximatesLinearOn f A s δ), (m : ℝ≥0∞) * μ s ≤ μ (f '' s) :=
   by
@@ -401,7 +400,7 @@ theorem mul_le_add_haar_image_of_lt_det (A : E →L[ℝ] E) {m : ℝ≥0} (hm : 
   -- let `B` be the continuous linear equiv version of `A`.
   let B := A.to_continuous_linear_equiv_of_det_ne_zero hA
   -- the determinant of `B.symm` is bounded by `m⁻¹`
-  have I : Ennreal.ofReal |(B.symm : E →L[ℝ] E).det| < (m⁻¹ : ℝ≥0) := by
+  have I : Ennreal.ofReal (|(B.symm : E →L[ℝ] E).det|) < (m⁻¹ : ℝ≥0) := by
     simp only [Ennreal.ofReal, abs_inv, Real.to_nnreal_inv, ContinuousLinearEquiv.det_coe_symm,
       ContinuousLinearMap.coe_to_continuous_linear_equiv_of_det_ne_zero, Ennreal.coe_lt_coe] at hm⊢
     exact Nnreal.inv_lt_inv mpos.ne' hm
@@ -417,19 +416,19 @@ theorem mul_le_add_haar_image_of_lt_det (A : E →L[ℝ] E) {m : ℝ≥0} (hm : 
     rcases(this.and self_mem_nhds_within).exists with ⟨δ₀, h, h'⟩
     exact ⟨δ₀, h', h⟩
   -- record smallness conditions for `δ` that will be needed to apply `hδ₀` below.
-  have L1 : ∀ᶠ δ in 𝓝 (0 : ℝ≥0), Subsingleton E ∨ δ < ∥(B.symm : E →L[ℝ] E)∥₊⁻¹ := by
+  have L1 : ∀ᶠ δ in 𝓝 (0 : ℝ≥0), Subsingleton E ∨ δ < ‖(B.symm : E →L[ℝ] E)‖₊⁻¹ := by
     by_cases Subsingleton E
     · simp only [h, true_or_iff, eventually_const]
       
     simp only [h, false_or_iff]
     apply Iio_mem_nhds
     simpa only [h, false_or_iff, Nnreal.inv_pos] using B.subsingleton_or_nnnorm_symm_pos
-  have L2 : ∀ᶠ δ in 𝓝 (0 : ℝ≥0), ∥(B.symm : E →L[ℝ] E)∥₊ * (∥(B.symm : E →L[ℝ] E)∥₊⁻¹ - δ)⁻¹ * δ < δ₀ := by
+  have L2 : ∀ᶠ δ in 𝓝 (0 : ℝ≥0), ‖(B.symm : E →L[ℝ] E)‖₊ * (‖(B.symm : E →L[ℝ] E)‖₊⁻¹ - δ)⁻¹ * δ < δ₀ := by
     have :
-      tendsto (fun δ => ∥(B.symm : E →L[ℝ] E)∥₊ * (∥(B.symm : E →L[ℝ] E)∥₊⁻¹ - δ)⁻¹ * δ) (𝓝 0)
-        (𝓝 (∥(B.symm : E →L[ℝ] E)∥₊ * (∥(B.symm : E →L[ℝ] E)∥₊⁻¹ - 0)⁻¹ * 0)) :=
+      tendsto (fun δ => ‖(B.symm : E →L[ℝ] E)‖₊ * (‖(B.symm : E →L[ℝ] E)‖₊⁻¹ - δ)⁻¹ * δ) (𝓝 0)
+        (𝓝 (‖(B.symm : E →L[ℝ] E)‖₊ * (‖(B.symm : E →L[ℝ] E)‖₊⁻¹ - 0)⁻¹ * 0)) :=
       by
-      rcases eq_or_ne ∥(B.symm : E →L[ℝ] E)∥₊ 0 with (H | H)
+      rcases eq_or_ne ‖(B.symm : E →L[ℝ] E)‖₊ 0 with (H | H)
       · simpa only [H, zero_mul] using tendsto_const_nhds
         
       refine' tendsto.mul (tendsto_const_nhds.mul _) tendsto_id
@@ -461,10 +460,10 @@ theorem mul_le_add_haar_image_of_lt_det (A : E →L[ℝ] E) {m : ℝ≥0} (hm : 
 #align measure_theory.mul_le_add_haar_image_of_lt_det MeasureTheory.mul_le_add_haar_image_of_lt_det
 
 /-- If a differentiable function `f` is approximated by a linear map `A` on a set `s`, up to `δ`,
-then at almost every `x` in `s` one has `∥f' x - A∥ ≤ δ`. -/
+then at almost every `x` in `s` one has `‖f' x - A‖ ≤ δ`. -/
 theorem _root_.approximates_linear_on.norm_fderiv_sub_le {A : E →L[ℝ] E} {δ : ℝ≥0} (hf : ApproximatesLinearOn f A s δ)
     (hs : MeasurableSet s) (f' : E → E →L[ℝ] E) (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) :
-    ∀ᵐ x ∂μ.restrict s, ∥f' x - A∥₊ ≤ δ := by
+    ∀ᵐ x ∂μ.restrict s, ‖f' x - A‖₊ ≤ δ := by
   /- The conclusion will hold at the Lebesgue density points of `s` (which have full measure).
     At such a point `x`, for any `z` and any `ε > 0` one has for small `r`
     that `{x} + r • closed_ball z ε` intersects `s`. At a point `y` in the intersection,
@@ -475,12 +474,12 @@ theorem _root_.approximates_linear_on.norm_fderiv_sub_le {A : E →L[ℝ] E} {δ
   intro x hx xs
   -- consider an arbitrary vector `z`.
   apply ContinuousLinearMap.op_norm_le_bound _ δ.2 fun z => _
-  -- to show that `∥(f' x - A) z∥ ≤ δ ∥z∥`, it suffices to do it up to some error that vanishes
+  -- to show that `‖(f' x - A) z‖ ≤ δ ‖z‖`, it suffices to do it up to some error that vanishes
   -- asymptotically in terms of `ε > 0`.
-  suffices H : ∀ ε, 0 < ε → ∥(f' x - A) z∥ ≤ (δ + ε) * (∥z∥ + ε) + ∥f' x - A∥ * ε
+  suffices H : ∀ ε, 0 < ε → ‖(f' x - A) z‖ ≤ (δ + ε) * (‖z‖ + ε) + ‖f' x - A‖ * ε
   · have :
-      tendsto (fun ε : ℝ => ((δ : ℝ) + ε) * (∥z∥ + ε) + ∥f' x - A∥ * ε) (𝓝[>] 0)
-        (𝓝 ((δ + 0) * (∥z∥ + 0) + ∥f' x - A∥ * 0)) :=
+      tendsto (fun ε : ℝ => ((δ : ℝ) + ε) * (‖z‖ + ε) + ‖f' x - A‖ * ε) (𝓝[>] 0)
+        (𝓝 ((δ + 0) * (‖z‖ + 0) + ‖f' x - A‖ * 0)) :=
       tendsto.mono_left (Continuous.tendsto (by continuity) 0) nhds_within_le_nhds
     simp only [add_zero, mul_zero] at this
     apply le_of_tendsto_of_tendsto tendsto_const_nhds this
@@ -494,7 +493,7 @@ theorem _root_.approximates_linear_on.norm_fderiv_sub_le {A : E →L[ℝ] E} {δ
   have B₁ : ∀ᶠ r in 𝓝[>] (0 : ℝ), (s ∩ ({x} + r • closed_ball z ε)).Nonempty :=
     eventually_nonempty_inter_smul_of_density_one μ s x hx _ measurableSetClosedBall
       (measure_closed_ball_pos μ z εpos).ne'
-  obtain ⟨ρ, ρpos, hρ⟩ : ∃ ρ > 0, ball x ρ ∩ s ⊆ { y : E | ∥f y - f x - (f' x) (y - x)∥ ≤ ε * ∥y - x∥ } :=
+  obtain ⟨ρ, ρpos, hρ⟩ : ∃ ρ > 0, ball x ρ ∩ s ⊆ { y : E | ‖f y - f x - (f' x) (y - x)‖ ≤ ε * ‖y - x‖ } :=
     mem_nhds_within_iff.1 (is_o.def (hf' x xs) εpos)
   -- for small enough `r`, the rescaled ball `r • closed_ball z ε` is included in the set where
   -- `f y - f x` is well approximated by `f' x (y - x)`.
@@ -509,45 +508,45 @@ theorem _root_.approximates_linear_on.norm_fderiv_sub_le {A : E →L[ℝ] E} {δ
     simp only [mem_smul_set, image_add_left, mem_preimage, singleton_add] at hy
     rcases hy with ⟨a, az, ha⟩
     exact ⟨a, az, by simp only [ha, add_neg_cancel_left]⟩
-  have norm_a : ∥a∥ ≤ ∥z∥ + ε :=
+  have norm_a : ‖a‖ ≤ ‖z‖ + ε :=
     calc
-      ∥a∥ = ∥z + (a - z)∥ := by simp only [add_sub_cancel'_right]
-      _ ≤ ∥z∥ + ∥a - z∥ := norm_add_le _ _
-      _ ≤ ∥z∥ + ε := add_le_add_left (mem_closed_ball_iff_norm.1 az) _
+      ‖a‖ = ‖z + (a - z)‖ := by simp only [add_sub_cancel'_right]
+      _ ≤ ‖z‖ + ‖a - z‖ := norm_add_le _ _
+      _ ≤ ‖z‖ + ε := add_le_add_left (mem_closed_ball_iff_norm.1 az) _
       
   -- use the approximation properties to control `(f' x - A) a`, and then `(f' x - A) z` as `z` is
   -- close to `a`.
-  have I : r * ∥(f' x - A) a∥ ≤ r * (δ + ε) * (∥z∥ + ε) :=
+  have I : r * ‖(f' x - A) a‖ ≤ r * (δ + ε) * (‖z‖ + ε) :=
     calc
-      r * ∥(f' x - A) a∥ = ∥(f' x - A) (r • a)∥ := by
+      r * ‖(f' x - A) a‖ = ‖(f' x - A) (r • a)‖ := by
         simp only [ContinuousLinearMap.map_smul, norm_smul, Real.norm_eq_abs, abs_of_nonneg rpos.le]
-      _ = ∥f y - f x - A (y - x) - (f y - f x - (f' x) (y - x))∥ := by
+      _ = ‖f y - f x - A (y - x) - (f y - f x - (f' x) (y - x))‖ := by
         congr 1
         simp only [ya, add_sub_cancel', sub_sub_sub_cancel_left, ContinuousLinearMap.coe_sub', eq_self_iff_true,
           sub_left_inj, Pi.sub_apply, ContinuousLinearMap.map_smul, smul_sub]
-      _ ≤ ∥f y - f x - A (y - x)∥ + ∥f y - f x - (f' x) (y - x)∥ := norm_sub_le _ _
-      _ ≤ δ * ∥y - x∥ + ε * ∥y - x∥ := add_le_add (hf _ ys _ xs) (hρ ⟨rρ hy, ys⟩)
-      _ = r * (δ + ε) * ∥a∥ := by
+      _ ≤ ‖f y - f x - A (y - x)‖ + ‖f y - f x - (f' x) (y - x)‖ := norm_sub_le _ _
+      _ ≤ δ * ‖y - x‖ + ε * ‖y - x‖ := add_le_add (hf _ ys _ xs) (hρ ⟨rρ hy, ys⟩)
+      _ = r * (δ + ε) * ‖a‖ := by
         simp only [ya, add_sub_cancel', norm_smul, Real.norm_eq_abs, abs_of_nonneg rpos.le]
         ring
-      _ ≤ r * (δ + ε) * (∥z∥ + ε) := mul_le_mul_of_nonneg_left norm_a (mul_nonneg rpos.le (add_nonneg δ.2 εpos.le))
+      _ ≤ r * (δ + ε) * (‖z‖ + ε) := mul_le_mul_of_nonneg_left norm_a (mul_nonneg rpos.le (add_nonneg δ.2 εpos.le))
       
-  show ∥(f' x - A) z∥ ≤ (δ + ε) * (∥z∥ + ε) + ∥f' x - A∥ * ε
+  show ‖(f' x - A) z‖ ≤ (δ + ε) * (‖z‖ + ε) + ‖f' x - A‖ * ε
   exact
     calc
-      ∥(f' x - A) z∥ = ∥(f' x - A) a + (f' x - A) (z - a)∥ := by
+      ‖(f' x - A) z‖ = ‖(f' x - A) a + (f' x - A) (z - a)‖ := by
         congr 1
         simp only [ContinuousLinearMap.coe_sub', map_sub, Pi.sub_apply]
         abel
-      _ ≤ ∥(f' x - A) a∥ + ∥(f' x - A) (z - a)∥ := norm_add_le _ _
-      _ ≤ (δ + ε) * (∥z∥ + ε) + ∥f' x - A∥ * ∥z - a∥ := by
+      _ ≤ ‖(f' x - A) a‖ + ‖(f' x - A) (z - a)‖ := norm_add_le _ _
+      _ ≤ (δ + ε) * (‖z‖ + ε) + ‖f' x - A‖ * ‖z - a‖ := by
         apply add_le_add
         · rw [mul_assoc] at I
           exact (mul_le_mul_left rpos).1 I
           
         · apply ContinuousLinearMap.le_op_norm
           
-      _ ≤ (δ + ε) * (∥z∥ + ε) + ∥f' x - A∥ * ε :=
+      _ ≤ (δ + ε) * (‖z‖ + ε) + ‖f' x - A‖ * ε :=
         add_le_add le_rfl (mul_le_mul_of_nonneg_left (mem_closed_ball_iff_norm'.1 az) (norm_nonneg _))
       
 #align
@@ -571,17 +570,17 @@ theorem add_haar_image_eq_zero_of_differentiable_on_of_add_haar_eq_zero (hf : Di
     ∀ A : E →L[ℝ] E,
       ∃ δ : ℝ≥0,
         0 < δ ∧
-          ∀ (t : Set E) (hf : ApproximatesLinearOn f A t δ), μ (f '' t) ≤ (Real.toNnreal |A.det| + 1 : ℝ≥0) * μ t :=
+          ∀ (t : Set E) (hf : ApproximatesLinearOn f A t δ), μ (f '' t) ≤ (Real.toNnreal (|A.det|) + 1 : ℝ≥0) * μ t :=
     by
     intro A
-    let m : ℝ≥0 := Real.toNnreal |A.det| + 1
-    have I : Ennreal.ofReal |A.det| < m := by
+    let m : ℝ≥0 := Real.toNnreal (|A.det|) + 1
+    have I : Ennreal.ofReal (|A.det|) < m := by
       simp only [Ennreal.ofReal, m, lt_add_iff_pos_right, zero_lt_one, Ennreal.coe_lt_coe]
     rcases((add_haar_image_le_mul_of_det_lt μ A I).And self_mem_nhds_within).exists with ⟨δ, h, h'⟩
     exact ⟨δ, h', fun t ht => h t f ht⟩
   choose δ hδ using this
   obtain ⟨t, A, t_disj, t_meas, t_cover, ht, -⟩ :
-    ∃ (t : ℕ → Set E) (A : ℕ → E →L[ℝ] E),
+    ∃ (t : ℕ → Set E)(A : ℕ → E →L[ℝ] E),
       Pairwise (Disjoint on t) ∧
         (∀ n : ℕ, MeasurableSet (t n)) ∧
           (s ⊆ ⋃ n : ℕ, t n) ∧
@@ -595,11 +594,11 @@ theorem add_haar_image_eq_zero_of_differentiable_on_of_add_haar_eq_zero (hf : Di
       rw [← image_Union, ← inter_Union]
       exact image_subset f (subset_inter subset.rfl t_cover)
     _ ≤ ∑' n, μ (f '' (s ∩ t n)) := measure_Union_le _
-    _ ≤ ∑' n, (Real.toNnreal |(A n).det| + 1 : ℝ≥0) * μ (s ∩ t n) := by
+    _ ≤ ∑' n, (Real.toNnreal (|(A n).det|) + 1 : ℝ≥0) * μ (s ∩ t n) := by
       apply Ennreal.tsum_le_tsum fun n => _
       apply (hδ (A n)).2
       exact ht n
-    _ ≤ ∑' n, (Real.toNnreal |(A n).det| + 1 : ℝ≥0) * 0 := by
+    _ ≤ ∑' n, (Real.toNnreal (|(A n).det|) + 1 : ℝ≥0) * 0 := by
       refine' Ennreal.tsum_le_tsum fun n => Ennreal.mul_le_mul le_rfl _
       exact le_trans (measure_mono (inter_subset_left _ _)) (le_of_eq hs)
     _ = 0 := by simp only [tsum_zero, mul_zero]
@@ -620,17 +619,17 @@ theorem add_haar_image_eq_zero_of_det_fderiv_within_eq_zero_aux (hf' : ∀ x ∈
     ∀ A : E →L[ℝ] E,
       ∃ δ : ℝ≥0,
         0 < δ ∧
-          ∀ (t : Set E) (hf : ApproximatesLinearOn f A t δ), μ (f '' t) ≤ (Real.toNnreal |A.det| + ε : ℝ≥0) * μ t :=
+          ∀ (t : Set E) (hf : ApproximatesLinearOn f A t δ), μ (f '' t) ≤ (Real.toNnreal (|A.det|) + ε : ℝ≥0) * μ t :=
     by
     intro A
-    let m : ℝ≥0 := Real.toNnreal |A.det| + ε
-    have I : Ennreal.ofReal |A.det| < m := by
+    let m : ℝ≥0 := Real.toNnreal (|A.det|) + ε
+    have I : Ennreal.ofReal (|A.det|) < m := by
       simp only [Ennreal.ofReal, m, lt_add_iff_pos_right, εpos, Ennreal.coe_lt_coe]
     rcases((add_haar_image_le_mul_of_det_lt μ A I).And self_mem_nhds_within).exists with ⟨δ, h, h'⟩
     exact ⟨δ, h', fun t ht => h t f ht⟩
   choose δ hδ using this
   obtain ⟨t, A, t_disj, t_meas, t_cover, ht, Af'⟩ :
-    ∃ (t : ℕ → Set E) (A : ℕ → E →L[ℝ] E),
+    ∃ (t : ℕ → Set E)(A : ℕ → E →L[ℝ] E),
       Pairwise (Disjoint on t) ∧
         (∀ n : ℕ, MeasurableSet (t n)) ∧
           (s ⊆ ⋃ n : ℕ, t n) ∧
@@ -642,7 +641,7 @@ theorem add_haar_image_eq_zero_of_det_fderiv_within_eq_zero_aux (hf' : ∀ x ∈
       rw [← image_Union, ← inter_Union]
       exact image_subset f (subset_inter subset.rfl t_cover)
     _ ≤ ∑' n, μ (f '' (s ∩ t n)) := measure_Union_le _
-    _ ≤ ∑' n, (Real.toNnreal |(A n).det| + ε : ℝ≥0) * μ (s ∩ t n) := by
+    _ ≤ ∑' n, (Real.toNnreal (|(A n).det|) + ε : ℝ≥0) * μ (s ∩ t n) := by
       apply Ennreal.tsum_le_tsum fun n => _
       apply (hδ (A n)).2
       exact ht n
@@ -725,7 +724,7 @@ theorem aeMeasurableFderivWithin (hs : MeasurableSet s) (hf' : ∀ x ∈ s, HasF
   have δpos : 0 < δ := εpos
   -- partition `s` into sets `s ∩ t n` on which `f` is approximated by linear maps `A n`.
   obtain ⟨t, A, t_disj, t_meas, t_cover, ht, Af'⟩ :
-    ∃ (t : ℕ → Set E) (A : ℕ → E →L[ℝ] E),
+    ∃ (t : ℕ → Set E)(A : ℕ → E →L[ℝ] E),
       Pairwise (Disjoint on t) ∧
         (∀ n : ℕ, MeasurableSet (t n)) ∧
           (s ⊆ ⋃ n : ℕ, t n) ∧
@@ -749,7 +748,7 @@ theorem aeMeasurableFderivWithin (hs : MeasurableSet s) (hf' : ∀ x ∈ s, HasF
   refine' ae_sum_iff.2 fun n => _
   -- on almost all `s ∩ t n`, `f' x` is close to `A n` thanks to
   -- `approximates_linear_on.norm_fderiv_sub_le`.
-  have E₁ : ∀ᵐ x : E ∂μ.restrict (s ∩ t n), ∥f' x - A n∥₊ ≤ δ :=
+  have E₁ : ∀ᵐ x : E ∂μ.restrict (s ∩ t n), ‖f' x - A n‖₊ ≤ δ :=
     (ht n).norm_fderiv_sub_le μ (hs.inter (t_meas n)) f' fun x hx => (hf' x hx.1).mono (inter_subset_left _ _)
   -- moreover, `g x` is equal to `A n` there.
   have E₂ : ∀ᵐ x : E ∂μ.restrict (s ∩ t n), g x = A n := by
@@ -765,7 +764,7 @@ theorem aeMeasurableFderivWithin (hs : MeasurableSet s) (hf' : ∀ x ∈ s, HasF
 #align measure_theory.ae_measurable_fderiv_within MeasureTheory.aeMeasurableFderivWithin
 
 theorem aeMeasurableOfRealAbsDetFderivWithin (hs : MeasurableSet s) (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) :
-    AeMeasurable (fun x => Ennreal.ofReal |(f' x).det|) (μ.restrict s) := by
+    AeMeasurable (fun x => Ennreal.ofReal (|(f' x).det|)) (μ.restrict s) := by
   apply ennreal.measurable_of_real.comp_ae_measurable
   refine' continuous_abs.measurable.comp_ae_measurable _
   refine' continuous_linear_map.continuous_det.measurable.comp_ae_measurable _
@@ -807,7 +806,7 @@ directions, first up to controlled errors and then letting these errors tend to 
 
 theorem add_haar_image_le_lintegral_abs_det_fderiv_aux1 (hs : MeasurableSet s)
     (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) {ε : ℝ≥0} (εpos : 0 < ε) :
-    μ (f '' s) ≤ (∫⁻ x in s, Ennreal.ofReal |(f' x).det| ∂μ) + 2 * ε * μ s := by
+    μ (f '' s) ≤ (∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) ∂μ) + 2 * ε * μ s := by
   /- To bound `μ (f '' s)`, we cover `s` by sets where `f` is well-approximated by linear maps
     `A n` (and where `f'` is almost everywhere close to `A n`), and then use that `f` expands the
     measure of such a set by at most `(A n).det + ε`. -/
@@ -815,16 +814,16 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv_aux1 (hs : MeasurableSet s)
     ∀ A : E →L[ℝ] E,
       ∃ δ : ℝ≥0,
         0 < δ ∧
-          (∀ B : E →L[ℝ] E, ∥B - A∥ ≤ δ → |B.det - A.det| ≤ ε) ∧
+          (∀ B : E →L[ℝ] E, ‖B - A‖ ≤ δ → |B.det - A.det| ≤ ε) ∧
             ∀ (t : Set E) (g : E → E) (hf : ApproximatesLinearOn g A t δ),
-              μ (g '' t) ≤ (Ennreal.ofReal |A.det| + ε) * μ t :=
+              μ (g '' t) ≤ (Ennreal.ofReal (|A.det|) + ε) * μ t :=
     by
     intro A
-    let m : ℝ≥0 := Real.toNnreal |A.det| + ε
-    have I : Ennreal.ofReal |A.det| < m := by
+    let m : ℝ≥0 := Real.toNnreal (|A.det|) + ε
+    have I : Ennreal.ofReal (|A.det|) < m := by
       simp only [Ennreal.ofReal, m, lt_add_iff_pos_right, εpos, Ennreal.coe_lt_coe]
     rcases((add_haar_image_le_mul_of_det_lt μ A I).And self_mem_nhds_within).exists with ⟨δ, h, δpos⟩
-    obtain ⟨δ', δ'pos, hδ'⟩ : ∃ (δ' : ℝ) (H : 0 < δ'), ∀ B, dist B A < δ' → dist B.det A.det < ↑ε :=
+    obtain ⟨δ', δ'pos, hδ'⟩ : ∃ (δ' : ℝ)(H : 0 < δ'), ∀ B, dist B A < δ' → dist B.det A.det < ↑ε :=
       continuous_at_iff.1 continuous_linear_map.continuous_det.continuous_at ε εpos
     let δ'' : ℝ≥0 := ⟨δ' / 2, (half_pos δ'pos).le⟩
     refine' ⟨min δ δ'', lt_min δpos (half_pos δ'pos), _, _⟩
@@ -833,7 +832,7 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv_aux1 (hs : MeasurableSet s)
       apply (hδ' B _).le
       rw [dist_eq_norm]
       calc
-        ∥B - A∥ ≤ (min δ δ'' : ℝ≥0) := hB
+        ‖B - A‖ ≤ (min δ δ'' : ℝ≥0) := hB
         _ ≤ δ'' := by simp only [le_refl, Nnreal.coe_min, min_le_iff, or_true_iff]
         _ < δ' := half_lt_self δ'pos
         
@@ -843,7 +842,7 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv_aux1 (hs : MeasurableSet s)
       
   choose δ hδ using this
   obtain ⟨t, A, t_disj, t_meas, t_cover, ht, -⟩ :
-    ∃ (t : ℕ → Set E) (A : ℕ → E →L[ℝ] E),
+    ∃ (t : ℕ → Set E)(A : ℕ → E →L[ℝ] E),
       Pairwise (Disjoint on t) ∧
         (∀ n : ℕ, MeasurableSet (t n)) ∧
           (s ⊆ ⋃ n : ℕ, t n) ∧
@@ -855,13 +854,13 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv_aux1 (hs : MeasurableSet s)
       rw [← image_Union, ← inter_Union]
       exact image_subset f (subset_inter subset.rfl t_cover)
     _ ≤ ∑' n, μ (f '' (s ∩ t n)) := measure_Union_le _
-    _ ≤ ∑' n, (Ennreal.ofReal |(A n).det| + ε) * μ (s ∩ t n) := by
+    _ ≤ ∑' n, (Ennreal.ofReal (|(A n).det|) + ε) * μ (s ∩ t n) := by
       apply Ennreal.tsum_le_tsum fun n => _
       apply (hδ (A n)).2.2
       exact ht n
-    _ = ∑' n, ∫⁻ x in s ∩ t n, Ennreal.ofReal |(A n).det| + ε ∂μ := by
+    _ = ∑' n, ∫⁻ x in s ∩ t n, Ennreal.ofReal (|(A n).det|) + ε ∂μ := by
       simp only [lintegral_const, MeasurableSet.univ, measure.restrict_apply, univ_inter]
-    _ ≤ ∑' n, ∫⁻ x in s ∩ t n, Ennreal.ofReal |(f' x).det| + 2 * ε ∂μ := by
+    _ ≤ ∑' n, ∫⁻ x in s ∩ t n, Ennreal.ofReal (|(f' x).det|) + 2 * ε ∂μ := by
       apply Ennreal.tsum_le_tsum fun n => _
       apply lintegral_mono_ae
       filter_upwards [(ht n).norm_fderiv_sub_le μ (hs.inter (t_meas n)) f' fun x hx =>
@@ -876,33 +875,33 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv_aux1 (hs : MeasurableSet s)
           _ ≤ |(f' x).det| + ε := add_le_add le_rfl ((hδ (A n)).2.1 _ hx)
           
       calc
-        Ennreal.ofReal |(A n).det| + ε ≤ Ennreal.ofReal (|(f' x).det| + ε) + ε :=
+        Ennreal.ofReal (|(A n).det|) + ε ≤ Ennreal.ofReal (|(f' x).det| + ε) + ε :=
           add_le_add (Ennreal.of_real_le_of_real I) le_rfl
-        _ = Ennreal.ofReal |(f' x).det| + 2 * ε := by
+        _ = Ennreal.ofReal (|(f' x).det|) + 2 * ε := by
           simp only [Ennreal.of_real_add, abs_nonneg, two_mul, add_assoc, Nnreal.zero_le_coe,
             Ennreal.of_real_coe_nnreal]
         
-    _ = ∫⁻ x in ⋃ n, s ∩ t n, Ennreal.ofReal |(f' x).det| + 2 * ε ∂μ := by
+    _ = ∫⁻ x in ⋃ n, s ∩ t n, Ennreal.ofReal (|(f' x).det|) + 2 * ε ∂μ := by
       have M : ∀ n : ℕ, MeasurableSet (s ∩ t n) := fun n => hs.inter (t_meas n)
       rw [lintegral_Union M]
       exact PairwiseDisjoint.mono t_disj fun n => inter_subset_right _ _
-    _ = ∫⁻ x in s, Ennreal.ofReal |(f' x).det| + 2 * ε ∂μ := by
+    _ = ∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) + 2 * ε ∂μ := by
       have : s = ⋃ n, s ∩ t n := by
         rw [← inter_Union]
         exact subset.antisymm (subset_inter subset.rfl t_cover) (inter_subset_left _ _)
       rw [← this]
-    _ = (∫⁻ x in s, Ennreal.ofReal |(f' x).det| ∂μ) + 2 * ε * μ s := by
+    _ = (∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) ∂μ) + 2 * ε * μ s := by
       simp only [lintegral_add_right' _ aeMeasurableConst, set_lintegral_const]
     
 #align
   measure_theory.add_haar_image_le_lintegral_abs_det_fderiv_aux1 MeasureTheory.add_haar_image_le_lintegral_abs_det_fderiv_aux1
 
 theorem add_haar_image_le_lintegral_abs_det_fderiv_aux2 (hs : MeasurableSet s) (h's : μ s ≠ ∞)
-    (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) : μ (f '' s) ≤ ∫⁻ x in s, Ennreal.ofReal |(f' x).det| ∂μ := by
+    (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) : μ (f '' s) ≤ ∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) ∂μ := by
   -- We just need to let the error tend to `0` in the previous lemma.
   have :
-    tendsto (fun ε : ℝ≥0 => (∫⁻ x in s, Ennreal.ofReal |(f' x).det| ∂μ) + 2 * ε * μ s) (𝓝[>] 0)
-      (𝓝 ((∫⁻ x in s, Ennreal.ofReal |(f' x).det| ∂μ) + 2 * (0 : ℝ≥0) * μ s)) :=
+    tendsto (fun ε : ℝ≥0 => (∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) ∂μ) + 2 * ε * μ s) (𝓝[>] 0)
+      (𝓝 ((∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) ∂μ) + 2 * (0 : ℝ≥0) * μ s)) :=
     by
     apply tendsto.mono_left _ nhds_within_le_nhds
     refine' tendsto_const_nhds.add _
@@ -917,7 +916,7 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv_aux2 (hs : MeasurableSet s) (
   measure_theory.add_haar_image_le_lintegral_abs_det_fderiv_aux2 MeasureTheory.add_haar_image_le_lintegral_abs_det_fderiv_aux2
 
 theorem add_haar_image_le_lintegral_abs_det_fderiv (hs : MeasurableSet s)
-    (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) : μ (f '' s) ≤ ∫⁻ x in s, Ennreal.ofReal |(f' x).det| ∂μ := by
+    (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) : μ (f '' s) ≤ ∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) ∂μ := by
   /- We already know the result for finite-measure sets. We cover `s` by finite-measure sets using
     `spanning_sets μ`, and apply the previous result to each of these parts. -/
   let u n := disjointed (spanning_sets μ) n
@@ -930,14 +929,14 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv (hs : MeasurableSet s)
     μ (f '' s) ≤ ∑' n, μ (f '' (s ∩ u n)) := by
       conv_lhs => rw [A, image_Union]
       exact measure_Union_le _
-    _ ≤ ∑' n, ∫⁻ x in s ∩ u n, Ennreal.ofReal |(f' x).det| ∂μ := by
+    _ ≤ ∑' n, ∫⁻ x in s ∩ u n, Ennreal.ofReal (|(f' x).det|) ∂μ := by
       apply Ennreal.tsum_le_tsum fun n => _
       apply
         add_haar_image_le_lintegral_abs_det_fderiv_aux2 μ (hs.inter (u_meas n)) _ fun x hx =>
           (hf' x hx.1).mono (inter_subset_left _ _)
       have : μ (u n) < ∞ := lt_of_le_of_lt (measure_mono (disjointed_subset _ _)) (measure_spanning_sets_lt_top μ n)
       exact ne_of_lt (lt_of_le_of_lt (measure_mono (inter_subset_right _ _)) this)
-    _ = ∫⁻ x in s, Ennreal.ofReal |(f' x).det| ∂μ := by
+    _ = ∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) ∂μ := by
       conv_rhs => rw [A]
       rw [lintegral_Union]
       · intro n
@@ -951,7 +950,7 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv (hs : MeasurableSet s)
 
 theorem lintegral_abs_det_fderiv_le_add_haar_image_aux1 (hs : MeasurableSet s)
     (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) (hf : InjOn f s) {ε : ℝ≥0} (εpos : 0 < ε) :
-    (∫⁻ x in s, Ennreal.ofReal |(f' x).det| ∂μ) ≤ μ (f '' s) + 2 * ε * μ s := by
+    (∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) ∂μ) ≤ μ (f '' s) + 2 * ε * μ s := by
   /- To bound `∫⁻ x in s, ennreal.of_real (|(f' x).det|) ∂μ`, we cover `s` by sets where `f` is
     well-approximated by linear maps `A n` (and where `f'` is almost everywhere close to `A n`),
     and then use that `f` expands the measure of such a set by at least `(A n).det - ε`. -/
@@ -959,15 +958,15 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image_aux1 (hs : MeasurableSet s)
     ∀ A : E →L[ℝ] E,
       ∃ δ : ℝ≥0,
         0 < δ ∧
-          (∀ B : E →L[ℝ] E, ∥B - A∥ ≤ δ → |B.det - A.det| ≤ ε) ∧
+          (∀ B : E →L[ℝ] E, ‖B - A‖ ≤ δ → |B.det - A.det| ≤ ε) ∧
             ∀ (t : Set E) (g : E → E) (hf : ApproximatesLinearOn g A t δ),
-              Ennreal.ofReal |A.det| * μ t ≤ μ (g '' t) + ε * μ t :=
+              Ennreal.ofReal (|A.det|) * μ t ≤ μ (g '' t) + ε * μ t :=
     by
     intro A
-    obtain ⟨δ', δ'pos, hδ'⟩ : ∃ (δ' : ℝ) (H : 0 < δ'), ∀ B, dist B A < δ' → dist B.det A.det < ↑ε :=
+    obtain ⟨δ', δ'pos, hδ'⟩ : ∃ (δ' : ℝ)(H : 0 < δ'), ∀ B, dist B A < δ' → dist B.det A.det < ↑ε :=
       continuous_at_iff.1 continuous_linear_map.continuous_det.continuous_at ε εpos
     let δ'' : ℝ≥0 := ⟨δ' / 2, (half_pos δ'pos).le⟩
-    have I'' : ∀ B : E →L[ℝ] E, ∥B - A∥ ≤ ↑δ'' → |B.det - A.det| ≤ ↑ε := by
+    have I'' : ∀ B : E →L[ℝ] E, ‖B - A‖ ≤ ↑δ'' → |B.det - A.det| ≤ ↑ε := by
       intro B hB
       rw [← Real.dist_eq]
       apply (hδ' B _).le
@@ -977,8 +976,8 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image_aux1 (hs : MeasurableSet s)
     · refine' ⟨δ'', half_pos δ'pos, I'', _⟩
       simp only [hA, forall_const, zero_mul, Ennreal.of_real_zero, imp_true_iff, zero_le, abs_zero]
       
-    let m : ℝ≥0 := Real.toNnreal |A.det| - ε
-    have I : (m : ℝ≥0∞) < Ennreal.ofReal |A.det| := by
+    let m : ℝ≥0 := Real.toNnreal (|A.det|) - ε
+    have I : (m : ℝ≥0∞) < Ennreal.ofReal (|A.det|) := by
       simp only [Ennreal.ofReal, WithTop.coe_sub]
       apply Ennreal.sub_lt_self Ennreal.coe_ne_top
       · simpa only [abs_nonpos_iff, Real.to_nnreal_eq_zero, Ennreal.coe_eq_zero, Ne.def] using hA
@@ -1001,7 +1000,7 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image_aux1 (hs : MeasurableSet s)
       
   choose δ hδ using this
   obtain ⟨t, A, t_disj, t_meas, t_cover, ht, -⟩ :
-    ∃ (t : ℕ → Set E) (A : ℕ → E →L[ℝ] E),
+    ∃ (t : ℕ → Set E)(A : ℕ → E →L[ℝ] E),
       Pairwise (Disjoint on t) ∧
         (∀ n : ℕ, MeasurableSet (t n)) ∧
           (s ⊆ ⋃ n : ℕ, t n) ∧
@@ -1011,14 +1010,14 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image_aux1 (hs : MeasurableSet s)
     rw [← inter_Union]
     exact subset.antisymm (subset_inter subset.rfl t_cover) (inter_subset_left _ _)
   calc
-    (∫⁻ x in s, Ennreal.ofReal |(f' x).det| ∂μ) = ∑' n, ∫⁻ x in s ∩ t n, Ennreal.ofReal |(f' x).det| ∂μ := by
+    (∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) ∂μ) = ∑' n, ∫⁻ x in s ∩ t n, Ennreal.ofReal (|(f' x).det|) ∂μ := by
       conv_lhs => rw [s_eq]
       rw [lintegral_Union]
       · exact fun n => hs.inter (t_meas n)
         
       · exact PairwiseDisjoint.mono t_disj fun n => inter_subset_right _ _
         
-    _ ≤ ∑' n, ∫⁻ x in s ∩ t n, Ennreal.ofReal |(A n).det| + ε ∂μ := by
+    _ ≤ ∑' n, ∫⁻ x in s ∩ t n, Ennreal.ofReal (|(A n).det|) + ε ∂μ := by
       apply Ennreal.tsum_le_tsum fun n => _
       apply lintegral_mono_ae
       filter_upwards [(ht n).norm_fderiv_sub_le μ (hs.inter (t_meas n)) f' fun x hx =>
@@ -1033,11 +1032,11 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image_aux1 (hs : MeasurableSet s)
           _ ≤ |(A n).det| + ε := add_le_add le_rfl ((hδ (A n)).2.1 _ hx)
           
       calc
-        Ennreal.ofReal |(f' x).det| ≤ Ennreal.ofReal (|(A n).det| + ε) := Ennreal.of_real_le_of_real I
-        _ = Ennreal.ofReal |(A n).det| + ε := by
+        Ennreal.ofReal (|(f' x).det|) ≤ Ennreal.ofReal (|(A n).det| + ε) := Ennreal.of_real_le_of_real I
+        _ = Ennreal.ofReal (|(A n).det|) + ε := by
           simp only [Ennreal.of_real_add, abs_nonneg, Nnreal.zero_le_coe, Ennreal.of_real_coe_nnreal]
         
-    _ = ∑' n, Ennreal.ofReal |(A n).det| * μ (s ∩ t n) + ε * μ (s ∩ t n) := by
+    _ = ∑' n, Ennreal.ofReal (|(A n).det|) * μ (s ∩ t n) + ε * μ (s ∩ t n) := by
       simp only [set_lintegral_const, lintegral_add_right _ measurableConst]
     _ ≤ ∑' n, μ (f '' (s ∩ t n)) + ε * μ (s ∩ t n) + ε * μ (s ∩ t n) := by
       refine' Ennreal.tsum_le_tsum fun n => add_le_add_right _ _
@@ -1071,7 +1070,7 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image_aux1 (hs : MeasurableSet s)
 
 theorem lintegral_abs_det_fderiv_le_add_haar_image_aux2 (hs : MeasurableSet s) (h's : μ s ≠ ∞)
     (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) (hf : InjOn f s) :
-    (∫⁻ x in s, Ennreal.ofReal |(f' x).det| ∂μ) ≤ μ (f '' s) := by
+    (∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) ∂μ) ≤ μ (f '' s) := by
   -- We just need to let the error tend to `0` in the previous lemma.
   have : tendsto (fun ε : ℝ≥0 => μ (f '' s) + 2 * ε * μ s) (𝓝[>] 0) (𝓝 (μ (f '' s) + 2 * (0 : ℝ≥0) * μ s)) := by
     apply tendsto.mono_left _ nhds_within_le_nhds
@@ -1088,7 +1087,7 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image_aux2 (hs : MeasurableSet s) (
 
 theorem lintegral_abs_det_fderiv_le_add_haar_image (hs : MeasurableSet s)
     (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) (hf : InjOn f s) :
-    (∫⁻ x in s, Ennreal.ofReal |(f' x).det| ∂μ) ≤ μ (f '' s) := by
+    (∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) ∂μ) ≤ μ (f '' s) := by
   /- We already know the result for finite-measure sets. We cover `s` by finite-measure sets using
     `spanning_sets μ`, and apply the previous result to each of these parts. -/
   let u n := disjointed (spanning_sets μ) n
@@ -1098,7 +1097,7 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image (hs : MeasurableSet s)
     exact measurable_spanning_sets μ i
   have A : s = ⋃ n, s ∩ u n := by rw [← inter_Union, Union_disjointed, Union_spanning_sets, inter_univ]
   calc
-    (∫⁻ x in s, Ennreal.ofReal |(f' x).det| ∂μ) = ∑' n, ∫⁻ x in s ∩ u n, Ennreal.ofReal |(f' x).det| ∂μ := by
+    (∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) ∂μ) = ∑' n, ∫⁻ x in s ∩ u n, Ennreal.ofReal (|(f' x).det|) ∂μ := by
       conv_lhs => rw [A]
       rw [lintegral_Union]
       · intro n
@@ -1135,7 +1134,7 @@ integral of `|(f' x).det|` on `s`.
 Note that the measurability of `f '' s` is given by `measurable_image_of_fderiv_within`. -/
 theorem lintegral_abs_det_fderiv_eq_add_haar_image (hs : MeasurableSet s)
     (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) (hf : InjOn f s) :
-    (∫⁻ x in s, Ennreal.ofReal |(f' x).det| ∂μ) = μ (f '' s) :=
+    (∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) ∂μ) = μ (f '' s) :=
   le_antisymm (lintegral_abs_det_fderiv_le_add_haar_image μ hs hf' hf)
     (add_haar_image_le_lintegral_abs_det_fderiv μ hs hf')
 #align
@@ -1150,7 +1149,7 @@ function `s.restrict f`, see `restrict_map_with_density_abs_det_fderiv_eq_add_ha
 -/
 theorem map_with_density_abs_det_fderiv_eq_add_haar (hs : MeasurableSet s)
     (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) (hf : InjOn f s) (h'f : Measurable f) :
-    Measure.map f ((μ.restrict s).withDensity fun x => Ennreal.ofReal |(f' x).det|) = μ.restrict (f '' s) := by
+    Measure.map f ((μ.restrict s).withDensity fun x => Ennreal.ofReal (|(f' x).det|)) = μ.restrict (f '' s) := by
   apply measure.ext fun t ht => _
   rw [map_apply h'f ht, with_density_apply _ (h'f ht), measure.restrict_apply ht, restrict_restrict (h'f ht),
     lintegral_abs_det_fderiv_eq_add_haar_image μ ((h'f ht).inter hs)
@@ -1168,7 +1167,8 @@ see `map_with_density_abs_det_fderiv_eq_add_haar`.
 -/
 theorem restrict_map_with_density_abs_det_fderiv_eq_add_haar (hs : MeasurableSet s)
     (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) (hf : InjOn f s) :
-    Measure.map (s.restrict f) (comap coe (μ.withDensity fun x => Ennreal.ofReal |(f' x).det|)) = μ.restrict (f '' s) :=
+    Measure.map (s.restrict f) (comap coe (μ.withDensity fun x => Ennreal.ofReal (|(f' x).det|))) =
+      μ.restrict (f '' s) :=
   by
   obtain ⟨u, u_meas, uf⟩ : ∃ u, Measurable u ∧ eq_on u f s := by classical
     refine' ⟨piecewise s f 0, _, piecewise_eq_on _ _ _⟩
@@ -1177,7 +1177,7 @@ theorem restrict_map_with_density_abs_det_fderiv_eq_add_haar (hs : MeasurableSet
     exact this.continuous_on
   have u' : ∀ x ∈ s, HasFderivWithinAt u (f' x) s x := fun x hx => (hf' x hx).congr (fun y hy => uf hy) (uf hx)
   set F : s → E := u ∘ coe with hF
-  have A : measure.map F (comap coe (μ.with_density fun x => Ennreal.ofReal |(f' x).det|)) = μ.restrict (u '' s) := by
+  have A : measure.map F (comap coe (μ.with_density fun x => Ennreal.ofReal (|(f' x).det|))) = μ.restrict (u '' s) := by
     rw [hF, ← measure.map_map u_meas measurableSubtypeCoe, map_comap_subtype_coe hs, restrict_with_density hs]
     exact map_with_density_abs_det_fderiv_eq_add_haar μ hs u' (hf.congr uf.symm) u_meas
   rw [uf.image_eq] at A
@@ -1197,7 +1197,7 @@ injective and differentiable on a measurable set `s`, then the Lebesgue integral
 Note that the measurability of `f '' s` is given by `measurable_image_of_fderiv_within`. -/
 theorem lintegral_image_eq_lintegral_abs_det_fderiv_mul (hs : MeasurableSet s)
     (hf' : ∀ x ∈ s, HasFderivWithinAt f (f' x) s x) (hf : InjOn f s) (g : E → ℝ≥0∞) :
-    (∫⁻ x in f '' s, g x ∂μ) = ∫⁻ x in s, Ennreal.ofReal |(f' x).det| * g (f x) ∂μ := by
+    (∫⁻ x in f '' s, g x ∂μ) = ∫⁻ x in s, Ennreal.ofReal (|(f' x).det|) * g (f x) ∂μ := by
   rw [← restrict_map_with_density_abs_det_fderiv_eq_add_haar μ hs hf' hf,
     (measurable_embedding_of_fderiv_within hs hf' hf).lintegral_map]
   have : ∀ x : s, g (s.restrict f x) = (g ∘ f) x := fun x => rfl

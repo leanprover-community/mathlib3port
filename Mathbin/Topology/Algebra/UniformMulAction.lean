@@ -3,7 +3,6 @@ Copyright (c) 2022 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Algebra.Hom.GroupInstances
 import Mathbin.Topology.Algebra.UniformGroup
 import Mathbin.Topology.UniformSpace.Completion
 
@@ -101,7 +100,7 @@ is. -/
 @[to_additive "If an additive action is central, then its right action is uniform\ncontinuous when its left action,is."]
 instance (priority := 100) HasUniformContinuousConstSmul.op [HasSmul Mᵐᵒᵖ X] [IsCentralScalar M X]
     [HasUniformContinuousConstSmul M X] : HasUniformContinuousConstSmul Mᵐᵒᵖ X :=
-  ⟨MulOpposite.rec $ fun c => by
+  ⟨MulOpposite.rec fun c => by
       change UniformContinuous fun m => MulOpposite.op c • m
       simp_rw [op_smul_eq_smul]
       exact uniform_continuous_const_smul c⟩
@@ -110,7 +109,7 @@ instance (priority := 100) HasUniformContinuousConstSmul.op [HasSmul Mᵐᵒᵖ 
 @[to_additive]
 instance MulOpposite.has_uniform_continuous_const_smul [HasUniformContinuousConstSmul M X] :
     HasUniformContinuousConstSmul M Xᵐᵒᵖ :=
-  ⟨fun c => MulOpposite.uniform_continuous_op.comp $ MulOpposite.uniform_continuous_unop.const_smul c⟩
+  ⟨fun c => MulOpposite.uniform_continuous_op.comp <| MulOpposite.uniform_continuous_unop.const_smul c⟩
 #align mul_opposite.has_uniform_continuous_const_smul MulOpposite.has_uniform_continuous_const_smul
 
 end HasSmul
@@ -163,7 +162,7 @@ instance [HasSmul N X] [SmulCommClass M N X] [HasUniformContinuousConstSmul M X]
 
 @[to_additive]
 instance [HasSmul Mᵐᵒᵖ X] [IsCentralScalar M X] : IsCentralScalar M (Completion X) :=
-  ⟨fun c a => (congr_arg fun f => Completion.map f a) $ funext (op_smul_eq_smul c)⟩
+  ⟨fun c a => (congr_arg fun f => Completion.map f a) <| funext (op_smul_eq_smul c)⟩
 
 variable {M X} [HasUniformContinuousConstSmul M X]
 
@@ -177,9 +176,9 @@ end HasSmul
 @[to_additive]
 instance [Monoid M] [MulAction M X] [HasUniformContinuousConstSmul M X] : MulAction M (Completion X) where
   smul := (· • ·)
-  one_smul := ext' (continuous_const_smul _) continuous_id $ fun a => by rw [← coe_smul, one_smul]
+  one_smul := (ext' (continuous_const_smul _) continuous_id) fun a => by rw [← coe_smul, one_smul]
   mul_smul x y :=
-    ext' (continuous_const_smul _) ((continuous_const_smul _).const_smul _) $ fun a => by
+    (ext' (continuous_const_smul _) ((continuous_const_smul _).const_smul _)) fun a => by
       simp only [← coe_smul, mul_smul]
 
 end Completion

@@ -23,7 +23,7 @@ namespace Ennreal
 variable {α : Type _} {f : Filter α}
 
 theorem eventually_le_limsup [CountableInterFilter f] (u : α → ℝ≥0∞) : ∀ᶠ y in f, u y ≤ f.limsup u := by
-  by_cases hx_top:f.limsup u = ⊤
+  by_cases hx_top : f.limsup u = ⊤
   · simp_rw [hx_top]
     exact eventually_of_forall fun a => le_top
     
@@ -54,7 +54,7 @@ theorem limsup_eq_zero_iff [CountableInterFilter f] {u : α → ℝ≥0∞} : f.
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:62:18: unsupported non-interactive tactic filter.is_bounded_default -/
 theorem limsup_const_mul_of_ne_top {u : α → ℝ≥0∞} {a : ℝ≥0∞} (ha_top : a ≠ ⊤) :
     (f.limsup fun x : α => a * u x) = a * f.limsup u := by
-  by_cases ha_zero:a = 0
+  by_cases ha_zero : a = 0
   · simp_rw [ha_zero, zero_mul, ← Ennreal.bot_eq_zero]
     exact limsup_const_bot
     
@@ -75,11 +75,11 @@ theorem limsup_const_mul_of_ne_top {u : α → ℝ≥0∞} {a : ℝ≥0∞} (ha_
 
 theorem limsup_const_mul [CountableInterFilter f] {u : α → ℝ≥0∞} {a : ℝ≥0∞} :
     (f.limsup fun x : α => a * u x) = a * f.limsup u := by
-  by_cases ha_top:a ≠ ⊤
+  by_cases ha_top : a ≠ ⊤
   · exact limsup_const_mul_of_ne_top ha_top
     
   push_neg  at ha_top
-  by_cases hu:u =ᶠ[f] 0
+  by_cases hu : u =ᶠ[f] 0
   · have hau : (fun x => a * u x) =ᶠ[f] 0 := by
       refine' hu.mono fun x hx => _
       rw [Pi.zero_apply] at hx

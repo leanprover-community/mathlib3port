@@ -399,12 +399,11 @@ theorem attach_affine_combination_of_injective [DecidableEq P] (s : Finset P) (w
         (Term.explicitBinder "(" [`w] [":" (Term.arrow `P "→" `k)] [] ")")]
        (Term.typeSpec
         ":"
-        (Init.Core.«term_=_»
+        («term_=_»
          (Term.app
           (Term.proj (Term.proj `s "." `attach) "." `affineCombination)
-          [(Term.typeAscription "(" `coe ":" [(Term.arrow `s "→" `P)] ")")
-           (Function.Init.Function.«term_∘_» `w " ∘ " `coe)])
-         " = "
+          [(Term.typeAscription "(" `coe ":" [(Term.arrow `s "→" `P)] ")") («term_∘_» `w "∘" `coe)])
+         "="
          (Term.app (Term.proj `s "." `affineCombination) [`id `w]))))
       (Command.declValSimple
        ":="
@@ -604,7 +603,7 @@ theorem affine_combination_of_eq_one_of_eq_zero (w : ι → k) (p : ι → P) {i
   convert zero_vadd V (p i)
   convert sum_eq_zero _
   intro i2 hi2
-  by_cases h:i2 = i
+  by_cases h : i2 = i
   · simp [h]
     
   · simp [hw0 i2 hi2 h]
@@ -695,8 +694,8 @@ corresponding indexed family whose index type is the subtype
 corresponding to that subset. -/
 theorem eq_weighted_vsub_of_point_subset_iff_eq_weighted_vsub_of_point_subtype {v : V} {x : k} {s : Set ι} {p : ι → P}
     {b : P} :
-    (∃ (fs : Finset ι) (hfs : ↑fs ⊆ s) (w : ι → k) (hw : (∑ i in fs, w i) = x), v = fs.weightedVsubOfPoint p b w) ↔
-      ∃ (fs : Finset s) (w : s → k) (hw : (∑ i in fs, w i) = x), v = fs.weightedVsubOfPoint (fun i : s => p i) b w :=
+    (∃ (fs : Finset ι)(hfs : ↑fs ⊆ s)(w : ι → k)(hw : (∑ i in fs, w i) = x), v = fs.weightedVsubOfPoint p b w) ↔
+      ∃ (fs : Finset s)(w : s → k)(hw : (∑ i in fs, w i) = x), v = fs.weightedVsubOfPoint (fun i : s => p i) b w :=
   by classical
   simp_rw [weighted_vsub_of_point_apply]
   constructor
@@ -721,8 +720,8 @@ only if it can be expressed as `weighted_vsub` with sum of weights 0
 for the corresponding indexed family whose index type is the subtype
 corresponding to that subset. -/
 theorem eq_weighted_vsub_subset_iff_eq_weighted_vsub_subtype {v : V} {s : Set ι} {p : ι → P} :
-    (∃ (fs : Finset ι) (hfs : ↑fs ⊆ s) (w : ι → k) (hw : (∑ i in fs, w i) = 0), v = fs.weightedVsub p w) ↔
-      ∃ (fs : Finset s) (w : s → k) (hw : (∑ i in fs, w i) = 0), v = fs.weightedVsub (fun i : s => p i) w :=
+    (∃ (fs : Finset ι)(hfs : ↑fs ⊆ s)(w : ι → k)(hw : (∑ i in fs, w i) = 0), v = fs.weightedVsub p w) ↔
+      ∃ (fs : Finset s)(w : s → k)(hw : (∑ i in fs, w i) = 0), v = fs.weightedVsub (fun i : s => p i) w :=
   eq_weighted_vsub_of_point_subset_iff_eq_weighted_vsub_of_point_subtype
 #align
   finset.eq_weighted_vsub_subset_iff_eq_weighted_vsub_subtype Finset.eq_weighted_vsub_subset_iff_eq_weighted_vsub_subtype
@@ -737,8 +736,8 @@ with sum of weights 1 if and only if it can be expressed an
 indexed family whose index type is the subtype corresponding to that
 subset. -/
 theorem eq_affine_combination_subset_iff_eq_affine_combination_subtype {p0 : P} {s : Set ι} {p : ι → P} :
-    (∃ (fs : Finset ι) (hfs : ↑fs ⊆ s) (w : ι → k) (hw : (∑ i in fs, w i) = 1), p0 = fs.affineCombination p w) ↔
-      ∃ (fs : Finset s) (w : s → k) (hw : (∑ i in fs, w i) = 1), p0 = fs.affineCombination (fun i : s => p i) w :=
+    (∃ (fs : Finset ι)(hfs : ↑fs ⊆ s)(w : ι → k)(hw : (∑ i in fs, w i) = 1), p0 = fs.affineCombination p w) ↔
+      ∃ (fs : Finset s)(w : s → k)(hw : (∑ i in fs, w i) = 1), p0 = fs.affineCombination (fun i : s => p i) w :=
   by
   simp_rw [affine_combination_apply, eq_vadd_iff_vsub_eq]
   exact eq_weighted_vsub_of_point_subset_iff_eq_weighted_vsub_of_point_subtype
@@ -843,7 +842,7 @@ theorem centroid_singleton (p : ι → P) (i : ι) : ({i} : Finset ι).centroid 
 to a point. -/
 theorem centroid_pair [DecidableEq ι] [Invertible (2 : k)] (p : ι → P) (i₁ i₂ : ι) :
     ({i₁, i₂} : Finset ι).centroid k p = (2⁻¹ : k) • (p i₂ -ᵥ p i₁) +ᵥ p i₁ := by
-  by_cases h:i₁ = i₂
+  by_cases h : i₁ = i₂
   · simp [h]
     
   · have hc : (card ({i₁, i₂} : Finset ι) : k) ≠ 0 := by
@@ -989,14 +988,11 @@ theorem centroid_eq_centroid_image_of_inj_on {p : ι → P} (hi : ∀ (i j) (_ :
           (Term.forall
            "∀"
            [(Term.explicitBinder "(" [`i `j] [] [] ")")
-            (Term.explicitBinder "(" [(Term.hole "_")] [":" (Init.Core.«term_∈_» `i " ∈ " `s)] [] ")")
-            (Term.explicitBinder "(" [(Term.hole "_")] [":" (Init.Core.«term_∈_» `j " ∈ " `s)] [] ")")]
+            (Term.explicitBinder "(" [(Term.hole "_")] [":" («term_∈_» `i "∈" `s)] [] ")")
+            (Term.explicitBinder "(" [(Term.hole "_")] [":" («term_∈_» `j "∈" `s)] [] ")")]
            []
            ","
-           (Term.arrow
-            (Init.Core.«term_=_» (Term.app `p [`i]) " = " (Term.app `p [`j]))
-            "→"
-            (Init.Core.«term_=_» `i " = " `j)))]
+           (Term.arrow («term_=_» (Term.app `p [`i]) "=" (Term.app `p [`j])) "→" («term_=_» `i "=" `j)))]
          []
          ")")
         (Term.implicitBinder "{" [`p₂] [":" (Term.arrow `ι₂ "→" `P)] "}")
@@ -1007,31 +1003,28 @@ theorem centroid_eq_centroid_image_of_inj_on {p : ι → P} (hi : ∀ (i j) (_ :
           (Term.forall
            "∀"
            [(Term.explicitBinder "(" [`i `j] [] [] ")")
-            (Term.explicitBinder "(" [(Term.hole "_")] [":" (Init.Core.«term_∈_» `i " ∈ " `s₂)] [] ")")
-            (Term.explicitBinder "(" [(Term.hole "_")] [":" (Init.Core.«term_∈_» `j " ∈ " `s₂)] [] ")")]
+            (Term.explicitBinder "(" [(Term.hole "_")] [":" («term_∈_» `i "∈" `s₂)] [] ")")
+            (Term.explicitBinder "(" [(Term.hole "_")] [":" («term_∈_» `j "∈" `s₂)] [] ")")]
            []
            ","
-           (Term.arrow
-            (Init.Core.«term_=_» (Term.app `p₂ [`i]) " = " (Term.app `p₂ [`j]))
-            "→"
-            (Init.Core.«term_=_» `i " = " `j)))]
+           (Term.arrow («term_=_» (Term.app `p₂ [`i]) "=" (Term.app `p₂ [`j])) "→" («term_=_» `i "=" `j)))]
          []
          ")")
         (Term.explicitBinder
          "("
          [`he]
          [":"
-          (Init.Core.«term_=_»
-           (Set.Data.Set.Basic.term_''_ `p " '' " (Init.Coe.«term↑_» "↑" `s))
-           " = "
-           (Set.Data.Set.Basic.term_''_ `p₂ " '' " (Init.Coe.«term↑_» "↑" `s₂)))]
+          («term_=_»
+           (Set.Data.Set.Basic.term_''_ `p " '' " (coeNotation "↑" `s))
+           "="
+           (Set.Data.Set.Basic.term_''_ `p₂ " '' " (coeNotation "↑" `s₂)))]
          []
          ")")]
        (Term.typeSpec
         ":"
-        (Init.Core.«term_=_»
+        («term_=_»
          (Term.app (Term.proj `s "." `centroid) [`k `p])
-         " = "
+         "="
          (Term.app (Term.proj `s₂ "." `centroid) [`k `p₂]))))
       (Command.declValSimple
        ":="
@@ -1234,8 +1227,8 @@ variable (k) {V}
 /-- A vector is in the `vector_span` of an indexed family if and only
 if it is a `weighted_vsub` with sum of weights 0. -/
 theorem mem_vector_span_iff_eq_weighted_vsub {v : V} {p : ι → P} :
-    v ∈ vectorSpan k (Set.range p) ↔ ∃ (s : Finset ι) (w : ι → k) (h : (∑ i in s, w i) = 0), v = s.weightedVsub p w :=
-  by classical
+    v ∈ vectorSpan k (Set.range p) ↔ ∃ (s : Finset ι)(w : ι → k)(h : (∑ i in s, w i) = 0), v = s.weightedVsub p w := by
+  classical
   constructor
   · rcases isEmpty_or_nonempty ι with (hι | ⟨⟨i0⟩⟩)
     swap
@@ -1256,7 +1249,7 @@ theorem mem_vector_span_iff_eq_weighted_vsub {v : V} {p : ι → P} :
         Finset.weighted_vsub_of_point_apply, ← hv, Finsupp.total_apply, Finset.sum_insert_zero hz]
       change (∑ i in l.support, l i • _) = _
       congr with i
-      by_cases h:i = i0
+      by_cases h : i = i0
       · simp [h]
         
       · simp [hwdef, h]
@@ -1280,7 +1273,7 @@ variable {k}
 `affine_combination` with sum of weights 1. See also
 `eq_affine_combination_of_mem_affine_span_of_fintype`. -/
 theorem eq_affine_combination_of_mem_affine_span {p1 : P} {p : ι → P} (h : p1 ∈ affineSpan k (Set.range p)) :
-    ∃ (s : Finset ι) (w : ι → k) (hw : (∑ i in s, w i) = 1), p1 = s.affineCombination p w := by classical
+    ∃ (s : Finset ι)(w : ι → k)(hw : (∑ i in s, w i) = 1), p1 = s.affineCombination p w := by classical
   have hn : (affineSpan k (Set.range p) : Set P).Nonempty := ⟨p1, h⟩
   rw [affine_span_nonempty, Set.range_nonempty_iff_nonempty] at hn
   cases' hn with i0
@@ -1310,7 +1303,7 @@ theorem eq_affine_combination_of_mem_affine_span {p1 : P} {p : ι → P} (h : p1
 
 theorem eq_affine_combination_of_mem_affine_span_of_fintype [Fintype ι] {p1 : P} {p : ι → P}
     (h : p1 ∈ affineSpan k (Set.range p)) :
-    ∃ (w : ι → k) (hw : (∑ i, w i) = 1), p1 = Finset.univ.affineCombination p w := by classical
+    ∃ (w : ι → k)(hw : (∑ i, w i) = 1), p1 = Finset.univ.affineCombination p w := by classical
   obtain ⟨s, w, hw, rfl⟩ := eq_affine_combination_of_mem_affine_span h
   refine' ⟨(s : Set ι).indicator w, _, Finset.affine_combination_indicator_subset w p s.subset_univ⟩
   simp only [Finset.mem_coe, Set.indicator_apply, ← hw]
@@ -1324,7 +1317,7 @@ if it is an `affine_combination` with sum of weights 1, provided the
 underlying ring is nontrivial. -/
 theorem mem_affine_span_iff_eq_affine_combination [Nontrivial k] {p1 : P} {p : ι → P} :
     p1 ∈ affineSpan k (Set.range p) ↔
-      ∃ (s : Finset ι) (w : ι → k) (hw : (∑ i in s, w i) = 1), p1 = s.affineCombination p w :=
+      ∃ (s : Finset ι)(w : ι → k)(hw : (∑ i in s, w i) = 1), p1 = s.affineCombination p w :=
   by
   constructor
   · exact eq_affine_combination_of_mem_affine_span
@@ -1338,7 +1331,7 @@ theorem mem_affine_span_iff_eq_affine_combination [Nontrivial k] {p1 : P} {p : �
 affine span of this family corresponds to an identity in terms of `weighted_vsub_of_point`, with
 weights that are not required to sum to 1. -/
 theorem mem_affine_span_iff_eq_weighted_vsub_of_point_vadd [Nontrivial k] (p : ι → P) (j : ι) (q : P) :
-    q ∈ affineSpan k (Set.range p) ↔ ∃ (s : Finset ι) (w : ι → k), q = s.weightedVsubOfPoint p (p j) w +ᵥ p j := by
+    q ∈ affineSpan k (Set.range p) ↔ ∃ (s : Finset ι)(w : ι → k), q = s.weightedVsubOfPoint p (p j) w +ᵥ p j := by
   constructor
   · intro hq
     obtain ⟨s, w, hw, rfl⟩ := eq_affine_combination_of_mem_affine_span hq
@@ -1348,7 +1341,7 @@ theorem mem_affine_span_iff_eq_weighted_vsub_of_point_vadd [Nontrivial k] (p : �
     classical
     let w' : ι → k := Function.update w j (1 - (s \ {j}).Sum w)
     have h₁ : (insert j s).Sum w' = 1 := by
-      by_cases hj:j ∈ s
+      by_cases hj : j ∈ s
       · simp [Finset.sum_update_of_mem hj, Finset.insert_eq_of_mem hj]
         
       · simp [w', Finset.sum_insert hj, Finset.sum_update_of_not_mem hj, hj]
@@ -1368,7 +1361,7 @@ variable {k V}
 all other members of the set along the line joining them to this base point, the affine span is
 unchanged. -/
 theorem affine_span_eq_affine_span_line_map_units [Nontrivial k] {s : Set P} {p : P} (hp : p ∈ s) (w : s → Units k) :
-    affineSpan k (Set.range fun q : s => AffineMap.lineMap p (↑q) (w q : k)) = affineSpan k s := by
+    affineSpan k (Set.range fun q : s => AffineMap.lineMap p ↑q (w q : k)) = affineSpan k s := by
   have : s = Set.range (coe : s → P) := by simp
   conv_rhs => rw [this]
   apply le_antisymm <;>

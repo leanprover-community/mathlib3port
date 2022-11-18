@@ -131,7 +131,7 @@ theorem LinearMap.lift_dim_le_of_injective (f : M →ₗ[R] M') (i : Injective f
   apply csupr_mono' (Cardinal.bdd_above_range.{v', v} _)
   rintro ⟨s, li⟩
   refine' ⟨⟨f '' s, _⟩, cardinal.lift_mk_le'.mpr ⟨(Equiv.Set.image f s i).toEmbedding⟩⟩
-  exact (li.map' _ $ linear_map.ker_eq_bot.mpr i).image
+  exact (li.map' _ <| linear_map.ker_eq_bot.mpr i).image
 #align linear_map.lift_dim_le_of_injective LinearMap.lift_dim_le_of_injective
 
 theorem LinearMap.dim_le_of_injective (f : M →ₗ[R] M₁) (i : Injective f) : Module.rank R M ≤ Module.rank R M₁ :=
@@ -176,7 +176,7 @@ theorem dim_map_le (f : M →ₗ[R] M₁) (p : Submodule R M) : Module.rank R (p
 #align dim_map_le dim_map_le
 
 theorem dim_le_of_submodule (s t : Submodule R M) (h : s ≤ t) : Module.rank R s ≤ Module.rank R t :=
-  (ofLe h).dim_le_of_injective $ fun ⟨x, hx⟩ ⟨y, hy⟩ eq => Subtype.eq $ show x = y from Subtype.ext_iff_val.1 Eq
+  (ofLe h).dim_le_of_injective fun ⟨x, hx⟩ ⟨y, hy⟩ eq => Subtype.eq <| show x = y from Subtype.ext_iff_val.1 Eq
 #align dim_le_of_submodule dim_le_of_submodule
 
 /-- Two linearly equivalent vector spaces have the same dimension, a version with different
@@ -539,7 +539,7 @@ def Basis.indexEquiv (v : Basis ι R M) (v' : Basis ι' R M) : ι ≃ ι' :=
 #align basis.index_equiv Basis.indexEquiv
 
 theorem mk_eq_mk_of_basis' {ι' : Type w} (v : Basis ι R M) (v' : Basis ι' R M) : (#ι) = (#ι') :=
-  Cardinal.lift_inj.1 $ mk_eq_mk_of_basis v v'
+  Cardinal.lift_inj.1 <| mk_eq_mk_of_basis v v'
 #align mk_eq_mk_of_basis' mk_eq_mk_of_basis'
 
 end InvariantBasisNumber
@@ -893,7 +893,7 @@ variable {K V}
 /-- If a vector space has a finite dimension, the index set of `basis.of_vector_space` is finite. -/
 theorem Basis.finite_of_vector_space_index_of_dim_lt_aleph_0 (h : Module.rank K V < ℵ₀) :
     (Basis.ofVectorSpaceIndex K V).Finite :=
-  finite_def.2 $ (Basis.ofVectorSpace K V).nonempty_fintype_index_of_dim_lt_aleph_0 h
+  finite_def.2 <| (Basis.ofVectorSpace K V).nonempty_fintype_index_of_dim_lt_aleph_0 h
 #align basis.finite_of_vector_space_index_of_dim_lt_aleph_0 Basis.finite_of_vector_space_index_of_dim_lt_aleph_0
 
 variable [AddCommGroup V'] [Module K V']
@@ -909,7 +909,7 @@ theorem nonempty_linear_equiv_of_lift_dim_eq
 
 /-- Two vector spaces are isomorphic if they have the same dimension. -/
 theorem nonempty_linear_equiv_of_dim_eq (cond : Module.rank K V = Module.rank K V₁) : Nonempty (V ≃ₗ[K] V₁) :=
-  nonempty_linear_equiv_of_lift_dim_eq $ congr_arg _ cond
+  nonempty_linear_equiv_of_lift_dim_eq <| congr_arg _ cond
 #align nonempty_linear_equiv_of_dim_eq nonempty_linear_equiv_of_dim_eq
 
 section
@@ -974,7 +974,7 @@ open LinearMap
 theorem dim_pi [Finite η] : Module.rank K (∀ i, φ i) = Cardinal.sum fun i => Module.rank K (φ i) := by
   cases nonempty_fintype η
   let b i := Basis.ofVectorSpace K (φ i)
-  let this : Basis (Σ j, _) K (∀ j, φ j) := Pi.basis b
+  let this : Basis (Σj, _) K (∀ j, φ j) := Pi.basis b
   rw [← Cardinal.lift_inj, ← this.mk_eq_dim]
   simp [← (b _).mk_range_eq_dim]
 #align dim_pi dim_pi
@@ -1017,12 +1017,12 @@ variable [AddCommGroup V'] [Module K V']
        [(Term.explicitBinder "(" [`p] [":" (Term.app `Submodule [`K `V])] [] ")")]
        (Term.typeSpec
         ":"
-        (Init.Core.«term_=_»
-         (Init.Core.«term_+_»
+        («term_=_»
+         («term_+_»
           (Term.app `Module.rank [`K (Algebra.Quotient.«term_⧸_» `V " ⧸ " `p)])
-          " + "
+          "+"
           (Term.app `Module.rank [`K `p]))
-         " = "
+         "="
          (Term.app `Module.rank [`K `V]))))
       (Command.declValSimple
        ":="
@@ -1209,7 +1209,7 @@ theorem dim_sup_add_dim_inf_eq (s t : Submodule K V) :
     Module.rank K (s ⊔ t : Submodule K V) + Module.rank K (s ⊓ t : Submodule K V) = Module.rank K s + Module.rank K t :=
   dim_add_dim_split (ofLe le_sup_left) (ofLe le_sup_right) (ofLe inf_le_left) (ofLe inf_le_right)
     (by
-      rw [← map_le_map_iff' (ker_subtype $ s ⊔ t), map_sup, map_top, ← LinearMap.range_comp, ← LinearMap.range_comp,
+      rw [← map_le_map_iff' (ker_subtype <| s ⊔ t), map_sup, map_top, ← LinearMap.range_comp, ← LinearMap.range_comp,
         subtype_comp_of_le, subtype_comp_of_le, range_subtype, range_subtype, range_subtype]
       exact le_rfl)
     (ker_of_le _ _ _)
@@ -1231,7 +1231,7 @@ theorem dim_add_le_dim_add_dim (s t : Submodule K V) :
 end
 
 theorem exists_mem_ne_zero_of_dim_pos {s : Submodule K V} (h : 0 < Module.rank K s) : ∃ b : V, b ∈ s ∧ b ≠ 0 :=
-  exists_mem_ne_zero_of_ne_bot $ fun eq => by rw [Eq, dim_bot] at h <;> exact lt_irrefl _ h
+  exists_mem_ne_zero_of_ne_bot fun eq => by rw [Eq, dim_bot] at h <;> exact lt_irrefl _ h
 #align exists_mem_ne_zero_of_dim_pos exists_mem_ne_zero_of_dim_pos
 
 end Field
@@ -1289,8 +1289,8 @@ theorem rank_add_le (f g : V →ₗ[K] V') : rank (f + g) ≤ rank f + rank g :=
     rank (f + g) ≤ Module.rank K (f.range ⊔ g.range : Submodule K V') := by
       refine' dim_le_of_submodule _ _ _
       exact
-        LinearMap.range_le_iff_comap.2 $
-          eq_top_iff'.2 $ fun x =>
+        LinearMap.range_le_iff_comap.2 <|
+          eq_top_iff'.2 fun x =>
             show f x + g x ∈ (f.range ⊔ g.range : Submodule K V') from mem_sup.2 ⟨_, ⟨x, rfl⟩, _, ⟨x, rfl⟩, rfl⟩
     _ ≤ rank f + rank g := dim_add_le_dim_add_dim _ _
     
@@ -1414,7 +1414,7 @@ theorem dim_submodule_le_one_iff' (s : Submodule K V) : Module.rank K s ≤ 1 �
     exact ⟨v₀, h⟩
     
   · rintro ⟨v₀, h⟩
-    by_cases hw:∃ w : V, w ∈ s ∧ w ≠ 0
+    by_cases hw : ∃ w : V, w ∈ s ∧ w ≠ 0
     · rcases hw with ⟨w, hw, hw0⟩
       use w, hw
       rcases mem_span_singleton.1 (h hw) with ⟨r', rfl⟩

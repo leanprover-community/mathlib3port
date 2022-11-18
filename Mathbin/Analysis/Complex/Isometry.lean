@@ -41,8 +41,8 @@ def rotation : circle →* ℂ ≃ₗᵢ[ℝ] ℂ where
   toFun a :=
     { DistribMulAction.toLinearEquiv ℝ ℂ a with
       norm_map' := fun x => show |a * x| = |x| by rw [map_mul, abs_coe_circle, one_mul] }
-  map_one' := LinearIsometryEquiv.ext $ one_smul _
-  map_mul' _ _ := LinearIsometryEquiv.ext $ mul_smul _ _
+  map_one' := LinearIsometryEquiv.ext <| one_smul _
+  map_mul' _ _ := LinearIsometryEquiv.ext <| mul_smul _ _
 #align rotation rotation
 
 @[simp]
@@ -52,7 +52,7 @@ theorem rotation_apply (a : circle) (z : ℂ) : rotation a z = a * z :=
 
 @[simp]
 theorem rotation_symm (a : circle) : (rotation a).symm = rotation a⁻¹ :=
-  LinearIsometryEquiv.ext $ fun x => rfl
+  LinearIsometryEquiv.ext fun x => rfl
 #align rotation_symm rotation_symm
 
 @[simp]
@@ -79,7 +79,7 @@ def rotationOf (e : ℂ ≃ₗᵢ[ℝ] ℂ) : circle :=
 
 @[simp]
 theorem rotation_of_rotation (a : circle) : rotationOf (rotation a) = a :=
-  Subtype.ext $ by simp
+  Subtype.ext <| by simp
 #align rotation_of_rotation rotation_of_rotation
 
 theorem rotation_injective : Function.Injective rotation :=
@@ -88,8 +88,7 @@ theorem rotation_injective : Function.Injective rotation :=
 
 theorem LinearIsometry.re_apply_eq_re_of_add_conj_eq (f : ℂ →ₗᵢ[ℝ] ℂ) (h₃ : ∀ z, z + conj z = f z + conj (f z))
     (z : ℂ) : (f z).re = z.re := by
-  simpa [ext_iff, add_re, add_im, conj_re, conj_im, ← two_mul, show (2 : ℝ) ≠ 0 by simp [two_ne_zero']] using
-    (h₃ z).symm
+  simpa [ext_iff, add_re, add_im, conj_re, conj_im, ← two_mul, show (2 : ℝ) ≠ 0 by simp [two_ne_zero]] using (h₃ z).symm
 #align linear_isometry.re_apply_eq_re_of_add_conj_eq LinearIsometry.re_apply_eq_re_of_add_conj_eq
 
 theorem LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_re {f : ℂ →ₗᵢ[ℝ] ℂ} (h₂ : ∀ z, (f z).re = z.re) (z : ℂ) :
@@ -101,7 +100,7 @@ theorem LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_re {f : ℂ →ₗ�
 #align linear_isometry.im_apply_eq_im_or_neg_of_re_apply_eq_re LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_re
 
 theorem LinearIsometry.im_apply_eq_im {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1) (z : ℂ) : z + conj z = f z + conj (f z) := by
-  have : ∥f z - 1∥ = ∥z - 1∥ := by rw [← f.norm_map (z - 1), f.map_sub, h]
+  have : ‖f z - 1‖ = ‖z - 1‖ := by rw [← f.norm_map (z - 1), f.map_sub, h]
   apply_fun fun x => x ^ 2  at this
   simp only [norm_eq_abs, ← norm_sq_eq_abs] at this
   rw [← of_real_inj, ← mul_conj, ← mul_conj] at this

@@ -29,13 +29,13 @@ include 𝕜
 namespace ContinuousLinearMap
 
 /-- A (possibly nonlinear) right inverse to a continuous linear map, which doesn't have to be
-linear itself but which satisfies a bound `∥inverse x∥ ≤ C * ∥x∥`. A surjective continuous linear
+linear itself but which satisfies a bound `‖inverse x‖ ≤ C * ‖x‖`. A surjective continuous linear
 map doesn't always have a continuous linear right inverse, but it always has a nonlinear inverse
 in this sense, by Banach's open mapping theorem. -/
 structure NonlinearRightInverse where
   toFun : F → E
   nnnorm : ℝ≥0
-  bound' : ∀ y, ∥to_fun y∥ ≤ nnnorm * ∥y∥
+  bound' : ∀ y, ‖to_fun y‖ ≤ nnnorm * ‖y‖
   right_inv' : ∀ y, f (to_fun y) = y
 #align continuous_linear_map.nonlinear_right_inverse ContinuousLinearMap.NonlinearRightInverse
 
@@ -48,7 +48,7 @@ theorem NonlinearRightInverse.right_inv {f : E →L[𝕜] F} (fsymm : NonlinearR
 #align continuous_linear_map.nonlinear_right_inverse.right_inv ContinuousLinearMap.NonlinearRightInverse.right_inv
 
 theorem NonlinearRightInverse.bound {f : E →L[𝕜] F} (fsymm : NonlinearRightInverse f) (y : F) :
-    ∥fsymm y∥ ≤ fsymm.nnnorm * ∥y∥ :=
+    ‖fsymm y‖ ≤ fsymm.nnnorm * ‖y‖ :=
   fsymm.bound' y
 #align continuous_linear_map.nonlinear_right_inverse.bound ContinuousLinearMap.NonlinearRightInverse.bound
 
@@ -59,7 +59,7 @@ end ContinuousLinearMap
 noncomputable def ContinuousLinearEquiv.toNonlinearRightInverse (f : E ≃L[𝕜] F) :
     ContinuousLinearMap.NonlinearRightInverse (f : E →L[𝕜] F) where
   toFun := f.invFun
-  nnnorm := ∥(f.symm : F →L[𝕜] E)∥₊
+  nnnorm := ‖(f.symm : F →L[𝕜] E)‖₊
   bound' y := ContinuousLinearMap.le_op_norm (f.symm : F →L[𝕜] E) _
   right_inv' := f.apply_symm_apply
 #align continuous_linear_equiv.to_nonlinear_right_inverse ContinuousLinearEquiv.toNonlinearRightInverse
@@ -77,33 +77,33 @@ namespace ContinuousLinearMap
 /-- First step of the proof of the Banach open mapping theorem (using completeness of `F`):
 by Baire's theorem, there exists a ball in `E` whose image closure has nonempty interior.
 Rescaling everything, it follows that any `y ∈ F` is arbitrarily well approached by
-images of elements of norm at most `C * ∥y∥`.
+images of elements of norm at most `C * ‖y‖`.
 For further use, we will only need such an element whose image
-is within distance `∥y∥/2` of `y`, to apply an iterative process. -/
+is within distance `‖y‖/2` of `y`, to apply an iterative process. -/
 theorem exists_approx_preimage_norm_le (surj : Surjective f) :
-    ∃ C ≥ 0, ∀ y, ∃ x, dist (f x) y ≤ 1 / 2 * ∥y∥ ∧ ∥x∥ ≤ C * ∥y∥ := by
+    ∃ C ≥ 0, ∀ y, ∃ x, dist (f x) y ≤ 1 / 2 * ‖y‖ ∧ ‖x‖ ≤ C * ‖y‖ := by
   have A : (⋃ n : ℕ, closure (f '' ball 0 n)) = univ := by
     refine' subset.antisymm (subset_univ _) fun y hy => _
     rcases surj y with ⟨x, hx⟩
-    rcases exists_nat_gt ∥x∥ with ⟨n, hn⟩
+    rcases exists_nat_gt ‖x‖ with ⟨n, hn⟩
     refine' mem_Union.2 ⟨n, subset_closure _⟩
     refine' (mem_image _ _ _).2 ⟨x, ⟨_, hx⟩⟩
     rwa [mem_ball, dist_eq_norm, sub_zero]
-  have : ∃ (n : ℕ) (x), x ∈ interior (closure (f '' ball 0 n)) :=
+  have : ∃ (n : ℕ)(x : _), x ∈ interior (closure (f '' ball 0 n)) :=
     nonempty_interior_of_Union_of_closed (fun n => isClosedClosure) A
   simp only [mem_interior_iff_mem_nhds, Metric.mem_nhds_iff] at this
   rcases this with ⟨n, a, ε, ⟨εpos, H⟩⟩
   rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
-  refine' ⟨(ε / 2)⁻¹ * ∥c∥ * 2 * n, _, fun y => _⟩
+  refine' ⟨(ε / 2)⁻¹ * ‖c‖ * 2 * n, _, fun y => _⟩
   · refine' mul_nonneg (mul_nonneg (mul_nonneg _ (norm_nonneg _)) (by norm_num)) _
     exacts[inv_nonneg.2 (div_nonneg (le_of_lt εpos) (by norm_num)), n.cast_nonneg]
     
-  · by_cases hy:y = 0
+  · by_cases hy : y = 0
     · use 0
       simp [hy]
       
     · rcases rescale_to_shell hc (half_pos εpos) hy with ⟨d, hd, ydlt, leyd, dinv⟩
-      let δ := ∥d∥ * ∥y∥ / 4
+      let δ := ‖d‖ * ‖y‖ / 4
       have δpos : 0 < δ := div_pos (mul_pos (norm_pos_iff.2 hd) (norm_pos_iff.2 hy)) (by norm_num)
       have : a + d • y ∈ ball a ε := by simp [dist_eq_norm, lt_of_le_of_lt ydlt.le (half_lt_self εpos)]
       rcases Metric.mem_closure_iff.1 (H this) _ δpos with ⟨z₁, z₁im, h₁⟩
@@ -118,13 +118,13 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
       rw [← xz₂] at h₂
       rw [mem_ball, dist_eq_norm, sub_zero] at hx₂
       let x := x₁ - x₂
-      have I : ∥f x - d • y∥ ≤ 2 * δ :=
+      have I : ‖f x - d • y‖ ≤ 2 * δ :=
         calc
-          ∥f x - d • y∥ = ∥f x₁ - (a + d • y) - (f x₂ - a)∥ := by
+          ‖f x - d • y‖ = ‖f x₁ - (a + d • y) - (f x₂ - a)‖ := by
             congr 1
             simp only [x, f.map_sub]
             abel
-          _ ≤ ∥f x₁ - (a + d • y)∥ + ∥f x₂ - a∥ := norm_sub_le _ _
+          _ ≤ ‖f x₁ - (a + d • y)‖ + ‖f x₂ - a‖ := norm_sub_le _ _
           _ ≤ δ + δ := by
             apply add_le_add
             · rw [← dist_eq_norm, dist_comm]
@@ -135,35 +135,35 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
               
           _ = 2 * δ := (two_mul _).symm
           
-      have J : ∥f (d⁻¹ • x) - y∥ ≤ 1 / 2 * ∥y∥ :=
+      have J : ‖f (d⁻¹ • x) - y‖ ≤ 1 / 2 * ‖y‖ :=
         calc
-          ∥f (d⁻¹ • x) - y∥ = ∥d⁻¹ • f x - (d⁻¹ * d) • y∥ := by rwa [f.map_smul _, inv_mul_cancel, one_smul]
-          _ = ∥d⁻¹ • (f x - d • y)∥ := by rw [mul_smul, smul_sub]
-          _ = ∥d∥⁻¹ * ∥f x - d • y∥ := by rw [norm_smul, norm_inv]
-          _ ≤ ∥d∥⁻¹ * (2 * δ) := by
+          ‖f (d⁻¹ • x) - y‖ = ‖d⁻¹ • f x - (d⁻¹ * d) • y‖ := by rwa [f.map_smul _, inv_mul_cancel, one_smul]
+          _ = ‖d⁻¹ • (f x - d • y)‖ := by rw [mul_smul, smul_sub]
+          _ = ‖d‖⁻¹ * ‖f x - d • y‖ := by rw [norm_smul, norm_inv]
+          _ ≤ ‖d‖⁻¹ * (2 * δ) := by
             apply mul_le_mul_of_nonneg_left I
             rw [inv_nonneg]
             exact norm_nonneg _
-          _ = ∥d∥⁻¹ * ∥d∥ * ∥y∥ / 2 := by
+          _ = ‖d‖⁻¹ * ‖d‖ * ‖y‖ / 2 := by
             simp only [δ]
             ring
-          _ = ∥y∥ / 2 := by
+          _ = ‖y‖ / 2 := by
             rw [inv_mul_cancel, one_mul]
             simp [norm_eq_zero, hd]
-          _ = 1 / 2 * ∥y∥ := by ring
+          _ = 1 / 2 * ‖y‖ := by ring
           
       rw [← dist_eq_norm] at J
-      have K : ∥d⁻¹ • x∥ ≤ (ε / 2)⁻¹ * ∥c∥ * 2 * ↑n * ∥y∥ :=
+      have K : ‖d⁻¹ • x‖ ≤ (ε / 2)⁻¹ * ‖c‖ * 2 * ↑n * ‖y‖ :=
         calc
-          ∥d⁻¹ • x∥ = ∥d∥⁻¹ * ∥x₁ - x₂∥ := by rw [norm_smul, norm_inv]
-          _ ≤ (ε / 2)⁻¹ * ∥c∥ * ∥y∥ * (n + n) := by
+          ‖d⁻¹ • x‖ = ‖d‖⁻¹ * ‖x₁ - x₂‖ := by rw [norm_smul, norm_inv]
+          _ ≤ (ε / 2)⁻¹ * ‖c‖ * ‖y‖ * (n + n) := by
             refine' mul_le_mul dinv _ (norm_nonneg _) _
             · exact le_trans (norm_sub_le _ _) (add_le_add (le_of_lt hx₁) (le_of_lt hx₂))
               
             · apply mul_nonneg (mul_nonneg _ (norm_nonneg _)) (norm_nonneg _)
               exact inv_nonneg.2 (le_of_lt (half_pos εpos))
               
-          _ = (ε / 2)⁻¹ * ∥c∥ * 2 * ↑n * ∥y∥ := by ring
+          _ = (ε / 2)⁻¹ * ‖c‖ * 2 * ↑n * ‖y‖ := by ring
           
       exact ⟨d⁻¹ • x, J, K⟩
       
@@ -174,7 +174,7 @@ variable [CompleteSpace E]
 
 /-- The Banach open mapping theorem: if a bounded linear map between Banach spaces is onto, then
 any point has a preimage with controlled norm. -/
-theorem exists_preimage_norm_le (surj : Surjective f) : ∃ C > 0, ∀ y, ∃ x, f x = y ∧ ∥x∥ ≤ C * ∥y∥ := by
+theorem exists_preimage_norm_le (surj : Surjective f) : ∃ C > 0, ∀ y, ∃ x, f x = y ∧ ‖x‖ ≤ C * ‖y‖ := by
   obtain ⟨C, C0, hC⟩ := exists_approx_preimage_norm_le f surj
   /- Second step of the proof: starting from `y`, we want an exact preimage of `y`. Let `g y` be
     the approximate preimage of `y` given by the first step, and `h y = y - f(g y)` the part that
@@ -184,12 +184,12 @@ theorem exists_preimage_norm_le (surj : Surjective f) : ∃ C > 0, ∀ y, ∃ x,
     preimage of `y`. This uses completeness of `E`. -/
   choose g hg using hC
   let h y := y - f (g y)
-  have hle : ∀ y, ∥h y∥ ≤ 1 / 2 * ∥y∥ := by
+  have hle : ∀ y, ‖h y‖ ≤ 1 / 2 * ‖y‖ := by
     intro y
     rw [← dist_eq_norm, dist_comm]
     exact (hg y).1
   refine' ⟨2 * C + 1, by linarith, fun y => _⟩
-  have hnle : ∀ n : ℕ, ∥(h^[n]) y∥ ≤ (1 / 2) ^ n * ∥y∥ := by
+  have hnle : ∀ n : ℕ, ‖(h^[n]) y‖ ≤ (1 / 2) ^ n * ‖y‖ := by
     intro n
     induction' n with n IH
     · simp only [one_div, Nat.zero_eq, one_mul, iterate_zero_apply, pow_zero]
@@ -201,26 +201,26 @@ theorem exists_preimage_norm_le (surj : Surjective f) : ∃ C > 0, ∀ y, ∃ x,
       norm_num
       
   let u n := g ((h^[n]) y)
-  have ule : ∀ n, ∥u n∥ ≤ (1 / 2) ^ n * (C * ∥y∥) := by
+  have ule : ∀ n, ‖u n‖ ≤ (1 / 2) ^ n * (C * ‖y‖) := by
     intro n
     apply le_trans (hg _).2 _
     calc
-      C * ∥(h^[n]) y∥ ≤ C * ((1 / 2) ^ n * ∥y∥) := mul_le_mul_of_nonneg_left (hnle n) C0
-      _ = (1 / 2) ^ n * (C * ∥y∥) := by ring
+      C * ‖(h^[n]) y‖ ≤ C * ((1 / 2) ^ n * ‖y‖) := mul_le_mul_of_nonneg_left (hnle n) C0
+      _ = (1 / 2) ^ n * (C * ‖y‖) := by ring
       
-  have sNu : Summable fun n => ∥u n∥ := by
+  have sNu : Summable fun n => ‖u n‖ := by
     refine' summable_of_nonneg_of_le (fun n => norm_nonneg _) ule _
     exact Summable.mul_right _ (summable_geometric_of_lt_1 (by norm_num) (by norm_num))
   have su : Summable u := summable_of_summable_norm sNu
   let x := tsum u
-  have x_ineq : ∥x∥ ≤ (2 * C + 1) * ∥y∥ :=
+  have x_ineq : ‖x‖ ≤ (2 * C + 1) * ‖y‖ :=
     calc
-      ∥x∥ ≤ ∑' n, ∥u n∥ := norm_tsum_le_tsum_norm sNu
-      _ ≤ ∑' n, (1 / 2) ^ n * (C * ∥y∥) := tsum_le_tsum ule sNu (Summable.mul_right _ summable_geometric_two)
-      _ = (∑' n, (1 / 2) ^ n) * (C * ∥y∥) := tsum_mul_right
-      _ = 2 * C * ∥y∥ := by rw [tsum_geometric_two, mul_assoc]
-      _ ≤ 2 * C * ∥y∥ + ∥y∥ := le_add_of_nonneg_right (norm_nonneg y)
-      _ = (2 * C + 1) * ∥y∥ := by ring
+      ‖x‖ ≤ ∑' n, ‖u n‖ := norm_tsum_le_tsum_norm sNu
+      _ ≤ ∑' n, (1 / 2) ^ n * (C * ‖y‖) := tsum_le_tsum ule sNu (Summable.mul_right _ summable_geometric_two)
+      _ = (∑' n, (1 / 2) ^ n) * (C * ‖y‖) := tsum_mul_right
+      _ = 2 * C * ‖y‖ := by rw [tsum_geometric_two, mul_assoc]
+      _ ≤ 2 * C * ‖y‖ + ‖y‖ := le_add_of_nonneg_right (norm_nonneg y)
+      _ = (2 * C + 1) * ‖y‖ := by ring
       
   have fsumeq : ∀ n : ℕ, f (∑ i in Finset.range n, u i) = y - (h^[n]) y := by
     intro n
@@ -237,7 +237,7 @@ theorem exists_preimage_norm_le (surj : Surjective f) : ∃ C > 0, ∀ y, ∃ x,
     rw [tendsto_iff_norm_tendsto_zero]
     simp only [sub_zero]
     refine' squeeze_zero (fun _ => norm_nonneg _) hnle _
-    rw [← zero_mul ∥y∥]
+    rw [← zero_mul ‖y‖]
     refine' (tendsto_pow_at_top_nhds_0_of_lt_1 _ _).mul tendsto_const_nhds <;> norm_num
   have feq : f x = y - 0 := tendsto_nhds_unique L₁ L₂
   rw [sub_zero] at feq
@@ -258,10 +258,10 @@ protected theorem is_open_map (surj : Surjective f) : IsOpenMap f := by
   rw [← this]
   have : x + w ∈ ball x ε :=
     calc
-      dist (x + w) x = ∥w∥ := by
+      dist (x + w) x = ‖w‖ := by
         rw [dist_eq_norm]
         simp
-      _ ≤ C * ∥z - y∥ := wnorm
+      _ ≤ C * ‖z - y‖ := wnorm
       _ < C * (ε / C) := by
         apply mul_lt_mul_of_pos_left _ Cpos
         rwa [mem_ball, dist_eq_norm] at hz
@@ -276,7 +276,7 @@ protected theorem quotient_map (surj : Surjective f) : QuotientMap f :=
 
 theorem _root_.affine_map.is_open_map {P Q : Type _} [MetricSpace P] [NormedAddTorsor E P] [MetricSpace Q]
     [NormedAddTorsor F Q] (f : P →ᵃ[𝕜] Q) (hf : Continuous f) (surj : Surjective f) : IsOpenMap f :=
-  AffineMap.is_open_map_linear_iff.mp $
+  AffineMap.is_open_map_linear_iff.mp <|
     ContinuousLinearMap.is_open_map { f.linear with cont := AffineMap.continuous_linear_iff.mpr hf }
       (f.surjective_iff_linear_surjective.mpr surj)
 #align continuous_linear_map._root_.affine_map.is_open_map continuous_linear_map._root_.affine_map.is_open_map
@@ -450,7 +450,7 @@ variable [CompleteSpace E] (g : E →ₗ[𝕜] F)
 
 /-- The **closed graph theorem** : a linear map between two Banach spaces whose graph is closed
 is continuous. -/
-theorem LinearMap.continuous_of_is_closed_graph (hg : IsClosed (g.graph : Set $ E × F)) : Continuous g := by
+theorem LinearMap.continuous_of_is_closed_graph (hg : IsClosed (g.graph : Set <| E × F)) : Continuous g := by
   letI : CompleteSpace g.graph := complete_space_coe_iff_is_complete.mpr hg.is_complete
   let φ₀ : E →ₗ[𝕜] E × F := linear_map.id.prod g
   have : Function.LeftInverse Prod.fst φ₀ := fun x => rfl
@@ -479,18 +479,18 @@ variable {g}
 namespace ContinuousLinearMap
 
 /-- Upgrade a `linear_map` to a `continuous_linear_map` using the **closed graph theorem**. -/
-def ofIsClosedGraph (hg : IsClosed (g.graph : Set $ E × F)) : E →L[𝕜] F where
+def ofIsClosedGraph (hg : IsClosed (g.graph : Set <| E × F)) : E →L[𝕜] F where
   toLinearMap := g
   cont := g.continuous_of_is_closed_graph hg
 #align continuous_linear_map.of_is_closed_graph ContinuousLinearMap.ofIsClosedGraph
 
 @[simp]
-theorem coe_fn_of_is_closed_graph (hg : IsClosed (g.graph : Set $ E × F)) :
+theorem coe_fn_of_is_closed_graph (hg : IsClosed (g.graph : Set <| E × F)) :
     ⇑(ContinuousLinearMap.ofIsClosedGraph hg) = g :=
   rfl
 #align continuous_linear_map.coe_fn_of_is_closed_graph ContinuousLinearMap.coe_fn_of_is_closed_graph
 
-theorem coe_of_is_closed_graph (hg : IsClosed (g.graph : Set $ E × F)) :
+theorem coe_of_is_closed_graph (hg : IsClosed (g.graph : Set <| E × F)) :
     ↑(ContinuousLinearMap.ofIsClosedGraph hg) = g := by
   ext
   rfl

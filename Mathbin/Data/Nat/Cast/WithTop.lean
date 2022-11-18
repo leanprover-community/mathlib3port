@@ -3,8 +3,8 @@ Copyright (c) 2014 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Nat.Cast.Basic
 import Mathbin.Algebra.Order.Monoid.WithTop
+import Mathbin.Data.Nat.Basic
 
 /-!
 # Lemma about the coercion `ℕ → with_bot ℕ`.

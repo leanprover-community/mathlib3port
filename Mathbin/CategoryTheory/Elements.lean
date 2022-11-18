@@ -43,7 +43,7 @@ is a pair `(X : C, x : F.obj X)`.
 -/
 @[nolint has_nonempty_instance]
 def Functor.Elements (F : C ⥤ Type w) :=
-  Σ c : C, F.obj c
+  Σc : C, F.obj c
 #align category_theory.functor.elements CategoryTheory.Functor.Elements
 
 /-- The category structure on `F.elements`, for `F : C ⥤ Type`.
@@ -269,7 +269,7 @@ theorem to_from_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
 @[simps]
 def costructuredArrowYonedaEquivalence (F : Cᵒᵖ ⥤ Type v) : F.Elementsᵒᵖ ≌ CostructuredArrow yoneda F :=
   Equivalence.mk (toCostructuredArrow F) (fromCostructuredArrow F).rightOp
-    (NatIso.op (eqToIso (from_to_costructured_arrow_eq F))) (eq_to_iso $ to_from_costructured_arrow_eq F)
+    (NatIso.op (eqToIso (from_to_costructured_arrow_eq F))) (eq_to_iso <| to_from_costructured_arrow_eq F)
 #align
   category_theory.category_of_elements.costructured_arrow_yoneda_equivalence CategoryTheory.categoryOfElements.costructuredArrowYonedaEquivalence
 

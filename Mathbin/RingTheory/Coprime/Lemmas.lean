@@ -31,12 +31,12 @@ open Classical
 
 theorem Nat.is_coprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.Coprime m n :=
   ⟨fun ⟨a, b, H⟩ =>
-    Nat.eq_one_of_dvd_one $
-      Int.coe_nat_dvd.1 $ by
+    Nat.eq_one_of_dvd_one <|
+      Int.coe_nat_dvd.1 <| by
         rw [Int.ofNat_one, ← H]
         exact
-          dvd_add (dvd_mul_of_dvd_right (Int.coe_nat_dvd.2 $ Nat.gcd_dvd_left m n) _)
-            (dvd_mul_of_dvd_right (Int.coe_nat_dvd.2 $ Nat.gcd_dvd_right m n) _),
+          dvd_add (dvd_mul_of_dvd_right (Int.coe_nat_dvd.2 <| Nat.gcd_dvd_left m n) _)
+            (dvd_mul_of_dvd_right (Int.coe_nat_dvd.2 <| Nat.gcd_dvd_right m n) _),
     fun H =>
     ⟨Nat.gcdA m n, Nat.gcdB m n, by
       rw [mul_comm _ (m : ℤ), mul_comm _ (n : ℤ), ← Nat.gcd_eq_gcd_ab, show _ = _ from H, Int.ofNat_one]⟩⟩
@@ -45,7 +45,7 @@ theorem Nat.is_coprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.C
 alias Nat.is_coprime_iff_coprime ↔ IsCoprime.nat_coprime Nat.Coprime.is_coprime
 
 theorem IsCoprime.prod_left : (∀ i ∈ t, IsCoprime (s i) x) → IsCoprime (∏ i in t, s i) x :=
-  (Finset.induction_on t fun _ => is_coprime_one_left) $ fun b t hbt ih H => by
+  (Finset.induction_on t fun _ => is_coprime_one_left) fun b t hbt ih H => by
     rw [Finset.prod_insert hbt]
     rw [Finset.forall_mem_insert] at H
     exact H.1.mul_left (ih H.2)
@@ -56,7 +56,7 @@ theorem IsCoprime.prod_right : (∀ i ∈ t, IsCoprime x (s i)) → IsCoprime x 
 #align is_coprime.prod_right IsCoprime.prod_right
 
 theorem IsCoprime.prod_left_iff : IsCoprime (∏ i in t, s i) x ↔ ∀ i ∈ t, IsCoprime (s i) x :=
-  Finset.induction_on t (iff_of_true is_coprime_one_left $ fun _ => False.elim) $ fun b t hbt ih => by
+  (Finset.induction_on t ((iff_of_true is_coprime_one_left) fun _ => False.elim)) fun b t hbt ih => by
     rw [Finset.prod_insert hbt, IsCoprime.mul_left_iff, ih, Finset.forall_mem_insert]
 #align is_coprime.prod_left_iff IsCoprime.prod_left_iff
 
@@ -80,11 +80,11 @@ theorem Finset.prod_dvd_of_coprime :
       rw [Finset.prod_insert har]
       have aux1 : a ∈ (↑(insert a r) : Set I) := Finset.mem_insert_self a r
       refine'
-        (IsCoprime.prod_right $ fun i hir =>
-              Hs aux1 (Finset.mem_insert_of_mem hir) $ by
+        (IsCoprime.prod_right fun i hir =>
+              Hs aux1 (Finset.mem_insert_of_mem hir) <| by
                 rintro rfl
                 exact har hir).mul_dvd
-          (Hs1 a aux1) (ih (Hs.mono _) $ fun i hi => Hs1 i $ Finset.mem_insert_of_mem hi)
+          (Hs1 a aux1) ((ih (Hs.mono _)) fun i hi => Hs1 i <| Finset.mem_insert_of_mem hi)
       simp only [Finset.coe_insert, Set.subset_insert])
 #align finset.prod_dvd_of_coprime Finset.prod_dvd_of_coprime
 
@@ -120,7 +120,7 @@ theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) 
       rw [← hμ, sum_congr rfl]
       intro x hx
       convert @add_mul R _ _ _ _ _ _ using 2
-      · by_cases hx:x = h.some
+      · by_cases hx : x = h.some
         · rw [hx, Pi.single_eq_same, Pi.single_eq_same]
           
         · rw [Pi.single_eq_of_ne hx, Pi.single_eq_of_ne hx, zero_mul]
@@ -175,7 +175,7 @@ theorem pairwise_coprime_iff_coprime_prod [DecidableEq I] :
     
   · rintro ⟨i, hi⟩ ⟨j, hj⟩ h
     apply is_coprime.prod_right_iff.mp (hp i hi)
-    exact finset.mem_sdiff.mpr ⟨hj, fun f => h $ Subtype.ext (finset.mem_singleton.mp f).symm⟩
+    exact finset.mem_sdiff.mpr ⟨hj, fun f => h <| Subtype.ext (finset.mem_singleton.mp f).symm⟩
     
 #align pairwise_coprime_iff_coprime_prod pairwise_coprime_iff_coprime_prod
 
@@ -202,10 +202,10 @@ theorem IsCoprime.pow_left_iff (hm : 0 < m) : IsCoprime (x ^ m) y ↔ IsCoprime 
 #align is_coprime.pow_left_iff IsCoprime.pow_left_iff
 
 theorem IsCoprime.pow_right_iff (hm : 0 < m) : IsCoprime x (y ^ m) ↔ IsCoprime x y :=
-  is_coprime_comm.trans $ (IsCoprime.pow_left_iff hm).trans $ is_coprime_comm
+  is_coprime_comm.trans <| (IsCoprime.pow_left_iff hm).trans <| is_coprime_comm
 #align is_coprime.pow_right_iff IsCoprime.pow_right_iff
 
 theorem IsCoprime.pow_iff (hm : 0 < m) (hn : 0 < n) : IsCoprime (x ^ m) (y ^ n) ↔ IsCoprime x y :=
-  (IsCoprime.pow_left_iff hm).trans $ IsCoprime.pow_right_iff hn
+  (IsCoprime.pow_left_iff hm).trans <| IsCoprime.pow_right_iff hn
 #align is_coprime.pow_iff IsCoprime.pow_iff
 

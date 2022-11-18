@@ -49,7 +49,7 @@ theorem eq_on_zero_of_preconnected_of_eventually_eq_zero_aux [CompleteSpace F] {
   exact Emetric.mem_closure_iff.1 xu (r / 2) (Ennreal.half_pos hp.r_pos.ne')
   let q := p.change_origin (y - x)
   have has_series : HasFpowerSeriesOnBall f q y (r / 2) := by
-    have A : (∥y - x∥₊ : ℝ≥0∞) < r / 2 := by rwa [edist_comm, edist_eq_coe_nnnorm_sub] at hxy
+    have A : (‖y - x‖₊ : ℝ≥0∞) < r / 2 := by rwa [edist_comm, edist_eq_coe_nnnorm_sub] at hxy
     have := hp.change_origin (A.trans_le Ennreal.half_le_self)
     simp only [add_sub_cancel'_right] at this
     apply this.mono (Ennreal.half_pos hp.r_pos.ne')

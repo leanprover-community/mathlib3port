@@ -52,7 +52,7 @@ theorem is_primitive_root_exp (n : ℕ) (h0 : n ≠ 0) : IsPrimitiveRoot (exp (2
 #align complex.is_primitive_root_exp Complex.is_primitive_root_exp
 
 theorem is_primitive_root_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
-    IsPrimitiveRoot ζ n ↔ ∃ (i < (n : ℕ)) (hi : i.Coprime n), exp (2 * π * I * (i / n)) = ζ := by
+    IsPrimitiveRoot ζ n ↔ ∃ i < (n : ℕ), ∃ hi : i.Coprime n, exp (2 * π * I * (i / n)) = ζ := by
   have hn0 : (n : ℂ) ≠ 0 := by exact_mod_cast hn
   constructor
   swap
@@ -94,7 +94,7 @@ theorem card_roots_of_unity (n : ℕ+) : Fintype.card (rootsOfUnity n ℂ) = n :
 #align complex.card_roots_of_unity Complex.card_roots_of_unity
 
 theorem card_primitive_roots (k : ℕ) : (primitiveRoots k ℂ).card = φ k := by
-  by_cases h:k = 0
+  by_cases h : k = 0
   · simp [h]
     
   exact (is_primitive_root_exp k h).card_primitive_roots
@@ -102,12 +102,12 @@ theorem card_primitive_roots (k : ℕ) : (primitiveRoots k ℂ).card = φ k := b
 
 end Complex
 
-theorem IsPrimitiveRoot.norm'_eq_one {ζ : ℂ} {n : ℕ} (h : IsPrimitiveRoot ζ n) (hn : n ≠ 0) : ∥ζ∥ = 1 :=
+theorem IsPrimitiveRoot.norm'_eq_one {ζ : ℂ} {n : ℕ} (h : IsPrimitiveRoot ζ n) (hn : n ≠ 0) : ‖ζ‖ = 1 :=
   Complex.norm_eq_one_of_pow_eq_one h.pow_eq_one hn
 #align is_primitive_root.norm'_eq_one IsPrimitiveRoot.norm'_eq_one
 
-theorem IsPrimitiveRoot.nnnorm_eq_one {ζ : ℂ} {n : ℕ} (h : IsPrimitiveRoot ζ n) (hn : n ≠ 0) : ∥ζ∥₊ = 1 :=
-  Subtype.ext $ h.norm'_eq_one hn
+theorem IsPrimitiveRoot.nnnorm_eq_one {ζ : ℂ} {n : ℕ} (h : IsPrimitiveRoot ζ n) (hn : n ≠ 0) : ‖ζ‖₊ = 1 :=
+  Subtype.ext <| h.norm'_eq_one hn
 #align is_primitive_root.nnnorm_eq_one IsPrimitiveRoot.nnnorm_eq_one
 
 theorem IsPrimitiveRoot.arg_ext {n m : ℕ} {ζ μ : ℂ} (hζ : IsPrimitiveRoot ζ n) (hμ : IsPrimitiveRoot μ m) (hn : n ≠ 0)
@@ -161,12 +161,12 @@ theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn 
     field_simp [hn]
     refine' ⟨(neg_lt_neg Real.pi_pos).trans_le _, _⟩
     · rw [neg_zero]
-      exact mul_nonneg (mul_nonneg i.cast_nonneg $ by simp [real.pi_pos.le]) (by simp)
+      exact mul_nonneg (mul_nonneg i.cast_nonneg <| by simp [real.pi_pos.le]) (by simp)
       
     rw [← mul_rotate', mul_div_assoc]
     rw [← mul_one n] at h₂
     exact
-      mul_le_of_le_one_right real.pi_pos.le ((div_le_iff' $ by exact_mod_cast pos_of_gt h).mpr $ by exact_mod_cast h₂)
+      mul_le_of_le_one_right real.pi_pos.le ((div_le_iff' <| by exact_mod_cast pos_of_gt h).mpr <| by exact_mod_cast h₂)
     
   rw [← Complex.cos_sub_two_pi, ← Complex.sin_sub_two_pi]
   convert Complex.arg_cos_add_sin_mul_I _
@@ -183,8 +183,8 @@ theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn 
   on_goal 2 =>
   rw [mul_div_assoc]
   exact
-    mul_nonpos_of_nonpos_of_nonneg (sub_nonpos.mpr $ by exact_mod_cast h.le)
-      (div_nonneg (by simp [real.pi_pos.le]) $ by simp)
+    mul_nonpos_of_nonpos_of_nonneg (sub_nonpos.mpr <| by exact_mod_cast h.le)
+      (div_nonneg (by simp [real.pi_pos.le]) <| by simp)
   rw [← mul_rotate', mul_div_assoc, neg_lt, ← mul_neg, mul_lt_iff_lt_one_right Real.pi_pos, ← neg_div, ← neg_mul,
     neg_sub, div_lt_iff, one_mul, sub_mul, sub_lt_comm, ← mul_sub_one]
   norm_num

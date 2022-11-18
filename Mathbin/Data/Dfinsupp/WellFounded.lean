@@ -101,9 +101,9 @@ theorem lex_fibration [∀ (i) (s : Set ι), Decidable (i ∈ s)] :
 
 variable {r s}
 
-theorem Lex.acc_of_single_erase [DecidableEq ι] {x : Π₀ i, α i} (i : ι) (hs : Acc (Dfinsupp.Lex r s) $ single i (x i))
-    (hu : Acc (Dfinsupp.Lex r s) $ x.erase i) : Acc (Dfinsupp.Lex r s) x := by classical
-  convert ← @Acc.of_fibration _ _ _ _ _ (lex_fibration r s) ⟨{i}, _⟩ (InvImage.accessible snd $ hs.prod_game_add hu)
+theorem Lex.acc_of_single_erase [DecidableEq ι] {x : Π₀ i, α i} (i : ι) (hs : Acc (Dfinsupp.Lex r s) <| single i (x i))
+    (hu : Acc (Dfinsupp.Lex r s) <| x.erase i) : Acc (Dfinsupp.Lex r s) x := by classical
+  convert ← @Acc.of_fibration _ _ _ _ _ (lex_fibration r s) ⟨{i}, _⟩ (InvImage.accessible snd <| hs.prod_game_add hu)
   convert piecewise_single_erase x i
 #align dfinsupp.lex.acc_of_single_erase Dfinsupp.Lex.acc_of_single_erase
 
@@ -112,11 +112,11 @@ variable (hbot : ∀ ⦃i a⦄, ¬s i a 0)
 include hbot
 
 theorem Lex.acc_zero : Acc (Dfinsupp.Lex r s) 0 :=
-  Acc.intro 0 $ fun x ⟨_, _, h⟩ => (hbot h).elim
+  (Acc.intro 0) fun x ⟨_, _, h⟩ => (hbot h).elim
 #align dfinsupp.lex.acc_zero Dfinsupp.Lex.acc_zero
 
 theorem Lex.acc_of_single [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : Π₀ i, α i) :
-    (∀ i ∈ x.support, Acc (Dfinsupp.Lex r s) $ single i (x i)) → Acc (Dfinsupp.Lex r s) x := by
+    (∀ i ∈ x.support, Acc (Dfinsupp.Lex r s) <| single i (x i)) → Acc (Dfinsupp.Lex r s) x := by
   generalize ht : x.support = t
   revert x
   classical
@@ -125,7 +125,7 @@ theorem Lex.acc_of_single [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠
     rw [support_eq_empty.1 ht]
     exact fun _ => lex.acc_zero hbot
     
-  refine' fun x ht h => lex.acc_of_single_erase b (h b $ t.mem_insert_self b) _
+  refine' fun x ht h => lex.acc_of_single_erase b (h b <| t.mem_insert_self b) _
   refine' ih _ (by rw [support_erase, ht, Finset.erase_insert hb]) fun a ha => _
   rw [erase_ne (ha.ne_of_not_mem hb)]
   exact h a (Finset.mem_insert_of_mem ha)
@@ -162,7 +162,7 @@ theorem Lex.acc_single [DecidableEq ι] {i : ι} (hi : Acc (rᶜ ⊓ (· ≠ ·)
 
 theorem Lex.acc [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : Π₀ i, α i)
     (h : ∀ i ∈ x.support, Acc (rᶜ ⊓ (· ≠ ·)) i) : Acc (Dfinsupp.Lex r s) x :=
-  Lex.acc_of_single hbot x $ fun i hi => Lex.acc_single hbot hs (h i hi) _
+  (Lex.acc_of_single hbot x) fun i hi => Lex.acc_single hbot hs (h i hi) _
 #align dfinsupp.lex.acc Dfinsupp.Lex.acc
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -176,13 +176,13 @@ theorem Lex.acc [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : 
          "("
          [`hr]
          [":"
-          (Init.Core.«term_$_»
+          («term_<|_»
            `WellFounded
-           " $ "
+           "<|"
            (Order.Basic.«term_⊓_»
             (Order.Basic.«term_ᶜ» `r "ᶜ")
             " ⊓ "
-            (Term.paren "(" (Init.Logic.«term_≠_» (Term.cdot "·") " ≠ " (Term.cdot "·")) ")")))]
+            (Term.paren "(" («term_≠_» (Term.cdot "·") "≠" (Term.cdot "·")) ")")))]
          []
          ")")]
        (Term.typeSpec ":" (Term.app `WellFounded [(Term.app `Dfinsupp.Lex [`r `s])])))
@@ -363,12 +363,12 @@ theorem Lex.acc [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : 
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
 theorem
   Lex.well_founded
-  ( hr : WellFounded $ r ᶜ ⊓ ( · ≠ · ) ) : WellFounded Dfinsupp.Lex r s
+  ( hr : WellFounded <| r ᶜ ⊓ ( · ≠ · ) ) : WellFounded Dfinsupp.Lex r s
   := ⟨ fun x => by skip <;> exact lex.acc hbot hs x fun i _ => hr.apply i ⟩
 #align dfinsupp.lex.well_founded Dfinsupp.Lex.well_founded
 
 theorem Lex.well_founded' [IsTrichotomous ι r] (hr : WellFounded r.swap) : WellFounded (Dfinsupp.Lex r s) :=
-  Lex.well_founded hbot hs $
+  Lex.well_founded hbot hs <|
     Subrelation.wf (fun i j h => ((@IsTrichotomous.trichotomous ι r _ i j).resolve_left h.1).resolve_left h.2) hr
 #align dfinsupp.lex.well_founded' Dfinsupp.Lex.well_founded'
 
@@ -418,7 +418,7 @@ theorem Dfinsupp.Lex.well_founded_of_finite [IsStrictTotalOrder ι r] [Finite ι
 
 instance Dfinsupp.Lex.well_founded_lt_of_finite [LinearOrder ι] [Finite ι] [∀ i, Zero (α i)] [∀ i, LT (α i)]
     [hwf : ∀ i, WellFoundedLt (α i)] : WellFoundedLt (Lex (Π₀ i, α i)) :=
-  ⟨Dfinsupp.Lex.well_founded_of_finite (· < ·) $ fun i => (hwf i).1⟩
+  ⟨(Dfinsupp.Lex.well_founded_of_finite (· < ·)) fun i => (hwf i).1⟩
 #align dfinsupp.lex.well_founded_lt_of_finite Dfinsupp.Lex.well_founded_lt_of_finite
 
 protected theorem Dfinsupp.well_founded_lt [∀ i, Zero (α i)] [∀ i, Preorder (α i)] [∀ i, WellFoundedLt (α i)]
@@ -426,7 +426,7 @@ protected theorem Dfinsupp.well_founded_lt [∀ i, Zero (α i)] [∀ i, Preorder
   ⟨by
     letI : ∀ i, Zero (Antisymmetrization (α i) (· ≤ ·)) := fun i => ⟨toAntisymmetrization (· ≤ ·) 0⟩
     let f := map_range (fun i => @toAntisymmetrization (α i) (· ≤ ·) _) fun i => rfl
-    refine' Subrelation.wf (fun x y h => _) (InvImage.wf f $ lex.well_founded' _ (fun i => _) _)
+    refine' Subrelation.wf (fun x y h => _) (InvImage.wf f <| lex.well_founded' _ (fun i => _) _)
     · exact well_ordering_rel.swap
       
     · exact fun i => (· < ·)
@@ -443,7 +443,7 @@ protected theorem Dfinsupp.well_founded_lt [∀ i, Zero (α i)] [∀ i, Preorder
 
 instance Dfinsupp.well_founded_lt' [∀ i, CanonicallyOrderedAddMonoid (α i)] [∀ i, WellFoundedLt (α i)] :
     WellFoundedLt (Π₀ i, α i) :=
-  Dfinsupp.well_founded_lt $ fun i a => (zero_le a).not_lt
+  Dfinsupp.well_founded_lt fun i a => (zero_le a).not_lt
 #align dfinsupp.well_founded_lt' Dfinsupp.well_founded_lt'
 
 instance Pi.well_founded_lt [Finite ι] [∀ i, Preorder (α i)] [hw : ∀ i, WellFoundedLt (α i)] :
@@ -456,7 +456,7 @@ instance Pi.well_founded_lt [Finite ι] [∀ i, Preorder (α i)] [hw : ∀ i, We
       
     letI : ∀ i, Zero (α i) := fun i => ⟨(hw i).wf.min ⊤ ⟨x i, trivial⟩⟩
     haveI := Fintype.ofFinite ι
-    refine' InvImage.wf equiv_fun_on_fintype.symm (Dfinsupp.well_founded_lt $ fun i a => _).wf
+    refine' InvImage.wf equiv_fun_on_fintype.symm (Dfinsupp.well_founded_lt fun i a => _).wf
     exact (hw i).wf.not_lt_min ⊤ _ trivial⟩
 #align pi.well_founded_lt Pi.well_founded_lt
 

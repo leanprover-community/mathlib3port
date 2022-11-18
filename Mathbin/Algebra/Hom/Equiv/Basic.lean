@@ -414,12 +414,12 @@ theorem ext_iff {f g : MulEquiv M N} : f = g ↔ ∀ x, f x = g x :=
 
 @[simp, to_additive]
 theorem mk_coe (e : M ≃* N) (e' h₁ h₂ h₃) : (⟨e, e', h₁, h₂, h₃⟩ : M ≃* N) = e :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 #align mul_equiv.mk_coe MulEquiv.mk_coe
 
 @[simp, to_additive]
 theorem mk_coe' (e : M ≃* N) (f h₁ h₂ h₃) : (MulEquiv.mk f (⇑e) h₁ h₂ h₃ : N ≃* M) = e.symm :=
-  symm_bijective.Injective $ ext $ fun x => rfl
+  symm_bijective.Injective <| ext fun x => rfl
 #align mul_equiv.mk_coe' MulEquiv.mk_coe'
 
 @[to_additive]
@@ -442,7 +442,7 @@ def mulEquivOfUnique {M N} [Unique M] [Unique N] [Mul M] [Mul N] : M ≃* N :=
 @[to_additive "There is a unique additive monoid homomorphism between two additive monoids with\na unique element."]
 instance {M N} [Unique M] [Unique N] [Mul M] [Mul N] : Unique (M ≃* N) where
   default := mulEquivOfUnique
-  uniq _ := ext $ fun x => Subsingleton.elim _ _
+  uniq _ := ext fun x => Subsingleton.elim _ _
 
 /-!
 ## Monoids
@@ -549,7 +549,7 @@ This is the `mul_equiv` version of `equiv.Pi_congr_right`, and the dependent ver
 def piCongrRight {η : Type _} {Ms Ns : η → Type _} [∀ j, Mul (Ms j)] [∀ j, Mul (Ns j)] (es : ∀ j, Ms j ≃* Ns j) :
     (∀ j, Ms j) ≃* ∀ j, Ns j :=
   { Equiv.piCongrRight fun j => (es j).toEquiv with toFun := fun x j => es j (x j),
-    invFun := fun x j => (es j).symm (x j), map_mul' := fun x y => funext $ fun j => (es j).map_mul (x j) (y j) }
+    invFun := fun x j => (es j).symm (x j), map_mul' := fun x y => funext fun j => (es j).map_mul (x j) (y j) }
 #align mul_equiv.Pi_congr_right MulEquiv.piCongrRight
 
 @[simp]
@@ -560,14 +560,14 @@ theorem Pi_congr_right_refl {η : Type _} {Ms : η → Type _} [∀ j, Mul (Ms j
 
 @[simp]
 theorem Pi_congr_right_symm {η : Type _} {Ms Ns : η → Type _} [∀ j, Mul (Ms j)] [∀ j, Mul (Ns j)]
-    (es : ∀ j, Ms j ≃* Ns j) : (piCongrRight es).symm = (Pi_congr_right $ fun i => (es i).symm) :=
+    (es : ∀ j, Ms j ≃* Ns j) : (piCongrRight es).symm = Pi_congr_right fun i => (es i).symm :=
   rfl
 #align mul_equiv.Pi_congr_right_symm MulEquiv.Pi_congr_right_symm
 
 @[simp]
 theorem Pi_congr_right_trans {η : Type _} {Ms Ns Ps : η → Type _} [∀ j, Mul (Ms j)] [∀ j, Mul (Ns j)] [∀ j, Mul (Ps j)]
     (es : ∀ j, Ms j ≃* Ns j) (fs : ∀ j, Ns j ≃* Ps j) :
-    (piCongrRight es).trans (piCongrRight fs) = (Pi_congr_right $ fun i => (es i).trans (fs i)) :=
+    (piCongrRight es).trans (piCongrRight fs) = Pi_congr_right fun i => (es i).trans (fs i) :=
   rfl
 #align mul_equiv.Pi_congr_right_trans MulEquiv.Pi_congr_right_trans
 

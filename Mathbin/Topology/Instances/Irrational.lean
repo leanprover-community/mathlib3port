@@ -54,7 +54,7 @@ namespace Irrational
 variable {x : ℝ}
 
 instance : OrderTopology { x // Irrational x } :=
-  (induced_order_topology _ fun x y => Iff.rfl) $ fun x y hlt =>
+  (induced_order_topology _ fun x y => Iff.rfl) fun x y hlt =>
     let ⟨a, ha, hxa, hay⟩ := exists_irrational_btwn hlt
     ⟨⟨a, ha⟩, hxa, hay⟩
 
@@ -77,7 +77,7 @@ theorem eventually_forall_le_dist_cast_div (hx : Irrational x) (n : ℕ) : ∀�
     rintro ⟨m, rfl⟩
     simpa using hx
   rcases Metric.mem_nhds_iff.1 (A.is_open_compl.mem_nhds B) with ⟨ε, ε0, hε⟩
-  refine' (ge_mem_nhds ε0).mono fun δ hδ m => not_lt.1 $ fun hlt => _
+  refine' (ge_mem_nhds ε0).mono fun δ hδ m => not_lt.1 fun hlt => _
   rw [dist_comm] at hlt
   refine' hε (ball_subset_ball hδ hlt) ⟨m, _⟩
   simp [div_eq_inv_mul]
@@ -85,13 +85,13 @@ theorem eventually_forall_le_dist_cast_div (hx : Irrational x) (n : ℕ) : ∀�
 
 theorem eventually_forall_le_dist_cast_div_of_denom_le (hx : Irrational x) (n : ℕ) :
     ∀ᶠ ε : ℝ in 𝓝 0, ∀ k ≤ n, ∀ (m : ℤ), ε ≤ dist x (m / k) :=
-  (finite_le_nat n).eventually_all.2 $ fun k hk => hx.eventually_forall_le_dist_cast_div k
+  (finite_le_nat n).eventually_all.2 fun k hk => hx.eventually_forall_le_dist_cast_div k
 #align
   irrational.eventually_forall_le_dist_cast_div_of_denom_le Irrational.eventually_forall_le_dist_cast_div_of_denom_le
 
 theorem eventually_forall_le_dist_cast_rat_of_denom_le (hx : Irrational x) (n : ℕ) :
     ∀ᶠ ε : ℝ in 𝓝 0, ∀ r : ℚ, r.denom ≤ n → ε ≤ dist x r :=
-  (hx.eventually_forall_le_dist_cast_div_of_denom_le n).mono $ fun ε H r hr => by
+  (hx.eventually_forall_le_dist_cast_div_of_denom_le n).mono fun ε H r hr => by
     simpa only [Rat.cast_def] using H r.denom hr r.num
 #align
   irrational.eventually_forall_le_dist_cast_rat_of_denom_le Irrational.eventually_forall_le_dist_cast_rat_of_denom_le

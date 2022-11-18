@@ -147,7 +147,7 @@ private theorem sdiff_sup_self' : y \ x ⊔ x = y ⊔ x :=
 
 @[simp]
 theorem sdiff_inf_sdiff : x \ y ⊓ y \ x = ⊥ :=
-  Eq.symm $
+  Eq.symm <|
     calc
       ⊥ = x ⊓ y ⊓ x \ y := by rw [inf_inf_sdiff]
       _ = x ⊓ (y ⊓ x ⊔ y \ x) ⊓ x \ y := by rw [sup_inf_sdiff]
@@ -221,7 +221,7 @@ theorem disjoint_sdiff_self_right : Disjoint x (y \ x) :=
 /- TODO: we could make an alternative constructor for `generalized_boolean_algebra` using
 `disjoint x (y \ x)` and `x ⊔ (y \ x) = y` as axioms. -/
 theorem Disjoint.sdiff_eq_of_sup_eq (hi : Disjoint x z) (hs : x ⊔ z = y) : y \ x = z :=
-  have h : y ⊓ x = x := inf_eq_right.2 $ le_sup_left.trans hs.le
+  have h : y ⊓ x = x := inf_eq_right.2 <| le_sup_left.trans hs.le
   sdiff_unique (by rw [h, hs]) (by rw [h, hi.eq_bot])
 #align disjoint.sdiff_eq_of_sup_eq Disjoint.sdiff_eq_of_sup_eq
 
@@ -323,7 +323,7 @@ theorem le_sdiff_iff : x ≤ y \ x ↔ x = ⊥ :=
 #align le_sdiff_iff le_sdiff_iff
 
 theorem sdiff_lt_sdiff_right (h : x < y) (hz : z ≤ x) : x \ z < y \ z :=
-  (sdiff_le_sdiff_right h.le).lt_of_not_le $ fun h' => h.not_le $ le_sdiff_sup.trans $ sup_le_of_le_sdiff_right h' hz
+  (sdiff_le_sdiff_right h.le).lt_of_not_le fun h' => h.not_le <| le_sdiff_sup.trans <| sup_le_of_le_sdiff_right h' hz
 #align sdiff_lt_sdiff_right sdiff_lt_sdiff_right
 
 theorem sup_inf_inf_sdiff : x ⊓ y ⊓ z ⊔ y \ z = x ⊓ y ⊔ y \ z :=
@@ -389,7 +389,7 @@ theorem eq_of_sdiff_eq_sdiff (hxz : x ≤ z) (hyz : y ≤ z) (h : z \ x = z \ y)
   rw [← sdiff_sdiff_eq_self hxz, h, sdiff_sdiff_eq_self hyz]
 #align eq_of_sdiff_eq_sdiff eq_of_sdiff_eq_sdiff
 
-theorem sdiff_sdiff_left' : x \ y \ z = x \ y ⊓ x \ z := by rw [sdiff_sdiff_left, sdiff_sup]
+theorem sdiff_sdiff_left' : (x \ y) \ z = x \ y ⊓ x \ z := by rw [sdiff_sdiff_left, sdiff_sup]
 #align sdiff_sdiff_left' sdiff_sdiff_left'
 
 theorem sdiff_sdiff_sup_sdiff : z \ (x \ y ⊔ y \ x) = z ⊓ (z \ x ⊔ y) ⊓ (z \ y ⊔ x) :=
@@ -455,7 +455,7 @@ theorem inf_sdiff_distrib_right (a b c : α) : a \ b ⊓ c = (a ⊓ c) \ (b ⊓ 
 #align inf_sdiff_distrib_right inf_sdiff_distrib_right
 
 theorem sup_eq_sdiff_sup_sdiff_sup_inf : x ⊔ y = x \ y ⊔ y \ x ⊔ x ⊓ y :=
-  Eq.symm $
+  Eq.symm <|
     calc
       x \ y ⊔ y \ x ⊔ x ⊓ y = (x \ y ⊔ y \ x ⊔ x) ⊓ (x \ y ⊔ y \ x ⊔ y) := by rw [sup_inf_left]
       _ = (x \ y ⊔ x ⊔ y \ x) ⊓ (x \ y ⊔ (y \ x ⊔ y)) := by ac_rfl
@@ -533,12 +533,12 @@ variable [BooleanAlgebra α]
 
 @[simp]
 theorem inf_compl_eq_bot' : x ⊓ xᶜ = ⊥ :=
-  bot_unique $ BooleanAlgebra.inf_compl_le_bot x
+  bot_unique <| BooleanAlgebra.inf_compl_le_bot x
 #align inf_compl_eq_bot' inf_compl_eq_bot'
 
 @[simp]
 theorem sup_compl_eq_top : x ⊔ xᶜ = ⊤ :=
-  top_unique $ BooleanAlgebra.top_le_sup_compl x
+  top_unique <| BooleanAlgebra.top_le_sup_compl x
 #align sup_compl_eq_top sup_compl_eq_top
 
 @[simp]
@@ -715,15 +715,15 @@ instance PropCat.booleanAlgebra : BooleanAlgebra Prop :=
 #align Prop.boolean_algebra PropCat.booleanAlgebra
 
 instance Pi.booleanAlgebra {ι : Type u} {α : ι → Type v} [∀ i, BooleanAlgebra (α i)] : BooleanAlgebra (∀ i, α i) :=
-  { Pi.hasSdiff, Pi.heytingAlgebra, Pi.distribLattice with sdiff_eq := fun x y => funext $ fun i => sdiff_eq,
-    himp_eq := fun x y => funext $ fun i => himp_eq, inf_compl_le_bot := fun _ _ => BooleanAlgebra.inf_compl_le_bot _,
+  { Pi.hasSdiff, Pi.heytingAlgebra, Pi.distribLattice with sdiff_eq := fun x y => funext fun i => sdiff_eq,
+    himp_eq := fun x y => funext fun i => himp_eq, inf_compl_le_bot := fun _ _ => BooleanAlgebra.inf_compl_le_bot _,
     top_le_sup_compl := fun _ _ => BooleanAlgebra.top_le_sup_compl _ }
 #align pi.boolean_algebra Pi.booleanAlgebra
 
 instance : BooleanAlgebra Bool :=
   { Bool.instLinearOrderBool, Bool.boundedOrder with sup := or, le_sup_left := Bool.left_le_or,
     le_sup_right := Bool.right_le_or, sup_le := fun _ _ _ => Bool.or_le, inf := and, inf_le_left := Bool.and_le_left,
-    inf_le_right := Bool.and_le_right, le_inf := fun _ _ _ => Bool.le_and, le_sup_inf := dec_trivial, compl := not,
+    inf_le_right := Bool.and_le_right, le_inf := fun _ _ _ => Bool.le_and, le_sup_inf := by decide, compl := not,
     inf_compl_le_bot := fun a => a.band_bnot_self.le, top_le_sup_compl := fun a => a.bor_bnot_self.ge }
 
 @[simp]
@@ -751,8 +751,8 @@ protected def Function.Injective.generalizedBooleanAlgebra [HasSup α] [HasInf �
     (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b) (map_bot : f ⊥ = ⊥) (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) :
     GeneralizedBooleanAlgebra α :=
   { hf.GeneralizedCoheytingAlgebra f map_sup map_inf map_bot map_sdiff, hf.DistribLattice f map_sup map_inf with
-    sup_inf_sdiff := fun a b => hf $ by erw [map_sup, map_sdiff, map_inf, sup_inf_sdiff],
-    inf_inf_sdiff := fun a b => hf $ by erw [map_inf, map_sdiff, map_inf, inf_inf_sdiff, map_bot] }
+    sup_inf_sdiff := fun a b => hf <| by erw [map_sup, map_sdiff, map_inf, sup_inf_sdiff],
+    inf_inf_sdiff := fun a b => hf <| by erw [map_inf, map_sdiff, map_inf, inf_inf_sdiff, map_bot] }
 #align function.injective.generalized_boolean_algebra Function.Injective.generalizedBooleanAlgebra
 
 -- See note [reducible non-instances]
@@ -764,12 +764,12 @@ protected def Function.Injective.booleanAlgebra [HasSup α] [HasInf α] [HasTop 
     (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) : BooleanAlgebra α :=
   { hf.GeneralizedBooleanAlgebra f map_sup map_inf map_bot map_sdiff with compl := compl, top := ⊤,
     le_top := fun a => (@le_top β _ _ _).trans map_top.ge, bot_le := fun a => map_bot.le.trans bot_le,
-    inf_compl_le_bot := fun a => ((map_inf _ _).trans $ by rw [map_compl, inf_compl_eq_bot, map_bot]).le,
-    top_le_sup_compl := fun a => ((map_sup _ _).trans $ by rw [map_compl, sup_compl_eq_top, map_top]).ge,
+    inf_compl_le_bot := fun a => ((map_inf _ _).trans <| by rw [map_compl, inf_compl_eq_bot, map_bot]).le,
+    top_le_sup_compl := fun a => ((map_sup _ _).trans <| by rw [map_compl, sup_compl_eq_top, map_top]).ge,
     sdiff_eq := fun a b =>
-      hf $
-        (map_sdiff _ _).trans $
-          sdiff_eq.trans $ by
+      hf <|
+        (map_sdiff _ _).trans <|
+          sdiff_eq.trans <| by
             convert (map_inf _ _).symm
             exact (map_compl _).symm }
 #align function.injective.boolean_algebra Function.Injective.booleanAlgebra

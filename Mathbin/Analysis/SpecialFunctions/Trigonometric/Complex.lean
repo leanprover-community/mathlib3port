@@ -29,14 +29,14 @@ open Real
 
 theorem cos_eq_zero_iff {θ : ℂ} : cos θ = 0 ↔ ∃ k : ℤ, θ = (2 * k + 1) * π / 2 := by
   have h : (exp (θ * I) + exp (-θ * I)) / 2 = 0 ↔ exp (2 * θ * I) = -1 := by
-    rw [@div_eq_iff _ _ (exp (θ * I) + exp (-θ * I)) 2 0 two_ne_zero', zero_mul, add_eq_zero_iff_eq_neg,
+    rw [@div_eq_iff _ _ (exp (θ * I) + exp (-θ * I)) 2 0 two_ne_zero, zero_mul, add_eq_zero_iff_eq_neg,
       neg_eq_neg_one_mul, ← div_eq_iff (exp_ne_zero _), ← exp_sub]
     field_simp only
     congr 3
     ring
   rw [cos, h, ← exp_pi_mul_I, exp_eq_exp_iff_exists_int, mul_right_comm]
   refine' exists_congr fun x => _
-  refine' (iff_of_eq $ congr_arg _ _).trans (mul_right_inj' $ mul_ne_zero two_ne_zero' I_ne_zero)
+  refine' (iff_of_eq <| congr_arg _ _).trans (mul_right_inj' <| mul_ne_zero two_ne_zero I_ne_zero)
   field_simp
   ring
 #align complex.cos_eq_zero_iff Complex.cos_eq_zero_iff
@@ -67,7 +67,7 @@ theorem tan_eq_zero_iff {θ : ℂ} : tan θ = 0 ↔ ∃ k : ℤ, θ = k * π / 2
   have h := (sin_two_mul θ).symm
   rw [mul_assoc] at h
   rw [tan, div_eq_zero_iff, ← mul_eq_zero, ← zero_mul (1 / 2 : ℂ), mul_one_div,
-    CancelFactors.cancel_factors_eq_div h two_ne_zero', mul_comm]
+    CancelFactors.cancel_factors_eq_div h two_ne_zero, mul_comm]
   simpa only [zero_div, zero_mul, Ne.def, not_false_iff, field_simps] using sin_eq_zero_iff
 #align complex.tan_eq_zero_iff Complex.tan_eq_zero_iff
 
@@ -129,7 +129,7 @@ theorem tan_add' {x y : ℂ} (h : (∀ k : ℤ, x ≠ (2 * k + 1) * π / 2) ∧ 
 #align complex.tan_add' Complex.tan_add'
 
 theorem tan_two_mul {z : ℂ} : tan (2 * z) = 2 * tan z / (1 - tan z ^ 2) := by
-  by_cases h:∀ k : ℤ, z ≠ (2 * k + 1) * π / 2
+  by_cases h : ∀ k : ℤ, z ≠ (2 * k + 1) * π / 2
   · rw [two_mul, two_mul, sq, tan_add (Or.inl ⟨h, h⟩)]
     
   · rw [not_forall_not] at h
@@ -155,7 +155,7 @@ theorem tan_eq {z : ℂ}
 open TopologicalSpace
 
 theorem continuous_on_tan : ContinuousOn tan { x | cos x ≠ 0 } :=
-  continuous_on_sin.div continuous_on_cos $ fun x => id
+  (continuous_on_sin.div continuous_on_cos) fun x => id
 #align complex.continuous_on_tan Complex.continuous_on_tan
 
 @[continuity]
@@ -173,9 +173,8 @@ theorem cos_eq_iff_quadratic {z w : ℂ} : cos z = w ↔ exp (z * I) ^ 2 - 2 * w
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (w «expr ≠ » 0) -/
 theorem cos_surjective : Function.Surjective cos := by
   intro x
-  obtain ⟨w, w₀, hw⟩ : ∃ (w) (_ : w ≠ 0), 1 * w * w + -2 * x * w + 1 = 0 := by
-    rcases exists_quadratic_eq_zero (@one_ne_zero ℂ _ _)
-        ⟨_, (cpow_nat_inv_pow _ two_ne_zero).symm.trans $ pow_two _⟩ with
+  obtain ⟨w, w₀, hw⟩ : ∃ (w : _)(_ : w ≠ 0), 1 * w * w + -2 * x * w + 1 = 0 := by
+    rcases exists_quadratic_eq_zero one_ne_zero ⟨_, (cpow_nat_inv_pow _ two_ne_zero).symm.trans <| pow_two _⟩ with
       ⟨w, hw⟩
     refine' ⟨w, _, hw⟩
     rintro rfl

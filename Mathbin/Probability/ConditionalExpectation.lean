@@ -5,6 +5,7 @@ Authors: Kexing Ying
 -/
 import Mathbin.Probability.Notation
 import Mathbin.Probability.Independence
+import Mathbin.MeasureTheory.Function.ConditionalExpectation.Basic
 
 /-!
 
@@ -36,7 +37,7 @@ variable {Ω E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpa
 almost everywhere. -/
 theorem condexp_indep_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFinite (μ.trim hle₂)] (hf : strongly_measurable[m₁] f)
     (hindp : Indep m₁ m₂ μ) : μ[f|m₂] =ᵐ[μ] fun x => μ[f] := by
-  by_cases hfint:integrable f μ
+  by_cases hfint : integrable f μ
   swap
   · rw [condexp_undef hfint, integral_undef hfint]
     rfl

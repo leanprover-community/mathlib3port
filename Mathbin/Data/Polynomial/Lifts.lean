@@ -115,7 +115,7 @@ theorem monomial_mem_lifts {s : S} (n : ℕ) (h : s ∈ Set.range f) : monomial 
 theorem erase_mem_lifts {p : S[X]} (n : ℕ) (h : p ∈ lifts f) : p.erase n ∈ lifts f := by
   rw [lifts_iff_ring_hom_srange, mem_map_srange] at h⊢
   intro k
-  by_cases hk:k = n
+  by_cases hk : k = n
   · use 0
     simp only [hk, RingHom.map_zero, erase_same]
     
@@ -128,7 +128,7 @@ section LiftDeg
 
 theorem monomial_mem_lifts_and_degree_eq {s : S} {n : ℕ} (hl : monomial n s ∈ lifts f) :
     ∃ q : R[X], map f q = monomial n s ∧ q.degree = (monomial n s).degree := by
-  by_cases hzero:s = 0
+  by_cases hzero : s = 0
   · use 0
     simp only [hzero, degree_zero, eq_self_iff_true, and_self_iff, monomial_zero_right, Polynomial.map_zero]
     
@@ -156,7 +156,7 @@ theorem mem_lifts_and_degree_eq {p : S[X]} (hlifts : p ∈ lifts f) : ∃ q : R[
   revert hd p
   apply Nat.strong_induction_on d
   intro n hn p hlifts hdeg
-  by_cases erase_zero:p.erase_lead = 0
+  by_cases erase_zero : p.erase_lead = 0
   · rw [← erase_lead_add_monomial_nat_degree_leading_coeff p, erase_zero, zero_add, leading_coeff]
     exact
       monomial_mem_lifts_and_degree_eq
@@ -201,7 +201,7 @@ theorem lifts_and_degree_eq_and_monic [Nontrivial S] {p : S[X]} (hlifts : p ∈ 
     
   have H : erase p.nat_degree p + X ^ p.nat_degree = p := by
     simpa only [hp.leading_coeff, C_1, one_mul, erase_lead] using erase_lead_add_C_mul_X_pow p
-  by_cases h0:erase p.nat_degree p = 0
+  by_cases h0 : erase p.nat_degree p = 0
   · rw [← H, h0, zero_add]
     refine' ⟨X ^ p.nat_degree, _, _, monic_X_pow p.nat_degree⟩
     · rw [Polynomial.map_pow, map_X]

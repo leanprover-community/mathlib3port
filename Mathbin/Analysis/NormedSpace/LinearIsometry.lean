@@ -18,7 +18,7 @@ the star-linear versions.
 
 We also prove some trivial lemmas and provide convenience constructors.
 
-Since a lot of elementary properties don't require `∥x∥ = 0 → x = 0` we start setting up the
+Since a lot of elementary properties don't require `‖x‖ = 0 → x = 0` we start setting up the
 theory for `seminormed_add_comm_group` and we specialize to `normed_add_comm_group` when needed.
 -/
 
@@ -40,7 +40,7 @@ variable {R R₂ R₃ R₄ E E₂ E₃ E₄ F 𝓕 : Type _} [Semiring R] [Semir
 /-- A `σ₁₂`-semilinear isometric embedding of a normed `R`-module into an `R₂`-module. -/
 structure LinearIsometry (σ₁₂ : R →+* R₂) (E E₂ : Type _) [SeminormedAddCommGroup E] [SeminormedAddCommGroup E₂]
   [Module R E] [Module R₂ E₂] extends E →ₛₗ[σ₁₂] E₂ where
-  norm_map' : ∀ x, ∥to_linear_map x∥ = ∥x∥
+  norm_map' : ∀ x, ‖to_linear_map x‖ = ‖x‖
 #align linear_isometry LinearIsometry
 
 -- mathport name: «expr →ₛₗᵢ[ ] »
@@ -61,9 +61,9 @@ A map `f` between an `R`-module and an `S`-module over a ring homomorphism `σ :
 is semilinear if it satisfies the two properties `f (x + y) = f x + f y` and
 `f (c • x) = (σ c) • f x`. -/
 class SemilinearIsometryClass (𝓕 : Type _) {R R₂ : outParam (Type _)} [Semiring R] [Semiring R₂]
-  (σ₁₂ : outParam $ R →+* R₂) (E E₂ : outParam (Type _)) [SeminormedAddCommGroup E] [SeminormedAddCommGroup E₂]
+  (σ₁₂ : outParam <| R →+* R₂) (E E₂ : outParam (Type _)) [SeminormedAddCommGroup E] [SeminormedAddCommGroup E₂]
   [Module R E] [Module R₂ E₂] extends SemilinearMapClass 𝓕 σ₁₂ E E₂ where
-  norm_map : ∀ (f : 𝓕) (x : E), ∥f x∥ = ∥x∥
+  norm_map : ∀ (f : 𝓕) (x : E), ‖f x‖ = ‖x‖
 #align semilinear_isometry_class SemilinearIsometryClass
 
 /-- `linear_isometry_class F R E E₂` asserts `F` is a type of bundled `R`-linear isometries
@@ -88,8 +88,8 @@ protected theorem continuous [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f :
 #align semilinear_isometry_class.continuous SemilinearIsometryClass.continuous
 
 @[simp]
-theorem nnnorm_map [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) (x : E) : ∥f x∥₊ = ∥x∥₊ :=
-  Nnreal.eq $ norm_map f x
+theorem nnnorm_map [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) (x : E) : ‖f x‖₊ = ‖x‖₊ :=
+  Nnreal.eq <| norm_map f x
 #align semilinear_isometry_class.nnnorm_map SemilinearIsometryClass.nnnorm_map
 
 protected theorem lipschitz [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) : LipschitzWith 1 f :=
@@ -173,7 +173,7 @@ initialize_simps_projections LinearIsometry (to_linear_map_to_fun → apply)
 
 @[ext.1]
 theorem ext {f g : E →ₛₗᵢ[σ₁₂] E₂} (h : ∀ x, f x = g x) : f = g :=
-  coe_injective $ funext h
+  coe_injective <| funext h
 #align linear_isometry.ext LinearIsometry.ext
 
 protected theorem congr_arg [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] {f : 𝓕} : ∀ {x x' : E}, x = x' → f x = f x'
@@ -215,13 +215,13 @@ protected theorem map_smul [Module R E₂] (f : E →ₗᵢ[R] E₂) (c : R) (x 
 #align linear_isometry.map_smul LinearIsometry.map_smul
 
 @[simp]
-theorem norm_map (x : E) : ∥f x∥ = ∥x∥ :=
+theorem norm_map (x : E) : ‖f x‖ = ‖x‖ :=
   SemilinearIsometryClass.norm_map f x
 #align linear_isometry.norm_map LinearIsometry.norm_map
 
 @[simp]
-theorem nnnorm_map (x : E) : ∥f x∥₊ = ∥x∥₊ :=
-  Nnreal.eq $ norm_map f x
+theorem nnnorm_map (x : E) : ‖f x‖₊ = ‖x‖₊ :=
+  Nnreal.eq <| norm_map f x
 #align linear_isometry.nnnorm_map LinearIsometry.nnnorm_map
 
 protected theorem isometry : Isometry f :=
@@ -246,12 +246,12 @@ theorem is_complete_map_iff' [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f :
 
 instance complete_space_map [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) [RingHomSurjective σ₁₂] (p : Submodule R E)
     [CompleteSpace p] : CompleteSpace (p.map f) :=
-  ((is_complete_map_iff' f).2 $ complete_space_coe_iff_is_complete.1 ‹_›).complete_space_coe
+  ((is_complete_map_iff' f).2 <| complete_space_coe_iff_is_complete.1 ‹_›).complete_space_coe
 #align linear_isometry.complete_space_map LinearIsometry.complete_space_map
 
 instance complete_space_map' [RingHomSurjective σ₁₂] (p : Submodule R E) [CompleteSpace p] :
     CompleteSpace (p.map f.toLinearMap) :=
-  (f.is_complete_map_iff.2 $ complete_space_coe_iff_is_complete.1 ‹_›).complete_space_coe
+  (f.is_complete_map_iff.2 <| complete_space_coe_iff_is_complete.1 ‹_›).complete_space_coe
 #align linear_isometry.complete_space_map' LinearIsometry.complete_space_map'
 
 @[simp]
@@ -390,12 +390,12 @@ omit σ₁₃
 
 @[simp]
 theorem id_comp : (id : E₂ →ₗᵢ[R₂] E₂).comp f = f :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 #align linear_isometry.id_comp LinearIsometry.id_comp
 
 @[simp]
 theorem comp_id : f.comp id = f :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 #align linear_isometry.comp_id LinearIsometry.comp_id
 
 include σ₁₃ σ₂₄ σ₁₄
@@ -472,7 +472,7 @@ end Submodule
 structure LinearIsometryEquiv (σ₁₂ : R →+* R₂) {σ₂₁ : R₂ →+* R} [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂]
   (E E₂ : Type _) [SeminormedAddCommGroup E] [SeminormedAddCommGroup E₂] [Module R E] [Module R₂ E₂] extends
   E ≃ₛₗ[σ₁₂] E₂ where
-  norm_map' : ∀ x, ∥to_linear_equiv x∥ = ∥x∥
+  norm_map' : ∀ x, ‖to_linear_equiv x‖ = ‖x‖
 #align linear_isometry_equiv LinearIsometryEquiv
 
 -- mathport name: «expr ≃ₛₗᵢ[ ] »
@@ -493,10 +493,10 @@ A map `f` between an `R`-module and an `S`-module over a ring homomorphism `σ :
 is semilinear if it satisfies the two properties `f (x + y) = f x + f y` and
 `f (c • x) = (σ c) • f x`. -/
 class SemilinearIsometryEquivClass (𝓕 : Type _) {R R₂ : outParam (Type _)} [Semiring R] [Semiring R₂]
-  (σ₁₂ : outParam $ R →+* R₂) {σ₂₁ : outParam $ R₂ →+* R} [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂]
+  (σ₁₂ : outParam <| R →+* R₂) {σ₂₁ : outParam <| R₂ →+* R} [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂]
   (E E₂ : outParam (Type _)) [SeminormedAddCommGroup E] [SeminormedAddCommGroup E₂] [Module R E] [Module R₂ E₂] extends
   SemilinearEquivClass 𝓕 σ₁₂ E E₂ where
-  norm_map : ∀ (f : 𝓕) (x : E), ∥f x∥ = ∥x∥
+  norm_map : ∀ (f : 𝓕) (x : E), ‖f x‖ = ‖x‖
 #align semilinear_isometry_equiv_class SemilinearIsometryEquivClass
 
 /-- `linear_isometry_equiv_class F R E E₂` asserts `F` is a type of bundled `R`-linear isometries
@@ -565,7 +565,7 @@ theorem coe_injective : @Function.Injective (E ≃ₛₗᵢ[σ₁₂] E₂) (E �
 #align linear_isometry_equiv.coe_injective LinearIsometryEquiv.coe_injective
 
 @[simp]
-theorem coe_mk (e : E ≃ₛₗ[σ₁₂] E₂) (he : ∀ x, ∥e x∥ = ∥x∥) : ⇑(mk e he) = e :=
+theorem coe_mk (e : E ≃ₛₗ[σ₁₂] E₂) (he : ∀ x, ‖e x‖ = ‖x‖) : ⇑(mk e he) = e :=
   rfl
 #align linear_isometry_equiv.coe_mk LinearIsometryEquiv.coe_mk
 
@@ -576,7 +576,7 @@ theorem coe_to_linear_equiv (e : E ≃ₛₗᵢ[σ₁₂] E₂) : ⇑e.toLinearE
 
 @[ext.1]
 theorem ext {e e' : E ≃ₛₗᵢ[σ₁₂] E₂} (h : ∀ x, e x = e' x) : e = e' :=
-  to_linear_equiv_injective $ LinearEquiv.ext h
+  to_linear_equiv_injective <| LinearEquiv.ext h
 #align linear_isometry_equiv.ext LinearIsometryEquiv.ext
 
 protected theorem congr_arg {f : E ≃ₛₗᵢ[σ₁₂] E₂} : ∀ {x x' : E}, x = x' → f x = f x'
@@ -588,13 +588,13 @@ protected theorem congr_fun {f g : E ≃ₛₗᵢ[σ₁₂] E₂} (h : f = g) (x
 #align linear_isometry_equiv.congr_fun LinearIsometryEquiv.congr_fun
 
 /-- Construct a `linear_isometry_equiv` from a `linear_equiv` and two inequalities:
-`∀ x, ∥e x∥ ≤ ∥x∥` and `∀ y, ∥e.symm y∥ ≤ ∥y∥`. -/
-def ofBounds (e : E ≃ₛₗ[σ₁₂] E₂) (h₁ : ∀ x, ∥e x∥ ≤ ∥x∥) (h₂ : ∀ y, ∥e.symm y∥ ≤ ∥y∥) : E ≃ₛₗᵢ[σ₁₂] E₂ :=
-  ⟨e, fun x => le_antisymm (h₁ x) $ by simpa only [e.symm_apply_apply] using h₂ (e x)⟩
+`∀ x, ‖e x‖ ≤ ‖x‖` and `∀ y, ‖e.symm y‖ ≤ ‖y‖`. -/
+def ofBounds (e : E ≃ₛₗ[σ₁₂] E₂) (h₁ : ∀ x, ‖e x‖ ≤ ‖x‖) (h₂ : ∀ y, ‖e.symm y‖ ≤ ‖y‖) : E ≃ₛₗᵢ[σ₁₂] E₂ :=
+  ⟨e, fun x => le_antisymm (h₁ x) <| by simpa only [e.symm_apply_apply] using h₂ (e x)⟩
 #align linear_isometry_equiv.of_bounds LinearIsometryEquiv.ofBounds
 
 @[simp]
-theorem norm_map (x : E) : ∥e x∥ = ∥x∥ :=
+theorem norm_map (x : E) : ‖e x‖ = ‖x‖ :=
   e.norm_map' x
 #align linear_isometry_equiv.norm_map LinearIsometryEquiv.norm_map
 
@@ -722,7 +722,7 @@ theorem coe_refl : ⇑(refl R E) = id :=
 
 /-- The inverse `linear_isometry_equiv`. -/
 def symm : E₂ ≃ₛₗᵢ[σ₂₁] E :=
-  ⟨e.toLinearEquiv.symm, fun x => (e.norm_map _).symm.trans $ congr_arg norm $ e.toLinearEquiv.apply_symm_apply x⟩
+  ⟨e.toLinearEquiv.symm, fun x => (e.norm_map _).symm.trans <| congr_arg norm <| e.toLinearEquiv.apply_symm_apply x⟩
 #align linear_isometry_equiv.symm LinearIsometryEquiv.symm
 
 @[simp]
@@ -742,7 +742,7 @@ theorem map_eq_zero_iff {x : E} : e x = 0 ↔ x = 0 :=
 
 @[simp]
 theorem symm_symm : e.symm.symm = e :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 #align linear_isometry_equiv.symm_symm LinearIsometryEquiv.symm_symm
 
 @[simp]
@@ -805,12 +805,12 @@ omit σ₁₃ σ₂₁ σ₃₁ σ₃₂
 
 @[simp]
 theorem trans_refl : e.trans (refl R₂ E₂) = e :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 #align linear_isometry_equiv.trans_refl LinearIsometryEquiv.trans_refl
 
 @[simp]
 theorem refl_trans : (refl R E).trans e = e :=
-  ext $ fun x => rfl
+  ext fun x => rfl
 #align linear_isometry_equiv.refl_trans LinearIsometryEquiv.refl_trans
 
 @[simp]
@@ -970,7 +970,7 @@ theorem map_smul [Module R E₂] {e : E ≃ₗᵢ[R] E₂} (c : R) (x : E) : e (
 #align linear_isometry_equiv.map_smul LinearIsometryEquiv.map_smul
 
 @[simp]
-theorem nnnorm_map (x : E) : ∥e x∥₊ = ∥x∥₊ :=
+theorem nnnorm_map (x : E) : ‖e x‖₊ = ‖x‖₊ :=
   SemilinearIsometryClass.nnnorm_map e x
 #align linear_isometry_equiv.nnnorm_map LinearIsometryEquiv.nnnorm_map
 
@@ -1185,7 +1185,7 @@ end LinearIsometryEquiv
 /-- Two linear isometries are equal if they are equal on basis vectors. -/
 theorem Basis.ext_linear_isometry {ι : Type _} (b : Basis ι R E) {f₁ f₂ : E →ₛₗᵢ[σ₁₂] E₂}
     (h : ∀ i, f₁ (b i) = f₂ (b i)) : f₁ = f₂ :=
-  LinearIsometry.to_linear_map_injective $ b.ext h
+  LinearIsometry.to_linear_map_injective <| b.ext h
 #align basis.ext_linear_isometry Basis.ext_linear_isometry
 
 include σ₂₁
@@ -1193,7 +1193,7 @@ include σ₂₁
 /-- Two linear isometric equivalences are equal if they are equal on basis vectors. -/
 theorem Basis.ext_linear_isometry_equiv {ι : Type _} (b : Basis ι R E) {f₁ f₂ : E ≃ₛₗᵢ[σ₁₂] E₂}
     (h : ∀ i, f₁ (b i) = f₂ (b i)) : f₁ = f₂ :=
-  LinearIsometryEquiv.to_linear_equiv_injective $ b.ext' h
+  LinearIsometryEquiv.to_linear_equiv_injective <| b.ext' h
 #align basis.ext_linear_isometry_equiv Basis.ext_linear_isometry_equiv
 
 omit σ₂₁

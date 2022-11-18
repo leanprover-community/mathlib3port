@@ -35,7 +35,7 @@ def AntilipschitzWith [PseudoEmetricSpace α] [PseudoEmetricSpace β] (K : ℝ�
 
 theorem AntilipschitzWith.edist_lt_top [PseudoEmetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0} {f : α → β}
     (h : AntilipschitzWith K f) (x y : α) : edist x y < ⊤ :=
-  (h x y).trans_lt $ Ennreal.mul_lt_top Ennreal.coe_ne_top (edist_ne_top _ _)
+  (h x y).trans_lt <| Ennreal.mul_lt_top Ennreal.coe_ne_top (edist_ne_top _ _)
 #align antilipschitz_with.edist_lt_top AntilipschitzWith.edist_lt_top
 
 theorem AntilipschitzWith.edist_ne_top [PseudoEmetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0} {f : α → β}
@@ -102,7 +102,7 @@ theorem mul_le_edist (hf : AntilipschitzWith K f) (x y : α) : (K⁻¹ * edist x
 #align antilipschitz_with.mul_le_edist AntilipschitzWith.mul_le_edist
 
 theorem ediam_preimage_le (hf : AntilipschitzWith K f) (s : Set β) : diam (f ⁻¹' s) ≤ K * diam s :=
-  diam_le $ fun x hx y hy => (hf x y).trans $ mul_le_mul_left' (edist_le_diam_of_mem hx hy) K
+  diam_le fun x hx y hy => (hf x y).trans <| mul_le_mul_left' (edist_le_diam_of_mem hx hy) K
 #align antilipschitz_with.ediam_preimage_le AntilipschitzWith.ediam_preimage_le
 
 theorem le_mul_ediam_image (hf : AntilipschitzWith K f) (s : Set α) : diam s ≤ K * diam (f '' s) :=
@@ -191,7 +191,7 @@ theorem ofSubsingleton [Subsingleton α] {K : ℝ≥0} : AntilipschitzWith K f :
 /-- If `f : α → β` is `0`-antilipschitz, then `α` is a `subsingleton`. -/
 protected theorem subsingleton {α β} [EmetricSpace α] [PseudoEmetricSpace β] {f : α → β} (h : AntilipschitzWith 0 f) :
     Subsingleton α :=
-  ⟨fun x y => edist_le_zero.1 $ (h x y).trans_eq $ zero_mul _⟩
+  ⟨fun x y => edist_le_zero.1 <| (h x y).trans_eq <| zero_mul _⟩
 #align antilipschitz_with.subsingleton AntilipschitzWith.subsingleton
 
 end AntilipschitzWith
@@ -203,7 +203,7 @@ open Metric
 variable [PseudoMetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0} {f : α → β}
 
 theorem boundedPreimage (hf : AntilipschitzWith K f) {s : Set β} (hs : Bounded s) : Bounded (f ⁻¹' s) :=
-  Exists.intro (K * diam s) $ fun x hx y hy =>
+  (Exists.intro (K * diam s)) fun x hx y hy =>
     calc
       dist x y ≤ K * dist (f x) (f y) := hf.le_mul_dist x y
       _ ≤ K * diam s := mul_le_mul_of_nonneg_left (dist_le_diam_of_mem hs hx hy) K.2
@@ -211,8 +211,8 @@ theorem boundedPreimage (hf : AntilipschitzWith K f) {s : Set β} (hs : Bounded 
 #align antilipschitz_with.bounded_preimage AntilipschitzWith.boundedPreimage
 
 theorem tendsto_cobounded (hf : AntilipschitzWith K f) : Tendsto f (cobounded α) (cobounded β) :=
-  compl_surjective.forall.2 $ fun s (hs : IsBounded s) =>
-    Metric.is_bounded_iff.2 $ hf.boundedPreimage $ Metric.is_bounded_iff.1 hs
+  compl_surjective.forall.2 fun s (hs : IsBounded s) =>
+    Metric.is_bounded_iff.2 <| hf.boundedPreimage <| Metric.is_bounded_iff.1 hs
 #align antilipschitz_with.tendsto_cobounded AntilipschitzWith.tendsto_cobounded
 
 /-- The image of a proper space under an expanding onto map is proper. -/

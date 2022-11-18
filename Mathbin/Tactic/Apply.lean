@@ -43,17 +43,17 @@ private unsafe def has_opt_auto_param_inst_for_apply (ms : List (Name × expr)) 
     (fun r m => do
       let type ← infer_type m.2
       let b ← is_class type
-      return $ r || type `opt_param 2 || type `auto_param 2 || b)
+      return <| r || type `opt_param 2 || type `auto_param 2 || b)
     false
 #align tactic.has_opt_auto_param_inst_for_apply tactic.has_opt_auto_param_inst_for_apply
 
 private unsafe def try_apply_opt_auto_param_instance_for_apply (cfg : ApplyCfg) (ms : List (Name × expr)) :
     tactic Unit :=
-  whenM (has_opt_auto_param_inst_for_apply ms) $ do
+  whenM (has_opt_auto_param_inst_for_apply ms) <| do
     let gs ← get_goals
     ms fun m =>
-        whenM (not <$> is_assigned m.2) $
-          set_goals [m.2] >> try apply_instance >> when cfg (try apply_opt_param) >> when cfg (try apply_auto_param)
+        whenM (not <$> is_assigned m.2) <|
+          ((set_goals [m.2] >> try apply_instance) >> when cfg (try apply_opt_param)) >> when cfg (try apply_auto_param)
     set_goals gs
 #align tactic.try_apply_opt_auto_param_instance_for_apply tactic.try_apply_opt_auto_param_instance_for_apply
 
@@ -74,7 +74,7 @@ private unsafe def retry_apply_aux :
         apply_core e cfg
       let v ← mk_meta_var d
       let b := b.has_var
-      let e ← head_beta $ e v
+      let e ← head_beta <| e v
       retry_apply_aux e cfg ((b, n, v) :: gs)
 #align tactic.retry_apply_aux tactic.retry_apply_aux
 
@@ -116,7 +116,7 @@ private unsafe def relation_tactic (md : Transparency) (op_for : environment →
       let r ← mk_const refl
       retry_apply r { md, NewGoals := new_goals.non_dep_only }
       return ()
-    | none => fail $ tac_name ++ " tactic failed, target is not a relation application with the expected property."
+    | none => fail <| tac_name ++ " tactic failed, target is not a relation application with the expected property."
 #align tactic.relation_tactic tactic.relation_tactic
 
 /-- Similar to `reflexivity` with the difference that `apply'` is used instead of `apply` -/

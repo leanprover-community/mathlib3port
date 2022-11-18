@@ -92,7 +92,7 @@ theorem coe_inj {a b : R} : (↑a : K) = ↑b ↔ a = b :=
 #align is_fraction_ring.coe_inj IsFractionRing.coe_inj
 
 instance (priority := 100) [NoZeroDivisors K] : NoZeroSmulDivisors R K :=
-  NoZeroSmulDivisors.of_algebra_map_injective $ IsFractionRing.injective R K
+  NoZeroSmulDivisors.of_algebra_map_injective <| IsFractionRing.injective R K
 
 variable {R K}
 
@@ -115,9 +115,9 @@ attribute [local instance] Classical.decEq
 protected noncomputable irreducible_def inv (z : K) : K :=
   if h : z = 0 then 0
   else
-    mk' K (↑(sec (nonZeroDivisors A) z).2)
+    mk' K ↑(sec (nonZeroDivisors A) z).2
       ⟨(sec _ z).1,
-        mem_non_zero_divisors_iff_ne_zero.2 $ fun h0 => h $ eq_zero_of_fst_eq_zero (sec_spec (nonZeroDivisors A) z) h0⟩
+        mem_non_zero_divisors_iff_ne_zero.2 fun h0 => h <| eq_zero_of_fst_eq_zero (sec_spec (nonZeroDivisors A) z) h0⟩
 #align is_fraction_ring.inv IsFractionRing.inv
 
 attribute [local semireducible] IsFractionRing.inv
@@ -128,8 +128,8 @@ protected theorem mul_inv_cancel (x : K) (hx : x ≠ 0) : x * IsFractionRing.inv
         IsUnit.mul_left_inj
           (map_units K
             ⟨(sec _ x).1,
-              mem_non_zero_divisors_iff_ne_zero.2 $ fun h0 =>
-                hx $ eq_zero_of_fst_eq_zero (sec_spec (nonZeroDivisors A) x) h0⟩),
+              mem_non_zero_divisors_iff_ne_zero.2 fun h0 =>
+                hx <| eq_zero_of_fst_eq_zero (sec_spec (nonZeroDivisors A) x) h0⟩),
         one_mul, mul_assoc, mk'_spec, ← eq_mk'_iff_mul_eq] <;>
       exact (mk'_sec _ x).symm
 #align is_fraction_ring.mul_inv_cancel IsFractionRing.mul_inv_cancel
@@ -148,7 +148,7 @@ variable {B : Type _} [CommRing B] [IsDomain B] [Field K] {L : Type _} [Field L]
   {g : A →+* L}
 
 theorem mk'_mk_eq_div {r s} (hs : s ∈ nonZeroDivisors A) : mk' K r ⟨s, hs⟩ = algebraMap A K r / algebraMap A K s :=
-  mk'_eq_iff_eq_mul.2 $
+  mk'_eq_iff_eq_mul.2 <|
     (div_mul_cancel (algebraMap A K r) (IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors hs)).symm
 #align is_fraction_ring.mk'_mk_eq_div IsFractionRing.mk'_mk_eq_div
 
@@ -157,15 +157,13 @@ theorem mk'_eq_div {r} (s : nonZeroDivisors A) : mk' K r s = algebraMap A K r / 
   mk'_mk_eq_div s.2
 #align is_fraction_ring.mk'_eq_div IsFractionRing.mk'_eq_div
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
-theorem div_surjective (z : K) :
-    ∃ (x : A) (y : A) (hy : y ∈ nonZeroDivisors A), algebraMap _ _ x / algebraMap _ _ y = z :=
+theorem div_surjective (z : K) : ∃ (x y : A)(hy : y ∈ nonZeroDivisors A), algebraMap _ _ x / algebraMap _ _ y = z :=
   let ⟨x, ⟨y, hy⟩, h⟩ := mk'_surjective (nonZeroDivisors A) z
   ⟨x, y, hy, by rwa [mk'_eq_div] at h⟩
 #align is_fraction_ring.div_surjective IsFractionRing.div_surjective
 
 theorem is_unit_map_of_injective (hg : Function.Injective g) (y : nonZeroDivisors A) : IsUnit (g y) :=
-  IsUnit.mk0 (g y) $ show g.toMonoidWithZeroHom y ≠ 0 from map_ne_zero_of_mem_non_zero_divisors g hg y.2
+  IsUnit.mk0 (g y) <| show g.toMonoidWithZeroHom y ≠ 0 from map_ne_zero_of_mem_non_zero_divisors g hg y.2
 #align is_fraction_ring.is_unit_map_of_injective IsFractionRing.is_unit_map_of_injective
 
 @[simp]
@@ -193,7 +191,7 @@ and an injective ring hom `g : A →+* L` where `L` is a field, we get a
 field hom sending `z : K` to `g x * (g y)⁻¹`, where `(x, y) : A × (non_zero_divisors A)` are
 such that `z = f x * (f y)⁻¹`. -/
 noncomputable def lift (hg : Injective g) : K →+* L :=
-  lift $ fun y : nonZeroDivisors A => is_unit_map_of_injective hg y
+  lift fun y : nonZeroDivisors A => is_unit_map_of_injective hg y
 #align is_fraction_ring.lift IsFractionRing.lift
 
 /-- Given an integral domain `A` with field of fractions `K`,

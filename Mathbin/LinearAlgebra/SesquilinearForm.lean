@@ -5,8 +5,8 @@ Authors: Andreas Swerdlow
 -/
 import Mathbin.Algebra.Module.LinearMap
 import Mathbin.LinearAlgebra.BilinearMap
-import Mathbin.LinearAlgebra.Matrix.Basis
-import Mathbin.LinearAlgebra.LinearPmap
+import Mathbin.Algebra.EuclideanDomain.Instances
+import Mathbin.RingTheory.NonZeroDivisors
 
 /-!
 # Sesquilinear form
@@ -149,7 +149,7 @@ theorem linear_independent_of_is_Ortho {B : V₁ →ₛₗ[I₁] V₁ →ₛₗ[
     (hv₂ : ∀ i, ¬B.IsOrtho (v i) (v i)) : LinearIndependent K₁ v := by classical
   rw [linear_independent_iff']
   intro s w hs i hi
-  have : B (s.sum $ fun i : n => w i • v i) (v i) = 0 := by rw [hs, map_zero, zero_apply]
+  have : B (s.sum fun i : n => w i • v i) (v i) = 0 := by rw [hs, map_zero, zero_apply]
   have hsum : (s.sum fun j : n => I₁ (w j) * B (v j) (v i)) = I₁ (w i) * B (v i) (v i) := by
     apply Finset.sum_eq_single_of_mem i hi
     intro j hj hij
@@ -377,9 +377,9 @@ theorem span_singleton_inf_orthogonal_eq_bot (B : V₁ →ₛₗ[J₁] V₁ →�
         (fun y => by
           simp at y
           exact y)
-        fun hfalse => False.elim $ hx hfalse
+        fun hfalse => False.elim <| hx hfalse
     
-  · rw [Submodule.mem_span] <;> exact fun _ hp => hp $ Finset.mem_singleton_self _
+  · rw [Submodule.mem_span] <;> exact fun _ hp => hp <| Finset.mem_singleton_self _
     
 #align linear_map.span_singleton_inf_orthogonal_eq_bot LinearMap.span_singleton_inf_orthogonal_eq_bot
 
@@ -409,8 +409,8 @@ theorem span_singleton_sup_orthogonal_eq_top {B : V →ₗ[K] V →ₗ[K] K} {x 
   is complement to its orthogonal complement. -/
 theorem is_compl_span_singleton_orthogonal {B : V →ₗ[K] V →ₗ[K] K} {x : V} (hx : ¬B.IsOrtho x x) :
     IsCompl (K ∙ x) (Submodule.orthogonalBilin (K ∙ x) B) :=
-  { Disjoint := disjoint_iff.2 $ span_singleton_inf_orthogonal_eq_bot B x hx,
-    Codisjoint := codisjoint_iff.2 $ span_singleton_sup_orthogonal_eq_top hx }
+  { Disjoint := disjoint_iff.2 <| span_singleton_inf_orthogonal_eq_bot B x hx,
+    Codisjoint := codisjoint_iff.2 <| span_singleton_sup_orthogonal_eq_top hx }
 #align linear_map.is_compl_span_singleton_orthogonal LinearMap.is_compl_span_singleton_orthogonal
 
 end Orthogonal
@@ -579,7 +579,7 @@ theorem mem_is_pair_self_adjoint_submodule (f : Module.EndCat R M) :
 #align linear_map.mem_is_pair_self_adjoint_submodule LinearMap.mem_is_pair_self_adjoint_submodule
 
 theorem is_pair_self_adjoint_equiv (e : M₁ ≃ₗ[R] M) (f : Module.EndCat R M) :
-    IsPairSelfAdjoint B F f ↔ IsPairSelfAdjoint (B.compl₁₂ (↑e) ↑e) (F.compl₁₂ (↑e) ↑e) (e.symm.conj f) := by
+    IsPairSelfAdjoint B F f ↔ IsPairSelfAdjoint (B.compl₁₂ ↑e ↑e) (F.compl₁₂ ↑e ↑e) (e.symm.conj f) := by
   have hₗ :
     (F.compl₁₂ (↑e : M₁ →ₗ[R] M) (↑e : M₁ →ₗ[R] M)).comp (e.symm.conj f) =
       (F.comp f).compl₁₂ (↑e : M₁ →ₗ[R] M) (↑e : M₁ →ₗ[R] M) :=
@@ -638,13 +638,13 @@ variable (M₁ M₂ I₁ I₂)
 /-- In a non-trivial module, zero is not non-degenerate. -/
 theorem not_separating_left_zero [Nontrivial M₁] : ¬(0 : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R).SeparatingLeft :=
   let ⟨m, hm⟩ := exists_ne (0 : M₁)
-  fun h => hm (h m $ fun n => rfl)
+  fun h => hm ((h m) fun n => rfl)
 #align linear_map.not_separating_left_zero LinearMap.not_separating_left_zero
 
 variable {M₁ M₂ I₁ I₂}
 
 theorem SeparatingLeft.ne_zero [Nontrivial M₁] {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} (h : B.SeparatingLeft) : B ≠ 0 := fun h0 =>
-  not_separating_left_zero M₁ M₂ I₁ I₂ $ h0 ▸ h
+  not_separating_left_zero M₁ M₂ I₁ I₂ <| h0 ▸ h
 #align linear_map.separating_left.ne_zero LinearMap.SeparatingLeft.ne_zero
 
 section Linear
@@ -772,7 +772,7 @@ elements. -/
 theorem IsOrtho.not_is_ortho_basis_self_of_separating_left [Nontrivial R] {B : M →ₛₗ[I] M →ₛₗ[I'] R} {v : Basis n R M}
     (h : B.IsOrtho v) (hB : B.SeparatingLeft) (i : n) : ¬B.IsOrtho (v i) (v i) := by
   intro ho
-  refine' v.ne_zero i (hB (v i) $ fun m => _)
+  refine' v.ne_zero i ((hB (v i)) fun m => _)
   obtain ⟨vi, rfl⟩ := v.repr.symm.surjective m
   rw [Basis.repr_symm_apply, Finsupp.total_apply, Finsupp.sum, map_sum]
   apply Finset.sum_eq_zero

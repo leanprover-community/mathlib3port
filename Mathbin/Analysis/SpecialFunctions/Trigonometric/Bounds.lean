@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 -/
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Basic
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Deriv
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.ArctanDeriv
 
 /-!
@@ -42,7 +41,7 @@ theorem sin_lt {x : ℝ} (h : 0 < x) : sin x < x := by
   · exact (sin_le_one x).trans_lt h'
     
   have hx : |x| = x := abs_of_nonneg h.le
-  have := le_of_abs_le (sin_bound $ show |x| ≤ 1 by rwa [hx])
+  have := le_of_abs_le (sin_bound <| show |x| ≤ 1 by rwa [hx])
   rw [sub_le_iff_le_add', hx] at this
   apply this.trans_lt
   rw [sub_add, sub_lt_self_iff, sub_pos, div_eq_mul_inv (x ^ 3)]
@@ -58,7 +57,7 @@ tight; the tighter inequality is sin x > x - x ^ 3 / 6 for all x > 0, but this i
 a simpler proof. -/
 theorem sin_gt_sub_cube {x : ℝ} (h : 0 < x) (h' : x ≤ 1) : x - x ^ 3 / 4 < sin x := by
   have hx : |x| = x := abs_of_nonneg h.le
-  have := neg_le_of_abs_le (sin_bound $ show |x| ≤ 1 by rwa [hx])
+  have := neg_le_of_abs_le (sin_bound <| show |x| ≤ 1 by rwa [hx])
   rw [le_sub_iff_add_le, hx] at this
   refine' lt_of_lt_of_le _ this
   have : x ^ 3 / 4 - x ^ 3 / 6 = x ^ 3 * 12⁻¹ := by norm_num [div_eq_mul_inv, ← mul_sub]
@@ -70,7 +69,7 @@ theorem sin_gt_sub_cube {x : ℝ} (h : 0 < x) (h' : x ≤ 1) : x - x ^ 3 / 4 < s
 
 /-- The derivative of `tan x - x` is `1/(cos x)^2 - 1` away from the zeroes of cos. -/
 theorem deriv_tan_sub_id (x : ℝ) (h : cos x ≠ 0) : deriv (fun y : ℝ => tan y - y) x = 1 / cos x ^ 2 - 1 :=
-  HasDerivAt.deriv $ by simpa using (has_deriv_at_tan h).add (hasDerivAtId x).neg
+  HasDerivAt.deriv <| by simpa using (has_deriv_at_tan h).add (hasDerivAtId x).neg
 #align real.deriv_tan_sub_id Real.deriv_tan_sub_id
 
 /-- For all `0 ≤ x < π/2` we have `x < tan x`.

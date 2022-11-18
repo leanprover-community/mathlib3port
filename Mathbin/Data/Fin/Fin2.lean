@@ -36,13 +36,11 @@ universe u
 
 #print Fin2 /-
 /-- An alternate definition of `fin n` defined as an inductive type instead of a subtype of `ℕ`. -/
-inductive Fin2 : ℕ → Type
-  |
-  /-- `0` as a member of `fin (succ n)` (`fin 0` is empty) -/
-  fz {n} : Fin2 (succ n)
-  |
-  /-- `n` as a member of `fin (succ n)` -/
-  fs {n} : Fin2 n → Fin2 (succ n)
+inductive Fin2 : ℕ → Type/-- `0` as a member of `fin (succ n)` (`fin 0` is empty) -/
+
+  | fz {n} : Fin2 (succ n)/-- `n` as a member of `fin (succ n)` -/
+
+  | fs {n} : Fin2 n → Fin2 (succ n)
 #align fin2 Fin2
 -/
 

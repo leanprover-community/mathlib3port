@@ -29,11 +29,11 @@ variable [Zero α] [Mul α]
 
 instance : MulZeroClass (WithTop α) where
   zero := 0
-  mul m n := if m = 0 ∨ n = 0 then 0 else m.bind fun a => n.bind $ fun b => ↑(a * b)
-  zero_mul a := if_pos $ Or.inl rfl
-  mul_zero a := if_pos $ Or.inr rfl
+  mul m n := if m = 0 ∨ n = 0 then 0 else m.bind fun a => n.bind fun b => ↑(a * b)
+  zero_mul a := if_pos <| Or.inl rfl
+  mul_zero a := if_pos <| Or.inr rfl
 
-theorem mul_def {a b : WithTop α} : a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind $ fun b => ↑(a * b) :=
+theorem mul_def {a b : WithTop α} : a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind fun b => ↑(a * b) :=
   rfl
 #align with_top.mul_def WithTop.mul_def
 
@@ -58,8 +58,8 @@ variable [MulZeroClass α]
 
 @[norm_cast]
 theorem coe_mul {a b : α} : (↑(a * b) : WithTop α) = a * b :=
-  (Decidable.byCases fun this : a = 0 => by simp [this]) $ fun ha =>
-    (Decidable.byCases fun this : b = 0 => by simp [this]) $ fun hb => by
+  (Decidable.byCases fun this : a = 0 => by simp [this]) fun ha =>
+    (Decidable.byCases fun this : b = 0 => by simp [this]) fun hb => by
       simp [*, mul_def]
       rfl
 #align with_top.coe_mul WithTop.coe_mul
@@ -74,9 +74,9 @@ theorem mul_eq_top_iff {a b : WithTop α} : a * b = ⊤ ↔ a ≠ 0 ∧ b = ⊤ 
   cases a <;> cases b <;> simp only [none_eq_top, some_eq_coe]
   · simp [← coe_mul]
     
-  · by_cases hb:b = 0 <;> simp [hb]
+  · by_cases hb : b = 0 <;> simp [hb]
     
-  · by_cases ha:a = 0 <;> simp [ha]
+  · by_cases ha : a = 0 <;> simp [ha]
     
   · simp [← coe_mul]
     
@@ -90,10 +90,10 @@ theorem mul_lt_top [Preorder α] {a b : WithTop α} (ha : a ≠ ⊤) (hb : b ≠
 
 @[simp]
 theorem untop'_zero_mul (a b : WithTop α) : (a * b).untop' 0 = a.untop' 0 * b.untop' 0 := by
-  by_cases ha:a = 0
+  by_cases ha : a = 0
   · rw [ha, zero_mul, ← coe_zero, untop'_coe, zero_mul]
     
-  by_cases hb:b = 0
+  by_cases hb : b = 0
   · rw [hb, mul_zero, ← coe_zero, untop'_coe, mul_zero]
     
   induction a using WithTop.recTopCoe
@@ -181,9 +181,9 @@ variable [CanonicallyOrderedCommSemiring α]
 
 private theorem distrib' (a b c : WithTop α) : (a + b) * c = a * c + b * c := by
   induction c using WithTop.recTopCoe
-  · by_cases ha:a = 0 <;> simp [ha]
+  · by_cases ha : a = 0 <;> simp [ha]
     
-  · by_cases hc:c = 0
+  · by_cases hc : c = 0
     · simp [hc]
       
     simp [mul_coe hc]
@@ -228,7 +228,7 @@ variable [Zero α] [Mul α]
 instance : MulZeroClass (WithBot α) :=
   WithTop.mulZeroClass
 
-theorem mul_def {a b : WithBot α} : a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind $ fun b => ↑(a * b) :=
+theorem mul_def {a b : WithBot α} : a * b = if a = 0 ∨ b = 0 then 0 else a.bind fun a => b.bind fun b => ↑(a * b) :=
   rfl
 #align with_bot.mul_def WithBot.mul_def
 
@@ -255,8 +255,8 @@ variable [MulZeroClass α]
 
 @[norm_cast]
 theorem coe_mul {a b : α} : (↑(a * b) : WithBot α) = a * b :=
-  (Decidable.byCases fun this : a = 0 => by simp [this]) $ fun ha =>
-    (Decidable.byCases fun this : b = 0 => by simp [this]) $ fun hb => by
+  (Decidable.byCases fun this : a = 0 => by simp [this]) fun ha =>
+    (Decidable.byCases fun this : b = 0 => by simp [this]) fun hb => by
       simp [*, mul_def]
       rfl
 #align with_bot.coe_mul WithBot.coe_mul

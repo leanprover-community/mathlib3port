@@ -6,9 +6,9 @@ Authors: Scott Morrison, Shing Tak Lam, Mario Carneiro
 import Mathbin.Data.Int.Modeq
 import Mathbin.Data.Nat.Bits
 import Mathbin.Data.Nat.Log
-import Mathbin.Data.Nat.Parity
 import Mathbin.Data.List.Indexes
 import Mathbin.Data.List.Palindrome
+import Mathbin.Algebra.Parity
 import Mathbin.Tactic.IntervalCases
 import Mathbin.Tactic.Linarith.Default
 
@@ -98,7 +98,7 @@ theorem digits_zero_succ (n : ℕ) : digits 0 n.succ = [n + 1] :=
 #align nat.digits_zero_succ Nat.digits_zero_succ
 
 theorem digits_zero_succ' : ∀ {n : ℕ} (w : 0 < n), digits 0 n = [n]
-  | 0, h => absurd h dec_trivial
+  | 0, h => absurd h (by decide)
   | n + 1, _ => rfl
 #align nat.digits_zero_succ' Nat.digits_zero_succ'
 
@@ -123,8 +123,8 @@ theorem digits_add_two_add_one (b n : ℕ) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem digits_def' : ∀ {b : ℕ} (h : 2 ≤ b) {n : ℕ} (w : 0 < n), digits b n = (n % b)::digits b (n / b)
-  | 0, h => absurd h dec_trivial
-  | 1, h => absurd h dec_trivial
+  | 0, h => absurd h (by decide)
+  | 1, h => absurd h (by decide)
   | b + 2, h => digits_aux_def _ _
 #align nat.digits_def' Nat.digits_def'
 
@@ -297,7 +297,7 @@ theorem digits_of_digits (b : ℕ) (h : 2 ≤ b) (L : List ℕ) (w₁ : ∀ l �
       
     · exact w₁ d (List.mem_cons_self _ _)
       
-    · by_cases h':L = []
+    · by_cases h' : L = []
       · rcases h' with rfl
         simp at w₂
         left
@@ -396,7 +396,7 @@ theorem digits_eq_cons_digits_div {b n : ℕ} (h : 2 ≤ b) (w : 0 < n) : digits
 #align nat.digits_eq_cons_digits_div Nat.digits_eq_cons_digits_div
 
 theorem digits_last {b : ℕ} (m : ℕ) (h : 2 ≤ b) (p q) : (digits b m).last p = (digits b (m / b)).last q := by
-  by_cases hm:m = 0
+  by_cases hm : m = 0
   · simp [hm]
     
   simp only [digits_eq_cons_digits_div h (Nat.pos_of_ne_zero hm)]
@@ -447,14 +447,14 @@ theorem last_digit_ne_zero (b : ℕ) {m : ℕ} (hm : m ≠ 0) : (digits b m).las
   apply Nat.strong_induction_on m
   intro n IH hn
   have hnpos : 0 < n := Nat.pos_of_ne_zero hn
-  by_cases hnb:n < b + 2
+  by_cases hnb : n < b + 2
   · simp_rw [digits_of_lt b.succ.succ n hnpos hnb]
     exact pos_iff_ne_zero.mp hnpos
     
-  · rw [digits_last n (show 2 ≤ b + 2 from dec_trivial)]
-    refine' IH _ (Nat.div_lt_self hnpos dec_trivial) _
+  · rw [digits_last n (show 2 ≤ b + 2 by decide)]
+    refine' IH _ (Nat.div_lt_self hnpos (by decide)) _
     · rw [← pos_iff_ne_zero]
-      exact Nat.div_pos (le_of_not_lt hnb) dec_trivial
+      exact Nat.div_pos (le_of_not_lt hnb) (by decide)
       
     
 #align nat.last_digit_ne_zero Nat.last_digit_ne_zero
@@ -491,7 +491,7 @@ theorem of_digits_lt_base_pow_length' {b : ℕ} {l : List ℕ} (hl : ∀ x ∈ l
     
   · rw [of_digits, List.length_cons, pow_succ]
     have : (of_digits (b + 2) tl + 1) * (b + 2) ≤ (b + 2) ^ tl.length * (b + 2) :=
-      mul_le_mul (IH fun x hx => hl _ (List.mem_cons_of_mem _ hx)) (by rfl) dec_trivial (Nat.zero_le _)
+      mul_le_mul (IH fun x hx => hl _ (List.mem_cons_of_mem _ hx)) (by rfl) (by decide) (Nat.zero_le _)
     suffices ↑hd < b + 2 by linarith
     norm_cast
     exact hl hd (List.mem_cons_self _ _)

@@ -3,7 +3,6 @@ Copyright (c) 2021 Ivan Sadofschi Costa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ivan Sadofschi Costa
 -/
-import Mathbin.Data.Fin.Tuple.Default
 import Mathbin.Data.Finsupp.Defs
 
 /-!
@@ -51,13 +50,13 @@ theorem cons_succ : cons y s i.succ = s i :=
 
 @[simp]
 theorem tail_cons : tail (cons y s) = s :=
-  ext $ fun k => by simp only [tail_apply, cons_succ]
+  ext fun k => by simp only [tail_apply, cons_succ]
 #align finsupp.tail_cons Finsupp.tail_cons
 
 @[simp]
 theorem cons_tail : cons (t 0) (tail t) = t := by
   ext
-  by_cases c_a:a = 0
+  by_cases c_a : a = 0
   · rw [c_a, cons_zero]
     
   · rw [← Fin.succ_pred a c_a, cons_succ, ← tail_apply]
@@ -67,7 +66,7 @@ theorem cons_tail : cons (t 0) (tail t) = t := by
 @[simp]
 theorem cons_zero_zero : cons 0 (0 : Fin n →₀ M) = 0 := by
   ext
-  by_cases c:a = 0
+  by_cases c : a = 0
   · simp [c]
     
   · rw [← Fin.succ_pred a c, cons_succ]

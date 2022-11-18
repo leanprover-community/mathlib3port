@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
 import Mathbin.Data.Nat.Multiplicity
+import Mathbin.Data.Zmod.Algebra
 import Mathbin.RingTheory.WittVector.Basic
 import Mathbin.RingTheory.WittVector.IsPoly
 import Mathbin.FieldTheory.PerfectClosure
@@ -80,7 +81,7 @@ theorem bind₁_frobenius_poly_rat_witt_polynomial (n : ℕ) :
 /-- An auxiliary definition, to avoid an excessive amount of finiteness proofs
 for `multiplicity p n`. -/
 private def pnat_multiplicity (n : ℕ+) : ℕ :=
-  (multiplicity p n).get $ multiplicity.finite_nat_iff.mpr $ ⟨ne_of_gt hp.1.one_lt, n.2⟩
+  (multiplicity p n).get <| multiplicity.finite_nat_iff.mpr <| ⟨ne_of_gt hp.1.one_lt, n.2⟩
 #align witt_vector.pnat_multiplicity witt_vector.pnat_multiplicity
 
 -- mathport name: exprv
@@ -243,7 +244,7 @@ variable {p}
 /-- `frobenius_fun` is the function underlying the ring endomorphism
 `frobenius : 𝕎 R →+* frobenius 𝕎 R`. -/
 def frobeniusFun (x : 𝕎 R) : 𝕎 R :=
-  mk p $ fun n => MvPolynomial.aeval x.coeff (frobeniusPoly p n)
+  (mk p) fun n => MvPolynomial.aeval x.coeff (frobeniusPoly p n)
 #align witt_vector.frobenius_fun WittVector.frobeniusFun
 
 theorem coeff_frobenius_fun (x : 𝕎 R) (n : ℕ) :
@@ -353,11 +354,11 @@ def frobeniusEquiv [PerfectRing R p] : WittVector p R ≃+* WittVector p R :=
   { (WittVector.frobenius : WittVector p R →+* WittVector p R) with toFun := WittVector.frobenius,
     invFun := map (pthRoot R p),
     left_inv := fun f =>
-      ext $ fun n => by
+      ext fun n => by
         rw [frobenius_eq_map_frobenius]
         exact pth_root_frobenius _,
     right_inv := fun f =>
-      ext $ fun n => by
+      ext fun n => by
         rw [frobenius_eq_map_frobenius]
         exact frobenius_pth_root _ }
 #align witt_vector.frobenius_equiv WittVector.frobeniusEquiv

@@ -27,16 +27,14 @@ namespace List
 
 variable {α : Type _} [DecidableEq α]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Return the `z` such that `x :: z :: _` appears in `xs`, or `default` if there is no such `z`. -/
 def nextOr : ∀ (xs : List α) (x default : α), α
   | [], x, default => default
   | [y], x, default => default
   |-- Handles the not-found and the wraparound case
-      y::z::xs,
-    x, default => if x = y then z else next_or (z::xs) x default
+      y ::
+      z :: xs,
+    x, default => if x = y then z else next_or (z :: xs) x default
 #align list.next_or List.nextOr
 
 @[simp]
@@ -49,15 +47,12 @@ theorem next_or_singleton (x y d : α) : nextOr [y] x d = d :=
   rfl
 #align list.next_or_singleton List.next_or_singleton
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem next_or_self_cons_cons (xs : List α) (x y d : α) : nextOr (x::y::xs) x d = y :=
+theorem next_or_self_cons_cons (xs : List α) (x y d : α) : nextOr (x :: y :: xs) x d = y :=
   if_pos rfl
 #align list.next_or_self_cons_cons List.next_or_self_cons_cons
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem next_or_cons_of_ne (xs : List α) (y x d : α) (h : x ≠ y) : nextOr (y::xs) x d = nextOr xs x d := by
+theorem next_or_cons_of_ne (xs : List α) (y x d : α) (h : x ≠ y) : nextOr (y :: xs) x d = nextOr xs x d := by
   cases' xs with z zs
   · rfl
     
@@ -75,7 +70,7 @@ theorem next_or_eq_next_or_of_mem_of_ne (xs : List α) (x d d' : α) (x_mem : x 
   · simp at x_mem x_ne
     contradiction
     
-  by_cases h:x = y
+  by_cases h : x = y
   · rw [h, next_or_self_cons_cons, next_or_self_cons_cons]
     
   · rw [next_or, next_or, IH] <;> simpa [h] using x_mem
@@ -89,7 +84,7 @@ theorem mem_of_next_or_ne {xs : List α} {x d : α} (h : nextOr xs x d ≠ d) : 
   cases' ys with z zs
   · simpa using h
     
-  · by_cases hx:x = y
+  · by_cases hx : x = y
     · simp [hx]
       
     · rw [next_or_cons_of_ne _ _ _ _ hx] at h
@@ -140,10 +135,6 @@ def next (l : List α) (x : α) (h : x ∈ l) : α :=
   nextOr l x (l.nthLe 0 (length_pos_of_mem h))
 #align list.next List.next
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Given an element `x : α` of `l : list α` such that `x ∈ l`, get the previous
 element of `l`. This works from head to tail, (including a check for last element)
 so it will match on first hit, ignoring later duplicates.
@@ -157,8 +148,9 @@ so it will match on first hit, ignoring later duplicates.
 def prev : ∀ (l : List α) (x : α) (h : x ∈ l), α
   | [], _, h => by simpa using h
   | [y], _, _ => y
-  | y::z::xs, x, h =>
-    if hx : x = y then last (z::xs) (cons_ne_nil _ _) else if x = z then y else prev (z::xs) x (by simpa [hx] using h)
+  | y :: z :: xs, x, h =>
+    if hx : x = y then last (z :: xs) (cons_ne_nil _ _)
+    else if x = z then y else prev (z :: xs) x (by simpa [hx] using h)
 #align list.prev List.prev
 
 variable (l : List α) (x : α) (h : x ∈ l)
@@ -173,28 +165,17 @@ theorem prev_singleton (x y : α) (h : x ∈ [y]) : prev [y] x h = y :=
   rfl
 #align list.prev_singleton List.prev_singleton
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem next_cons_cons_eq' (y z : α) (h : x ∈ y::z::l) (hx : x = y) : next (y::z::l) x h = z := by
+theorem next_cons_cons_eq' (y z : α) (h : x ∈ y :: z :: l) (hx : x = y) : next (y :: z :: l) x h = z := by
   rw [next, next_or, if_pos hx]
 #align list.next_cons_cons_eq' List.next_cons_cons_eq'
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem next_cons_cons_eq (z : α) (h : x ∈ x::z::l) : next (x::z::l) x h = z :=
+theorem next_cons_cons_eq (z : α) (h : x ∈ x :: z :: l) : next (x :: z :: l) x h = z :=
   next_cons_cons_eq' l x x z h rfl
 #align list.next_cons_cons_eq List.next_cons_cons_eq
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem next_ne_head_ne_last (y : α) (h : x ∈ y::l) (hy : x ≠ y) (hx : x ≠ last (y::l) (cons_ne_nil _ _)) :
-    next (y::l) x h = next l x (by simpa [hy] using h) := by
+theorem next_ne_head_ne_last (y : α) (h : x ∈ y :: l) (hy : x ≠ y) (hx : x ≠ last (y :: l) (cons_ne_nil _ _)) :
+    next (y :: l) x h = next l x (by simpa [hy] using h) := by
   rw [next, next, next_or_cons_of_ne _ _ _ _ hy, next_or_eq_next_or_of_mem_of_ne]
   · rwa [last_cons] at hx
     
@@ -202,10 +183,8 @@ theorem next_ne_head_ne_last (y : α) (h : x ∈ y::l) (hy : x ≠ y) (hx : x �
     
 #align list.next_ne_head_ne_last List.next_ne_head_ne_last
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem next_cons_concat (y : α) (hy : x ≠ y) (hx : x ∉ l)
-    (h : x ∈ (y::l) ++ [x] := mem_append_right _ (mem_singleton_self x)) : next ((y::l) ++ [x]) x h = y := by
+    (h : x ∈ y :: l ++ [x] := mem_append_right _ (mem_singleton_self x)) : next (y :: l ++ [x]) x h = y := by
   rw [next, next_or_concat]
   · rfl
     
@@ -213,11 +192,8 @@ theorem next_cons_concat (y : α) (hy : x ≠ y) (hx : x ∉ l)
     
 #align list.next_cons_concat List.next_cons_concat
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem next_last_cons (y : α) (h : x ∈ y::l) (hy : x ≠ y) (hx : x = last (y::l) (cons_ne_nil _ _)) (hl : Nodup l) :
-    next (y::l) x h = y := by
+theorem next_last_cons (y : α) (h : x ∈ y :: l) (hy : x ≠ y) (hx : x = last (y :: l) (cons_ne_nil _ _)) (hl : Nodup l) :
+    next (y :: l) x h = y := by
   rw [next, nth_le, ← init_append_last (cons_ne_nil y l), hx, next_or_concat]
   subst hx
   intro H
@@ -235,45 +211,26 @@ theorem next_last_cons (y : α) (h : x ∈ y::l) (hy : x ≠ y) (hx : x = last (
     
 #align list.next_last_cons List.next_last_cons
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem prev_last_cons' (y : α) (h : x ∈ y::l) (hx : x = y) : prev (y::l) x h = last (y::l) (cons_ne_nil _ _) := by
-  cases l <;> simp [prev, hx]
+theorem prev_last_cons' (y : α) (h : x ∈ y :: l) (hx : x = y) : prev (y :: l) x h = last (y :: l) (cons_ne_nil _ _) :=
+  by cases l <;> simp [prev, hx]
 #align list.prev_last_cons' List.prev_last_cons'
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prev_last_cons (h : x ∈ x::l) : prev (x::l) x h = last (x::l) (cons_ne_nil _ _) :=
+theorem prev_last_cons (h : x ∈ x :: l) : prev (x :: l) x h = last (x :: l) (cons_ne_nil _ _) :=
   prev_last_cons' l x x h rfl
 #align list.prev_last_cons List.prev_last_cons
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem prev_cons_cons_eq' (y z : α) (h : x ∈ y::z::l) (hx : x = y) :
-    prev (y::z::l) x h = last (z::l) (cons_ne_nil _ _) := by rw [prev, dif_pos hx]
+theorem prev_cons_cons_eq' (y z : α) (h : x ∈ y :: z :: l) (hx : x = y) :
+    prev (y :: z :: l) x h = last (z :: l) (cons_ne_nil _ _) := by rw [prev, dif_pos hx]
 #align list.prev_cons_cons_eq' List.prev_cons_cons_eq'
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prev_cons_cons_eq (z : α) (h : x ∈ x::z::l) : prev (x::z::l) x h = last (z::l) (cons_ne_nil _ _) :=
+theorem prev_cons_cons_eq (z : α) (h : x ∈ x :: z :: l) : prev (x :: z :: l) x h = last (z :: l) (cons_ne_nil _ _) :=
   prev_cons_cons_eq' l x x z h rfl
 #align list.prev_cons_cons_eq List.prev_cons_cons_eq
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem prev_cons_cons_of_ne' (y z : α) (h : x ∈ y::z::l) (hy : x ≠ y) (hz : x = z) : prev (y::z::l) x h = y := by
+theorem prev_cons_cons_of_ne' (y z : α) (h : x ∈ y :: z :: l) (hy : x ≠ y) (hz : x = z) : prev (y :: z :: l) x h = y :=
+  by
   cases l
   · simp [prev, hy, hz]
     
@@ -281,21 +238,12 @@ theorem prev_cons_cons_of_ne' (y z : α) (h : x ∈ y::z::l) (hy : x ≠ y) (hz 
     
 #align list.prev_cons_cons_of_ne' List.prev_cons_cons_of_ne'
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem prev_cons_cons_of_ne (y : α) (h : x ∈ y::x::l) (hy : x ≠ y) : prev (y::x::l) x h = y :=
+theorem prev_cons_cons_of_ne (y : α) (h : x ∈ y :: x :: l) (hy : x ≠ y) : prev (y :: x :: l) x h = y :=
   prev_cons_cons_of_ne' _ _ _ _ _ hy rfl
 #align list.prev_cons_cons_of_ne List.prev_cons_cons_of_ne
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem prev_ne_cons_cons (y z : α) (h : x ∈ y::z::l) (hy : x ≠ y) (hz : x ≠ z) :
-    prev (y::z::l) x h = prev (z::l) x (by simpa [hy] using h) := by
+theorem prev_ne_cons_cons (y z : α) (h : x ∈ y :: z :: l) (hy : x ≠ y) (hz : x ≠ z) :
+    prev (y :: z :: l) x h = prev (z :: l) x (by simpa [hy] using h) := by
   cases l
   · simpa [hy, hz] using h
     
@@ -316,7 +264,7 @@ theorem prev_mem : l.prev x h ∈ l := by
   induction' tl with hd' tl hl generalizing hd
   · simp
     
-  · by_cases hx:x = hd
+  · by_cases hx : x = hd
     · simp only [hx, prev_cons_cons_eq]
       exact mem_cons_of_mem _ (last_mem _)
       
@@ -330,8 +278,6 @@ theorem prev_mem : l.prev x h ∈ l := by
     
 #align list.prev_mem List.prev_mem
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem next_nth_le (l : List α) (h : Nodup l) (n : ℕ) (hn : n < l.length) :
     next l (l.nthLe n hn) (nth_le_mem _ _ _) = l.nthLe ((n + 1) % l.length) (Nat.mod_lt _ (n.zero_le.trans_lt hn)) := by
   cases' l with x l
@@ -346,7 +292,7 @@ theorem next_nth_le (l : List α) (h : Nodup l) (n : ℕ) (hn : n < l.length) :
     · have hn' : n.succ ≤ l.length.succ := by
         refine' Nat.succ_le_of_lt _
         simpa [Nat.succ_lt_succ_iff] using hn
-      have hx' : (x::y::l).nthLe n.succ hn ≠ x := by
+      have hx' : (x :: y :: l).nthLe n.succ hn ≠ x := by
         intro H
         suffices n.succ = 0 by simpa
         rw [nodup_iff_nth_le_inj] at h
@@ -383,9 +329,6 @@ theorem next_nth_le (l : List α) (h : Nodup l) (n : ℕ) (hn : n < l.length) :
     
 #align list.next_nth_le List.next_nth_le
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prev_nth_le (l : List α) (h : Nodup l) (n : ℕ) (hn : n < l.length) :
     prev l (l.nthLe n hn) (nth_le_mem _ _ _) =
       l.nthLe ((n + (l.length - 1)) % l.length) (Nat.mod_lt _ (n.zero_le.trans_lt hn)) :=
@@ -405,7 +348,7 @@ theorem prev_nth_le (l : List α) (h : Nodup l) (n : ℕ) (hn : n < l.length) :
       
     · rw [prev_ne_cons_cons]
       · convert hl _ _ h.of_cons _ using 1
-        have : ∀ k hk, (y::l).nthLe k hk = (x::y::l).nthLe (k + 1) (Nat.succ_lt_succ hk) := by
+        have : ∀ k hk, (y :: l).nthLe k hk = (x :: y :: l).nthLe (k + 1) (Nat.succ_lt_succ hk) := by
           intros
           simpa
         rw [this]
@@ -551,8 +494,7 @@ theorem mk'_eq_coe (l : List α) : Quotient.mk' l = (l : Cycle α) :=
   rfl
 #align cycle.mk'_eq_coe Cycle.mk'_eq_coe
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem coe_cons_eq_coe_append (l : List α) (a : α) : (↑(a::l) : Cycle α) = ↑(l ++ [a]) :=
+theorem coe_cons_eq_coe_append (l : List α) (a : α) : (↑(a :: l) : Cycle α) = ↑(l ++ [a]) :=
   Quot.sound ⟨1, by rw [rotate_cons_succ, rotate_zero]⟩
 #align cycle.coe_cons_eq_coe_append Cycle.coe_cons_eq_coe_append
 
@@ -583,19 +525,18 @@ theorem empty_eq : ∅ = @nil α :=
 instance : Inhabited (Cycle α) :=
   ⟨nil⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- An induction principle for `cycle`. Use as `induction s using cycle.induction_on`. -/
 @[elab_as_elim]
-theorem induction_on {C : Cycle α → Prop} (s : Cycle α) (H0 : C nil) (HI : ∀ (a) (l : List α), C ↑l → C ↑(a::l)) :
+theorem induction_on {C : Cycle α → Prop} (s : Cycle α) (H0 : C nil) (HI : ∀ (a) (l : List α), C ↑l → C ↑(a :: l)) :
     C s :=
-  Quotient.inductionOn' s $ fun l => by
+  (Quotient.inductionOn' s) fun l => by
     apply List.recOn l <;> simp
     assumption'
 #align cycle.induction_on Cycle.induction_on
 
 /-- For `x : α`, `s : cycle α`, `x ∈ s` indicates that `x` occurs at least once in `s`. -/
 def Mem (a : α) (s : Cycle α) : Prop :=
-  Quot.liftOn s (fun l => a ∈ l) fun l₁ l₂ e => propext $ e.mem_iff
+  Quot.liftOn s (fun l => a ∈ l) fun l₁ l₂ e => propext <| e.mem_iff
 #align cycle.mem Cycle.Mem
 
 instance : Membership α (Cycle α) :=
@@ -687,10 +628,9 @@ theorem Subsingleton.congr {s : Cycle α} (h : Subsingleton s) : ∀ ⦃x⦄ (hx
   rcases h with (rfl | ⟨z, rfl⟩) <;> simp
 #align cycle.subsingleton.congr Cycle.Subsingleton.congr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 /-- A `s : cycle α` that is made up of at least two unique elements. -/
 def Nontrivial (s : Cycle α) : Prop :=
-  ∃ (x : α) (y : α) (h : x ≠ y), x ∈ s ∧ y ∈ s
+  ∃ (x y : α)(h : x ≠ y), x ∈ s ∧ y ∈ s
 #align cycle.nontrivial Cycle.Nontrivial
 
 @[simp]
@@ -727,7 +667,7 @@ theorem length_nontrivial {s : Cycle α} (h : Nontrivial s) : 2 ≤ length s := 
 
 /-- The `s : cycle α` contains no duplicates. -/
 def Nodup (s : Cycle α) : Prop :=
-  Quot.liftOn s Nodup fun l₁ l₂ e => propext $ e.nodup_iff
+  Quot.liftOn s Nodup fun l₁ l₂ e => propext <| e.nodup_iff
 #align cycle.nodup Cycle.Nodup
 
 @[simp]
@@ -790,7 +730,7 @@ theorem to_multiset_eq_nil {s : Cycle α} : s.toMultiset = 0 ↔ s = Cycle.nil :
 
 /-- The lift of `list.map`. -/
 def map {β : Type _} (f : α → β) : Cycle α → Cycle β :=
-  Quotient.map' (List.map f) $ fun l₁ l₂ h => h.map _
+  (Quotient.map' (List.map f)) fun l₁ l₂ h => h.map _
 #align cycle.map Cycle.map
 
 @[simp]
@@ -810,7 +750,7 @@ theorem map_eq_nil {β : Type _} (f : α → β) (s : Cycle α) : map f s = nil 
 
 /-- The `multiset` of lists that can make the cycle. -/
 def lists (s : Cycle α) : Multiset (List α) :=
-  (Quotient.liftOn' s fun l => (l.cyclicPermutations : Multiset (List α))) $ fun l₁ l₂ h => by
+  (Quotient.liftOn' s fun l => (l.cyclicPermutations : Multiset (List α))) fun l₁ l₂ h => by
     simpa using h.cyclic_permutations.perm
 #align cycle.lists Cycle.lists
 
@@ -821,7 +761,7 @@ theorem lists_coe (l : List α) : lists (l : Cycle α) = ↑l.cyclicPermutations
 
 @[simp]
 theorem mem_lists_iff_coe_eq {s : Cycle α} {l : List α} : l ∈ s.lists ↔ (l : Cycle α) = s :=
-  Quotient.inductionOn' s $ fun l => by
+  (Quotient.inductionOn' s) fun l => by
     rw [lists, Quotient.lift_on'_mk']
     simp
 #align cycle.mem_lists_iff_coe_eq Cycle.mem_lists_iff_coe_eq
@@ -834,18 +774,14 @@ section Decidable
 
 variable [DecidableEq α]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary decidability algorithm for lists that contain at least two unique elements.
 -/
 def decidableNontrivialCoe : ∀ l : List α, Decidable (Nontrivial (l : Cycle α))
   | [] => isFalse (by simp [Nontrivial])
   | [x] => isFalse (by simp [Nontrivial])
-  | x::y::l =>
+  | x :: y :: l =>
     if h : x = y then
-      @decidable_of_iff' _ (Nontrivial (x::l : Cycle α)) (by simp [h, Nontrivial]) (decidable_nontrivial_coe (x::l))
+      @decidable_of_iff' _ (Nontrivial (x :: l : Cycle α)) (by simp [h, Nontrivial]) (decidable_nontrivial_coe (x :: l))
     else isTrue ⟨x, y, h, by simp, by simp⟩
 #align cycle.decidable_nontrivial_coe Cycle.decidableNontrivialCoe
 
@@ -955,7 +891,6 @@ underlying element. This representation also supports cycles that can contain du
 instance [Repr α] : Repr (Cycle α) :=
   ⟨fun s => "c[" ++ String.intercalate ", " ((s.map repr).lists.sort (· ≤ ·)).head ++ "]"⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `chain R s` means that `R` holds between adjacent elements of `s`.
 
 `chain R ([a, b, c] : cycle α) ↔ R a b ∧ R b c ∧ R c a` -/
@@ -963,9 +898,9 @@ def Chain (r : α → α → Prop) (c : Cycle α) : Prop :=
   (Quotient.liftOn' c fun l =>
       match l with
       | [] => True
-      | a::m => Chain r a (m ++ [a])) $
+      | a :: m => Chain r a (m ++ [a]))
     fun a b hab =>
-    propext $ by
+    propext <| by
       cases' a with a l <;> cases' b with b m
       · rfl
         
@@ -997,9 +932,8 @@ def Chain (r : α → α → Prop) (c : Cycle α) : Prop :=
 theorem Chain.nil (r : α → α → Prop) : Cycle.Chain r (@nil α) := by trivial
 #align cycle.chain.nil Cycle.Chain.nil
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem chain_coe_cons (r : α → α → Prop) (a : α) (l : List α) : Chain r (a::l) ↔ List.Chain r a (l ++ [a]) :=
+theorem chain_coe_cons (r : α → α → Prop) (a : α) (l : List α) : Chain r (a :: l) ↔ List.Chain r a (l ++ [a]) :=
   Iff.rfl
 #align cycle.chain_coe_cons Cycle.chain_coe_cons
 
@@ -1017,7 +951,7 @@ theorem chain_ne_nil (r : α → α → Prop) {l : List α} : ∀ hl : l ≠ [],
 
 theorem chain_map {β : Type _} {r : α → α → Prop} (f : β → α) {s : Cycle β} :
     Chain r (s.map f) ↔ Chain (fun a b => r (f a) (f b)) s :=
-  Quotient.inductionOn' s $ fun l => by
+  (Quotient.inductionOn' s) fun l => by
     cases' l with a l
     rfl
     convert List.chain_map f
@@ -1031,14 +965,12 @@ theorem chain_range_succ (r : ℕ → ℕ → Prop) (n : ℕ) : Chain r (List.ra
 
 variable {r : α → α → Prop} {s : Cycle α}
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem chain_of_pairwise : (∀ a ∈ s, ∀ b ∈ s, r a b) → Chain r s := by
   induction' s using Cycle.induction_on with a l _
   exact fun _ => Cycle.Chain.nil r
   intro hs
-  have Ha : a ∈ (a::l : Cycle α) := by simp
-  have Hl : ∀ {b} (hb : b ∈ l), b ∈ (a::l : Cycle α) := fun b hb => by simp [hb]
+  have Ha : a ∈ (a :: l : Cycle α) := by simp
+  have Hl : ∀ {b} (hb : b ∈ l), b ∈ (a :: l : Cycle α) := fun b hb => by simp [hb]
   rw [Cycle.chain_coe_cons]
   apply pairwise.chain
   rw [pairwise_cons]

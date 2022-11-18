@@ -369,7 +369,7 @@ theorem coe_injective : @Function.Injective (L₁ →ₗ⁅R⁆ L₂) (L₁ → 
 
 @[ext.1]
 theorem ext {f g : L₁ →ₗ⁅R⁆ L₂} (h : ∀ x, f x = g x) : f = g :=
-  coe_injective $ funext h
+  coe_injective <| funext h
 #align lie_hom.ext LieHom.ext
 
 theorem ext_iff {f g : L₁ →ₗ⁅R⁆ L₂} : f = g ↔ ∀ x, f x = g x :=
@@ -555,7 +555,7 @@ theorem coe_injective : @Injective (L₁ ≃ₗ⁅R⁆ L₂) (L₁ → L₂) coe
 
 @[ext.1]
 theorem ext {f g : L₁ ≃ₗ⁅R⁆ L₂} (h : ∀ x, f x = g x) : f = g :=
-  coe_injective $ funext h
+  coe_injective <| funext h
 #align lie_equiv.ext LieEquiv.ext
 
 instance : One (L₁ ≃ₗ⁅R⁆ L₁) :=
@@ -770,7 +770,7 @@ theorem coe_injective : @Function.Injective (M →ₗ⁅R,L⁆ N) (M → N) coeF
 
 @[ext.1]
 theorem ext {f g : M →ₗ⁅R,L⁆ N} (h : ∀ m, f m = g m) : f = g :=
-  coe_injective $ funext h
+  coe_injective <| funext h
 #align lie_module_hom.ext LieModuleHom.ext
 
 theorem ext_iff {f g : M →ₗ⁅R,L⁆ N} : f = g ↔ ∀ m, f m = g m :=

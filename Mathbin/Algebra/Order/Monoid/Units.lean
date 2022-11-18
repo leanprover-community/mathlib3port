@@ -6,7 +6,6 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 import Mathbin.Order.Hom.Basic
 import Mathbin.Order.MinMax
 import Mathbin.Algebra.Group.Units
-import Mathbin.Algebra.Order.Monoid.Defs
 
 /-!
 # Units in ordered monoids

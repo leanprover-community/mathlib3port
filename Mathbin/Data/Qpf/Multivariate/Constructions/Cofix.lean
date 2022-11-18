@@ -93,14 +93,13 @@ def mrepr {α : Typevec n} : q.p.M α → q.p.M α :=
   corecF (abs ∘ M.dest q.p)
 #align mvqpf.Mrepr Mvqpf.mrepr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a₁ a₂) -/
 /-- the map function for the functor `cofix F` -/
 def Cofix.map {α β : Typevec n} (g : α ⟹ β) : Cofix F α → Cofix F β :=
   Quot.lift (fun x : q.p.M α => Quot.mk McongrCat (g <$$> x))
     (by
       rintro aa₁ aa₂ ⟨r, pr, ra₁a₂⟩
       apply Quot.sound
-      let r' b₁ b₂ := ∃ (a₁ : q.P.M α) (a₂ : q.P.M α), r a₁ a₂ ∧ b₁ = g <$$> a₁ ∧ b₂ = g <$$> a₂
+      let r' b₁ b₂ := ∃ a₁ a₂ : q.P.M α, r a₁ a₂ ∧ b₁ = g <$$> a₁ ∧ b₂ = g <$$> a₂
       use r'
       constructor
       · show is_precongr r'
@@ -153,7 +152,7 @@ def Cofix.abs {α} : q.p.M α → Cofix F α :=
 
 /-- Representation function for `cofix F α` -/
 def Cofix.repr {α} : Cofix F α → q.p.M α :=
-  M.corec _ $ repr ∘ cofix.dest
+  M.corec _ <| repr ∘ cofix.dest
 #align mvqpf.cofix.repr Mvqpf.Cofix.repr
 
 /-- Corecursor for `cofix F` -/
@@ -166,9 +165,9 @@ def Cofix.corec'₁ {α : Typevec n} {β : Type u} (g : ∀ {X}, (β → X) → 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- More flexible corecursor for `cofix F`. Allows the return of a fully formed
 value instead of making a recursive call -/
-def Cofix.corec' {α : Typevec n} {β : Type u} (g : β → F (α.append1 (Cofix F α ⊕ β))) (x : β) : Cofix F α :=
-  let f : (α ::: Cofix F α) ⟹ (α ::: Cofix F α ⊕ β) := id ::: Sum.inl
-  Cofix.corec (Sum.elim (Mvfunctor.map f ∘ cofix.dest) g) (Sum.inr x : Cofix F α ⊕ β)
+def Cofix.corec' {α : Typevec n} {β : Type u} (g : β → F (α.append1 (Sum (Cofix F α) β))) (x : β) : Cofix F α :=
+  let f : (α ::: Cofix F α) ⟹ (α ::: Sum (Cofix F α) β) := id ::: Sum.inl
+  Cofix.corec (Sum.elim (Mvfunctor.map f ∘ cofix.dest) g) (Sum.inr x : Sum (Cofix F α) β)
 #align mvqpf.cofix.corec' Mvqpf.Cofix.corec'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -190,7 +189,7 @@ theorem Cofix.dest_corec {α : Typevec n} {β : Type u} (g : β → F (α.append
 #align mvqpf.cofix.dest_corec Mvqpf.Cofix.dest_corec
 
 /-- constructor for `cofix F` -/
-def Cofix.mk {α : Typevec n} : F (α.append1 $ Cofix F α) → Cofix F α :=
+def Cofix.mk {α : Typevec n} : F (α.append1 <| Cofix F α) → Cofix F α :=
   Cofix.corec fun x => (appendFun id fun i : Cofix F α => Cofix.dest.{u} i) <$$> x
 #align mvqpf.cofix.mk Mvqpf.Cofix.mk
 
@@ -302,10 +301,9 @@ open Mvfunctor
 /-- Bisimulation principle using `liftr'` to match and relate children of two trees. -/
 theorem Cofix.bisim₂ {α : Typevec n} (r : Cofix F α → Cofix F α → Prop)
     (h : ∀ x y, r x y → Liftr' (relLast' α r) (Cofix.dest x) (Cofix.dest y)) : ∀ x y, r x y → x = y :=
-  Cofix.bisim _ $ by intros <;> rw [← liftr_last_rel_iff] <;> apply h <;> assumption
+  Cofix.bisim _ <| by intros <;> rw [← liftr_last_rel_iff] <;> apply h <;> assumption
 #align mvqpf.cofix.bisim₂ Mvqpf.Cofix.bisim₂
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a f' f₀ f₁) -/
 /-- Bisimulation principle the values `⟨a,f⟩` of the polynomial functor representing
 `cofix F α` as well as an invariant `Q : β → Prop` and a state `β` generating the
 left-hand side and right-hand side of the equality through functions `u v : β → cofix F α` -/
@@ -313,7 +311,7 @@ theorem Cofix.bisim' {α : Typevec n} {β : Type _} (Q : β → Prop) (u v : β 
     (h :
       ∀ x,
         Q x →
-          ∃ (a) (f') (f₀) (f₁),
+          ∃ a f' f₀ f₁,
             Cofix.dest (u x) = abs ⟨a, q.p.appendContents f' f₀⟩ ∧
               Cofix.dest (v x) = abs ⟨a, q.p.appendContents f' f₁⟩ ∧ ∀ i, ∃ x', Q x' ∧ f₀ i = u x' ∧ f₁ i = v x') :
     ∀ x, Q x → u x = v x := fun x Qx =>
@@ -351,7 +349,7 @@ theorem Cofix.mk_dest {α : Typevec n} (x : Cofix F α) : Cofix.mk (Cofix.dest x
   rfl
 #align mvqpf.cofix.mk_dest Mvqpf.Cofix.mk_dest
 
-theorem Cofix.dest_mk {α : Typevec n} (x : F (α.append1 $ Cofix F α)) : Cofix.dest (Cofix.mk x) = x := by
+theorem Cofix.dest_mk {α : Typevec n} (x : F (α.append1 <| Cofix F α)) : Cofix.dest (Cofix.mk x) = x := by
   have : cofix.mk ∘ cofix.dest = @_root_.id (cofix F α) := funext cofix.mk_dest
   rw [cofix.mk, cofix.dest_corec, ← comp_map, ← cofix.mk, ← append_fun_comp, this, id_comp, append_fun_id_id,
     Mvfunctor.id_map]
@@ -480,12 +478,11 @@ open Tactic
 
 omit q
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- tactic for proof by bisimulation -/
 unsafe def mv_bisim (e : parse texpr) (ids : parse with_ident_list) : tactic Unit := do
   let e ← to_expr e
   let expr.pi n bi d b ←
-    retrieve $ do
+    retrieve <| do
         generalize e
         target
   let q(@Eq $(t) $(l) $(r)) ← pure b
@@ -501,7 +498,7 @@ unsafe def mv_bisim (e : parse texpr) (ids : parse with_ident_list) : tactic Uni
   refine ``(Cofix.bisim₂ $(R) _ _ _ ⟨_, rfl, rfl⟩)
   let f (a b : Name) : Name := if a = `_ then b else a
   let ids := (ids ++ List.repeat `_ 5).zipWith f [`a, `b, `x, `Ha, `Hb]
-  let (ids₀, w::ids₁) ← pure $ List.splitAt 2 ids
+  let (ids₀, w :: ids₁) ← pure <| List.splitAt 2 ids
   intro_lst ids₀
   let h ← intro1
   let [(_, [w, h], _)] ← cases_core h [w]
@@ -526,7 +523,7 @@ theorem corec_roll {α : Typevec n} {X Y} {x₀ : X} (f : X → Y) (g : Y → F 
   refine' ⟨a, rfl, rfl⟩
 #align mvqpf.corec_roll Mvqpf.corec_roll
 
-theorem Cofix.dest_corec' {α : Typevec n} {β : Type u} (g : β → F (α.append1 (Cofix F α ⊕ β))) (x : β) :
+theorem Cofix.dest_corec' {α : Typevec n} {β : Type u} (g : β → F (α.append1 (Sum (Cofix F α) β))) (x : β) :
     Cofix.dest (Cofix.corec' g x) = appendFun id (Sum.elim id (Cofix.corec' g)) <$$> g x := by
   rw [cofix.corec', cofix.dest_corec]
   dsimp

@@ -109,7 +109,7 @@ theorem norm_algebra_map_of_basis [Fintype ι] (b : Basis ι R S) (x : R) :
 @[simp]
 protected theorem norm_algebra_map {K L : Type _} [Field K] [CommRing L] [Algebra K L] (x : K) :
     norm K (algebraMap K L x) = x ^ finrank K L := by
-  by_cases H:∃ s : Finset L, Nonempty (Basis s K L)
+  by_cases H : ∃ s : Finset L, Nonempty (Basis s K L)
   · rw [norm_algebra_map_of_basis H.some_spec.some, finrank_eq_card_basis H.some_spec.some]
     
   · rw [norm_eq_one_of_not_exists_basis K H, finrank_eq_zero_of_not_exists_basis, pow_zero]
@@ -156,7 +156,7 @@ theorem norm_eq_zero_iff_of_basis [IsDomain R] [IsDomain S] (b : Basis ι R S) {
     rintro ⟨v, v_ne, hv⟩
     rw [← b.equiv_fun.apply_symm_apply v, b.equiv_fun_symm_apply, b.equiv_fun_apply,
       Algebra.left_mul_matrix_mul_vec_repr] at hv
-    refine' (mul_eq_zero.mp (b.ext_elem $ fun i => _)).resolve_right (show (∑ i, v i • b i) ≠ 0 from _)
+    refine' (mul_eq_zero.mp (b.ext_elem fun i => _)).resolve_right (show (∑ i, v i • b i) ≠ 0 from _)
     · simpa only [LinearEquiv.map_zero, Pi.zero_apply] using congr_fun hv i
       
     · contrapose! v_ne with sum_eq
@@ -231,7 +231,7 @@ theorem _root_.intermediate_field.adjoin_simple.norm_gen_eq_prod_roots (x : L)
     (hf : (minpoly K x).Splits (algebraMap K F)) :
     (algebraMap K F) (norm K (AdjoinSimple.gen K x)) = ((minpoly K x).map (algebraMap K F)).roots.Prod := by
   have injKxL := (algebraMap K⟮⟯ L).Injective
-  by_cases hx:_root_.is_integral K x
+  by_cases hx : _root_.is_integral K x
   swap
   · simp [minpoly.eq_zero hx, IntermediateField.AdjoinSimple.norm_gen_eq_one hx]
     

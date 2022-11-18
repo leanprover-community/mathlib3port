@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import Mathbin.CategoryTheory.Sites.Subsheaf
-import Mathbin.CategoryTheory.Adjunction.Evaluation
+import Mathbin.CategoryTheory.Sites.CompatibleSheafification
 
 /-!
 
@@ -140,8 +140,8 @@ noncomputable def sheafificationIsoImagePresheaf :
     J.sheafify F ≅ ((imagePresheaf (J.toSheafify F)).sheafify J).toPresheaf where
   Hom :=
     J.sheafifyLift (toImagePresheafSheafify J _)
-      ((is_sheaf_iff_is_sheaf_of_type J _).mpr $
-        Subpresheaf.sheafifyIsSheaf _ $ (is_sheaf_iff_is_sheaf_of_type J _).mp $ sheafifyIsSheaf J _)
+      ((is_sheaf_iff_is_sheaf_of_type J _).mpr <|
+        Subpresheaf.sheafifyIsSheaf _ <| (is_sheaf_iff_is_sheaf_of_type J _).mp <| sheafifyIsSheaf J _)
   inv := Subpresheaf.ι _
   hom_inv_id' := J.sheafify_hom_ext _ _ (J.sheafifyIsSheaf _) (by simp [to_image_presheaf_sheafify])
   inv_hom_id' := by

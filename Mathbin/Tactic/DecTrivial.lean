@@ -33,7 +33,7 @@ by dec_trivial!
 ```
 -/
 unsafe def tactic.interactive.dec_trivial (revert_deps : parse (parser.optional (tk "!"))) : tactic Unit :=
-  if revert_deps.isSome then revert_target_deps; tactic.exact_dec_trivial else tactic.exact_dec_trivial
+  if revert_deps.isSome then andthen revert_target_deps tactic.exact_dec_trivial else tactic.exact_dec_trivial
 #align tactic.interactive.dec_trivial tactic.interactive.dec_trivial
 
 add_tactic_doc

@@ -69,7 +69,7 @@ protected theorem MulLeCancellable.is_left_regular [PartialOrder R] {a : R} (ha 
 #align mul_le_cancellable.is_left_regular MulLeCancellable.is_left_regular
 
 theorem IsLeftRegular.right_of_commute {a : R} (ca : ∀ b, Commute a b) (h : IsLeftRegular a) : IsRightRegular a :=
-  fun x y xy => h $ (ca x).trans $ xy.trans $ (ca y).symm
+  fun x y xy => h <| (ca x).trans <| xy.trans <| (ca y).symm
 #align is_left_regular.right_of_commute IsLeftRegular.right_of_commute
 
 theorem Commute.is_regular_iff {a : R} (ca : ∀ b, Commute a b) : IsRegular a ↔ IsLeftRegular a :=
@@ -161,12 +161,12 @@ variable [MulZeroClass R] {a b : R}
 
 /-- The element `0` is left-regular if and only if `R` is trivial. -/
 theorem IsLeftRegular.subsingleton (h : IsLeftRegular (0 : R)) : Subsingleton R :=
-  ⟨fun a b => h $ Eq.trans (zero_mul a) (zero_mul b).symm⟩
+  ⟨fun a b => h <| Eq.trans (zero_mul a) (zero_mul b).symm⟩
 #align is_left_regular.subsingleton IsLeftRegular.subsingleton
 
 /-- The element `0` is right-regular if and only if `R` is trivial. -/
 theorem IsRightRegular.subsingleton (h : IsRightRegular (0 : R)) : Subsingleton R :=
-  ⟨fun a b => h $ Eq.trans (mul_zero a) (mul_zero b).symm⟩
+  ⟨fun a b => h <| Eq.trans (mul_zero a) (mul_zero b).symm⟩
 #align is_right_regular.subsingleton IsRightRegular.subsingleton
 
 /-- The element `0` is regular if and only if `R` is trivial. -/

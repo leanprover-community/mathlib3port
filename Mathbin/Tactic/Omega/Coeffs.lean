@@ -256,7 +256,7 @@ theorem val_between_map_mul {i : Int} {as : List Int} {l : Nat} :
     unfold val_between
     rw [@val_between_map_mul m, mul_add]
     apply fun_mono_2 rfl
-    by_cases h1:l + m < as.length
+    by_cases h1 : l + m < as.length
     · rw [get_map h1, mul_assoc]
       
     rw [not_lt] at h1
@@ -276,7 +276,7 @@ theorem dvd_val_between {i} {as : List Int} {l : Nat} : ∀ {m}, (∀ x ∈ as, 
     apply dvd_add
     apply dvd_val_between h1
     apply dvd_mul_of_dvd_left
-    by_cases h2:get (l + m) as = 0
+    by_cases h2 : get (l + m) as = 0
     · rw [h2]
       apply dvd_zero
       

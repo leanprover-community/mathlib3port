@@ -57,7 +57,7 @@ theorem l_series_summable_zero {z : ℂ} : LSeriesSummable 0 z := by simp [l_ser
 
 theorem l_series_summable_of_bounded_of_one_lt_real {f : ArithmeticFunction ℂ} {m : ℝ}
     (h : ∀ n : ℕ, Complex.abs (f n) ≤ m) {z : ℝ} (hz : 1 < z) : f.LSeriesSummable z := by
-  by_cases h0:m = 0
+  by_cases h0 : m = 0
   · subst h0
     have hf : f = 0 := arithmetic_function.ext fun n => complex.abs.eq_zero.1 (le_antisymm (h n) (complex.abs.nonneg _))
     simp [hf]
@@ -112,7 +112,7 @@ open ArithmeticFunction
 theorem zeta_l_series_summable_iff_one_lt_re {z : ℂ} : LSeriesSummable ζ z ↔ 1 < z.re := by
   rw [← l_series_summable_iff_of_re_eq_re (Complex.of_real_re z.re), l_series_summable, ← summable_norm_iff, ←
     Real.summable_one_div_nat_rpow, iff_iff_eq]
-  by_cases h0:z.re = 0
+  by_cases h0 : z.re = 0
   · rw [h0, ← summable_nat_add_iff 1]
     swap
     · infer_instance

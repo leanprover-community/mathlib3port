@@ -5,7 +5,6 @@ Authors: Jakob von Raumer
 -/
 import Mathbin.CategoryTheory.Monoidal.Rigid.Basic
 import Mathbin.CategoryTheory.Monoidal.Subcategory
-import Mathbin.LinearAlgebra.TensorProductBasis
 import Mathbin.LinearAlgebra.Coevaluation
 import Mathbin.Algebra.Category.ModuleCat.Monoidal
 

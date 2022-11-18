@@ -5,7 +5,6 @@ Authors: Scott Morrison, Simon Hudon
 -/
 import Mathbin.CategoryTheory.Monoidal.Braided
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
-import Mathbin.CategoryTheory.Limits.Shapes.Terminal
 import Mathbin.CategoryTheory.Pempty
 
 /-!

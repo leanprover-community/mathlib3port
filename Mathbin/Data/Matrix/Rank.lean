@@ -56,7 +56,7 @@ theorem rank_le_card_width : A.rank ≤ Fintype.card n := by
 #align matrix.rank_le_card_width Matrix.rank_le_card_width
 
 theorem rank_le_width {m n : ℕ} (A : Matrix (Fin m) (Fin n) K) : A.rank ≤ n :=
-  A.rank_le_card_width.trans $ (Fintype.card_fin n).le
+  A.rank_le_card_width.trans <| (Fintype.card_fin n).le
 #align matrix.rank_le_width Matrix.rank_le_width
 
 theorem rank_mul_le (B : Matrix n o K) : (A ⬝ B).rank ≤ A.rank := by
@@ -106,7 +106,7 @@ theorem rank_le_card_height : A.rank ≤ Fintype.card m :=
 omit m_fin
 
 theorem rank_le_height {m n : ℕ} (A : Matrix (Fin m) (Fin n) K) : A.rank ≤ m :=
-  A.rank_le_card_height.trans $ (Fintype.card_fin m).le
+  A.rank_le_card_height.trans <| (Fintype.card_fin m).le
 #align matrix.rank_le_height Matrix.rank_le_height
 
 end Matrix

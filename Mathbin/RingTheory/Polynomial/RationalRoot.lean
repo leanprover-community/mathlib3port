@@ -68,7 +68,7 @@ theorem num_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : Num A r ∣
   suffices Num A r ∣ (scale_roots p (denom A r)).coeff 0 by
     simp only [coeff_scale_roots, tsub_zero] at this
     haveI := Classical.propDecidable
-    by_cases hr:Num A r = 0
+    by_cases hr : Num A r = 0
     · obtain ⟨u, hu⟩ := (is_unit_denom_of_num_eq_zero hr).pow p.nat_degree
       rw [← hu] at this
       exact units.dvd_mul_right.mp this
@@ -99,7 +99,7 @@ theorem denom_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : (denom A 
   rw [← coeff_scale_roots_nat_degree]
   apply dvd_term_of_is_root_of_dvd_terms _ (num_is_root_scale_roots_of_aeval_eq_zero hr)
   intro j hj
-  by_cases h:j < p.nat_degree
+  by_cases h : j < p.nat_degree
   · rw [coeff_scale_roots]
     refine' (dvd_mul_of_dvd_right _ _).mul_right _
     convert pow_dvd_pow _ (nat.succ_le_iff.mpr (lt_tsub_iff_left.mpr _))

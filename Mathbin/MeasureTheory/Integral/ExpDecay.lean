@@ -4,8 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 -/
 import Mathbin.MeasureTheory.Integral.IntervalIntegral
-import Mathbin.Analysis.SpecialFunctions.Exponential
-import Mathbin.Analysis.SpecialFunctions.Integrals
 import Mathbin.MeasureTheory.Integral.IntegralEqImproper
 
 /-!
@@ -73,7 +71,7 @@ theorem integrableOfIsOExpNeg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b) (h1 : C
     simpa only [Ioc_union_Ioi_eq_Ioi, le_max_iff, le_refl, true_or_iff] using t
   -- now show integrable on `(v, ∞)` from asymptotic
   constructor
-  · exact (h1.mono $ Ioi_subset_Ici $ le_max_left a r).AeStronglyMeasurable measurableSetIoi
+  · exact (h1.mono <| Ioi_subset_Ici <| le_max_left a r).AeStronglyMeasurable measurableSetIoi
     
   have : has_finite_integral (fun x : ℝ => c * exp (-b * x)) (volume.restrict (Ioi v)) :=
     (expNegIntegrableOnIoi v h0).HasFiniteIntegral.const_mul c

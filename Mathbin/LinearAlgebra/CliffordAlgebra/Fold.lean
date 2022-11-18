@@ -48,7 +48,7 @@ given by `foldr Q f hf n (ι Q m * x) = f m (foldr Q f hf n x)`.
 
 For example, `foldr f hf n (r • ι R u + ι R v * ι R w) = r • f u n + f v (f w n)`. -/
 def foldr (f : M →ₗ[R] N →ₗ[R] N) (hf : ∀ m x, f m (f m x) = Q m • x) : N →ₗ[R] CliffordAlgebra Q →ₗ[R] N :=
-  (CliffordAlgebra.lift Q ⟨f, fun v => LinearMap.ext $ hf v⟩).toLinearMap.flip
+  (CliffordAlgebra.lift Q ⟨f, fun v => LinearMap.ext <| hf v⟩).toLinearMap.flip
 #align clifford_algebra.foldr CliffordAlgebra.foldr
 
 @[simp]
@@ -74,7 +74,7 @@ theorem foldr_mul (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (a b : CliffordAl
 
 /-- This lemma demonstrates the origin of the `foldr` name. -/
 theorem foldr_prod_map_ι (l : List M) (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) :
-    foldr Q f hf n (l.map $ ι Q).Prod = List.foldr (fun m n => f m n) n l := by
+    foldr Q f hf n (l.map <| ι Q).Prod = List.foldr (fun m n => f m n) n l := by
   induction' l with hd tl ih
   · rw [List.map_nil, List.prod_nil, List.foldr_nil, foldr_one]
     
@@ -97,7 +97,7 @@ def foldl (f : M →ₗ[R] N →ₗ[R] N) (hf : ∀ m x, f m (f m x) = Q m • x
 @[simp]
 theorem foldl_reverse (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (x : CliffordAlgebra Q) :
     foldl Q f hf n (reverse x) = foldr Q f hf n x :=
-  FunLike.congr_arg (foldr Q f hf n) $ reverse_reverse _
+  FunLike.congr_arg (foldr Q f hf n) <| reverse_reverse _
 #align clifford_algebra.foldl_reverse CliffordAlgebra.foldl_reverse
 
 @[simp]
@@ -129,7 +129,7 @@ theorem foldl_mul (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (a b : CliffordAl
 
 /-- This lemma demonstrates the origin of the `foldl` name. -/
 theorem foldl_prod_map_ι (l : List M) (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) :
-    foldl Q f hf n (l.map $ ι Q).Prod = List.foldl (fun m n => f n m) n l := by
+    foldl Q f hf n (l.map <| ι Q).Prod = List.foldl (fun m n => f n m) n l := by
   rw [← foldr_reverse, reverse_prod_map_ι, ← List.map_reverse, foldr_prod_map_ι, List.foldr_reverse]
 #align clifford_algebra.foldl_prod_map_ι CliffordAlgebra.foldl_prod_map_ι
 
@@ -174,10 +174,9 @@ def foldr'Aux (f : M →ₗ[R] CliffordAlgebra Q × N →ₗ[R] N) : M →ₗ[R]
   exact
     { toFun := fun m => (l m).Prod (f m),
       map_add' := fun v₂ v₂ =>
-        LinearMap.ext $ fun x =>
-          Prod.ext (LinearMap.congr_fun (l.map_add _ _) x) (LinearMap.congr_fun (f.map_add _ _) x),
+        LinearMap.ext fun x => Prod.ext (LinearMap.congr_fun (l.map_add _ _) x) (LinearMap.congr_fun (f.map_add _ _) x),
       map_smul' := fun c v =>
-        LinearMap.ext $ fun x =>
+        LinearMap.ext fun x =>
           Prod.ext (LinearMap.congr_fun (l.map_smul _ _) x) (LinearMap.congr_fun (f.map_smul _ _) x) }
 #align clifford_algebra.foldr'_aux CliffordAlgebra.foldr'Aux
 

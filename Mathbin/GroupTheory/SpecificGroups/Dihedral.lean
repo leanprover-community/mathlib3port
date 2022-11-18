@@ -3,10 +3,8 @@ Copyright (c) 2020 Shing Tak Lam. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 -/
-import Mathbin.Data.Fintype.Card
 import Mathbin.Data.Zmod.Basic
 import Mathbin.GroupTheory.Exponent
-import Mathbin.Data.Int.Parity
 
 /-!
 # Dihedral Groups
@@ -102,7 +100,7 @@ theorem one_def : (1 : DihedralGroup n) = r 0 :=
   rfl
 #align dihedral_group.one_def DihedralGroup.one_def
 
-private def fintype_helper : Zmod n ⊕ Zmod n ≃ DihedralGroup n where
+private def fintype_helper : Sum (Zmod n) (Zmod n) ≃ DihedralGroup n where
   invFun i :=
     match i with
     | r j => Sum.inl j
@@ -121,7 +119,7 @@ instance [NeZero n] : Fintype (DihedralGroup n) :=
   Fintype.ofEquiv _ fintypeHelper
 
 instance : Nontrivial (DihedralGroup n) :=
-  ⟨⟨r 0, sr 0, dec_trivial⟩⟩
+  ⟨⟨r 0, sr 0, by decide⟩⟩
 
 /-- If `0 < n`, then `dihedral_group n` has `2n` elements.
 -/
@@ -176,7 +174,7 @@ theorem order_of_r_one : orderOf (r 1 : DihedralGroup n) = n := by
     simpa using hn.ne'
     
   · skip
-    apply (Nat.le_of_dvd (NeZero.pos n) $ order_of_dvd_of_pow_eq_one $ @r_one_pow_n n).lt_or_eq.resolve_left
+    apply (Nat.le_of_dvd (NeZero.pos n) <| order_of_dvd_of_pow_eq_one <| @r_one_pow_n n).lt_or_eq.resolve_left
     intro h
     have h1 : (r 1 : DihedralGroup n) ^ orderOf (r 1) = 1 := pow_order_of_eq_one _
     rw [r_one_pow] at h1

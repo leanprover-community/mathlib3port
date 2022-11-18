@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert A. Spencer, Markus Himmel
 -/
 import Mathbin.Algebra.Category.GroupCat.Preadditive
-import Mathbin.CategoryTheory.Limits.Shapes.Kernels
 import Mathbin.CategoryTheory.Linear.Default
 import Mathbin.CategoryTheory.Elementwise
 import Mathbin.LinearAlgebra.Basic
@@ -243,8 +242,8 @@ This version is better than `linear_equiv_to_Module_iso` when applicable, becaus
 def LinearEquiv.toModuleIso' {M N : ModuleCat.{v} R} (i : M ≃ₗ[R] N) : M ≅ N where
   Hom := i
   inv := i.symm
-  hom_inv_id' := LinearMap.ext $ fun x => by simp
-  inv_hom_id' := LinearMap.ext $ fun x => by simp
+  hom_inv_id' := LinearMap.ext fun x => by simp
+  inv_hom_id' := LinearMap.ext fun x => by simp
 #align linear_equiv.to_Module_iso' LinearEquiv.toModuleIso'
 
 /-- Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
@@ -256,8 +255,8 @@ def LinearEquiv.toModuleIso'Left {X₁ : ModuleCat.{v} R} {g₂ : AddCommGroup X
     X₁ ≅ ModuleCat.of R X₂ where
   Hom := (e : X₁ →ₗ[R] X₂)
   inv := (e.symm : X₂ →ₗ[R] X₁)
-  hom_inv_id' := LinearMap.ext $ fun x => by simp
-  inv_hom_id' := LinearMap.ext $ fun x => by simp
+  hom_inv_id' := LinearMap.ext fun x => by simp
+  inv_hom_id' := LinearMap.ext fun x => by simp
 #align linear_equiv.to_Module_iso'_left LinearEquiv.toModuleIso'Left
 
 /-- Build an isomorphism in the category `Module R` from a `linear_equiv` between `module`s.
@@ -269,8 +268,8 @@ def LinearEquiv.toModuleIso'Right {g₁ : AddCommGroup X₁} {m₁ : Module R X�
     ModuleCat.of R X₁ ≅ X₂ where
   Hom := (e : X₁ →ₗ[R] X₂)
   inv := (e.symm : X₂ →ₗ[R] X₁)
-  hom_inv_id' := LinearMap.ext $ fun x => by simp
-  inv_hom_id' := LinearMap.ext $ fun x => by simp
+  hom_inv_id' := LinearMap.ext fun x => by simp
+  inv_hom_id' := LinearMap.ext fun x => by simp
 #align linear_equiv.to_Module_iso'_right LinearEquiv.toModuleIso'Right
 
 namespace CategoryTheory.Iso

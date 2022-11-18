@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Mathbin.Logic.IsEmpty
+import Mathbin.Control.Traversable.Basic
 import Mathbin.Tactic.Basic
-import Mathbin.Logic.Relator
 
 /-!
 THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
@@ -68,7 +68,7 @@ protected theorem forall {p : Option α → Prop} : (∀ x, p x) ↔ p none ∧ 
 
 #print Option.exists /-
 protected theorem exists {p : Option α → Prop} : (∃ x, p x) ↔ p none ∨ ∃ x, p (some x) :=
-  ⟨fun ⟨x, hx⟩ => (Option.casesOn x Or.inl $ fun x hx => Or.inr ⟨x, hx⟩) hx, fun h =>
+  ⟨fun ⟨x, hx⟩ => ((Option.casesOn x Or.inl) fun x hx => Or.inr ⟨x, hx⟩) hx, fun h =>
     h.elim (fun h => ⟨_, h⟩) fun ⟨x, hx⟩ => ⟨_, hx⟩⟩
 #align option.exists Option.exists
 -/
@@ -136,7 +136,7 @@ theorem coe_get {o : Option α} (h : o.isSome) : ((Option.get h : α) : Option �
 
 #print Option.mem_unique /-
 theorem mem_unique {o : Option α} {a b : α} (ha : a ∈ o) (hb : b ∈ o) : a = b :=
-  Option.some.inj $ ha.symm.trans hb
+  Option.some.inj <| ha.symm.trans hb
 #align option.mem_unique Option.mem_unique
 -/
 
@@ -190,7 +190,7 @@ theorem ext : ∀ {o₁ o₂ : Option α}, (∀ a, a ∈ o₁ ↔ a ∈ o₂) �
 
 #print Option.eq_none_iff_forall_not_mem /-
 theorem eq_none_iff_forall_not_mem {o : Option α} : o = none ↔ ∀ a, a ∉ o :=
-  ⟨fun e a h => by rw [e] at h <;> cases h, fun h => ext $ by simpa⟩
+  ⟨fun e a h => by rw [e] at h <;> cases h, fun h => ext <| by simpa⟩
 #align option.eq_none_iff_forall_not_mem Option.eq_none_iff_forall_not_mem
 -/
 
@@ -484,7 +484,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align option.map_injective' Option.map_injective'ₓ'. -/
 /-- `option.map` as a function between functions is injective. -/
 theorem map_injective' : Function.Injective (@Option.map α β) := fun f g h =>
-  funext $ fun x => some_injective _ $ by simp only [← map_some', h]
+  funext fun x => some_injective _ <| by simp only [← map_some', h]
 #align option.map_injective' Option.map_injective'
 
 /- warning: option.map_inj -> Option.map_inj is a dubious translation:
@@ -807,7 +807,7 @@ but is expected to have type
   forall {α : Type.{u_1}} {β : Type.{u_2}} {p : α -> Prop} {f : forall (a : α), (p a) -> β} {x : Option.{u_1} α} {hf : forall (a : α), (Membership.mem.{u_1 u_1} α (Option.{u_1} α) (Option.instMembershipOption.{u_1} α) a x) -> (p a)} {y : β}, Iff (Eq.{succ u_2} (Option.{u_2} β) (Option.pmap.{u_1 u_2} α β (fun (a : α) => p a) f x hf) (Option.some.{u_2} β y)) (Exists.{succ u_1} α (fun (a : α) => Exists.{0} (Eq.{succ u_1} (Option.{u_1} α) x (Option.some.{u_1} α a)) (fun (H : Eq.{succ u_1} (Option.{u_1} α) x (Option.some.{u_1} α a)) => Eq.{succ u_2} β (f a (hf a H)) y)))
 Case conversion may be inaccurate. Consider using '#align option.pmap_eq_some_iff Option.pmap_eq_some_iffₓ'. -/
 @[simp]
-theorem pmap_eq_some_iff {hf} {y : β} : pmap f x hf = some y ↔ ∃ (a : α) (H : x = some a), f a (hf a H) = y := by
+theorem pmap_eq_some_iff {hf} {y : β} : pmap f x hf = some y ↔ ∃ (a : α)(H : x = some a), f a (hf a H) = y := by
   cases x
   · simp only [not_mem_none, exists_false, pmap, not_false_iff, exists_prop_of_false]
     
@@ -964,14 +964,14 @@ theorem ne_none_iff_exists {o : Option α} : o ≠ none ↔ ∃ x : α, some x =
 
 #print Option.ne_none_iff_exists' /-
 theorem ne_none_iff_exists' {o : Option α} : o ≠ none ↔ ∃ x : α, o = some x :=
-  ne_none_iff_exists.trans $ exists_congr $ fun _ => eq_comm
+  ne_none_iff_exists.trans <| exists_congr fun _ => eq_comm
 #align option.ne_none_iff_exists' Option.ne_none_iff_exists'
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
 #print Option.bex_ne_none /-
-theorem bex_ne_none {p : Option α → Prop} : (∃ (x) (_ : x ≠ none), p x) ↔ ∃ x, p (some x) :=
-  ⟨fun ⟨x, hx, hp⟩ => ⟨get $ ne_none_iff_is_some.1 hx, by rwa [some_get]⟩, fun ⟨x, hx⟩ => ⟨some x, some_ne_none x, hx⟩⟩
+theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _)(_ : x ≠ none), p x) ↔ ∃ x, p (some x) :=
+  ⟨fun ⟨x, hx, hp⟩ => ⟨get <| ne_none_iff_is_some.1 hx, by rwa [some_get]⟩, fun ⟨x, hx⟩ => ⟨some x, some_ne_none x, hx⟩⟩
 #align option.bex_ne_none Option.bex_ne_none
 -/
 
@@ -979,7 +979,7 @@ theorem bex_ne_none {p : Option α → Prop} : (∃ (x) (_ : x ≠ none), p x) �
 #print Option.ball_ne_none /-
 theorem ball_ne_none {p : Option α → Prop} : (∀ (x) (_ : x ≠ none), p x) ↔ ∀ x, p (some x) :=
   ⟨fun h x => h (some x) (some_ne_none x), fun h x hx => by
-    simpa only [some_get] using h (get $ ne_none_iff_is_some.1 hx)⟩
+    simpa only [some_get] using h (get <| ne_none_iff_is_some.1 hx)⟩
 #align option.ball_ne_none Option.ball_ne_none
 -/
 
@@ -1173,7 +1173,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align option.elim_none_some Option.elim_none_someₓ'. -/
 @[simp]
 theorem elim_none_some (f : Option α → β) : Option.elim' (f none) (f ∘ some) = f :=
-  funext $ fun o => by cases o <;> rfl
+  funext fun o => by cases o <;> rfl
 #align option.elim_none_some Option.elim_none_some
 
 end Option

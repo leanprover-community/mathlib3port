@@ -39,7 +39,7 @@ theorem countp_cons_of_neg {a : α} (l) (pa : ¬p a) : countp p (a :: l) = count
   if_neg pa
 #align list.countp_cons_of_neg List.countp_cons_of_neg
 
-theorem countp_cons (a : α) (l) : countp p (a :: l) = countp p l + ite (p a) 1 0 := by by_cases h:p a <;> simp [h]
+theorem countp_cons (a : α) (l) : countp p (a :: l) = countp p l + ite (p a) 1 0 := by by_cases h : p a <;> simp [h]
 #align list.countp_cons List.countp_cons
 
 theorem length_eq_countp_add_countp (l) : length l = countp p l + countp (fun a => ¬p a) l := by
@@ -125,7 +125,7 @@ theorem countp_mono_left (h : ∀ x ∈ l, p x → q x) : countp p l ≤ countp 
 #align list.countp_mono_left List.countp_mono_left
 
 theorem countp_congr (h : ∀ x ∈ l, p x ↔ q x) : countp p l = countp q l :=
-  le_antisymm (countp_mono_left $ fun x hx => (h x hx).1) (countp_mono_left $ fun x hx => (h x hx).2)
+  le_antisymm (countp_mono_left fun x hx => (h x hx).1) (countp_mono_left fun x hx => (h x hx).2)
 #align list.countp_congr List.countp_congr
 
 end Countp
@@ -212,7 +212,7 @@ theorem one_le_count_iff_mem {a : α} {l : List α} : 1 ≤ count a l ↔ a ∈ 
 
 @[simp]
 theorem count_eq_zero_of_not_mem {a : α} {l : List α} (h : a ∉ l) : count a l = 0 :=
-  Decidable.by_contradiction $ fun h' => h $ count_pos.1 (Nat.pos_of_ne_zero h')
+  Decidable.by_contradiction fun h' => h <| count_pos.1 (Nat.pos_of_ne_zero h')
 #align list.count_eq_zero_of_not_mem List.count_eq_zero_of_not_mem
 
 theorem not_mem_of_count_eq_zero {a : α} {l : List α} (h : count a l = 0) : a ∉ l := fun h' => (count_pos.2 h').ne' h
@@ -235,7 +235,7 @@ theorem count_repeat (a : α) (n : ℕ) : count a (repeat a n) = n := by
 
 theorem le_count_iff_repeat_sublist {a : α} {l : List α} {n : ℕ} : n ≤ count a l ↔ repeat a n <+ l :=
   ⟨fun h =>
-    ((repeat_sublist_repeat a).2 h).trans $ by
+    ((repeat_sublist_repeat a).2 h).trans <| by
       have : filter' (Eq a) l = repeat a (count a l) :=
         eq_repeat.2 ⟨by simp only [count, countp_eq_length_filter], fun b m => (of_mem_filter m).symm⟩
       rw [← this] <;> apply filter_sublist,
@@ -243,7 +243,7 @@ theorem le_count_iff_repeat_sublist {a : α} {l : List α} {n : ℕ} : n ≤ cou
 #align list.le_count_iff_repeat_sublist List.le_count_iff_repeat_sublist
 
 theorem repeat_count_eq_of_count_eq_length {a : α} {l : List α} (h : count a l = length l) : repeat a (count a l) = l :=
-  (le_count_iff_repeat_sublist.mp le_rfl).eq_of_length $ (length_repeat a (count a l)).trans h
+  (le_count_iff_repeat_sublist.mp le_rfl).eq_of_length <| (length_repeat a (count a l)).trans h
 #align list.repeat_count_eq_of_count_eq_length List.repeat_count_eq_of_count_eq_length
 
 @[simp]
@@ -273,11 +273,11 @@ theorem count_erase (a b : α) : ∀ l : List α, count a (l.erase b) = count a 
   | [] => by simp
   | c :: l => by
     rw [erase_cons]
-    by_cases hc:c = b
+    by_cases hc : c = b
     · rw [if_pos hc, hc, count_cons', Nat.add_sub_cancel]
       
     · rw [if_neg hc, count_cons', count_cons', count_erase]
-      by_cases ha:a = b
+      by_cases ha : a = b
       · rw [← ha, eq_comm] at hc
         rw [if_pos ha, if_neg hc, add_zero, add_zero]
         

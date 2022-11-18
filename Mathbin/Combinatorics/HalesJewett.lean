@@ -3,7 +3,9 @@ Copyright (c) 2021 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 -/
-import Mathbin.Data.Fintype.Basic
+import Mathbin.Data.Fintype.Option
+import Mathbin.Data.Fintype.Pi
+import Mathbin.Data.Fintype.Sum
 import Mathbin.Algebra.BigOperators.Basic
 
 /-!
@@ -132,19 +134,19 @@ def map {α α' ι} (f : α → α') (l : Line α ι) : Line α' ι where
 #align combinatorics.line.map Combinatorics.Line.map
 
 /-- A point in `ι → α` and a line in `ι' → α` determine a line in `ι ⊕ ι' → α`. -/
-def vertical {α ι ι'} (v : ι → α) (l : Line α ι') : Line α (ι ⊕ ι') where
+def vertical {α ι ι'} (v : ι → α) (l : Line α ι') : Line α (Sum ι ι') where
   idxFun := Sum.elim (some ∘ v) l.idxFun
   proper := ⟨Sum.inr l.proper.some, l.proper.some_spec⟩
 #align combinatorics.line.vertical Combinatorics.Line.vertical
 
 /-- A line in `ι → α` and a point in `ι' → α` determine a line in `ι ⊕ ι' → α`. -/
-def horizontal {α ι ι'} (l : Line α ι) (v : ι' → α) : Line α (ι ⊕ ι') where
+def horizontal {α ι ι'} (l : Line α ι) (v : ι' → α) : Line α (Sum ι ι') where
   idxFun := Sum.elim l.idxFun (some ∘ v)
   proper := ⟨Sum.inl l.proper.some, l.proper.some_spec⟩
 #align combinatorics.line.horizontal Combinatorics.Line.horizontal
 
 /-- One line in `ι → α` and one in `ι' → α` together determine a line in `ι ⊕ ι' → α`. -/
-def prod {α ι ι'} (l : Line α ι) (l' : Line α ι') : Line α (ι ⊕ ι') where
+def prod {α ι ι'} (l : Line α ι) (l' : Line α ι') : Line α (Sum ι ι') where
   idxFun := Sum.elim l.idxFun l'.idxFun
   proper := ⟨Sum.inl l.proper.some, l.proper.some_spec⟩
 #align combinatorics.line.prod Combinatorics.Line.prod
@@ -193,21 +195,21 @@ theorem diagonal_apply {α ι} [Nonempty ι] (x : α) : Line.diagonal α ι x = 
 for the proof. See `exists_mono_in_high_dimension` for a fully universe-polymorphic version. -/
 private theorem exists_mono_in_high_dimension' :
     ∀ (α : Type u) [Finite α] (κ : Type max v u) [Finite κ],
-      ∃ (ι : Type) (_ : Fintype ι), ∀ C : (ι → α) → κ, ∃ l : Line α ι, l.IsMono C :=
+      ∃ (ι : Type)(_ : Fintype ι), ∀ C : (ι → α) → κ, ∃ l : Line α ι, l.IsMono C :=
   -- The proof proceeds by induction on `α`.
     Finite.induction_empty_option
     (-- We have to show that the theorem is invariant under `α ≃ α'` for the induction to work.
     fun α α' e =>
-      forall_imp $ fun κ =>
-        forall_imp $ fun _ =>
-          Exists.imp $ fun ι =>
-            Exists.imp $ fun _ h C =>
+      forall_imp fun κ =>
+        forall_imp fun _ =>
+          Exists.imp fun ι =>
+            Exists.imp fun _ h C =>
               let ⟨l, c, lc⟩ := h fun v => C (e ∘ v)
-              ⟨l.map e, c, e.forall_congr_left.mp $ fun x => by rw [← lc x, line.map_apply]⟩)
+              ⟨l.map e, c, e.forall_congr_left.mp fun x => by rw [← lc x, line.map_apply]⟩)
     (by
       -- This deals with the degenerate case where `α` is empty.
       intro κ _
-      by_cases h:Nonempty κ
+      by_cases h : Nonempty κ
       · skip
         exact ⟨Unit, inferInstance, fun C => ⟨default, Classical.arbitrary _, PEmpty.rec _⟩⟩
         
@@ -219,7 +221,7 @@ private theorem exists_mono_in_high_dimension' :
       cases nonempty_fintype κ
       -- Later we'll need `α` to be nonempty. So we first deal with the trivial case where `α` is empty.
       -- Then `option α` has only one element, so any line is monochromatic.
-      by_cases h:Nonempty α
+      by_cases h : Nonempty α
       on_goal 2 =>
       refine' ⟨Unit, inferInstance, fun C => ⟨diagonal _ _, C fun _ => none, _⟩⟩
       rintro (_ | ⟨a⟩)
@@ -229,7 +231,7 @@ private theorem exists_mono_in_high_dimension' :
       -- `r` color focused lines or a monochromatic line.
       suffices key :
         ∀ r : ℕ,
-          ∃ (ι : Type) (_ : Fintype ι),
+          ∃ (ι : Type)(_ : Fintype ι),
             ∀ C : (ι → Option α) → κ, (∃ s : color_focused C, s.lines.card = r) ∨ ∃ l, is_mono C l
       -- Given the key claim, we simply take `r = |κ| + 1`. We cannot have this many distinct colors so
       -- we must be in the second case, where there is a monochromatic line.
@@ -256,7 +258,7 @@ private theorem exists_mono_in_high_dimension' :
       obtain ⟨ι', _inst, hι'⟩ := ihα
       skip
       -- We claim that `ι ⊕ ι'` works for `option α` and `κ`-coloring.
-      refine' ⟨ι ⊕ ι', inferInstance, _⟩
+      refine' ⟨Sum ι ι', inferInstance, _⟩
       intro C
       -- A `κ`-coloring of `ι ⊕ ι' → option α` induces an `(ι → option α) → κ`-coloring of `ι' → α`.
       specialize hι' fun v' v => C (Sum.elim v (some ∘ v'))
@@ -275,7 +277,7 @@ private theorem exists_mono_in_high_dimension' :
       on_goal 2 => exact Or.inr (mono_of_mono hι)
       -- Here we assume `C'` has `r` color focused lines. We split into cases depending on whether one of
       -- these `r` lines has the same color as the focus point.
-      by_cases h:∃ p ∈ s.lines, (p : almost_mono _).Color = C' s.focus
+      by_cases h : ∃ p ∈ s.lines, (p : almost_mono _).Color = C' s.focus
       -- If so then this is a `C'`-monochromatic line and we are done.
       · obtain ⟨p, p_mem, hp⟩ := h
         refine' Or.inr (mono_of_mono ⟨p.line, p.color, _⟩)
@@ -317,7 +319,7 @@ private theorem exists_mono_in_high_dimension' :
 /-- The Hales-Jewett theorem: for any finite types `α` and `κ`, there exists a finite type `ι` such
 that whenever the hypercube `ι → α` is `κ`-colored, there is a monochromatic combinatorial line. -/
 theorem exists_mono_in_high_dimension (α : Type u) [Finite α] (κ : Type v) [Finite κ] :
-    ∃ (ι : Type) (_ : Fintype ι), ∀ C : (ι → α) → κ, ∃ l : Line α ι, l.IsMono C :=
+    ∃ (ι : Type)(_ : Fintype ι), ∀ C : (ι → α) → κ, ∃ l : Line α ι, l.IsMono C :=
   let ⟨ι, ιfin, hι⟩ := exists_mono_in_high_dimension' α (ULift κ)
   ⟨ι, ιfin, fun C =>
     let ⟨l, c, hc⟩ := hι (ULift.up ∘ C)
@@ -329,10 +331,10 @@ end Line
 /-- A generalization of Van der Waerden's theorem: if `M` is a finitely colored commutative
 monoid, and `S` is a finite subset, then there exists a monochromatic homothetic copy of `S`. -/
 theorem exists_mono_homothetic_copy {M κ : Type _} [AddCommMonoid M] (S : Finset M) [Finite κ] (C : M → κ) :
-    ∃ (a > 0) (b : M) (c : κ), ∀ s ∈ S, C (a • s + b) = c := by
+    ∃ a > 0, ∃ (b : M)(c : κ), ∀ s ∈ S, C (a • s + b) = c := by
   obtain ⟨ι, _inst, hι⟩ := line.exists_mono_in_high_dimension S κ
   skip
-  specialize hι fun v => C $ ∑ i, v i
+  specialize hι fun v => C <| ∑ i, v i
   obtain ⟨l, c, hl⟩ := hι
   set s : Finset ι := { i ∈ Finset.univ | l.idx_fun i = none } with hs
   refine' ⟨s.card, finset.card_pos.mpr ⟨l.proper.some, _⟩, ∑ i in sᶜ, ((l.idx_fun i).map coe).getOrElse 0, c, _⟩

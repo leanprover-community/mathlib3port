@@ -323,7 +323,7 @@ theorem lipschitz_with_one_iff_forall_dist_image_le_of_mem_cylinder {α : Type _
 variable (E) [∀ n, TopologicalSpace (E n)] [∀ n, DiscreteTopology (E n)]
 
 theorem is_topological_basis_cylinders :
-    IsTopologicalBasis { s : Set (∀ n, E n) | ∃ (x : ∀ n, E n) (n : ℕ), s = cylinder x n } := by
+    IsTopologicalBasis { s : Set (∀ n, E n) | ∃ (x : ∀ n, E n)(n : ℕ), s = cylinder x n } := by
   apply is_topological_basis_of_open_of_nhds
   · rintro u ⟨x, n, rfl⟩
     rw [cylinder_eq_pi]
@@ -331,10 +331,10 @@ theorem is_topological_basis_cylinders :
     
   · intro x u hx u_open
     obtain ⟨v, ⟨U, F, hUF, rfl⟩, xU, Uu⟩ :
-      ∃ (v : Set (∀ i : ℕ, E i)) (H :
+      ∃ (v : Set (∀ i : ℕ, E i))(H :
         v ∈
           { S : Set (∀ i : ℕ, E i) |
-            ∃ (U : ∀ i : ℕ, Set (E i)) (F : Finset ℕ),
+            ∃ (U : ∀ i : ℕ, Set (E i))(F : Finset ℕ),
               (∀ i : ℕ, i ∈ F → U i ∈ { s : Set (E i) | IsOpen s }) ∧ S = (F : Set ℕ).pi U }),
         x ∈ v ∧ v ⊆ u :=
       (is_topological_basis_pi fun n : ℕ => is_topological_basis_opens).exists_subset_of_mem_open hx u_open
@@ -356,7 +356,7 @@ theorem is_open_iff_dist (s : Set (∀ n, E n)) : IsOpen s ↔ ∀ x ∈ s, ∃ 
   constructor
   · intro hs x hx
     obtain ⟨v, ⟨y, n, rfl⟩, h'x, h's⟩ :
-      ∃ (v : Set (∀ n : ℕ, E n)) (H : v ∈ { s | ∃ (x : ∀ n : ℕ, E n) (n : ℕ), s = cylinder x n }), x ∈ v ∧ v ⊆ s :=
+      ∃ (v : Set (∀ n : ℕ, E n))(H : v ∈ { s | ∃ (x : ∀ n : ℕ, E n)(n : ℕ), s = cylinder x n }), x ∈ v ∧ v ⊆ s :=
       (is_topological_basis_cylinders E).exists_subset_of_mem_open hx hs
     rw [← mem_cylinder_iff_eq.1 h'x] at h's
     exact ⟨(1 / 2 : ℝ) ^ n, by simp, fun y hy => h's fun i hi => (apply_eq_of_dist_lt hy hi.le).symm⟩
@@ -511,7 +511,7 @@ theorem first_diff_le_longest_prefix {s : Set (∀ n, E n)} (hs : IsClosed s) {x
 
 theorem inter_cylinder_longest_prefix_nonempty {s : Set (∀ n, E n)} (hs : IsClosed s) (hne : s.Nonempty)
     (x : ∀ n, E n) : (s ∩ cylinder x (longestPrefix x s)).Nonempty := by
-  by_cases hx:x ∈ s
+  by_cases hx : x ∈ s
   · exact ⟨x, hx, self_mem_cylinder _ _⟩
     
   have A := exists_disjoint_cylinder hs hx
@@ -590,7 +590,7 @@ theorem exists_lipschitz_retraction_of_is_closed {s : Set (∀ n, E n)} (hs : Is
   -- check that the range of `f` is `s`.
   · apply subset.antisymm
     · rintro x ⟨y, rfl⟩
-      by_cases hy:y ∈ s
+      by_cases hy : y ∈ s
       · rwa [fs y hy]
         
       simpa [hf, if_neg hy] using (inter_cylinder_longest_prefix_nonempty hs hne y).some_spec.1
@@ -614,10 +614,10 @@ theorem exists_lipschitz_retraction_of_is_closed {s : Set (∀ n, E n)} (hs : Is
       apply mem_cylinder_first_diff
     suffices first_diff x y ≤ first_diff (f x) (f y) by simpa [dist_eq_of_ne hxy, dist_eq_of_ne hfxfy]
     -- case where `x ∈ s`
-    by_cases xs:x ∈ s
+    by_cases xs : x ∈ s
     · rw [fs x xs] at hfxfy⊢
       -- case where `y ∈ s`, trivial
-      by_cases ys:y ∈ s
+      by_cases ys : y ∈ s
       · rw [fs y ys]
         
       -- case where `y ∉ s`
@@ -630,7 +630,7 @@ theorem exists_lipschitz_retraction_of_is_closed {s : Set (∀ n, E n)} (hs : Is
       rwa [← fy, ← I2, ← mem_cylinder_iff_eq, mem_cylinder_iff_le_first_diff hfxfy.symm, first_diff_comm _ x] at I
       
     -- case where `x ∉ s`
-    · by_cases ys:y ∈ s
+    · by_cases ys : y ∈ s
       -- case where `y ∈ s` (similar to the above)
       · have A : (s ∩ cylinder x (longest_prefix x s)).Nonempty := inter_cylinder_longest_prefix_nonempty hs hne x
         have fx : f x = A.some := by simp_rw [hf, if_neg xs]
@@ -648,7 +648,7 @@ theorem exists_lipschitz_retraction_of_is_closed {s : Set (∀ n, E n)} (hs : Is
         have fy : f y = Ay.some := by simp_rw [hf, if_neg ys]
         -- case where the common prefix to `x` and `s`, or `y` and `s`, is shorter than the
         -- common part to `x` and `y` -- then `f x = f y`.
-        by_cases H:longest_prefix x s < first_diff x y ∨ longest_prefix y s < first_diff x y
+        by_cases H : longest_prefix x s < first_diff x y ∨ longest_prefix y s < first_diff x y
         · have : cylinder x (longest_prefix x s) = cylinder y (longest_prefix y s) := by
             cases H
             · exact cylinder_longest_prefix_eq_of_longest_prefix_lt_first_diff hs hne H xs ys
@@ -893,7 +893,7 @@ protected def metricSpace : MetricSpace (∀ i, F i) where
       obtain ⟨K, hK⟩ : ∃ K : Finset ι, (∑' i : { j // j ∉ K }, (1 / 2 : ℝ) ^ encode (i : ι)) < ε / 2 :=
         ((tendsto_order.1 (tendsto_tsum_compl_at_top_zero fun i : ι => (1 / 2 : ℝ) ^ encode i)).2 _
             (half_pos εpos)).exists
-      obtain ⟨δ, δpos, hδ⟩ : ∃ (δ : ℝ) (δpos : 0 < δ), (K.card : ℝ) * δ ≤ ε / 2 := by
+      obtain ⟨δ, δpos, hδ⟩ : ∃ (δ : ℝ)(δpos : 0 < δ), (K.card : ℝ) * δ ≤ ε / 2 := by
         rcases Nat.eq_zero_or_pos K.card with (hK | hK)
         · exact ⟨1, zero_lt_one, by simpa only [hK, Nat.cast_zero, zero_mul] using (half_pos εpos).le⟩
           

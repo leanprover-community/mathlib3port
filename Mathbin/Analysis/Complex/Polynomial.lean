@@ -31,12 +31,12 @@ theorem exists_root {f : ℂ[X]} (hf : 0 < degree f) : ∃ z : ℂ, IsRoot f z :
     
   · obtain ⟨z₀, h₀⟩ := f.exists_forall_norm_le
     simp only [bounded_iff_forall_norm_le, Set.forall_range_iff, norm_inv]
-    exact ⟨∥eval z₀ f∥⁻¹, fun z => inv_le_inv_of_le (norm_pos_iff.2 $ hf z₀) (h₀ z)⟩
+    exact ⟨‖eval z₀ f‖⁻¹, fun z => inv_le_inv_of_le (norm_pos_iff.2 <| hf z₀) (h₀ z)⟩
     
 #align complex.exists_root Complex.exists_root
 
 instance isAlgClosed : IsAlgClosed ℂ :=
-  IsAlgClosed.ofExistsRoot _ $ fun p _ hp => Complex.exists_root $ degree_pos_of_irreducible hp
+  (IsAlgClosed.ofExistsRoot _) fun p _ hp => Complex.exists_root <| degree_pos_of_irreducible hp
 #align complex.is_alg_closed Complex.isAlgClosed
 
 end Complex

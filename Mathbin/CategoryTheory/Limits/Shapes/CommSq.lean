@@ -6,7 +6,6 @@ Authors: Scott Morrison, Joël Riou
 import Mathbin.CategoryTheory.CommSq
 import Mathbin.CategoryTheory.Limits.Opposites
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Pullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.ZeroMorphisms
 import Mathbin.CategoryTheory.Limits.Constructions.BinaryProducts
 import Mathbin.CategoryTheory.Limits.Constructions.ZeroObjects
@@ -987,7 +986,7 @@ alias functor.map_is_pushout ← is_pushout.map
 
 theorem IsPullback.of_map [ReflectsLimit (cospan h i) F] (e : f ≫ h = g ≫ i)
     (H : IsPullback (F.map f) (F.map g) (F.map h) (F.map i)) : IsPullback f g h i := by
-  refine' ⟨⟨e⟩, ⟨is_limit_of_reflects F $ _⟩⟩
+  refine' ⟨⟨e⟩, ⟨is_limit_of_reflects F <| _⟩⟩
   refine' (is_limit.equiv_of_nat_iso_of_iso (cospan_comp_iso F h i) _ _ (walking_cospan.ext _ _ _)).symm H.is_limit
   exacts[iso.refl _, (category.comp_id _).trans (category.id_comp _).symm,
     (category.comp_id _).trans (category.id_comp _).symm]
@@ -995,7 +994,7 @@ theorem IsPullback.of_map [ReflectsLimit (cospan h i) F] (e : f ≫ h = g ≫ i)
 
 theorem IsPullback.of_map_of_faithful [ReflectsLimit (cospan h i) F] [Faithful F]
     (H : IsPullback (F.map f) (F.map g) (F.map h) (F.map i)) : IsPullback f g h i :=
-  H.of_map F (F.map_injective $ by simpa only [F.map_comp] using H.w)
+  H.of_map F (F.map_injective <| by simpa only [F.map_comp] using H.w)
 #align category_theory.is_pullback.of_map_of_faithful CategoryTheory.IsPullback.of_map_of_faithful
 
 theorem IsPullback.map_iff {D : Type _} [Category D] (F : C ⥤ D) [PreservesLimit (cospan h i) F]
@@ -1006,14 +1005,14 @@ theorem IsPullback.map_iff {D : Type _} [Category D] (F : C ⥤ D) [PreservesLim
 
 theorem IsPushout.of_map [ReflectsColimit (span f g) F] (e : f ≫ h = g ≫ i)
     (H : IsPushout (F.map f) (F.map g) (F.map h) (F.map i)) : IsPushout f g h i := by
-  refine' ⟨⟨e⟩, ⟨is_colimit_of_reflects F $ _⟩⟩
+  refine' ⟨⟨e⟩, ⟨is_colimit_of_reflects F <| _⟩⟩
   refine' (is_colimit.equiv_of_nat_iso_of_iso (span_comp_iso F f g) _ _ (walking_span.ext _ _ _)).symm H.is_colimit
   exacts[iso.refl _, (category.comp_id _).trans (category.id_comp _), (category.comp_id _).trans (category.id_comp _)]
 #align category_theory.is_pushout.of_map CategoryTheory.IsPushout.of_map
 
 theorem IsPushout.of_map_of_faithful [ReflectsColimit (span f g) F] [Faithful F]
     (H : IsPushout (F.map f) (F.map g) (F.map h) (F.map i)) : IsPushout f g h i :=
-  H.of_map F (F.map_injective $ by simpa only [F.map_comp] using H.w)
+  H.of_map F (F.map_injective <| by simpa only [F.map_comp] using H.w)
 #align category_theory.is_pushout.of_map_of_faithful CategoryTheory.IsPushout.of_map_of_faithful
 
 theorem IsPushout.map_iff {D : Type _} [Category D] (F : C ⥤ D) [PreservesColimit (span f g) F]

@@ -7,9 +7,8 @@ import Mathbin.MeasureTheory.Covering.VitaliFamily
 import Mathbin.MeasureTheory.Measure.Regular
 import Mathbin.MeasureTheory.Function.AeMeasurableOrder
 import Mathbin.MeasureTheory.Integral.Lebesgue
-import Mathbin.MeasureTheory.Decomposition.RadonNikodym
 import Mathbin.MeasureTheory.Integral.Average
-import Mathbin.MeasureTheory.Function.LocallyIntegrable
+import Mathbin.MeasureTheory.Decomposition.Lebesgue
 
 /-!
 # Differentiation of measures
@@ -33,7 +32,7 @@ derived:
 * `vitali_family.ae_tendsto_measure_inter_div` states that, for almost every point `x ∈ s`,
   then `μ (s ∩ a) / μ a` tends to `1` as `a` shrinks to `x` along a Vitali family.
 * `vitali_family.ae_tendsto_average_norm_sub` states that, for almost every point `x`, then the
-  average of `y ↦ ∥f y - f x∥` on `a` tends to `0` as `a` shrinks to `x` along a Vitali family.
+  average of `y ↦ ‖f y - f x‖` on `a` tends to `0` as `a` shrinks to `x` along a Vitali family.
 
 ## Sketch of proof
 
@@ -110,7 +109,7 @@ theorem ae_eventually_measure_pos [SecondCountableTopology α] : ∀ᵐ x ∂μ,
 /-- For every point `x`, sufficiently small sets in a Vitali family around `x` have finite measure.
 (This is a trivial result, following from the fact that the measure is locally finite). -/
 theorem eventually_measure_lt_top [IsLocallyFiniteMeasure μ] (x : α) : ∀ᶠ a in v.filterAt x, μ a < ∞ := by
-  obtain ⟨ε, εpos, με⟩ : ∃ (ε : ℝ) (hi : 0 < ε), μ (closed_ball x ε) < ∞ :=
+  obtain ⟨ε, εpos, με⟩ : ∃ (ε : ℝ)(hi : 0 < ε), μ (closed_ball x ε) < ∞ :=
     (μ.finite_at_nhds x).exists_mem_basis nhds_basis_closed_ball
   exact v.eventually_filter_at_iff.2 ⟨ε, εpos, fun a ha haε => (measure_mono haε).trans_lt με⟩
 #align vitali_family.eventually_measure_lt_top VitaliFamily.eventually_measure_lt_top
@@ -122,7 +121,7 @@ theorem measure_le_of_frequently_le [SigmaCompactSpace α] [BorelSpace α] {ρ :
   by
   -- this follows from a covering argument using the sets satisfying `ρ a ≤ ν a`.
   apply Ennreal.le_of_forall_pos_le_add fun ε εpos hc => _
-  obtain ⟨U, sU, U_open, νU⟩ : ∃ (U : Set α) (H : s ⊆ U), IsOpen U ∧ ν U ≤ ν s + ε :=
+  obtain ⟨U, sU, U_open, νU⟩ : ∃ (U : Set α)(H : s ⊆ U), IsOpen U ∧ ν U ≤ ν s + ε :=
     exists_is_open_le_add s ν (Ennreal.coe_pos.2 εpos).ne'
   let f : α → Set (Set α) := fun x => { a | ρ a ≤ ν a ∧ a ⊆ U }
   have h : v.fine_subfamily_on f s := by
@@ -266,13 +265,12 @@ theorem ae_tendsto_lim_ratio : ∀ᵐ x ∂μ, Tendsto (fun a => ρ a / μ a) (v
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (m n) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (m n) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (m n) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- Given two thresholds `p < q`, the sets `{x | v.lim_ratio ρ x < p}`
 and `{x | q < v.lim_ratio ρ x}` are obviously disjoint. The key to proving that `v.lim_ratio ρ` is
 almost everywhere measurable is to show that these sets have measurable supersets which are also
 disjoint, up to zero measure. This is the content of this lemma. -/
 theorem exists_measurable_supersets_lim_ratio {p q : ℝ≥0} (hpq : p < q) :
-    ∃ (a) (b),
+    ∃ a b,
       MeasurableSet a ∧
         MeasurableSet b ∧ { x | v.limRatio ρ x < p } ⊆ a ∧ { x | (q : ℝ≥0∞) < v.limRatio ρ x } ⊆ b ∧ μ (a ∩ b) = 0 :=
   by
@@ -307,7 +305,7 @@ theorem exists_measurable_supersets_lim_ratio {p q : ℝ≥0} (hpq : p < q) :
   · exact (measurable_set_to_measurable _ _).union (MeasurableSet.union fun n => measurable_set_to_measurable _ _)
     
   · intro x hx
-    by_cases h:x ∈ s
+    by_cases h : x ∈ s
     · refine' Or.inr (mem_Union.2 ⟨spanning_sets_index (ρ + μ) x, _⟩)
       exact subset_to_measurable _ _ ⟨⟨h, hx⟩, mem_spanning_sets_index _ _⟩
       
@@ -315,7 +313,7 @@ theorem exists_measurable_supersets_lim_ratio {p q : ℝ≥0} (hpq : p < q) :
       
     
   · intro x hx
-    by_cases h:x ∈ s
+    by_cases h : x ∈ s
     · refine' Or.inr (mem_Union.2 ⟨spanning_sets_index (ρ + μ) x, _⟩)
       exact subset_to_measurable _ _ ⟨⟨h, hx⟩, mem_spanning_sets_index _ _⟩
       
@@ -802,8 +800,8 @@ theorem ae_tendsto_lintegral_div {f : α → ℝ≥0∞} (hf : AeMeasurable f μ
 #align vitali_family.ae_tendsto_lintegral_div VitaliFamily.ae_tendsto_lintegral_div
 
 theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f μ) (h'f : StronglyMeasurable f) :
-    ∀ᵐ x ∂μ, Tendsto (fun a => (∫⁻ y in a, ∥f y - f x∥₊ ∂μ) / μ a) (v.filterAt x) (𝓝 0) := by
-  /- For every `c`, then `(∫⁻ y in a, ∥f y - c∥₊ ∂μ) / μ a` tends almost everywhere to `∥f x - c∥`.
+    ∀ᵐ x ∂μ, Tendsto (fun a => (∫⁻ y in a, ‖f y - f x‖₊ ∂μ) / μ a) (v.filterAt x) (𝓝 0) := by
+  /- For every `c`, then `(∫⁻ y in a, ‖f y - c‖₊ ∂μ) / μ a` tends almost everywhere to `‖f x - c‖`.
     We apply this to a countable set of `c` which is dense in the range of `f`, to deduce the desired
     convergence.
     A minor technical inconvenience is that constants are not integrable, so to apply previous lemmas
@@ -814,8 +812,8 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
   have main :
     ∀ᵐ x ∂μ,
       ∀ (n : ℕ) (c : E) (hc : c ∈ t),
-        tendsto (fun a => (∫⁻ y in a, ∥f y - (A.set n).indicator (fun y => c) y∥₊ ∂μ) / μ a) (v.filter_at x)
-          (𝓝 ∥f x - (A.set n).indicator (fun y => c) x∥₊) :=
+        tendsto (fun a => (∫⁻ y in a, ‖f y - (A.set n).indicator (fun y => c) y‖₊ ∂μ) / μ a) (v.filter_at x)
+          (𝓝 ‖f x - (A.set n).indicator (fun y => c) x‖₊) :=
     by
     simp_rw [ae_all_iff, ae_ball_iff t_count]
     intro n c hc
@@ -825,15 +823,15 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
       
     · apply ne_of_lt
       calc
-        (∫⁻ y, ↑∥f y - (A.set n).indicator (fun y : α => c) y∥₊ ∂μ) ≤
-            ∫⁻ y, ∥f y∥₊ + ∥(A.set n).indicator (fun y : α => c) y∥₊ ∂μ :=
+        (∫⁻ y, ↑‖f y - (A.set n).indicator (fun y : α => c) y‖₊ ∂μ) ≤
+            ∫⁻ y, ‖f y‖₊ + ‖(A.set n).indicator (fun y : α => c) y‖₊ ∂μ :=
           by
           apply lintegral_mono
           intro x
           dsimp
           rw [← Ennreal.coe_add]
           exact Ennreal.coe_le_coe.2 (nnnorm_sub_le _ _)
-        _ = (∫⁻ y, ∥f y∥₊ ∂μ) + ∫⁻ y, ∥(A.set n).indicator (fun y : α => c) y∥₊ ∂μ := lintegral_add_left h'f.ennnorm _
+        _ = (∫⁻ y, ‖f y‖₊ ∂μ) + ∫⁻ y, ‖(A.set n).indicator (fun y : α => c) y‖₊ ∂μ := lintegral_add_left h'f.ennnorm _
         _ < ∞ + ∞ :=
           haveI I : integrable ((A.set n).indicator fun y : α => c) μ := by
             simp only [integrable_indicator_iff (IsOpen.measurableSet (A.set_mem n)), integrable_on_const, A.finite n,
@@ -842,7 +840,7 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
         
       
   filter_upwards [main, v.ae_eventually_measure_pos] with x hx h'x
-  have M : ∀ c ∈ t, tendsto (fun a => (∫⁻ y in a, ∥f y - c∥₊ ∂μ) / μ a) (v.filter_at x) (𝓝 ∥f x - c∥₊) := by
+  have M : ∀ c ∈ t, tendsto (fun a => (∫⁻ y in a, ‖f y - c‖₊ ∂μ) / μ a) (v.filter_at x) (𝓝 ‖f x - c‖₊) := by
     intro c hc
     obtain ⟨n, xn⟩ : ∃ n, x ∈ A.set n := by simpa [← A.spanning] using mem_univ x
     specialize hx n c hc
@@ -856,17 +854,17 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
     intro hy
     simp only [ha hy, indicator_of_mem]
   apply Ennreal.tendsto_nhds_zero.2 fun ε εpos => _
-  obtain ⟨c, ct, xc⟩ : ∃ c ∈ t, (∥f x - c∥₊ : ℝ≥0∞) < ε / 2 := by
+  obtain ⟨c, ct, xc⟩ : ∃ c ∈ t, (‖f x - c‖₊ : ℝ≥0∞) < ε / 2 := by
     simp_rw [← edist_eq_coe_nnnorm_sub]
     have : f x ∈ closure t := ht (mem_range_self _)
     exact Emetric.mem_closure_iff.1 this (ε / 2) (Ennreal.half_pos (ne_of_gt εpos))
   filter_upwards [(tendsto_order.1 (M c ct)).2 (ε / 2) xc, h'x, v.eventually_measure_lt_top x] with a ha h'a h''a
   apply Ennreal.div_le_of_le_mul
   calc
-    (∫⁻ y in a, ∥f y - f x∥₊ ∂μ) ≤ ∫⁻ y in a, ∥f y - c∥₊ + ∥f x - c∥₊ ∂μ := by
+    (∫⁻ y in a, ‖f y - f x‖₊ ∂μ) ≤ ∫⁻ y in a, ‖f y - c‖₊ + ‖f x - c‖₊ ∂μ := by
       apply lintegral_mono fun x => _
       simpa only [← edist_eq_coe_nnnorm_sub] using edist_triangle_right _ _ _
-    _ = (∫⁻ y in a, ∥f y - c∥₊ ∂μ) + ∫⁻ y in a, ∥f x - c∥₊ ∂μ := lintegral_add_right _ measurableConst
+    _ = (∫⁻ y in a, ‖f y - c‖₊ ∂μ) + ∫⁻ y in a, ‖f x - c‖₊ ∂μ := lintegral_add_right _ measurableConst
     _ ≤ ε / 2 * μ a + ε / 2 * μ a := by
       refine' add_le_add _ _
       · rw [Ennreal.div_lt_iff (Or.inl h'a.ne') (Or.inl h''a.ne)] at ha
@@ -880,7 +878,7 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
 #align vitali_family.ae_tendsto_lintegral_nnnorm_sub_div' VitaliFamily.ae_tendsto_lintegral_nnnorm_sub_div'
 
 theorem ae_tendsto_lintegral_nnnorm_sub_div {f : α → E} (hf : Integrable f μ) :
-    ∀ᵐ x ∂μ, Tendsto (fun a => (∫⁻ y in a, ∥f y - f x∥₊ ∂μ) / μ a) (v.filterAt x) (𝓝 0) := by
+    ∀ᵐ x ∂μ, Tendsto (fun a => (∫⁻ y in a, ‖f y - f x‖₊ ∂μ) / μ a) (v.filterAt x) (𝓝 0) := by
   have I : integrable (hf.1.mk f) μ := hf.congr hf.1.ae_eq_mk
   filter_upwards [v.ae_tendsto_lintegral_nnnorm_sub_div' I hf.1.stronglyMeasurableMk, hf.1.ae_eq_mk] with x hx h'x
   apply hx.congr _
@@ -893,16 +891,16 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div {f : α → E} (hf : Integrable f μ
 #align vitali_family.ae_tendsto_lintegral_nnnorm_sub_div VitaliFamily.ae_tendsto_lintegral_nnnorm_sub_div
 
 /-- *Lebesgue differentiation theorem*: for almost every point `x`, the
-average of `∥f y - f x∥` on `a` tends to `0` as `a` shrinks to `x` along a Vitali family.-/
+average of `‖f y - f x‖` on `a` tends to `0` as `a` shrinks to `x` along a Vitali family.-/
 theorem ae_tendsto_average_norm_sub {f : α → E} (hf : Integrable f μ) :
-    ∀ᵐ x ∂μ, Tendsto (fun a => ⨍ y in a, ∥f y - f x∥ ∂μ) (v.filterAt x) (𝓝 0) := by
+    ∀ᵐ x ∂μ, Tendsto (fun a => ⨍ y in a, ‖f y - f x‖ ∂μ) (v.filterAt x) (𝓝 0) := by
   filter_upwards [v.ae_tendsto_lintegral_nnnorm_sub_div hf, v.ae_eventually_measure_pos] with x hx h'x
   have := (Ennreal.tendsto_to_real Ennreal.zero_ne_top).comp hx
   simp only [Ennreal.zero_to_real] at this
   apply tendsto.congr' _ this
   filter_upwards [h'x, v.eventually_measure_lt_top x] with a ha h'a
   simp only [Function.comp_apply, Ennreal.to_real_div, set_average_eq, div_eq_inv_mul]
-  have A : integrable_on (fun y => (∥f y - f x∥₊ : ℝ)) a μ := by
+  have A : integrable_on (fun y => (‖f y - f x‖₊ : ℝ)) a μ := by
     simp_rw [coe_nnnorm]
     exact (hf.integrable_on.sub (integrable_on_const.2 (Or.inr h'a))).norm
   rw [lintegral_coe_eq_integral _ A, Ennreal.to_real_of_real]

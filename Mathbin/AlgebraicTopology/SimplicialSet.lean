@@ -117,9 +117,9 @@ open Simplicial
 
 /-- The simplicial circle. -/
 noncomputable def s1 : SSet :=
-  limits.colimit $
-    Limits.parallelPair (standardSimplex.map $ SimplexCategory.δ 0 : Δ[0] ⟶ Δ[1])
-      (standardSimplex.map $ SimplexCategory.δ 1)
+  limits.colimit <|
+    Limits.parallelPair (standardSimplex.map <| SimplexCategory.δ 0 : Δ[0] ⟶ Δ[1])
+      (standardSimplex.map <| SimplexCategory.δ 1)
 #align sSet.S1 SSet.s1
 
 end Examples
@@ -135,7 +135,7 @@ def sk (n : ℕ) : SSet ⥤ SSet.Truncated n :=
 #align sSet.sk SSet.sk
 
 instance {n} : Inhabited (SSet.Truncated n) :=
-  ⟨(sk n).obj $ Δ[0]⟩
+  ⟨(sk n).obj <| Δ[0]⟩
 
 /-- The category of augmented simplicial sets, as a particular case of
 augmented simplicial objects. -/
@@ -149,7 +149,7 @@ namespace Augmented
 the obvious augmentation towards the terminal object of the category of sets. -/
 @[simps]
 noncomputable def standardSimplex : SimplexCategory ⥤ SSet.Augmented where
-  obj Δ := { left := SSet.standardSimplex.obj Δ, right := terminal _, Hom := { app := fun Δ' => terminal.from _ } }
+  obj Δ := { left := SSet.standardSimplex.obj Δ, right := terminal _, hom := { app := fun Δ' => terminal.from _ } }
   map Δ₁ Δ₂ θ := { left := SSet.standardSimplex.map θ, right := terminal.from _ }
 #align sSet.augmented.standard_simplex SSet.Augmented.standardSimplex
 

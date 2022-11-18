@@ -29,7 +29,7 @@ namespace EisensteinCriterionAux
 theorem map_eq_C_mul_X_pow_of_forall_coeff_mem {f : R[X]} {P : Ideal R} (hfP : ∀ n : ℕ, ↑n < f.degree → f.coeff n ∈ P) :
     map (mk P) f = c ((mk P) f.leadingCoeff) * X ^ f.natDegree :=
   Polynomial.ext fun n => by
-    by_cases hf0:f = 0
+    by_cases hf0 : f = 0
     · simp [hf0]
       
     rcases lt_trichotomy (↑n) (degree f) with (h | h | h)

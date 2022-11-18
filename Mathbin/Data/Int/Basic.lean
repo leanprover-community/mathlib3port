@@ -3,8 +3,8 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
-import Mathbin.Order.Monotone
 import Mathbin.Data.Nat.Basic
+import Mathbin.Order.Monotone
 
 /-!
 # Basic instances on the integers
@@ -148,7 +148,7 @@ theorem mul_def {a b : ℤ} : Int.mul a b = a * b :=
 
 #print Int.negSucc_not_nonneg /-
 @[simp]
-theorem negSucc_not_nonneg (n : ℕ) : 0 ≤ -[1+ n] ↔ False := by
+theorem negSucc_not_nonneg (n : ℕ) : 0 ≤ -[n+1] ↔ False := by
   simp only [not_le, iff_false_iff]
   exact Int.negSucc_lt_zero n
 #align int.neg_succ_not_nonneg Int.negSucc_not_nonneg
@@ -156,34 +156,34 @@ theorem negSucc_not_nonneg (n : ℕ) : 0 ≤ -[1+ n] ↔ False := by
 
 #print Int.negSucc_not_pos /-
 @[simp]
-theorem negSucc_not_pos (n : ℕ) : 0 < -[1+ n] ↔ False := by simp only [not_lt, iff_false_iff]
+theorem negSucc_not_pos (n : ℕ) : 0 < -[n+1] ↔ False := by simp only [not_lt, iff_false_iff]
 #align int.neg_succ_not_pos Int.negSucc_not_pos
 -/
 
 #print Int.negSucc_sub_one /-
 @[simp]
-theorem negSucc_sub_one (n : ℕ) : -[1+ n] - 1 = -[1+ n + 1] :=
+theorem negSucc_sub_one (n : ℕ) : -[n+1] - 1 = -[n + 1+1] :=
   rfl
 #align int.neg_succ_sub_one Int.negSucc_sub_one
 -/
 
 #print Int.ofNat_mul_negSucc /-
 @[simp]
-theorem ofNat_mul_negSucc (m n : ℕ) : (m : ℤ) * -[1+ n] = -(m * succ n) :=
+theorem ofNat_mul_negSucc (m n : ℕ) : (m : ℤ) * -[n+1] = -(m * succ n) :=
   rfl
 #align int.coe_nat_mul_neg_succ Int.ofNat_mul_negSucc
 -/
 
 #print Int.negSucc_mul_ofNat /-
 @[simp]
-theorem negSucc_mul_ofNat (m n : ℕ) : -[1+ m] * n = -(succ m * n) :=
+theorem negSucc_mul_ofNat (m n : ℕ) : -[m+1] * n = -(succ m * n) :=
   rfl
 #align int.neg_succ_mul_coe_nat Int.negSucc_mul_ofNat
 -/
 
 #print Int.negSucc_mul_negSucc /-
 @[simp]
-theorem negSucc_mul_negSucc (m n : ℕ) : -[1+ m] * -[1+ n] = succ m * succ n :=
+theorem negSucc_mul_negSucc (m n : ℕ) : -[m+1] * -[n+1] = succ m * succ n :=
   rfl
 #align int.neg_succ_mul_neg_succ Int.negSucc_mul_negSucc
 -/
@@ -223,13 +223,13 @@ theorem coe_nat_nonneg (n : ℕ) : 0 ≤ (n : ℤ) :=
 
 #print Int.negSucc_ne_zero /-
 @[simp]
-theorem negSucc_ne_zero (n : ℕ) : -[1+ n] ≠ 0 := fun h => Int.noConfusion h
+theorem negSucc_ne_zero (n : ℕ) : -[n+1] ≠ 0 := fun h => Int.noConfusion h
 #align int.neg_of_nat_ne_zero Int.negSucc_ne_zero
 -/
 
 #print Int.zero_ne_negSucc /-
 @[simp]
-theorem zero_ne_negSucc (n : ℕ) : 0 ≠ -[1+ n] := fun h => Int.noConfusion h
+theorem zero_ne_negSucc (n : ℕ) : 0 ≠ -[n+1] := fun h => Int.noConfusion h
 #align int.zero_ne_neg_of_nat Int.zero_ne_negSucc
 -/
 
@@ -402,12 +402,12 @@ theorem natAbs_mul_self' (a : ℤ) : (natAbs a * natAbs a : ℤ) = a * a := by r
 -/
 
 #print Int.negSucc_eq' /-
-theorem negSucc_eq' (m : ℕ) : -[1+ m] = -m - 1 := by simp [neg_succ_of_nat_eq, sub_eq_neg_add]
+theorem negSucc_eq' (m : ℕ) : -[m+1] = -m - 1 := by simp [neg_succ_of_nat_eq, sub_eq_neg_add]
 #align int.neg_succ_of_nat_eq' Int.negSucc_eq'
 -/
 
 #print Int.natAbs_ne_zero_of_ne_zero /-
-theorem natAbs_ne_zero_of_ne_zero {z : ℤ} (hz : z ≠ 0) : z.natAbs ≠ 0 := fun h => hz $ Int.eq_zero_of_natAbs_eq_zero h
+theorem natAbs_ne_zero_of_ne_zero {z : ℤ} (hz : z ≠ 0) : z.natAbs ≠ 0 := fun h => hz <| Int.eq_zero_of_natAbs_eq_zero h
 #align int.nat_abs_ne_zero_of_ne_zero Int.natAbs_ne_zero_of_ne_zero
 -/
 
@@ -467,7 +467,7 @@ theorem coe_nat_div (m n : ℕ) : ((m / n : ℕ) : ℤ) = m / n :=
 -/
 
 #print Int.negSucc_ediv /-
-theorem negSucc_ediv (m : ℕ) {b : ℤ} (H : 0 < b) : -[1+ m] / b = -(m / b + 1) :=
+theorem negSucc_ediv (m : ℕ) {b : ℤ} (H : 0 < b) : -[m+1] / b = -(m / b + 1) :=
   match b, eq_succ_of_zero_lt H with
   | _, ⟨n, rfl⟩ => rfl
 #align int.neg_succ_of_nat_div Int.negSucc_ediv
@@ -478,7 +478,7 @@ theorem negSucc_ediv (m : ℕ) {b : ℤ} (H : 0 < b) : -[1+ m] / b = -(m / b + 1
 @[local simp]
 protected theorem zero_div : ∀ b : ℤ, 0 / b = 0
   | (n : ℕ) => show ofNat _ = _ by simp [Nat.cast_zero]
-  | -[1+ n] => show -ofNat _ = _ by simp [Nat.cast_zero]
+  | -[n+1] => show -ofNat _ = _ by simp [Nat.cast_zero]
 #align int.zero_div Int.zero_div
 -/
 
@@ -487,7 +487,7 @@ protected theorem zero_div : ∀ b : ℤ, 0 / b = 0
 @[local simp]
 protected theorem div_zero : ∀ a : ℤ, a / 0 = 0
   | (n : ℕ) => show ofNat _ = _ by simp [Nat.cast_zero]
-  | -[1+ n] => rfl
+  | -[n+1] => rfl
 #align int.div_zero Int.div_zero
 -/
 
@@ -495,10 +495,10 @@ protected theorem div_zero : ∀ a : ℤ, a / 0 = 0
 protected theorem div_neg : ∀ a b : ℤ, a / -b = -(a / b)
   | (m : ℕ), 0 => show ofNat (m / 0) = -(m / 0 : ℕ) by rw [Nat.div_zero] <;> rfl
   | (m : ℕ), (n + 1 : ℕ) => rfl
-  | (m : ℕ), -[1+ n] => (neg_neg _).symm
-  | -[1+ m], 0 => rfl
-  | -[1+ m], (n + 1 : ℕ) => rfl
-  | -[1+ m], -[1+ n] => rfl
+  | (m : ℕ), -[n+1] => (neg_neg _).symm
+  | -[m+1], 0 => rfl
+  | -[m+1], (n + 1 : ℕ) => rfl
+  | -[m+1], -[n+1] => rfl
 #align int.div_neg Int.div_negₓ
 
 /- warning: int.div_of_neg_of_pos -> Int.ediv_of_neg_of_pos is a dubious translation:
@@ -509,7 +509,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.div_of_neg_of_pos Int.ediv_of_neg_of_posₓ'. -/
 theorem ediv_of_neg_of_pos {a b : ℤ} (Ha : a < 0) (Hb : 0 < b) : a / b = -((-a - 1) / b + 1) :=
   match a, b, eq_negSucc_of_lt_zero Ha, eq_succ_of_zero_lt Hb with
-  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => by change (- -[1+ m] : ℤ) with (m + 1 : ℤ) <;> rw [add_sub_cancel] <;> rfl
+  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => by change (- -[m+1] : ℤ) with (m + 1 : ℤ) <;> rw [add_sub_cancel] <;> rfl
 #align int.div_of_neg_of_pos Int.ediv_of_neg_of_pos
 
 protected theorem div_nonneg {a b : ℤ} (Ha : 0 ≤ a) (Hb : 0 ≤ b) : 0 ≤ a / b :=
@@ -527,12 +527,12 @@ theorem ediv_neg' {a b : ℤ} (Ha : a < 0) (Hb : 0 < b) : a / b < 0 :=
 @[simp]
 protected theorem div_one : ∀ a : ℤ, a / 1 = a
   | (n : ℕ) => congr_arg ofNat (Nat.div_one _)
-  | -[1+ n] => congr_arg negSucc (Nat.div_one _)
+  | -[n+1] => congr_arg negSucc (Nat.div_one _)
 #align int.div_one Int.div_oneₓ
 
 theorem div_eq_zero_of_lt {a b : ℤ} (H1 : 0 ≤ a) (H2 : a < b) : a / b = 0 :=
   match a, b, eq_ofNat_of_zero_le H1, eq_succ_of_zero_lt (lt_of_le_of_lt H1 H2), H2 with
-  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩, H2 => congr_arg ofNat $ Nat.div_eq_of_lt $ lt_of_ofNat_lt_ofNat H2
+  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩, H2 => congr_arg ofNat <| Nat.div_eq_of_lt <| lt_of_ofNat_lt_ofNat H2
 #align int.div_eq_zero_of_lt Int.div_eq_zero_of_ltₓ
 
 /-! ### mod -/
@@ -552,7 +552,7 @@ theorem coe_nat_mod (m n : ℕ) : (↑(m % n) : ℤ) = ↑m % ↑n :=
 -/
 
 #print Int.negSucc_emod /-
-theorem negSucc_emod (m : ℕ) {b : ℤ} (bpos : 0 < b) : -[1+ m] % b = b - 1 - m % b := by
+theorem negSucc_emod (m : ℕ) {b : ℤ} (bpos : 0 < b) : -[m+1] % b = b - 1 - m % b := by
   rw [sub_sub, add_comm] <;>
     exact
       match b, eq_succ_of_zero_lt bpos with
@@ -563,7 +563,7 @@ theorem negSucc_emod (m : ℕ) {b : ℤ} (bpos : 0 < b) : -[1+ m] % b = b - 1 - 
 @[simp]
 theorem mod_neg : ∀ a b : ℤ, a % -b = a % b
   | (m : ℕ), n => @congr_arg ℕ ℤ _ _ (fun i => ↑(m % i)) (natAbs_neg _)
-  | -[1+ m], n => @congr_arg ℕ ℤ _ _ (fun i => subNatNat i (Nat.succ (m % i))) (natAbs_neg _)
+  | -[m+1], n => @congr_arg ℕ ℤ _ _ (fun i => subNatNat i (Nat.succ (m % i))) (natAbs_neg _)
 #align int.mod_neg Int.mod_negₓ
 
 -- Will be generalized to Euclidean domains.
@@ -575,23 +575,23 @@ theorem zero_mod (b : ℤ) : 0 % b = 0 :=
 -- Will be generalized to Euclidean domains.
 @[local simp]
 theorem mod_zero : ∀ a : ℤ, a % 0 = a
-  | (m : ℕ) => congr_arg ofNat $ Nat.mod_zero _
-  | -[1+ m] => congr_arg negSucc $ Nat.mod_zero _
+  | (m : ℕ) => congr_arg ofNat <| Nat.mod_zero _
+  | -[m+1] => congr_arg negSucc <| Nat.mod_zero _
 #align int.mod_zero Int.mod_zeroₓ
 
 -- Will be generalized to Euclidean domains.
 @[local simp]
 theorem mod_one : ∀ a : ℤ, a % 1 = 0
-  | (m : ℕ) => congr_arg ofNat $ Nat.mod_one _
-  | -[1+ m] => show (1 - (m % 1).succ : ℤ) = 0 by rw [Nat.mod_one] <;> rfl
+  | (m : ℕ) => congr_arg ofNat <| Nat.mod_one _
+  | -[m+1] => show (1 - (m % 1).succ : ℤ) = 0 by rw [Nat.mod_one] <;> rfl
 #align int.mod_one Int.mod_oneₓ
 
 theorem mod_eq_of_lt {a b : ℤ} (H1 : 0 ≤ a) (H2 : a < b) : a % b = a :=
   match a, b, eq_ofNat_of_zero_le H1, eq_ofNat_of_zero_le (le_trans H1 (le_of_lt H2)), H2 with
-  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩, H2 => congr_arg ofNat $ Nat.mod_eq_of_lt (lt_of_ofNat_lt_ofNat H2)
+  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩, H2 => congr_arg ofNat <| Nat.mod_eq_of_lt (lt_of_ofNat_lt_ofNat H2)
 #align int.mod_eq_of_lt Int.mod_eq_of_ltₓ
 
-theorem mod_add_div_aux (m n : ℕ) : (n - (m % n + 1) - (n * (m / n) + n) : ℤ) = -[1+ m] := by
+theorem mod_add_div_aux (m n : ℕ) : (n - (m % n + 1) - (n * (m / n) + n) : ℤ) = -[m+1] := by
   rw [← sub_sub, neg_succ_of_nat_coe, sub_sub (n : ℤ)]
   apply eq_neg_of_eq_neg
   rw [neg_sub, sub_sub_self, add_right_comm]
@@ -600,12 +600,12 @@ theorem mod_add_div_aux (m n : ℕ) : (n - (m % n + 1) - (n * (m / n) + n) : ℤ
 
 theorem mod_add_div : ∀ a b : ℤ, a % b + b * (a / b) = a
   | (m : ℕ), (n : ℕ) => congr_arg ofNat (Nat.mod_add_div _ _)
-  | (m : ℕ), -[1+ n] =>
+  | (m : ℕ), -[n+1] =>
     show (_ + -(n + 1) * -(m / (n + 1) : ℕ) : ℤ) = _ by
       rw [neg_mul_neg] <;> exact congr_arg of_nat (Nat.mod_add_div _ _)
-  | -[1+ m], 0 => by rw [mod_zero, Int.div_zero] <;> rfl
-  | -[1+ m], (n + 1 : ℕ) => mod_add_div_aux m n.succ
-  | -[1+ m], -[1+ n] => mod_add_div_aux m n.succ
+  | -[m+1], 0 => by rw [mod_zero, Int.div_zero] <;> rfl
+  | -[m+1], (n + 1 : ℕ) => mod_add_div_aux m n.succ
+  | -[m+1], -[n+1] => mod_add_div_aux m n.succ
 #align int.mod_add_div Int.mod_add_divₓ
 
 theorem div_add_mod (a b : ℤ) : b * (a / b) + a % b = a :=
@@ -640,9 +640,9 @@ theorem mul_ediv_mul_of_pos {a : ℤ} (b c : ℤ) (H : 0 < a) : a * b / (a * c) 
   fun m k b =>
   match b, k with
   | (n : ℕ), k => congr_arg ofNat (Nat.mul_div_mul _ _ m.succ_pos)
-  | -[1+ n], 0 => by rw [Int.ofNat_zero, mul_zero, Int.div_zero, Int.div_zero]
-  | -[1+ n], k + 1 =>
-    congr_arg negSucc $
+  | -[n+1], 0 => by rw [Int.ofNat_zero, mul_zero, Int.div_zero, Int.div_zero]
+  | -[n+1], k + 1 =>
+    congr_arg negSucc <|
       show (m.succ * n + m) / (m.succ * k.succ) = n / k.succ by
         apply Nat.div_eq_of_lt_le
         · refine' le_trans _ (Nat.le_add_right _ _)
@@ -724,7 +724,7 @@ Case conversion may be inaccurate. Consider using '#align int.div_sign Int.div_s
 theorem div_sign : ∀ a b, a / sign b = a * sign b
   | a, (n + 1 : ℕ) => by unfold sign <;> simp
   | a, 0 => by simp [sign]
-  | a, -[1+ n] => by simp [sign]
+  | a, -[n+1] => by simp [sign]
 #align int.div_sign Int.div_sign
 
 #print Int.sign_mul /-
@@ -733,9 +733,9 @@ theorem sign_mul : ∀ a b, sign (a * b) = sign a * sign b
   | a, 0 => by simp
   | 0, b => by simp
   | (m + 1 : ℕ), (n + 1 : ℕ) => rfl
-  | (m + 1 : ℕ), -[1+ n] => rfl
-  | -[1+ m], (n + 1 : ℕ) => rfl
-  | -[1+ m], -[1+ n] => rfl
+  | (m + 1 : ℕ), -[n+1] => rfl
+  | -[m+1], (n + 1 : ℕ) => rfl
+  | -[m+1], -[n+1] => rfl
 #align int.sign_mul Int.sign_mul
 -/
 
@@ -743,12 +743,12 @@ theorem sign_mul : ∀ a b, sign (a * b) = sign a * sign b
 theorem mul_sign : ∀ i : ℤ, i * sign i = natAbs i
   | (n + 1 : ℕ) => mul_one _
   | 0 => mul_zero _
-  | -[1+ n] => mul_neg_one _
+  | -[n+1] => mul_neg_one _
 #align int.mul_sign Int.mul_sign
 -/
 
 #print Int.ofNat_add_negSucc_of_lt /-
-theorem ofNat_add_negSucc_of_lt {m n : ℕ} (h : m < n.succ) : ofNat m + -[1+ n] = -[1+ n - m] := by
+theorem ofNat_add_negSucc_of_lt {m n : ℕ} (h : m < n.succ) : ofNat m + -[n+1] = -[n - m+1] := by
   change sub_nat_nat _ _ = _
   have h' : n.succ - m = (n - m).succ
   apply succ_sub
@@ -761,7 +761,7 @@ theorem ofNat_add_negSucc_of_lt {m n : ℕ} (h : m < n.succ) : ofNat m + -[1+ n]
 Case conversion may be inaccurate. Consider using '#align int.neg_add_neg Int.negSucc_add_negSuccₓ'. -/
 #print Int.negSucc_add_negSucc /-
 @[simp]
-theorem negSucc_add_negSucc (m n : ℕ) : -[1+ m] + -[1+ n] = -[1+ Nat.succ (m + n)] :=
+theorem negSucc_add_negSucc (m n : ℕ) : -[m+1] + -[n+1] = -[Nat.succ (m + n)+1] :=
   rfl
 #align int.neg_add_neg Int.negSucc_add_negSucc
 -/
@@ -777,7 +777,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.to_nat_eq_max Int.toNat_eq_maxₓ'. -/
 theorem toNat_eq_max : ∀ a : ℤ, (toNat a : ℤ) = max a 0
   | (n : ℕ) => (max_eq_left (ofNat_zero_le n)).symm
-  | -[1+ n] => (max_eq_right (le_of_lt (negSucc_lt_zero n))).symm
+  | -[n+1] => (max_eq_right (le_of_lt (negSucc_lt_zero n))).symm
 #align int.to_nat_eq_max Int.toNat_eq_max
 
 #print Int.toNat_zero /-
@@ -846,7 +846,7 @@ theorem toNat_add_nat {a : ℤ} (ha : 0 ≤ a) (n : ℕ) : (a + n).toNat = a.toN
 theorem pred_toNat : ∀ i : ℤ, (i - 1).toNat = i.toNat - 1
   | (0 : ℕ) => rfl
   | (n + 1 : ℕ) => by simp
-  | -[1+ n] => rfl
+  | -[n+1] => rfl
 #align int.pred_to_nat Int.pred_toNat
 -/
 
@@ -855,7 +855,7 @@ theorem pred_toNat : ∀ i : ℤ, (i - 1).toNat = i.toNat - 1
 theorem toNat_sub_toNat_neg : ∀ n : ℤ, ↑n.toNat - ↑(-n).toNat = n
   | (0 : ℕ) => rfl
   | (n + 1 : ℕ) => show ↑(n + 1) - (0 : ℤ) = n + 1 from sub_zero _
-  | -[1+ n] => show 0 - (n + 1 : ℤ) = _ from zero_sub _
+  | -[n+1] => show 0 - (n + 1 : ℤ) = _ from zero_sub _
 #align int.to_nat_sub_to_nat_neg Int.toNat_sub_toNat_neg
 -/
 
@@ -864,7 +864,7 @@ theorem toNat_sub_toNat_neg : ∀ n : ℤ, ↑n.toNat - ↑(-n).toNat = n
 theorem toNat_add_toNat_neg_eq_nat_abs : ∀ n : ℤ, n.toNat + (-n).toNat = n.natAbs
   | (0 : ℕ) => rfl
   | (n + 1 : ℕ) => show n + 1 + 0 = n + 1 from add_zero _
-  | -[1+ n] => show 0 + (n + 1) = n + 1 from zero_add _
+  | -[n+1] => show 0 + (n + 1) = n + 1 from zero_add _
 #align int.to_nat_add_to_nat_neg_eq_nat_abs Int.toNat_add_toNat_neg_eq_nat_abs
 -/
 
@@ -873,14 +873,14 @@ theorem toNat_add_toNat_neg_eq_nat_abs : ∀ n : ℤ, n.toNat + (-n).toNat = n.n
 -/
 def toNat' : ℤ → Option ℕ
   | (n : ℕ) => some n
-  | -[1+ n] => none
+  | -[n+1] => none
 #align int.to_nat' Int.toNat'
 -/
 
 #print Int.mem_toNat' /-
 theorem mem_toNat' : ∀ (a : ℤ) (n : ℕ), n ∈ toNat' a ↔ a = n
   | (m : ℕ), n => Option.some_inj.trans coe_nat_inj'.symm
-  | -[1+ m], n => by constructor <;> intro h <;> cases h
+  | -[m+1], n => by constructor <;> intro h <;> cases h
 #align int.mem_to_nat' Int.mem_toNat'
 -/
 

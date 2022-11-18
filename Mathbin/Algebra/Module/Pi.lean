@@ -27,19 +27,19 @@ variable (x y : ∀ i, f i) (i : I)
 
 namespace Pi
 
-theorem _root_.is_smul_regular.pi {α : Type _} [∀ i, HasSmul α $ f i] {k : α} (hk : ∀ i, IsSmulRegular (f i) k) :
-    IsSmulRegular (∀ i, f i) k := fun _ _ h => funext $ fun i => hk i (congr_fun h i : _)
+theorem _root_.is_smul_regular.pi {α : Type _} [∀ i, HasSmul α <| f i] {k : α} (hk : ∀ i, IsSmulRegular (f i) k) :
+    IsSmulRegular (∀ i, f i) k := fun _ _ h => funext fun i => hk i (congr_fun h i : _)
 #align pi._root_.is_smul_regular.pi pi._root_.is_smul_regular.pi
 
 instance smulWithZero (α) [Zero α] [∀ i, Zero (f i)] [∀ i, SmulWithZero α (f i)] : SmulWithZero α (∀ i, f i) :=
-  { Pi.hasSmul with smul_zero := fun _ => funext $ fun _ => smul_zero _,
-    zero_smul := fun _ => funext $ fun _ => zero_smul _ _ }
+  { Pi.hasSmul with smul_zero := fun _ => funext fun _ => smul_zero _,
+    zero_smul := fun _ => funext fun _ => zero_smul _ _ }
 #align pi.smul_with_zero Pi.smulWithZero
 
 instance smulWithZero' {g : I → Type _} [∀ i, Zero (g i)] [∀ i, Zero (f i)] [∀ i, SmulWithZero (g i) (f i)] :
     SmulWithZero (∀ i, g i) (∀ i, f i) :=
-  { Pi.hasSmul' with smul_zero := fun _ => funext $ fun _ => smul_zero _,
-    zero_smul := fun _ => funext $ fun _ => zero_smul _ _ }
+  { Pi.hasSmul' with smul_zero := fun _ => funext fun _ => smul_zero _,
+    zero_smul := fun _ => funext fun _ => zero_smul _ _ }
 #align pi.smul_with_zero' Pi.smulWithZero'
 
 instance mulActionWithZero (α) [MonoidWithZero α] [∀ i, Zero (f i)] [∀ i, MulActionWithZero α (f i)] :
@@ -54,10 +54,10 @@ instance mulActionWithZero' {g : I → Type _} [∀ i, MonoidWithZero (g i)] [�
 
 variable (I f)
 
-instance module (α) {r : Semiring α} {m : ∀ i, AddCommMonoid $ f i} [∀ i, Module α $ f i] :
+instance module (α) {r : Semiring α} {m : ∀ i, AddCommMonoid <| f i} [∀ i, Module α <| f i] :
     @Module α (∀ i : I, f i) r (@Pi.addCommMonoid I f m) :=
-  { Pi.distribMulAction _ with add_smul := fun c f g => funext $ fun i => add_smul _ _ _,
-    zero_smul := fun f => funext $ fun i => zero_smul α _ }
+  { Pi.distribMulAction _ with add_smul := fun c f g => funext fun i => add_smul _ _ _,
+    zero_smul := fun f => funext fun i => zero_smul α _ }
 #align pi.module Pi.module
 
 /- Extra instance to short-circuit type class resolution.
@@ -88,8 +88,8 @@ instance module' {g : I → Type _} {r : ∀ i, Semiring (f i)} {m : ∀ i, AddC
     apply zero_smul
 #align pi.module' Pi.module'
 
-instance (α) {r : Semiring α} {m : ∀ i, AddCommMonoid $ f i} [∀ i, Module α $ f i] [∀ i, NoZeroSmulDivisors α $ f i] :
-    NoZeroSmulDivisors α (∀ i : I, f i) :=
+instance (α) {r : Semiring α} {m : ∀ i, AddCommMonoid <| f i} [∀ i, Module α <| f i]
+    [∀ i, NoZeroSmulDivisors α <| f i] : NoZeroSmulDivisors α (∀ i : I, f i) :=
   ⟨fun c x h => or_iff_not_imp_left.mpr fun hc => funext fun i => (smul_eq_zero.mp (congr_fun h i)).resolve_left hc⟩
 
 /-- A special case of `pi.no_zero_smul_divisors` for non-dependent types. Lean struggles to

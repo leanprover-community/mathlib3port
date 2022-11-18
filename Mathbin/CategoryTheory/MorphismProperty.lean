@@ -6,6 +6,7 @@ Authors: Andrew Yang
 import Mathbin.CategoryTheory.Limits.Shapes.Diagonal
 import Mathbin.CategoryTheory.Arrow
 import Mathbin.CategoryTheory.Limits.Shapes.CommSq
+import Mathbin.CategoryTheory.ConcreteCategory.Basic
 
 /-!
 # Properties of morphisms
@@ -593,7 +594,7 @@ theorem StableUnderComposition.universally [HasPullbacks C] {P : MorphismPropert
   intro X Y Z f g hf hg X' Z' i₁ i₂ f' H
   have := pullback.lift_fst _ _ (H.w.trans (category.assoc _ _ _).symm)
   rw [← this] at H⊢
-  apply hP _ _ _ (hg _ _ _ $ is_pullback.of_has_pullback _ _)
+  apply hP _ _ _ (hg _ _ _ <| is_pullback.of_has_pullback _ _)
   exact hf _ _ _ (H.of_right (pullback.lift_snd _ _ _) (is_pullback.of_has_pullback i₂ g))
 #align
   category_theory.morphism_property.stable_under_composition.universally CategoryTheory.MorphismProperty.StableUnderComposition.universally
@@ -605,7 +606,7 @@ theorem universally_le (P : MorphismProperty C) : P.universally ≤ P := by
 
 theorem StableUnderBaseChange.universally_eq {P : MorphismProperty C} (hP : P.StableUnderBaseChange) :
     P.universally = P :=
-  P.universally_le.antisymm $ fun X Y f hf X' Y' i₁ i₂ f' H => hP H.flip hf
+  P.universally_le.antisymm fun X Y f hf X' Y' i₁ i₂ f' H => hP H.flip hf
 #align
   category_theory.morphism_property.stable_under_base_change.universally_eq CategoryTheory.MorphismProperty.StableUnderBaseChange.universally_eq
 
@@ -614,6 +615,71 @@ theorem universally_mono : Monotone (universally : MorphismProperty C → Morphi
 #align category_theory.morphism_property.universally_mono CategoryTheory.MorphismProperty.universally_mono
 
 end Universally
+
+section Bijective
+
+variable [ConcreteCategory C]
+
+open Function
+
+attribute [local instance] concrete_category.has_coe_to_fun concrete_category.has_coe_to_sort
+
+variable (C)
+
+/-- Injectiveness (in a concrete category) as a `morphism_property` -/
+protected def injective : MorphismProperty C := fun X Y f => Injective f
+#align category_theory.morphism_property.injective CategoryTheory.MorphismProperty.injective
+
+/-- Surjectiveness (in a concrete category) as a `morphism_property` -/
+protected def surjective : MorphismProperty C := fun X Y f => Surjective f
+#align category_theory.morphism_property.surjective CategoryTheory.MorphismProperty.surjective
+
+/-- Bijectiveness (in a concrete category) as a `morphism_property` -/
+protected def bijective : MorphismProperty C := fun X Y f => Bijective f
+#align category_theory.morphism_property.bijective CategoryTheory.MorphismProperty.bijective
+
+theorem bijective_eq_sup :
+    MorphismProperty.bijective C = MorphismProperty.injective C ⊓ MorphismProperty.surjective C :=
+  rfl
+#align category_theory.morphism_property.bijective_eq_sup CategoryTheory.MorphismProperty.bijective_eq_sup
+
+theorem injective_stable_under_composition : (MorphismProperty.injective C).StableUnderComposition :=
+  fun X Y Z f g hf hg => by
+  delta morphism_property.injective
+  rw [coe_comp]
+  exact hg.comp hf
+#align
+  category_theory.morphism_property.injective_stable_under_composition CategoryTheory.MorphismProperty.injective_stable_under_composition
+
+theorem surjective_stable_under_composition : (MorphismProperty.surjective C).StableUnderComposition :=
+  fun X Y Z f g hf hg => by
+  delta morphism_property.surjective
+  rw [coe_comp]
+  exact hg.comp hf
+#align
+  category_theory.morphism_property.surjective_stable_under_composition CategoryTheory.MorphismProperty.surjective_stable_under_composition
+
+theorem bijective_stable_under_composition : (MorphismProperty.bijective C).StableUnderComposition :=
+  fun X Y Z f g hf hg => by
+  delta morphism_property.bijective
+  rw [coe_comp]
+  exact hg.comp hf
+#align
+  category_theory.morphism_property.bijective_stable_under_composition CategoryTheory.MorphismProperty.bijective_stable_under_composition
+
+theorem injective_respects_iso : (MorphismProperty.injective C).RespectsIso :=
+  (injective_stable_under_composition C).RespectsIso fun X Y e => ((forget C).mapIso e).toEquiv.Injective
+#align category_theory.morphism_property.injective_respects_iso CategoryTheory.MorphismProperty.injective_respects_iso
+
+theorem surjective_respects_iso : (MorphismProperty.surjective C).RespectsIso :=
+  (surjective_stable_under_composition C).RespectsIso fun X Y e => ((forget C).mapIso e).toEquiv.Surjective
+#align category_theory.morphism_property.surjective_respects_iso CategoryTheory.MorphismProperty.surjective_respects_iso
+
+theorem bijective_respects_iso : (MorphismProperty.bijective C).RespectsIso :=
+  (bijective_stable_under_composition C).RespectsIso fun X Y e => ((forget C).mapIso e).toEquiv.Bijective
+#align category_theory.morphism_property.bijective_respects_iso CategoryTheory.MorphismProperty.bijective_respects_iso
+
+end Bijective
 
 end MorphismProperty
 

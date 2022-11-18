@@ -73,7 +73,7 @@ coequalizer of something (i.e. a regular epi).
 -/
 def counitCoequalises [∀ X : B, RegularEpi (adj₁.counit.app X)] (X : B) :
     IsColimit (Cofork.ofπ (adj₁.counit.app X) (adj₁.counit_naturality _)) :=
-  Cofork.IsColimit.mk' _ $ fun s => by
+  (Cofork.IsColimit.mk' _) fun s => by
     refine' ⟨(regular_epi.desc' (adj₁.counit.app X) s.π _).1, _, _⟩
     · rw [← cancel_epi (adj₁.counit.app (regular_epi.W (adj₁.counit.app X)))]
       rw [← adj₁.counit_naturality_assoc]

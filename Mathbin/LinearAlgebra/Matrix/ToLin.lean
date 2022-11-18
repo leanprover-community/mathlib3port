@@ -9,6 +9,7 @@ import Mathbin.LinearAlgebra.Matrix.FiniteDimensional
 import Mathbin.LinearAlgebra.StdBasis
 import Mathbin.RingTheory.AlgebraTower
 import Mathbin.Algebra.Module.Algebra
+import Mathbin.Algebra.Algebra.Subalgebra.Tower
 
 /-!
 # Linear maps and matrices
@@ -140,7 +141,7 @@ theorem Matrix.to_linear_map_right'_apply (M : Matrix m n R) (v : m → R) : Mat
 @[simp]
 theorem Matrix.to_linear_map_right'_mul [Fintype l] [DecidableEq l] (M : Matrix l m R) (N : Matrix m n R) :
     Matrix.toLinearMapRight' (M ⬝ N) = (Matrix.toLinearMapRight' N).comp (Matrix.toLinearMapRight' M) :=
-  LinearMap.ext $ fun x => (vec_mul_vec_mul _ M N).symm
+  LinearMap.ext fun x => (vec_mul_vec_mul _ M N).symm
 #align matrix.to_linear_map_right'_mul Matrix.to_linear_map_right'_mul
 
 theorem Matrix.to_linear_map_right'_mul_apply [Fintype l] [DecidableEq l] (M : Matrix l m R) (N : Matrix m n R) (x) :
@@ -192,12 +193,12 @@ def Matrix.mulVecLin [Fintype n] (M : Matrix m n R) : (n → R) →ₗ[R] m → 
 variable [Fintype n] [DecidableEq n]
 
 theorem Matrix.mul_vec_std_basis (M : Matrix m n R) (i j) : M.mulVec (stdBasis R (fun _ => R) j 1) i = M i j :=
-  (congr_fun (Matrix.mul_vec_single _ _ (1 : R)) i).trans $ mul_one _
+  (congr_fun (Matrix.mul_vec_single _ _ (1 : R)) i).trans <| mul_one _
 #align matrix.mul_vec_std_basis Matrix.mul_vec_std_basis
 
 @[simp]
 theorem Matrix.mul_vec_std_basis_apply (M : Matrix m n R) (j) : M.mulVec (stdBasis R (fun _ => R) j 1) = Mᵀ j :=
-  funext $ fun i => Matrix.mul_vec_std_basis M i j
+  funext fun i => Matrix.mul_vec_std_basis M i j
 #align matrix.mul_vec_std_basis_apply Matrix.mul_vec_std_basis_apply
 
 /-- Linear maps `(n → R) →ₗ[R] (m → R)` are linearly equivalent to `matrix m n R`. -/
@@ -277,7 +278,7 @@ theorem LinearMap.to_matrix'_id : LinearMap.toMatrix' (LinearMap.id : (n → R) 
 @[simp]
 theorem Matrix.to_lin'_mul [Fintype m] [DecidableEq m] (M : Matrix l m R) (N : Matrix m n R) :
     Matrix.toLin' (M ⬝ N) = (Matrix.toLin' M).comp (Matrix.toLin' N) :=
-  LinearMap.ext $ fun x => (mul_vec_mul_vec _ _ _).symm
+  LinearMap.ext fun x => (mul_vec_mul_vec _ _ _).symm
 #align matrix.to_lin'_mul Matrix.to_lin'_mul
 
 /-- Shortcut lemma for `matrix.to_lin'_mul` and `linear_map.comp_apply` -/
@@ -472,7 +473,7 @@ theorem LinearMap.to_matrix_apply (f : M₁ →ₗ[R] M₂) (i : m) (j : n) :
 
 theorem LinearMap.to_matrix_transpose_apply (f : M₁ →ₗ[R] M₂) (j : n) :
     (LinearMap.toMatrix v₁ v₂ f)ᵀ j = v₂.repr (f (v₁ j)) :=
-  funext $ fun i => f.to_matrix_apply _ _ i j
+  funext fun i => f.to_matrix_apply _ _ i j
 #align linear_map.to_matrix_transpose_apply LinearMap.to_matrix_transpose_apply
 
 theorem LinearMap.to_matrix_apply' (f : M₁ →ₗ[R] M₂) (i : m) (j : n) :
@@ -615,7 +616,7 @@ theorem LinearMap.to_matrix_alg_equiv_apply (f : M₁ →ₗ[R] M₁) (i j : n) 
 
 theorem LinearMap.to_matrix_alg_equiv_transpose_apply (f : M₁ →ₗ[R] M₁) (j : n) :
     (LinearMap.toMatrixAlgEquiv v₁ f)ᵀ j = v₁.repr (f (v₁ j)) :=
-  funext $ fun i => f.to_matrix_apply _ _ i j
+  funext fun i => f.to_matrix_apply _ _ i j
 #align linear_map.to_matrix_alg_equiv_transpose_apply LinearMap.to_matrix_alg_equiv_transpose_apply
 
 theorem LinearMap.to_matrix_alg_equiv_apply' (f : M₁ →ₗ[R] M₁) (i j : n) :
@@ -686,7 +687,7 @@ theorem Matrix.to_lin_fin_two_prod (a b c d : R) :
     Matrix.toLin (Basis.finTwoProd R) (Basis.finTwoProd R)
         («expr!![ » "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation") =
       (a • LinearMap.fst R R R + b • LinearMap.snd R R R).Prod (c • LinearMap.fst R R R + d • LinearMap.snd R R R) :=
-  LinearMap.ext $ Matrix.to_lin_fin_two_prod_apply _ _ _ _
+  LinearMap.ext <| Matrix.to_lin_fin_two_prod_apply _ _ _ _
 #align matrix.to_lin_fin_two_prod Matrix.to_lin_fin_two_prod
 
 @[simp]

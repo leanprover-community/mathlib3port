@@ -34,7 +34,7 @@ variable {α α' β β' γ γ' δ δ' ε ε' : Type _} {f : α → β → γ} {a
 /-- The image of a binary function `f : α → β → γ` as a function `option α → option β → option γ`.
 Mathematically this should be thought of as the image of the corresponding function `α × β → γ`. -/
 def map₂ (f : α → β → γ) (a : Option α) (b : Option β) : Option γ :=
-  a.bind $ fun a => b.map $ f a
+  a.bind fun a => b.map <| f a
 #align option.map₂ Option.map₂
 
 /-- `option.map₂` in terms of monadic operations. Note that this can't be taken as the definition
@@ -71,9 +71,8 @@ theorem map₂_coe_right (f : α → β → γ) (a : Option α) (b : β) : map�
   rfl
 #align option.map₂_coe_right Option.map₂_coe_right
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a' b') -/
 @[simp]
-theorem mem_map₂_iff {c : γ} : c ∈ map₂ f a b ↔ ∃ (a') (b'), a' ∈ a ∧ b' ∈ b ∧ f a' b' = c := by simp [map₂]
+theorem mem_map₂_iff {c : γ} : c ∈ map₂ f a b ↔ ∃ a' b', a' ∈ a ∧ b' ∈ b ∧ f a' b' = c := by simp [map₂]
 #align option.mem_map₂_iff Option.mem_map₂_iff
 
 @[simp]

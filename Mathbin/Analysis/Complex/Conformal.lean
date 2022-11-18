@@ -45,8 +45,8 @@ section ConformalIntoComplexNormed
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedSpace ℂ E] {z : ℂ} {g : ℂ →L[ℝ] E} {f : ℂ → E}
 
 theorem isConformalMapComplexLinear {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) : IsConformalMap (map.restrictScalars ℝ) := by
-  have minor₁ : ∥map 1∥ ≠ 0 := by simpa [ext_ring_iff] using nonzero
-  refine' ⟨∥map 1∥, minor₁, ⟨∥map 1∥⁻¹ • map, _⟩, _⟩
+  have minor₁ : ‖map 1‖ ≠ 0 := by simpa [ext_ring_iff] using nonzero
+  refine' ⟨‖map 1‖, minor₁, ⟨‖map 1‖⁻¹ • map, _⟩, _⟩
   · intro x
     simp only [LinearMap.smul_apply]
     have : x = x • 1 := by rw [smul_eq_mul, mul_one]

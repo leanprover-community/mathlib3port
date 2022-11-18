@@ -87,7 +87,7 @@ theorem bernoulli_eval_one (n : ℕ) : (bernoulli n).eval 1 = bernoulli' n := by
   simp only [bernoulli, eval_finset_sum]
   simp only [← succ_eq_add_one, sum_range_succ, mul_one, cast_one, choose_self, (_root_.bernoulli _).mul_comm,
     sum_bernoulli, one_pow, mul_one, eval_C, eval_monomial]
-  by_cases h:n = 1
+  by_cases h : n = 1
   · norm_num [h]
     
   · simp [h]
@@ -129,7 +129,7 @@ theorem sum_bernoulli (n : ℕ) : (∑ k in range (n + 1), ((n + 1).choose k : �
   conv =>
   apply_congr
   skip
-  rw [← Nat.cast_mul, choose_mul ((le_tsub_iff_left $ mem_range_le H).1 $ mem_range_le H_1) (le.intro rfl),
+  rw [← Nat.cast_mul, choose_mul ((le_tsub_iff_left <| mem_range_le H).1 <| mem_range_le H_1) (le.intro rfl),
     Nat.cast_mul, add_comm x x_1, add_tsub_cancel_right, mul_assoc, mul_comm, ← smul_eq_mul, ← smul_monomial]
   rw [← sum_smul]
   rw [sum_range_succ_comm]

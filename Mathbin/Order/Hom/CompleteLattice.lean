@@ -81,7 +81,7 @@ Case conversion may be inaccurate. Consider using '#align Sup_hom_class SupHomCl
 /-- `Sup_hom_class F α β` states that `F` is a type of `⨆`-preserving morphisms.
 
 You should extend this class when you extend `Sup_hom`. -/
-class SupHomClass (F : Type _) (α β : outParam $ Type _) [HasSup α] [HasSup β] extends FunLike F α fun _ => β where
+class SupHomClass (F : Type _) (α β : outParam <| Type _) [HasSup α] [HasSup β] extends FunLike F α fun _ => β where
   map_Sup (f : F) (s : Set α) : f (sup s) = sup (f '' s)
 #align Sup_hom_class SupHomClass
 -/
@@ -92,7 +92,7 @@ Case conversion may be inaccurate. Consider using '#align Inf_hom_class InfHomCl
 /-- `Inf_hom_class F α β` states that `F` is a type of `⨅`-preserving morphisms.
 
 You should extend this class when you extend `Inf_hom`. -/
-class InfHomClass (F : Type _) (α β : outParam $ Type _) [HasInf α] [HasInf β] extends FunLike F α fun _ => β where
+class InfHomClass (F : Type _) (α β : outParam <| Type _) [HasInf α] [HasInf β] extends FunLike F α fun _ => β where
   map_Inf (f : F) (s : Set α) : f (inf s) = inf (f '' s)
 #align Inf_hom_class InfHomClass
 -/
@@ -100,7 +100,7 @@ class InfHomClass (F : Type _) (α β : outParam $ Type _) [HasInf α] [HasInf �
 /-- `frame_hom_class F α β` states that `F` is a type of frame morphisms. They preserve `⊓` and `⨆`.
 
 You should extend this class when you extend `frame_hom`. -/
-class FrameHomClass (F : Type _) (α β : outParam $ Type _) [CompleteLattice α] [CompleteLattice β] extends
+class FrameHomClass (F : Type _) (α β : outParam <| Type _) [CompleteLattice α] [CompleteLattice β] extends
   InfTopHomClass F α β where
   map_Sup (f : F) (s : Set α) : f (sup s) = sup (f '' s)
 #align frame_hom_class FrameHomClass
@@ -108,7 +108,7 @@ class FrameHomClass (F : Type _) (α β : outParam $ Type _) [CompleteLattice α
 /-- `complete_lattice_hom_class F α β` states that `F` is a type of complete lattice morphisms.
 
 You should extend this class when you extend `complete_lattice_hom`. -/
-class CompleteLatticeHomClass (F : Type _) (α β : outParam $ Type _) [CompleteLattice α] [CompleteLattice β] extends
+class CompleteLatticeHomClass (F : Type _) (α β : outParam <| Type _) [CompleteLattice α] [CompleteLattice β] extends
   InfHomClass F α β where
   map_Sup (f : F) (s : Set α) : f (sup s) = sup (f '' s)
 #align complete_lattice_hom_class CompleteLatticeHomClass
@@ -186,8 +186,7 @@ Case conversion may be inaccurate. Consider using '#align order_iso_class.to_Sup
 instance (priority := 100) OrderIsoClass.toSupHomClass [CompleteLattice α] [CompleteLattice β] [OrderIsoClass F α β] :
     SupHomClass F α β :=
   { show OrderHomClass F α β from inferInstance with
-    map_Sup := fun f s =>
-      eq_of_forall_ge_iff $ fun c => by simp only [← le_map_inv_iff, Sup_le_iff, Set.ball_image_iff] }
+    map_Sup := fun f s => eq_of_forall_ge_iff fun c => by simp only [← le_map_inv_iff, Sup_le_iff, Set.ball_image_iff] }
 #align order_iso_class.to_Sup_hom_class OrderIsoClass.toSupHomClass
 -/
 
@@ -198,8 +197,7 @@ Case conversion may be inaccurate. Consider using '#align order_iso_class.to_Inf
 instance (priority := 100) OrderIsoClass.toInfHomClass [CompleteLattice α] [CompleteLattice β] [OrderIsoClass F α β] :
     InfHomClass F α β :=
   { show OrderHomClass F α β from inferInstance with
-    map_Inf := fun f s =>
-      eq_of_forall_le_iff $ fun c => by simp only [← map_inv_le_iff, le_Inf_iff, Set.ball_image_iff] }
+    map_Inf := fun f s => eq_of_forall_le_iff fun c => by simp only [← map_inv_le_iff, le_Inf_iff, Set.ball_image_iff] }
 #align order_iso_class.to_Inf_hom_class OrderIsoClass.toInfHomClass
 -/
 
@@ -347,7 +345,7 @@ Case conversion may be inaccurate. Consider using '#align Sup_hom.comp_id SupHom
 #print SupHom.comp_id /-
 @[simp]
 theorem comp_id (f : SupHom α β) : f.comp (SupHom.id α) = f :=
-  ext $ fun a => rfl
+  ext fun a => rfl
 #align Sup_hom.comp_id SupHom.comp_id
 -/
 
@@ -356,7 +354,7 @@ Case conversion may be inaccurate. Consider using '#align Sup_hom.id_comp SupHom
 #print SupHom.id_comp /-
 @[simp]
 theorem id_comp (f : SupHom α β) : (SupHom.id β).comp f = f :=
-  ext $ fun a => rfl
+  ext fun a => rfl
 #align Sup_hom.id_comp SupHom.id_comp
 -/
 
@@ -364,7 +362,7 @@ theorem id_comp (f : SupHom α β) : (SupHom.id β).comp f = f :=
 Case conversion may be inaccurate. Consider using '#align Sup_hom.cancel_right SupHom.cancel_rightₓ'. -/
 #print SupHom.cancel_right /-
 theorem cancel_right {g₁ g₂ : SupHom β γ} {f : SupHom α β} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext $ hf.forall.2 $ FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 #align Sup_hom.cancel_right SupHom.cancel_right
 -/
 
@@ -372,7 +370,7 @@ theorem cancel_right {g₁ g₂ : SupHom β γ} {f : SupHom α β} (hf : Surject
 Case conversion may be inaccurate. Consider using '#align Sup_hom.cancel_left SupHom.cancel_leftₓ'. -/
 #print SupHom.cancel_left /-
 theorem cancel_left {g : SupHom β γ} {f₁ f₂ : SupHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => ext $ fun a => hg $ by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align Sup_hom.cancel_left SupHom.cancel_left
 -/
 
@@ -540,7 +538,7 @@ Case conversion may be inaccurate. Consider using '#align Inf_hom.comp_id InfHom
 #print InfHom.comp_id /-
 @[simp]
 theorem comp_id (f : InfHom α β) : f.comp (InfHom.id α) = f :=
-  ext $ fun a => rfl
+  ext fun a => rfl
 #align Inf_hom.comp_id InfHom.comp_id
 -/
 
@@ -549,7 +547,7 @@ Case conversion may be inaccurate. Consider using '#align Inf_hom.id_comp InfHom
 #print InfHom.id_comp /-
 @[simp]
 theorem id_comp (f : InfHom α β) : (InfHom.id β).comp f = f :=
-  ext $ fun a => rfl
+  ext fun a => rfl
 #align Inf_hom.id_comp InfHom.id_comp
 -/
 
@@ -557,7 +555,7 @@ theorem id_comp (f : InfHom α β) : (InfHom.id β).comp f = f :=
 Case conversion may be inaccurate. Consider using '#align Inf_hom.cancel_right InfHom.cancel_rightₓ'. -/
 #print InfHom.cancel_right /-
 theorem cancel_right {g₁ g₂ : InfHom β γ} {f : InfHom α β} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext $ hf.forall.2 $ FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 #align Inf_hom.cancel_right InfHom.cancel_right
 -/
 
@@ -565,7 +563,7 @@ theorem cancel_right {g₁ g₂ : InfHom β γ} {f : InfHom α β} (hf : Surject
 Case conversion may be inaccurate. Consider using '#align Inf_hom.cancel_left InfHom.cancel_leftₓ'. -/
 #print InfHom.cancel_left /-
 theorem cancel_left {g : InfHom β γ} {f₁ f₂ : InfHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => ext $ fun a => hg $ by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align Inf_hom.cancel_left InfHom.cancel_left
 -/
 
@@ -694,20 +692,20 @@ theorem comp_assoc (f : FrameHom γ δ) (g : FrameHom β γ) (h : FrameHom α β
 
 @[simp]
 theorem comp_id (f : FrameHom α β) : f.comp (FrameHom.id α) = f :=
-  ext $ fun a => rfl
+  ext fun a => rfl
 #align frame_hom.comp_id FrameHom.comp_id
 
 @[simp]
 theorem id_comp (f : FrameHom α β) : (FrameHom.id β).comp f = f :=
-  ext $ fun a => rfl
+  ext fun a => rfl
 #align frame_hom.id_comp FrameHom.id_comp
 
 theorem cancel_right {g₁ g₂ : FrameHom β γ} {f : FrameHom α β} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext $ hf.forall.2 $ FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 #align frame_hom.cancel_right FrameHom.cancel_right
 
 theorem cancel_left {g : FrameHom β γ} {f₁ f₂ : FrameHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => ext $ fun a => hg $ by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align frame_hom.cancel_left FrameHom.cancel_left
 
 instance : PartialOrder (FrameHom α β) :=
@@ -804,22 +802,22 @@ theorem comp_assoc (f : CompleteLatticeHom γ δ) (g : CompleteLatticeHom β γ)
 
 @[simp]
 theorem comp_id (f : CompleteLatticeHom α β) : f.comp (CompleteLatticeHom.id α) = f :=
-  ext $ fun a => rfl
+  ext fun a => rfl
 #align complete_lattice_hom.comp_id CompleteLatticeHom.comp_id
 
 @[simp]
 theorem id_comp (f : CompleteLatticeHom α β) : (CompleteLatticeHom.id β).comp f = f :=
-  ext $ fun a => rfl
+  ext fun a => rfl
 #align complete_lattice_hom.id_comp CompleteLatticeHom.id_comp
 
 theorem cancel_right {g₁ g₂ : CompleteLatticeHom β γ} {f : CompleteLatticeHom α β} (hf : Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext $ hf.forall.2 $ FunLike.ext_iff.1 h, congr_arg _⟩
+  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 #align complete_lattice_hom.cancel_right CompleteLatticeHom.cancel_right
 
 theorem cancel_left {g : CompleteLatticeHom β γ} {f₁ f₂ : CompleteLatticeHom α β} (hg : Injective g) :
     g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
-  ⟨fun h => ext $ fun a => hg $ by rw [← comp_apply, h, comp_apply], congr_arg _⟩
+  ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align complete_lattice_hom.cancel_left CompleteLatticeHom.cancel_left
 
 end CompleteLatticeHom
@@ -839,8 +837,8 @@ Case conversion may be inaccurate. Consider using '#align Sup_hom.dual SupHom.du
 protected def dual : SupHom α β ≃ InfHom αᵒᵈ βᵒᵈ where
   toFun f := ⟨to_dual ∘ f ∘ of_dual, f.map_Sup'⟩
   invFun f := ⟨of_dual ∘ f ∘ to_dual, f.map_Inf'⟩
-  left_inv f := SupHom.ext $ fun a => rfl
-  right_inv f := InfHom.ext $ fun a => rfl
+  left_inv f := SupHom.ext fun a => rfl
+  right_inv f := InfHom.ext fun a => rfl
 #align Sup_hom.dual SupHom.dual
 -/
 
@@ -907,8 +905,8 @@ Case conversion may be inaccurate. Consider using '#align Inf_hom.dual InfHom.du
 protected def dual : InfHom α β ≃ SupHom αᵒᵈ βᵒᵈ where
   toFun f := { toFun := to_dual ∘ f ∘ of_dual, map_Sup' := fun _ => congr_arg toDual (map_Inf f _) }
   invFun f := { toFun := of_dual ∘ f ∘ to_dual, map_Inf' := fun _ => congr_arg ofDual (map_Sup f _) }
-  left_inv f := InfHom.ext $ fun a => rfl
-  right_inv f := SupHom.ext $ fun a => rfl
+  left_inv f := InfHom.ext fun a => rfl
+  right_inv f := SupHom.ext fun a => rfl
 #align Inf_hom.dual InfHom.dual
 -/
 
@@ -973,8 +971,8 @@ lattices. -/
 protected def dual : CompleteLatticeHom α β ≃ CompleteLatticeHom αᵒᵈ βᵒᵈ where
   toFun f := ⟨f.toSupHom.dual, f.map_Inf'⟩
   invFun f := ⟨f.toSupHom.dual, f.map_Inf'⟩
-  left_inv f := ext $ fun a => rfl
-  right_inv f := ext $ fun a => rfl
+  left_inv f := ext fun a => rfl
+  right_inv f := ext fun a => rfl
 #align complete_lattice_hom.dual CompleteLatticeHom.dual
 
 @[simp]
@@ -1008,8 +1006,8 @@ namespace CompleteLatticeHom
 /-- `set.preimage` as a complete lattice homomorphism. -/
 def setPreimage (f : α → β) : CompleteLatticeHom (Set β) (Set α) where
   toFun := preimage f
-  map_Sup' s := preimage_sUnion.trans $ by simp only [Set.Sup_eq_sUnion, Set.sUnion_image]
-  map_Inf' s := preimage_sInter.trans $ by simp only [Set.Inf_eq_sInter, Set.sInter_image]
+  map_Sup' s := preimage_sUnion.trans <| by simp only [Set.Sup_eq_sUnion, Set.sUnion_image]
+  map_Inf' s := preimage_sInter.trans <| by simp only [Set.Inf_eq_sInter, Set.sInter_image]
 #align complete_lattice_hom.set_preimage CompleteLatticeHom.setPreimage
 
 @[simp]

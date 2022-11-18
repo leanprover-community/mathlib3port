@@ -5,7 +5,6 @@ Authors: Scott Morrison
 -/
 import Mathbin.Algebra.Category.ModuleCat.Abelian
 import Mathbin.CategoryTheory.Limits.Shapes.Images
-import Mathbin.CategoryTheory.Limits.Types
 
 /-!
 # The category of R-modules has images.

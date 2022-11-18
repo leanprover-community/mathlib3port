@@ -3,6 +3,7 @@ Copyright (c) 2021 Alex Kontorovich and Heather Macbeth and Marc Masdeu. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
 -/
+import Mathbin.Data.Fintype.Parity
 import Mathbin.LinearAlgebra.SpecialLinearGroup
 import Mathbin.Analysis.Complex.Basic
 import Mathbin.GroupTheory.GroupAction.Defs
@@ -237,7 +238,7 @@ section ModularScalarTowers
 variable (Γ : Subgroup (SpecialLinearGroup (Fin 2) ℤ))
 
 instance sLAction {R : Type _} [CommRing R] [Algebra R ℝ] : MulAction SL(2, R) ℍ :=
-  MulAction.compHom ℍ $ SpecialLinearGroup.toGLPos.comp $ map (algebraMap R ℝ)
+  MulAction.compHom ℍ <| SpecialLinearGroup.toGLPos.comp <| map (algebraMap R ℝ)
 #align upper_half_plane.SL_action UpperHalfPlane.sLAction
 
 instance : Coe SL(2, ℤ) GL(2, ℝ)⁺ :=
@@ -365,9 +366,9 @@ end SLModularAction
 section PosRealAction
 
 instance posRealAction : MulAction { x : ℝ // 0 < x } ℍ where
-  smul x z := mk ((x : ℝ) • z) $ by simpa using mul_pos x.2 z.2
-  one_smul z := Subtype.ext $ one_smul _ _
-  mul_smul x y z := Subtype.ext $ mul_smul (x : ℝ) y (z : ℂ)
+  smul x z := mk ((x : ℝ) • z) <| by simpa using mul_pos x.2 z.2
+  one_smul z := Subtype.ext <| one_smul _ _
+  mul_smul x y z := Subtype.ext <| mul_smul (x : ℝ) y (z : ℂ)
 #align upper_half_plane.pos_real_action UpperHalfPlane.posRealAction
 
 variable (x : { x : ℝ // 0 < x }) (z : ℍ)
@@ -392,9 +393,9 @@ end PosRealAction
 section RealAddAction
 
 instance : AddAction ℝ ℍ where
-  vadd x z := mk (x + z) $ by simpa using z.im_pos
-  zero_vadd z := Subtype.ext $ by simp
-  add_vadd x y z := Subtype.ext $ by simp [add_assoc]
+  vadd x z := mk (x + z) <| by simpa using z.im_pos
+  zero_vadd z := Subtype.ext <| by simp
+  add_vadd x y z := Subtype.ext <| by simp [add_assoc]
 
 variable (x : ℝ) (z : ℍ)
 

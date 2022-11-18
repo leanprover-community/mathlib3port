@@ -5,7 +5,6 @@ Authors: Scott Morrison
 -/
 import Mathbin.Topology.Algebra.Polynomial
 import Mathbin.Topology.ContinuousFunction.Algebra
-import Mathbin.Topology.ContinuousFunction.Compact
 import Mathbin.Topology.UnitInterval
 
 /-!

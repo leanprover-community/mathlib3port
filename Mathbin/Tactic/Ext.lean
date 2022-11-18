@@ -46,7 +46,7 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name := do
   let fs ← e.structure_fields n
   let d ← get_decl n
   let n ← resolve_constant n
-  let r := @expr.const true n $ d.univ_params.map level.param
+  let r := @expr.const true n <| d.univ_params.map level.param
   let (args, _) ← infer_type r >>= open_pis
   let args := args.map expr.to_implicit_local_const
   let t := r.mk_app args
@@ -55,9 +55,9 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name := do
   let args_x := args ++ [x]
   let args_y := args ++ [y]
   let bs ←
-    fs.mmap $ fun f => do
+    fs.mmap fun f => do
         let d ← get_decl (n ++ f)
-        let a := @expr.const true (n ++ f) $ d.univ_params.map level.param
+        let a := @expr.const true (n ++ f) <| d.univ_params.map level.param
         let t ← infer_type a
         let s ← infer_type t
         if s ≠ q(Prop) then do
@@ -73,7 +73,7 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name := do
   let eq_t ← mk_app `eq [x, y]
   let t ← pis (args ++ [x, y] ++ bs) eq_t
   let pr ←
-    run_async $ do
+    run_async <| do
         let (_, pr) ←
           solve_aux t do
               let args ← intron args.length
@@ -86,29 +86,29 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name := do
                   cases e
               reflexivity
         instantiate_mvars pr
-  let decl_n := n <.> "ext"
+  let decl_n := .str n "ext"
   add_decl (declaration.thm decl_n d t pr)
   let bs ← bs.mmap infer_type
   let rhs := expr.mk_and_lst bs
   let iff_t ← mk_app `iff [eq_t, rhs]
   let t ← pis (args ++ [x, y]) iff_t
   let pr ←
-    run_async $ do
+    run_async <| do
         let (_, pr) ←
-          solve_aux t $ do
+          solve_aux t <| do
               let args ← intron args.length
               let x ← intro1
               let y ← intro1
               cases x
               cases y
               split
-              solve1 $ do
+              solve1 <| do
                   let h ← intro1
                   let hs ← injection h
                   subst_vars
                   repeat (refine ``(And.intro _ _) >> reflexivity)
                   done <|> reflexivity
-              solve1 $ do
+              solve1 <| do
                   repeat do
                       refine ``(and_imp.mpr _)
                       let h ← intro1
@@ -118,22 +118,22 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name := do
                   cases h
                   reflexivity
         instantiate_mvars pr
-  add_decl (declaration.thm (n <.> "ext_iff") d t pr)
+  add_decl (declaration.thm (.str n "ext_iff") d t pr)
   pure decl_n
 #align derive_struct_ext_lemma derive_struct_ext_lemma
 
 unsafe def get_ext_subject : expr → tactic Name
   | expr.pi n bi d b => do
     let v ← mk_local' n bi d
-    let b' ← whnf $ b.instantiate_var v
+    let b' ← whnf <| b.instantiate_var v
     get_ext_subject b'
   | expr.app _ e => do
     let t ← infer_type e >>= instantiate_mvars >>= head_beta
-    if t then pure $ t
+    if t then pure <| t
       else
-        if t then pure $ Name.mk_numeral 0 Name.anonymous
+        if t then pure <| Name.mk_numeral 0 Name.anonymous
         else
-          if t then pure $ Name.mk_numeral 1 Name.anonymous
+          if t then pure <| Name.mk_numeral 1 Name.anonymous
           else do
             let t ← pp t
             fail f! "only constants and Pi types are supported: {t}"
@@ -146,10 +146,10 @@ unsafe def saturate_fun : Name → tactic expr
   | Name.mk_numeral 0 Name.anonymous => do
     let v₀ ← mk_mvar
     let v₁ ← mk_mvar
-    return $ v₀ v₁
+    return <| v₀ v₁
   | Name.mk_numeral 1 Name.anonymous => do
     let u ← mk_meta_univ
-    pure $ expr.sort u
+    pure <| expr.sort u
   | n => do
     let e ← resolve_constant n >>= mk_const
     let a ← get_arity e
@@ -322,7 +322,7 @@ unsafe def extensional_attribute : user_attribute Unit (Option Name) where
   descr := "lemmas usable by `ext` tactic"
   parser := optional ident
   after_set :=
-    some $ fun n _ b => do
+    some fun n _ b => do
       let add ← extensional_attribute.get_param n
       let e ← get_env
       let n ← if (e.structure_fields n).isSome then derive_struct_ext_lemma n else pure n
@@ -414,13 +414,13 @@ private unsafe def try_intros_core : StateT ext_state tactic Unit := do
     | [] =>
       (do
           let es ← StateT.lift intros
-          when (es > 0) $ do
+          when (es > 0) <| do
               let msg := "intros " ++ " ".intercalate (es fun e => e)
               modify fun ⟨patts, trace_msg, fuel⟩ => ⟨patts, trace_msg ++ [msg], fuel⟩) <|>
         pure ()
     | x :: xs => do
       let tgt ← StateT.lift (target >>= whnf)
-      when tgt $ do
+      when tgt <| do
           StateT.lift (rintro [x])
           let msg ← StateT.lift ((· ++ ·) "rintro " <$> format.to_string <$> x ff)
           modify fun ⟨_, trace_msg, fuel⟩ => ⟨xs, trace_msg ++ [msg], fuel⟩
@@ -439,11 +439,11 @@ unsafe def try_intros (patts : List rcases_patt) : tactic (List rcases_patt) :=
 unsafe def ext1_core (cfg : ApplyCfg := {  }) : StateT ext_state tactic Unit := do
   let ⟨patts, trace_msg, _⟩ ← get
   let new_msgs ←
-    StateT.lift $
-        focus1 $ do
+    StateT.lift <|
+        focus1 <| do
           let m ← get_ext_lemmas
           let tgt ← target
-          when_tracing `ext $
+          when_tracing `ext <|
               ← do
                 dbg_trace "[ext] goal: {← tgt}"
           let subject ← get_ext_subject tgt
@@ -490,7 +490,7 @@ unsafe def ext_core (cfg : ApplyCfg := {  }) : StateT ext_state tactic Unit := d
 unsafe def ext1 (xs : List rcases_patt) (cfg : ApplyCfg := {  }) (trace : Bool := false) : tactic (List rcases_patt) :=
   do
   let ⟨_, σ⟩ ← StateT.run (ext1_core cfg) { patts := xs }
-  when trace $ tactic.trace $ "Try this: " ++ ", ".intercalate σ
+  when trace <| tactic.trace <| "Try this: " ++ ", ".intercalate σ
   pure σ
 #align tactic.ext1 tactic.ext1
 
@@ -499,7 +499,7 @@ unsafe def ext1 (xs : List rcases_patt) (cfg : ApplyCfg := {  }) (trace : Bool :
 unsafe def ext (xs : List rcases_patt) (fuel : Option ℕ) (cfg : ApplyCfg := {  }) (trace : Bool := false) :
     tactic (List rcases_patt) := do
   let ⟨_, σ⟩ ← StateT.run (ext_core cfg) { patts := xs, fuel }
-  when trace $ tactic.trace $ "Try this: " ++ ", ".intercalate σ
+  when trace <| tactic.trace <| "Try this: " ++ ", ".intercalate σ
   pure σ
 #align tactic.ext tactic.ext
 
@@ -580,7 +580,7 @@ Try this: apply funext, rintro ⟨a, b⟩
 A maximum depth can be provided with `ext x y z : 3`.
 -/
 unsafe def interactive.ext :
-    (parse $ (tk "?")?) → parse rintro_patt_parse_hi* → parse (tk ":" *> small_nat)? → tactic Unit
+    (parse <| (tk "?")?) → parse rintro_patt_parse_hi* → parse (tk ":" *> small_nat)? → tactic Unit
   | trace, [], some n => iterate_range 1 n (ext1 [] {  } trace.isSome $> ())
   | trace, [], none => repeat1 (ext1 [] {  } trace.isSome $> ())
   | trace, xs, n => ext xs.join n {  } trace.isSome $> ()

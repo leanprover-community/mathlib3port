@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
 import Mathbin.Topology.Algebra.Module.Basic
-import Mathbin.Topology.Instances.Real
 import Mathbin.Topology.Instances.Rat
 
 /-!
@@ -21,8 +20,8 @@ variable {E : Type _} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [HasC
 /-- A continuous additive map between two vector spaces over `ℝ` is `ℝ`-linear. -/
 theorem map_real_smul {G} [AddMonoidHomClass G E F] (f : G) (hf : Continuous f) (c : ℝ) (x : E) : f (c • x) = c • f x :=
   suffices (fun c : ℝ => f (c • x)) = fun c : ℝ => c • f x from congr_fun this c
-  Rat.dense_embedding_coe_real.dense.equalizer (hf.comp $ continuous_id.smul continuous_const)
-    (continuous_id.smul continuous_const) (funext $ fun r => map_rat_cast_smul f ℝ ℝ r x)
+  Rat.dense_embedding_coe_real.dense.equalizer (hf.comp <| continuous_id.smul continuous_const)
+    (continuous_id.smul continuous_const) (funext fun r => map_rat_cast_smul f ℝ ℝ r x)
 #align map_real_smul map_real_smul
 
 namespace AddMonoidHom

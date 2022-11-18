@@ -110,7 +110,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     obtain ⟨⟨x, y⟩, hxy⟩ : ∃ p : γ × γ, ClusterPt p (F ⊓ 𝓟 (Vᶜ)) := cluster_point_of_compact _
     -- In particular (x, y) is a cluster point of 𝓟 Vᶜ, hence is not in the interior of V,
     -- and a fortiori not in Δ, so x ≠ y
-    have clV : ClusterPt (x, y) (𝓟 $ Vᶜ) := hxy.of_inf_right
+    have clV : ClusterPt (x, y) (𝓟 <| Vᶜ) := hxy.of_inf_right
     have : (x, y) ∉ interior V := by
       have : (x, y) ∈ closure (Vᶜ) := by rwa [mem_closure_iff_cluster_pt]
       rwa [closure_compl] at this
@@ -138,7 +138,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
       rw [mem_supr]
       intro x
       apply IsOpen.mem_nhds (IsOpen.union (IsOpen.union _ _) _)
-      · by_cases hx:x ∈ V₁ ∪ V₂
+      · by_cases hx : x ∈ V₁ ∪ V₂
         · left
           cases' hx with hx hx <;> [left, right] <;> constructor <;> tauto
           
@@ -159,10 +159,10 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     -- So u ∈ V₁, v ∈ V₂, and there exists some w such that (u, w) ∈ W and (w ,v) ∈ W.
     -- Because u is in V₁ which is disjoint from U₂ and U₃, (u, w) ∈ W forces (u, w) ∈ U₁ ×ˢ U₁.
     have uw_in : (u, w) ∈ U₁ ×ˢ U₁ :=
-      (huw.resolve_right $ fun h => h.1 $ Or.inl u_in).resolve_right fun h => hU₁₂.le_bot ⟨VU₁ u_in, h.1⟩
+      (huw.resolve_right fun h => h.1 <| Or.inl u_in).resolve_right fun h => hU₁₂.le_bot ⟨VU₁ u_in, h.1⟩
     -- Similarly, because v ∈ V₂, (w ,v) ∈ W forces (w, v) ∈ U₂ ×ˢ U₂.
     have wv_in : (w, v) ∈ U₂ ×ˢ U₂ :=
-      (hwv.resolve_right $ fun h => h.2 $ Or.inr v_in).resolve_left fun h => hU₁₂.le_bot ⟨h.2, VU₂ v_in⟩
+      (hwv.resolve_right fun h => h.2 <| Or.inr v_in).resolve_left fun h => hU₁₂.le_bot ⟨h.2, VU₂ v_in⟩
     -- Hence w ∈ U₁ ∩ U₂ which is empty.
     -- So we have a contradiction
     exact hU₁₂.le_bot ⟨uw_in.2, wv_in.1⟩
@@ -219,7 +219,7 @@ theorem ContinuousOn.tendsto_uniformly [LocallyCompactSpace α] [CompactSpace β
     {U : Set α} (hxU : U ∈ 𝓝 x) (h : ContinuousOn (↿f) (U ×ˢ univ)) : TendstoUniformly f (f x) (𝓝 x) := by
   rcases LocallyCompactSpace.local_compact_nhds _ _ hxU with ⟨K, hxK, hKU, hK⟩
   have : UniformContinuousOn (↿f) (K ×ˢ univ) :=
-    IsCompact.uniform_continuous_on_of_continuous (hK.prod is_compact_univ) (h.mono $ prod_mono hKU subset.rfl)
+    IsCompact.uniform_continuous_on_of_continuous (hK.prod is_compact_univ) (h.mono <| prod_mono hKU subset.rfl)
   exact this.tendsto_uniformly hxK
 #align continuous_on.tendsto_uniformly ContinuousOn.tendsto_uniformly
 

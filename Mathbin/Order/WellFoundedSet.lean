@@ -52,7 +52,7 @@ namespace Set
 
 /-- `s.well_founded_on r` indicates that the relation `r` is well-founded when restricted to `s`. -/
 def WellFoundedOn (s : Set α) (r : α → α → Prop) : Prop :=
-  WellFounded $ fun a b : s => r a b
+  WellFounded fun a b : s => r a b
 #align set.well_founded_on Set.WellFoundedOn
 
 @[simp]
@@ -74,7 +74,7 @@ theorem well_founded_on_iff : s.WellFoundedOn r ↔ WellFounded fun a b : α => 
   refine' ⟨fun h => _, f.well_founded⟩
   rw [WellFounded.well_founded_iff_has_min]
   intro t ht
-  by_cases hst:(s ∩ t).Nonempty
+  by_cases hst : (s ∩ t).Nonempty
   · rw [← Subtype.preimage_coe_nonempty] at hst
     rcases h.has_min (coe ⁻¹' t) hst with ⟨⟨m, ms⟩, mt, hm⟩
     exact ⟨m, mt, fun x xt ⟨xm, xs, ms⟩ => hm ⟨x, xs⟩ xt xm⟩
@@ -122,12 +122,12 @@ open Relation
       (Command.declId `acc_iff_well_founded_on [])
       (Command.declSig
        [(Term.implicitBinder "{" [`α] [] "}")
-        (Term.implicitBinder "{" [`r] [":" (Term.arrow `α "→" (Term.arrow `α "→" (Init.Core.termProp "Prop")))] "}")
+        (Term.implicitBinder "{" [`r] [":" (Term.arrow `α "→" (Term.arrow `α "→" (Term.prop "Prop")))] "}")
         (Term.implicitBinder "{" [`a] [":" `α] "}")]
        (Term.typeSpec
         ":"
         (Term.proj
-         (Init.Core.«term[_,»
+         («term[_]»
           "["
           [(Term.app `Acc [`r `a])
            ","
@@ -785,7 +785,7 @@ theorem WellFoundedOn.union (hs : s.WellFoundedOn r) (ht : t.WellFoundedOn r) : 
 
 @[simp]
 theorem well_founded_on_union : (s ∪ t).WellFoundedOn r ↔ s.WellFoundedOn r ∧ t.WellFoundedOn r :=
-  ⟨fun h => ⟨h.Subset $ subset_union_left _ _, h.Subset $ subset_union_right _ _⟩, fun h => h.1.union h.2⟩
+  ⟨fun h => ⟨h.Subset <| subset_union_left _ _, h.Subset <| subset_union_right _ _⟩, fun h => h.1.union h.2⟩
 #align set.well_founded_on_union Set.well_founded_on_union
 
 end IsStrictOrder
@@ -854,11 +854,10 @@ finite, see `set.partially_well_ordered_on_iff_finite_antichains`.
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (m n) -/
 /-- A subset is partially well-ordered by a relation `r` when any infinite sequence contains
   two elements where the first is related to the second by `r`. -/
 def PartiallyWellOrderedOn (s : Set α) (r : α → α → Prop) : Prop :=
-  ∀ f : ℕ → α, (∀ n, f n ∈ s) → ∃ (m : ℕ) (n : ℕ), m < n ∧ r (f m) (f n)
+  ∀ f : ℕ → α, (∀ n, f n ∈ s) → ∃ m n : ℕ, m < n ∧ r (f m) (f n)
 #align set.partially_well_ordered_on Set.PartiallyWellOrderedOn
 
 section PartiallyWellOrderedOn
@@ -866,7 +865,7 @@ section PartiallyWellOrderedOn
 variable {r : α → α → Prop} {r' : β → β → Prop} {f : α → β} {s : Set α} {t : Set α} {a : α}
 
 theorem PartiallyWellOrderedOn.mono (ht : t.PartiallyWellOrderedOn r) (h : s ⊆ t) : s.PartiallyWellOrderedOn r :=
-  fun f hf => ht f $ fun n => h $ hf n
+  fun f hf => (ht f) fun n => h <| hf n
 #align set.partially_well_ordered_on.mono Set.PartiallyWellOrderedOn.mono
 
 @[simp]
@@ -888,7 +887,7 @@ theorem PartiallyWellOrderedOn.union (hs : s.PartiallyWellOrderedOn r) (ht : t.P
 @[simp]
 theorem partially_well_ordered_on_union :
     (s ∪ t).PartiallyWellOrderedOn r ↔ s.PartiallyWellOrderedOn r ∧ t.PartiallyWellOrderedOn r :=
-  ⟨fun h => ⟨h.mono $ subset_union_left _ _, h.mono $ subset_union_right _ _⟩, fun h => h.1.union h.2⟩
+  ⟨fun h => ⟨h.mono <| subset_union_left _ _, h.mono <| subset_union_right _ _⟩, fun h => h.1.union h.2⟩
 #align set.partially_well_ordered_on_union Set.partially_well_ordered_on_union
 
 theorem PartiallyWellOrderedOn.image_of_monotone_on (hs : s.PartiallyWellOrderedOn r)
@@ -907,8 +906,8 @@ theorem _root_.is_antichain.finite_of_partially_well_ordered_on (ha : IsAntichai
   obtain ⟨m, n, hmn, h⟩ := hp (fun n => hi.nat_embedding _ n) fun n => (hi.nat_embedding _ n).2
   exact
     hmn.ne
-      ((hi.nat_embedding _).Injective $
-        Subtype.val_injective $ ha.eq (hi.nat_embedding _ m).2 (hi.nat_embedding _ n).2 h)
+      ((hi.nat_embedding _).Injective <|
+        Subtype.val_injective <| ha.eq (hi.nat_embedding _ m).2 (hi.nat_embedding _ n).2 h)
 #align
   set._root_.is_antichain.finite_of_partially_well_ordered_on set._root_.is_antichain.finite_of_partially_well_ordered_on
 
@@ -919,7 +918,7 @@ variable [IsRefl α r]
 protected theorem Finite.partially_well_ordered_on (hs : s.Finite) : s.PartiallyWellOrderedOn r := by
   intro f hf
   obtain ⟨m, n, hmn, h⟩ := hs.exists_lt_map_eq_of_forall_mem hf
-  exact ⟨m, n, hmn, h.subst $ refl (f m)⟩
+  exact ⟨m, n, hmn, h.subst <| refl (f m)⟩
 #align set.finite.partially_well_ordered_on Set.Finite.partially_well_ordered_on
 
 theorem _root_.is_antichain.partially_well_ordered_on_iff (hs : IsAntichain r s) :
@@ -1200,12 +1199,12 @@ protected theorem well_founded_on [IsStrictOrder α r] (s : Finset α) : Set.Wel
 
 theorem well_founded_on_sup [IsStrictOrder α r] (s : Finset ι) {f : ι → Set α} :
     (s.sup f).WellFoundedOn r ↔ ∀ i ∈ s, (f i).WellFoundedOn r :=
-  Finset.cons_induction_on s (by simp) $ fun a s ha hs => by simp [-sup_set_eq_bUnion, hs]
+  (Finset.cons_induction_on s (by simp)) fun a s ha hs => by simp [-sup_set_eq_bUnion, hs]
 #align finset.well_founded_on_sup Finset.well_founded_on_sup
 
 theorem partially_well_ordered_on_sup (s : Finset ι) {f : ι → Set α} :
     (s.sup f).PartiallyWellOrderedOn r ↔ ∀ i ∈ s, (f i).PartiallyWellOrderedOn r :=
-  Finset.cons_induction_on s (by simp) $ fun a s ha hs => by simp [-sup_set_eq_bUnion, hs]
+  (Finset.cons_induction_on s (by simp)) fun a s ha hs => by simp [-sup_set_eq_bUnion, hs]
 #align finset.partially_well_ordered_on_sup Finset.partially_well_ordered_on_sup
 
 theorem is_wf_sup [Preorder α] (s : Finset ι) {f : ι → Set α} : (s.sup f).IsWf ↔ ∀ i ∈ s, (f i).IsWf :=
@@ -1314,7 +1313,7 @@ def IsBadSeq (r : α → α → Prop) (s : Set α) (f : ℕ → α) : Prop :=
 #align set.partially_well_ordered_on.is_bad_seq Set.PartiallyWellOrderedOn.IsBadSeq
 
 theorem iff_forall_not_is_bad_seq (r : α → α → Prop) (s : Set α) : s.PartiallyWellOrderedOn r ↔ ∀ f, ¬IsBadSeq r s f :=
-  forall_congr' $ fun f => by simp [is_bad_seq]
+  forall_congr' fun f => by simp [is_bad_seq]
 #align set.partially_well_ordered_on.iff_forall_not_is_bad_seq Set.PartiallyWellOrderedOn.iff_forall_not_is_bad_seq
 
 /-- This indicates that every bad sequence `g` that agrees with `f` on the first `n`
@@ -1329,7 +1328,7 @@ def IsMinBadSeq (r : α → α → Prop) (rk : α → ℕ) (s : Set α) (n : ℕ
 noncomputable def minBadSeqOfBadSeq (r : α → α → Prop) (rk : α → ℕ) (s : Set α) (n : ℕ) (f : ℕ → α)
     (hf : IsBadSeq r s f) : { g : ℕ → α // (∀ m : ℕ, m < n → f m = g m) ∧ IsBadSeq r s g ∧ IsMinBadSeq r rk s n g } :=
   by classical
-  have h : ∃ (k : ℕ) (g : ℕ → α), (∀ m, m < n → f m = g m) ∧ is_bad_seq r s g ∧ rk (g n) = k :=
+  have h : ∃ (k : ℕ)(g : ℕ → α), (∀ m, m < n → f m = g m) ∧ is_bad_seq r s g ∧ rk (g n) = k :=
     ⟨_, f, fun _ _ => rfl, hf, rfl⟩
   obtain ⟨h1, h2, h3⟩ := Classical.choose_spec (Nat.find_spec h)
   refine' ⟨Classical.choose (Nat.find_spec h), h1, by convert h2, fun g hg1 hg2 con => _⟩
@@ -1421,7 +1420,7 @@ theorem partially_well_ordered_on_sublist_forall₂ (r : α → α → Prop) [Is
     · refine' hf1.1 _ _ (List.tail_subset _ hx)
       
     
-  by_cases hn:n < g 0
+  by_cases hn : n < g 0
   · apply hf1.2 m n mn
     rwa [if_pos hn, if_pos (mn.trans hn)] at hmn
     

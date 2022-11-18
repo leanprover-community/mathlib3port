@@ -107,18 +107,17 @@ of the elements of `pqr`, as rational number.
 
 The intended argument is a multiset `{p,q,r}` of cardinality `3`. -/
 def sumInv (pqr : Multiset ℕ+) : ℚ :=
-  Multiset.sum $ pqr.map $ fun x => x⁻¹
+  Multiset.sum <| pqr.map fun x => x⁻¹
 #align ADE_inequality.sum_inv ADEInequality.sumInv
 
 theorem sum_inv_pqr (p q r : ℕ+) : sumInv {p, q, r} = p⁻¹ + q⁻¹ + r⁻¹ := by
   simp only [sum_inv, coe_coe, add_zero, insert_eq_cons, add_assoc, map_cons, sum_cons, map_singleton, sum_singleton]
 #align ADE_inequality.sum_inv_pqr ADEInequality.sum_inv_pqr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (q r) -/
 /-- A multiset `pqr` of positive natural numbers is `admissible`
 if it is equal to `A' q r`, or `D' r`, or one of `E6`, `E7`, or `E8`. -/
 def Admissible (pqr : Multiset ℕ+) : Prop :=
-  (∃ (q) (r), a' q r = pqr) ∨ (∃ r, d' r = pqr) ∨ e' 3 = pqr ∨ e' 4 = pqr ∨ e' 5 = pqr
+  (∃ q r, a' q r = pqr) ∨ (∃ r, d' r = pqr) ∨ e' 3 = pqr ∨ e' 4 = pqr ∨ e' 5 = pqr
 #align ADE_inequality.admissible ADEInequality.Admissible
 
 theorem admissible_A' (q r : ℕ+) : Admissible (a' q r) :=
@@ -126,19 +125,19 @@ theorem admissible_A' (q r : ℕ+) : Admissible (a' q r) :=
 #align ADE_inequality.admissible_A' ADEInequality.admissible_A'
 
 theorem admissible_D' (n : ℕ+) : Admissible (d' n) :=
-  Or.inr $ Or.inl ⟨n, rfl⟩
+  Or.inr <| Or.inl ⟨n, rfl⟩
 #align ADE_inequality.admissible_D' ADEInequality.admissible_D'
 
 theorem admissible_E'3 : Admissible (e' 3) :=
-  Or.inr $ Or.inr $ Or.inl rfl
+  Or.inr <| Or.inr <| Or.inl rfl
 #align ADE_inequality.admissible_E'3 ADEInequality.admissible_E'3
 
 theorem admissible_E'4 : Admissible (e' 4) :=
-  Or.inr $ Or.inr $ Or.inr $ Or.inl rfl
+  Or.inr <| Or.inr <| Or.inr <| Or.inl rfl
 #align ADE_inequality.admissible_E'4 ADEInequality.admissible_E'4
 
 theorem admissible_E'5 : Admissible (e' 5) :=
-  Or.inr $ Or.inr $ Or.inr $ Or.inr rfl
+  Or.inr <| Or.inr <| Or.inr <| Or.inr rfl
 #align ADE_inequality.admissible_E'5 ADEInequality.admissible_E'5
 
 theorem admissible_E6 : Admissible e6 :=
@@ -157,11 +156,11 @@ theorem Admissible.one_lt_sum_inv {pqr : Multiset ℕ+} : Admissible pqr → 1 <
   rw [admissible]
   rintro (⟨p', q', H⟩ | ⟨n, H⟩ | H | H | H)
   · rw [← H, A', sum_inv_pqr, add_assoc]
-    simp only [lt_add_iff_pos_right, Pnat.one_coe, inv_one, Nat.cast_one, coe_coe]
-    apply add_pos <;> simp only [Pnat.pos, Nat.cast_pos, inv_pos]
+    simp only [lt_add_iff_pos_right, PNat.one_coe, inv_one, Nat.cast_one, coe_coe]
+    apply add_pos <;> simp only [PNat.pos, Nat.cast_pos, inv_pos]
     
   · rw [← H, D', sum_inv_pqr]
-    simp only [lt_add_iff_pos_right, Pnat.one_coe, inv_one, Nat.cast_one, coe_coe, Pnat.coe_bit0, Nat.cast_bit0]
+    simp only [lt_add_iff_pos_right, PNat.one_coe, inv_one, Nat.cast_one, coe_coe, PNat.coe_bit0, Nat.cast_bit0]
     norm_num
     
   all_goals
@@ -187,7 +186,7 @@ theorem lt_four {q r : ℕ+} (hqr : q ≤ r) (H : 1 < sumInv {2, q, r}) : q < 4 
   contrapose! H
   rw [sum_inv_pqr]
   have h4r := H.trans hqr
-  simp only [Pnat.coe_bit0, Nat.cast_bit0, Pnat.one_coe, Nat.cast_one, coe_coe]
+  simp only [PNat.coe_bit0, Nat.cast_bit0, PNat.one_coe, Nat.cast_one, coe_coe]
   calc
     (2⁻¹ + q⁻¹ + r⁻¹ : ℚ) ≤ 2⁻¹ + 4⁻¹ + 4⁻¹ := add_le_add (add_le_add le_rfl _) _
     _ = 1 := by norm_num
@@ -199,7 +198,7 @@ theorem lt_six {r : ℕ+} (H : 1 < sumInv {2, 3, r}) : r < 6 := by
   have h6 : (0 : ℚ) < 6 := by norm_num
   contrapose! H
   rw [sum_inv_pqr]
-  simp only [Pnat.coe_bit0, Nat.cast_bit0, Pnat.one_coe, Nat.cast_bit1, Nat.cast_one, Pnat.coe_bit1, coe_coe]
+  simp only [PNat.coe_bit0, Nat.cast_bit0, PNat.one_coe, Nat.cast_bit1, Nat.cast_one, PNat.coe_bit1, coe_coe]
   calc
     (2⁻¹ + 3⁻¹ + r⁻¹ : ℚ) ≤ 2⁻¹ + 3⁻¹ + 6⁻¹ := add_le_add (add_le_add le_rfl le_rfl) _
     _ = 1 := by norm_num

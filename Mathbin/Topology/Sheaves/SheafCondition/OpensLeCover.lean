@@ -127,7 +127,7 @@ def generateEquivalenceOpensLe :
           ⟨U i, h.Hom, (hY.substr (le_supr U i)).Hom, ⟨i, rfl⟩, rfl⟩⟩,
       map := fun _ _ g => Over.homMk g }
   unitIso :=
-    eq_to_iso $
+    eq_to_iso <|
       CategoryTheory.Functor.ext
         (by
           rintro ⟨⟨_, _⟩, _⟩
@@ -137,7 +137,7 @@ def generateEquivalenceOpensLe :
           intros
           ext)
   counitIso :=
-    eq_to_iso $
+    eq_to_iso <|
       CategoryTheory.Functor.hext
         (by
           intro

@@ -292,8 +292,8 @@ theorem to_intermediate_field_to_subalgebra (S : IntermediateField K L) :
 
 /-- Turn a subalgebra satisfying `is_field` into an intermediate_field -/
 def Subalgebra.toIntermediateField' (S : Subalgebra K L) (hS : IsField S) : IntermediateField K L :=
-  S.toIntermediateField $ fun x hx => by
-    by_cases hx0:x = 0
+  S.toIntermediateField fun x hx => by
+    by_cases hx0 : x = 0
     · rw [hx0, inv_zero]
       exact S.zero_mem
       
@@ -413,7 +413,7 @@ theorem coe_map (f : L →ₐ[K] L') : (S.map f : Set L') = f '' S :=
 theorem map_map {K L₁ L₂ L₃ : Type _} [Field K] [Field L₁] [Algebra K L₁] [Field L₂] [Algebra K L₂] [Field L₃]
     [Algebra K L₃] (E : IntermediateField K L₁) (f : L₁ →ₐ[K] L₂) (g : L₂ →ₐ[K] L₃) :
     (E.map f).map g = E.map (g.comp f) :=
-  SetLike.coe_injective $ Set.image_image _ _ _
+  SetLike.coe_injective <| Set.image_image _ _ _
 #align intermediate_field.map_map IntermediateField.map_map
 
 /-- Given an equivalence `e : L ≃ₐ[K] L'` of `K`-field extensions and an intermediate
@@ -615,7 +615,7 @@ theorem mem_restrict_scalars {E : IntermediateField L' L} {x : L} : x ∈ restri
 
 theorem restrict_scalars_injective :
     Function.Injective (restrictScalars K : IntermediateField L' L → IntermediateField K L) := fun U V H =>
-  ext $ fun x => by rw [← mem_restrict_scalars K, H, mem_restrict_scalars]
+  ext fun x => by rw [← mem_restrict_scalars K, H, mem_restrict_scalars]
 #align intermediate_field.restrict_scalars_injective IntermediateField.restrict_scalars_injective
 
 end RestrictScalars
@@ -656,7 +656,7 @@ theorem to_subalgebra_eq_iff : F.toSubalgebra = E.toSubalgebra ↔ F = E := by
 #align intermediate_field.to_subalgebra_eq_iff IntermediateField.to_subalgebra_eq_iff
 
 theorem eq_of_le_of_finrank_le [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank K E ≤ finrank K F) : F = E :=
-  to_subalgebra_injective $ Subalgebra.to_submodule_injective $ eq_of_le_of_finrank_le h_le h_finrank
+  to_subalgebra_injective <| Subalgebra.to_submodule_injective <| eq_of_le_of_finrank_le h_le h_finrank
 #align intermediate_field.eq_of_le_of_finrank_le IntermediateField.eq_of_le_of_finrank_le
 
 theorem eq_of_le_of_finrank_eq [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank K F = finrank K E) : F = E :=
@@ -688,7 +688,7 @@ theorem is_integral_iff {x : S} : IsIntegral K x ↔ IsIntegral K (x : L) := by
 #align intermediate_field.is_integral_iff IntermediateField.is_integral_iff
 
 theorem minpoly_eq (x : S) : minpoly K x = minpoly K (x : L) := by
-  by_cases hx:IsIntegral K x
+  by_cases hx : IsIntegral K x
   · exact minpoly.eq_of_algebra_map_eq (algebraMap S L).Injective hx rfl
     
   · exact (minpoly.eq_zero hx).trans (minpoly.eq_zero (mt is_integral_iff.mpr hx)).symm

@@ -137,7 +137,7 @@ end
 
 instance hasShift {β : Type _} [AddCommGroup β] (s : β) : HasShift (GradedObjectWithShift s C) ℤ :=
   hasShiftMk _ _
-    { f := fun n => (comap fun _ => C) $ fun b : β => b + n • s,
+    { f := fun n => (comap fun _ => C) fun b : β => b + n • s,
       ε :=
         (comapId β fun _ => C).symm ≪≫
           comapEq C

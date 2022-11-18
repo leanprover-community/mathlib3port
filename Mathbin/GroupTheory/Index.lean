@@ -175,10 +175,10 @@ theorem index_eq_two_iff : H.index = 2 ↔ ∃ a, ∀ b, Xor' (b * a ∈ H) (b �
 
 @[to_additive]
 theorem mul_mem_iff_of_index_two (h : H.index = 2) {a b : G} : a * b ∈ H ↔ (a ∈ H ↔ b ∈ H) := by
-  by_cases ha:a ∈ H
+  by_cases ha : a ∈ H
   · simp only [ha, true_iff_iff, mul_mem_cancel_left ha]
     
-  by_cases hb:b ∈ H
+  by_cases hb : b ∈ H
   · simp only [hb, iff_true_iff, mul_mem_cancel_right hb]
     
   simp only [ha, hb, iff_self_iff, iff_true_iff]
@@ -366,7 +366,7 @@ theorem index_inf_ne_zero (hH : H.index ≠ 0) (hK : K.index ≠ 0) : (H ⊓ K).
 
 @[to_additive]
 theorem relindex_inf_le : (H ⊓ K).relindex L ≤ H.relindex L * K.relindex L := by
-  by_cases h:H.relindex L = 0
+  by_cases h : H.relindex L = 0
   · exact (le_of_eq (relindex_eq_zero_of_le_left inf_le_left h)).trans (zero_le _)
     
   rw [← inf_relindex_right, inf_assoc, ← relindex_mul_relindex _ _ L inf_le_right inf_le_right, inf_relindex_right,
@@ -413,6 +413,16 @@ theorem index_eq_one : H.index = 1 ↔ H = ⊤ :=
   ⟨fun h => QuotientGroup.subgroup_eq_top_of_subsingleton H (Cardinal.to_nat_eq_one_iff_unique.mp h).1, fun h =>
     (congr_arg index h).trans index_top⟩
 #align subgroup.index_eq_one Subgroup.index_eq_one
+
+@[simp, to_additive relindex_eq_one]
+theorem relindex_eq_one : H.relindex K = 1 ↔ K ≤ H :=
+  index_eq_one.trans subgroup_of_eq_top
+#align subgroup.relindex_eq_one Subgroup.relindex_eq_one
+
+@[simp, to_additive card_eq_one]
+theorem card_eq_one : Nat.card H = 1 ↔ H = ⊥ :=
+  H.relindex_bot_left ▸ relindex_eq_one.trans le_bot_iff
+#align subgroup.card_eq_one Subgroup.card_eq_one
 
 @[to_additive]
 theorem index_ne_zero_of_finite [hH : Finite (G ⧸ H)] : H.index ≠ 0 := by

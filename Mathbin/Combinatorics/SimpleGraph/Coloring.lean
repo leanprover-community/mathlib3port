@@ -3,7 +3,6 @@ Copyright (c) 2021 Arthur Paulino. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Paulino, Kyle Miller
 -/
-import Mathbin.Combinatorics.SimpleGraph.Subgraph
 import Mathbin.Combinatorics.SimpleGraph.Clique
 import Mathbin.Data.Nat.Lattice
 import Mathbin.Data.Setoid.Partition
@@ -193,7 +192,7 @@ def recolorOfEquiv {α β : Type _} (f : α ≃ β) : G.Coloring α ≃ G.Colori
 `β` has at least as large a cardinality as `α`. -/
 noncomputable def recolorOfCardLe {α β : Type _} [Fintype α] [Fintype β] (hn : Fintype.card α ≤ Fintype.card β) :
     G.Coloring α ↪ G.Coloring β :=
-  G.recolorOfEmbedding $ (Function.Embedding.nonempty_of_card_le hn).some
+  G.recolorOfEmbedding <| (Function.Embedding.nonempty_of_card_le hn).some
 #align simple_graph.recolor_of_card_le SimpleGraph.recolorOfCardLe
 
 variable {G}
@@ -404,10 +403,10 @@ theorem CompleteBipartiteGraph.chromatic_number {V W : Type _} [Nonempty V] [Non
   have w := Classical.arbitrary W
   have h : (completeBipartiteGraph V W).Adj (Sum.inl v) (Sum.inr w) := by simp
   have hn := C.valid h
-  by_cases he:C (Sum.inl v) = b
+  by_cases he : C (Sum.inl v) = b
   · exact ⟨_, he⟩
     
-  · by_cases he':C (Sum.inr w) = b
+  · by_cases he' : C (Sum.inr w) = b
     · exact ⟨_, he'⟩
       
     · exfalso

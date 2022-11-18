@@ -31,15 +31,15 @@ variable (R)
 /-- The derivation on `mv_polynomial σ R` that takes value `f i` on `X i`, as a linear map.
 Use `mv_polynomial.mk_derivation` instead. -/
 def mkDerivationₗ (f : σ → A) : MvPolynomial σ R →ₗ[R] A :=
-  Finsupp.lsum R $ fun xs : σ →₀ ℕ =>
-    (LinearMap.ringLmapEquivSelf R R A).symm $ xs.Sum $ fun i k => monomial (xs - Finsupp.single i 1) (k : R) • f i
+  (Finsupp.lsum R) fun xs : σ →₀ ℕ =>
+    (LinearMap.ringLmapEquivSelf R R A).symm <| xs.Sum fun i k => monomial (xs - Finsupp.single i 1) (k : R) • f i
 #align mv_polynomial.mk_derivationₗ MvPolynomial.mkDerivationₗ
 
 end
 
 theorem mk_derivationₗ_monomial (f : σ → A) (s : σ →₀ ℕ) (r : R) :
-    mkDerivationₗ R f (monomial s r) = r • (s.Sum $ fun i k => monomial (s - Finsupp.single i 1) (k : R) • f i) :=
-  sum_monomial_eq $ LinearMap.map_zero _
+    mkDerivationₗ R f (monomial s r) = r • s.Sum fun i k => monomial (s - Finsupp.single i 1) (k : R) • f i :=
+  sum_monomial_eq <| LinearMap.map_zero _
 #align mv_polynomial.mk_derivationₗ_monomial MvPolynomial.mk_derivationₗ_monomial
 
 theorem mk_derivationₗ_C (f : σ → A) (r : R) : mkDerivationₗ R f (c r) = 0 :=
@@ -47,7 +47,7 @@ theorem mk_derivationₗ_C (f : σ → A) (r : R) : mkDerivationₗ R f (c r) = 
 #align mv_polynomial.mk_derivationₗ_C MvPolynomial.mk_derivationₗ_C
 
 theorem mk_derivationₗ_X (f : σ → A) (i : σ) : mkDerivationₗ R f (x i) = f i :=
-  (mk_derivationₗ_monomial f _ _).trans $ by simp
+  (mk_derivationₗ_monomial f _ _).trans <| by simp
 #align mv_polynomial.mk_derivationₗ_X MvPolynomial.mk_derivationₗ_X
 
 @[simp]
@@ -79,7 +79,7 @@ theorem derivation_eq_zero_of_forall_mem_vars {D : Derivation R (MvPolynomial σ
 
 @[ext.1]
 theorem derivation_ext {D₁ D₂ : Derivation R (MvPolynomial σ R) A} (h : ∀ i, D₁ (x i) = D₂ (x i)) : D₁ = D₂ :=
-  Derivation.ext $ fun f => derivation_eq_of_forall_mem_vars fun i _ => h i
+  Derivation.ext fun f => derivation_eq_of_forall_mem_vars fun i _ => h i
 #align mv_polynomial.derivation_ext MvPolynomial.derivation_ext
 
 variable [IsScalarTower R (MvPolynomial σ R) A]
@@ -119,7 +119,7 @@ def mkDerivation (f : σ → A) : Derivation R (MvPolynomial σ R) A where
   toLinearMap := mkDerivationₗ R f
   map_one_eq_zero' := mk_derivationₗ_C _ 1
   leibniz' :=
-    (leibniz_iff_X (mkDerivationₗ R f) (mk_derivationₗ_C _ 1)).2 $ fun s i => by
+    (leibniz_iff_X (mkDerivationₗ R f) (mk_derivationₗ_C _ 1)).2 fun s i => by
       simp only [mk_derivationₗ_monomial, X, monomial_mul, one_smul, one_mul]
       rw [Finsupp.sum_add_index] <;> [skip,
         · simp
@@ -145,15 +145,15 @@ theorem mk_derivation_X (f : σ → A) (i : σ) : mkDerivation R f (x i) = f i :
 #align mv_polynomial.mk_derivation_X MvPolynomial.mk_derivation_X
 
 theorem mk_derivation_monomial (f : σ → A) (s : σ →₀ ℕ) (r : R) :
-    mkDerivation R f (monomial s r) = r • (s.Sum $ fun i k => monomial (s - Finsupp.single i 1) (k : R) • f i) :=
+    mkDerivation R f (monomial s r) = r • s.Sum fun i k => monomial (s - Finsupp.single i 1) (k : R) • f i :=
   mk_derivationₗ_monomial f s r
 #align mv_polynomial.mk_derivation_monomial MvPolynomial.mk_derivation_monomial
 
 /-- `mv_polynomial.mk_derivation` as a linear equivalence. -/
 def mkDerivationEquiv : (σ → A) ≃ₗ[R] Derivation R (MvPolynomial σ R) A :=
-  LinearEquiv.symm $
+  LinearEquiv.symm <|
     { invFun := mkDerivation R, toFun := fun D i => D (x i), map_add' := fun D₁ D₂ => rfl, map_smul' := fun c D => rfl,
-      left_inv := fun D => derivation_ext $ mk_derivation_X _ _, right_inv := fun f => funext $ mk_derivation_X _ _ }
+      left_inv := fun D => derivation_ext <| mk_derivation_X _ _, right_inv := fun f => funext <| mk_derivation_X _ _ }
 #align mv_polynomial.mk_derivation_equiv MvPolynomial.mkDerivationEquiv
 
 end MvPolynomial

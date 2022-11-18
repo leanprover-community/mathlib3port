@@ -54,7 +54,7 @@ theorem decomposition_Q (n q : ℕ) :
   induction' q with q hq
   · simp only [Q_eq_zero, HomologicalComplex.zero_f_apply, Nat.not_lt_zero, Finset.filter_false, Finset.sum_empty]
     
-  · by_cases hqn:q + 1 ≤ n + 1
+  · by_cases hqn : q + 1 ≤ n + 1
     swap
     · rw [Q_is_eventually_constant (show n + 1 ≤ q by linarith), hq]
       congr

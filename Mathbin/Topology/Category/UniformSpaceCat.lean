@@ -6,7 +6,6 @@ Authors: Reid Barton, Patrick Massot, Scott Morrison
 import Mathbin.CategoryTheory.Adjunction.Reflective
 import Mathbin.CategoryTheory.ConcreteCategory.UnbundledHom
 import Mathbin.CategoryTheory.Monad.Limits
-import Mathbin.CategoryTheory.Limits.HasLimits
 import Mathbin.Topology.Category.TopCat.Basic
 import Mathbin.Topology.UniformSpace.Completion
 
@@ -226,7 +225,7 @@ open CategoryTheory.Limits
 
 -- TODO Once someone defines `has_limits UniformSpace`, turn this into an instance.
 example [HasLimits.{u} UniformSpaceCat.{u}] : HasLimits.{u} CpltSepUniformSpaceCat.{u} :=
-  has_limits_of_reflective $ forget₂ CpltSepUniformSpaceCat UniformSpaceCat.{u}
+  has_limits_of_reflective <| forget₂ CpltSepUniformSpaceCat UniformSpaceCat.{u}
 
 end UniformSpaceCat
 

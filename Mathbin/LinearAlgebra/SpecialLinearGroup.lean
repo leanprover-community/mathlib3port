@@ -107,7 +107,7 @@ instance hasOne : One (SpecialLinearGroup n R) :=
   ⟨⟨1, det_one⟩⟩
 #align matrix.special_linear_group.has_one Matrix.SpecialLinearGroup.hasOne
 
-instance : Pow (SpecialLinearGroup n R) ℕ where pow x n := ⟨x ^ n, (det_pow _ _).trans $ x.Prop.symm ▸ one_pow _⟩
+instance : Pow (SpecialLinearGroup n R) ℕ where pow x n := ⟨x ^ n, (det_pow _ _).trans <| x.Prop.symm ▸ one_pow _⟩
 
 instance : Inhabited (SpecialLinearGroup n R) :=
   ⟨1⟩
@@ -156,7 +156,7 @@ theorem det_ne_zero [Nontrivial R] (g : SpecialLinearGroup n R) : det ↑ₘg �
 #align matrix.special_linear_group.det_ne_zero Matrix.SpecialLinearGroup.det_ne_zero
 
 theorem row_ne_zero [Nontrivial R] (g : SpecialLinearGroup n R) (i : n) : ↑ₘg i ≠ 0 := fun h =>
-  g.det_ne_zero $ det_eq_zero_of_row_eq_zero i $ by simp [h]
+  g.det_ne_zero <| det_eq_zero_of_row_eq_zero i <| by simp [h]
 #align matrix.special_linear_group.row_ne_zero Matrix.SpecialLinearGroup.row_ne_zero
 
 end CoeLemmas
@@ -177,7 +177,7 @@ def toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R where
       (by rw [← to_lin'_mul, ← special_linear_group.coe_mul, mul_right_inv, coe_one, to_lin'_one])
       (by rw [← to_lin'_mul, ← special_linear_group.coe_mul, mul_left_inv, coe_one, to_lin'_one])
   map_one' := LinearEquiv.to_linear_map_injective Matrix.to_lin'_one
-  map_mul' A B := LinearEquiv.to_linear_map_injective $ Matrix.to_lin'_mul A B
+  map_mul' A B := LinearEquiv.to_linear_map_injective <| Matrix.to_lin'_mul A B
 #align matrix.special_linear_group.to_lin' Matrix.SpecialLinearGroup.toLin'
 
 theorem to_lin'_apply (A : SpecialLinearGroup n R) (v : n → R) :
@@ -198,7 +198,7 @@ theorem to_lin'_symm_to_linear_map (A : SpecialLinearGroup n R) : ↑A.toLin'.sy
 #align matrix.special_linear_group.to_lin'_symm_to_linear_map Matrix.SpecialLinearGroup.to_lin'_symm_to_linear_map
 
 theorem to_lin'_injective : Function.Injective ⇑(toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R) := fun A B h =>
-  Subtype.coe_injective $ Matrix.toLin'.Injective $ LinearEquiv.to_linear_map_injective.eq_iff.mpr h
+  Subtype.coe_injective <| Matrix.toLin'.Injective <| LinearEquiv.to_linear_map_injective.eq_iff.mpr h
 #align matrix.special_linear_group.to_lin'_injective Matrix.SpecialLinearGroup.to_lin'_injective
 
 /-- `to_GL` is the map from the special linear group to the general linear group -/
@@ -220,8 +220,8 @@ def map (f : R →+* S) : SpecialLinearGroup n R →* SpecialLinearGroup n S whe
     ⟨f.mapMatrix ↑g, by
       rw [← f.map_det]
       simp [g.2]⟩
-  map_one' := Subtype.ext $ f.mapMatrix.map_one
-  map_mul' x y := Subtype.ext $ f.mapMatrix.map_mul x y
+  map_one' := Subtype.ext <| f.mapMatrix.map_one
+  map_mul' x y := Subtype.ext <| f.mapMatrix.map_mul x y
 #align matrix.special_linear_group.map Matrix.SpecialLinearGroup.map
 
 section cast
@@ -245,7 +245,7 @@ variable [Fact (Even (Fintype.card n))]
 /-- Formal operation of negation on special linear group on even cardinality `n` given by negating
 each element. -/
 instance : Neg (SpecialLinearGroup n R) :=
-  ⟨fun g => ⟨-g, by simpa [(Fact.out $ Even $ Fintype.card n).neg_one_pow, g.det_coe] using det_smul (↑ₘg) (-1)⟩⟩
+  ⟨fun g => ⟨-g, by simpa [(Fact.out <| Even <| Fintype.card n).neg_one_pow, g.det_coe] using det_smul (↑ₘg) (-1)⟩⟩
 
 @[simp]
 theorem coe_neg (g : SpecialLinearGroup n R) : ↑(-g) = -(g : Matrix n n R) :=
@@ -257,7 +257,7 @@ instance : HasDistribNeg (SpecialLinearGroup n R) :=
 
 @[simp]
 theorem coe_int_neg (g : SpecialLinearGroup n ℤ) : ↑(-g) = (-↑g : SpecialLinearGroup n R) :=
-  Subtype.ext $ (@RingHom.mapMatrix n _ _ _ _ _ _ (Int.castRingHom R)).map_neg ↑g
+  Subtype.ext <| (@RingHom.mapMatrix n _ _ _ _ _ _ (Int.castRingHom R)).map_neg ↑g
 #align matrix.special_linear_group.coe_int_neg Matrix.SpecialLinearGroup.coe_int_neg
 
 end Neg

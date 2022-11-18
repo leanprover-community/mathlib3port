@@ -43,13 +43,13 @@ unsafe def repeat_count {α : Type} (t : tactic α) : tactic ℕ := do
 #align conv.repeat_count conv.repeat_count
 
 unsafe def slice (a b : ℕ) : conv Unit := do
-  repeat $ to_expr ``(Category.assoc) >>= fun e => tactic.rewrite_target e { symm := ff }
+  repeat <| to_expr ``(Category.assoc) >>= fun e => tactic.rewrite_target e { symm := ff }
   iterate_range (a - 1) (a - 1) do
       conv.congr
       conv.skip
-  let k ← repeat_count $ to_expr ``(Category.assoc) >>= fun e => tactic.rewrite_target e { symm := true }
+  let k ← repeat_count <| to_expr ``(Category.assoc) >>= fun e => tactic.rewrite_target e { symm := true }
   iterate_range (k + 1 + a - b) (k + 1 + a - b) conv.congr
-  repeat $ to_expr ``(Category.assoc) >>= fun e => tactic.rewrite_target e { symm := ff }
+  repeat <| to_expr ``(Category.assoc) >>= fun e => tactic.rewrite_target e { symm := ff }
   rotate 1
   iterate_exactly' (k + 1 + a - b) conv.skip
 #align conv.slice conv.slice
@@ -100,14 +100,14 @@ namespace Interactive
 composition as needed, zooms in on the `a`-th through `b`-th morphisms, and invokes `tac`.
 -/
 unsafe def slice_lhs (a b : parse small_nat) (t : conv.interactive.itactic) : tactic Unit := do
-  conv_target' (conv.interactive.to_lhs >> slice a b >> t)
+  conv_target' ((conv.interactive.to_lhs >> slice a b) >> t)
 #align tactic.interactive.slice_lhs tactic.interactive.slice_lhs
 
 /-- `slice_rhs a b { tac }` zooms to the right hand side, uses associativity for categorical
 composition as needed, zooms in on the `a`-th through `b`-th morphisms, and invokes `tac`.
 -/
 unsafe def slice_rhs (a b : parse small_nat) (t : conv.interactive.itactic) : tactic Unit := do
-  conv_target' (conv.interactive.to_rhs >> slice a b >> t)
+  conv_target' ((conv.interactive.to_rhs >> slice a b) >> t)
 #align tactic.interactive.slice_rhs tactic.interactive.slice_rhs
 
 end Interactive

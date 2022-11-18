@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau
 -/
 import Mathbin.Data.List.BigOperators
-import Mathbin.Algebra.Order.Group.MinMax
+import Mathbin.Algebra.Order.Monoid.MinMax
 
 /-!
 # zip & unzip
@@ -319,9 +319,8 @@ theorem nth_zip_with (f : α → β → γ) (l₁ : List α) (l₂ : List β) (i
     
 #align list.nth_zip_with List.nth_zip_with
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 theorem nth_zip_with_eq_some {α β γ} (f : α → β → γ) (l₁ : List α) (l₂ : List β) (z : γ) (i : ℕ) :
-    (zipWith f l₁ l₂).nth i = some z ↔ ∃ (x) (y), l₁.nth i = some x ∧ l₂.nth i = some y ∧ f x y = z := by
+    (zipWith f l₁ l₂).nth i = some z ↔ ∃ x y, l₁.nth i = some x ∧ l₂.nth i = some y ∧ f x y = z := by
   induction l₁ generalizing l₂ i
   · simp [zip_with]
     

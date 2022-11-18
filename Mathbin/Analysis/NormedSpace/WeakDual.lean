@@ -127,7 +127,7 @@ theorem to_weak_dual_eq_iff (x' y' : Dual 𝕜 E) : x'.toWeakDual = y'.toWeakDua
 #align normed_space.dual.to_weak_dual_eq_iff NormedSpace.Dual.to_weak_dual_eq_iff
 
 theorem to_weak_dual_continuous : Continuous fun x' : Dual 𝕜 E => x'.toWeakDual :=
-  WeakBilin.continuous_of_continuous_eval _ $ fun z => (inclusionInDoubleDual 𝕜 E z).Continuous
+  (WeakBilin.continuous_of_continuous_eval _) fun z => (inclusionInDoubleDual 𝕜 E z).Continuous
 #align normed_space.dual.to_weak_dual_continuous NormedSpace.Dual.to_weak_dual_continuous
 
 /-- For a normed space `E`, according to `to_weak_dual_continuous` the "identity mapping"
@@ -191,7 +191,7 @@ def polar (s : Set E) : Set (WeakDual 𝕜 E) :=
   to_normed_dual ⁻¹' polar 𝕜 s
 #align weak_dual.polar WeakDual.polar
 
-theorem polar_def (s : Set E) : polar 𝕜 s = { f : WeakDual 𝕜 E | ∀ x ∈ s, ∥f x∥ ≤ 1 } :=
+theorem polar_def (s : Set E) : polar 𝕜 s = { f : WeakDual 𝕜 E | ∀ x ∈ s, ‖f x‖ ≤ 1 } :=
   rfl
 #align weak_dual.polar_def WeakDual.polar_def
 
@@ -213,8 +213,8 @@ theorem isClosedImageCoeOfBoundedOfClosed {s : Set (WeakDual 𝕜 E)} (hb : Boun
 
 theorem is_compact_of_bounded_of_closed [ProperSpace 𝕜] {s : Set (WeakDual 𝕜 E)}
     (hb : Bounded (dual.to_weak_dual ⁻¹' s)) (hc : IsClosed s) : IsCompact s :=
-  (Embedding.is_compact_iff_is_compact_image FunLike.coe_injective.embedding_induced).mpr $
-    ContinuousLinearMap.is_compact_image_coe_of_bounded_of_closed_image hb $ isClosedImageCoeOfBoundedOfClosed hb hc
+  (Embedding.is_compact_iff_is_compact_image FunLike.coe_injective.embedding_induced).mpr <|
+    ContinuousLinearMap.is_compact_image_coe_of_bounded_of_closed_image hb <| isClosedImageCoeOfBoundedOfClosed hb hc
 #align weak_dual.is_compact_of_bounded_of_closed WeakDual.is_compact_of_bounded_of_closed
 
 variable (𝕜)

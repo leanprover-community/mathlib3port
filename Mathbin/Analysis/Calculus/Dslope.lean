@@ -113,7 +113,7 @@ theorem continuous_at_dslope_of_ne (h : b ≠ a) : ContinuousAt (dslope f a) b �
 
 theorem continuous_on_dslope (h : s ∈ 𝓝 a) : ContinuousOn (dslope f a) s ↔ ContinuousOn f s ∧ DifferentiableAt 𝕜 f a :=
   by
-  refine' ⟨fun hc => ⟨hc.of_dslope, continuous_at_dslope_same.1 $ hc.ContinuousAt h⟩, _⟩
+  refine' ⟨fun hc => ⟨hc.of_dslope, continuous_at_dslope_same.1 <| hc.ContinuousAt h⟩, _⟩
   rintro ⟨hc, hd⟩ x hx
   rcases eq_or_ne x a with (rfl | hne)
   exacts[(continuous_at_dslope_same.2 hd).ContinuousWithinAt, (continuous_within_at_dslope_of_ne hne).2 (hc x hx)]
@@ -144,7 +144,7 @@ theorem differentiable_within_at_dslope_of_ne (h : b ≠ a) :
 #align differentiable_within_at_dslope_of_ne differentiable_within_at_dslope_of_ne
 
 theorem differentiable_on_dslope_of_nmem (h : a ∉ s) : DifferentiableOn 𝕜 (dslope f a) s ↔ DifferentiableOn 𝕜 f s :=
-  forall_congr' $ fun x => forall_congr' $ fun hx => differentiable_within_at_dslope_of_ne $ ne_of_mem_of_not_mem hx h
+  forall_congr' fun x => forall_congr' fun hx => differentiable_within_at_dslope_of_ne <| ne_of_mem_of_not_mem hx h
 #align differentiable_on_dslope_of_nmem differentiable_on_dslope_of_nmem
 
 theorem differentiable_at_dslope_of_ne (h : b ≠ a) : DifferentiableAt 𝕜 (dslope f a) b ↔ DifferentiableAt 𝕜 f b := by

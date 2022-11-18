@@ -149,7 +149,7 @@ instance categoryFreeMonoidalCategory : Category.{u} (F C) where
 instance : MonoidalCategory (F C) where
   tensorObj X Y := FreeMonoidalCategory.tensor X Y
   tensorHom X₁ Y₁ X₂ Y₂ :=
-    Quotient.map₂ Hom.tensor $ by
+    Quotient.map₂ Hom.tensor <| by
       intro _ _ h _ _ h'
       exact hom_equiv.tensor h h'
   tensor_id' X Y := Quotient.sound tensor_id

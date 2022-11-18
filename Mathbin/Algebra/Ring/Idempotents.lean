@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 -/
 import Mathbin.Order.Basic
-import Mathbin.Algebra.Ring.Basic
 import Mathbin.Algebra.GroupPower.Basic
+import Mathbin.Algebra.Ring.Defs
 import Mathbin.Tactic.NthRewrite.Default
 
 /-!
@@ -123,17 +123,17 @@ theorem coe_compl (p : { p : R // IsIdempotentElem p }) : ↑(pᶜ) = (1 : R) - 
 
 @[simp]
 theorem compl_compl (p : { p : R // IsIdempotentElem p }) : pᶜᶜ = p :=
-  Subtype.ext $ sub_sub_cancel _ _
+  Subtype.ext <| sub_sub_cancel _ _
 #align is_idempotent_elem.compl_compl IsIdempotentElem.compl_compl
 
 @[simp]
 theorem zero_compl : (0 : { p : R // IsIdempotentElem p })ᶜ = 1 :=
-  Subtype.ext $ sub_zero _
+  Subtype.ext <| sub_zero _
 #align is_idempotent_elem.zero_compl IsIdempotentElem.zero_compl
 
 @[simp]
 theorem one_compl : (1 : { p : R // IsIdempotentElem p })ᶜ = 0 :=
-  Subtype.ext $ sub_self _
+  Subtype.ext <| sub_self _
 #align is_idempotent_elem.one_compl IsIdempotentElem.one_compl
 
 end Instances

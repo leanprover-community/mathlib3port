@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 -/
 import Mathbin.Algebra.Order.Ring.Defs
-import Mathbin.Algebra.Order.Group.InjSurj
 import Mathbin.Algebra.Order.Monoid.Cancel.Basic
 import Mathbin.Algebra.Ring.InjSurj
 

@@ -7,6 +7,7 @@ import Mathbin.Logic.Equiv.Option
 import Mathbin.Order.RelIso.Basic
 import Mathbin.Tactic.Monotonicity.Basic
 import Mathbin.Tactic.AssertExists
+import Mathbin.Order.BoundedOrder
 
 /-!
 # Order homomorphisms
@@ -271,13 +272,13 @@ theorem mk_le_mk {f g : α → β} {hf hg} : mk f hf ≤ mk g hg ↔ f ≤ g :=
 
 @[mono]
 theorem apply_mono {f g : α →o β} {x y : α} (h₁ : f ≤ g) (h₂ : x ≤ y) : f x ≤ g y :=
-  (h₁ x).trans $ g.mono h₂
+  (h₁ x).trans <| g.mono h₂
 #align order_hom.apply_mono OrderHom.apply_mono
 
 /-- Curry/uncurry as an order isomorphism between `α × β →o γ` and `α →o β →o γ`. -/
 def curry : (α × β →o γ) ≃o (α →o β →o γ) where
   toFun f := ⟨fun x => ⟨Function.curry f x, fun y₁ y₂ h => f.mono ⟨le_rfl, h⟩⟩, fun x₁ x₂ h y => f.mono ⟨h, le_rfl⟩⟩
-  invFun f := ⟨Function.uncurry fun x => f x, fun x y h => (f.mono h.1 x.2).trans $ (f y.1).mono h.2⟩
+  invFun f := ⟨Function.uncurry fun x => f x, fun x y h => (f.mono h.1 x.2).trans <| (f y.1).mono h.2⟩
   left_inv f := by
     ext ⟨x, y⟩
     rfl
@@ -305,7 +306,7 @@ def comp (g : β →o γ) (f : α →o β) : α →o γ :=
 
 @[mono]
 theorem comp_mono ⦃g₁ g₂ : β →o γ⦄ (hg : g₁ ≤ g₂) ⦃f₁ f₂ : α →o β⦄ (hf : f₁ ≤ f₂) : g₁.comp f₁ ≤ g₂.comp f₂ := fun x =>
-  (hg _).trans (g₂.mono $ hf _)
+  (hg _).trans (g₂.mono <| hf _)
 #align order_hom.comp_mono OrderHom.comp_mono
 
 /-- The composition of two bundled monotone functions, a fully bundled version. -/
@@ -1045,7 +1046,7 @@ variable (f : α → β) (h_mono : StrictMono f) (h_surj : Function.Surjective f
 /-- A strictly monotone function with a right inverse is an order isomorphism. -/
 @[simps (config := { fullyApplied := False })]
 def orderIsoOfRightInverse (g : β → α) (hg : Function.RightInverse g f) : α ≃o β :=
-  { OrderEmbedding.ofStrictMono f h_mono with toFun := f, invFun := g, left_inv := fun x => h_mono.Injective $ hg _,
+  { OrderEmbedding.ofStrictMono f h_mono with toFun := f, invFun := g, left_inv := fun x => h_mono.Injective <| hg _,
     right_inv := hg }
 #align strict_mono.order_iso_of_right_inverse StrictMono.orderIsoOfRightInverse
 
@@ -1156,7 +1157,7 @@ theorem to_dual_top_equiv_symm_bot [LE α] : WithBot.toDualTopEquiv.symm (⊥ : 
 
 theorem coe_to_dual_top_equiv_eq [LE α] :
     (WithBot.toDualTopEquiv : WithBot αᵒᵈ → (WithTop α)ᵒᵈ) = to_dual ∘ WithBot.ofDual :=
-  funext $ fun _ => rfl
+  funext fun _ => rfl
 #align with_bot.coe_to_dual_top_equiv_eq WithBot.coe_to_dual_top_equiv_eq
 
 end WithBot
@@ -1192,7 +1193,7 @@ theorem to_dual_bot_equiv_symm_top [LE α] : WithTop.toDualBotEquiv.symm (⊤ : 
 
 theorem coe_to_dual_bot_equiv_eq [LE α] :
     (WithTop.toDualBotEquiv : WithTop αᵒᵈ → (WithBot α)ᵒᵈ) = to_dual ∘ WithTop.ofDual :=
-  funext $ fun _ => rfl
+  funext fun _ => rfl
 #align with_top.coe_to_dual_bot_equiv_eq WithTop.coe_to_dual_bot_equiv_eq
 
 end WithTop
@@ -1220,7 +1221,7 @@ theorem with_top_congr_symm (e : α ≃o β) : e.withTopCongr.symm = e.symm.with
 @[simp]
 theorem with_top_congr_trans (e₁ : α ≃o β) (e₂ : β ≃o γ) :
     e₁.withTopCongr.trans e₂.withTopCongr = (e₁.trans e₂).withTopCongr :=
-  RelIso.to_equiv_injective $ e₁.toEquiv.option_congr_trans e₂.toEquiv
+  RelIso.to_equiv_injective <| e₁.toEquiv.option_congr_trans e₂.toEquiv
 #align order_iso.with_top_congr_trans OrderIso.with_top_congr_trans
 
 /-- A version of `equiv.option_congr` for `with_bot`. -/
@@ -1242,7 +1243,7 @@ theorem with_bot_congr_symm (e : α ≃o β) : e.withBotCongr.symm = e.symm.with
 @[simp]
 theorem with_bot_congr_trans (e₁ : α ≃o β) (e₂ : β ≃o γ) :
     e₁.withBotCongr.trans e₂.withBotCongr = (e₁.trans e₂).withBotCongr :=
-  RelIso.to_equiv_injective $ e₁.toEquiv.option_congr_trans e₂.toEquiv
+  RelIso.to_equiv_injective <| e₁.toEquiv.option_congr_trans e₂.toEquiv
 #align order_iso.with_bot_congr_trans OrderIso.with_bot_congr_trans
 
 end OrderIso
@@ -1280,5 +1281,5 @@ end BoundedOrder
 
 end LatticeIsos
 
-/- ./././Mathport/Syntax/Translate/Command.lean:702:14: unsupported user command assert_not_exists -/
+/- ./././Mathport/Syntax/Translate/Command.lean:687:14: unsupported user command assert_not_exists -/
 -- Developments relating order homs and sets belong in `order.hom.set` or later.

@@ -63,9 +63,9 @@ since all of the names from the list are taken and `n_2` is the first unused
 variation of `n`.
 -/
 unsafe def get_unused_name_reserved (ns : List Name) (reserved : name_set) : tactic Name :=
-  (first $
-      ns.map $ fun n => do
-        guard (¬reserved n)
+  (first <|
+      ns.map fun n => do
+        guard ¬reserved n
         fail_if_success (resolve_name n)
         pure n) <|>
     do
@@ -97,8 +97,8 @@ order of introductions matters:
 hypotheses `n` and `n_1` (assuming that these names are otherwise unused and not
 reserved).
 -/
-unsafe def intro_lst_fresh_reserved (ns : List (Name ⊕ List Name)) (reserved : name_set) : tactic (List expr) :=
-  ns.mmap $ fun spec =>
+unsafe def intro_lst_fresh_reserved (ns : List (Sum Name (List Name))) (reserved : name_set) : tactic (List expr) :=
+  ns.mmap fun spec =>
     match spec with
     | Sum.inl n => intro n
     | Sum.inr ns => intro_fresh_reserved ns reserved
@@ -129,17 +129,17 @@ pairs are returned in context order. Note that the returned list may contain
 hypotheses which do not appear in `renames` but had to be temporarily reverted
 due to dependencies.
 -/
-unsafe def rename_fresh (renames : name_map (Name ⊕ List Name)) (reserved : name_set) : tactic (List (expr × expr)) :=
-  do
-  let (_, reverted) ← revert_name_set $ name_set.of_list $ renames.keys
+unsafe def rename_fresh (renames : name_map (Sum Name (List Name))) (reserved : name_set) :
+    tactic (List (expr × expr)) := do
+  let (_, reverted) ← revert_name_set <| name_set.of_list <| renames.keys
   let renames :=
-    reverted.map $ fun h =>
+    reverted.map fun h =>
       match renames.find h.local_uniq_name with
       | none => Sum.inl h.local_pp_name
       | some new_names => new_names
-  let reserved := reserved.insert_list $ renames.filterMap Sum.getLeft
+  let reserved := reserved.insert_list <| renames.filterMap Sum.getLeft
   let new_hyps ← intro_lst_fresh_reserved renames reserved
-  pure $ reverted new_hyps
+  pure <| reverted new_hyps
 #align tactic.rename_fresh tactic.rename_fresh
 
 end Tactic

@@ -63,7 +63,7 @@ ordered map, ordered set, data structure
 
 universe u
 
-/- ./././Mathport/Syntax/Translate/Command.lean:330:30: infer kinds are unsupported in Lean 4: nil {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: nil {} -/
 /-- An `ordnode α` is a finite set of values, represented as a tree.
   The operations on this type maintain that the tree is balanced
   and correctly stores subtree sizes at each level. -/
@@ -515,11 +515,12 @@ def glue : Ordnode α → Ordnode α → Ordnode α
      merge {1, 2} {3, 4} = {1, 2, 3, 4}
      merge {3, 4} {1, 2} = precondition violation -/
 def merge (l : Ordnode α) : Ordnode α → Ordnode α :=
-  (Ordnode.recOn l fun r => r) $ fun ls ll lx lr IHll IHlr r =>
-    Ordnode.recOn r (node ls ll lx lr) $ fun rs rl rx rr IHrl IHrr =>
+  (Ordnode.recOn l fun r => r) fun ls ll lx lr IHll IHlr r =>
+    (Ordnode.recOn r (node ls ll lx lr)) fun rs rl rx rr IHrl IHrr =>
       if delta * ls < rs then balanceL IHrl rx rr
       else
-        if delta * rs < ls then balanceR ll lx (IHlr $ node rs rl rx rr) else glue (node ls ll lx lr) (node rs rl rx rr)
+        if delta * rs < ls then balanceR ll lx (IHlr <| node rs rl rx rr)
+        else glue (node ls ll lx lr) (node rs rl rx rr)
 #align ordnode.merge Ordnode.merge
 
 /-- O(log n). Insert an element above all the others, without any comparisons.
@@ -548,8 +549,8 @@ assumption on the relative sizes.
     link {1, 2} 4 {5, 6} = {1, 2, 4, 5, 6}
     link {1, 3} 2 {5} = precondition violation -/
 def link (l : Ordnode α) (x : α) : Ordnode α → Ordnode α :=
-  Ordnode.recOn l (insertMin x) $ fun ls ll lx lr IHll IHlr r =>
-    Ordnode.recOn r (insertMax l x) $ fun rs rl rx rr IHrl IHrr =>
+  (Ordnode.recOn l (insertMin x)) fun ls ll lx lr IHll IHlr r =>
+    (Ordnode.recOn r (insertMax l x)) fun rs rl rx rr IHrl IHrr =>
       if delta * ls < rs then balanceL IHrl rx rr else if delta * rs < ls then balanceR ll lx (IHlr r) else node' l x r
 #align ordnode.link Ordnode.link
 
@@ -670,21 +671,21 @@ instance [DecidableEq α] : DecidableRel (@Equiv α) := fun t₁ t₂ => And.dec
 
      powerset {1, 2, 3} = {∅, {1}, {2}, {3}, {1,2}, {1,3}, {2,3}, {1,2,3}} -/
 def powerset (t : Ordnode α) : Ordnode (Ordnode α) :=
-  insertMin nil $ foldr (fun x ts => glue (insertMin (ι x) (map (insertMin x) ts)) ts) t nil
+  insertMin nil <| foldr (fun x ts => glue (insertMin (ι x) (map (insertMin x) ts)) ts) t nil
 #align ordnode.powerset Ordnode.powerset
 
 /-- O(m*n). The cartesian product of two sets: `(a, b) ∈ s.prod t` iff `a ∈ s` and `b ∈ t`.
 
      prod {1, 2} {2, 3} = {(1, 2), (1, 3), (2, 2), (2, 3)} -/
 protected def prod {β} (t₁ : Ordnode α) (t₂ : Ordnode β) : Ordnode (α × β) :=
-  fold nil (fun s₁ a s₂ => merge s₁ $ merge (map (Prod.mk a) t₂) s₂) t₁
+  fold nil (fun s₁ a s₂ => merge s₁ <| merge (map (Prod.mk a) t₂) s₂) t₁
 #align ordnode.prod Ordnode.prod
 
 /-- O(m+n). Build a set on the disjoint union by combining sets on the factors.
 `inl a ∈ s.copair t` iff `a ∈ s`, and `inr b ∈ s.copair t` iff `b ∈ t`.
 
     copair {1, 2} {2, 3} = {inl 1, inl 2, inr 2, inr 3} -/
-protected def copair {β} (t₁ : Ordnode α) (t₂ : Ordnode β) : Ordnode (α ⊕ β) :=
+protected def copair {β} (t₁ : Ordnode α) (t₂ : Ordnode β) : Ordnode (Sum α β) :=
   merge (map Sum.inl t₁) (map Sum.inr t₂)
 #align ordnode.copair Ordnode.copair
 
@@ -906,7 +907,7 @@ Using a preorder on `ℕ × ℕ` that only compares the first coordinate:
 def mem (x : α) : Ordnode α → Bool
   | nil => false
   | node _ l y r =>
-    match cmpLe x y with
+    match cmpLE x y with
     | Ordering.lt => mem l
     | Ordering.eq => true
     | Ordering.gt => mem r
@@ -925,7 +926,7 @@ Using a preorder on `ℕ × ℕ` that only compares the first coordinate:
 def find (x : α) : Ordnode α → Option α
   | nil => none
   | node _ l y r =>
-    match cmpLe x y with
+    match cmpLE x y with
     | Ordering.lt => find l
     | Ordering.eq => some y
     | Ordering.gt => find r
@@ -952,7 +953,7 @@ Using a preorder on `ℕ × ℕ` that only compares the first coordinate:
 def insertWith (f : α → α) (x : α) : Ordnode α → Ordnode α
   | nil => ι x
   | t@(node sz l y r) =>
-    match cmpLe x y with
+    match cmpLE x y with
     | Ordering.lt => balanceL (insert_with l) y r
     | Ordering.eq => node sz l (f y) r
     | Ordering.gt => balanceR l y (insert_with r)
@@ -972,7 +973,7 @@ Using a preorder on `ℕ × ℕ` that only compares the first coordinate:
 def adjustWith (f : α → α) (x : α) : Ordnode α → Ordnode α
   | nil => nil
   | t@(node sz l y r) =>
-    match cmpLe x y with
+    match cmpLE x y with
     | Ordering.lt => node sz (adjust_with l) y r
     | Ordering.eq => node sz l (f y) r
     | Ordering.gt => node sz l y (adjust_with r)
@@ -988,7 +989,7 @@ Note that the element returned by `f` must be equivalent to `x`.
 def updateWith (f : α → Option α) (x : α) : Ordnode α → Ordnode α
   | nil => nil
   | t@(node sz l y r) =>
-    match cmpLe x y with
+    match cmpLE x y with
     | Ordering.lt => balanceR (update_with l) y r
     | Ordering.eq =>
       match f y with
@@ -1008,7 +1009,7 @@ Note that the element returned by `f` must be equivalent to `x`.
 def alter (f : Option α → Option α) (x : α) : Ordnode α → Ordnode α
   | nil => Option.recOn (f none) nil Ordnode.singleton
   | t@(node sz l y r) =>
-    match cmpLe x y with
+    match cmpLE x y with
     | Ordering.lt => balance (alter l) y r
     | Ordering.eq =>
       match f (some y) with
@@ -1030,7 +1031,7 @@ Using a preorder on `ℕ × ℕ` that only compares the first coordinate:
 protected def insert (x : α) : Ordnode α → Ordnode α
   | nil => ι x
   | node sz l y r =>
-    match cmpLe x y with
+    match cmpLE x y with
     | Ordering.lt => balanceL (insert l) y r
     | Ordering.eq => node sz l x r
     | Ordering.gt => balanceR l y (insert r)
@@ -1052,7 +1053,7 @@ Using a preorder on `ℕ × ℕ` that only compares the first coordinate:
 def insert' (x : α) : Ordnode α → Ordnode α
   | nil => ι x
   | t@(node sz l y r) =>
-    match cmpLe x y with
+    match cmpLE x y with
     | Ordering.lt => balanceL (insert' l) y r
     | Ordering.eq => t
     | Ordering.gt => balanceR l y (insert' r)
@@ -1072,7 +1073,7 @@ Using a preorder on `ℕ × ℕ` that only compares the first coordinate:
 def split (x : α) : Ordnode α → Ordnode α × Ordnode α
   | nil => (nil, nil)
   | node sz l y r =>
-    match cmpLe x y with
+    match cmpLE x y with
     | Ordering.lt =>
       let (lt, GT.gt) := split l
       (lt, link GT.gt y r)
@@ -1096,7 +1097,7 @@ Using a preorder on `ℕ × ℕ` that only compares the first coordinate:
 def split3 (x : α) : Ordnode α → Ordnode α × Option α × Ordnode α
   | nil => (nil, none, nil)
   | node sz l y r =>
-    match cmpLe x y with
+    match cmpLE x y with
     | Ordering.lt =>
       let (lt, f, GT.gt) := split3 l
       (lt, f, link GT.gt y r)
@@ -1119,7 +1120,7 @@ Using a preorder on `ℕ × ℕ` that only compares the first coordinate:
 def erase (x : α) : Ordnode α → Ordnode α
   | nil => nil
   | t@(node sz l y r) =>
-    match cmpLe x y with
+    match cmpLE x y with
     | Ordering.lt => balanceR (erase l) y r
     | Ordering.eq => glue l r
     | Ordering.gt => balanceL l y (erase r)
@@ -1161,7 +1162,7 @@ def findGt (x : α) : Ordnode α → Option α
 def findLeAux (x : α) : Ordnode α → α → α
   | nil, best => best
   | node _ l y r, best =>
-    match cmpLe x y with
+    match cmpLE x y with
     | Ordering.lt => find_le_aux l best
     | Ordering.eq => y
     | Ordering.gt => find_le_aux r y
@@ -1175,7 +1176,7 @@ def findLeAux (x : α) : Ordnode α → α → α
 def findLe (x : α) : Ordnode α → Option α
   | nil => none
   | node _ l y r =>
-    match cmpLe x y with
+    match cmpLE x y with
     | Ordering.lt => find_le l
     | Ordering.eq => some y
     | Ordering.gt => some (findLeAux x r y)
@@ -1185,7 +1186,7 @@ def findLe (x : α) : Ordnode α → Option α
 def findGeAux (x : α) : Ordnode α → α → α
   | nil, best => best
   | node _ l y r, best =>
-    match cmpLe x y with
+    match cmpLE x y with
     | Ordering.lt => find_ge_aux l y
     | Ordering.eq => y
     | Ordering.gt => find_ge_aux r best
@@ -1199,7 +1200,7 @@ def findGeAux (x : α) : Ordnode α → α → α
 def findGe (x : α) : Ordnode α → Option α
   | nil => none
   | node _ l y r =>
-    match cmpLe x y with
+    match cmpLE x y with
     | Ordering.lt => some (findGeAux x l y)
     | Ordering.eq => some y
     | Ordering.gt => find_ge r
@@ -1209,7 +1210,7 @@ def findGe (x : α) : Ordnode α → Option α
 def findIndexAux (x : α) : Ordnode α → ℕ → Option ℕ
   | nil, i => none
   | node _ l y r, i =>
-    match cmpLe x y with
+    match cmpLE x y with
     | Ordering.lt => find_index_aux l i
     | Ordering.eq => some (i + size l)
     | Ordering.gt => find_index_aux r (i + size l + 1)
@@ -1282,7 +1283,7 @@ def union : Ordnode α → Ordnode α → Ordnode α
 def diff : Ordnode α → Ordnode α → Ordnode α
   | t₁, nil => t₁
   | t₁, t₂@(node _ l₂ x r₂) =>
-    cond t₁.Empty t₂ $
+    cond t₁.Empty t₂ <|
       let (l₁, r₁) := split x t₁
       let l₁₂ := diff l₁ l₂
       let r₁₂ := diff r₁ r₂
@@ -1297,7 +1298,7 @@ def diff : Ordnode α → Ordnode α → Ordnode α
 def inter : Ordnode α → Ordnode α → Ordnode α
   | nil, t₂ => nil
   | t₁@(node _ l₁ x r₁), t₂ =>
-    cond t₂.Empty t₁ $
+    cond t₂.Empty t₁ <|
       let (l₂, y, r₂) := split3 x t₂
       let l₁₂ := inter l₁ l₂
       let r₁₂ := inter r₁ r₂

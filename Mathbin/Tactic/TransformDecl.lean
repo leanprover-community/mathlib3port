@@ -15,7 +15,7 @@ unsafe def copy_attribute' (attr_name : Name) (src : Name) (tgt : Name) (p : Opt
   get_decl tgt <|> throwError "unknown declaration {← tgt}"
   -- if the source doesn't have the attribute we do not error and simply return
         whenM
-        (succeeds (has_attribute attr_name src)) $
+        (succeeds (has_attribute attr_name src)) <|
       do
       let (p', prio) ← has_attribute attr_name src
       let p := p p'
@@ -36,7 +36,7 @@ open Expr
 
 /-- Auxilliary function for `additive_test`. The bool argument *only* matters when applied
 to exactly a constant. -/
-unsafe def additive_test_aux (f : Name → Option Name) (ignore : name_map $ List ℕ) : Bool → expr → Bool
+unsafe def additive_test_aux (f : Name → Option Name) (ignore : name_map <| List ℕ) : Bool → expr → Bool
   | b, var n => true
   | b, sort l => true
   | b, const n ls => b || (f n).isSome
@@ -64,7 +64,8 @@ e.g. `ℕ` or `ℝ × α`.
 We ignore all arguments specified in the `name_map` `ignore`.
 If `replace_all` is `tt` the test always return `tt`.
 -/
-unsafe def additive_test (f : Name → Option Name) (replace_all : Bool) (ignore : name_map $ List ℕ) (e : expr) : Bool :=
+unsafe def additive_test (f : Name → Option Name) (replace_all : Bool) (ignore : name_map <| List ℕ) (e : expr) :
+    Bool :=
   if replace_all then true else additive_test_aux f ignore false e
 #align tactic.additive_test tactic.additive_test
 
@@ -74,7 +75,7 @@ using the dictionary `f`.
 `pre` is the declaration that got the `@[to_additive]` attribute and `tgt_pre` is the target of this
 declaration. -/
 unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replace_all trace : Bool)
-    (relevant : name_map ℕ) (ignore reorder : name_map $ List ℕ) (pre tgt_pre : Name) : Name → command := fun src => do
+    (relevant : name_map ℕ) (ignore reorder : name_map <| List ℕ) (pre tgt_pre : Name) : Name → Tactic := fun src => do
   let-- if this declaration is not `pre` or an internal declaration, we do nothing.
     tt
     ← return (src = pre ∨ src.is_internal : Bool) |
@@ -91,7 +92,7 @@ unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replac
   tgt := src.mapPrefix fun n => if n = pre then some tgt_pre else none
   let-- we skip if we already transformed this declaration before
     ff
-    ← return $ env.contains tgt |
+    ← return <| env.contains tgt |
     skip
   let decl ← get_decl src
   (-- we first transform all the declarations of the form `pre._proof_i`
@@ -105,7 +106,7 @@ unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replac
     ←-- o ← get_options, set_options $ o.set_bool `pp.all tt, -- print with pp.all (for debugging)
         pp
         decl
-  when trace $
+  when trace <|
       ← do
         dbg_trace "[to_additive] > generating
           {← pp_decl}"
@@ -116,13 +117,13 @@ unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replac
             {pp_decl}
             
             Nested error message:
-            ").toString $
+            ").toString <|
       do
       if env src then add_protected_decl decl else add_decl decl
       -- we test that the declaration value type-checks, so that we get the decorated error message
             -- without this line, the type-checking might fail outside the `decorate_error`.
             decorate_error
-            "proof doesn't type-check. " $
+            "proof doesn't type-check. " <|
           type_check decl
 #align tactic.transform_decl_with_prefix_fun_aux tactic.transform_decl_with_prefix_fun_aux
 
@@ -131,7 +132,7 @@ replacing fragments of the names of identifiers in the type and the body using t
 This is used to implement `@[to_additive]`.
 -/
 unsafe def transform_decl_with_prefix_fun (f : Name → Option Name) (replace_all trace : Bool) (relevant : name_map ℕ)
-    (ignore reorder : name_map $ List ℕ) (src tgt : Name) (attrs : List Name) : command := do
+    (ignore reorder : name_map <| List ℕ) (src tgt : Name) (attrs : List Name) : Tactic := do
   -- In order to ensure that attributes are copied correctly we must transform declarations and
       -- attributes in the right order:
       -- first generate the transformed main declaration
@@ -139,7 +140,7 @@ unsafe def transform_decl_with_prefix_fun (f : Name → Option Name) (replace_al
       f replace_all trace relevant ignore reorder src tgt src
   let ls ← get_eqn_lemmas_for true src
   -- now transform all of the equational lemmas
-      ls $
+      ls <|
       transform_decl_with_prefix_fun_aux f replace_all trace relevant ignore reorder src tgt
   -- copy attributes for the equational lemmas so that they know if they are refl lemmas
       ls
@@ -162,7 +163,7 @@ the body using the dictionary `dict`.
 This is used to implement `@[to_additive]`.
 -/
 unsafe def transform_decl_with_prefix_dict (dict : name_map Name) (replace_all trace : Bool) (relevant : name_map ℕ)
-    (ignore reorder : name_map $ List ℕ) (src tgt : Name) (attrs : List Name) : command :=
+    (ignore reorder : name_map <| List ℕ) (src tgt : Name) (attrs : List Name) : Tactic :=
   transform_decl_with_prefix_fun dict.find replace_all trace relevant ignore reorder src tgt attrs
 #align tactic.transform_decl_with_prefix_dict tactic.transform_decl_with_prefix_dict
 

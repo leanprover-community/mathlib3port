@@ -66,7 +66,7 @@ theorem exists_chain_of_prime_pow {p : Associates M} {n : ℕ} (hn : n ≠ 0) (h
 theorem element_of_chain_not_is_unit_of_index_ne_zero {n : ℕ} {i : Fin (n + 1)} (i_pos : i ≠ 0)
     {c : Fin (n + 1) → Associates M} (h₁ : StrictMono c) : ¬IsUnit (c i) :=
   DvdNotUnit.not_unit
-    (Associates.dvd_not_unit_iff_lt.2 (h₁ $ show (0 : Fin (n + 1)) < i from i.pos_iff_ne_zero.mpr i_pos))
+    (Associates.dvd_not_unit_iff_lt.2 (h₁ <| show (0 : Fin (n + 1)) < i from i.pos_iff_ne_zero.mpr i_pos))
 #align
   divisor_chain.element_of_chain_not_is_unit_of_index_ne_zero DivisorChain.element_of_chain_not_is_unit_of_index_ne_zero
 
@@ -101,7 +101,7 @@ theorem eq_second_of_chain_of_prime_dvd {p q r : Associates M} {n : ℕ} (hn : n
   · contradiction
     
   obtain ⟨i, rfl⟩ := h₂.1 (dvd_trans hp' hr)
-  refine' congr_arg c (eq_of_ge_of_not_gt _ $ fun hi => _)
+  refine' congr_arg c ((eq_of_ge_of_not_gt _) fun hi => _)
   · rw [Fin.le_iff_coe_le_coe, Fin.coe_one, Nat.succ_le_iff, ← Fin.coe_zero, ← Fin.lt_iff_coe_lt_coe,
       Fin.pos_iff_ne_zero]
     rintro rfl
@@ -128,7 +128,7 @@ theorem card_subset_divisors_le_length_of_chain {q : Associates M} {n : ℕ} {c 
     obtain ⟨i, hi⟩ := h₂.1 hr
     exact Finset.mem_image.2 ⟨i, Finset.mem_univ _, hi.symm⟩
   rw [← Finset.card_fin (n + 1)]
-  exact (Finset.card_le_of_subset $ fun x hx => mem_image x $ hm x hx).trans Finset.card_image_le
+  exact (Finset.card_le_of_subset fun x hx => mem_image x <| hm x hx).trans Finset.card_image_le
 #align divisor_chain.card_subset_divisors_le_length_of_chain DivisorChain.card_subset_divisors_le_length_of_chain
 
 variable [UniqueFactorizationMonoid M]
@@ -234,7 +234,7 @@ open DivisorChain
 theorem pow_image_of_prime_by_factor_order_iso_dvd [DecidableEq (Associates M)] {m p : Associates M} {n : Associates N}
     (hn : n ≠ 0) (hp : p ∈ normalizedFactors m) (d : Set.iic m ≃o Set.iic n) {s : ℕ} (hs' : p ^ s ≤ m) :
     (d ⟨p, dvd_of_mem_normalized_factors hp⟩ : Associates N) ^ s ≤ n := by
-  by_cases hs:s = 0
+  by_cases hs : s = 0
   · simp [hs]
     
   suffices (d ⟨p, dvd_of_mem_normalized_factors hp⟩ : Associates N) ^ s = ↑(d ⟨p ^ s, hs'⟩) by
@@ -268,7 +268,7 @@ theorem mapPrimeOfFactorOrderIso [DecidableEq (Associates M)] {m p : Associates 
     (hp : p ∈ normalizedFactors m) (d : Set.iic m ≃o Set.iic n) :
     Prime (d ⟨p, dvd_of_mem_normalized_factors hp⟩ : Associates N) := by
   rw [← irreducible_iff_prime]
-  refine' (Associates.is_atom_iff $ ne_zero_of_dvd_ne_zero hn (d ⟨p, _⟩).Prop).mp ⟨_, fun b hb => _⟩
+  refine' (Associates.is_atom_iff <| ne_zero_of_dvd_ne_zero hn (d ⟨p, _⟩).Prop).mp ⟨_, fun b hb => _⟩
   · rw [Ne.def, ← Associates.is_unit_iff_eq_bot, Associates.is_unit_iff_eq_one, coe_factor_order_iso_map_eq_one_iff _ d]
     rintro rfl
     exact (prime_of_normalized_factor 1 hp).not_unit is_unit_one
@@ -284,9 +284,9 @@ theorem mapPrimeOfFactorOrderIso [DecidableEq (Associates M)] {m p : Associates 
     obtain ⟨a, ha⟩ := x
     rw [Subtype.mk_eq_bot_iff]
     · exact
-        ((Associates.is_atom_iff $ Prime.ne_zero $ prime_of_normalized_factor p hp).mpr $
+        ((Associates.is_atom_iff <| Prime.ne_zero <| prime_of_normalized_factor p hp).mpr <|
               irreducible_of_normalized_factor p hp).right
-          a (subtype.mk_lt_mk.mp $ d.lt_iff_lt.mp hb)
+          a (subtype.mk_lt_mk.mp <| d.lt_iff_lt.mp hb)
       
     exact bot_le
     
@@ -308,13 +308,13 @@ variable [DecidableRel ((· ∣ ·) : M → M → Prop)] [DecidableRel ((· ∣ 
 theorem multiplicity_prime_le_multiplicity_image_by_factor_order_iso [DecidableEq (Associates M)] {m p : Associates M}
     {n : Associates N} (hp : p ∈ normalizedFactors m) (d : Set.iic m ≃o Set.iic n) :
     multiplicity p m ≤ multiplicity (↑(d ⟨p, dvd_of_mem_normalized_factors hp⟩)) n := by
-  by_cases hn:n = 0
+  by_cases hn : n = 0
   · simp [hn]
     
-  by_cases hm:m = 0
+  by_cases hm : m = 0
   · simpa [hm] using hp
     
-  rw [← PartEnat.coe_get (finite_iff_dom.1 $ finite_prime_left (prime_of_normalized_factor p hp) hm), ←
+  rw [← PartEnat.coe_get (finite_iff_dom.1 <| finite_prime_left (prime_of_normalized_factor p hp) hm), ←
     pow_dvd_iff_le_multiplicity]
   exact pow_image_of_prime_by_factor_order_iso_dvd hn hp d (pow_multiplicity_dvd _)
 #align

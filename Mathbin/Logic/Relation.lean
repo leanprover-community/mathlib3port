@@ -7,6 +7,10 @@ import Mathbin.Tactic.Basic
 import Mathbin.Logic.Relator
 
 /-!
+THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+https://github.com/leanprover-community/mathlib4/pull/565
+Any changes to this file require a corresponding PR to mathlib4.
+
 # Relation closures
 
 This file defines the reflexive, transitive, and reflexive transitive closures of relations.
@@ -55,7 +59,7 @@ theorem IsRefl.reflexive [IsRefl α r] : Reflexive r := fun x => IsRefl.refl x
 /-- To show a reflexive relation `r : α → α → Prop` holds over `x y : α`,
 it suffices to show it holds when `x ≠ y`. -/
 theorem Reflexive.rel_of_ne_imp (h : Reflexive r) {x y : α} (hr : x ≠ y → r x y) : r x y := by
-  by_cases hxy:x = y
+  by_cases hxy : x = y
   · exact hxy ▸ h x
     
   · exact hr hxy
@@ -87,7 +91,7 @@ protected theorem Symmetric.iff (H : Symmetric r) (x y : α) : r x y ↔ r y x :
 
 #print Symmetric.flip_eq /-
 theorem Symmetric.flip_eq (h : Symmetric r) : flip r = r :=
-  funext₂ $ fun _ _ => propext $ h.Iff _ _
+  funext₂ fun _ _ => propext <| h.Iff _ _
 #align symmetric.flip_eq Symmetric.flip_eq
 -/
 
@@ -164,7 +168,7 @@ but is expected to have type
   forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> β -> Prop}, Eq.{(max (succ u_1) (succ u_2))} (α -> β -> Prop) (Relation.Comp.{u_1 u_2 u_2} α β β r (fun (x._@.Mathlib.Logic.Relation._hyg.1341 : β) (x._@.Mathlib.Logic.Relation._hyg.1343 : β) => Eq.{succ u_2} β x._@.Mathlib.Logic.Relation._hyg.1341 x._@.Mathlib.Logic.Relation._hyg.1343)) r
 Case conversion may be inaccurate. Consider using '#align relation.comp_eq Relation.comp_eqₓ'. -/
 theorem comp_eq : r ∘r (· = ·) = r :=
-  funext $ fun a => funext $ fun b => propext $ Iff.intro (fun ⟨c, h, Eq⟩ => Eq ▸ h) fun h => ⟨b, h, rfl⟩
+  funext fun a => funext fun b => propext <| Iff.intro (fun ⟨c, h, Eq⟩ => Eq ▸ h) fun h => ⟨b, h, rfl⟩
 #align relation.comp_eq Relation.comp_eq
 
 /- warning: relation.eq_comp -> Relation.eq_comp is a dubious translation:
@@ -174,7 +178,7 @@ but is expected to have type
   forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> β -> Prop}, Eq.{(max (succ u_1) (succ u_2))} (α -> β -> Prop) (Relation.Comp.{u_1 u_1 u_2} α α β (fun (x._@.Mathlib.Logic.Relation._hyg.1441 : α) (x._@.Mathlib.Logic.Relation._hyg.1443 : α) => Eq.{succ u_1} α x._@.Mathlib.Logic.Relation._hyg.1441 x._@.Mathlib.Logic.Relation._hyg.1443) r) r
 Case conversion may be inaccurate. Consider using '#align relation.eq_comp Relation.eq_compₓ'. -/
 theorem eq_comp : (· = ·) ∘r r = r :=
-  funext $ fun a => funext $ fun b => propext $ Iff.intro (fun ⟨c, Eq, h⟩ => Eq.symm ▸ h) fun h => ⟨a, rfl, h⟩
+  funext fun a => funext fun b => propext <| Iff.intro (fun ⟨c, Eq, h⟩ => Eq.symm ▸ h) fun h => ⟨a, rfl, h⟩
 #align relation.eq_comp Relation.eq_comp
 
 #print Relation.iff_comp /-
@@ -254,7 +258,6 @@ theorem _root_.acc.of_downward_closed (dc : ∀ {a b}, rβ b (f a) → ∃ c, f 
 
 end Fibration
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 #print Relation.Map /-
 /-- The map of a relation `r` through a pair of functions pushes the
 relation to the codomains of the functions.  The resulting relation is
@@ -262,7 +265,7 @@ defined by having pairs of terms related if they have preimages
 related by `r`.
 -/
 protected def Map (r : α → β → Prop) (f : α → γ) (g : β → δ) : γ → δ → Prop := fun c d =>
-  ∃ (a) (b), r a b ∧ f a = c ∧ g b = d
+  ∃ a b, r a b ∧ f a = c ∧ g b = d
 #align relation.map Relation.Map
 -/
 
@@ -558,9 +561,9 @@ theorem _root_.well_founded.trans_gen (h : WellFounded r) : WellFounded (TransGe
 section TransGen
 
 theorem trans_gen_eq_self (trans : Transitive r) : TransGen r = r :=
-  funext $ fun a =>
-    funext $ fun b =>
-      propext $
+  funext fun a =>
+    funext fun b =>
+      propext <|
         ⟨fun h => by
           induction h
           case single c hc => exact hc
@@ -672,9 +675,9 @@ theorem ReflTransGen.mono {p : α → α → Prop} : (∀ a b, r a b → p a b) 
 
 #print Relation.reflTransGen_eq_self /-
 theorem reflTransGen_eq_self (refl : Reflexive r) (trans : Transitive r) : ReflTransGen r = r :=
-  funext $ fun a =>
-    funext $ fun b =>
-      propext $
+  funext fun a =>
+    funext fun b =>
+      propext <|
         ⟨fun h => by
           induction' h with b c h₁ h₂ IH
           · apply refl
@@ -817,7 +820,7 @@ theorem equivalence_join_refl_trans_gen (h : ∀ a b c, r a b → r a c → ∃ 
 
 #print Relation.join_of_equivalence /-
 theorem join_of_equivalence {r' : α → α → Prop} (hr : Equivalence r) (h : ∀ a b, r' a b → r a b) : Join r' a b → r a b
-  | ⟨c, hac, hbc⟩ => hr.2.2 (h _ _ hac) (hr.2.1 $ h _ _ hbc)
+  | ⟨c, hac, hbc⟩ => hr.2.2 (h _ _ hac) (hr.2.1 <| h _ _ hbc)
 #align relation.join_of_equivalence Relation.join_of_equivalence
 -/
 
@@ -863,7 +866,7 @@ theorem Equivalence.eqvGen_iff (h : Equivalence r) : EqvGen r a b ↔ r a b :=
 
 #print Equivalence.eqvGen_eq /-
 theorem Equivalence.eqvGen_eq (h : Equivalence r) : EqvGen r = r :=
-  funext $ fun _ => funext $ fun _ => propext $ h.eqv_gen_iff
+  funext fun _ => funext fun _ => propext <| h.eqv_gen_iff
 #align equivalence.eqv_gen_eq Equivalence.eqvGen_eq
 -/
 

@@ -59,7 +59,7 @@ def lsingle (i) : M i →ₗ[R] Π₀ i, M i :=
 
 /-- Two `R`-linear maps from `Π₀ i, M i` which agree on each `single i x` agree everywhere. -/
 theorem lhom_ext ⦃φ ψ : (Π₀ i, M i) →ₗ[R] N⦄ (h : ∀ i x, φ (single i x) = ψ (single i x)) : φ = ψ :=
-  LinearMap.to_add_monoid_hom_injective $ add_hom_ext h
+  LinearMap.to_add_monoid_hom_injective <| add_hom_ext h
 #align dfinsupp.lhom_ext Dfinsupp.lhom_ext
 
 /-- Two `R`-linear maps from `Π₀ i, M i` which agree on each `single i x` agree everywhere.
@@ -68,7 +68,7 @@ See note [partially-applied ext lemmas].
 After apply this lemma, if `M = R` then it suffices to verify `φ (single a 1) = ψ (single a 1)`. -/
 @[ext.1]
 theorem lhom_ext' ⦃φ ψ : (Π₀ i, M i) →ₗ[R] N⦄ (h : ∀ i, φ.comp (lsingle i) = ψ.comp (lsingle i)) : φ = ψ :=
-  lhom_ext $ fun i => LinearMap.congr_fun (h i)
+  lhom_ext fun i => LinearMap.congr_fun (h i)
 #align dfinsupp.lhom_ext' Dfinsupp.lhom_ext'
 
 omit dec_ι
@@ -197,7 +197,7 @@ theorem mapRange.linear_map_id : (mapRange.linearMap fun i => (LinearMap.id : β
 
 theorem mapRange.linear_map_comp (f : ∀ i, β₁ i →ₗ[R] β₂ i) (f₂ : ∀ i, β i →ₗ[R] β₁ i) :
     (mapRange.linearMap fun i => (f i).comp (f₂ i)) = (mapRange.linearMap f).comp (mapRange.linearMap f₂) :=
-  LinearMap.ext $ map_range_comp (fun i x => f i x) (fun i x => f₂ i x) _ _ _
+  LinearMap.ext <| map_range_comp (fun i x => f i x) (fun i x => f₂ i x) _ _ _
 #align dfinsupp.map_range.linear_map_comp Dfinsupp.mapRange.linear_map_comp
 
 include dec_ι
@@ -221,13 +221,13 @@ def mapRange.linearEquiv (e : ∀ i, β₁ i ≃ₗ[R] β₂ i) : (Π₀ i, β�
 
 @[simp]
 theorem mapRange.linear_equiv_refl :
-    (map_range.linear_equiv $ fun i => LinearEquiv.refl R (β₁ i)) = LinearEquiv.refl _ _ :=
+    (map_range.linear_equiv fun i => LinearEquiv.refl R (β₁ i)) = LinearEquiv.refl _ _ :=
   LinearEquiv.ext map_range_id
 #align dfinsupp.map_range.linear_equiv_refl Dfinsupp.mapRange.linear_equiv_refl
 
 theorem mapRange.linear_equiv_trans (f : ∀ i, β i ≃ₗ[R] β₁ i) (f₂ : ∀ i, β₁ i ≃ₗ[R] β₂ i) :
     (mapRange.linearEquiv fun i => (f i).trans (f₂ i)) = (mapRange.linearEquiv f).trans (mapRange.linearEquiv f₂) :=
-  LinearEquiv.ext $ map_range_comp (fun i x => f₂ i x) (fun i x => f i x) _ _ _
+  LinearEquiv.ext <| map_range_comp (fun i x => f₂ i x) (fun i x => f i x) _ _ _
 #align dfinsupp.map_range.linear_equiv_trans Dfinsupp.mapRange.linear_equiv_trans
 
 @[simp]
@@ -263,7 +263,7 @@ section Basis
 /-- The direct sum of free modules is free.
 
 Note that while this is stated for `dfinsupp` not `direct_sum`, the types are defeq. -/
-noncomputable def basis {η : ι → Type _} (b : ∀ i, Basis (η i) R (M i)) : Basis (Σ i, η i) R (Π₀ i, M i) :=
+noncomputable def basis {η : ι → Type _} (b : ∀ i, Basis (η i) R (M i)) : Basis (Σi, η i) R (Π₀ i, M i) :=
   Basis.of_repr ((mapRange.linearEquiv fun i => (b i).repr).trans (sigmaFinsuppLequivDfinsupp R).symm)
 #align dfinsupp.basis Dfinsupp.basis
 
@@ -319,7 +319,7 @@ theorem bsupr_eq_range_dfinsupp_lsum (p : ι → Prop) [DecidablePred p] (S : ι
   · rintro x ⟨v, rfl⟩
     refine' dfinsupp_sum_add_hom_mem _ _ _ fun i hi => _
     refine' mem_supr_of_mem i _
-    by_cases hp:p i
+    by_cases hp : p i
     · simp [hp]
       
     · simp [hp]
@@ -353,7 +353,7 @@ theorem mem_supr_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N
     (a ∈ ⨆ i ∈ s, p i) ↔ ∃ μ : ∀ i, p i, (∑ i in s, (μ i : N)) = a := by classical
   rw [Submodule.mem_supr_iff_exists_dfinsupp']
   constructor <;> rintro ⟨μ, hμ⟩
-  · use fun i => ⟨μ i, (supr_const_le : _ ≤ p i) (coe_mem $ μ i)⟩
+  · use fun i => ⟨μ i, (supr_const_le : _ ≤ p i) (coe_mem <| μ i)⟩
     rw [← hμ]
     symm
     apply Finset.sum_subset
@@ -384,7 +384,7 @@ theorem mem_supr_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N
       
     simp only [Dfinsupp.sum]
     rw [Finset.sum_subset support_mk_subset, ← hμ]
-    exact Finset.sum_congr rfl fun x hx => congr_arg coe $ mk_of_mem hx
+    exact Finset.sum_congr rfl fun x hx => congr_arg coe <| mk_of_mem hx
     · intro x _ hx
       rw [mem_support_iff, not_ne_iff] at hx
       rw [hx]
@@ -543,7 +543,7 @@ theorem Independent.linear_independent [NoZeroSmulDivisors R N] (p : ι → Subm
 
 theorem independent_iff_linear_independent_of_ne_zero [NoZeroSmulDivisors R N] {v : ι → N} (h_ne_zero : ∀ i, v i ≠ 0) :
     (Independent fun i => R ∙ v i) ↔ LinearIndependent R v :=
-  ⟨fun hv => hv.LinearIndependent _ (fun i => Submodule.mem_span_singleton_self $ v i) h_ne_zero, fun hv =>
+  ⟨fun hv => hv.LinearIndependent _ (fun i => Submodule.mem_span_singleton_self <| v i) h_ne_zero, fun hv =>
     hv.independentSpanSingleton⟩
 #align
   complete_lattice.independent_iff_linear_independent_of_ne_zero CompleteLattice.independent_iff_linear_independent_of_ne_zero

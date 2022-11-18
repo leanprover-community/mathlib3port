@@ -65,7 +65,7 @@ instance decidableMemCenter [DecidableEq M] [Fintype M] : DecidablePred (· ∈ 
 
 /-- The center of a monoid is commutative. -/
 instance : CommMonoid (center M) :=
-  { (center M).toMonoid with mul_comm := fun a b => Subtype.ext $ b.Prop _ }
+  { (center M).toMonoid with mul_comm := fun a b => Subtype.ext <| b.Prop _ }
 
 /-- The center of a monoid acts commutatively on that monoid. -/
 instance center.smul_comm_class_left :

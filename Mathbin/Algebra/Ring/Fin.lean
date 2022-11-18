@@ -3,9 +3,9 @@ Copyright (c) 2022 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.Algebra.Ring.Pi
-import Mathbin.Algebra.Ring.Prod
 import Mathbin.Logic.Equiv.Fin
+import Mathbin.Algebra.Ring.Equiv
+import Mathbin.Algebra.Group.Prod
 
 /-!
 # Rings and `fin`

@@ -5,7 +5,6 @@ Authors: Bhavik Mehta
 -/
 import Mathbin.CategoryTheory.Limits.Shapes.Terminal
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
-import Mathbin.CategoryTheory.EpiMono
 
 /-!
 # Strict initial objects

@@ -3,11 +3,9 @@ Copyright (c) 2020 Alexander Bentkamp. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 -/
-import Mathbin.LinearAlgebra.Charpoly.Basic
-import Mathbin.LinearAlgebra.Finsupp
-import Mathbin.LinearAlgebra.Matrix.ToLin
 import Mathbin.Algebra.Algebra.Spectrum
 import Mathbin.Order.Hom.Basic
+import Mathbin.LinearAlgebra.FreeModule.Finite.Basic
 
 /-!
 # Eigenvectors and eigenvalues
@@ -329,7 +327,7 @@ theorem eigenspacesIndependent (f : EndCat K V) : CompleteLattice.Independent f.
     -- Thus, all coefficients in `l` are `0`.
     show l = 0
     · ext μ
-      by_cases h_cases:μ = μ₀
+      by_cases h_cases : μ = μ₀
       · rwa [h_cases, SetLike.coe_eq_coe, Dfinsupp.coe_zero, Pi.zero_apply]
         
       exact congr_arg (coe : _ → V) (h_lμ_eq_0 μ h_cases)

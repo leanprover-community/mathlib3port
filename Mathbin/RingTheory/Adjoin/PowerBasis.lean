@@ -73,8 +73,8 @@ for a version over a more general base ring. -/
 @[simps]
 noncomputable def PowerBasis.ofGenMemAdjoin {x : S} (B : PowerBasis K S) (hint : IsIntegral K x)
     (hx : B.gen ∈ adjoin K ({x} : Set S)) : PowerBasis K S :=
-  (Algebra.adjoin.powerBasis hint).map $
-    (Subalgebra.equivOfEq _ _ $ PowerBasis.adjoin_eq_top_of_gen_mem_adjoin hx).trans Subalgebra.topEquiv
+  (Algebra.adjoin.powerBasis hint).map <|
+    (Subalgebra.equivOfEq _ _ <| PowerBasis.adjoin_eq_top_of_gen_mem_adjoin hx).trans Subalgebra.topEquiv
 #align power_basis.of_gen_mem_adjoin PowerBasis.ofGenMemAdjoin
 
 section IsIntegral
@@ -104,7 +104,7 @@ theorem reprGenPowIsIntegral [IsDomain S] (hmin : minpoly S B.gen = (minpoly R B
   have : B.gen ^ n = aeval B.gen Q := by
     rw [← @aeval_X_pow R _ _ _ _ B.gen, ← mod_by_monic_add_div (X ^ n) (minpoly.monic hB)]
     simp
-  by_cases hQ:Q = 0
+  by_cases hQ : Q = 0
   · simp [this, hQ, isIntegralZero]
     
   have hlt : Q.nat_degree < B.dim := by
@@ -119,7 +119,7 @@ theorem reprGenPowIsIntegral [IsDomain S] (hmin : minpoly S B.gen = (minpoly R B
   rw [← Fin.coe_mk hj, ← B.basis_eq_pow, Algebra.smul_def, IsScalarTower.algebra_map_apply R S A, ← Algebra.smul_def,
     LinearEquiv.map_smul]
   simp only [algebra_map_smul, Finsupp.coe_smul, Pi.smul_apply, B.basis.repr_self_apply]
-  by_cases hij:(⟨j, hj⟩ : Fin _) = i
+  by_cases hij : (⟨j, hj⟩ : Fin _) = i
   · simp only [hij, eq_self_iff_true, if_true]
     rw [Algebra.smul_def, mul_one]
     exact isIntegralAlgebraMap

@@ -5,7 +5,6 @@ Authors: Moritz Doll
 -/
 import Mathbin.Analysis.Calculus.IteratedDeriv
 import Mathbin.Analysis.Calculus.MeanValue
-import Mathbin.MeasureTheory.Integral.IntervalIntegral
 import Mathbin.Data.Polynomial.Basic
 import Mathbin.Data.Polynomial.Module
 
@@ -240,7 +239,7 @@ theorem taylor_mean_remainder {f : ℝ → ℝ} {g g' : ℝ → ℝ} {x x₀ : �
     (hf : ContDiffOn ℝ n f (icc x₀ x)) (hf' : DifferentiableOn ℝ (iteratedDerivWithin n f (icc x₀ x)) (ioo x₀ x))
     (gcont : ContinuousOn g (icc x₀ x)) (gdiff : ∀ x_1 : ℝ, x_1 ∈ ioo x₀ x → HasDerivAt g (g' x_1) x_1)
     (g'_ne : ∀ x_1 : ℝ, x_1 ∈ ioo x₀ x → g' x_1 ≠ 0) :
-    ∃ (x' : ℝ) (hx' : x' ∈ ioo x₀ x),
+    ∃ (x' : ℝ)(hx' : x' ∈ ioo x₀ x),
       f x - taylorWithinEval f n (icc x₀ x) x₀ x =
         ((x - x') ^ n / n ! * (g x - g x₀) / g' x') • iteratedDerivWithin (n + 1) f (icc x₀ x) x' :=
   by
@@ -268,7 +267,7 @@ where $P_n f$ denotes the Taylor polynomial of degree $n$ and $f^{(n+1)}$ is the
 derivative. -/
 theorem taylor_mean_remainder_lagrange {f : ℝ → ℝ} {x x₀ : ℝ} {n : ℕ} (hx : x₀ < x) (hf : ContDiffOn ℝ n f (icc x₀ x))
     (hf' : DifferentiableOn ℝ (iteratedDerivWithin n f (icc x₀ x)) (ioo x₀ x)) :
-    ∃ (x' : ℝ) (hx' : x' ∈ ioo x₀ x),
+    ∃ (x' : ℝ)(hx' : x' ∈ ioo x₀ x),
       f x - taylorWithinEval f n (icc x₀ x) x₀ x =
         iteratedDerivWithin (n + 1) f (icc x₀ x) x' * (x - x₀) ^ (n + 1) / (n + 1)! :=
   by
@@ -301,7 +300,7 @@ where $P_n f$ denotes the Taylor polynomial of degree $n$ and $f^{(n+1)}$ is the
 derivative. -/
 theorem taylor_mean_remainder_cauchy {f : ℝ → ℝ} {x x₀ : ℝ} {n : ℕ} (hx : x₀ < x) (hf : ContDiffOn ℝ n f (icc x₀ x))
     (hf' : DifferentiableOn ℝ (iteratedDerivWithin n f (icc x₀ x)) (ioo x₀ x)) :
-    ∃ (x' : ℝ) (hx' : x' ∈ ioo x₀ x),
+    ∃ (x' : ℝ)(hx' : x' ∈ ioo x₀ x),
       f x - taylorWithinEval f n (icc x₀ x) x₀ x =
         iteratedDerivWithin (n + 1) f (icc x₀ x) x' * (x - x') ^ n / n ! * (x - x₀) :=
   by
@@ -322,8 +321,8 @@ The difference of `f` and its `n`-th Taylor polynomial can be estimated by
 `C * (x - a)^(n+1) / n!` where `C` is a bound for the `n+1`-th iterated derivative of `f`. -/
 theorem taylor_mean_remainder_bound {f : ℝ → E} {a b C x : ℝ} {n : ℕ} (hab : a ≤ b)
     (hf : ContDiffOn ℝ (n + 1) f (icc a b)) (hx : x ∈ icc a b)
-    (hC : ∀ y ∈ icc a b, ∥iteratedDerivWithin (n + 1) f (icc a b) y∥ ≤ C) :
-    ∥f x - taylorWithinEval f n (icc a b) a x∥ ≤ C * (x - a) ^ (n + 1) / n ! := by
+    (hC : ∀ y ∈ icc a b, ‖iteratedDerivWithin (n + 1) f (icc a b) y‖ ≤ C) :
+    ‖f x - taylorWithinEval f n (icc a b) a x‖ ≤ C * (x - a) ^ (n + 1) / n ! := by
   rcases eq_or_lt_of_le hab with (rfl | h)
   · rw [Icc_self, mem_singleton_iff] at hx
     simp [hx]
@@ -334,7 +333,7 @@ theorem taylor_mean_remainder_bound {f : ℝ → E} {a b C x : ℝ} {n : ℕ} (h
   -- We can uniformly bound the derivative of the Taylor polynomial
   have h' :
     ∀ (y : ℝ) (hy : y ∈ Ico a x),
-      ∥((n ! : ℝ)⁻¹ * (x - y) ^ n) • iteratedDerivWithin (n + 1) f (Icc a b) y∥ ≤ (n ! : ℝ)⁻¹ * |x - a| ^ n * C :=
+      ‖((n ! : ℝ)⁻¹ * (x - y) ^ n) • iteratedDerivWithin (n + 1) f (Icc a b) y‖ ≤ (n ! : ℝ)⁻¹ * |x - a| ^ n * C :=
     by
     rintro y ⟨hay, hyx⟩
     rw [norm_smul, Real.norm_eq_abs]
@@ -369,18 +368,18 @@ There exists a constant `C` such that for all `x ∈ Icc a b` the difference of 
 Taylor polynomial can be estimated by `C * (x - a)^(n+1)`. -/
 theorem exists_taylor_mean_remainder_bound {f : ℝ → E} {a b : ℝ} {n : ℕ} (hab : a ≤ b)
     (hf : ContDiffOn ℝ (n + 1) f (icc a b)) :
-    ∃ C, ∀ x ∈ icc a b, ∥f x - taylorWithinEval f n (icc a b) a x∥ ≤ C * (x - a) ^ (n + 1) := by
+    ∃ C, ∀ x ∈ icc a b, ‖f x - taylorWithinEval f n (icc a b) a x‖ ≤ C * (x - a) ^ (n + 1) := by
   rcases eq_or_lt_of_le hab with (rfl | h)
   · refine' ⟨0, fun x hx => _⟩
     have : a = x := by simpa [← le_antisymm_iff] using hx
     simp [← this]
     
   -- We estimate by the supremum of the norm of the iterated derivative
-  let g : ℝ → ℝ := fun y => ∥iteratedDerivWithin (n + 1) f (Icc a b) y∥
+  let g : ℝ → ℝ := fun y => ‖iteratedDerivWithin (n + 1) f (Icc a b) y‖
   use HasSup.sup (g '' Icc a b) / n !
   intro x hx
   rw [div_mul_eq_mul_div₀]
   refine' taylor_mean_remainder_bound hab hf hx fun y => _
-  exact (hf.continuous_on_iterated_deriv_within rfl.le $ uniqueDiffOnIcc h).norm.le_Sup_image_Icc
+  exact (hf.continuous_on_iterated_deriv_within rfl.le <| uniqueDiffOnIcc h).norm.le_Sup_image_Icc
 #align exists_taylor_mean_remainder_bound exists_taylor_mean_remainder_bound
 

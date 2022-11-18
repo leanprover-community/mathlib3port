@@ -97,7 +97,7 @@ continuous maps from `circle` to `ℂ`. -/
 @[simps]
 def fourier (n : ℤ) : C(circle, ℂ) where
   toFun z := z ^ n
-  continuous_to_fun := continuous_subtype_coe.zpow₀ n $ fun z => Or.inl (ne_zero_of_mem_circle z)
+  continuous_to_fun := (continuous_subtype_coe.zpow₀ n) fun z => Or.inl (ne_zero_of_mem_circle z)
 #align fourier fourier
 
 @[simp]
@@ -265,11 +265,11 @@ theorem has_sum_fourier_series (f : lp ℂ 2 haarCircle) : HasSum (fun i => four
 /-- **Parseval's identity**: the sum of the squared norms of the Fourier coefficients equals the
 `L2` norm of the function. -/
 theorem tsum_sq_fourier_series_repr (f : lp ℂ 2 haarCircle) :
-    (∑' i : ℤ, ∥fourierSeries.repr f i∥ ^ 2) = ∫ t : circle, ∥f t∥ ^ 2 ∂haarCircle := by
-  have H₁ : ∥fourier_series.repr f∥ ^ 2 = ∑' i, ∥fourier_series.repr f i∥ ^ 2 := by
+    (∑' i : ℤ, ‖fourierSeries.repr f i‖ ^ 2) = ∫ t : circle, ‖f t‖ ^ 2 ∂haarCircle := by
+  have H₁ : ‖fourier_series.repr f‖ ^ 2 = ∑' i, ‖fourier_series.repr f i‖ ^ 2 := by
     exact_mod_cast lp.norm_rpow_eq_tsum _ (fourier_series.repr f)
     norm_num
-  have H₂ : ∥fourier_series.repr f∥ ^ 2 = ∥f∥ ^ 2 := by simp
+  have H₂ : ‖fourier_series.repr f‖ ^ 2 = ‖f‖ ^ 2 := by simp
   have H₃ := congr_arg IsROrC.re (@L2.inner_def circle ℂ ℂ _ _ _ _ f f)
   rw [← integral_re] at H₃
   · simp only [← norm_sq_eq_inner] at H₃

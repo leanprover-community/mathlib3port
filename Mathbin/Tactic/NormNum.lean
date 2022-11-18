@@ -392,7 +392,7 @@ unsafe def match_neg : expr → Option expr
 #align norm_num.match_neg norm_num.match_neg
 
 /-- `match_sign (- e) = inl e`, `match_sign 0 = inr ff`, otherwise `inr tt` -/
-unsafe def match_sign : expr → expr ⊕ Bool
+unsafe def match_sign : expr → Sum expr Bool
   | q(-$(e)) => Sum.inl e
   | q(Zero.zero) => Sum.inr false
   | _ => Sum.inr true
@@ -961,7 +961,7 @@ unsafe def prove_clear_denom : instance_cache → expr → expr → ℚ → ℕ 
 
 theorem clear_denom_add {α} [DivisionRing α] (a a' b b' c c' d : α) (h₀ : d ≠ 0) (ha : a * d = a') (hb : b * d = b')
     (hc : c * d = c') (h : a' + b' = c') : a + b = c :=
-  mul_right_cancel₀ h₀ $ by rwa [add_mul, ha, hb, hc]
+  mul_right_cancel₀ h₀ <| by rwa [add_mul, ha, hb, hc]
 #align norm_num.clear_denom_add NormNum.clear_denom_add
 
 /-- Given `a`,`b`,`c` nonnegative rational numerals, returns `⊢ a + b = c`. -/
@@ -1054,8 +1054,8 @@ unsafe def prove_clear_denom_simple (c : instance_cache) (a : expr) (na : ℚ) :
 
 theorem clear_denom_mul {α} [Field α] (a a' b b' c c' d₁ d₂ d : α) (ha : d₁ ≠ 0 ∧ a * d₁ = a')
     (hb : d₂ ≠ 0 ∧ b * d₂ = b') (hc : c * d = c') (hd : d₁ * d₂ = d) (h : a' * b' = c') : a * b = c :=
-  mul_right_cancel₀ ha.1 $
-    mul_right_cancel₀ hb.1 $ by rw [mul_assoc c, hd, hc, ← h, ← ha.2, ← hb.2, ← mul_assoc, mul_right_comm a]
+  mul_right_cancel₀ ha.1 <|
+    mul_right_cancel₀ hb.1 <| by rw [mul_assoc c, hd, hc, ← h, ← ha.2, ← hb.2, ← mul_assoc, mul_right_comm a]
 #align norm_num.clear_denom_mul NormNum.clear_denom_mul
 
 /-- Given `a`,`b` nonnegative rational numerals, returns `(c, ⊢ a * b = c)`. -/
@@ -1222,7 +1222,7 @@ theorem sub_nat_pos (a b c : ℕ) (h : b + c = a) : a - b = c :=
 #align norm_num.sub_nat_pos NormNum.sub_nat_pos
 
 theorem sub_nat_neg (a b c : ℕ) (h : a + c = b) : a - b = 0 :=
-  tsub_eq_zero_iff_le.mpr $ h ▸ Nat.le_add_right _ _
+  tsub_eq_zero_iff_le.mpr <| h ▸ Nat.le_add_right _ _
 #align norm_num.sub_nat_neg NormNum.sub_nat_neg
 
 /-- Given `a : nat`,`b : nat` natural numerals, returns `(c, ⊢ a - b = c)`. -/
@@ -1394,19 +1394,19 @@ unsafe def false_intro (p : expr) : tactic (expr × expr) :=
   Prod.mk q(False) <$> mk_app `` eq_false [p]
 #align norm_num.false_intro norm_num.false_intro
 
-theorem not_refl_false_intro {α} (a : α) : a ≠ a = False :=
-  eq_false $ not_not_intro rfl
+theorem not_refl_false_intro {α} (a : α) : (a ≠ a) = False :=
+  eq_false <| not_not_intro rfl
 #align norm_num.not_refl_false_intro NormNum.not_refl_false_intro
 
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
-theorem gt_intro {α} [LT α] (a b : α) (c) (h : a < b = c) : b > a = c :=
+theorem gt_intro {α} [LT α] (a b : α) (c) (h : (a < b) = c) : (b > a) = c :=
   h
 #align norm_num.gt_intro NormNum.gt_intro
 
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
-theorem ge_intro {α} [LE α] (a b : α) (c) (h : a ≤ b = c) : b ≥ a = c :=
+theorem ge_intro {α} [LE α] (a b : α) (c) (h : (a ≤ b) = c) : (b ≥ a) = c :=
   h
 #align norm_num.ge_intro NormNum.ge_intro
 
@@ -1543,7 +1543,7 @@ theorem neg_succ_of_nat (a b : ℕ) (c : ℤ) (h₁ : a + 1 = b)
           b :
           ℤ) =
         c) :
-    -[1+ a] = -c := by rw [← h₂, ← h₁] <;> rfl
+    -[a+1] = -c := by rw [← h₂, ← h₁] <;> rfl
 #align norm_num.neg_succ_of_nat NormNum.neg_succ_of_nat
 
 /-- Evaluates `nat.succ`, `int.to_nat`, `int.nat_abs`, `int.neg_succ_of_nat`. -/
@@ -1694,7 +1694,7 @@ unsafe def derive' (step : expr → tactic (expr × expr)) : expr → tactic (ex
       ext_simplify_core () {  } simp_lemmas.mk (fun _ => failed) (fun _ _ _ _ _ => failed)
           (fun _ _ _ _ e => do
             let (new_e, pr) ← step e
-            guard (¬new_e =ₐ e)
+            guard ¬new_e == e
             pure ((), new_e, some pr, tt))
           `eq e
     pure (e', pr)
@@ -1715,25 +1715,23 @@ the basic builtin set of simplifications. -/
 unsafe def tactic.norm_num1 (step : expr → tactic (expr × expr)) (loc : Interactive.Loc) : tactic Unit := do
   let ns ← loc.get_locals
   let success ← tactic.replace_at (norm_num.derive' step) ns loc.include_goal
-  when loc $ try tactic.triv
-  when (¬ns) $ try tactic.contradiction
-  Monad.unlessb success $ done <|> fail "norm_num failed to simplify"
+  when loc <| try tactic.triv
+  when ¬ns <| try tactic.contradiction
+  Monad.unlessb success <| done <|> fail "norm_num failed to simplify"
 #align tactic.norm_num1 tactic.norm_num1
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Normalize numerical expressions. It uses the provided `step` tactic to simplify the expression;
 use `get_step` to get the default `norm_num` set and `derive.step` for the basic builtin set of
 simplifications. -/
 unsafe def tactic.norm_num (step : expr → tactic (expr × expr)) (hs : List simp_arg_type) (l : Interactive.Loc) :
     tactic Unit :=
-  repeat1 $
-    orelse' (tactic.norm_num1 step l) $
+  repeat1 <|
+    orelse' (tactic.norm_num1 step l) <|
       interactive.simp_core {  } (tactic.norm_num1 step (Interactive.Loc.ns [none])) false
-          (simp_arg_type.except `` one_div::hs) [] l >>
+          (simp_arg_type.except `` one_div :: hs) [] l >>
         skip
 #align tactic.norm_num tactic.norm_num
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Carry out similar operations as `tactic.norm_num` but on an `expr` rather than a location.
 Given an expression `e`, returns `(e', ⊢ e = e')`.
 The `no_dflt`, `hs`, and `attr_names` are passed on to `simp`.
@@ -1743,9 +1741,9 @@ unsafe def _root_.expr.norm_num (step : expr → tactic (expr × expr)) (no_dflt
   let simp_step (e : expr) := do
     let (e', p, _) ←
       e.simp {  } (tactic.norm_num1 step (Interactive.Loc.ns [none])) no_dflt attr_names
-          (simp_arg_type.except `` one_div::hs)
+          (simp_arg_type.except `` one_div :: hs)
     return (e', p)
-  or_refl_conv $ fun e => do
+  or_refl_conv fun e => do
     let (e', p') ← norm_num.derive' step e <|> simp_step e
     let (e'', p'') ← _root_.expr.norm_num e'
     let p ← mk_eq_trans p' p''
@@ -1838,7 +1836,6 @@ unsafe def norm_num1 : conv Unit :=
   replace_lhs derive
 #align conv.interactive.norm_num1 conv.interactive.norm_num1
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Normalize numerical expressions. Supports the operations
 `+` `-` `*` `/` `^` and `%` over numerical types such as
 `ℕ`, `ℤ`, `ℚ`, `ℝ`, `ℂ` and some general algebraic types,
@@ -1846,9 +1843,9 @@ and can prove goals of the form `A = B`, `A ≠ B`, `A < B` and `A ≤ B`,
 where `A` and `B` are numerical expressions.
 It also has a relatively simple primality prover. -/
 unsafe def norm_num (hs : parse simp_arg_list) : conv Unit :=
-  repeat1 $
-    orelse' norm_num1 $
-      conv.interactive.simp false (simp_arg_type.except `` one_div::hs) []
+  repeat1 <|
+    orelse' norm_num1 <|
+      conv.interactive.simp false (simp_arg_type.except `` one_div :: hs) []
         { discharger := tactic.interactive.norm_num1 (Loc.ns [none]) }
 #align conv.interactive.norm_num conv.interactive.norm_num
 
@@ -1867,7 +1864,6 @@ namespace Tactic
 initialize
   registerTraceClass.1 `silence_norm_num_if_true
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The basic usage is `#norm_num e`, where `e` is an expression,
 which will print the `norm_num` form of `e`.
 
@@ -1886,21 +1882,21 @@ Unlike `norm_num`, this command does not fail when no simplifications are made.
 introduce parameters.
 -/
 @[user_command]
-unsafe def norm_num_cmd (_ : parse $ tk "#norm_num") : lean.parser Unit := do
+unsafe def norm_num_cmd (_ : parse <| tk "#norm_num") : lean.parser Unit := do
   let no_dflt ← only_flag
   let hs ← simp_arg_list
   let attr_names ← with_ident_list
   let o ← optional (tk ":")
   let e ← texpr
   let-- Retrieve the `pexpr`s parsed as part of the simp args, and collate them into a big list.
-  hs_es := List.join $ hs.map $ Option.toList ∘ simp_arg_type.to_pexpr
+  hs_es := List.join <| hs.map <| Option.toList ∘ simp_arg_type.to_pexpr
   let/- Synthesize a `tactic_state` including local variables as hypotheses under which `expr.simp`
          may be safely called with expected behaviour given the `variables` in the environment. -/
     (ts, mappings)
-    ← synthesize_tactic_state_with_variables_as_hyps (e::hs_es)
+    ← synthesize_tactic_state_with_variables_as_hyps (e :: hs_es)
   let result
     ←-- Enter the `tactic` monad, *critically* using the synthesized tactic state `ts`.
-        lean.parser.of_tactic $
+        lean.parser.of_tactic
         fun _ =>
         (/- Resolve the local variables added by the parser to `e` (when it was parsed) against the local
                  hypotheses added to the `ts : tactic_state` which we are using. -/
@@ -1921,7 +1917,7 @@ unsafe def norm_num_cmd (_ : parse $ tk "#norm_num") : lean.parser Unit := do
                    annotation macros are injected, the direct patten matches in the `simp_lemmas.*` codebase
                    fail, and the lemmas we want don't get added.
                    -/
-            hs := hs.map $ fun sat => sat.replace_subexprs mappings
+            hs := hs.map fun sat => sat.replace_subexprs mappings
             let step
               ←-- Try simplifying the expression.
                 norm_num.get_step
@@ -2006,12 +2002,12 @@ unsafe def prove_div_mod (ic : instance_cache) : expr → expr → Bool → tact
           else failed
 #align norm_num.prove_div_mod norm_num.prove_div_mod
 
-theorem dvd_eq_nat (a b c : ℕ) (p) (h₁ : b % a = c) (h₂ : c = 0 = p) : a ∣ b = p :=
-  (propext $ by rw [← h₁, Nat.dvd_iff_mod_eq_zero]).trans h₂
+theorem dvd_eq_nat (a b c : ℕ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a ∣ b) = p :=
+  (propext <| by rw [← h₁, Nat.dvd_iff_mod_eq_zero]).trans h₂
 #align norm_num.dvd_eq_nat NormNum.dvd_eq_nat
 
-theorem dvd_eq_int (a b c : ℤ) (p) (h₁ : b % a = c) (h₂ : c = 0 = p) : a ∣ b = p :=
-  (propext $ by rw [← h₁, Int.dvd_iff_mod_eq_zero]).trans h₂
+theorem dvd_eq_int (a b c : ℤ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (a ∣ b) = p :=
+  (propext <| by rw [← h₁, Int.dvd_iff_mod_eq_zero]).trans h₂
 #align norm_num.dvd_eq_int NormNum.dvd_eq_int
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'

@@ -280,11 +280,11 @@ section Sum
 open Sum
 
 /-- If `e₁` and `e₂` are embeddings, then so is `sum.map e₁ e₂`. -/
-def sumMap {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : α ⊕ γ ↪ β ⊕ δ :=
+def sumMap {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : Sum α γ ↪ Sum β δ :=
   ⟨Sum.map e₁ e₂, fun s₁ s₂ h =>
     match s₁, s₂, h with
-    | inl a₁, inl a₂, h => congr_arg inl $ e₁.Injective $ inl.inj h
-    | inr b₁, inr b₂, h => congr_arg inr $ e₂.Injective $ inr.inj h⟩
+    | inl a₁, inl a₂, h => congr_arg inl <| e₁.Injective <| inl.inj h
+    | inr b₁, inr b₂, h => congr_arg inr <| e₂.Injective <| inr.inj h⟩
 #align function.embedding.sum_map Function.Embedding.sumMap
 
 @[simp]
@@ -294,13 +294,13 @@ theorem coe_sum_map {α β γ δ} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : ⇑(su
 
 /-- The embedding of `α` into the sum `α ⊕ β`. -/
 @[simps]
-def inl {α β : Type _} : α ↪ α ⊕ β :=
+def inl {α β : Type _} : α ↪ Sum α β :=
   ⟨Sum.inl, fun a b => Sum.inl.inj⟩
 #align function.embedding.inl Function.Embedding.inl
 
 /-- The embedding of `β` into the sum `α ⊕ β`. -/
 @[simps]
-def inr {α β : Type _} : β ↪ α ⊕ β :=
+def inr {α β : Type _} : β ↪ Sum α β :=
   ⟨Sum.inr, fun a b => Sum.inr.inj⟩
 #align function.embedding.inr Function.Embedding.inr
 
@@ -312,14 +312,14 @@ variable {α α' : Type _} {β : α → Type _} {β' : α' → Type _}
 
 /-- `sigma.mk` as an `function.embedding`. -/
 @[simps apply]
-def sigmaMk (a : α) : β a ↪ Σ x, β x :=
+def sigmaMk (a : α) : β a ↪ Σx, β x :=
   ⟨Sigma.mk a, sigma_mk_injective⟩
 #align function.embedding.sigma_mk Function.Embedding.sigmaMk
 
 /-- If `f : α ↪ α'` is an embedding and `g : Π a, β α ↪ β' (f α)` is a family
 of embeddings, then `sigma.map f g` is an embedding. -/
 @[simps apply]
-def sigmaMap (f : α ↪ α') (g : ∀ a, β a ↪ β' (f a)) : (Σ a, β a) ↪ Σ a', β' a' :=
+def sigmaMap (f : α ↪ α') (g : ∀ a, β a ↪ β' (f a)) : (Σa, β a) ↪ Σa', β' a' :=
   ⟨Sigma.map f fun a => g a, f.Injective.sigma_map fun a => (g a).Injective⟩
 #align function.embedding.sigma_map Function.Embedding.sigmaMap
 
@@ -329,7 +329,7 @@ end Sigma
 `e : Π a, (β a ↪ γ a)`. This embedding sends `f` to `λ a, e a (f a)`. -/
 @[simps]
 def piCongrRight {α : Sort _} {β γ : α → Sort _} (e : ∀ a, β a ↪ γ a) : (∀ a, β a) ↪ ∀ a, γ a :=
-  ⟨fun f a => e a (f a), fun f₁ f₂ h => funext $ fun a => (e a).Injective (congr_fun h a)⟩
+  ⟨fun f a => e a (f a), fun f₁ f₂ h => funext fun a => (e a).Injective (congr_fun h a)⟩
 #align function.embedding.Pi_congr_right Function.Embedding.piCongrRight
 
 /-- An embedding `e : α ↪ β` defines an embedding `(γ → α) ↪ (γ → β)` that sends each `f`
@@ -349,7 +349,7 @@ This embedding sends each `f : α → γ` to a function `g : β → γ` such tha
 `g y = default` whenever `y ∉ range e`. -/
 noncomputable def arrowCongrLeft {α : Sort u} {β : Sort v} {γ : Sort w} [Inhabited γ] (e : α ↪ β) : (α → γ) ↪ β → γ :=
   ⟨fun f => extend e f default, fun f₁ f₂ h =>
-    funext $ fun x => by simpa only [extend_apply e.injective] using congr_fun h (e x)⟩
+    funext fun x => by simpa only [extend_apply e.injective] using congr_fun h (e x)⟩
 #align function.embedding.arrow_congr_left Function.Embedding.arrowCongrLeft
 
 /-- Restrict both domain and codomain of an embedding. -/
@@ -448,7 +448,7 @@ variable {α : Type _}
 
 /-- A subtype `{x // p x ∨ q x}` over a disjunction of `p q : α → Prop` can be injectively split
 into a sum of subtypes `{x // p x} ⊕ {x // q x}` such that `¬ p x` is sent to the right. -/
-def subtypeOrLeftEmbedding (p q : α → Prop) [DecidablePred p] : { x // p x ∨ q x } ↪ { x // p x } ⊕ { x // q x } :=
+def subtypeOrLeftEmbedding (p q : α → Prop) [DecidablePred p] : { x // p x ∨ q x } ↪ Sum { x // p x } { x // q x } :=
   ⟨fun x => if h : p x then Sum.inl ⟨x, h⟩ else Sum.inr ⟨x, x.Prop.resolve_left h⟩, by
     intro x y
     dsimp only

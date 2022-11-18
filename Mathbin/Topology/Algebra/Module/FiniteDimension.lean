@@ -101,28 +101,28 @@ theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAd
   refine' TopologicalAddGroup.ext h₁ inferInstance (le_antisymm _ _)
   · -- To show `𝓣 ≤ 𝓣₀`, we have to show that closed balls are `𝓣`-neighborhoods of 0.
     rw [metric.nhds_basis_closed_ball.ge_iff]
-    -- Let `ε > 0`. Since `𝕜` is nontrivially normed, we have `0 < ∥ξ₀∥ < ε` for some `ξ₀ : 𝕜`.
+    -- Let `ε > 0`. Since `𝕜` is nontrivially normed, we have `0 < ‖ξ₀‖ < ε` for some `ξ₀ : 𝕜`.
     intro ε hε
     rcases NormedField.exists_norm_lt 𝕜 hε with ⟨ξ₀, hξ₀, hξ₀ε⟩
     -- Since `ξ₀ ≠ 0` and `𝓣` is T2, we know that `{ξ₀}ᶜ` is a `𝓣`-neighborhood of 0.
-    have : {ξ₀}ᶜ ∈ @nhds 𝕜 t 0 := IsOpen.mem_nhds is_open_compl_singleton (Ne.symm $ norm_ne_zero_iff.mp hξ₀.ne.symm)
+    have : {ξ₀}ᶜ ∈ @nhds 𝕜 t 0 := IsOpen.mem_nhds is_open_compl_singleton (Ne.symm <| norm_ne_zero_iff.mp hξ₀.ne.symm)
     -- Thus, its balanced core `𝓑` is too. Let's show that the closed ball of radius `ε` contains
     -- `𝓑`, which will imply that the closed ball is indeed a `𝓣`-neighborhood of 0.
     have : balancedCore 𝕜 ({ξ₀}ᶜ) ∈ @nhds 𝕜 t 0 := balanced_core_mem_nhds_zero this
     refine' mem_of_superset this fun ξ hξ => _
-    -- Let `ξ ∈ 𝓑`. We want to show `∥ξ∥ < ε`. If `ξ = 0`, this is trivial.
-    by_cases hξ0:ξ = 0
+    -- Let `ξ ∈ 𝓑`. We want to show `‖ξ‖ < ε`. If `ξ = 0`, this is trivial.
+    by_cases hξ0 : ξ = 0
     · rw [hξ0]
       exact Metric.mem_closed_ball_self hε.le
       
     · rw [mem_closed_ball_zero_iff]
-      -- Now suppose `ξ ≠ 0`. By contradiction, let's assume `ε < ∥ξ∥`, and show that
+      -- Now suppose `ξ ≠ 0`. By contradiction, let's assume `ε < ‖ξ‖`, and show that
       -- `ξ₀ ∈ 𝓑 ⊆ {ξ₀}ᶜ`, which is a contradiction.
       by_contra' h
       suffices (ξ₀ * ξ⁻¹) • ξ ∈ balancedCore 𝕜 ({ξ₀}ᶜ) by
         rw [smul_eq_mul 𝕜, mul_assoc, inv_mul_cancel hξ0, mul_one] at this
         exact not_mem_compl_iff.mpr (mem_singleton ξ₀) ((balanced_core_subset _) this)
-      -- For that, we use that `𝓑` is balanced : since `∥ξ₀∥ < ε < ∥ξ∥`, we have `∥ξ₀ / ξ∥ ≤ 1`,
+      -- For that, we use that `𝓑` is balanced : since `‖ξ₀‖ < ε < ‖ξ‖`, we have `‖ξ₀ / ξ‖ ≤ 1`,
       -- hence `ξ₀ = (ξ₀ / ξ) • ξ ∈ 𝓑` because `ξ ∈ 𝓑`.
       refine' (balancedCoreBalanced _).smul_mem _ hξ
       rw [norm_mul, norm_inv, mul_inv_le_iff (norm_pos_iff.mpr hξ0), mul_one]
@@ -151,7 +151,7 @@ theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAd
     its kernel is closed. -/
 theorem LinearMap.continuous_of_is_closed_ker (l : E →ₗ[𝕜] 𝕜) (hl : IsClosed (l.ker : Set E)) : Continuous l := by
   -- `l` is either constant or surjective. If it is constant, the result is trivial.
-  by_cases H:finrank 𝕜 l.range = 0
+  by_cases H : finrank 𝕜 l.range = 0
   · rw [finrank_eq_zero, LinearMap.range_eq_bot] at H
     rw [H]
     exact continuous_zero
@@ -200,7 +200,7 @@ theorem LinearMap.continuous_iff_is_closed_ker (l : E →ₗ[𝕜] 𝕜) : Conti
     automatically continuous. -/
 theorem LinearMap.continuous_of_nonzero_on_open (l : E →ₗ[𝕜] 𝕜) (s : Set E) (hs₁ : IsOpen s) (hs₂ : s.Nonempty)
     (hs₃ : ∀ x ∈ s, l x ≠ 0) : Continuous l := by
-  refine' l.continuous_of_is_closed_ker (l.is_closed_or_dense_ker.resolve_right $ fun hl => _)
+  refine' l.continuous_of_is_closed_ker (l.is_closed_or_dense_ker.resolve_right fun hl => _)
   rcases hs₂ with ⟨x, hx⟩
   have : x ∈ interior ((l.ker : Set E)ᶜ) := by
     rw [mem_interior_iff_mem_nhds]
@@ -240,7 +240,7 @@ private theorem continuous_equiv_fun_basis_aux [ht2 : T2Space E] {ι : Type v} [
     -- second step: any linear form is continuous, as its kernel is closed by the first step
     have H₂ : ∀ f : E →ₗ[𝕜] 𝕜, Continuous f := by
       intro f
-      by_cases H:finrank 𝕜 f.range = 0
+      by_cases H : finrank 𝕜 f.range = 0
       · rw [finrank_eq_zero, LinearMap.range_eq_bot] at H
         rw [H]
         exact continuous_zero
@@ -342,7 +342,8 @@ theorem is_open_map_of_finite_dimensional (f : F →ₗ[𝕜] E) (hf : Function.
   rcases f.exists_right_inverse_of_surjective (LinearMap.range_eq_top.2 hf) with ⟨g, hg⟩
   refine' IsOpenMap.of_sections fun x => ⟨fun y => g (y - f x) + x, _, _, fun y => _⟩
   · exact
-      ((g.continuous_of_finite_dimensional.comp $ continuous_id.sub continuous_const).add continuous_const).ContinuousAt
+      ((g.continuous_of_finite_dimensional.comp <| continuous_id.sub continuous_const).add
+          continuous_const).ContinuousAt
     
   · rw [sub_self, map_zero, zero_add]
     
@@ -435,7 +436,7 @@ theorem _root_.matrix.to_lin_fin_two_prod_to_continuous_linear_map (a b c d : �
             "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation")).toContinuousLinearMap =
       (a • ContinuousLinearMap.fst 𝕜 𝕜 𝕜 + b • ContinuousLinearMap.snd 𝕜 𝕜 𝕜).Prod
         (c • ContinuousLinearMap.fst 𝕜 𝕜 𝕜 + d • ContinuousLinearMap.snd 𝕜 𝕜 𝕜) :=
-  ContinuousLinearMap.ext $ Matrix.to_lin_fin_two_prod_apply _ _ _ _
+  ContinuousLinearMap.ext <| Matrix.to_lin_fin_two_prod_apply _ _ _ _
 #align
   continuous_linear_map._root_.matrix.to_lin_fin_two_prod_to_continuous_linear_map continuous_linear_map._root_.matrix.to_lin_fin_two_prod_to_continuous_linear_map
 

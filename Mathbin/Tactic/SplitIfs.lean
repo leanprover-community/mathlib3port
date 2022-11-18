@@ -14,14 +14,14 @@ namespace Tactic
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 unsafe def find_if_cond : expr → Option expr
   | e =>
-    e.fold none $ fun e _ acc =>
+    (e.fold none) fun e _ acc =>
       Acc <|> do
         let c ←
           match e with
             | q(@ite _ $(c) $(_) _ _) => some c
             | q(@dite _ $(c) $(_) _ _) => some c
             | _ => none
-        guard (¬c)
+        guard ¬c
         find_if_cond c <|> return c
 #align tactic.find_if_cond tactic.find_if_cond
 
@@ -30,7 +30,7 @@ unsafe def find_if_cond_at (at_ : Loc) : tactic (Option expr) := do
   let lctx ← lctx.mmap infer_type
   let tgt ← target
   let es := if at_.include_goal then tgt :: lctx else lctx
-  return $ find_if_cond $ es app default
+  return <| find_if_cond <| es app default
 #align tactic.find_if_cond_at tactic.find_if_cond_at
 
 run_cmd
@@ -51,7 +51,7 @@ unsafe def reduce_ifs_at (at_ : Loc) : tactic Unit := do
 #align tactic.reduce_ifs_at tactic.reduce_ifs_at
 
 unsafe def split_if1 (c : expr) (n : Name) (at_ : Loc) : tactic Unit :=
-  by_cases c n; reduce_ifs_at at_
+  andthen (by_cases c n) (reduce_ifs_at at_)
 #align tactic.split_if1 tactic.split_if1
 
 private unsafe def get_next_name (names : ref (List Name)) : tactic Name := do
@@ -66,7 +66,7 @@ private unsafe def get_next_name (names : ref (List Name)) : tactic Name := do
 private unsafe def value_known (c : expr) : tactic Bool := do
   let lctx ← local_context
   let lctx ← lctx.mmap infer_type
-  return $ c ∈ lctx ∨ q(¬$(c)) ∈ lctx
+  return <| c ∈ lctx ∨ q(¬$(c)) ∈ lctx
 #align tactic.value_known tactic.value_known
 
 private unsafe def split_ifs_core (at_ : Loc) (names : ref (List Name)) : List expr → tactic Unit
@@ -80,14 +80,14 @@ private unsafe def split_ifs_core (at_ : Loc) (names : ref (List Name)) : List e
     if cond ∈ done then skip
       else do
         let no_split ← value_known cond
-        if no_split then reduce_ifs_at at_; try (split_ifs_core (cond :: done))
+        if no_split then andthen (reduce_ifs_at at_) (try (split_ifs_core (cond :: done)))
           else do
             let n ← get_next_name names
-            split_if1 cond n at_; try (split_ifs_core (cond :: done))
+            andthen (split_if1 cond n at_) (try (split_ifs_core (cond :: done)))
 #align tactic.split_ifs_core tactic.split_ifs_core
 
 unsafe def split_ifs (names : List Name) (at_ : Loc := Loc.ns [none]) :=
-  using_new_ref names $ fun names => split_ifs_core at_ names []
+  (using_new_ref names) fun names => split_ifs_core at_ names []
 #align tactic.split_ifs tactic.split_ifs
 
 namespace Interactive

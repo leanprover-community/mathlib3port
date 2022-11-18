@@ -5,7 +5,6 @@ Authors: Scott Morrison
 -/
 import Mathbin.Algebra.Category.GroupCat.Abelian
 import Mathbin.CategoryTheory.Limits.Shapes.Images
-import Mathbin.CategoryTheory.Limits.Types
 
 /-!
 # The category of commutative additive groups has images.

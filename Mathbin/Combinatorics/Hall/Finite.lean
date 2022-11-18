@@ -50,13 +50,13 @@ theorem hall_cond_of_erase {x : ι} (a : α) (ha : ∀ s : Finset ι, s.Nonempty
   haveI := Classical.decEq ι
   specialize ha (s'.image coe)
   rw [nonempty.image_iff, Finset.card_image_of_injective s' Subtype.coe_injective] at ha
-  by_cases he:s'.nonempty
+  by_cases he : s'.nonempty
   · have ha' : s'.card < (s'.bUnion fun x => t x).card := by
       convert ha he fun h => by simpa [← h] using mem_univ x using 2
       ext x
       simp only [mem_image, mem_bUnion, exists_prop, SetCoe.exists, exists_and_right, exists_eq_right, Subtype.coe_mk]
     rw [← erase_bUnion]
-    by_cases hb:a ∈ s'.bUnion fun x => t x
+    by_cases hb : a ∈ s'.bUnion fun x => t x
     · rw [card_erase_of_mem hb]
       exact Nat.le_pred_of_lt ha'
       
@@ -110,7 +110,7 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
     have key : ∀ {x}, y ≠ f' x := by
       intro x h
       simpa [← h] using hfr x
-    by_cases h₁:z₁ = x <;> by_cases h₂:z₂ = x <;> simp [h₁, h₂, hfinj.eq_iff, key, key.symm]
+    by_cases h₁ : z₁ = x <;> by_cases h₂ : z₂ = x <;> simp [h₁, h₂, hfinj.eq_iff, key, key.symm]
     
   · intro z
     split_ifs with hz
@@ -241,7 +241,7 @@ theorem hall_hard_inductive (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).car
       by
       intro ι' _ _ hι' ht'
       exact ih _ (Nat.lt_succ_of_le hι') ht' _ rfl
-    by_cases h:∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.bUnion t).card
+    by_cases h : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.bUnion t).card
     · exact hall_hard_inductive_step_A hn ht ih' h
       
     · push_neg  at h

@@ -87,7 +87,7 @@ theorem to_equiv_injective : Function.Injective (toEquiv : α ≃ᵤ β → α �
 
 @[ext.1]
 theorem ext {h h' : α ≃ᵤ β} (H : ∀ x, h x = h' x) : h = h' :=
-  to_equiv_injective $ Equiv.ext H
+  to_equiv_injective <| Equiv.ext H
 #align uniform_equiv.ext UniformEquiv.ext
 
 /-- Identity map as a uniform isomorphism. -/
@@ -214,7 +214,7 @@ theorem preimage_image (h : α ≃ᵤ β) (s : Set α) : h ⁻¹' (h '' s) = s :
 #align uniform_equiv.preimage_image UniformEquiv.preimage_image
 
 protected theorem uniform_inducing (h : α ≃ᵤ β) : UniformInducing h :=
-  uniform_inducing_of_compose h.UniformContinuous h.symm.UniformContinuous $ by
+  uniform_inducing_of_compose h.UniformContinuous h.symm.UniformContinuous <| by
     simp only [symm_comp_self, uniform_inducing_id]
 #align uniform_equiv.uniform_inducing UniformEquiv.uniform_inducing
 
@@ -335,7 +335,7 @@ def piFinTwo (α : Fin 2 → Type u) [∀ i, UniformSpace (α i)] : (∀ i, α i
   toEquiv := piFinTwoEquiv α
   uniform_continuous_to_fun := (PiCat.uniform_continuous_proj _ 0).prod_mk (PiCat.uniform_continuous_proj _ 1)
   uniform_continuous_inv_fun :=
-    uniform_continuous_pi.mpr $ Fin.forall_fin_two.2 ⟨uniform_continuous_fst, uniform_continuous_snd⟩
+    uniform_continuous_pi.mpr <| Fin.forall_fin_two.2 ⟨uniform_continuous_fst, uniform_continuous_snd⟩
 #align uniform_equiv.pi_fin_two UniformEquiv.piFinTwo
 
 /-- Uniform isomorphism between `α² = fin 2 → α` and `α × α`. -/
@@ -359,6 +359,6 @@ end UniformEquiv
 def Equiv.toUniformEquivOfUniformInducing [UniformSpace α] [UniformSpace β] (f : α ≃ β) (hf : UniformInducing f) :
     α ≃ᵤ β :=
   { f with uniform_continuous_to_fun := hf.UniformContinuous,
-    uniform_continuous_inv_fun := hf.uniform_continuous_iff.2 $ by simpa using uniform_continuous_id }
+    uniform_continuous_inv_fun := hf.uniform_continuous_iff.2 <| by simpa using uniform_continuous_id }
 #align equiv.to_uniform_equiv_of_uniform_inducing Equiv.toUniformEquivOfUniformInducing
 

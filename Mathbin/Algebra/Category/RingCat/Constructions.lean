@@ -6,11 +6,9 @@ Authors: Andrew Yang
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.RingTheory.TensorProduct
 import Mathbin.Algebra.Category.RingCat.Limits
-import Mathbin.Algebra.Category.RingCat.Colimits
 import Mathbin.Algebra.Category.RingCat.Instances
 import Mathbin.CategoryTheory.Limits.Shapes.StrictInitial
 import Mathbin.RingTheory.Subring.Basic
-import Mathbin.CategoryTheory.Limits.Preserves.Limits
 
 /-!
 # Constructions of (co)limits in CommRing
@@ -170,7 +168,7 @@ variable (A B : CommRingCat.{u})
 /-- The product in `CommRing` is the cartesian product. This is the binary fan. -/
 @[simps x]
 def prodFan : BinaryFan A B :=
-  BinaryFan.mk (CommRingCat.ofHom $ RingHom.fst A B) (CommRingCat.ofHom $ RingHom.snd A B)
+  BinaryFan.mk (CommRingCat.ofHom <| RingHom.fst A B) (CommRingCat.ofHom <| RingHom.snd A B)
 #align CommRing.prod_fan CommRingCat.prodFan
 
 /-- The product in `CommRing` is the cartesian product. -/
@@ -262,9 +260,9 @@ the two maps `A × B ⟶ C`. This is the constructed pullback cone.
 -/
 def pullbackCone {A B C : CommRingCat.{u}} (f : A ⟶ C) (g : B ⟶ C) : PullbackCone f g :=
   PullbackCone.mk
-    (CommRingCat.ofHom $
+    (CommRingCat.ofHom <|
       (RingHom.fst A B).comp (RingHom.eqLocus (f.comp (RingHom.fst A B)) (g.comp (RingHom.snd A B))).Subtype)
-    (CommRingCat.ofHom $
+    (CommRingCat.ofHom <|
       (RingHom.snd A B).comp (RingHom.eqLocus (f.comp (RingHom.fst A B)) (g.comp (RingHom.snd A B))).Subtype)
     (by
       ext ⟨x, e⟩

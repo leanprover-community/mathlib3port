@@ -61,11 +61,11 @@ theorem nth_of_fn_aux {n} (f : Fin n → α) (i) :
 /-- The `n`th element of a list -/
 @[simp]
 theorem nth_of_fn {n} (f : Fin n → α) (i) : nth (ofFn f) i = ofFnNthVal f i :=
-  nth_of_fn_aux f _ _ _ _ $ fun i => by simp only [of_fn_nth_val, dif_neg (not_lt.2 (Nat.le_add_left n i))] <;> rfl
+  (nth_of_fn_aux f _ _ _ _) fun i => by simp only [of_fn_nth_val, dif_neg (not_lt.2 (Nat.le_add_left n i))] <;> rfl
 #align list.nth_of_fn List.nth_of_fn
 
 theorem nth_le_of_fn {n} (f : Fin n → α) (i : Fin n) : nthLe (ofFn f) i ((length_of_fn f).symm ▸ i.2) = f i :=
-  Option.some.inj $ by rw [← nth_le_nth] <;> simp only [List.nth_of_fn, of_fn_nth_val, Fin.eta, dif_pos i.is_lt]
+  Option.some.inj <| by rw [← nth_le_nth] <;> simp only [List.nth_of_fn, of_fn_nth_val, Fin.eta, dif_pos i.is_lt]
 #align list.nth_le_of_fn List.nth_le_of_fn
 
 @[simp]
@@ -129,7 +129,7 @@ theorem of_fn_eq_nil_iff {n : ℕ} {f : Fin n → α} : ofFn f = [] ↔ n = 0 :=
 #align list.of_fn_eq_nil_iff List.of_fn_eq_nil_iff
 
 theorem last_of_fn {n : ℕ} (f : Fin n → α) (h : ofFn f ≠ [])
-    (hn : n - 1 < n := Nat.pred_lt $ of_fn_eq_nil_iff.Not.mp h) : last (ofFn f) h = f ⟨n - 1, hn⟩ := by
+    (hn : n - 1 < n := Nat.pred_lt <| of_fn_eq_nil_iff.Not.mp h) : last (ofFn f) h = f ⟨n - 1, hn⟩ := by
   simp [last_eq_nth_le]
 #align list.last_of_fn List.last_of_fn
 
@@ -154,8 +154,8 @@ theorem of_fn_add {m n} (f : Fin (m + n) → α) :
 theorem of_fn_mul {m n} (f : Fin (m * n) → α) :
     List.ofFn f =
       List.join
-        (List.ofFn $ fun i : Fin m =>
-          List.ofFn $ fun j : Fin n =>
+        (List.ofFn fun i : Fin m =>
+          List.ofFn fun j : Fin n =>
             f
               ⟨i * n + j,
                 calc
@@ -175,8 +175,8 @@ theorem of_fn_mul {m n} (f : Fin (m * n) → α) :
 theorem of_fn_mul' {m n} (f : Fin (m * n) → α) :
     List.ofFn f =
       List.join
-        (List.ofFn $ fun i : Fin n =>
-          List.ofFn $ fun j : Fin m =>
+        (List.ofFn fun i : Fin n =>
+          List.ofFn fun j : Fin m =>
             f
               ⟨m * i + j,
                 calc
@@ -209,16 +209,16 @@ theorem forall_mem_of_fn_iff {n : ℕ} {f : Fin n → α} {P : α → Prop} : (�
 
 @[simp]
 theorem of_fn_const (n : ℕ) (c : α) : (ofFn fun i : Fin n => c) = repeat c n :=
-  Nat.recOn n (by simp) $ fun n ihn => by simp [ihn]
+  (Nat.recOn n (by simp)) fun n ihn => by simp [ihn]
 #align list.of_fn_const List.of_fn_const
 
 /-- Lists are equivalent to the sigma type of tuples of a given length. -/
 @[simps]
-def equivSigmaTuple : List α ≃ Σ n, Fin n → α where
+def equivSigmaTuple : List α ≃ Σn, Fin n → α where
   toFun l := ⟨l.length, fun i => l.nthLe (↑i) i.2⟩
   invFun f := List.ofFn f.2
   left_inv := List.of_fn_nth_le
-  right_inv := fun ⟨n, f⟩ => Fin.sigma_eq_of_eq_comp_cast (length_of_fn _) $ funext $ fun i => nth_le_of_fn' f i.Prop
+  right_inv := fun ⟨n, f⟩ => Fin.sigma_eq_of_eq_comp_cast (length_of_fn _) <| funext fun i => nth_le_of_fn' f i.Prop
 #align list.equiv_sigma_tuple List.equivSigmaTuple
 
 /-- A recursor for lists that expands a list into a function mapping to its elements.
@@ -226,7 +226,7 @@ def equivSigmaTuple : List α ≃ Σ n, Fin n → α where
 This can be used with `induction l using list.of_fn_rec`. -/
 @[elab_as_elim]
 def ofFnRec {C : List α → Sort _} (h : ∀ (n) (f : Fin n → α), C (List.ofFn f)) (l : List α) : C l :=
-  cast (congr_arg _ l.of_fn_nth_le) $ h l.length fun i => l.nthLe (↑i) i.2
+  cast (congr_arg _ l.of_fn_nth_le) <| h l.length fun i => l.nthLe (↑i) i.2
 #align list.of_fn_rec List.ofFnRec
 
 @[simp]
@@ -235,7 +235,7 @@ theorem of_fn_rec_of_fn {C : List α → Sort _} (h : ∀ (n) (f : Fin n → α)
   equivSigmaTuple.right_inverse_symm.cast_eq (fun s => h s.1 s.2) ⟨n, f⟩
 #align list.of_fn_rec_of_fn List.of_fn_rec_of_fn
 
-theorem exists_iff_exists_tuple {P : List α → Prop} : (∃ l : List α, P l) ↔ ∃ (n) (f : Fin n → α), P (List.ofFn f) :=
+theorem exists_iff_exists_tuple {P : List α → Prop} : (∃ l : List α, P l) ↔ ∃ (n : _)(f : Fin n → α), P (List.ofFn f) :=
   equivSigmaTuple.symm.Surjective.exists.trans Sigma.exists
 #align list.exists_iff_exists_tuple List.exists_iff_exists_tuple
 
@@ -244,13 +244,13 @@ theorem forall_iff_forall_tuple {P : List α → Prop} : (∀ l : List α, P l) 
 #align list.forall_iff_forall_tuple List.forall_iff_forall_tuple
 
 /-- `fin.sigma_eq_iff_eq_comp_cast` may be useful to work with the RHS of this expression. -/
-theorem of_fn_inj' {m n : ℕ} {f : Fin m → α} {g : Fin n → α} : ofFn f = ofFn g ↔ (⟨m, f⟩ : Σ n, Fin n → α) = ⟨n, g⟩ :=
-  Iff.symm $ equivSigmaTuple.symm.Injective.eq_iff.symm
+theorem of_fn_inj' {m n : ℕ} {f : Fin m → α} {g : Fin n → α} : ofFn f = ofFn g ↔ (⟨m, f⟩ : Σn, Fin n → α) = ⟨n, g⟩ :=
+  Iff.symm <| equivSigmaTuple.symm.Injective.eq_iff.symm
 #align list.of_fn_inj' List.of_fn_inj'
 
 /-- Note we can only state this when the two functions are indexed by defeq `n`. -/
 theorem of_fn_injective {n : ℕ} : Function.Injective (ofFn : (Fin n → α) → List α) := fun f g h =>
-  eq_of_heq $ by injection of_fn_inj'.mp h
+  eq_of_heq <| by injection of_fn_inj'.mp h
 #align list.of_fn_injective List.of_fn_injective
 
 /-- A special case of `list.of_fn_inj'` for when the two functions are indexed by defeq `n`. -/

@@ -5,7 +5,7 @@ Authors: Yaël Dillies
 -/
 import Mathbin.Data.Finset.LocallyFinite
 import Mathbin.Data.Finset.Pointwise
-import Mathbin.Data.Fintype.Card
+import Mathbin.Data.Fintype.BigOperators
 import Mathbin.Data.Dfinsupp.Order
 
 /-!
@@ -29,7 +29,7 @@ variable [DecidableEq ι] [∀ i, Zero (α i)] {s : Finset ι} {f : Π₀ i, α 
 /-- Finitely supported product of finsets. -/
 def dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : Finset (Π₀ i, α i) :=
   (s.pi t).map
-    ⟨fun f => Dfinsupp.mk s $ fun i => f i i.2, by
+    ⟨fun f => (Dfinsupp.mk s) fun i => f i i.2, by
       refine' (mk_injective _).comp fun f g h => _
       ext (i hi)
       convert congr_fun h ⟨i, hi⟩⟩
@@ -37,7 +37,7 @@ def dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : Finset (Π₀ i, α i)
 
 @[simp]
 theorem card_dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : (s.Dfinsupp t).card = ∏ i in s, (t i).card :=
-  (card_map _).trans $ card_pi _ _
+  (card_map _).trans <| card_pi _ _
 #align finset.card_dfinsupp Finset.card_dfinsupp
 
 variable [∀ i, DecidableEq (α i)]
@@ -52,7 +52,7 @@ theorem mem_dfinsupp_iff : f ∈ s.Dfinsupp t ↔ f.support ⊆ s ∧ ∀ i ∈ 
   · refine' fun h => ⟨fun i _ => f i, mem_pi.2 h.2, _⟩
     ext i
     dsimp
-    exact ite_eq_left_iff.2 fun hi => (not_mem_support_iff.1 $ fun H => hi $ h.1 H).symm
+    exact ite_eq_left_iff.2 fun hi => (not_mem_support_iff.1 fun H => hi <| h.1 H).symm
     
 #align finset.mem_dfinsupp_iff Finset.mem_dfinsupp_iff
 
@@ -63,10 +63,10 @@ theorem mem_dfinsupp_iff_of_support_subset {t : Π₀ i, Finset (α i)} (ht : t.
     f ∈ s.Dfinsupp t ↔ ∀ i, f i ∈ t i := by
   refine'
     mem_dfinsupp_iff.trans
-      (forall_and_distrib.symm.trans $
-        forall_congr' $ fun i =>
-          ⟨fun h => _, fun h => ⟨fun hi => ht $ mem_support_iff.2 $ fun H => mem_support_iff.1 hi _, fun _ => h⟩⟩)
-  · by_cases hi:i ∈ s
+      (forall_and_distrib.symm.trans <|
+        forall_congr' fun i =>
+          ⟨fun h => _, fun h => ⟨fun hi => ht <| mem_support_iff.2 fun H => mem_support_iff.1 hi _, fun _ => h⟩⟩)
+  · by_cases hi : i ∈ s
     · exact h.2 hi
       
     · rw [not_mem_support_iff.1 (mt h.1 hi), not_mem_support_iff.1 (not_mem_mono ht hi)]
@@ -90,7 +90,7 @@ variable [∀ i, Zero (α i)] {f : Π₀ i, α i} {i : ι} {a : α i}
 /-- Pointwise `finset.singleton` bundled as a `dfinsupp`. -/
 def singleton (f : Π₀ i, α i) : Π₀ i, Finset (α i) where
   toFun i := {f i}
-  support' := f.support'.map $ fun s => ⟨s, fun i => (s.Prop i).imp id (congr_arg _)⟩
+  support' := f.support'.map fun s => ⟨s, fun i => (s.Prop i).imp id (congr_arg _)⟩
 #align dfinsupp.singleton Dfinsupp.singleton
 
 theorem mem_singleton_apply_iff : a ∈ f.singleton i ↔ a = f i :=
@@ -107,14 +107,14 @@ variable [∀ i, Zero (α i)] [∀ i, PartialOrder (α i)] [∀ i, LocallyFinite
 def rangeIcc (f g : Π₀ i, α i) : Π₀ i, Finset (α i) where
   toFun i := icc (f i) (g i)
   support' :=
-    f.support'.bind $ fun fs =>
-      g.support'.map $ fun gs =>
+    f.support'.bind fun fs =>
+      g.support'.map fun gs =>
         ⟨fs + gs, fun i =>
-          or_iff_not_imp_left.2 $ fun h => by
+          or_iff_not_imp_left.2 fun h => by
             have hf : f i = 0 :=
-              (fs.prop i).resolve_left (Multiset.not_mem_mono (Multiset.Le.subset $ Multiset.le_add_right _ _) h)
+              (fs.prop i).resolve_left (Multiset.not_mem_mono (Multiset.Le.subset <| Multiset.le_add_right _ _) h)
             have hg : g i = 0 :=
-              (gs.prop i).resolve_left (Multiset.not_mem_mono (Multiset.Le.subset $ Multiset.le_add_left _ _) h)
+              (gs.prop i).resolve_left (Multiset.not_mem_mono (Multiset.Le.subset <| Multiset.le_add_left _ _) h)
             rw [hf, hg]
             exact Icc_self _⟩
 #align dfinsupp.range_Icc Dfinsupp.rangeIcc
@@ -152,7 +152,7 @@ def pi (f : Π₀ i, Finset (α i)) : Finset (Π₀ i, α i) :=
 
 @[simp]
 theorem mem_pi {f : Π₀ i, Finset (α i)} {g : Π₀ i, α i} : g ∈ f.pi ↔ ∀ i, g i ∈ f i :=
-  mem_dfinsupp_iff_of_support_subset $ Subset.refl _
+  mem_dfinsupp_iff_of_support_subset <| Subset.refl _
 #align dfinsupp.mem_pi Dfinsupp.mem_pi
 
 @[simp]
@@ -170,8 +170,8 @@ variable [DecidableEq ι] [∀ i, DecidableEq (α i)]
 variable [∀ i, PartialOrder (α i)] [∀ i, Zero (α i)] [∀ i, LocallyFiniteOrder (α i)]
 
 instance : LocallyFiniteOrder (Π₀ i, α i) :=
-  LocallyFiniteOrder.ofIcc (Π₀ i, α i) (fun f g => (f.support ∪ g.support).Dfinsupp $ f.rangeIcc g) fun f g x => by
-    refine' (mem_dfinsupp_iff_of_support_subset $ support_range_Icc_subset).trans _
+  LocallyFiniteOrder.ofIcc (Π₀ i, α i) (fun f g => (f.support ∪ g.support).Dfinsupp <| f.rangeIcc g) fun f g x => by
+    refine' (mem_dfinsupp_iff_of_support_subset <| support_range_Icc_subset).trans _
     simp_rw [mem_range_Icc_apply_iff, forall_and]
     rfl
 

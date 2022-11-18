@@ -38,7 +38,7 @@ variable {𝕜 : Type _} [IsROrC 𝕜] {F : Type _} [SeminormedAddCommGroup F] [
 local notation "abs𝕜" => @IsROrC.abs 𝕜 _
 
 /-- Extend `fr : F →ₗ[ℝ] ℝ` to `F →ₗ[𝕜] 𝕜` in a way that will also be continuous and have its norm
-bounded by `∥fr∥` if `fr` is continuous. -/
+bounded by `‖fr‖` if `fr` is continuous. -/
 noncomputable def LinearMap.extendTo𝕜' [Module ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →ₗ[ℝ] ℝ) : F →ₗ[𝕜] 𝕜 := by
   let fc : F → 𝕜 := fun x => (fr x : 𝕜) - (I : 𝕜) * fr ((I : 𝕜) • x)
   have add : ∀ x y : F, fc (x + y) = fc x + fc y := by
@@ -78,18 +78,18 @@ theorem LinearMap.extend_to_𝕜'_apply [Module ℝ F] [IsScalarTower ℝ 𝕜 F
   rfl
 #align linear_map.extend_to_𝕜'_apply LinearMap.extend_to_𝕜'_apply
 
-/-- The norm of the extension is bounded by `∥fr∥`. -/
+/-- The norm of the extension is bounded by `‖fr‖`. -/
 theorem norm_bound [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[ℝ] ℝ) (x : F) :
-    ∥(fr.toLinearMap.extendTo𝕜' x : 𝕜)∥ ≤ ∥fr∥ * ∥x∥ := by
+    ‖(fr.toLinearMap.extendTo𝕜' x : 𝕜)‖ ≤ ‖fr‖ * ‖x‖ := by
   let lm : F →ₗ[𝕜] 𝕜 := fr.to_linear_map.extend_to_𝕜'
   classical
   -- We aim to find a `t : 𝕜` such that
   -- * `lm (t • x) = fr (t • x)` (so `lm (t • x) = t * lm x ∈ ℝ`)
-  -- * `∥lm x∥ = ∥lm (t • x)∥` (so `t.abs` must be 1)
+  -- * `‖lm x‖ = ‖lm (t • x)‖` (so `t.abs` must be 1)
   -- If `lm x ≠ 0`, `(lm x)⁻¹` satisfies the first requirement, and after normalizing, it
   -- satisfies the second.
   -- (If `lm x = 0`, the goal is trivial.)
-  by_cases h:lm x = 0
+  by_cases h : lm x = 0
   · rw [h, norm_zero]
     apply mul_nonneg <;> exact norm_nonneg _
     
@@ -112,20 +112,20 @@ theorem norm_bound [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[�
         
       
   calc
-    ∥lm x∥ = abs𝕜 t * ∥lm x∥ := by rw [ht, one_mul]
-    _ = ∥t * lm x∥ := by rw [← norm_eq_abs, norm_mul]
-    _ = ∥lm (t • x)∥ := by rw [← smul_eq_mul, lm.map_smul]
-    _ = ∥(fr (t • x) : 𝕜)∥ := by rw [h1]
-    _ = ∥fr (t • x)∥ := by rw [norm_eq_abs, abs_of_real, norm_eq_abs, abs_to_real]
-    _ ≤ ∥fr∥ * ∥t • x∥ := ContinuousLinearMap.le_op_norm _ _
-    _ = ∥fr∥ * (∥t∥ * ∥x∥) := by rw [norm_smul]
-    _ ≤ ∥fr∥ * ∥x∥ := by rw [norm_eq_abs, ht, one_mul]
+    ‖lm x‖ = abs𝕜 t * ‖lm x‖ := by rw [ht, one_mul]
+    _ = ‖t * lm x‖ := by rw [← norm_eq_abs, norm_mul]
+    _ = ‖lm (t • x)‖ := by rw [← smul_eq_mul, lm.map_smul]
+    _ = ‖(fr (t • x) : 𝕜)‖ := by rw [h1]
+    _ = ‖fr (t • x)‖ := by rw [norm_eq_abs, abs_of_real, norm_eq_abs, abs_to_real]
+    _ ≤ ‖fr‖ * ‖t • x‖ := ContinuousLinearMap.le_op_norm _ _
+    _ = ‖fr‖ * (‖t‖ * ‖x‖) := by rw [norm_smul]
+    _ ≤ ‖fr‖ * ‖x‖ := by rw [norm_eq_abs, ht, one_mul]
     
 #align norm_bound norm_bound
 
 /-- Extend `fr : F →L[ℝ] ℝ` to `F →L[𝕜] 𝕜`. -/
 noncomputable def ContinuousLinearMap.extendTo𝕜' [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[ℝ] ℝ) : F →L[𝕜] 𝕜 :=
-  LinearMap.mkContinuous _ ∥fr∥ (norm_bound _)
+  LinearMap.mkContinuous _ ‖fr‖ (norm_bound _)
 #align continuous_linear_map.extend_to_𝕜' ContinuousLinearMap.extendTo𝕜'
 
 theorem ContinuousLinearMap.extend_to_𝕜'_apply [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[ℝ] ℝ) (x : F) :

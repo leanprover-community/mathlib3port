@@ -51,12 +51,12 @@ open Function Rat Real Set
 
 open Classical Pointwise
 
-/- ./././Mathport/Syntax/Translate/Command.lean:383:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:375:11: unsupported: advanced extends in structure -/
 /-- A field which is both linearly ordered and conditionally complete with respect to the order.
 This axiomatizes the reals. -/
 @[protect_proj]
 class ConditionallyCompleteLinearOrderedField (α : Type _) extends
-  "./././Mathport/Syntax/Translate/Command.lean:383:11: unsupported: advanced extends in structure",
+  "./././Mathport/Syntax/Translate/Command.lean:375:11: unsupported: advanced extends in structure",
   ConditionallyCompleteLinearOrder α
 #align conditionally_complete_linear_ordered_field ConditionallyCompleteLinearOrderedField
 
@@ -70,8 +70,8 @@ instance (priority := 100) ConditionallyCompleteLinearOrderedField.toArchimedean
       obtain ⟨x, h⟩ := h
       have :=
         cSup_le (range_nonempty (coe : ℕ → α))
-          (forall_range_iff.2 $ fun n =>
-            le_sub_iff_add_le.2 $ le_cSup ⟨x, forall_range_iff.2 h⟩ ⟨n + 1, Nat.cast_succ n⟩)
+          (forall_range_iff.2 fun n =>
+            le_sub_iff_add_le.2 <| le_cSup ⟨x, forall_range_iff.2 h⟩ ⟨n + 1, Nat.cast_succ n⟩)
       linarith)
 #align conditionally_complete_linear_ordered_field.to_archimedean ConditionallyCompleteLinearOrderedField.toArchimedean
 
@@ -105,7 +105,7 @@ def cutMap (a : α) : Set β :=
 #align linear_ordered_field.cut_map LinearOrderedField.cutMap
 
 theorem cut_map_mono (h : a₁ ≤ a₂) : cutMap β a₁ ⊆ cutMap β a₂ :=
-  image_subset _ $ fun _ => h.trans_lt'
+  (image_subset _) fun _ => h.trans_lt'
 #align linear_ordered_field.cut_map_mono LinearOrderedField.cut_map_mono
 
 variable {β}
@@ -141,16 +141,16 @@ theorem cut_map_coe (q : ℚ) : cutMap β (q : α) = coe '' { r : ℚ | (r : β)
 variable [Archimedean α]
 
 theorem cut_map_nonempty (a : α) : (cutMap β a).Nonempty :=
-  Nonempty.image _ $ exists_rat_lt a
+  Nonempty.image _ <| exists_rat_lt a
 #align linear_ordered_field.cut_map_nonempty LinearOrderedField.cut_map_nonempty
 
 theorem cut_map_bdd_above (a : α) : BddAbove (cutMap β a) := by
   obtain ⟨q, hq⟩ := exists_rat_gt a
-  exact ⟨q, ball_image_iff.2 $ fun r hr => by exact_mod_cast (hq.trans' hr).le⟩
+  exact ⟨q, ball_image_iff.2 fun r hr => by exact_mod_cast (hq.trans' hr).le⟩
 #align linear_ordered_field.cut_map_bdd_above LinearOrderedField.cut_map_bdd_above
 
 theorem cut_map_add (a b : α) : cutMap β (a + b) = cutMap β a + cutMap β b := by
-  refine' (image_subset_iff.2 $ fun q hq => _).antisymm _
+  refine' (image_subset_iff.2 fun q hq => _).antisymm _
   · rw [mem_set_of_eq, ← sub_lt_iff_lt_add] at hq
     obtain ⟨q₁, hq₁q, hq₁ab⟩ := exists_rat_btwn hq
     refine' ⟨q₁, q - q₁, _, _, add_sub_cancel'_right _ _⟩ <;> try norm_cast <;> rwa [coe_mem_cut_map_iff]
@@ -181,7 +181,7 @@ variable (α β γ) [LinearOrderedField α] [ConditionallyCompleteLinearOrderedF
 linear ordered field, defined by taking the Sup in the codomain of all the rationals less than the
 input. -/
 def inducedMap (x : α) : β :=
-  Sup $ cutMap β x
+  Sup <| cutMap β x
 #align linear_ordered_field.induced_map LinearOrderedField.inducedMap
 
 variable [Archimedean α]
@@ -213,7 +213,7 @@ theorem induced_map_one : inducedMap α β 1 = 1 := by exact_mod_cast induced_ma
 variable {α β} {a : α} {b : β} {q : ℚ}
 
 theorem induced_map_nonneg (ha : 0 ≤ a) : 0 ≤ inducedMap α β a :=
-  (induced_map_zero α _).ge.trans $ induced_map_mono _ _ ha
+  (induced_map_zero α _).ge.trans <| induced_map_mono _ _ ha
 #align linear_ordered_field.induced_map_nonneg LinearOrderedField.induced_map_nonneg
 
 theorem coe_lt_induced_map_iff : (q : β) < inducedMap α β a ↔ (q : α) < a := by
@@ -228,20 +228,20 @@ theorem coe_lt_induced_map_iff : (q : β) < inducedMap α β a ↔ (q : α) < a 
 #align linear_ordered_field.coe_lt_induced_map_iff LinearOrderedField.coe_lt_induced_map_iff
 
 theorem lt_induced_map_iff : b < inducedMap α β a ↔ ∃ q : ℚ, b < q ∧ (q : α) < a :=
-  ⟨fun h => (exists_rat_btwn h).imp $ fun q => And.imp_right coe_lt_induced_map_iff.1, fun ⟨q, hbq, hqa⟩ =>
-    hbq.trans $ by rwa [coe_lt_induced_map_iff]⟩
+  ⟨fun h => (exists_rat_btwn h).imp fun q => And.imp_right coe_lt_induced_map_iff.1, fun ⟨q, hbq, hqa⟩ =>
+    hbq.trans <| by rwa [coe_lt_induced_map_iff]⟩
 #align linear_ordered_field.lt_induced_map_iff LinearOrderedField.lt_induced_map_iff
 
 @[simp]
 theorem induced_map_self (b : β) : inducedMap β β b = b :=
-  eq_of_forall_rat_lt_iff_lt $ fun q => coe_lt_induced_map_iff
+  eq_of_forall_rat_lt_iff_lt fun q => coe_lt_induced_map_iff
 #align linear_ordered_field.induced_map_self LinearOrderedField.induced_map_self
 
 variable (α β)
 
 @[simp]
 theorem induced_map_induced_map (a : α) : inducedMap β γ (inducedMap α β a) = inducedMap α γ a :=
-  eq_of_forall_rat_lt_iff_lt $ fun q => by
+  eq_of_forall_rat_lt_iff_lt fun q => by
     rw [coe_lt_induced_map_iff, coe_lt_induced_map_iff, Iff.comm, coe_lt_induced_map_iff]
 #align linear_ordered_field.induced_map_induced_map LinearOrderedField.induced_map_induced_map
 
@@ -267,7 +267,7 @@ theorem le_induced_map_mul_self_of_mem_cut_map (ha : 0 < a) (b : β) (hb : b ∈
   rw [pow_two] at hqa⊢
   exact
     mul_self_le_mul_self (by exact_mod_cast hq'.le)
-      (le_cSup (cut_map_bdd_above β a) $ coe_mem_cut_map_iff.2 $ lt_of_mul_self_lt_mul_self ha.le hqa)
+      (le_cSup (cut_map_bdd_above β a) <| coe_mem_cut_map_iff.2 <| lt_of_mul_self_lt_mul_self ha.le hqa)
 #align
   linear_ordered_field.le_induced_map_mul_self_of_mem_cut_map LinearOrderedField.le_induced_map_mul_self_of_mem_cut_map
 
@@ -285,7 +285,7 @@ theorem exists_mem_cut_map_mul_self_of_lt_induced_map_mul_self (ha : 0 < a) (b :
   rw [pow_two] at hqa⊢
   push_cast
   obtain ⟨q', hq', hqa'⟩ := lt_induced_map_iff.1 (lt_of_mul_self_lt_mul_self _ hqa)
-  exact mul_self_lt_mul_self (by exact_mod_cast hq.le) (hqa'.trans' $ by assumption_mod_cast)
+  exact mul_self_lt_mul_self (by exact_mod_cast hq.le) (hqa'.trans' <| by assumption_mod_cast)
   exact induced_map_nonneg ha.le
 #align
   linear_ordered_field.exists_mem_cut_map_mul_self_of_lt_induced_map_mul_self LinearOrderedField.exists_mem_cut_map_mul_self_of_lt_induced_map_mul_self
@@ -356,12 +356,12 @@ open OrderRingIso
 /-- There is a unique ordered ring homomorphism from an archimedean linear ordered field to a
 conditionally complete linear ordered field. -/
 instance : Unique (α →+*o β) :=
-  uniqueOfSubsingleton $ inducedOrderRingHom α β
+  uniqueOfSubsingleton <| inducedOrderRingHom α β
 
 /-- There is a unique ordered ring isomorphism between two conditionally complete linear ordered
 fields. -/
 instance : Unique (β ≃+*o γ) :=
-  uniqueOfSubsingleton $ inducedOrderRingIso β γ
+  uniqueOfSubsingleton <| inducedOrderRingIso β γ
 
 end InducedMap
 
@@ -372,7 +372,7 @@ section Real
 variable {R S : Type _} [OrderedRing R] [LinearOrderedRing S]
 
 theorem ring_hom_monotone (hR : ∀ r : R, 0 ≤ r → ∃ s : R, s ^ 2 = r) (f : R →+* S) : Monotone f :=
-  (monotone_iff_map_nonneg f).2 $ fun r h => by
+  (monotone_iff_map_nonneg f).2 fun r h => by
     obtain ⟨s, rfl⟩ := hR r h
     rw [map_pow]
     apply sq_nonneg

@@ -50,59 +50,60 @@ is the derivative of `f`, then `g` is not integrable on any interval `a..b` such
 `[a, b] ∈ l`. -/
 theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter {f : ℝ → E} {g : ℝ → F} {a b : ℝ}
     (l : Filter ℝ) [NeBot l] [TendstoIxxClass icc l l] (hl : [a, b] ∈ l) (hd : ∀ᶠ x in l, DifferentiableAt ℝ f x)
-    (hf : Tendsto (fun x => ∥f x∥) l atTop) (hfg : deriv f =O[l] g) : ¬IntervalIntegrable g volume a b := by
+    (hf : Tendsto (fun x => ‖f x‖) l atTop) (hfg : deriv f =O[l] g) : ¬IntervalIntegrable g volume a b := by
   intro hgi
   obtain ⟨C, hC₀, s, hsl, hsub, hfd, hg⟩ :
-    ∃ (C : ℝ) (hC₀ : 0 ≤ C) (s ∈ l),
-      (∀ x ∈ s, ∀ y ∈ s, [x, y] ⊆ [a, b]) ∧
-        (∀ x ∈ s, ∀ y ∈ s, ∀ z ∈ [x, y], DifferentiableAt ℝ f z) ∧
-          ∀ x ∈ s, ∀ y ∈ s, ∀ z ∈ [x, y], ∥deriv f z∥ ≤ C * ∥g z∥ :=
+    ∃ (C : ℝ)(hC₀ : 0 ≤ C),
+      ∃ s ∈ l,
+        (∀ x ∈ s, ∀ y ∈ s, [x, y] ⊆ [a, b]) ∧
+          (∀ x ∈ s, ∀ y ∈ s, ∀ z ∈ [x, y], DifferentiableAt ℝ f z) ∧
+            ∀ x ∈ s, ∀ y ∈ s, ∀ z ∈ [x, y], ‖deriv f z‖ ≤ C * ‖g z‖ :=
     by
     rcases hfg.exists_nonneg with ⟨C, C₀, hC⟩
     have h :
-      ∀ᶠ x : ℝ × ℝ in l.prod l, ∀ y ∈ [x.1, x.2], (DifferentiableAt ℝ f y ∧ ∥deriv f y∥ ≤ C * ∥g y∥) ∧ y ∈ [a, b] :=
+      ∀ᶠ x : ℝ × ℝ in l.prod l, ∀ y ∈ [x.1, x.2], (DifferentiableAt ℝ f y ∧ ‖deriv f y‖ ≤ C * ‖g y‖) ∧ y ∈ [a, b] :=
       (tendsto_fst.interval tendsto_snd).Eventually ((hd.and hC.bound).And hl).smallSets
     rcases mem_prod_self_iff.1 h with ⟨s, hsl, hs⟩
     simp only [prod_subset_iff, mem_set_of_eq] at hs
     exact
       ⟨C, C₀, s, hsl, fun x hx y hy z hz => (hs x hx y hy z hz).2, fun x hx y hy z hz => (hs x hx y hy z hz).1.1,
         fun x hx y hy z hz => (hs x hx y hy z hz).1.2⟩
-  replace hgi : IntervalIntegrable (fun x => C * ∥g x∥) volume a b
+  replace hgi : IntervalIntegrable (fun x => C * ‖g x‖) volume a b
   · convert hgi.norm.smul C
     
-  obtain ⟨c, hc, d, hd, hlt⟩ : ∃ (c ∈ s) (d ∈ s), (∥f c∥ + ∫ y in Ι a b, C * ∥g y∥) < ∥f d∥ := by
+  obtain ⟨c, hc, d, hd, hlt⟩ : ∃ c ∈ s, ∃ d ∈ s, (‖f c‖ + ∫ y in Ι a b, C * ‖g y‖) < ‖f d‖ := by
     rcases Filter.nonempty_of_mem hsl with ⟨c, hc⟩
-    have : ∀ᶠ x in l, (∥f c∥ + ∫ y in Ι a b, C * ∥g y∥) < ∥f x∥ := hf.eventually (eventually_gt_at_top _)
+    have : ∀ᶠ x in l, (‖f c‖ + ∫ y in Ι a b, C * ‖g y‖) < ‖f x‖ := hf.eventually (eventually_gt_at_top _)
     exact ⟨c, hc, (this.and hsl).exists.imp fun d hd => ⟨hd.2, hd.1⟩⟩
   specialize hsub c hc d hd
   specialize hfd c hc d hd
-  replace hg : ∀ x ∈ Ι c d, ∥deriv f x∥ ≤ C * ∥g x∥
+  replace hg : ∀ x ∈ Ι c d, ‖deriv f x‖ ≤ C * ‖g x‖
   exact fun z hz => hg c hc d hd z ⟨hz.1.le, hz.2⟩
-  have hg_ae : ∀ᵐ x ∂volume.restrict (Ι c d), ∥deriv f x∥ ≤ C * ∥g x∥ :=
+  have hg_ae : ∀ᵐ x ∂volume.restrict (Ι c d), ‖deriv f x‖ ≤ C * ‖g x‖ :=
     (ae_restrict_mem measurableSetIntervalOc).mono hg
   have hsub' : Ι c d ⊆ Ι a b := interval_oc_subset_interval_oc_of_interval_subset_interval hsub
   have hfi : IntervalIntegrable (deriv f) volume c d :=
     (hgi.mono_set hsub).monoFun' (aeStronglyMeasurableDeriv _ _) hg_ae
   refine' hlt.not_le (sub_le_iff_le_add'.1 _)
   calc
-    ∥f d∥ - ∥f c∥ ≤ ∥f d - f c∥ := norm_sub_norm_le _ _
-    _ = ∥∫ x in c..d, deriv f x∥ := congr_arg _ (integral_deriv_eq_sub hfd hfi).symm
-    _ = ∥∫ x in Ι c d, deriv f x∥ := norm_integral_eq_norm_integral_Ioc _
-    _ ≤ ∫ x in Ι c d, ∥deriv f x∥ := norm_integral_le_integral_norm _
-    _ ≤ ∫ x in Ι c d, C * ∥g x∥ := set_integral_mono_on hfi.norm.def (hgi.def.mono_set hsub') measurableSetIntervalOc hg
-    _ ≤ ∫ x in Ι a b, C * ∥g x∥ :=
-      set_integral_mono_set hgi.def (ae_of_all _ $ fun x => mul_nonneg hC₀ (norm_nonneg _)) hsub'.eventually_le
+    ‖f d‖ - ‖f c‖ ≤ ‖f d - f c‖ := norm_sub_norm_le _ _
+    _ = ‖∫ x in c..d, deriv f x‖ := congr_arg _ (integral_deriv_eq_sub hfd hfi).symm
+    _ = ‖∫ x in Ι c d, deriv f x‖ := norm_integral_eq_norm_integral_Ioc _
+    _ ≤ ∫ x in Ι c d, ‖deriv f x‖ := norm_integral_le_integral_norm _
+    _ ≤ ∫ x in Ι c d, C * ‖g x‖ := set_integral_mono_on hfi.norm.def (hgi.def.mono_set hsub') measurableSetIntervalOc hg
+    _ ≤ ∫ x in Ι a b, C * ‖g x‖ :=
+      set_integral_mono_set hgi.def ((ae_of_all _) fun x => mul_nonneg hC₀ (norm_nonneg _)) hsub'.eventually_le
     
 #align
   not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter
 
 /-- If `a ≠ b`, `c ∈ [a, b]`, `f` is differentiable in the neighborhood of `c` within
-`[a, b] \ {c}`, `∥f x∥ → ∞` as `x → c` within `[a, b] \ {c}`, and `f' = O(g)` along
+`[a, b] \ {c}`, `‖f x‖ → ∞` as `x → c` within `[a, b] \ {c}`, and `f' = O(g)` along
 `𝓝[[a, b] \ {c}] c`, where `f'` is the derivative of `f`, then `g` is not interval integrable on
 `a..b`. -/
 theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_within_diff_singleton {f : ℝ → E} {g : ℝ → F}
     {a b c : ℝ} (hne : a ≠ b) (hc : c ∈ [a, b]) (h_deriv : ∀ᶠ x in 𝓝[[a, b] \ {c}] c, DifferentiableAt ℝ f x)
-    (h_infty : Tendsto (fun x => ∥f x∥) (𝓝[[a, b] \ {c}] c) atTop) (hg : deriv f =O[𝓝[[a, b] \ {c}] c] g) :
+    (h_infty : Tendsto (fun x => ‖f x‖) (𝓝[[a, b] \ {c}] c) atTop) (hg : deriv f =O[𝓝[[a, b] \ {c}] c] g) :
     ¬IntervalIntegrable g volume a b := by
   obtain ⟨l, hl, hl', hle, hmem⟩ : ∃ l : Filter ℝ, tendsto_Ixx_class Icc l l ∧ l.ne_bot ∧ l ≤ 𝓝 c ∧ [a, b] \ {c} ∈ l :=
     by
@@ -123,12 +124,12 @@ theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_within_diff
 #align
   not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_within_diff_singleton not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_within_diff_singleton
 
-/-- If `f` is differentiable in a punctured neighborhood of `c`, `∥f x∥ → ∞` as `x → c` (more
+/-- If `f` is differentiable in a punctured neighborhood of `c`, `‖f x‖ → ∞` as `x → c` (more
 formally, along the filter `𝓝[≠] c`), and `f' = O(g)` along `𝓝[≠] c`, where `f'` is the derivative
 of `f`, then `g` is not interval integrable on any nontrivial interval `a..b` such that
 `c ∈ [a, b]`. -/
 theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_punctured {f : ℝ → E} {g : ℝ → F} {a b c : ℝ}
-    (h_deriv : ∀ᶠ x in 𝓝[≠] c, DifferentiableAt ℝ f x) (h_infty : Tendsto (fun x => ∥f x∥) (𝓝[≠] c) atTop)
+    (h_deriv : ∀ᶠ x in 𝓝[≠] c, DifferentiableAt ℝ f x) (h_infty : Tendsto (fun x => ‖f x‖) (𝓝[≠] c) atTop)
     (hg : deriv f =O[𝓝[≠] c] g) (hne : a ≠ b) (hc : c ∈ [a, b]) : ¬IntervalIntegrable g volume a b :=
   have : 𝓝[[a, b] \ {c}] c ≤ 𝓝[≠] c := nhds_within_mono _ (inter_subset_right _ _)
   not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_within_diff_singleton hne hc (h_deriv.filter_mono this)
@@ -143,13 +144,13 @@ theorem not_interval_integrable_of_sub_inv_is_O_punctured {f : ℝ → F} {a b c
   have A : ∀ᶠ x in 𝓝[≠] c, HasDerivAt (fun x => Real.log (x - c)) (x - c)⁻¹ x := by
     filter_upwards [self_mem_nhds_within] with x hx
     simpa using ((hasDerivAtId x).sub_const c).log (sub_ne_zero.2 hx)
-  have B : tendsto (fun x => ∥Real.log (x - c)∥) (𝓝[≠] c) at_top := by
+  have B : tendsto (fun x => ‖Real.log (x - c)‖) (𝓝[≠] c) at_top := by
     refine' tendsto_abs_at_bot_at_top.comp (real.tendsto_log_nhds_within_zero.comp _)
     rw [← sub_self c]
     exact ((hasDerivAtId c).sub_const c).tendsto_punctured_nhds one_ne_zero
   exact
     not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_punctured (A.mono fun x hx => hx.DifferentiableAt) B
-      (hf.congr' (A.mono $ fun x hx => hx.deriv.symm) eventually_eq.rfl) hne hc
+      (hf.congr' (A.mono fun x hx => hx.deriv.symm) eventually_eq.rfl) hne hc
 #align not_interval_integrable_of_sub_inv_is_O_punctured not_interval_integrable_of_sub_inv_is_O_punctured
 
 /-- The function `λ x, (x - c)⁻¹` is integrable on `a..b` if and only if `a = b` or `c ∉ [a, b]`. -/
@@ -162,7 +163,7 @@ theorem interval_integrable_sub_inv_iff {a b c : ℝ} :
     
   · rintro (rfl | h₀)
     exacts[IntervalIntegrable.refl,
-      interval_integrable_inv (fun x hx => sub_ne_zero.2 $ ne_of_mem_of_not_mem hx h₀)
+      interval_integrable_inv (fun x hx => sub_ne_zero.2 <| ne_of_mem_of_not_mem hx h₀)
         (continuous_on_id.sub continuous_on_const)]
     
 #align interval_integrable_sub_inv_iff interval_integrable_sub_inv_iff

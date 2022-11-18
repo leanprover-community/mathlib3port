@@ -92,7 +92,7 @@ theorem single_order_mul_power_series_part (x : LaurentSeries R) :
     (single x.order 1 : LaurentSeries R) * x.powerSeriesPart = x := by
   ext n
   rw [← sub_add_cancel n x.order, single_mul_coeff_add, sub_add_cancel, one_mul]
-  by_cases h:x.order ≤ n
+  by_cases h : x.order ≤ n
   · rw [Int.eq_natAbs_of_zero_le (sub_nonneg_of_le h), coeff_coe_power_series, power_series_part_coeff, ←
       Int.eq_natAbs_of_zero_le (sub_nonneg_of_le h), add_sub_cancel'_right]
     
@@ -143,7 +143,7 @@ instance ofPowerSeriesLocalization [CommRing R] :
       
   surj := by
     intro z
-    by_cases h:0 ≤ z.order
+    by_cases h : 0 ≤ z.order
     · refine' ⟨⟨PowerSeries.x ^ Int.natAbs z.order * power_series_part z, 1⟩, _⟩
       simp only [RingHom.map_one, mul_one, RingHom.map_mul, coe_algebra_map, of_power_series_X_pow, Submonoid.coe_one]
       rw [Int.natAbs_of_nonneg h, ← coe_power_series, single_order_mul_power_series_part]
@@ -176,7 +176,7 @@ instance ofPowerSeriesLocalization [CommRing R] :
 instance {K : Type u} [Field K] : IsFractionRing (PowerSeries K) (LaurentSeries K) :=
   IsLocalization.ofLe (Submonoid.powers (PowerSeries.x : PowerSeries K)) _
     (powers_le_non_zero_divisors_of_no_zero_divisors PowerSeries.X_ne_zero) fun f hf =>
-    is_unit_of_mem_non_zero_divisors $ map_mem_non_zero_divisors _ HahnSeries.of_power_series_injective hf
+    is_unit_of_mem_non_zero_divisors <| map_mem_non_zero_divisors _ HahnSeries.of_power_series_injective hf
 
 end LaurentSeries
 

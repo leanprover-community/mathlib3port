@@ -76,8 +76,8 @@ See also `linear_equiv_class F R M M₂` for the case where `σ` is the identity
 A map `f` between an `R`-module and an `S`-module over a ring homomorphism `σ : R →+* S`
 is semilinear if it satisfies the two properties `f (x + y) = f x + f y` and
 `f (c • x) = (σ c) • f x`. -/
-class SemilinearEquivClass (F : Type _) {R S : outParam (Type _)} [Semiring R] [Semiring S] (σ : outParam $ R →+* S)
-  {σ' : outParam $ S →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (M M₂ : outParam (Type _)) [AddCommMonoid M]
+class SemilinearEquivClass (F : Type _) {R S : outParam (Type _)} [Semiring R] [Semiring S] (σ : outParam <| R →+* S)
+  {σ' : outParam <| S →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (M M₂ : outParam (Type _)) [AddCommMonoid M]
   [AddCommMonoid M₂] [Module R M] [Module S M₂] extends AddEquivClass F M M₂ where
   map_smulₛₗ : ∀ (f : F) (r : R) (x : M), f (r • x) = σ r • f x
 #align semilinear_equiv_class SemilinearEquivClass
@@ -159,7 +159,7 @@ theorem to_equiv_inj {e₁ e₂ : M ≃ₛₗ[σ] M₂} : e₁.toEquiv = e₂.to
 #align linear_equiv.to_equiv_inj LinearEquiv.to_equiv_inj
 
 theorem to_linear_map_injective : Injective (coe : (M ≃ₛₗ[σ] M₂) → M →ₛₗ[σ] M₂) := fun e₁ e₂ H =>
-  to_equiv_injective $ Equiv.ext $ LinearMap.congr_fun H
+  to_equiv_injective <| Equiv.ext <| LinearMap.congr_fun H
 #align linear_equiv.to_linear_map_injective LinearEquiv.to_linear_map_injective
 
 @[simp, norm_cast]
@@ -503,7 +503,7 @@ theorem comp_coe [Module R M] [Module R M₂] [Module R M₃] (f : M ≃ₗ[R] M
 
 @[simp]
 theorem mk_coe (h₁ h₂ f h₃ h₄) : (LinearEquiv.mk e h₁ h₂ f h₃ h₄ : M ≃ₛₗ[σ] M₂) = e :=
-  ext $ fun _ => rfl
+  ext fun _ => rfl
 #align linear_equiv.mk_coe LinearEquiv.mk_coe
 
 protected theorem map_add (a b : M) : e (a + b) = e a + e b :=
@@ -559,7 +559,7 @@ theorem symm_bijective [Module R M] [Module S M₂] [RingHomInvPair σ' σ] [Rin
 
 @[simp]
 theorem mk_coe' (f h₁ h₂ h₃ h₄) : (LinearEquiv.mk f h₁ h₂ (⇑e) h₃ h₄ : M₂ ≃ₛₗ[σ'] M) = e.symm :=
-  symm_bijective.Injective $ ext $ fun x => rfl
+  symm_bijective.Injective <| ext fun x => rfl
 #align linear_equiv.mk_coe' LinearEquiv.mk_coe'
 
 @[simp]
@@ -656,9 +656,9 @@ instance automorphismGroup : Group (M ≃ₗ[R] M) where
   one := LinearEquiv.refl R M
   inv f := f.symm
   mul_assoc f g h := rfl
-  mul_one f := ext $ fun x => rfl
-  one_mul f := ext $ fun x => rfl
-  mul_left_inv f := ext $ f.left_inv
+  mul_one f := ext fun x => rfl
+  one_mul f := ext fun x => rfl
+  mul_left_inv f := ext <| f.left_inv
 #align linear_equiv.automorphism_group LinearEquiv.automorphismGroup
 
 /-- Restriction from `R`-linear automorphisms of `M` to `R`-linear endomorphisms of `M`,
@@ -674,7 +674,7 @@ def automorphismGroup.toLinearMapMonoidHom : (M ≃ₗ[R] M) →* M →ₗ[R] M 
 
 This generalizes `function.End.apply_mul_action`. -/
 instance applyDistribMulAction : DistribMulAction (M ≃ₗ[R] M) M where
-  smul := (· $ ·)
+  smul := (· <| ·)
   smul_zero := LinearEquiv.map_zero
   smul_add := LinearEquiv.map_add
   one_smul _ := rfl
@@ -754,8 +754,8 @@ This is a stronger version of `distrib_mul_action.to_add_aut`. -/
 @[simps]
 def toModuleAut : S →* M ≃ₗ[R] M where
   toFun := toLinearEquiv R M
-  map_one' := LinearEquiv.ext $ one_smul _
-  map_mul' a b := LinearEquiv.ext $ mul_smul _ _
+  map_one' := LinearEquiv.ext <| one_smul _
+  map_mul' a b := LinearEquiv.ext <| mul_smul _ _
 #align distrib_mul_action.to_module_aut DistribMulAction.toModuleAut
 
 end DistribMulAction
@@ -788,7 +788,7 @@ theorem coe_to_linear_equiv_symm (h : ∀ (c : R) (x), e (c • x) = c • e x) 
 /-- An additive equivalence between commutative additive monoids is a linear equivalence between
 ℕ-modules -/
 def toNatLinearEquiv : M ≃ₗ[ℕ] M₂ :=
-  e.toLinearEquiv $ fun c a => by
+  e.toLinearEquiv fun c a => by
     erw [e.to_add_monoid_hom.map_nsmul]
     rfl
 #align add_equiv.to_nat_linear_equiv AddEquiv.toNatLinearEquiv
@@ -837,7 +837,7 @@ variable (e : M ≃+ M₂)
 /-- An additive equivalence between commutative additive groups is a linear
 equivalence between ℤ-modules -/
 def toIntLinearEquiv : M ≃ₗ[ℤ] M₂ :=
-  e.toLinearEquiv $ fun c a => e.toAddMonoidHom.map_zsmul a c
+  e.toLinearEquiv fun c a => e.toAddMonoidHom.map_zsmul a c
 #align add_equiv.to_int_linear_equiv AddEquiv.toIntLinearEquiv
 
 @[simp]

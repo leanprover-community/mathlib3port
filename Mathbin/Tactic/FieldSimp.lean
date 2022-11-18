@@ -37,10 +37,6 @@ namespace Tactic
 namespace Interactive
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The goal of `field_simp` is to reduce an expression in a field to an expression of the form `n / d`
 where neither `n` nor `d` contains any division symbol, just using the simplifier (with a carefully
 crafted simpset named `field_simps`) to reduce the number of division symbols whenever possible by
@@ -104,8 +100,8 @@ entirely remove (numeric) division from the expression by multiplying by a facto
 -/
 unsafe def field_simp (no_dflt : parse only_flag) (hs : parse simp_arg_list) (attr_names : parse with_ident_list)
     (locat : parse location) (cfg : simp_config_ext := { discharger := field_simp.ne_zero }) : tactic Unit :=
-  let attr_names := `field_simps::attr_names
-  let hs := simp_arg_type.except `one_div::simp_arg_type.except `mul_eq_zero::simp_arg_type.except `one_divp::hs
+  let attr_names := `field_simps :: attr_names
+  let hs := simp_arg_type.except `one_div :: simp_arg_type.except `mul_eq_zero :: simp_arg_type.except `one_divp :: hs
   propagate_tags (simp_core cfg.toSimpConfig cfg.discharger no_dflt hs attr_names locat >> skip)
 #align tactic.interactive.field_simp tactic.interactive.field_simp
 

@@ -5,7 +5,6 @@ Authors: Johannes Hölzl
 -/
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Algebra.Field.Basic
-import Mathbin.Algebra.Group.TypeTags
 import Mathbin.Logic.Equiv.Defs
 import Mathbin.RingTheory.Ideal.LocalRing
 
@@ -290,7 +289,7 @@ protected def addGroupWithOne [AddGroupWithOne β] : AddGroupWithOne α :=
   { e.AddMonoidWithOne, e.AddGroup with intCast := fun n => e.symm n,
     int_cast_of_nat := fun n => by rw [Int.cast_ofNat] <;> rfl,
     int_cast_neg_succ_of_nat := fun n =>
-      congr_arg e.symm $ (Int.cast_negSucc _).trans $ congr_arg _ (e.apply_symm_apply _).symm }
+      congr_arg e.symm <| (Int.cast_negSucc _).trans <| congr_arg _ (e.apply_symm_apply _).symm }
 #align equiv.add_group_with_one Equiv.addGroupWithOne
 
 /-- Transfer `non_assoc_semiring` across an `equiv` -/

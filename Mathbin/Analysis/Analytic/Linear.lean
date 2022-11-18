@@ -40,12 +40,12 @@ theorem fpower_series_apply_add_two (f : E →L[𝕜] F) (x : E) (n : ℕ) : f.f
 
 @[simp]
 theorem fpower_series_radius (f : E →L[𝕜] F) (x : E) : (f.fpowerSeries x).radius = ∞ :=
-  (f.fpowerSeries x).radius_eq_top_of_forall_image_add_eq_zero 2 $ fun n => rfl
+  ((f.fpowerSeries x).radius_eq_top_of_forall_image_add_eq_zero 2) fun n => rfl
 #align continuous_linear_map.fpower_series_radius ContinuousLinearMap.fpower_series_radius
 
 protected theorem hasFpowerSeriesOnBall (f : E →L[𝕜] F) (x : E) : HasFpowerSeriesOnBall f (f.fpowerSeries x) x ∞ :=
   { r_le := by simp, r_pos := Ennreal.coe_lt_top,
-    HasSum := fun y _ => (has_sum_nat_add_iff' 2).1 $ by simp [Finset.sum_range_succ, ← sub_sub, has_sum_zero] }
+    HasSum := fun y _ => (has_sum_nat_add_iff' 2).1 <| by simp [Finset.sum_range_succ, ← sub_sub, has_sum_zero] }
 #align continuous_linear_map.has_fpower_series_on_ball ContinuousLinearMap.hasFpowerSeriesOnBall
 
 protected theorem hasFpowerSeriesAt (f : E →L[𝕜] F) (x : E) : HasFpowerSeriesAt f (f.fpowerSeries x) x :=
@@ -61,8 +61,8 @@ protected theorem analyticAt (f : E →L[𝕜] F) (x : E) : AnalyticAt 𝕜 f x 
 multilinear series expansion of `uncurry f`. It is given by
 `f.uncurry_bilinear ![(x, y), (x', y')] = f x y'`. -/
 def uncurryBilinear (f : E →L[𝕜] F →L[𝕜] G) : E × F[×2]→L[𝕜] G :=
-  @ContinuousLinearMap.uncurryLeft 𝕜 1 (fun _ => E × F) G _ _ _ _ _ $
-    (↑(continuousMultilinearCurryFin1 𝕜 (E × F) G).symm : (E × F →L[𝕜] G) →L[𝕜] _).comp $
+  @ContinuousLinearMap.uncurryLeft 𝕜 1 (fun _ => E × F) G _ _ _ _ _ <|
+    (↑(continuousMultilinearCurryFin1 𝕜 (E × F) G).symm : (E × F →L[𝕜] G) →L[𝕜] _).comp <|
       f.bilinearComp (fst _ _ _) (snd _ _ _)
 #align continuous_linear_map.uncurry_bilinear ContinuousLinearMap.uncurryBilinear
 
@@ -82,14 +82,14 @@ def fpowerSeriesBilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) : Formal
 
 @[simp]
 theorem fpower_series_bilinear_radius (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) : (f.fpowerSeriesBilinear x).radius = ∞ :=
-  (f.fpowerSeriesBilinear x).radius_eq_top_of_forall_image_add_eq_zero 3 $ fun n => rfl
+  ((f.fpowerSeriesBilinear x).radius_eq_top_of_forall_image_add_eq_zero 3) fun n => rfl
 #align continuous_linear_map.fpower_series_bilinear_radius ContinuousLinearMap.fpower_series_bilinear_radius
 
 protected theorem hasFpowerSeriesOnBallBilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
     HasFpowerSeriesOnBall (fun x : E × F => f x.1 x.2) (f.fpowerSeriesBilinear x) x ∞ :=
   { r_le := by simp, r_pos := Ennreal.coe_lt_top,
     HasSum := fun y _ =>
-      (has_sum_nat_add_iff' 3).1 $ by
+      (has_sum_nat_add_iff' 3).1 <| by
         simp only [Finset.sum_range_succ, Finset.sum_range_one, Prod.fst_add, Prod.snd_add, f.map_add_add]
         dsimp
         simp only [add_comm, sub_self, has_sum_zero] }

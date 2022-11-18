@@ -3,8 +3,8 @@ Copyright (c) 2014 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
 -/
-import Mathbin.Algebra.Ring.Basic
 import Mathbin.Algebra.Divisibility.Basic
+import Mathbin.Algebra.Ring.Defs
 
 /-!
 # Lemmas about divisibility in rings
@@ -33,7 +33,7 @@ section NonUnitalCommSemiring
 variable [NonUnitalCommSemiring α] [NonUnitalCommSemiring β] {a b c : α}
 
 theorem Dvd.Dvd.linear_comb {d x y : α} (hdx : d ∣ x) (hdy : d ∣ y) (a b : α) : d ∣ a * x + b * y :=
-  dvd_add (hdx.mulLeft a) (hdy.mulLeft b)
+  dvd_add (hdx.mul_left a) (hdy.mul_left b)
 #align has_dvd.dvd.linear_comb Dvd.Dvd.linear_comb
 
 end NonUnitalCommSemiring

@@ -45,8 +45,8 @@ by Left as the second player.
 
 It turns out to be quite convenient to define various relations on top of these. We define the "less
 or fuzzy" relation `x ⧏ y` as `¬ y ≤ x`, the equivalence relation `x ≈ y` as `x ≤ y ∧ y ≤ x`, and
-the fuzzy relation `x ∥ y` as `x ⧏ y ∧ y ⧏ x`. If `0 ⧏ x`, then `x` can be won by Left as the
-first player. If `x ≈ 0`, then `x` can be won by the second player. If `x ∥ 0`, then `x` can be won
+the fuzzy relation `x ‖ y` as `x ⧏ y ∧ y ⧏ x`. If `0 ⧏ x`, then `x` can be won by Left as the
+first player. If `x ≈ 0`, then `x` can be won by the second player. If `x ‖ 0`, then `x` can be won
 by the first player.
 
 Statements like `zero_le_lf`, `zero_lf_le`, etc. unfold these definitions. The theorems `le_def` and
@@ -207,7 +207,7 @@ Both this and `pgame.rec_on` describe Conway induction on games. -/
 @[elab_as_elim]
 def moveRecOn {C : Pgame → Sort _} (x : Pgame)
     (IH : ∀ y : Pgame, (∀ i, C (y.moveLeft i)) → (∀ j, C (y.moveRight j)) → C y) : C x :=
-  x.recOn $ fun yl yr yL yR => IH (mk yl yr yL yR)
+  x.recOn fun yl yr yL yR => IH (mk yl yr yL yR)
 #align pgame.move_rec_on Pgame.moveRecOn
 
 /-- `is_option x y` means that `x` is either a left or right option for `y`. -/
@@ -229,8 +229,8 @@ theorem IsOption.mk_right {xl xr : Type u} (xL : xl → Pgame) (xR : xr → Pgam
 
 theorem wf_is_option : WellFounded IsOption :=
   ⟨fun x =>
-    moveRecOn x $ fun x IHl IHr =>
-      Acc.intro x $ fun y h => by
+    (moveRecOn x) fun x IHl IHr =>
+      (Acc.intro x) fun y h => by
         induction' h with _ i _ j
         · exact IHl i
           
@@ -256,7 +256,7 @@ theorem wf_subsequent : WellFounded Subsequent :=
   wf_is_option.TransGen
 #align pgame.wf_subsequent Pgame.wf_subsequent
 
-instance : HasWellFounded Pgame :=
+instance : WellFoundedRelation Pgame :=
   ⟨_, wf_subsequent⟩
 
 theorem Subsequent.move_left {x : Pgame} (i : x.LeftMoves) : Subsequent (x.moveLeft i) x :=
@@ -450,11 +450,11 @@ theorem lf_move_right_of_le {x y : Pgame} (h : x ≤ y) (j) : x ⧏ y.moveRight 
 alias lf_move_right_of_le ← _root_.has_le.le.lf_move_right
 
 theorem lf_of_move_right_le {x y : Pgame} {j} (h : x.moveRight j ≤ y) : x ⧏ y :=
-  lf_iff_exists_le.2 $ Or.inr ⟨j, h⟩
+  lf_iff_exists_le.2 <| Or.inr ⟨j, h⟩
 #align pgame.lf_of_move_right_le Pgame.lf_of_move_right_le
 
 theorem lf_of_le_move_left {x y : Pgame} {i} (h : x ≤ y.moveLeft i) : x ⧏ y :=
-  lf_iff_exists_le.2 $ Or.inl ⟨i, h⟩
+  lf_iff_exists_le.2 <| Or.inl ⟨i, h⟩
 #align pgame.lf_of_le_move_left Pgame.lf_of_le_move_left
 
 theorem lf_of_le_mk {xl xr xL xR y} : mk xl xr xL xR ≤ y → ∀ i, xL i ⧏ y :=
@@ -477,8 +477,8 @@ theorem lf_mk_of_le {x yl yr} {yL : yl → Pgame} (yR) {i} : x ≤ yL i → x �
 reorderings. This auxiliary lemma is used during said induction. -/
 private theorem le_trans_aux {x y z : Pgame} (h₁ : ∀ {i}, y ≤ z → z ≤ x.moveLeft i → y ≤ x.moveLeft i)
     (h₂ : ∀ {j}, z.moveRight j ≤ x → x ≤ y → z.moveRight j ≤ y) (hxy : x ≤ y) (hyz : y ≤ z) : x ≤ z :=
-  le_of_forall_lf (fun i => Pgame.not_le.1 $ fun h => (h₁ hyz h).not_gf $ hxy.move_left_lf i) fun j =>
-    Pgame.not_le.1 $ fun h => (h₂ h hxy).not_gf $ hyz.lf_move_right j
+  le_of_forall_lf (fun i => Pgame.not_le.1 fun h => (h₁ hyz h).not_gf <| hxy.move_left_lf i) fun j =>
+    Pgame.not_le.1 fun h => (h₂ h hxy).not_gf <| hyz.lf_move_right j
 #align pgame.le_trans_aux pgame.le_trans_aux
 
 instance : LT Pgame :=
@@ -662,27 +662,27 @@ theorem le_zero_of_is_empty_left_moves (x : Pgame) [IsEmpty x.LeftMoves] : x ≤
 /-- Given a game won by the right player when they play second, provide a response to any move by
 left. -/
 noncomputable def rightResponse {x : Pgame} (h : x ≤ 0) (i : x.LeftMoves) : (x.moveLeft i).RightMoves :=
-  Classical.choose $ (le_zero.1 h) i
+  Classical.choose <| (le_zero.1 h) i
 #align pgame.right_response Pgame.rightResponse
 
 /-- Show that the response for right provided by `right_response` preserves the right-player-wins
 condition. -/
 theorem right_response_spec {x : Pgame} (h : x ≤ 0) (i : x.LeftMoves) :
     (x.moveLeft i).moveRight (rightResponse h i) ≤ 0 :=
-  Classical.choose_spec $ (le_zero.1 h) i
+  Classical.choose_spec <| (le_zero.1 h) i
 #align pgame.right_response_spec Pgame.right_response_spec
 
 /-- Given a game won by the left player when they play second, provide a response to any move by
 right. -/
 noncomputable def leftResponse {x : Pgame} (h : 0 ≤ x) (j : x.RightMoves) : (x.moveRight j).LeftMoves :=
-  Classical.choose $ (zero_le.1 h) j
+  Classical.choose <| (zero_le.1 h) j
 #align pgame.left_response Pgame.leftResponse
 
 /-- Show that the response for left provided by `left_response` preserves the left-player-wins
 condition. -/
 theorem left_response_spec {x : Pgame} (h : 0 ≤ x) (j : x.RightMoves) :
     0 ≤ (x.moveRight j).moveLeft (leftResponse h j) :=
-  Classical.choose_spec $ (zero_le.1 h) j
+  Classical.choose_spec <| (zero_le.1 h) j
 #align pgame.left_response_spec Pgame.left_response_spec
 
 /-- The equivalence relation on pre-games. Two pre-games `x`, `y` are equivalent if `x ≤ y` and
@@ -771,7 +771,7 @@ theorem le_congr_right {x y₁ y₂} (hy : y₁ ≈ y₂) : x ≤ y₁ ↔ x ≤
 #align pgame.le_congr_right Pgame.le_congr_right
 
 theorem lf_congr {x₁ y₁ x₂ y₂} (hx : x₁ ≈ x₂) (hy : y₁ ≈ y₂) : x₁ ⧏ y₁ ↔ x₂ ⧏ y₂ :=
-  Pgame.not_le.symm.trans $ (not_congr (le_congr hy hx)).trans Pgame.not_le
+  Pgame.not_le.symm.trans <| (not_congr (le_congr hy hx)).trans Pgame.not_le
 #align pgame.lf_congr Pgame.lf_congr
 
 theorem lf_congr_imp {x₁ y₁ x₂ y₂} (hx : x₁ ≈ x₂) (hy : y₁ ≈ y₂) : x₁ ⧏ y₁ → x₂ ⧏ y₂ :=
@@ -823,11 +823,11 @@ theorem lt_congr_right {x y₁ y₂} (hy : y₁ ≈ y₂) : x < y₁ ↔ x < y�
 #align pgame.lt_congr_right Pgame.lt_congr_right
 
 theorem lt_or_equiv_of_le {x y : Pgame} (h : x ≤ y) : x < y ∨ (x ≈ y) :=
-  and_or_left.mp ⟨h, (em $ y ≤ x).swap.imp_left Pgame.not_le.1⟩
+  and_or_left.mp ⟨h, (em <| y ≤ x).swap.imp_left Pgame.not_le.1⟩
 #align pgame.lt_or_equiv_of_le Pgame.lt_or_equiv_of_le
 
 theorem lf_or_equiv_or_gf (x y : Pgame) : x ⧏ y ∨ (x ≈ y) ∨ y ⧏ x := by
-  by_cases h:x ⧏ y
+  by_cases h : x ⧏ y
   · exact Or.inl h
     
   · right
@@ -840,11 +840,11 @@ theorem lf_or_equiv_or_gf (x y : Pgame) : x ⧏ y ∨ (x ≈ y) ∨ y ⧏ x := b
 #align pgame.lf_or_equiv_or_gf Pgame.lf_or_equiv_or_gf
 
 theorem equiv_congr_left {y₁ y₂} : (y₁ ≈ y₂) ↔ ∀ x₁, (x₁ ≈ y₁) ↔ (x₁ ≈ y₂) :=
-  ⟨fun h x₁ => ⟨fun h' => h'.trans h, fun h' => h'.trans h.symm⟩, fun h => (h y₁).1 $ equiv_rfl⟩
+  ⟨fun h x₁ => ⟨fun h' => h'.trans h, fun h' => h'.trans h.symm⟩, fun h => (h y₁).1 <| equiv_rfl⟩
 #align pgame.equiv_congr_left Pgame.equiv_congr_left
 
 theorem equiv_congr_right {x₁ x₂} : (x₁ ≈ x₂) ↔ ∀ y₁, (x₁ ≈ y₁) ↔ (x₂ ≈ y₁) :=
-  ⟨fun h y₁ => ⟨fun h' => h.symm.trans h', fun h' => h.trans h'⟩, fun h => (h x₂).2 $ equiv_rfl⟩
+  ⟨fun h y₁ => ⟨fun h' => h.symm.trans h', fun h' => h.trans h'⟩, fun h => (h x₂).2 <| equiv_rfl⟩
 #align pgame.equiv_congr_right Pgame.equiv_congr_right
 
 theorem equiv_of_mk_equiv {x y : Pgame} (L : x.LeftMoves ≃ y.LeftMoves) (R : x.RightMoves ≃ y.RightMoves)
@@ -858,95 +858,95 @@ theorem equiv_of_mk_equiv {x y : Pgame} (L : x.LeftMoves ≃ y.LeftMoves) (R : x
 
 /-- The fuzzy, confused, or incomparable relation on pre-games.
 
-If `x ∥ 0`, then the first player can always win `x`. -/
+If `x ‖ 0`, then the first player can always win `x`. -/
 def Fuzzy (x y : Pgame) : Prop :=
   x ⧏ y ∧ y ⧏ x
 #align pgame.fuzzy Pgame.Fuzzy
 
 -- mathport name: pgame.fuzzy
-scoped infixl:50 " ∥ " => Pgame.Fuzzy
+scoped infixl:50 " ‖ " => Pgame.Fuzzy
 
 @[symm]
-theorem Fuzzy.swap {x y : Pgame} : x ∥ y → y ∥ x :=
+theorem Fuzzy.swap {x y : Pgame} : x ‖ y → y ‖ x :=
   And.symm
 #align pgame.fuzzy.swap Pgame.Fuzzy.swap
 
-instance : IsSymm _ (· ∥ ·) :=
+instance : IsSymm _ (· ‖ ·) :=
   ⟨fun x y => Fuzzy.swap⟩
 
-theorem Fuzzy.swap_iff {x y : Pgame} : x ∥ y ↔ y ∥ x :=
+theorem Fuzzy.swap_iff {x y : Pgame} : x ‖ y ↔ y ‖ x :=
   ⟨Fuzzy.swap, Fuzzy.swap⟩
 #align pgame.fuzzy.swap_iff Pgame.Fuzzy.swap_iff
 
-theorem fuzzy_irrefl (x : Pgame) : ¬x ∥ x := fun h => lf_irrefl x h.1
+theorem fuzzy_irrefl (x : Pgame) : ¬x ‖ x := fun h => lf_irrefl x h.1
 #align pgame.fuzzy_irrefl Pgame.fuzzy_irrefl
 
-instance : IsIrrefl _ (· ∥ ·) :=
+instance : IsIrrefl _ (· ‖ ·) :=
   ⟨fuzzy_irrefl⟩
 
-theorem lf_iff_lt_or_fuzzy {x y : Pgame} : x ⧏ y ↔ x < y ∨ x ∥ y := by
+theorem lf_iff_lt_or_fuzzy {x y : Pgame} : x ⧏ y ↔ x < y ∨ x ‖ y := by
   simp only [lt_iff_le_and_lf, fuzzy, ← Pgame.not_le]
   tauto!
 #align pgame.lf_iff_lt_or_fuzzy Pgame.lf_iff_lt_or_fuzzy
 
-theorem lf_of_fuzzy {x y : Pgame} (h : x ∥ y) : x ⧏ y :=
+theorem lf_of_fuzzy {x y : Pgame} (h : x ‖ y) : x ⧏ y :=
   lf_iff_lt_or_fuzzy.2 (Or.inr h)
 #align pgame.lf_of_fuzzy Pgame.lf_of_fuzzy
 
 alias lf_of_fuzzy ← fuzzy.lf
 
-theorem lt_or_fuzzy_of_lf {x y : Pgame} : x ⧏ y → x < y ∨ x ∥ y :=
+theorem lt_or_fuzzy_of_lf {x y : Pgame} : x ⧏ y → x < y ∨ x ‖ y :=
   lf_iff_lt_or_fuzzy.1
 #align pgame.lt_or_fuzzy_of_lf Pgame.lt_or_fuzzy_of_lf
 
-theorem Fuzzy.not_equiv {x y : Pgame} (h : x ∥ y) : ¬(x ≈ y) := fun h' => h'.1.not_gf h.2
+theorem Fuzzy.not_equiv {x y : Pgame} (h : x ‖ y) : ¬(x ≈ y) := fun h' => h'.1.not_gf h.2
 #align pgame.fuzzy.not_equiv Pgame.Fuzzy.not_equiv
 
-theorem Fuzzy.not_equiv' {x y : Pgame} (h : x ∥ y) : ¬(y ≈ x) := fun h' => h'.2.not_gf h.2
+theorem Fuzzy.not_equiv' {x y : Pgame} (h : x ‖ y) : ¬(y ≈ x) := fun h' => h'.2.not_gf h.2
 #align pgame.fuzzy.not_equiv' Pgame.Fuzzy.not_equiv'
 
-theorem not_fuzzy_of_le {x y : Pgame} (h : x ≤ y) : ¬x ∥ y := fun h' => h'.2.not_ge h
+theorem not_fuzzy_of_le {x y : Pgame} (h : x ≤ y) : ¬x ‖ y := fun h' => h'.2.not_ge h
 #align pgame.not_fuzzy_of_le Pgame.not_fuzzy_of_le
 
-theorem not_fuzzy_of_ge {x y : Pgame} (h : y ≤ x) : ¬x ∥ y := fun h' => h'.1.not_ge h
+theorem not_fuzzy_of_ge {x y : Pgame} (h : y ≤ x) : ¬x ‖ y := fun h' => h'.1.not_ge h
 #align pgame.not_fuzzy_of_ge Pgame.not_fuzzy_of_ge
 
-theorem Equiv.not_fuzzy {x y : Pgame} (h : x ≈ y) : ¬x ∥ y :=
+theorem Equiv.not_fuzzy {x y : Pgame} (h : x ≈ y) : ¬x ‖ y :=
   not_fuzzy_of_le h.1
 #align pgame.equiv.not_fuzzy Pgame.Equiv.not_fuzzy
 
-theorem Equiv.not_fuzzy' {x y : Pgame} (h : x ≈ y) : ¬y ∥ x :=
+theorem Equiv.not_fuzzy' {x y : Pgame} (h : x ≈ y) : ¬y ‖ x :=
   not_fuzzy_of_le h.2
 #align pgame.equiv.not_fuzzy' Pgame.Equiv.not_fuzzy'
 
-theorem fuzzy_congr {x₁ y₁ x₂ y₂ : Pgame} (hx : x₁ ≈ x₂) (hy : y₁ ≈ y₂) : x₁ ∥ y₁ ↔ x₂ ∥ y₂ :=
+theorem fuzzy_congr {x₁ y₁ x₂ y₂ : Pgame} (hx : x₁ ≈ x₂) (hy : y₁ ≈ y₂) : x₁ ‖ y₁ ↔ x₂ ‖ y₂ :=
   show _ ∧ _ ↔ _ ∧ _ by rw [lf_congr hx hy, lf_congr hy hx]
 #align pgame.fuzzy_congr Pgame.fuzzy_congr
 
-theorem fuzzy_congr_imp {x₁ y₁ x₂ y₂ : Pgame} (hx : x₁ ≈ x₂) (hy : y₁ ≈ y₂) : x₁ ∥ y₁ → x₂ ∥ y₂ :=
+theorem fuzzy_congr_imp {x₁ y₁ x₂ y₂ : Pgame} (hx : x₁ ≈ x₂) (hy : y₁ ≈ y₂) : x₁ ‖ y₁ → x₂ ‖ y₂ :=
   (fuzzy_congr hx hy).1
 #align pgame.fuzzy_congr_imp Pgame.fuzzy_congr_imp
 
-theorem fuzzy_congr_left {x₁ x₂ y} (hx : x₁ ≈ x₂) : x₁ ∥ y ↔ x₂ ∥ y :=
+theorem fuzzy_congr_left {x₁ x₂ y} (hx : x₁ ≈ x₂) : x₁ ‖ y ↔ x₂ ‖ y :=
   fuzzy_congr hx equiv_rfl
 #align pgame.fuzzy_congr_left Pgame.fuzzy_congr_left
 
-theorem fuzzy_congr_right {x y₁ y₂} (hy : y₁ ≈ y₂) : x ∥ y₁ ↔ x ∥ y₂ :=
+theorem fuzzy_congr_right {x y₁ y₂} (hy : y₁ ≈ y₂) : x ‖ y₁ ↔ x ‖ y₂ :=
   fuzzy_congr equiv_rfl hy
 #align pgame.fuzzy_congr_right Pgame.fuzzy_congr_right
 
 @[trans]
-theorem fuzzy_of_fuzzy_of_equiv {x y z} (h₁ : x ∥ y) (h₂ : y ≈ z) : x ∥ z :=
+theorem fuzzy_of_fuzzy_of_equiv {x y z} (h₁ : x ‖ y) (h₂ : y ≈ z) : x ‖ z :=
   (fuzzy_congr_right h₂).1 h₁
 #align pgame.fuzzy_of_fuzzy_of_equiv Pgame.fuzzy_of_fuzzy_of_equiv
 
 @[trans]
-theorem fuzzy_of_equiv_of_fuzzy {x y z} (h₁ : x ≈ y) (h₂ : y ∥ z) : x ∥ z :=
+theorem fuzzy_of_equiv_of_fuzzy {x y z} (h₁ : x ≈ y) (h₂ : y ‖ z) : x ‖ z :=
   (fuzzy_congr_left h₁).2 h₂
 #align pgame.fuzzy_of_equiv_of_fuzzy Pgame.fuzzy_of_equiv_of_fuzzy
 
 /-- Exactly one of the following is true (although we don't prove this here). -/
-theorem lt_or_equiv_or_gt_or_fuzzy (x y : Pgame) : x < y ∨ (x ≈ y) ∨ y < x ∨ x ∥ y := by
+theorem lt_or_equiv_or_gt_or_fuzzy (x y : Pgame) : x < y ∨ (x ≈ y) ∨ y < x ∨ x ‖ y := by
   cases' le_or_gf x y with h₁ h₁ <;> cases' le_or_gf y x with h₂ h₂
   · right
     left
@@ -1087,7 +1087,7 @@ def trans : ∀ {x y z : Pgame}, x ≡r y → y ≡r z → x ≡r z
 
 /-- Any game without left or right moves is a relabelling of 0. -/
 def isEmpty (x : Pgame) [IsEmpty x.LeftMoves] [IsEmpty x.RightMoves] : x ≡r 0 :=
-  ⟨Equiv.equivPempty _, Equiv.equivOfIsEmpty _ _, isEmptyElim, isEmptyElim⟩
+  ⟨Equiv.equivPEmpty _, Equiv.equivOfIsEmpty _ _, isEmptyElim, isEmptyElim⟩
 #align pgame.relabelling.is_empty Pgame.Relabelling.isEmpty
 
 end Relabelling
@@ -1170,7 +1170,7 @@ theorem neg_of_lists (L R : List Pgame) : -ofLists L R = ofLists (R.map fun x =>
     
   · intro a a' ha
     congr 2
-    have : ∀ {m n} (h₁ : m = n) {b : ULift (Fin m)} {c : ULift (Fin n)} (h₂ : b == c), (b.down : ℕ) = ↑c.down := by
+    have : ∀ {m n} (h₁ : m = n) {b : ULift (Fin m)} {c : ULift (Fin n)} (h₂ : HEq b c), (b.down : ℕ) = ↑c.down := by
       rintro m n rfl b c rfl
       rfl
     exact this (List.length_map _ _).symm ha
@@ -1288,7 +1288,7 @@ theorem neg_equiv_neg_iff {x y : Pgame} : (-x ≈ -y) ↔ (x ≈ y) := by
 #align pgame.neg_equiv_neg_iff Pgame.neg_equiv_neg_iff
 
 @[simp]
-theorem neg_fuzzy_neg_iff {x y : Pgame} : -x ∥ -y ↔ x ∥ y := by
+theorem neg_fuzzy_neg_iff {x y : Pgame} : -x ‖ -y ↔ x ‖ y := by
   rw [fuzzy, fuzzy, neg_lf_neg_iff, neg_lf_neg_iff, and_comm]
 #align pgame.neg_fuzzy_neg_iff Pgame.neg_fuzzy_neg_iff
 
@@ -1304,7 +1304,7 @@ theorem neg_lt_iff {x y : Pgame} : -y < x ↔ -x < y := by rw [← neg_neg x, ne
 theorem neg_equiv_iff {x y : Pgame} : (-x ≈ y) ↔ (x ≈ -y) := by rw [← neg_neg y, neg_equiv_neg_iff, neg_neg]
 #align pgame.neg_equiv_iff Pgame.neg_equiv_iff
 
-theorem neg_fuzzy_iff {x y : Pgame} : -x ∥ y ↔ x ∥ -y := by rw [← neg_neg y, neg_fuzzy_neg_iff, neg_neg]
+theorem neg_fuzzy_iff {x y : Pgame} : -x ‖ y ↔ x ‖ -y := by rw [← neg_neg y, neg_fuzzy_neg_iff, neg_neg]
 #align pgame.neg_fuzzy_iff Pgame.neg_fuzzy_iff
 
 theorem le_neg_iff {x y : Pgame} : y ≤ -x ↔ x ≤ -y := by rw [← neg_neg x, neg_le_neg_iff, neg_neg]
@@ -1345,7 +1345,7 @@ theorem neg_equiv_zero_iff {x : Pgame} : (-x ≈ 0) ↔ (x ≈ 0) := by rw [neg_
 #align pgame.neg_equiv_zero_iff Pgame.neg_equiv_zero_iff
 
 @[simp]
-theorem neg_fuzzy_zero_iff {x : Pgame} : -x ∥ 0 ↔ x ∥ 0 := by rw [neg_fuzzy_iff, neg_zero]
+theorem neg_fuzzy_zero_iff {x : Pgame} : -x ‖ 0 ↔ x ‖ 0 := by rw [neg_fuzzy_iff, neg_zero]
 #align pgame.neg_fuzzy_zero_iff Pgame.neg_fuzzy_zero_iff
 
 @[simp]
@@ -1353,7 +1353,7 @@ theorem zero_equiv_neg_iff {x : Pgame} : (0 ≈ -x) ↔ (0 ≈ x) := by rw [← 
 #align pgame.zero_equiv_neg_iff Pgame.zero_equiv_neg_iff
 
 @[simp]
-theorem zero_fuzzy_neg_iff {x : Pgame} : 0 ∥ -x ↔ 0 ∥ x := by rw [← neg_fuzzy_iff, neg_zero]
+theorem zero_fuzzy_neg_iff {x : Pgame} : 0 ‖ -x ↔ 0 ‖ x := by rw [← neg_fuzzy_iff, neg_zero]
 #align pgame.zero_fuzzy_neg_iff Pgame.zero_fuzzy_neg_iff
 
 /-! ### Addition and subtraction -/
@@ -1365,7 +1365,7 @@ instance : Add Pgame.{u} :=
     induction' x with xl xr xL xR IHxl IHxr generalizing y
     induction' y with yl yr yL yR IHyl IHyr
     have y := mk yl yr yL yR
-    refine' ⟨xl ⊕ yl, xr ⊕ yr, Sum.rec _ _, Sum.rec _ _⟩
+    refine' ⟨Sum xl yl, Sum xr yr, Sum.rec _ _, Sum.rec _ _⟩
     · exact fun i => IHxl i y
       
     · exact IHyl
@@ -1424,11 +1424,11 @@ theorem zero_add_equiv (x : Pgame.{u}) : 0 + x ≈ x :=
   (zeroAddRelabelling x).Equiv
 #align pgame.zero_add_equiv Pgame.zero_add_equiv
 
-theorem left_moves_add : ∀ x y : Pgame.{u}, (x + y).LeftMoves = (x.LeftMoves ⊕ y.LeftMoves)
+theorem left_moves_add : ∀ x y : Pgame.{u}, (x + y).LeftMoves = Sum x.LeftMoves y.LeftMoves
   | ⟨_, _, _, _⟩, ⟨_, _, _, _⟩ => rfl
 #align pgame.left_moves_add Pgame.left_moves_add
 
-theorem right_moves_add : ∀ x y : Pgame.{u}, (x + y).RightMoves = (x.RightMoves ⊕ y.RightMoves)
+theorem right_moves_add : ∀ x y : Pgame.{u}, (x + y).RightMoves = Sum x.RightMoves y.RightMoves
   | ⟨_, _, _, _⟩, ⟨_, _, _, _⟩ => rfl
 #align pgame.right_moves_add Pgame.right_moves_add
 
@@ -1436,7 +1436,7 @@ theorem right_moves_add : ∀ x y : Pgame.{u}, (x + y).RightMoves = (x.RightMove
 
 Even though these types are the same (not definitionally so), this is the preferred way to convert
 between them. -/
-def toLeftMovesAdd {x y : Pgame} : x.LeftMoves ⊕ y.LeftMoves ≃ (x + y).LeftMoves :=
+def toLeftMovesAdd {x y : Pgame} : Sum x.LeftMoves y.LeftMoves ≃ (x + y).LeftMoves :=
   Equiv.cast (left_moves_add x y).symm
 #align pgame.to_left_moves_add Pgame.toLeftMovesAdd
 
@@ -1444,7 +1444,7 @@ def toLeftMovesAdd {x y : Pgame} : x.LeftMoves ⊕ y.LeftMoves ≃ (x + y).LeftM
 
 Even though these types are the same (not definitionally so), this is the preferred way to convert
 between them. -/
-def toRightMovesAdd {x y : Pgame} : x.RightMoves ⊕ y.RightMoves ≃ (x + y).RightMoves :=
+def toRightMovesAdd {x y : Pgame} : Sum x.RightMoves y.RightMoves ≃ (x + y).RightMoves :=
   Equiv.cast (right_moves_add x y).symm
 #align pgame.to_right_moves_add Pgame.toRightMovesAdd
 
@@ -1504,8 +1504,8 @@ theorem add_move_right_inr (x : Pgame) {y : Pgame} (i) :
   rfl
 #align pgame.add_move_right_inr Pgame.add_move_right_inr
 
-theorem left_moves_add_cases {x y : Pgame} (k) {P : (x + y).LeftMoves → Prop} (hl : ∀ i, P $ toLeftMovesAdd (Sum.inl i))
-    (hr : ∀ i, P $ toLeftMovesAdd (Sum.inr i)) : P k := by
+theorem left_moves_add_cases {x y : Pgame} (k) {P : (x + y).LeftMoves → Prop}
+    (hl : ∀ i, P <| toLeftMovesAdd (Sum.inl i)) (hr : ∀ i, P <| toLeftMovesAdd (Sum.inr i)) : P k := by
   rw [← to_left_moves_add.apply_symm_apply k]
   cases' to_left_moves_add.symm k with i i
   · exact hl i
@@ -1515,7 +1515,7 @@ theorem left_moves_add_cases {x y : Pgame} (k) {P : (x + y).LeftMoves → Prop} 
 #align pgame.left_moves_add_cases Pgame.left_moves_add_cases
 
 theorem right_moves_add_cases {x y : Pgame} (k) {P : (x + y).RightMoves → Prop}
-    (hl : ∀ j, P $ toRightMovesAdd (Sum.inl j)) (hr : ∀ j, P $ toRightMovesAdd (Sum.inr j)) : P k := by
+    (hl : ∀ j, P <| toRightMovesAdd (Sum.inl j)) (hr : ∀ j, P <| toRightMovesAdd (Sum.inr j)) : P k := by
   rw [← to_right_moves_add.apply_symm_apply k]
   cases' to_right_moves_add.symm k with i i
   · exact hl i
@@ -1613,7 +1613,7 @@ theorem add_assoc_equiv {x y z : Pgame} : x + y + z ≈ x + (y + z) :=
 
 theorem add_left_neg_le_zero : ∀ x : Pgame, -x + x ≤ 0
   | ⟨xl, xr, xL, xR⟩ =>
-    le_zero.2 $ fun i => by
+    le_zero.2 fun i => by
       cases i
       · -- If Left played in -x, Right responds with the same move in x.
         refine' ⟨@to_right_moves_add _ ⟨_, _, _, _⟩ (Sum.inr i), _⟩
@@ -1820,7 +1820,7 @@ instance uniqueStarRightMoves : Unique star.RightMoves :=
   PUnit.unique
 #align pgame.unique_star_right_moves Pgame.uniqueStarRightMoves
 
-theorem star_fuzzy_zero : star ∥ 0 :=
+theorem star_fuzzy_zero : star ‖ 0 :=
   ⟨by
     rw [lf_zero]
     use default

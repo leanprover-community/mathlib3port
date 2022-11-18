@@ -8,7 +8,7 @@ import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.Shapes.WidePullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
-import Mathbin.Data.Fintype.Basic
+import Mathbin.Data.Fintype.Option
 
 /-!
 # Categories with finite limits.

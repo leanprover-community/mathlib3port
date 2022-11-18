@@ -200,7 +200,7 @@ def infGi :
     GaloisCoinsertion (fun x => OrderDual.toDual (principal x)) fun F => inf (OrderDual.ofDual F : Pfilter P) where
   choice F _ := inf (id F : Pfilter P)
   gc := Inf_gc
-  u_l_le s := Inf_le $ mem_principal.2 $ le_refl s
+  u_l_le s := Inf_le <| mem_principal.2 <| le_refl s
   choice_eq _ _ := rfl
 #align order.pfilter.Inf_gi Order.Pfilter.infGi
 

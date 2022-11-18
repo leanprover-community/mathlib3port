@@ -58,17 +58,17 @@ unsafe def get_ees : eqelim (List Ee) :=
 
 /-- Update the list of equality constraints. -/
 unsafe def set_eqs (eqs : List Term) : eqelim Unit :=
-  modify $ fun s => { s with eqs }
+  modify fun s => { s with eqs }
 #align omega.set_eqs omega.set_eqs
 
 /-- Update the list of inequality constraints. -/
 unsafe def set_les (les : List Term) : eqelim Unit :=
-  modify $ fun s => { s with les }
+  modify fun s => { s with les }
 #align omega.set_les omega.set_les
 
 /-- Update the sequence of equality elimiation steps. -/
 unsafe def set_ees (es : List Ee) : eqelim Unit :=
-  modify $ fun s => { s with ees := es }
+  modify fun s => { s with ees := es }
 #align omega.set_ees omega.set_ees
 
 /-- Add a new step to the sequence of equality elimination steps. -/
@@ -77,7 +77,6 @@ unsafe def add_ee (e : Ee) : eqelim Unit := do
   set_ees (es ++ [e])
 #align omega.add_ee omega.add_ee
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Return the first equality constraint in the current list of
     equality constraints. The returned constraint is 'popped' and
     no longer available in the state. -/
@@ -85,7 +84,7 @@ unsafe def head_eq : eqelim Term := do
   let eqs ← get_eqs
   match eqs with
     | [] => abort
-    | Eq::eqs' => set_eqs eqs' >> pure Eq
+    | Eq :: eqs' => set_eqs eqs' >> pure Eq
 #align omega.head_eq omega.head_eq
 
 unsafe def run {α : Type} (eqs les : List Term) (r : eqelim α) : tactic α :=
@@ -109,11 +108,10 @@ private unsafe def of_tactic {α : Type} : tactic α → eqelim α :=
   StateT.lift
 #align omega.of_tactic omega.of_tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- GCD of all elements of the list. -/
 def gcd : List Int → Nat
   | [] => 0
-  | i::is => Nat.gcd i.natAbs (gcd is)
+  | i :: is => Nat.gcd i.natAbs (gcd is)
 #align omega.gcd Omega.gcd
 
 /-- GCD of all coefficients in a term. -/
@@ -128,12 +126,11 @@ unsafe def factor (i : Int) (t : Term) : eqelim Term :=
   if i ∣ t.fst then add_ee (Ee.factor i) >> pure (t.div i) else abort
 #align omega.factor omega.factor
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- If list has a nonzero element, return the minimum element
 (by absolute value) with its index. Otherwise, return none. -/
 unsafe def find_min_coeff_core : List Int → eqelim (Int × Nat)
   | [] => abort
-  | i::is =>
+  | i :: is =>
     (do
         let (j, n) ← find_min_coeff_core is
         if i ≠ 0 ∧ i ≤ j then pure (i, 0) else pure (j, n + 1)) <|>
@@ -149,7 +146,6 @@ unsafe def find_min_coeff (t : Term) : eqelim (Int × Nat × term) := do
   if 0 < i then pure (i, n, t) else add_ee ee.neg >> pure (-i, n, t)
 #align omega.find_min_coeff omega.find_min_coeff
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Find an appropriate equality elimination step for the
     current state and apply it. -/
 unsafe def elim_eq : eqelim Unit := do
@@ -169,7 +165,7 @@ unsafe def elim_eq : eqelim Unit := do
           do
           let eqs ← get_eqs
           let les ← get_les
-          set_eqs (v::eqs (subst n r))
+          set_eqs (v :: eqs (subst n r))
           set_les (les (subst n r))
           add_ee (ee.reduce n)
           elim_eq

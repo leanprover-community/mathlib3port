@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
 import Mathbin.Topology.Algebra.Ring
-import Mathbin.Topology.Algebra.FilterBasis
 import Mathbin.Topology.Sets.Opens
 
 /-!
@@ -102,7 +101,7 @@ theorem coe_injective : Injective (coe : OpenSubgroup G → Set G) := by
 
 @[ext.1, to_additive]
 theorem ext (h : ∀ x, x ∈ U ↔ x ∈ V) : U = V :=
-  coe_injective $ Set.ext h
+  coe_injective <| Set.ext h
 #align open_subgroup.ext OpenSubgroup.ext
 
 @[to_additive]
@@ -243,7 +242,7 @@ variable {G : Type _} [Group G] [TopologicalSpace G] [HasContinuousMul G] (H : S
 theorem is_open_of_mem_nhds {g : G} (hg : (H : Set G) ∈ 𝓝 g) : IsOpen (H : Set G) := by
   simp only [is_open_iff_mem_nhds, SetLike.mem_coe] at hg⊢
   intro x hx
-  have : Filter.Tendsto (fun y => y * (x⁻¹ * g)) (𝓝 x) (𝓝 $ x * (x⁻¹ * g)) :=
+  have : Filter.Tendsto (fun y => y * (x⁻¹ * g)) (𝓝 x) (𝓝 <| x * (x⁻¹ * g)) :=
     (continuous_id.mul continuous_const).Tendsto _
   rw [mul_inv_cancel_left] at this
   have := Filter.mem_map'.1 (this hg)

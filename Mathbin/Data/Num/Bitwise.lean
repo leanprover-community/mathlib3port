@@ -423,8 +423,8 @@ def bits : Snum → ∀ n, Vector Bool n
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 def cadd : Snum → Snum → Bool → Snum :=
-  (rec' fun a p c => czadd c a p) $ fun a p IH =>
-    (rec' fun b c => czadd c b (a::p)) $ fun b q _ c => Bitvec.xor3 a b c::IH q (Bitvec.carry a b c)
+  (rec' fun a p c => czadd c a p) fun a p IH =>
+    (rec' fun b c => czadd c b (a::p)) fun b q _ c => Bitvec.xor3 a b c::IH q (Bitvec.carry a b c)
 #align snum.cadd Snum.cadd
 
 /-- Add two `snum`s. -/
@@ -445,7 +445,7 @@ instance : Sub Snum :=
 
 /-- Multiply two `snum`s. -/
 protected def mul (a : Snum) : Snum → Snum :=
-  (rec' fun b => cond b (-a) 0) $ fun b q IH => cond b (bit0 IH + a) (bit0 IH)
+  (rec' fun b => cond b (-a) 0) fun b q IH => cond b (bit0 IH + a) (bit0 IH)
 #align snum.mul Snum.mul
 
 instance : Mul Snum :=

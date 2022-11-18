@@ -62,7 +62,7 @@ theorem zero_zpow : ∀ z : ℤ, z ≠ 0 → (0 : G₀) ^ z = 0
   | (n : ℕ), h => by
     rw [zpow_coe_nat, zero_pow']
     simpa using h
-  | -[1+ n], h => by simp
+  | -[n+1], h => by simp
 #align zero_zpow zero_zpow
 
 theorem zero_zpow_eq (n : ℤ) : (0 : G₀) ^ n = if n = 0 then 1 else 0 := by
@@ -75,8 +75,8 @@ theorem zero_zpow_eq (n : ℤ) : (0 : G₀) ^ n = if n = 0 then 1 else 0 := by
 
 theorem zpow_add_one₀ {a : G₀} (ha : a ≠ 0) : ∀ n : ℤ, a ^ (n + 1) = a ^ n * a
   | (n : ℕ) => by simp only [← Int.ofNat_succ, zpow_coe_nat, pow_succ']
-  | -[1+ 0] => by erw [zpow_zero, zpow_neg_succ_of_nat, pow_one, inv_mul_cancel ha]
-  | -[1+ n + 1] => by
+  | -[0+1] => by erw [zpow_zero, zpow_neg_succ_of_nat, pow_one, inv_mul_cancel ha]
+  | -[n + 1+1] => by
     rw [Int.negSucc_eq, zpow_neg, neg_add, neg_add_cancel_right, zpow_neg, ← Int.ofNat_succ, zpow_coe_nat, zpow_coe_nat,
       pow_succ _ (n + 1), mul_inv_rev, mul_assoc, inv_mul_cancel ha, mul_one]
 #align zpow_add_one₀ zpow_add_one₀
@@ -98,13 +98,13 @@ theorem zpow_add₀ {a : G₀} (ha : a ≠ 0) (m n : ℤ) : a ^ (m + n) = a ^ m 
 #align zpow_add₀ zpow_add₀
 
 theorem zpow_add' {a : G₀} {m n : ℤ} (h : a ≠ 0 ∨ m + n ≠ 0 ∨ m = 0 ∧ n = 0) : a ^ (m + n) = a ^ m * a ^ n := by
-  by_cases hm:m = 0
+  by_cases hm : m = 0
   · simp [hm]
     
-  by_cases hn:n = 0
+  by_cases hn : n = 0
   · simp [hn]
     
-  by_cases ha:a = 0
+  by_cases ha : a = 0
   · subst a
     simp only [false_or_iff, eq_self_iff_true, not_true, Ne.def, hm, hn, false_and_iff, or_false_iff] at h
     rw [zero_zpow _ h, zero_zpow _ hm, zero_mul]
@@ -118,7 +118,7 @@ theorem zpow_one_add₀ {a : G₀} (h : a ≠ 0) (i : ℤ) : a ^ (1 + i) = a * a
 
 theorem SemiconjBy.zpow_right₀ {a x y : G₀} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a (x ^ m) (y ^ m)
   | (n : ℕ) => by simp [h.pow_right n]
-  | -[1+ n] => by simp [(h.pow_right (n + 1)).inv_right₀]
+  | -[n+1] => by simp [(h.pow_right (n + 1)).inv_right₀]
 #align semiconj_by.zpow_right₀ SemiconjBy.zpow_right₀
 
 theorem Commute.zpow_right₀ {a b : G₀} (h : Commute a b) : ∀ m : ℤ, Commute a (b ^ m) :=
@@ -156,7 +156,7 @@ theorem zpow_ne_zero_of_ne_zero {a : G₀} (ha : a ≠ 0) : ∀ z : ℤ, a ^ z �
   | (n : ℕ) => by
     rw [zpow_coe_nat]
     exact pow_ne_zero _ ha
-  | -[1+ n] => by
+  | -[n+1] => by
     rw [zpow_neg_succ_of_nat]
     exact inv_ne_zero (pow_ne_zero _ ha)
 #align zpow_ne_zero_of_ne_zero zpow_ne_zero_of_ne_zero
@@ -169,7 +169,7 @@ theorem zpow_bit1' (a : G₀) (n : ℤ) : a ^ bit1 n = (a * a) ^ n * a := by rw 
 #align zpow_bit1' zpow_bit1'
 
 theorem zpow_eq_zero {x : G₀} {n : ℤ} (h : x ^ n = 0) : x = 0 :=
-  Classical.by_contradiction $ fun hx => zpow_ne_zero_of_ne_zero hx n h
+  Classical.by_contradiction fun hx => zpow_ne_zero_of_ne_zero hx n h
 #align zpow_eq_zero zpow_eq_zero
 
 theorem zpow_eq_zero_iff {a : G₀} {n : ℤ} (hn : n ≠ 0) : a ^ n = 0 ↔ a = 0 :=
@@ -192,7 +192,7 @@ section
 variable {G₀ : Type _} [CommGroupWithZero G₀]
 
 theorem div_sq_cancel (a b : G₀) : a ^ 2 * b / a = a * b := by
-  by_cases ha:a = 0
+  by_cases ha : a = 0
   · simp [ha]
     
   rw [sq, mul_assoc, mul_div_cancel_left _ ha]

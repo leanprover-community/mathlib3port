@@ -57,6 +57,6 @@ version of `dom_dom_congr`. -/
 theorem Basis.ext_multilinear [DecidableEq ι] [Finite ι] {f g : MultilinearMap R (fun i : ι => M₂) M₃} {ι₁ : Type _}
     (e : Basis ι₁ R M₂) (h : ∀ v : ι → ι₁, (f fun i => e (v i)) = g fun i => e (v i)) : f = g := by
   cases nonempty_fintype ι
-  exact (dom_dom_congr_eq_iff (Fintype.equivFin ι) f g).mp ((Basis.ext_multilinear_fin fun i => e) $ fun i => h (i ∘ _))
+  exact (dom_dom_congr_eq_iff (Fintype.equivFin ι) f g).mp ((Basis.ext_multilinear_fin fun i => e) fun i => h (i ∘ _))
 #align basis.ext_multilinear Basis.ext_multilinear
 

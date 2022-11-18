@@ -96,7 +96,7 @@ unsafe def move_left_or_right :
     List (Bool × expr) → List expr → List Bool → tactic (List expr × List expr × List expr × List Bool)
   | [], l_un, l_m => return ([], [], l_un, l_m)
   | be :: l, l_un, l_m => do
-    let ex :: _ ← l_un.mfilter $ fun e' => succeeds $ unify be.2 e' |
+    let ex :: _ ← l_un.mfilter fun e' => succeeds <| unify be.2 e' |
       move_left_or_right l l_un (l_m.append [true])
     let (l_tt, l_ff, l_un, l_m) ← move_left_or_right l (l_un.erase ex) (l_m.append [false])
     if be.1 then return (ex :: l_tt, l_ff, l_un, l_m) else return (l_tt, ex :: l_ff, l_un, l_m)
@@ -110,7 +110,7 @@ unsafe def move_left_or_right :
 -/
 unsafe def final_sort (lp : List (Bool × pexpr)) (sl : List expr) : tactic (List expr × List Bool) := do
   let lp_exp : List (Bool × expr) ←
-    lp.mmap $ fun x => do
+    lp.mmap fun x => do
         let e ← to_expr x.2 true false
         return (x.1, e)
   let (l1, l2, l3, is_unused) ← move_left_or_right lp_exp sl []
@@ -170,13 +170,13 @@ unsafe def reorder_oper (op : pexpr) (lp : List (Bool × pexpr)) : expr → tact
         let summed := recs_rest (fun e f => op [e, f]) recs_0
         return (summed, list_unused List.band)
       | none => do
-        let [(Fn, unused_F), (bn, unused_b)] ← [F, b].mmap $ reorder_oper
-        return $ (expr.app Fn bn, [unused_F, unused_b].transpose.map List.band)
+        let [(Fn, unused_F), (bn, unused_b)] ← [F, b].mmap <| reorder_oper
+        return <| (expr.app Fn bn, [unused_F, unused_b].transpose.map List.band)
   | expr.pi na bi e f => do
-    let [en, fn] ← [e, f].mmap $ reorder_oper
+    let [en, fn] ← [e, f].mmap <| reorder_oper
     return (expr.pi na bi en.1 fn.1, [en.2, fn.2].transpose.map List.band)
   | expr.lam na bi e f => do
-    let [en, fn] ← [e, f].mmap $ reorder_oper
+    let [en, fn] ← [e, f].mmap <| reorder_oper
     return (expr.lam na bi en.1 fn.1, [en.2, fn.2].transpose.map List.band)
   | expr.mvar na pp e => do
     let en
@@ -191,12 +191,12 @@ unsafe def reorder_oper (op : pexpr) (lp : List (Bool × pexpr)) : expr → tact
           e
     return (expr.local_const na pp bi en.1, [en.2].transpose.map List.band)
   | expr.elet na e f g => do
-    let [en, fn, gn] ← [e, f, g].mmap $ reorder_oper
+    let [en, fn, gn] ← [e, f, g].mmap <| reorder_oper
     return (expr.elet na en.1 fn.1 gn.1, [en.2, fn.2, gn.2].transpose.map List.band)
   | expr.macro ma le => do
     let len
       ←-- is it really needed to recurse here?
-            le.mmap $
+            le.mmap <|
           reorder_oper
     let (lee, lb) := len.unzip
     return (expr.macro ma lee, lb List.band)
@@ -233,7 +233,7 @@ unsafe def reorder_hyp (op : pexpr) (lp : List (Bool × pexpr)) (na : Option Nam
       let nop ← to_expr op tt ff
       let pre ← pp reordered
       let (_, prf) ←
-        solve_aux neq $
+        solve_aux neq <|
             match nop with
             | q(Add.add) => sorry
             | q(Mul.mul) => sorry

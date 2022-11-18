@@ -53,7 +53,7 @@ variable (p : ℕ) [Fact p.Prime]
 
 /-- Euler's Criterion: A unit `x` of `zmod p` is a square if and only if `x ^ (p / 2) = 1`. -/
 theorem euler_criterion_units (x : (Zmod p)ˣ) : (∃ y : (Zmod p)ˣ, y ^ 2 = x) ↔ x ^ (p / 2) = 1 := by
-  by_cases hc:p = 2
+  by_cases hc : p = 2
   · subst hc
     simp only [eq_iff_true_of_subsingleton, exists_const]
     
@@ -128,7 +128,7 @@ namespace legendreSym
 /-- We have the congruence `legendre_sym p a ≡ a ^ (p / 2) mod p`. -/
 theorem eq_pow (a : ℤ) : (legendreSym p a : Zmod p) = a ^ (p / 2) := by
   cases' eq_or_ne (ringChar (Zmod p)) 2 with hc hc
-  · by_cases ha:(a : Zmod p) = 0
+  · by_cases ha : (a : Zmod p) = 0
     · rw [legendreSym, ha, quadratic_char_zero, zero_pow (Nat.div_pos (Fact.out p.prime).two_le (succ_pos 1))]
       norm_cast
       
@@ -351,8 +351,8 @@ open Zmod
 `(q / p) * (p / q) = (-1)^((p-1)(q-1)/4)`. -/
 theorem quadratic_reciprocity (hp : p ≠ 2) (hq : q ≠ 2) (hpq : p ≠ q) :
     legendreSym q p * legendreSym p q = (-1) ^ (p / 2 * (q / 2)) := by
-  have hp₁ := (prime.eq_two_or_odd $ Fact.out p.prime).resolve_left hp
-  have hq₁ := (prime.eq_two_or_odd $ Fact.out q.prime).resolve_left hq
+  have hp₁ := (prime.eq_two_or_odd <| Fact.out p.prime).resolve_left hp
+  have hq₁ := (prime.eq_two_or_odd <| Fact.out q.prime).resolve_left hq
   have hq₂ := (ring_char_zmod_n q).substr hq
   have h := quadratic_char_odd_prime ((ring_char_zmod_n p).substr hp) hq ((ring_char_zmod_n p).substr hpq)
   rw [card p] at h

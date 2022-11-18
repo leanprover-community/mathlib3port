@@ -197,7 +197,7 @@ theorem get_map {f : α → β} : ∀ {n : ℕ} {as : List α}, n < as.length �
 
 theorem get_map' {f : α → β} {n : ℕ} {as : List α} : f default = default → get n (as.map f) = f (get n as) := by
   intro h1
-  by_cases h2:n < as.length
+  by_cases h2 : n < as.length
   · apply get_map h2
     
   · rw [not_lt] at h2
@@ -209,7 +209,7 @@ theorem get_map' {f : α → β} {n : ℕ} {as : List α} : f default = default 
 
 theorem forall_val_of_forall_mem {as : List α} {p : α → Prop} : p default → (∀ x ∈ as, p x) → ∀ n, p (get n as) := by
   intro h1 h2 n
-  by_cases h3:n < as.length
+  by_cases h3 : n < as.length
   · apply h2 _ (mem_get_of_le h3)
     
   · rw [not_lt] at h3
@@ -343,7 +343,7 @@ theorem map_add_map {α : Type u} [AddMonoid α] (f g : α → α) {as : List α
     
   intro m
   rw [get_add]
-  by_cases h:m < length as
+  by_cases h : m < length as
   · repeat' rw [@get_map α α ⟨0⟩ ⟨0⟩ _ _ _ h]
     
   rw [not_lt] at h

@@ -57,7 +57,7 @@ variable {R} [CommSemiring R]
 
 /-- `pderiv i p` is the partial derivative of `p` with respect to `i` -/
 def pderiv (i : σ) : Derivation R (MvPolynomial σ R) (MvPolynomial σ R) :=
-  mkDerivation R $ Pi.single i 1
+  mkDerivation R <| Pi.single i 1
 #align mv_polynomial.pderiv MvPolynomial.pderiv
 
 @[simp]
@@ -95,7 +95,7 @@ theorem pderiv_X_of_ne {i j : σ} (h : j ≠ i) : pderiv i (x j : MvPolynomial �
 #align mv_polynomial.pderiv_X_of_ne MvPolynomial.pderiv_X_of_ne
 
 theorem pderiv_eq_zero_of_not_mem_vars {i : σ} {f : MvPolynomial σ R} (h : i ∉ f.vars) : pderiv i f = 0 :=
-  derivation_eq_zero_of_forall_mem_vars $ fun j hj => pderiv_X_of_ne $ ne_of_mem_of_not_mem hj h
+  derivation_eq_zero_of_forall_mem_vars fun j hj => pderiv_X_of_ne <| ne_of_mem_of_not_mem hj h
 #align mv_polynomial.pderiv_eq_zero_of_not_mem_vars MvPolynomial.pderiv_eq_zero_of_not_mem_vars
 
 theorem pderiv_monomial_single {i : σ} {n : ℕ} :

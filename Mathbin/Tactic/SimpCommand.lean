@@ -16,8 +16,8 @@ namespace Tactic
 /-- Strip all annotations of non local constants in the passed `expr`. (This is required in an
 incantation later on in order to make the C++ simplifier happy.) -/
 private unsafe def strip_annotations_from_all_non_local_consts {elab : Bool} (e : expr elab) : expr elab :=
-  expr.unsafe_cast $
-    e.unsafe_cast.replace $ fun e n =>
+  expr.unsafe_cast <|
+    e.unsafe_cast.replace fun e n =>
       match e.is_annotation with
       | some (_, expr.local_const _ _ _ _) => none
       | some (_, _) => e.erase_annotations
@@ -35,14 +35,14 @@ unsafe def simp_arg_type.to_pexpr : simp_arg_type → Option pexpr
 /-- Incantation which prepares a `pexpr` in a `simp_arg_type` for use by the simplifier after
 `expr.replace_subexprs` as been called to replace some of its local variables. -/
 private unsafe def replace_subexprs_for_simp_arg (e : pexpr) (rules : List (expr × expr)) : pexpr :=
-  strip_annotations_from_all_non_local_consts $ pexpr.of_expr $ e.unsafe_cast.replace_subexprs rules
+  strip_annotations_from_all_non_local_consts <| pexpr.of_expr <| e.unsafe_cast.replace_subexprs rules
 #align tactic.replace_subexprs_for_simp_arg tactic.replace_subexprs_for_simp_arg
 
 /-- `simp_arg_type.replace_subexprs` calls `expr.replace_subexprs` on the underlying `pexpr`, if
 there is one, and then prepares the result for use by the simplifier. -/
 unsafe def simp_arg_type.replace_subexprs : simp_arg_type → List (expr × expr) → simp_arg_type
-  | simp_arg_type.expr e, rules => simp_arg_type.expr $ replace_subexprs_for_simp_arg e rules
-  | simp_arg_type.symm_expr e, rules => simp_arg_type.symm_expr $ replace_subexprs_for_simp_arg e rules
+  | simp_arg_type.expr e, rules => simp_arg_type.expr <| replace_subexprs_for_simp_arg e rules
+  | simp_arg_type.symm_expr e, rules => simp_arg_type.symm_expr <| replace_subexprs_for_simp_arg e rules
   | sat, rules => sat
 #align tactic.simp_arg_type.replace_subexprs tactic.simp_arg_type.replace_subexprs
 
@@ -62,21 +62,21 @@ You can specify additional simp lemmas as usual for example using
 introduce parameters.
 -/
 @[user_command]
-unsafe def simp_cmd (_ : parse $ tk "#simp") : lean.parser Unit := do
+unsafe def simp_cmd (_ : parse <| tk "#simp") : lean.parser Unit := do
   let no_dflt ← only_flag
   let hs ← simp_arg_list
   let attr_names ← with_ident_list
   let o ← optional (tk ":")
   let e ← types.texpr
   let-- Retrieve the `pexpr`s parsed as part of the simp args, and collate them into a big list.
-  hs_es := List.join $ hs.map $ Option.toList ∘ simp_arg_type.to_pexpr
+  hs_es := List.join <| hs.map <| Option.toList ∘ simp_arg_type.to_pexpr
   let/- Synthesize a `tactic_state` including local variables as hypotheses under which `expr.simp`
          may be safely called with expected behaviour given the `variables` in the environment. -/
     (ts, mappings)
     ← synthesize_tactic_state_with_variables_as_hyps (e :: hs_es)
   let simp_result
     ←-- Enter the `tactic` monad, *critically* using the synthesized tactic state `ts`.
-        lean.parser.of_tactic $
+        lean.parser.of_tactic
         fun _ =>
         (/- Resolve the local variables added by the parser to `e` (when it was parsed) against the local
                  hypotheses added to the `ts : tactic_state` which we are using. -/
@@ -97,7 +97,7 @@ unsafe def simp_cmd (_ : parse $ tk "#simp") : lean.parser Unit := do
                    annotation macros are injected, the direct patten matches in the `simp_lemmas.*` codebase
                    fail, and the lemmas we want don't get added.
                    -/
-            hs := hs.map $ fun sat => sat.replace_subexprs mappings
+            hs := hs.map fun sat => sat.replace_subexprs mappings
             -- Finally, call `expr.simp` with `e` and return the result.
                 Prod.fst <$>
                 e {  } failed no_dflt attr_names hs)

@@ -59,9 +59,9 @@ unsafe def swap_var (renames : parse swap_args_parser) : tactic Unit := do
   renames fun e => do
       let n ← tactic.get_unused_name
       -- how to call `interactive.tactic.rename` here?
-          propagate_tags $
-          tactic.rename_many $ native.rb_map.of_list [(e.1, n), (e.2, e.1)]
-      propagate_tags $ tactic.rename_many $ native.rb_map.of_list [(n, e.2)]
+          propagate_tags <|
+          tactic.rename_many <| native.rb_map.of_list [(e.1, n), (e.2, e.1)]
+      propagate_tags <| tactic.rename_many <| native.rb_map.of_list [(n, e.2)]
   pure ()
 #align tactic.interactive.swap_var tactic.interactive.swap_var
 

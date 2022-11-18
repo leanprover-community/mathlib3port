@@ -166,7 +166,7 @@ theorem nat_cast_nat_abs_norm {α : Type _} [Ring α] (x : ℤ[i]) : (x.norm.nat
 #align gaussian_int.nat_cast_nat_abs_norm GaussianInt.nat_cast_nat_abs_norm
 
 theorem nat_abs_norm_eq (x : ℤ[i]) : x.norm.natAbs = x.re.natAbs * x.re.natAbs + x.im.natAbs * x.im.natAbs :=
-  Int.ofNat.inj $ by
+  Int.ofNat.inj <| by
     simp
     simp [Zsqrtd.norm]
 #align gaussian_int.nat_abs_norm_eq GaussianInt.nat_abs_norm_eq
@@ -202,7 +202,7 @@ theorem norm_sq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : �
   calc
     ((x / y : ℂ) - ((x / y : ℤ[i]) : ℂ)).normSq =
         ((x / y : ℂ).re - ((x / y : ℤ[i]) : ℂ).re + ((x / y : ℂ).im - ((x / y : ℤ[i]) : ℂ).im) * I : ℂ).normSq :=
-      congr_arg _ $ by apply Complex.ext <;> simp
+      congr_arg _ <| by apply Complex.ext <;> simp
     _ ≤ (1 / 2 + 1 / 2 * I).normSq :=
       have : |(2⁻¹ : ℝ)| = 2⁻¹ := abs_of_nonneg (by norm_num)
       norm_sq_le_norm_sq_of_re_le_of_im_le
@@ -221,7 +221,7 @@ theorem mod_def (x y : ℤ[i]) : x % y = x - y * (x / y) :=
 
 theorem norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (x % y).norm < y.norm :=
   have : (y : ℂ) ≠ 0 := by rwa [Ne.def, ← to_complex_zero, to_complex_inj]
-  (@Int.cast_lt ℝ _ _ _ _).1 $
+  (@Int.cast_lt ℝ _ _ _ _).1 <|
     calc
       ↑(Zsqrtd.norm (x % y)) = (x - y * (x / y : ℤ[i]) : ℂ).normSq := by simp [mod_def]
       _ = (y : ℂ).normSq * (x / y - (x / y : ℤ[i]) : ℂ).normSq := by rw [← norm_sq_mul, mul_sub, mul_div_cancel' _ this]
@@ -242,7 +242,7 @@ theorem norm_le_norm_mul_left (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (norm x
 #align gaussian_int.norm_le_norm_mul_left GaussianInt.norm_le_norm_mul_left
 
 instance : Nontrivial ℤ[i] :=
-  ⟨⟨0, 1, dec_trivial⟩⟩
+  ⟨⟨0, 1, by decide⟩⟩
 
 instance : EuclideanDomain ℤ[i] :=
   { GaussianInt.commRing, GaussianInt.nontrivial with Quotient := (· / ·), remainder := (· % ·),
@@ -251,7 +251,7 @@ instance : EuclideanDomain ℤ[i] :=
       rfl,
     quotient_mul_add_remainder_eq := fun _ _ => by simp [mod_def], R := _,
     r_well_founded := measure_wf (Int.natAbs ∘ norm), remainderLt := nat_abs_norm_mod_lt,
-    mul_left_not_lt := fun a b hb0 => not_lt_of_ge $ norm_le_norm_mul_left a hb0 }
+    mul_left_not_lt := fun a b hb0 => not_lt_of_ge <| norm_le_norm_mul_left a hb0 }
 
 open PrincipalIdealRing
 
@@ -259,20 +259,20 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime] (h
   hp.1.eq_two_or_odd.elim
     (fun hp2 =>
       absurd hpi
-        (mt irreducible_iff_prime.2 $ fun ⟨hu, h⟩ => by
+        ((mt irreducible_iff_prime.2) fun ⟨hu, h⟩ => by
           have := h ⟨1, 1⟩ ⟨1, -1⟩ (hp2.symm ▸ rfl)
           rw [← norm_eq_one_iff, ← norm_eq_one_iff] at this
-          exact absurd this dec_trivial))
+          exact absurd this (by decide)))
     fun hp1 =>
-    by_contradiction $ fun hp3 : p % 4 ≠ 3 => by
+    by_contradiction fun hp3 : p % 4 ≠ 3 => by
       have hp41 : p % 4 = 1 := by
         rw [← Nat.mod_mul_left_mod p 2 2, show 2 * 2 = 4 from rfl] at hp1
-        have := Nat.mod_lt p (show 0 < 4 from dec_trivial)
+        have := Nat.mod_lt p (show 0 < 4 by decide)
         revert this hp3 hp1
         generalize p % 4 = m
         decide!
-      let ⟨k, hk⟩ := Zmod.exists_sq_eq_neg_one_iff.2 $ by rw [hp41] <;> exact dec_trivial
-      obtain ⟨k, k_lt_p, rfl⟩ : ∃ (k' : ℕ) (h : k' < p), (k' : Zmod p) = k := by
+      let ⟨k, hk⟩ := Zmod.exists_sq_eq_neg_one_iff.2 <| by rw [hp41] <;> exact by decide
+      obtain ⟨k, k_lt_p, rfl⟩ : ∃ (k' : ℕ)(h : k' < p), (k' : Zmod p) = k := by
         refine' ⟨k.val, k.val_lt, Zmod.nat_cast_zmod_val k⟩
       have hpk : p ∣ k ^ 2 + 1 := by
         rw [pow_two, ← CharP.cast_eq_zero_iff (Zmod p) p, Nat.cast_add, Nat.cast_mul, Nat.cast_one, ← hk, add_left_neg]
@@ -286,22 +286,22 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime] (h
           _ < p * p := mul_lt_mul k_lt_p k_lt_p (Nat.succ_pos _) (Nat.zero_le _)
           
       have hpk₁ : ¬(p : ℤ[i]) ∣ ⟨k, -1⟩ := fun ⟨x, hx⟩ =>
-        lt_irrefl (p * x : ℤ[i]).norm.natAbs $
+        lt_irrefl (p * x : ℤ[i]).norm.natAbs <|
           calc
             (norm (p * x : ℤ[i])).natAbs = (Zsqrtd.norm ⟨k, -1⟩).natAbs := by rw [hx]
             _ < (norm (p : ℤ[i])).natAbs := by simpa [add_comm, Zsqrtd.norm] using hkltp
             _ ≤ (norm (p * x : ℤ[i])).natAbs :=
               norm_le_norm_mul_left _ fun hx0 =>
-                (show (-1 : ℤ) ≠ 0 from dec_trivial) $ by simpa [hx0] using congr_arg Zsqrtd.im hx
+                show (-1 : ℤ) ≠ 0 by decide <| by simpa [hx0] using congr_arg Zsqrtd.im hx
             
       have hpk₂ : ¬(p : ℤ[i]) ∣ ⟨k, 1⟩ := fun ⟨x, hx⟩ =>
-        lt_irrefl (p * x : ℤ[i]).norm.natAbs $
+        lt_irrefl (p * x : ℤ[i]).norm.natAbs <|
           calc
             (norm (p * x : ℤ[i])).natAbs = (Zsqrtd.norm ⟨k, 1⟩).natAbs := by rw [hx]
             _ < (norm (p : ℤ[i])).natAbs := by simpa [add_comm, Zsqrtd.norm] using hkltp
             _ ≤ (norm (p * x : ℤ[i])).natAbs :=
               norm_le_norm_mul_left _ fun hx0 =>
-                (show (1 : ℤ) ≠ 0 from dec_trivial) $ by simpa [hx0] using congr_arg Zsqrtd.im hx
+                show (1 : ℤ) ≠ 0 by decide <| by simpa [hx0] using congr_arg Zsqrtd.im hx
             
       have hpu : ¬IsUnit (p : ℤ[i]) :=
         mt norm_eq_one_iff.2
@@ -312,27 +312,25 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime] (h
       tauto
 #align gaussian_int.mod_four_eq_three_of_nat_prime_of_prime GaussianInt.mod_four_eq_three_of_nat_prime_of_prime
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 theorem sq_add_sq_of_nat_prime_of_not_irreducible (p : ℕ) [hp : Fact p.Prime] (hpi : ¬Irreducible (p : ℤ[i])) :
-    ∃ (a) (b), a ^ 2 + b ^ 2 = p :=
+    ∃ a b, a ^ 2 + b ^ 2 = p :=
   have hpu : ¬IsUnit (p : ℤ[i]) :=
-    mt norm_eq_one_iff.2 $ by
+    mt norm_eq_one_iff.2 <| by
       rw [norm_nat_cast, Int.natAbs_mul, Nat.mul_eq_one_iff] <;> exact fun h => (ne_of_lt hp.1.one_lt).symm h.1
-  have hab : ∃ (a) (b), (p : ℤ[i]) = a * b ∧ ¬IsUnit a ∧ ¬IsUnit b := by
+  have hab : ∃ a b, (p : ℤ[i]) = a * b ∧ ¬IsUnit a ∧ ¬IsUnit b := by
     simpa [irreducible_iff, hpu, not_forall, not_or] using hpi
   let ⟨a, b, hpab, hau, hbu⟩ := hab
   have hnap : (norm a).natAbs = p :=
-    ((hp.1.mul_eq_prime_sq_iff (mt norm_eq_one_iff.1 hau) (mt norm_eq_one_iff.1 hbu)).1 $ by
+    ((hp.1.mul_eq_prime_sq_iff (mt norm_eq_one_iff.1 hau) (mt norm_eq_one_iff.1 hbu)).1 <| by
         rw [← Int.coe_nat_inj', Int.coe_nat_pow, sq, ← @norm_nat_cast (-1), hpab] <;> simp).1
   ⟨a.re.natAbs, a.im.natAbs, by simpa [nat_abs_norm_eq, sq] using hnap⟩
 #align gaussian_int.sq_add_sq_of_nat_prime_of_not_irreducible GaussianInt.sq_add_sq_of_nat_prime_of_not_irreducible
 
 theorem primeOfNatPrimeOfModFourEqThree (p : ℕ) [hp : Fact p.Prime] (hp3 : p % 4 = 3) : Prime (p : ℤ[i]) :=
-  irreducible_iff_prime.1 $
-    Classical.by_contradiction $ fun hpi =>
+  irreducible_iff_prime.1 <|
+    Classical.by_contradiction fun hpi =>
       let ⟨a, b, hab⟩ := sq_add_sq_of_nat_prime_of_not_irreducible p hpi
-      have : ∀ a b : Zmod 4, a ^ 2 + b ^ 2 ≠ p := by erw [← Zmod.nat_cast_mod p 4, hp3] <;> exact dec_trivial
+      have : ∀ a b : Zmod 4, a ^ 2 + b ^ 2 ≠ p := by erw [← Zmod.nat_cast_mod p 4, hp3] <;> exact by decide
       this a b (hab ▸ by simp)
 #align gaussian_int.prime_of_nat_prime_of_mod_four_eq_three GaussianInt.primeOfNatPrimeOfModFourEqThree
 
