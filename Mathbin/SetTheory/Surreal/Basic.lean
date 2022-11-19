@@ -270,7 +270,8 @@ theorem add : ∀ {x y : Pgame} (ox : Numeric x) (oy : Numeric y), Numeric (x + 
           
         · apply ox.add (oy.move_right jy)
           
-        ⟩
+        ⟩decreasing_by
+  pgame_wf_tac
 #align pgame.numeric.add Pgame.Numeric.add
 
 theorem sub {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : Numeric (x - y) :=

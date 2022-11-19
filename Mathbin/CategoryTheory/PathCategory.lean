@@ -49,7 +49,7 @@ variable {V}
 /-- The inclusion of a quiver `V` into its path category, as a prefunctor.
 -/
 @[simps]
-def of : Prefunctor V (Paths V) where
+def of : V ⥤q Paths V where
   obj X := X
   map X Y f := f.toPath
 #align category_theory.paths.of CategoryTheory.Paths.of
@@ -57,7 +57,7 @@ def of : Prefunctor V (Paths V) where
 attribute [local ext.1] Functor.ext
 
 /-- Any prefunctor from `V` lifts to a functor from `paths V` -/
-def lift {C} [Category C] (φ : Prefunctor V C) : Paths V ⥤ C where
+def lift {C} [Category C] (φ : V ⥤q C) : Paths V ⥤ C where
   obj := φ.obj
   map X Y f :=
     @Quiver.Path.rec V _ X (fun Y f => φ.obj X ⟶ φ.obj Y) (𝟙 <| φ.obj X) (fun Y Z p f ihp => ihp ≫ φ.map f) Y f
@@ -75,23 +75,23 @@ def lift {C} [Category C] (φ : Prefunctor V C) : Paths V ⥤ C where
 #align category_theory.paths.lift CategoryTheory.Paths.lift
 
 @[simp]
-theorem lift_nil {C} [Category C] (φ : Prefunctor V C) (X : V) : (lift φ).map Quiver.Path.nil = 𝟙 (φ.obj X) :=
+theorem lift_nil {C} [Category C] (φ : V ⥤q C) (X : V) : (lift φ).map Quiver.Path.nil = 𝟙 (φ.obj X) :=
   rfl
 #align category_theory.paths.lift_nil CategoryTheory.Paths.lift_nil
 
 @[simp]
-theorem lift_cons {C} [Category C] (φ : Prefunctor V C) {X Y Z : V} (p : Quiver.Path X Y) (f : Y ⟶ Z) :
+theorem lift_cons {C} [Category C] (φ : V ⥤q C) {X Y Z : V} (p : Quiver.Path X Y) (f : Y ⟶ Z) :
     (lift φ).map (p.cons f) = (lift φ).map p ≫ φ.map f :=
   rfl
 #align category_theory.paths.lift_cons CategoryTheory.Paths.lift_cons
 
 @[simp]
-theorem lift_to_path {C} [Category C] (φ : Prefunctor V C) {X Y : V} (f : X ⟶ Y) : (lift φ).map f.toPath = φ.map f := by
+theorem lift_to_path {C} [Category C] (φ : V ⥤q C) {X Y : V} (f : X ⟶ Y) : (lift φ).map f.toPath = φ.map f := by
   dsimp [Quiver.Hom.toPath, lift]
   simp
 #align category_theory.paths.lift_to_path CategoryTheory.Paths.lift_to_path
 
-theorem lift_spec {C} [Category C] (φ : Prefunctor V C) : of.comp (lift φ).toPrefunctor = φ := by
+theorem lift_spec {C} [Category C] (φ : V ⥤q C) : (of ⋙q (lift φ).toPrefunctor) = φ := by
   apply Prefunctor.ext
   rotate_left
   · rintro X
@@ -104,8 +104,7 @@ theorem lift_spec {C} [Category C] (φ : Prefunctor V C) : of.comp (lift φ).toP
     
 #align category_theory.paths.lift_spec CategoryTheory.Paths.lift_spec
 
-theorem lift_unique {C} [Category C] (φ : Prefunctor V C) (Φ : Paths V ⥤ C) (hΦ : of.comp Φ.toPrefunctor = φ) :
-    Φ = lift φ := by
+theorem lift_unique {C} [Category C] (φ : V ⥤q C) (Φ : Paths V ⥤ C) (hΦ : (of ⋙q Φ.toPrefunctor) = φ) : Φ = lift φ := by
   subst_vars
   apply Functor.ext
   rotate_left
@@ -151,7 +150,7 @@ variable (W : Type u₂) [Quiver.{v₂ + 1} W]
 
 -- A restatement of `prefunctor.map_path_comp` using `f ≫ g` instead of `f.comp g`.
 @[simp]
-theorem Prefunctor.map_path_comp' (F : Prefunctor V W) {X Y Z : Paths V} (f : X ⟶ Y) (g : Y ⟶ Z) :
+theorem Prefunctor.map_path_comp' (F : V ⥤q W) {X Y Z : Paths V} (f : X ⟶ Y) (g : Y ⟶ Z) :
     F.mapPath (f ≫ g) = (F.mapPath f).comp (F.mapPath g) :=
   Prefunctor.map_path_comp _ _ _
 #align category_theory.prefunctor.map_path_comp' CategoryTheory.Prefunctor.map_path_comp'

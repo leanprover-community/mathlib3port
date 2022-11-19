@@ -120,7 +120,8 @@ def minSqFacAux : ℕ → ℕ → Option ℕ
           lt_of_le_of_lt (Nat.sub_le_sub_right (Nat.add_le_add_right (Nat.sqrt_le_sqrt <| Nat.div_le_self _ _) _) _)
             this
         if k ∣ n' then some k else min_sq_fac_aux n' (k + 2)
-      else min_sq_fac_aux n (k + 2)
+      else min_sq_fac_aux n (k + 2)termination_by'
+  ⟨_, measure_wf fun ⟨n, k⟩ => Nat.sqrt n + 2 - k⟩
 #align nat.min_sq_fac_aux Nat.minSqFacAux
 
 /-- Returns the smallest prime factor `p` of `n` such that `p^2 ∣ n`, or `none` if there is no
@@ -201,7 +202,8 @@ theorem min_sq_fac_aux_has_prop :
       exact min_sq_fac_prop_div _ (pk dk) dk (mt (Nat.dvd_div_iff dk).2 dkk) IH
       
     · exact IH n (dvd_refl _) dk
-      
+      termination_by'
+  ⟨_, measure_wf fun ⟨n, k⟩ => Nat.sqrt n + 2 - k⟩
 #align nat.min_sq_fac_aux_has_prop Nat.min_sq_fac_aux_has_prop
 
 theorem min_sq_fac_has_prop (n : ℕ) : MinSqFacProp n (minSqFac n) := by

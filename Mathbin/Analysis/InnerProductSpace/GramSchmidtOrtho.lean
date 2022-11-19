@@ -51,7 +51,7 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 /-- The Gram-Schmidt process takes a set of vectors as input
 and outputs a set of orthogonal vectors which have the same span. -/
 noncomputable def gramSchmidt (f : ι → E) : ι → E
-  | n => f n - ∑ i : iio n, orthogonalProjection (𝕜 ∙ gramSchmidt i) (f n)
+  | n => f n - ∑ i : iio n, orthogonalProjection (𝕜 ∙ gramSchmidt i) (f n)decreasing_by exact mem_Iio.1 i.2
 #align gram_schmidt gramSchmidt
 
 /-- This lemma uses `∑ i in` instead of `∑ i :`.-/

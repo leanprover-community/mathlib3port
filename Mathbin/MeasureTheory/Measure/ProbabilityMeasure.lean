@@ -176,10 +176,8 @@ theorem mass_to_finite_measure (μ : ProbabilityMeasure Ω) : μ.toFiniteMeasure
 #align measure_theory.probability_measure.mass_to_finite_measure MeasureTheory.ProbabilityMeasure.mass_to_finite_measure
 
 theorem to_finite_measure_nonzero (μ : ProbabilityMeasure Ω) : μ.toFiniteMeasure ≠ 0 := by
-  intro maybe_zero
-  have mass_zero := (finite_measure.mass_zero_iff _).mpr maybe_zero
-  rw [μ.mass_to_finite_measure] at mass_zero
-  exact one_ne_zero mass_zero
+  rw [← finite_measure.mass_nonzero_iff, μ.mass_to_finite_measure]
+  exact one_ne_zero
 #align
   measure_theory.probability_measure.to_finite_measure_nonzero MeasureTheory.ProbabilityMeasure.to_finite_measure_nonzero
 
@@ -310,21 +308,20 @@ def normalize : ProbabilityMeasure Ω :=
 
 @[simp]
 theorem self_eq_mass_mul_normalize (s : Set Ω) : μ s = μ.mass * μ.normalize s := by
-  by_cases μ = 0
-  · rw [h]
-    simp only [zero.mass, coe_fn_zero, Pi.zero_apply, zero_mul]
+  obtain rfl | h := eq_or_ne μ 0
+  · simp only [zero.mass, coe_fn_zero, Pi.zero_apply, zero_mul]
     
   have mass_nonzero : μ.mass ≠ 0 := by rwa [μ.mass_nonzero_iff]
-  simp only [show μ ≠ 0 from h, mass_nonzero, normalize, not_false_iff, dif_neg]
-  change μ s = μ.mass * (μ.mass⁻¹ • μ) s
-  rw [coe_fn_smul_apply]
-  simp only [mass_nonzero, Algebra.id.smul_eq_mul, mul_inv_cancel_left₀, Ne.def, not_false_iff]
+  simp only [normalize, dif_neg mass_nonzero, Ennreal.to_nnreal_mul, Subtype.coe_mk,
+    probability_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure, Ennreal.to_nnreal_coe,
+    MeasureTheory.Measure.coe_nnreal_smul_apply, mul_inv_cancel_left₀ mass_nonzero,
+    finite_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure]
 #align measure_theory.finite_measure.self_eq_mass_mul_normalize MeasureTheory.FiniteMeasure.self_eq_mass_mul_normalize
 
 theorem self_eq_mass_smul_normalize : μ = μ.mass • μ.normalize.toFiniteMeasure := by
   ext (s s_mble)
-  rw [μ.self_eq_mass_mul_normalize s, coe_fn_smul_apply]
-  rfl
+  rw [μ.self_eq_mass_mul_normalize s, coe_fn_smul_apply, smul_eq_mul,
+    probability_measure.coe_fn_comp_to_finite_measure_eq_coe_fn]
 #align measure_theory.finite_measure.self_eq_mass_smul_normalize MeasureTheory.FiniteMeasure.self_eq_mass_smul_normalize
 
 theorem normalize_eq_of_nonzero (nonzero : μ ≠ 0) (s : Set Ω) : μ.normalize s = μ.mass⁻¹ * μ s := by
@@ -349,8 +346,8 @@ theorem _root_.probability_measure.to_finite_measure_normalize_eq_self {m0 : Mea
     (μ : ProbabilityMeasure Ω) : μ.toFiniteMeasure.normalize = μ := by
   ext (s s_mble)
   rw [μ.to_finite_measure.normalize_eq_of_nonzero μ.to_finite_measure_nonzero s]
-  simp only [probability_measure.mass_to_finite_measure, inv_one, one_mul]
-  rfl
+  simp only [probability_measure.mass_to_finite_measure, inv_one, one_mul,
+    probability_measure.coe_fn_comp_to_finite_measure_eq_coe_fn]
 #align
   measure_theory.finite_measure._root_.probability_measure.to_finite_measure_normalize_eq_self measure_theory.finite_measure._root_.probability_measure.to_finite_measure_normalize_eq_self
 
@@ -370,8 +367,7 @@ variable [TopologicalSpace Ω]
 theorem test_against_nn_eq_mass_mul (f : Ω →ᵇ ℝ≥0) :
     μ.testAgainstNn f = μ.mass * μ.normalize.toFiniteMeasure.testAgainstNn f := by
   nth_rw 0 [μ.self_eq_mass_smul_normalize]
-  rw [μ.normalize.to_finite_measure.smul_test_against_nn_apply μ.mass f]
-  rfl
+  rw [μ.normalize.to_finite_measure.smul_test_against_nn_apply μ.mass f, smul_eq_mul]
 #align measure_theory.finite_measure.test_against_nn_eq_mass_mul MeasureTheory.FiniteMeasure.test_against_nn_eq_mass_mul
 
 theorem normalize_test_against_nn (nonzero : μ ≠ 0) (f : Ω →ᵇ ℝ≥0) :

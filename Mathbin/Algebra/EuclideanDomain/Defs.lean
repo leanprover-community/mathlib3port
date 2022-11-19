@@ -166,7 +166,8 @@ theorem Gcd.induction {P : R → R → Prop} : ∀ a b : R, (∀ x, P 0 x) → (
     if a0 : a = 0 then a0.symm ▸ H0 _
     else
       have h := modLt b a0
-      H1 _ _ a0 (gcd.induction (b % a) a H0 H1)
+      H1 _ _ a0 (gcd.induction (b % a) a H0 H1)termination_by'
+  ⟨_, r_well_founded⟩
 #align euclidean_domain.gcd.induction EuclideanDomain.Gcd.induction
 
 end
@@ -182,7 +183,8 @@ def gcd : R → R → R
     if a0 : a = 0 then b
     else
       have h := modLt b a0
-      gcd (b % a) a
+      gcd (b % a) a termination_by'
+  ⟨_, r_well_founded⟩
 #align euclidean_domain.gcd EuclideanDomain.gcd
 
 @[simp]
@@ -206,7 +208,8 @@ def xgcdAux : R → R → R → R → R → R → R × R × R
     else
       have : r' % r ≺ r := modLt _ hr
       let q := r' / r
-      xgcd_aux (r' % r) (s' - q * s) (t' - q * t) r s t
+      xgcd_aux (r' % r) (s' - q * s) (t' - q * t) r s t termination_by'
+  ⟨_, r_well_founded⟩
 #align euclidean_domain.xgcd_aux EuclideanDomain.xgcdAux
 
 @[simp]

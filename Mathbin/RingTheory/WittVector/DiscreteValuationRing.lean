@@ -58,7 +58,7 @@ is a unit.
 -/
 noncomputable def inverseCoeff (a : Units k) (A : 𝕎 k) : ℕ → k
   | 0 => ↑a⁻¹
-  | n + 1 => succNthValUnits n a A fun i => inverse_coeff i.val
+  | n + 1 => succNthValUnits n a A fun i => inverse_coeff i.val decreasing_by apply Fin.is_lt
 #align witt_vector.inverse_coeff WittVector.inverseCoeff
 
 /-- Upgrade a Witt vector `A` whose first entry `A.coeff 0` is a unit to be, itself, a unit in `𝕎 k`.

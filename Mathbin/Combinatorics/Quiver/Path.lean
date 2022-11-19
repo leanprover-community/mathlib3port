@@ -187,7 +187,7 @@ namespace Prefunctor
 
 open Quiver
 
-variable {V : Type u₁} [Quiver.{v₁} V] {W : Type u₂} [Quiver.{v₂} W] (F : Prefunctor V W)
+variable {V : Type u₁} [Quiver.{v₁} V] {W : Type u₂} [Quiver.{v₂} W] (F : V ⥤q W)
 
 /- warning: prefunctor.map_path -> Prefunctor.mapPath is a dubious translation:
 lean 3 declaration is

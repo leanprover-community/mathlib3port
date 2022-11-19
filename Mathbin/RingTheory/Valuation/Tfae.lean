@@ -530,7 +530,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                          [(Tactic.location "at" (Tactic.locationHyp [`e] []))])
                         [])
                        (group
-                        (tacticRwa__
+                        (Std.Tactic.tacticRwa__
                          "rwa"
                          (Tactic.rwRuleSeq
                           "["
@@ -811,7 +811,11 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `LocalRing.jacobson_eq_maximal_ideal)] "]")
                           [])
                          []
-                         (exacts "exacts" "[" [(Term.app `le_refl [(Term.hole "_")]) "," `bot_ne_top] "]")]))))))
+                         (Std.Tactic.exacts
+                          "exacts"
+                          "["
+                          [(Term.app `le_refl [(Term.hole "_")]) "," `bot_ne_top]
+                          "]")]))))))
                   [])
                  (group
                   (Tactic.tacticHave_
@@ -1240,7 +1244,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                         [(Tactic.location "at" (Tactic.locationHyp [`e] []))])
                        [])
                       (group
-                       (tacticRwa__
+                       (Std.Tactic.tacticRwa__
                         "rwa"
                         (Tactic.rwRuleSeq
                          "["
@@ -1516,7 +1520,11 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                          (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `LocalRing.jacobson_eq_maximal_ideal)] "]")
                          [])
                         []
-                        (exacts "exacts" "[" [(Term.app `le_refl [(Term.hole "_")]) "," `bot_ne_top] "]")]))))))
+                        (Std.Tactic.exacts
+                         "exacts"
+                         "["
+                         [(Term.app `le_refl [(Term.hole "_")]) "," `bot_ne_top]
+                         "]")]))))))
                  [])
                 (group
                  (Tactic.tacticHave_
@@ -1921,7 +1929,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                     [(Tactic.location "at" (Tactic.locationHyp [`e] []))])
                    [])
                   (group
-                   (tacticRwa__
+                   (Std.Tactic.tacticRwa__
                     "rwa"
                     (Tactic.rwRuleSeq
                      "["
@@ -2195,7 +2203,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                      (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `LocalRing.jacobson_eq_maximal_ideal)] "]")
                      [])
                     []
-                    (exacts "exacts" "[" [(Term.app `le_refl [(Term.hole "_")]) "," `bot_ne_top] "]")]))))))
+                    (Std.Tactic.exacts "exacts" "[" [(Term.app `le_refl [(Term.hole "_")]) "," `bot_ne_top] "]")]))))))
              [])
             (group
              (Tactic.tacticHave_

@@ -270,7 +270,8 @@ theorem of_nat_surjective_aux : ∀ {x : ℕ} (hx : x ∈ s), ∃ n, ofNat s n =
           rw [of_nat] <;>
             exact
               le_succ_of_forall_lt_le fun z hz => by
-                rw [ha] <;> cases m <;> exact List.le_maximum_of_mem (hmt.2 hz) hmax⟩
+                rw [ha] <;> cases m <;> exact List.le_maximum_of_mem (hmt.2 hz) hmax⟩decreasing_by
+  tauto
 #align nat.subtype.of_nat_surjective_aux Nat.Subtype.of_nat_surjective_aux
 
 theorem of_nat_surjective : Surjective (ofNat s) := fun ⟨x, hx⟩ => of_nat_surjective_aux hx

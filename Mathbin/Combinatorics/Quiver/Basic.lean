@@ -45,7 +45,7 @@ class Quiver (V : Type u) where
 -- mathport name: «expr ⟶ »
 infixr:10 " ⟶ " => Quiver.Hom
 
-/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`obj] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`obj] [] -/
 -- type as \h
 /-- A morphism of quivers. As we will later have categorical functors extend this structure,
 we call it a `prefunctor`.
@@ -94,16 +94,18 @@ def comp {U : Type _} [Quiver U] {V : Type _} [Quiver V] {W : Type _} [Quiver W]
 
 @[simp]
 theorem comp_assoc {U V W Z : Type _} [Quiver U] [Quiver V] [Quiver W] [Quiver Z] (F : Prefunctor U V)
-    (G : Prefunctor V W) (H : Prefunctor W Z) : (F.comp G).comp H = F.comp (G.comp H) := by
-  apply Prefunctor.ext
-  rotate_left
-  · rintro X
-    rfl
-    
-  · rintro X Y Z
-    rfl
-    
+    (G : Prefunctor V W) (H : Prefunctor W Z) : (F.comp G).comp H = F.comp (G.comp H) :=
+  rfl
 #align prefunctor.comp_assoc Prefunctor.comp_assoc
+
+-- mathport name: «expr ⥤q »
+infixl:50 " ⥤q " => Prefunctor
+
+-- mathport name: «expr ⋙q »
+infixl:50 " ⋙q " => Prefunctor.comp
+
+-- mathport name: «expr𝟭q»
+notation "𝟭q" => id
 
 end Prefunctor
 

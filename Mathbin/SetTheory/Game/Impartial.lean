@@ -24,7 +24,7 @@ namespace Pgame
 
 /-- The definition for a impartial game, defined using Conway induction. -/
 def ImpartialAux : Pgame → Prop
-  | G => (G ≈ -G) ∧ (∀ i, impartial_aux (G.moveLeft i)) ∧ ∀ j, impartial_aux (G.moveRight j)
+  | G => (G ≈ -G) ∧ (∀ i, impartial_aux (G.moveLeft i)) ∧ ∀ j, impartial_aux (G.moveRight j)decreasing_by pgame_wf_tac
 #align pgame.impartial_aux Pgame.ImpartialAux
 
 theorem impartial_aux_def {G : Pgame} :
@@ -82,7 +82,8 @@ theorem impartial_congr : ∀ {G H : Pgame} (e : G ≡r H) [G.Impartial], H.Impa
     exact
       impartial_def.2
         ⟨e.symm.equiv.trans ((neg_equiv_self G).trans (neg_equiv_neg_iff.2 e.equiv)), fun i =>
-          impartial_congr (e.move_left_symm i), fun j => impartial_congr (e.move_right_symm j)⟩
+          impartial_congr (e.move_left_symm i), fun j => impartial_congr (e.move_right_symm j)⟩decreasing_by
+  pgame_wf_tac
 #align pgame.impartial.impartial_congr Pgame.Impartial.impartial_congr
 
 instance impartial_add : ∀ (G H : Pgame) [G.Impartial] [H.Impartial], (G + H).Impartial
@@ -103,7 +104,8 @@ instance impartial_add : ∀ (G H : Pgame) [G.Impartial] [H.Impartial], (G + H).
       intro i
       simp only [add_move_right_inl, add_move_right_inr]
       apply impartial_add
-      
+      decreasing_by
+  pgame_wf_tac
 #align pgame.impartial.impartial_add Pgame.Impartial.impartial_add
 
 instance impartial_neg : ∀ (G : Pgame) [G.Impartial], (-G).Impartial
@@ -119,7 +121,8 @@ instance impartial_neg : ∀ (G : Pgame) [G.Impartial], (-G).Impartial
       
     · rw [move_right_neg']
       apply impartial_neg
-      
+      decreasing_by
+  pgame_wf_tac
 #align pgame.impartial.impartial_neg Pgame.Impartial.impartial_neg
 
 variable (G : Pgame) [Impartial G]

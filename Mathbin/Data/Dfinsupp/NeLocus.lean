@@ -45,9 +45,8 @@ theorem not_mem_ne_locus {f g : Π₀ a, N a} {a : α} : a ∉ f.neLocus g ↔ f
 #align dfinsupp.not_mem_ne_locus Dfinsupp.not_mem_ne_locus
 
 @[simp]
-theorem coe_ne_locus : ↑(f.neLocus g) = { x | f x ≠ g x } := by
-  ext
-  exact mem_ne_locus
+theorem coe_ne_locus : ↑(f.neLocus g) = { x | f x ≠ g x } :=
+  Set.ext fun x => mem_ne_locus
 #align dfinsupp.coe_ne_locus Dfinsupp.coe_ne_locus
 
 @[simp]

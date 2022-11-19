@@ -354,7 +354,7 @@ theorem pell_zd_add (m) : ∀ n, pell_zd (m + n) = pell_zd m * pell_zd n
             (Tactic.injection "injection" (Term.app `pell_zd_add [(Term.hole "_") `m `n]) ["with" [`h "_"]])
             "<;>"
             (Tactic.«tactic_<;>_»
-             (tacticRepeat'_
+             (Std.Tactic.tacticRepeat'_
               "repeat'"
               (Tactic.tacticSeq
                (Tactic.tacticSeq1Indented
@@ -394,7 +394,7 @@ theorem pell_zd_add (m) : ∀ n, pell_zd (m + n) = pell_zd m * pell_zd n
            (Tactic.injection "injection" (Term.app `pell_zd_add [(Term.hole "_") `m `n]) ["with" [`h "_"]])
            "<;>"
            (Tactic.«tactic_<;>_»
-            (tacticRepeat'_
+            (Std.Tactic.tacticRepeat'_
              "repeat'"
              (Tactic.tacticSeq
               (Tactic.tacticSeq1Indented
@@ -426,7 +426,7 @@ theorem pell_zd_add (m) : ∀ n, pell_zd (m + n) = pell_zd m * pell_zd n
        (Tactic.injection "injection" (Term.app `pell_zd_add [(Term.hole "_") `m `n]) ["with" [`h "_"]])
        "<;>"
        (Tactic.«tactic_<;>_»
-        (tacticRepeat'_
+        (Std.Tactic.tacticRepeat'_
          "repeat'"
          (Tactic.tacticSeq
           (Tactic.tacticSeq1Indented
@@ -454,7 +454,7 @@ theorem pell_zd_add (m) : ∀ n, pell_zd (m + n) = pell_zd m * pell_zd n
         (Tactic.exact "exact" (Term.app `Int.ofNat.inj [`h]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
-       (tacticRepeat'_
+       (Std.Tactic.tacticRepeat'_
         "repeat'"
         (Tactic.tacticSeq
          (Tactic.tacticSeq1Indented
@@ -495,7 +495,7 @@ theorem pell_zd_add (m) : ∀ n, pell_zd (m + n) = pell_zd m * pell_zd n
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (tacticRepeat'_
+      (Std.Tactic.tacticRepeat'_
        "repeat'"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
@@ -624,7 +624,7 @@ theorem
             (Tactic.injection "injection" (Term.app `pell_zd_add [(Term.hole "_") `m `n]) ["with" ["_" `h]])
             "<;>"
             (Tactic.«tactic_<;>_»
-             (tacticRepeat'_
+             (Std.Tactic.tacticRepeat'_
               "repeat'"
               (Tactic.tacticSeq
                (Tactic.tacticSeq1Indented
@@ -664,7 +664,7 @@ theorem
            (Tactic.injection "injection" (Term.app `pell_zd_add [(Term.hole "_") `m `n]) ["with" ["_" `h]])
            "<;>"
            (Tactic.«tactic_<;>_»
-            (tacticRepeat'_
+            (Std.Tactic.tacticRepeat'_
              "repeat'"
              (Tactic.tacticSeq
               (Tactic.tacticSeq1Indented
@@ -696,7 +696,7 @@ theorem
        (Tactic.injection "injection" (Term.app `pell_zd_add [(Term.hole "_") `m `n]) ["with" ["_" `h]])
        "<;>"
        (Tactic.«tactic_<;>_»
-        (tacticRepeat'_
+        (Std.Tactic.tacticRepeat'_
          "repeat'"
          (Tactic.tacticSeq
           (Tactic.tacticSeq1Indented
@@ -724,7 +724,7 @@ theorem
         (Tactic.exact "exact" (Term.app `Int.ofNat.inj [`h]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
-       (tacticRepeat'_
+       (Std.Tactic.tacticRepeat'_
         "repeat'"
         (Tactic.tacticSeq
          (Tactic.tacticSeq1Indented
@@ -765,7 +765,7 @@ theorem
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (tacticRepeat'_
+      (Std.Tactic.tacticRepeat'_
        "repeat'"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented

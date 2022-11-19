@@ -577,8 +577,7 @@ theorem DifferentiableOn.mono (h : DifferentiableOn 𝕜 f t) (st : s ⊆ t) : D
 #align differentiable_on.mono DifferentiableOn.mono
 
 theorem differentiable_on_univ : DifferentiableOn 𝕜 f univ ↔ Differentiable 𝕜 f := by
-  simp only [DifferentiableOn, differentiable_within_at_univ, mem_univ, forall_true_left]
-  rfl
+  simp only [DifferentiableOn, Differentiable, differentiable_within_at_univ, mem_univ, forall_true_left]
 #align differentiable_on_univ differentiable_on_univ
 
 theorem Differentiable.differentiableOn (h : Differentiable 𝕜 f) : DifferentiableOn 𝕜 f s :=
@@ -610,7 +609,7 @@ theorem fderiv_within_univ : fderivWithin 𝕜 f univ = fderiv 𝕜 f := by
     rw [has_fderiv_within_at_univ]
     apply h.has_fderiv_at
     
-  · have : ¬DifferentiableWithinAt 𝕜 f univ x := by contrapose! h <;> rwa [← differentiable_within_at_univ]
+  · have : ¬DifferentiableWithinAt 𝕜 f univ x := by rwa [differentiable_within_at_univ]
     rw [fderiv_zero_of_not_differentiable_at h, fderiv_within_zero_of_not_differentiable_within_at this]
     
 #align fderiv_within_univ fderiv_within_univ
@@ -621,7 +620,7 @@ theorem fderiv_within_inter (ht : t ∈ 𝓝 x) (hs : UniqueDiffWithinAt 𝕜 s 
   · apply fderiv_within_subset (inter_subset_left _ _) _ ((differentiable_within_at_inter ht).1 h)
     apply hs.inter ht
     
-  · have : ¬DifferentiableWithinAt 𝕜 f s x := by contrapose! h <;> rw [differentiable_within_at_inter] <;> assumption
+  · have : ¬DifferentiableWithinAt 𝕜 f s x := by rwa [← differentiable_within_at_inter ht]
     rw [fderiv_within_zero_of_not_differentiable_within_at h, fderiv_within_zero_of_not_differentiable_within_at this]
     
 #align fderiv_within_inter fderiv_within_inter

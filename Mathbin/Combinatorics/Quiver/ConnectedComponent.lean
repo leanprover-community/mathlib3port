@@ -5,6 +5,7 @@ Authors: David Wärn
 -/
 import Mathbin.Combinatorics.Quiver.Subquiver
 import Mathbin.Combinatorics.Quiver.Path
+import Mathbin.Data.Sum.Basic
 
 /-!
 ## Weakly connected components

@@ -520,8 +520,6 @@ theorem inv_of_diagonal_eq {α} [Semiring α] (v : n → α) [Invertible v] [Inv
     ⅟ (diagonal v) = diagonal (⅟ v) := by
   letI := diagonal_invertible v
   convert (rfl : ⅟ (diagonal v) = _)
-  convert Subsingleton.elim _ _
-  apply Invertible.subsingleton
 #align matrix.inv_of_diagonal_eq Matrix.inv_of_diagonal_eq
 
 /-- `v` is invertible if `diagonal v` is -/

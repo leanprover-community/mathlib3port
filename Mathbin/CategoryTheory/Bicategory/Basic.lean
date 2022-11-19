@@ -45,11 +45,11 @@ universe w v u
 
 open Category Iso
 
-/- ./././Mathport/Syntax/Translate/Command.lean:360:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:360:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:360:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:360:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:360:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:392:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:392:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:392:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:392:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:392:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/

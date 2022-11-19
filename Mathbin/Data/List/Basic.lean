@@ -1658,7 +1658,7 @@ def bidirectionalRec {C : List α → Sort _} (H0 : C []) (H1 : ∀ a : α, C [a
       simp
     rw [← init_append_last (cons_ne_nil b l)]
     have : C l' := bidirectional_rec l'
-    exact Hn a l' b' ‹C l'›
+    exact Hn a l' b' ‹C l'›termination_by' ⟨_, measure_wf List.length⟩
 #align list.bidirectional_rec List.bidirectionalRec
 
 /-- Like `bidirectional_rec`, but with the list parameter placed first. -/

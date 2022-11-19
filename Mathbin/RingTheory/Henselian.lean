@@ -270,7 +270,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
                [])
               [])
              (group
-              (tacticRwa__
+              (Std.Tactic.tacticRwa__
                "rwa"
                (Tactic.rwRuleSeq
                 "["
@@ -350,7 +350,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
                (cdotTk (patternIgnore (token.«·» "·")))
                [(group (Tactic.refine' "refine'" (Term.anonymousCtor "⟨" [`a "," `ha₁ "," (Term.hole "_")] "⟩")) [])
                 (group
-                 (tacticRwa__
+                 (Std.Tactic.tacticRwa__
                   "rwa"
                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `φ.map_sub) "," (Tactic.rwRule [] `sub_eq_zero)] "]")
                   [(Tactic.location "at" (Tactic.locationHyp [`ha₂] []))])
@@ -361,7 +361,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
                (cdotTk (patternIgnore (token.«·» "·")))
                [(group (Mathlib.Tactic.Contrapose.contrapose! "contrapose!" [`h₂ []]) [])
                 (group
-                 (tacticRwa__
+                 (Std.Tactic.tacticRwa__
                   "rwa"
                   (Tactic.rwRuleSeq
                    "["
@@ -462,7 +462,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
               [])
              [])
             (group
-             (tacticRwa__
+             (Std.Tactic.tacticRwa__
               "rwa"
               (Tactic.rwRuleSeq
                "["
@@ -542,7 +542,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
               (cdotTk (patternIgnore (token.«·» "·")))
               [(group (Tactic.refine' "refine'" (Term.anonymousCtor "⟨" [`a "," `ha₁ "," (Term.hole "_")] "⟩")) [])
                (group
-                (tacticRwa__
+                (Std.Tactic.tacticRwa__
                  "rwa"
                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `φ.map_sub) "," (Tactic.rwRule [] `sub_eq_zero)] "]")
                  [(Tactic.location "at" (Tactic.locationHyp [`ha₂] []))])
@@ -553,7 +553,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
               (cdotTk (patternIgnore (token.«·» "·")))
               [(group (Mathlib.Tactic.Contrapose.contrapose! "contrapose!" [`h₂ []]) [])
                (group
-                (tacticRwa__
+                (Std.Tactic.tacticRwa__
                  "rwa"
                  (Tactic.rwRuleSeq
                   "["
@@ -643,7 +643,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
           (cdotTk (patternIgnore (token.«·» "·")))
           [(group (Tactic.refine' "refine'" (Term.anonymousCtor "⟨" [`a "," `ha₁ "," (Term.hole "_")] "⟩")) [])
            (group
-            (tacticRwa__
+            (Std.Tactic.tacticRwa__
              "rwa"
              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `φ.map_sub) "," (Tactic.rwRule [] `sub_eq_zero)] "]")
              [(Tactic.location "at" (Tactic.locationHyp [`ha₂] []))])
@@ -654,7 +654,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
           (cdotTk (patternIgnore (token.«·» "·")))
           [(group (Mathlib.Tactic.Contrapose.contrapose! "contrapose!" [`h₂ []]) [])
            (group
-            (tacticRwa__
+            (Std.Tactic.tacticRwa__
              "rwa"
              (Tactic.rwRuleSeq
               "["
@@ -674,7 +674,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
        (cdotTk (patternIgnore (token.«·» "·")))
        [(group (Mathlib.Tactic.Contrapose.contrapose! "contrapose!" [`h₂ []]) [])
         (group
-         (tacticRwa__
+         (Std.Tactic.tacticRwa__
           "rwa"
           (Tactic.rwRuleSeq
            "["
@@ -689,7 +689,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
           [(Tactic.location "at" (Tactic.locationHyp [`h₂] []))])
          [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tacticRwa__
+      (Std.Tactic.tacticRwa__
        "rwa"
        (Tactic.rwRuleSeq
         "["
@@ -741,13 +741,13 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] :
        (cdotTk (patternIgnore (token.«·» "·")))
        [(group (Tactic.refine' "refine'" (Term.anonymousCtor "⟨" [`a "," `ha₁ "," (Term.hole "_")] "⟩")) [])
         (group
-         (tacticRwa__
+         (Std.Tactic.tacticRwa__
           "rwa"
           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `φ.map_sub) "," (Tactic.rwRule [] `sub_eq_zero)] "]")
           [(Tactic.location "at" (Tactic.locationHyp [`ha₂] []))])
          [])])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tacticRwa__
+      (Std.Tactic.tacticRwa__
        "rwa"
        (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `φ.map_sub) "," (Tactic.rwRule [] `sub_eq_zero)] "]")
        [(Tactic.location "at" (Tactic.locationHyp [`ha₂] []))])

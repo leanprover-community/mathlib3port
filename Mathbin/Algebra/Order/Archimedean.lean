@@ -271,7 +271,7 @@ variable [LinearOrderedRing α] [Archimedean α]
                      "by"
                      (Tactic.tacticSeq
                       (Tactic.tacticSeq1Indented
-                       [(tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+                       [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
                    "⟩"))))))))])))
        [])
       []
@@ -372,7 +372,7 @@ variable [LinearOrderedRing α] [Archimedean α]
                     "by"
                     (Tactic.tacticSeq
                      (Tactic.tacticSeq1Indented
-                      [(tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+                      [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
                   "⟩"))))))))])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -450,7 +450,7 @@ variable [LinearOrderedRing α] [Archimedean α]
                 "by"
                 (Tactic.tacticSeq
                  (Tactic.tacticSeq1Indented
-                  [(tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+                  [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
               "⟩"))))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.exact
@@ -524,7 +524,7 @@ variable [LinearOrderedRing α] [Archimedean α]
                "by"
                (Tactic.tacticSeq
                 (Tactic.tacticSeq1Indented
-                 [(tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+                 [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
              "⟩")))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.let
@@ -596,7 +596,7 @@ variable [LinearOrderedRing α] [Archimedean α]
               "by"
               (Tactic.tacticSeq
                (Tactic.tacticSeq1Indented
-                [(tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+                [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
             "⟩"))))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.have
@@ -664,7 +664,7 @@ variable [LinearOrderedRing α] [Archimedean α]
              "by"
              (Tactic.tacticSeq
               (Tactic.tacticSeq1Indented
-               [(tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+               [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
            "⟩")))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.have
@@ -723,7 +723,7 @@ variable [LinearOrderedRing α] [Archimedean α]
             "by"
             (Tactic.tacticSeq
              (Tactic.tacticSeq1Indented
-              [(tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+              [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
           "⟩"))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.have
@@ -754,7 +754,7 @@ variable [LinearOrderedRing α] [Archimedean α]
            "by"
            (Tactic.tacticSeq
             (Tactic.tacticSeq1Indented
-             [(tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+             [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
          "⟩")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.have
@@ -775,7 +775,8 @@ variable [LinearOrderedRing α] [Archimedean α]
          (Term.byTactic
           "by"
           (Tactic.tacticSeq
-           (Tactic.tacticSeq1Indented [(tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+           (Tactic.tacticSeq1Indented
+            [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
         "⟩"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.anonymousCtor
@@ -787,16 +788,18 @@ variable [LinearOrderedRing α] [Archimedean α]
         (Term.byTactic
          "by"
          (Tactic.tacticSeq
-          (Tactic.tacticSeq1Indented [(tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
+          (Tactic.tacticSeq1Indented
+           [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))]
        "⟩")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Term.byTactic
        "by"
        (Tactic.tacticSeq
-        (Tactic.tacticSeq1Indented [(tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))
+        (Tactic.tacticSeq1Indented
+         [(Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])
+      (Std.Tactic.tacticRwa__ "rwa" (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `hnsp)] "]") [])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       `hnsp
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
@@ -1272,7 +1275,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                                 "by"
                                 (Tactic.tacticSeq
                                  (Tactic.tacticSeq1Indented
-                                  [(tacticRwa__
+                                  [(Std.Tactic.tacticRwa__
                                     "rwa"
                                     (Tactic.rwRuleSeq
                                      "["
@@ -1436,7 +1439,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                                "by"
                                (Tactic.tacticSeq
                                 (Tactic.tacticSeq1Indented
-                                 [(tacticRwa__
+                                 [(Std.Tactic.tacticRwa__
                                    "rwa"
                                    (Tactic.rwRuleSeq
                                     "["
@@ -1592,7 +1595,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                            "by"
                            (Tactic.tacticSeq
                             (Tactic.tacticSeq1Indented
-                             [(tacticRwa__
+                             [(Std.Tactic.tacticRwa__
                                "rwa"
                                (Tactic.rwRuleSeq
                                 "["
@@ -1744,7 +1747,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                           "by"
                           (Tactic.tacticSeq
                            (Tactic.tacticSeq1Indented
-                            [(tacticRwa__
+                            [(Std.Tactic.tacticRwa__
                               "rwa"
                               (Tactic.rwRuleSeq
                                "["
@@ -1894,7 +1897,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                          "by"
                          (Tactic.tacticSeq
                           (Tactic.tacticSeq1Indented
-                           [(tacticRwa__
+                           [(Std.Tactic.tacticRwa__
                              "rwa"
                              (Tactic.rwRuleSeq
                               "["
@@ -2034,7 +2037,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                         "by"
                         (Tactic.tacticSeq
                          (Tactic.tacticSeq1Indented
-                          [(tacticRwa__
+                          [(Std.Tactic.tacticRwa__
                             "rwa"
                             (Tactic.rwRuleSeq
                              "["
@@ -2128,7 +2131,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                        "by"
                        (Tactic.tacticSeq
                         (Tactic.tacticSeq1Indented
-                         [(tacticRwa__
+                         [(Std.Tactic.tacticRwa__
                            "rwa"
                            (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
                            [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])])))])))]
@@ -2209,7 +2212,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                       "by"
                       (Tactic.tacticSeq
                        (Tactic.tacticSeq1Indented
-                        [(tacticRwa__
+                        [(Std.Tactic.tacticRwa__
                           "rwa"
                           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
                           [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])])))])))]
@@ -2429,7 +2432,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                    "by"
                    (Tactic.tacticSeq
                     (Tactic.tacticSeq1Indented
-                     [(tacticRwa__
+                     [(Std.Tactic.tacticRwa__
                        "rwa"
                        (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
                        [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])])))])))]
@@ -2459,7 +2462,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                  "by"
                  (Tactic.tacticSeq
                   (Tactic.tacticSeq1Indented
-                   [(tacticRwa__
+                   [(Std.Tactic.tacticRwa__
                      "rwa"
                      (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
                      [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])])))])))
@@ -2482,7 +2485,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
                "by"
                (Tactic.tacticSeq
                 (Tactic.tacticSeq1Indented
-                 [(tacticRwa__
+                 [(Std.Tactic.tacticRwa__
                    "rwa"
                    (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
                    [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])])))])
@@ -2505,7 +2508,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
              "by"
              (Tactic.tacticSeq
               (Tactic.tacticSeq1Indented
-               [(tacticRwa__
+               [(Std.Tactic.tacticRwa__
                  "rwa"
                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
                  [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])])))
@@ -2520,7 +2523,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
            "by"
            (Tactic.tacticSeq
             (Tactic.tacticSeq1Indented
-             [(tacticRwa__
+             [(Std.Tactic.tacticRwa__
                "rwa"
                (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
                [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])])
@@ -2534,7 +2537,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
          "by"
          (Tactic.tacticSeq
           (Tactic.tacticSeq1Indented
-           [(tacticRwa__
+           [(Std.Tactic.tacticRwa__
              "rwa"
              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
              [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))])
@@ -2545,13 +2548,13 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
-         [(tacticRwa__
+         [(Std.Tactic.tacticRwa__
            "rwa"
            (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
            [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tacticRwa__
+      (Std.Tactic.tacticRwa__
        "rwa"
        (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
        [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])
@@ -2570,7 +2573,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
       "by"
       (Tactic.tacticSeq
        (Tactic.tacticSeq1Indented
-        [(tacticRwa__
+        [(Std.Tactic.tacticRwa__
           "rwa"
           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
           [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))
@@ -2595,7 +2598,7 @@ variable [LinearOrderedField α] [Archimedean α] {x y ε : α}
          "by"
          (Tactic.tacticSeq
           (Tactic.tacticSeq1Indented
-           [(tacticRwa__
+           [(Std.Tactic.tacticRwa__
              "rwa"
              (Tactic.rwRuleSeq "[" [(Tactic.rwRule [(patternIgnore (token.«← » "←"))] `zpow_coe_nat)] "]")
              [(Tactic.location "at" (Tactic.locationHyp [`hM] []))])])))

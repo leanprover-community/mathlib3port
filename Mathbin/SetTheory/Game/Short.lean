@@ -44,7 +44,8 @@ instance subsingleton_short : ∀ x : Pgame, Subsingleton (Short x)
         
       · funext
         apply @Subsingleton.elim _ (subsingleton_short (xR x))
-        ⟩
+        ⟩decreasing_by
+  pgame_wf_tac
 #align pgame.subsingleton_short Pgame.subsingleton_short
 
 /-- A synonym for `short.mk` that specifies the pgame in an implicit argument. -/
@@ -207,7 +208,7 @@ def shortOfRelabelling : ∀ {x y : Pgame.{u}} (R : Relabelling x y) (S : Short 
 instance shortNeg : ∀ (x : Pgame.{u}) [Short x], Short (-x)
   | mk xl xr xL xR, _ => by
     skip
-    exact short.mk (fun i => short_neg _) fun i => short_neg _
+    exact short.mk (fun i => short_neg _) fun i => short_neg _ decreasing_by pgame_wf_tac
 #align pgame.short_neg Pgame.shortNeg
 
 instance shortAdd : ∀ (x y : Pgame.{u}) [Short x] [Short y], Short (x + y)
@@ -220,7 +221,8 @@ instance shortAdd : ∀ (x y : Pgame.{u}) [Short x] [Short y], Short (x + y)
       
     · change short (mk xl xr xL xR + _)
       apply short_add
-      
+      decreasing_by
+  pgame_wf_tac
 #align pgame.short_add Pgame.shortAdd
 
 instance shortNat : ∀ n : ℕ, Short n
@@ -267,7 +269,8 @@ def leLfDecidable : ∀ (x y : Pgame.{u}) [Short x] [Short y], Decidable (x ≤ 
         intro i
         apply (@le_lf_decidable _ _ _ _).1 <;> infer_instance
         
-      
+      decreasing_by
+  pgame_wf_tac
 #align pgame.le_lf_decidable Pgame.leLfDecidable
 
 instance leDecidable (x y : Pgame.{u}) [Short x] [Short y] : Decidable (x ≤ y) :=

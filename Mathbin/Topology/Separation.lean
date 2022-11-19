@@ -685,7 +685,7 @@ protected theorem Finset.isClosed [T1Space α] (s : Finset α) : IsClosed (s : S
                [])
               [])
              (group
-              (exacts
+              (Std.Tactic.exacts
                "exacts"
                "["
                [`is_open_empty
@@ -904,7 +904,7 @@ protected theorem Finset.isClosed [T1Space α] (s : Finset α) : IsClosed (s : S
               [])
              [])
             (group
-             (exacts
+             (Std.Tactic.exacts
               "exacts"
               "["
               [`is_open_empty
@@ -2334,7 +2334,7 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
                   "by"
                   (Tactic.tacticSeq
                    (Tactic.tacticSeq1Indented
-                    [(tacticRwa__
+                    [(Std.Tactic.tacticRwa__
                       "rwa"
                       (Tactic.rwRuleSeq
                        "["
@@ -2377,7 +2377,7 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
                (Term.app `disjoint_of_disjoint_of_mem [`disjoint_compl_left (Term.hole "_") `hU]))
               [])
              (group
-              (tacticRwa__
+              (Std.Tactic.tacticRwa__
                "rwa"
                (Tactic.rwRuleSeq
                 "["
@@ -2634,7 +2634,7 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
                  "by"
                  (Tactic.tacticSeq
                   (Tactic.tacticSeq1Indented
-                   [(tacticRwa__
+                   [(Std.Tactic.tacticRwa__
                      "rwa"
                      (Tactic.rwRuleSeq
                       "["
@@ -2677,7 +2677,7 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
               (Term.app `disjoint_of_disjoint_of_mem [`disjoint_compl_left (Term.hole "_") `hU]))
              [])
             (group
-             (tacticRwa__
+             (Std.Tactic.tacticRwa__
               "rwa"
               (Tactic.rwRuleSeq
                "["

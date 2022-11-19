@@ -161,12 +161,7 @@ theorem coe_zero : ((0 : ℤ_[p]) : ℚ_[p]) = 0 :=
   rfl
 #align padic_int.coe_zero PadicInt.coe_zero
 
-theorem coe_eq_zero (z : ℤ_[p]) : (z : ℚ_[p]) = 0 ↔ z = 0 :=
-  ⟨fun h => by
-    rw [← coe_zero] at h
-    exact subtype.coe_inj.mp h, fun h => by
-    rw [h]
-    exact coe_zero⟩
+theorem coe_eq_zero (z : ℤ_[p]) : (z : ℚ_[p]) = 0 ↔ z = 0 := by rw [← coe_zero, Subtype.coe_inj]
 #align padic_int.coe_eq_zero PadicInt.coe_eq_zero
 
 instance : AddCommGroup ℤ_[p] :=
@@ -642,9 +637,8 @@ theorem p_nonnunit : (p : ℤ_[p]) ∈ nonunits ℤ_[p] := by
 theorem maximal_ideal_eq_span_p : maximalIdeal ℤ_[p] = Ideal.span {p} := by
   apply le_antisymm
   · intro x hx
-    rw [Ideal.mem_span_singleton]
     simp only [LocalRing.mem_maximal_ideal, mem_nonunits] at hx
-    rwa [← norm_lt_one_iff_dvd]
+    rwa [Ideal.mem_span_singleton, ← norm_lt_one_iff_dvd]
     
   · rw [Ideal.span_le, Set.singleton_subset_iff]
     exact p_nonnunit
@@ -722,15 +716,14 @@ instance isFractionRing : IsFractionRing ℤ_[p] ℚ_[p] where
   surj x := by
     by_cases hx : ‖x‖ ≤ 1
     · use (⟨x, hx⟩, 1)
-      rw [Submonoid.coe_one, map_one, mul_one]
-      rfl
+      rw [Submonoid.coe_one, map_one, mul_one, PadicInt.algebra_map_apply, Subtype.coe_mk]
       
     · set n := Int.toNat (-x.valuation) with hn
       have hn_coe : (n : ℤ) = -x.valuation := by
         rw [hn, Int.toNat_of_nonneg]
         rw [Right.nonneg_neg_iff]
-        rw [Padic.norm_le_one_iff_val_nonneg] at hx
-        exact le_of_lt (not_le.mp hx)
+        rw [Padic.norm_le_one_iff_val_nonneg, not_le] at hx
+        exact hx.le
       set a := x * p ^ n with ha
       have ha_norm : ‖a‖ = 1 := by
         have hx : x ≠ 0 := by

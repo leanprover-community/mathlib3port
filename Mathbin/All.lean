@@ -31,8 +31,6 @@ import Mathbin.Algebra.Bounds
 import Mathbin.Algebra.Category.AlgebraCat.Basic
 import Mathbin.Algebra.Category.AlgebraCat.Limits
 import Mathbin.Algebra.Category.BoolRingCat
-import Mathbin.Algebra.Category.FinVectCat
-import Mathbin.Algebra.Category.FinVectCat.Limits
 import Mathbin.Algebra.Category.GroupCat.ZModuleEquivalence
 import Mathbin.Algebra.Category.GroupCat.Abelian
 import Mathbin.Algebra.Category.GroupCat.Adjunctions
@@ -83,6 +81,8 @@ import Mathbin.Algebra.Category.RingCat.FilteredColimits
 import Mathbin.Algebra.Category.RingCat.Instances
 import Mathbin.Algebra.Category.RingCat.Limits
 import Mathbin.Algebra.Category.SemigroupCat.Basic
+import Mathbin.Algebra.Category.FgModule.Basic
+import Mathbin.Algebra.Category.FgModule.Limits
 import Mathbin.Algebra.CharP.Algebra
 import Mathbin.Algebra.CharP.Basic
 import Mathbin.Algebra.CharP.CharAndCard
@@ -326,11 +326,11 @@ import Mathbin.Algebra.Order.Positive.Ring
 import Mathbin.Algebra.Order.Rearrangement
 import Mathbin.Algebra.Order.Ring.Abs
 import Mathbin.Algebra.Order.Ring.Canonical
+import Mathbin.Algebra.Order.Ring.CharZero
 import Mathbin.Algebra.Order.Ring.Cone
 import Mathbin.Algebra.Order.Ring.Defs
 import Mathbin.Algebra.Order.Ring.InjSurj
 import Mathbin.Algebra.Order.Ring.Lemmas
-import Mathbin.Algebra.Order.Ring.Nontrivial
 import Mathbin.Algebra.Order.Ring.WithTop
 import Mathbin.Algebra.Order.Smul
 import Mathbin.Algebra.Order.Sub.Basic
@@ -1094,6 +1094,7 @@ import Mathbin.Combinatorics.SetFamily.Intersecting
 import Mathbin.Combinatorics.SetFamily.Kleitman
 import Mathbin.Combinatorics.SetFamily.Lym
 import Mathbin.Combinatorics.SetFamily.Shadow
+import Mathbin.Combinatorics.SimpleGraph.Acyclic
 import Mathbin.Combinatorics.SimpleGraph.AdjMatrix
 import Mathbin.Combinatorics.SimpleGraph.Basic
 import Mathbin.Combinatorics.SimpleGraph.Clique
@@ -2386,6 +2387,7 @@ import Mathbin.RingTheory.HahnSeries
 import Mathbin.RingTheory.Henselian
 import Mathbin.RingTheory.Ideal.Basic
 import Mathbin.RingTheory.Ideal.Cotangent
+import Mathbin.RingTheory.Ideal.IdempotentFg
 import Mathbin.RingTheory.Ideal.LocalRing
 import Mathbin.RingTheory.Ideal.MinimalPrime
 import Mathbin.RingTheory.Ideal.Norm

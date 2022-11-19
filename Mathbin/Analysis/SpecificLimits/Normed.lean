@@ -670,7 +670,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
                 "⟩"))
               [])
              (group
-              (tacticRwa__
+              (Std.Tactic.tacticRwa__
                "rwa"
                (Tactic.rwRuleSeq
                 "["
@@ -1216,7 +1216,7 @@ theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) : (f
                "⟩"))
              [])
             (group
-             (tacticRwa__
+             (Std.Tactic.tacticRwa__
               "rwa"
               (Tactic.rwRuleSeq
                "["

@@ -131,7 +131,7 @@ structure Besicovitch.SatelliteConfig (α : Type _) [MetricSpace α] (N : ℕ) (
   inter : ∀ i < last N, dist (c i) (c (last N)) ≤ r i + r (last N)
 #align besicovitch.satellite_config Besicovitch.SatelliteConfig
 
-/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`no_satellite_config] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`no_satellite_config] [] -/
 /-- A metric space has the Besicovitch covering property if there exist `N` and `τ > 1` such that
 there are no satellite configuration of parameter `τ` with `N+1` points. This is the condition that
 guarantees that the measurable Besicovitch covering theorem holds. It is satified by
@@ -236,7 +236,8 @@ noncomputable def index : Ordinal.{u} → β
     -- return an index `b` for which the center `c b` is not in `Z`, and the radius is at
       -- least `R / τ`, if such an index exists (and garbage otherwise).
       Classical.epsilon
-      fun b : β => p.c b ∉ Z ∧ R ≤ p.τ * p.R b
+      fun b : β => p.c b ∉ Z ∧ R ≤ p.τ * p.R b decreasing_by
+  exact j.2
 #align besicovitch.tau_package.index Besicovitch.TauPackage.index
 
 /-- The set of points that are covered by the union of balls selected at steps `< i`. -/
@@ -263,7 +264,8 @@ noncomputable def color : Ordinal.{u} → ℕ
       ⋃ (j : { j // j < i }) (hj :
         (closedBall (p.c (p.index j)) (p.R (p.index j)) ∩ closedBall (p.c (p.index i)) (p.R (p.index i))).Nonempty),
         {color j}
-    inf (univ \ A)
+    inf (univ \ A)decreasing_by
+  exact j.2
 #align besicovitch.tau_package.color Besicovitch.TauPackage.color
 
 /-- `p.last_step` is the first ordinal where the construction stops making sense, i.e., `f` returns

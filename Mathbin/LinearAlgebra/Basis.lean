@@ -227,6 +227,14 @@ theorem sum_coords_self_apply : b.sumCoords (b i) = 1 := by
     Finsupp.coe_lsum, LinearMap.coe_comp, Finsupp.sum_single_index]
 #align basis.sum_coords_self_apply Basis.sum_coords_self_apply
 
+theorem dvd_coord_smul (i : ι) (m : M) (r : R) : r ∣ b.Coord i (r • m) :=
+  ⟨b.Coord i m, by simp⟩
+#align basis.dvd_coord_smul Basis.dvd_coord_smul
+
+theorem coord_repr_symm (b : Basis ι R M) (i : ι) (f : ι →₀ R) : b.Coord i (b.repr.symm f) = f i := by
+  simp only [repr_symm_apply, coord_apply, repr_total]
+#align basis.coord_repr_symm Basis.coord_repr_symm
+
 end Coord
 
 section Ext
@@ -938,6 +946,10 @@ theorem Basis.mem_submodule_iff' {P : Submodule R M} (b : Basis ι R P) {x : M} 
   b.mem_submodule_iff.trans <|
     Finsupp.equivFunOnFintype.exists_congr_left.trans <| exists_congr fun c => by simp [Finsupp.sum_fintype]
 #align basis.mem_submodule_iff' Basis.mem_submodule_iff'
+
+theorem coord_equiv_fun_symm (i : ι) (f : ι → R) : b.Coord i (b.equivFun.symm f) = f i :=
+  b.coord_repr_symm i (Finsupp.equivFunOnFintype.symm f)
+#align coord_equiv_fun_symm coord_equiv_fun_symm
 
 end Fintype
 

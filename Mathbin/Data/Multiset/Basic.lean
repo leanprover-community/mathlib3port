@@ -781,7 +781,8 @@ def strongInductionOn {p : Multiset α → Sort _} : ∀ s : Multiset α, (∀ s
   | s => fun ih =>
     (ih s) fun t h =>
       have : card t < card s := card_lt_of_lt h
-      strong_induction_on t ih
+      strong_induction_on t ih termination_by'
+  ⟨_, measure_wf card⟩
 #align multiset.strong_induction_on Multiset.strongInductionOn
 
 theorem strong_induction_eq {p : Multiset α → Sort _} (s : Multiset α) (H) :
@@ -812,7 +813,8 @@ def strongDownwardInduction {p : Multiset α → Sort _} {n : ℕ}
   | s =>
     H s fun t ht h =>
       have : n - card t < n - card s := (tsub_lt_tsub_iff_left_of_le ht).2 (card_lt_of_lt h)
-      strong_downward_induction t ht
+      strong_downward_induction t ht termination_by'
+  ⟨_, measure_wf fun t : Multiset α => n - t.card⟩
 #align multiset.strong_downward_induction Multiset.strongDownwardInduction
 
 theorem strong_downward_induction_eq {p : Multiset α → Sort _} {n : ℕ}

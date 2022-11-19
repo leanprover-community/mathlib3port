@@ -329,7 +329,7 @@ def mergeSort : List α → List α
   | a :: b :: l => by
     cases' e : split (a :: b :: l) with l₁ l₂
     cases' length_split_lt e with h₁ h₂
-    exact merge r (merge_sort l₁) (merge_sort l₂)
+    exact merge r (merge_sort l₁) (merge_sort l₂)termination_by' ⟨_, InvImage.wf length Nat.lt_wfRel.wf⟩
 #align list.merge_sort List.mergeSort
 
 theorem merge_sort_cons_cons {a b} {l l₁ l₂ : List α} (h : split (a :: b :: l) = (l₁, l₂)) :
@@ -368,7 +368,8 @@ theorem perm_merge_sort : ∀ l : List α, mergeSort r l ~ l
     cases' length_split_lt e with h₁ h₂
     rw [merge_sort_cons_cons r e]
     apply (perm_merge r _ _).trans
-    exact ((perm_merge_sort l₁).append (perm_merge_sort l₂)).trans (perm_split e).symm
+    exact ((perm_merge_sort l₁).append (perm_merge_sort l₂)).trans (perm_split e).symm termination_by'
+  ⟨_, InvImage.wf length Nat.lt_wfRel.wf⟩
 #align list.perm_merge_sort List.perm_merge_sort
 
 @[simp]
@@ -421,7 +422,7 @@ theorem sorted_merge_sort : ∀ l : List α, Sorted r (mergeSort r l)
     cases' e : split (a :: b :: l) with l₁ l₂
     cases' length_split_lt e with h₁ h₂
     rw [merge_sort_cons_cons r e]
-    exact (sorted_merge_sort l₁).merge (sorted_merge_sort l₂)
+    exact (sorted_merge_sort l₁).merge (sorted_merge_sort l₂)termination_by' ⟨_, InvImage.wf length Nat.lt_wfRel.wf⟩
 #align list.sorted_merge_sort List.sorted_merge_sort
 
 theorem merge_sort_eq_self [IsAntisymm α r] {l : List α} : Sorted r l → mergeSort r l = l :=

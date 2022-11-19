@@ -220,18 +220,15 @@ variable {n S}
 theorem ofUnionOfDvd (h : ∀ s ∈ S, n ∣ s) (hS : S.Nonempty) [H : IsCyclotomicExtension S A B] :
     IsCyclotomicExtension (S ∪ {n}) A B := by
   refine' (iff_adjoin_eq_top _ _ _).2 ⟨fun s hs => _, _⟩
-  · cases hs
+  · rw [mem_union, mem_singleton_iff] at hs
+    obtain hs | rfl := hs
     · exact H.exists_prim_root hs
       
-    · simp only [mem_singleton_iff] at hs
-      obtain ⟨m, hm⟩ := hS
-      obtain ⟨x, hx⟩ := h m hm
-      rw [← hs] at hx
+    · obtain ⟨m, hm⟩ := hS
+      obtain ⟨x, rfl⟩ := h m hm
       obtain ⟨ζ, hζ⟩ := H.exists_prim_root hm
       refine' ⟨ζ ^ (x : ℕ), _⟩
-      have : (x : ℕ) ∣ m := ⟨s, by simp only [hx, PNat.mul_coe, mul_comm]⟩
-      convert hζ.pow_of_dvd x.ne_zero this
-      rw [hx]
+      convert hζ.pow_of_dvd x.ne_zero (dvd_mul_left (x : ℕ) s)
       simp only [PNat.mul_coe, Nat.mul_div_left, PNat.pos]
       
     
@@ -240,9 +237,7 @@ theorem ofUnionOfDvd (h : ∀ s ∈ S, n ∣ s) (hS : S.Nonempty) [H : IsCycloto
     refine' adjoin_mono fun x hx => _
     simp only [union_singleton, mem_insert_iff, mem_set_of_eq] at hx⊢
     obtain ⟨m, hm⟩ := hx
-    refine' ⟨m, ⟨_, hm.2⟩⟩
-    right
-    exact hm.1
+    exact ⟨m, ⟨Or.inr hm.1, hm.2⟩⟩
     
 #align is_cyclotomic_extension.of_union_of_dvd IsCyclotomicExtension.ofUnionOfDvd
 
@@ -253,17 +248,14 @@ theorem iff_union_of_dvd (h : ∀ s ∈ S, n ∣ s) (hS : S.Nonempty) :
   refine' ⟨fun H => of_union_of_dvd A B h hS, fun H => (iff_adjoin_eq_top _ _ _).2 ⟨fun s hs => _, _⟩⟩
   · exact H.exists_prim_root (subset_union_left _ _ hs)
     
-  · refine' _root_.eq_top_iff.2 _
-    rw [← ((iff_adjoin_eq_top _ A B).1 H).2]
+  · rw [_root_.eq_top_iff, ← ((iff_adjoin_eq_top _ A B).1 H).2]
     refine' adjoin_mono fun x hx => _
     simp only [union_singleton, mem_insert_iff, mem_set_of_eq] at hx⊢
-    obtain ⟨m, hm, hxpow⟩ := hx
-    cases hm
+    obtain ⟨m, rfl | hm, hxpow⟩ := hx
     · obtain ⟨y, hy⟩ := hS
       refine' ⟨y, ⟨hy, _⟩⟩
-      obtain ⟨z, hz⟩ := h y hy
-      rw [hm] at hxpow
-      simp only [hz, PNat.mul_coe, pow_mul, hxpow, one_pow]
+      obtain ⟨z, rfl⟩ := h y hy
+      simp only [PNat.mul_coe, pow_mul, hxpow, one_pow]
       
     · exact ⟨m, ⟨hm, hxpow⟩⟩
       
@@ -274,27 +266,16 @@ variable (n S)
 
 /-- `is_cyclotomic_extension S A B` is equivalent to `is_cyclotomic_extension (S ∪ {1}) A B`. -/
 theorem iff_union_singleton_one : IsCyclotomicExtension S A B ↔ IsCyclotomicExtension (S ∪ {1}) A B := by
-  by_cases hS : S.nonempty
+  obtain hS | rfl := S.eq_empty_or_nonempty.symm
   · exact iff_union_of_dvd _ _ (fun s hs => one_dvd _) hS
     
-  replace hS : S = ∅ := Set.not_nonempty_iff_eq_empty.1 hS
+  rw [empty_union]
   refine' ⟨fun H => _, fun H => _⟩
-  · rw [hS] at H⊢
-    simp only [union_singleton, insert_emptyc_eq]
-    refine' (iff_adjoin_eq_top _ _ _).2 ⟨fun s hs => ⟨1, by simp [mem_singleton_iff.1 hs]⟩, _⟩
-    letI := H
-    simp [adjoin_singleton_one, Empty]
+  · refine' (iff_adjoin_eq_top _ _ _).2 ⟨fun s hs => ⟨1, by simp [mem_singleton_iff.1 hs]⟩, _⟩
+    simp [adjoin_singleton_one, @Empty _ _ _ _ _ H]
     
-  · rw [hS, empty_union] at H
-    refine' (iff_adjoin_eq_top _ _ _).2 ⟨fun s hs => _, _⟩
-    · exfalso
-      rw [hS] at hs
-      simpa [hs]
-      
-    · rw [hS]
-      letI := H
-      simp [singleton_one]
-      
+  · refine' (iff_adjoin_eq_top _ _ _).2 ⟨fun s hs => (not_mem_empty s hs).elim, _⟩
+    simp [@singleton_one A B _ _ _ H]
     
 #align is_cyclotomic_extension.iff_union_singleton_one IsCyclotomicExtension.iff_union_singleton_one
 

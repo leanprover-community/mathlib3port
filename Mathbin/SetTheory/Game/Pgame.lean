@@ -352,7 +352,8 @@ def leLf : ∀ x y : Pgame.{u}, Prop × Prop
     --   and.left/or.inl refer to moves by Left, and
     --   and.right/or.inr refer to moves by Right.
     ((∀ i, (le_lf (xL i) ⟨yl, yr, yL, yR⟩).2) ∧ ∀ j, (le_lf ⟨xl, xr, xL, xR⟩ (yR j)).2,
-      (∃ i, (le_lf ⟨xl, xr, xL, xR⟩ (yL i)).1) ∨ ∃ j, (le_lf (xR j) ⟨yl, yr, yL, yR⟩).1)
+      (∃ i, (le_lf ⟨xl, xr, xL, xR⟩ (yL i)).1) ∨ ∃ j, (le_lf (xR j) ⟨yl, yr, yL, yR⟩).1)decreasing_by
+  pgame_wf_tac
 #align pgame.le_lf Pgame.leLf
 
 /-- The less or equal relation on pre-games.
@@ -1053,7 +1054,7 @@ def moveRightSymm : ∀ (r : x ≡r y) (i : y.RightMoves), x.moveRight (r.rightM
 /-- The identity relabelling. -/
 @[refl]
 def refl : ∀ x : Pgame, x ≡r x
-  | x => ⟨Equiv.refl _, Equiv.refl _, fun i => refl _, fun j => refl _⟩
+  | x => ⟨Equiv.refl _, Equiv.refl _, fun i => refl _, fun j => refl _⟩decreasing_by pgame_wf_tac
 #align pgame.relabelling.refl Pgame.Relabelling.refl
 
 instance (x : Pgame) : Inhabited (x ≡r x) :=
@@ -1066,7 +1067,9 @@ def symm : ∀ {x y : Pgame}, x ≡r y → y ≡r x
 #align pgame.relabelling.symm Pgame.Relabelling.symm
 
 theorem le : ∀ {x y : Pgame} (r : x ≡r y), x ≤ y
-  | x, y, r => le_def.2 ⟨fun i => Or.inl ⟨_, (r.moveLeft i).le⟩, fun j => Or.inr ⟨_, (r.moveRightSymm j).le⟩⟩
+  | x, y, r =>
+    le_def.2 ⟨fun i => Or.inl ⟨_, (r.moveLeft i).le⟩, fun j => Or.inr ⟨_, (r.moveRightSymm j).le⟩⟩decreasing_by
+  pgame_wf_tac
 #align pgame.relabelling.le Pgame.Relabelling.le
 
 theorem ge {x y : Pgame} (r : x ≡r y) : y ≤ x :=
@@ -1264,7 +1267,8 @@ private theorem neg_le_lf_neg_iff : ∀ {x y : Pgame.{u}}, (-y ≤ -x ↔ x ≤ 
       
     · rw [or_comm']
       apply or_congr <;> exact exists_congr fun _ => neg_le_lf_neg_iff.1
-      
+      decreasing_by
+  pgame_wf_tac
 #align pgame.neg_le_lf_neg_iff pgame.neg_le_lf_neg_iff
 
 @[simp]
@@ -1546,7 +1550,8 @@ def Relabelling.addCongr : ∀ {w x y z : Pgame.{u}}, w ≡r x → y ≡r z → 
     · exact (hR₁ i).addCongr Hyz
       
     · exact Hwx.add_congr (hR₂ j)
-      
+      decreasing_by
+  pgame_wf_tac
 #align pgame.relabelling.add_congr Pgame.Relabelling.addCongr
 
 instance : Sub Pgame :=
@@ -1568,7 +1573,9 @@ def negAddRelabelling : ∀ x y : Pgame, -(x + y) ≡r -x + -y
   | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩ => by
     refine' ⟨Equiv.refl _, Equiv.refl _, _, _⟩
     all_goals
-      exact fun j => Sum.casesOn j (fun j => neg_add_relabelling _ _) fun j => neg_add_relabelling ⟨xl, xr, xL, xR⟩ _
+      exact fun j =>
+        Sum.casesOn j (fun j => neg_add_relabelling _ _) fun j => neg_add_relabelling ⟨xl, xr, xL, xR⟩ _ decreasing_by
+  pgame_wf_tac
 #align pgame.neg_add_relabelling Pgame.negAddRelabelling
 
 theorem neg_add_le {x y : Pgame} : -(x + y) ≤ -x + -y :=
@@ -1582,7 +1589,8 @@ def addCommRelabelling : ∀ x y : Pgame.{u}, x + y ≡r y + x
       rintro (_ | _) <;>
         · dsimp [left_moves_add, right_moves_add]
           apply add_comm_relabelling
-          
+          decreasing_by
+  pgame_wf_tac
 #align pgame.add_comm_relabelling Pgame.addCommRelabelling
 
 theorem add_comm_le {x y : Pgame} : x + y ≤ y + x :=
@@ -1604,7 +1612,8 @@ def addAssocRelabelling : ∀ x y z : Pgame.{u}, x + y + z ≡r x + (y + z)
     · apply add_assoc_relabelling ⟨xl, xr, xL, xR⟩
       
     · apply add_assoc_relabelling ⟨xl, xr, xL, xR⟩ ⟨yl, yr, yL, yR⟩
-      
+      decreasing_by
+  pgame_wf_tac
 #align pgame.add_assoc_relabelling Pgame.addAssocRelabelling
 
 theorem add_assoc_equiv {x y z : Pgame} : x + y + z ≈ x + (y + z) :=
@@ -1679,7 +1688,8 @@ private theorem add_le_add_right' : ∀ {x y z : Pgame} (h : x ≤ y), x + z ≤
         
       
     · exact Or.inr ⟨@to_right_moves_add _ ⟨_, _, _, _⟩ (Sum.inr i), add_le_add_right' h⟩
-      
+      decreasing_by
+  pgame_wf_tac
 #align pgame.add_le_add_right' pgame.add_le_add_right'
 
 instance covariant_class_swap_add_le : CovariantClass Pgame Pgame (swap (· + ·)) (· ≤ ·) :=

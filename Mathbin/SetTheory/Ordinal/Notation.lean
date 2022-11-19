@@ -1139,7 +1139,8 @@ def fastGrowing : Onote → ℕ → ℕ
       fun i => (fast_growing a^[i]) i
     | Sum.inr f, h => fun i =>
       have : f i < o := (h.2.1 i).2.1
-      fast_growing (f i) i
+      fast_growing (f i) i termination_by'
+  ⟨_, InvImage.wf repr Ordinal.lt_wf⟩
 #align onote.fast_growing Onote.fastGrowing
 
 theorem fast_growing_def {o : Onote} {x} (e : fundamentalSequence o = x) :

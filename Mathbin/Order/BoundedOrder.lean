@@ -2612,7 +2612,7 @@ structure IsCompl [PartialOrder α] [BoundedOrder α] (x y : α) : Prop where
   Codisjoint : Codisjoint x y
 #align is_compl IsCompl
 
-theorem is_compl_iff [Lattice α] [BoundedOrder α] {a b : α} : IsCompl a b ↔ Disjoint a b ∧ Codisjoint a b :=
+theorem is_compl_iff [PartialOrder α] [BoundedOrder α] {a b : α} : IsCompl a b ↔ Disjoint a b ∧ Codisjoint a b :=
   ⟨fun h => ⟨h.1, h.2⟩, fun h => ⟨h.1, h.2⟩⟩
 #align is_compl_iff is_compl_iff
 
@@ -2732,6 +2732,80 @@ theorem inf_sup {x' y'} (h : IsCompl x y) (h' : IsCompl x' y') : IsCompl (x ⊓ 
 #align is_compl.inf_sup IsCompl.inf_sup
 
 end IsCompl
+
+namespace Prod
+
+variable [PartialOrder α] [PartialOrder β]
+
+protected theorem disjoint_iff [OrderBot α] [OrderBot β] {x y : α × β} :
+    Disjoint x y ↔ Disjoint x.1 y.1 ∧ Disjoint x.2 y.2 := by
+  constructor
+  · intro h
+    refine' ⟨fun a hx hy => (@h (a, ⊥) ⟨hx, _⟩ ⟨hy, _⟩).1, fun b hx hy => (@h (⊥, b) ⟨_, hx⟩ ⟨_, hy⟩).2⟩
+    all_goals exact bot_le
+    
+  · rintro ⟨ha, hb⟩ z hza hzb
+    refine' ⟨ha hza.1 hzb.1, hb hza.2 hzb.2⟩
+    
+#align prod.disjoint_iff Prod.disjoint_iff
+
+protected theorem codisjoint_iff [OrderTop α] [OrderTop β] {x y : α × β} :
+    Codisjoint x y ↔ Codisjoint x.1 y.1 ∧ Codisjoint x.2 y.2 :=
+  @Prod.disjoint_iff αᵒᵈ βᵒᵈ _ _ _ _ _ _
+#align prod.codisjoint_iff Prod.codisjoint_iff
+
+protected theorem is_compl_iff [BoundedOrder α] [BoundedOrder β] {x y : α × β} :
+    IsCompl x y ↔ IsCompl x.1 y.1 ∧ IsCompl x.2 y.2 := by
+  simp_rw [is_compl_iff, Prod.disjoint_iff, Prod.codisjoint_iff, and_and_and_comm]
+#align prod.is_compl_iff Prod.is_compl_iff
+
+end Prod
+
+namespace Pi
+
+variable {ι : Type _} {α' : ι → Type _} [∀ i, PartialOrder (α' i)]
+
+theorem disjoint_iff [∀ i, OrderBot (α' i)] {f g : ∀ i, α' i} : Disjoint f g ↔ ∀ i, Disjoint (f i) (g i) := by
+  constructor
+  · intro h i x hf hg
+    refine' (update_le_iff.mp <| h (update_le_iff.mpr ⟨hf, fun _ _ => _⟩) (update_le_iff.mpr ⟨hg, fun _ _ => _⟩)).1
+    · exact ⊥
+      
+    · exact bot_le
+      
+    · exact bot_le
+      
+    
+  · intro h x hf hg i
+    apply h i (hf i) (hg i)
+    
+#align pi.disjoint_iff Pi.disjoint_iff
+
+theorem codisjoint_iff [∀ i, OrderTop (α' i)] {f g : ∀ i, α' i} : Codisjoint f g ↔ ∀ i, Codisjoint (f i) (g i) :=
+  @disjoint_iff _ (fun i => (α' i)ᵒᵈ) _ _ _ _
+#align pi.codisjoint_iff Pi.codisjoint_iff
+
+theorem is_compl_iff [∀ i, BoundedOrder (α' i)] {f g : ∀ i, α' i} : IsCompl f g ↔ ∀ i, IsCompl (f i) (g i) := by
+  simp_rw [is_compl_iff, disjoint_iff, codisjoint_iff, forall_and]
+#align pi.is_compl_iff Pi.is_compl_iff
+
+end Pi
+
+@[simp]
+theorem PropCat.disjoint_iff {P Q : Prop} : Disjoint P Q ↔ ¬(P ∧ Q) :=
+  disjoint_iff_inf_le
+#align Prop.disjoint_iff PropCat.disjoint_iff
+
+@[simp]
+theorem PropCat.codisjoint_iff {P Q : Prop} : Codisjoint P Q ↔ P ∨ Q :=
+  codisjoint_iff_le_sup.trans <| forall_const _
+#align Prop.codisjoint_iff PropCat.codisjoint_iff
+
+@[simp]
+theorem PropCat.is_compl_iff {P Q : Prop} : IsCompl P Q ↔ ¬(P ↔ Q) := by
+  rw [is_compl_iff, PropCat.disjoint_iff, PropCat.codisjoint_iff, not_iff]
+  tauto
+#align Prop.is_compl_iff PropCat.is_compl_iff
 
 section
 

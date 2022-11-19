@@ -1281,5 +1281,5 @@ end BoundedOrder
 
 end LatticeIsos
 
-/- ./././Mathport/Syntax/Translate/Command.lean:687:14: unsupported user command assert_not_exists -/
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
 -- Developments relating order homs and sets belong in `order.hom.set` or later.

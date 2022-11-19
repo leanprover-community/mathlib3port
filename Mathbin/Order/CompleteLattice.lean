@@ -330,10 +330,10 @@ def completeLatticeOfCompleteSemilatticeSup (α : Type _) [CompleteSemilatticeSu
   completeLatticeOfSup α fun s => is_lub_Sup s
 #align complete_lattice_of_complete_semilattice_Sup completeLatticeOfCompleteSemilatticeSup
 
-/- ./././Mathport/Syntax/Translate/Command.lean:375:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:407:11: unsupported: advanced extends in structure -/
 /-- A complete linear order is a linear order whose lattice structure is complete. -/
 class CompleteLinearOrder (α : Type _) extends CompleteLattice α,
-  "./././Mathport/Syntax/Translate/Command.lean:375:11: unsupported: advanced extends in structure"
+  "./././Mathport/Syntax/Translate/Command.lean:407:11: unsupported: advanced extends in structure"
 #align complete_linear_order CompleteLinearOrder
 
 namespace OrderDual

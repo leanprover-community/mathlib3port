@@ -30,7 +30,8 @@ def ltb : Iterator → Iterator → Bool
           match s₁, h₁ with
           | ⟨_, a :: l⟩, h => Nat.lt_succ_self _
         ltb s₁.next s₂.next
-      else s₁.curr < s₂.curr
+      else s₁.curr < s₂.curr termination_by'
+  ⟨_, measure_wf fun s => s.1.2.length⟩
 #align string.ltb String.ltb
 
 instance hasLt' : LT String :=

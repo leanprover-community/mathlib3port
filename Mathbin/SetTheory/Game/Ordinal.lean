@@ -199,7 +199,8 @@ theorem to_pgame_add : ∀ a b : Ordinal.{u}, a.toPgame + b.toPgame ≈ (a ♯ b
       · apply add_lf_add_left
         rwa [to_pgame_lf_iff]
         
-      
+      decreasing_by
+  solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
 #align ordinal.to_pgame_add Ordinal.to_pgame_add
 
 @[simp]

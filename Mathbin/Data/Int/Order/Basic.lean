@@ -6,7 +6,7 @@ Authors: Jeremy Avigad
 import Mathbin.Data.Int.Basic
 import Mathbin.Algebra.Ring.Divisibility
 import Mathbin.Algebra.Order.Group.Abs
-import Mathbin.Algebra.Order.Ring.Nontrivial
+import Mathbin.Algebra.Order.Ring.CharZero
 import Mathbin.Tactic.AssertExists
 
 /-!
@@ -912,5 +912,5 @@ theorem to_nat_sub_of_le {a b : ℤ} (h : b ≤ a) : (toNat (a - b) : ℤ) = a -
 
 end Int
 
-/- ./././Mathport/Syntax/Translate/Command.lean:687:14: unsupported user command assert_not_exists -/
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
 -- We should need only a minimal development of sets in order to get here.

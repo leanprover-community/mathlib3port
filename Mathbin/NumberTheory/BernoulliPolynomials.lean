@@ -216,7 +216,7 @@ variable {A : Type _} [CommRing A] [Algebra ℚ A]
 
 -- TODO: define exponential generating functions, and use them here
 -- This name should probably be updated afterwards
-/-- The theorem that `∑ Bₙ(t)X^n/n!)(e^X-1)=Xe^{tX}`  -/
+/-- The theorem that $(e^X - 1) * ∑ Bₙ(t)* X^n/n! = Xe^{tX}$ -/
 theorem bernoulli_generating_function (t : A) :
     (mk fun n => aeval t ((1 / n ! : ℚ) • bernoulli n)) * (exp A - 1) = PowerSeries.x * rescale t (exp A) := by
   -- check equality of power series by checking coefficients of X^n

@@ -83,7 +83,7 @@ class BoundedRandom (α : Type u) [Preorder α] where
 -/
 
 #print Random /-
-/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`Random] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`Random] [] -/
 /-- `random α` gives us machinery to generate values of type `α` -/
 class Random (α : Type u) where
   Random : ∀ (g : Type) [RandomGen g], RandG g α

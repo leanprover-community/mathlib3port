@@ -703,7 +703,7 @@ theorem comp_eq_zero_iff : p.comp q = 0 ↔ p = 0 ∨ p.eval (q.coeff 0) = 0 ∧
             (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
             "<;>"
             (Tactic.«tactic_<;>_»
-             (byContra "by_contra" [(Lean.binderIdent `hp)])
+             (Std.Tactic.byContra "by_contra" [(Lean.binderIdent `hp)])
              "<;>"
              (Tactic.exact
               "exact"
@@ -737,7 +737,7 @@ theorem comp_eq_zero_iff : p.comp q = 0 ↔ p = 0 ∨ p.eval (q.coeff 0) = 0 ∧
            (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
            "<;>"
            (Tactic.«tactic_<;>_»
-            (byContra "by_contra" [(Lean.binderIdent `hp)])
+            (Std.Tactic.byContra "by_contra" [(Lean.binderIdent `hp)])
             "<;>"
             (Tactic.exact
              "exact"
@@ -763,7 +763,7 @@ theorem comp_eq_zero_iff : p.comp q = 0 ↔ p = 0 ∨ p.eval (q.coeff 0) = 0 ∧
        (Mathlib.Tactic.tacticClassical_ (Tactic.skip "skip"))
        "<;>"
        (Tactic.«tactic_<;>_»
-        (byContra "by_contra" [(Lean.binderIdent `hp)])
+        (Std.Tactic.byContra "by_contra" [(Lean.binderIdent `hp)])
         "<;>"
         (Tactic.exact
          "exact"
@@ -785,7 +785,7 @@ theorem comp_eq_zero_iff : p.comp q = 0 ↔ p = 0 ∨ p.eval (q.coeff 0) = 0 ∧
             "⟩")]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
       (Tactic.«tactic_<;>_»
-       (byContra "by_contra" [(Lean.binderIdent `hp)])
+       (Std.Tactic.byContra "by_contra" [(Lean.binderIdent `hp)])
        "<;>"
        (Tactic.exact
         "exact"
@@ -933,7 +933,7 @@ theorem comp_eq_zero_iff : p.comp q = 0 ↔ p = 0 ∨ p.eval (q.coeff 0) = 0 ∧
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))
-      (byContra "by_contra" [(Lean.binderIdent `hp)])
+      (Std.Tactic.byContra "by_contra" [(Lean.binderIdent `hp)])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1, tactic))

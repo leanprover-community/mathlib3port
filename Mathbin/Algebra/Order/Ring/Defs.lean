@@ -815,13 +815,13 @@ instance (priority := 100) StrictOrderedRing.toStrictOrderedSemiring : StrictOrd
 def StrictOrderedRing.toOrderedRing' [@DecidableRel α (· ≤ ·)] : OrderedRing α :=
   { ‹StrictOrderedRing α›, Ring.toSemiring with
     mul_nonneg := fun a b ha hb => by
-      cases' Decidable.eq_or_lt_of_le ha with ha ha
+      obtain ha | ha := Decidable.eq_or_lt_of_le ha
       · rw [← ha, zero_mul]
         
-      cases' Decidable.eq_or_lt_of_le hb with hb hb
+      obtain hb | hb := Decidable.eq_or_lt_of_le hb
       · rw [← hb, mul_zero]
         
-      · exact (mul_pos ha hb).le
+      · exact (StrictOrderedRing.mul_pos _ _ ha hb).le
          }
 #align strict_ordered_ring.to_ordered_ring' StrictOrderedRing.toOrderedRing'
 

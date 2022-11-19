@@ -47,7 +47,8 @@ This construction is very similar to that of the Borel hierarchy. -/
 def generateMeasurableRec (s : Set (Set α)) : ω₁ → Set (Set α)
   | i =>
     let S := ⋃ j : iio i, generate_measurable_rec j.1
-    s ∪ {∅} ∪ compl '' S ∪ Set.range fun f : ℕ → S => ⋃ n, (f n).1
+    s ∪ {∅} ∪ compl '' S ∪ Set.range fun f : ℕ → S => ⋃ n, (f n).1decreasing_by
+  exact j.2
 #align measurable_space.generate_measurable_rec MeasurableSpace.generateMeasurableRec
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:65:38: in apply_rules #[["[", expr subset_union_of_subset_left, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/

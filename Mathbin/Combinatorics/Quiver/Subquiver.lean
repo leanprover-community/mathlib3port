@@ -3,7 +3,7 @@ Copyright (c) 2021 David Wärn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 -/
-import Mathbin.Data.Set.Basic
+import Mathbin.Order.BoundedOrder
 import Mathbin.Combinatorics.Quiver.Basic
 
 /-!
@@ -38,7 +38,7 @@ instance wideSubquiverHasCoeToSort {V} [Quiver V] :
 
 /-- A wide subquiver viewed as a quiver on its own. -/
 instance WideSubquiver.quiver {V} [Quiver V] (H : WideSubquiver V) : Quiver H :=
-  ⟨fun a b => H a b⟩
+  ⟨fun a b => { f // f ∈ H a b }⟩
 #align wide_subquiver.quiver WideSubquiver.quiver
 
 namespace Quiver

@@ -2090,7 +2090,8 @@ def strongInduction {p : Finset α → Sort _} (H : ∀ s, (∀ (t) (_ : t ⊂ s
   | s =>
     H s fun t h =>
       have : t.card < s.card := card_lt_card h
-      strong_induction t
+      strong_induction t termination_by'
+  ⟨_, measure_wf card⟩
 #align finset.strong_induction Finset.strongInduction
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (t «expr ⊂ » s) -/
@@ -2137,7 +2138,8 @@ def strongDownwardInduction {p : Finset α → Sort _} {n : ℕ}
   | s =>
     H s fun t ht h =>
       have : n - t.card < n - s.card := (tsub_lt_tsub_iff_left_of_le ht).2 (Finset.card_lt_card h)
-      strong_downward_induction t ht
+      strong_downward_induction t ht termination_by'
+  ⟨_, measure_wf fun t : Finset α => n - t.card⟩
 #align finset.strong_downward_induction Finset.strongDownwardInduction
 
 theorem strong_downward_induction_eq {p : Finset α → Sort _}

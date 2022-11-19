@@ -1647,7 +1647,8 @@ def reverseInduction {n : ℕ} {C : Fin (n + 1) → Sort _} (hlast : C (Fin.last
         cases i
         rw [tsub_lt_tsub_iff_left_of_le] <;> simp [*, Nat.succ_le_iff]
       have hi : i = Fin.castSucc j := Fin.ext rfl
-      cast (by rw [hi]) (hs _ (reverse_induction j.succ))
+      cast (by rw [hi]) (hs _ (reverse_induction j.succ))termination_by'
+  ⟨_, measure_wf fun i : Fin (n + 1) => n + 1 - i⟩
 #align fin.reverse_induction Fin.reverseInduction
 
 @[simp]

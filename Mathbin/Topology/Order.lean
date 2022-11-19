@@ -301,7 +301,7 @@ theorem TopologicalSpace.is_open_top_iff {α} (U : Set α) : (⊤ : TopologicalS
     exacts[@is_open_empty _ ⊤, @is_open_univ _ ⊤]⟩
 #align topological_space.is_open_top_iff TopologicalSpace.is_open_top_iff
 
-/- ./././Mathport/Syntax/Translate/Command.lean:347:30: infer kinds are unsupported in Lean 4: #[`eq_bot] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`eq_bot] [] -/
 /-- A topological space is discrete if every set is open, that is,
   its topology equals the discrete topology `⊥`. -/
 class DiscreteTopology (α : Type _) [t : TopologicalSpace α] : Prop where

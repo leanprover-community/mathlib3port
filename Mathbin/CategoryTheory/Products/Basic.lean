@@ -5,6 +5,7 @@ Authors: Stephen Morgan, Scott Morrison
 -/
 import Mathbin.CategoryTheory.EqToHom
 import Mathbin.CategoryTheory.Functor.Const
+import Mathbin.Data.Prod.Basic
 
 /-!
 # Cartesian products of categories

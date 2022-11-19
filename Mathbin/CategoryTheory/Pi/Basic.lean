@@ -5,6 +5,7 @@ Authors: Simon Hudon, Scott Morrison
 -/
 import Mathbin.CategoryTheory.NaturalIsomorphism
 import Mathbin.CategoryTheory.EqToHom
+import Mathbin.Data.Sum.Basic
 
 /-!
 # Categories of indexed families of objects.

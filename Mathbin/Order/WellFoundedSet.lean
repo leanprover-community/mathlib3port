@@ -201,7 +201,7 @@ open Relation
               («tactic___;_»
                (cdotTk (patternIgnore (token.«·» "·")))
                [(group
-                 (tacticRwa__
+                 (Std.Tactic.tacticRwa__
                   "rwa"
                   (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h')] "]")
                   [(Tactic.location "at" (Tactic.locationHyp [`h] []))])
@@ -326,7 +326,7 @@ open Relation
              («tactic___;_»
               (cdotTk (patternIgnore (token.«·» "·")))
               [(group
-                (tacticRwa__
+                (Std.Tactic.tacticRwa__
                  "rwa"
                  (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `h')] "]")
                  [(Tactic.location "at" (Tactic.locationHyp [`h] []))])

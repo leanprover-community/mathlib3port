@@ -389,7 +389,7 @@ theorem diag_induction (P : ℕ → ℕ → Prop) (ha : ∀ a, P (a + 1) (a + 1)
       apply diag_induction (a + 1) b this
       
     apply diag_induction a (b + 1)
-    apply lt_of_le_of_lt (Nat.le_succ _) h
+    apply lt_of_le_of_lt (Nat.le_succ _) h termination_by' ⟨_, measure_wf fun p => p.1 + p.2.1⟩
 #align nat.diag_induction Nat.diag_induction
 
 /-- A subset of `ℕ` containing `b : ℕ` and closed under `nat.succ` contains every `n ≥ b`. -/

@@ -179,7 +179,7 @@ theorem IsCycle.exists_zpow_eq {f : Perm β} (hf : IsCycle f) {x y : β} (hx : f
                        `n.mod_nonneg
                        [(Term.app `int.coe_nat_ne_zero.mpr [(Term.app `ne_of_gt [(Term.app `order_of_pos [`f])])])]))))
                    []
-                   (tacticRwa__
+                   (Std.Tactic.tacticRwa__
                     "rwa"
                     (Tactic.rwRuleSeq
                      "["
@@ -235,7 +235,7 @@ theorem IsCycle.exists_zpow_eq {f : Perm β} (hf : IsCycle f) {x y : β} (hx : f
                       `n.mod_nonneg
                       [(Term.app `int.coe_nat_ne_zero.mpr [(Term.app `ne_of_gt [(Term.app `order_of_pos [`f])])])]))))
                   []
-                  (tacticRwa__
+                  (Std.Tactic.tacticRwa__
                    "rwa"
                    (Tactic.rwRuleSeq
                     "["
@@ -273,7 +273,7 @@ theorem IsCycle.exists_zpow_eq {f : Perm β} (hf : IsCycle f) {x y : β} (hx : f
                   `n.mod_nonneg
                   [(Term.app `int.coe_nat_ne_zero.mpr [(Term.app `ne_of_gt [(Term.app `order_of_pos [`f])])])]))))
               []
-              (tacticRwa__
+              (Std.Tactic.tacticRwa__
                "rwa"
                (Tactic.rwRuleSeq
                 "["
@@ -307,7 +307,7 @@ theorem IsCycle.exists_zpow_eq {f : Perm β} (hf : IsCycle f) {x y : β} (hx : f
                  `n.mod_nonneg
                  [(Term.app `int.coe_nat_ne_zero.mpr [(Term.app `ne_of_gt [(Term.app `order_of_pos [`f])])])]))))
              []
-             (tacticRwa__
+             (Std.Tactic.tacticRwa__
               "rwa"
               (Tactic.rwRuleSeq
                "["
@@ -339,7 +339,7 @@ theorem IsCycle.exists_zpow_eq {f : Perm β} (hf : IsCycle f) {x y : β} (hx : f
                 `n.mod_nonneg
                 [(Term.app `int.coe_nat_ne_zero.mpr [(Term.app `ne_of_gt [(Term.app `order_of_pos [`f])])])]))))
             []
-            (tacticRwa__
+            (Std.Tactic.tacticRwa__
              "rwa"
              (Tactic.rwRuleSeq
               "["
@@ -367,7 +367,7 @@ theorem IsCycle.exists_zpow_eq {f : Perm β} (hf : IsCycle f) {x y : β} (hx : f
               `n.mod_nonneg
               [(Term.app `int.coe_nat_ne_zero.mpr [(Term.app `ne_of_gt [(Term.app `order_of_pos [`f])])])]))))
           []
-          (tacticRwa__
+          (Std.Tactic.tacticRwa__
            "rwa"
            (Tactic.rwRuleSeq
             "["
@@ -380,7 +380,7 @@ theorem IsCycle.exists_zpow_eq {f : Perm β} (hf : IsCycle f) {x y : β} (hx : f
            [])])))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (tacticRwa__
+      (Std.Tactic.tacticRwa__
        "rwa"
        (Tactic.rwRuleSeq
         "["
@@ -686,7 +686,8 @@ theorem IsCycle.sign : ∀ {f : Perm α} (hf : IsCycle f), sign f = -(-1) ^ f.su
           have wf : card (support (swap x (f x) * f)) < card (support f) := card_support_swap_mul hx.1
           rw [sign_mul, sign_swap hx.1.symm, (hf.swap_mul hx.1 h1).sign, ← h]
           simp only [pow_add, mul_one, neg_neg, one_mul, mul_neg, eq_self_iff_true, pow_one, neg_mul_neg]
-      
+      termination_by'
+  ⟨_, measure_wf fun f => f.support.card⟩
 #align equiv.perm.is_cycle.sign Equiv.Perm.IsCycle.sign
 
 theorem is_cycle_of_is_cycle_pow {σ : Perm α} {n : ℕ} (h1 : IsCycle (σ ^ n)) (h2 : σ.support ≤ (σ ^ n).support) :

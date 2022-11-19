@@ -47,14 +47,11 @@ theorem lex_lt_of_lt_of_preorder [∀ i, Preorder (α i)] (r) [IsStrictOrder ι 
     ∃ i, (∀ j, r j i → x j ≤ y j ∧ y j ≤ x j) ∧ x i < y i := by
   obtain ⟨hle, j, hlt⟩ := Pi.lt_def.1 hlt
   classical
-  obtain ⟨i, hi, hl⟩ :=
-    (x.ne_locus y).finite_to_set.WellFoundedOn.has_min { i | x i < y i } ⟨⟨j, mem_ne_locus.2 hlt.ne⟩, hlt⟩
-  pick_goal 3
-  · assumption
-    
+  have : (x.ne_locus y : Set ι).WellFoundedOn r := (x.ne_locus y).finite_to_set.WellFoundedOn
+  obtain ⟨i, hi, hl⟩ := this.has_min { i | x i < y i } ⟨⟨j, mem_ne_locus.2 hlt.ne⟩, hlt⟩
   exact
     ⟨i, fun k hk =>
-      ⟨hle k, not_not.1 fun h => hl ⟨k, mem_ne_locus.2 (ne_of_not_le h).symm⟩ ((hle k).lt_of_not_le h) hk⟩, hi⟩
+      ⟨hle k, of_not_not fun h => hl ⟨k, mem_ne_locus.2 (ne_of_not_le h).symm⟩ ((hle k).lt_of_not_le h) hk⟩, hi⟩
 #align dfinsupp.lex_lt_of_lt_of_preorder Dfinsupp.lex_lt_of_lt_of_preorder
 
 theorem lex_lt_of_lt [∀ i, PartialOrder (α i)] (r) [IsStrictOrder ι r] {x y : Π₀ i, α i} (hlt : x < y) :
@@ -97,13 +94,13 @@ private def lt_trichotomy_rec {P : Lex (Π₀ i, α i) → Lex (Π₀ i, α i) �
           h_gt ⟨wit, fun j hj => not_mem_ne_locus.mp (Finset.not_mem_of_lt_min hj <| by rwa [ne_locus_comm]), hwit⟩
 #align dfinsupp.lt_trichotomy_rec dfinsupp.lt_trichotomy_rec
 
-/- ./././Mathport/Syntax/Translate/Command.lean:288:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:309:38: unsupported irreducible non-definition -/
 irreducible_def Lex.decidableLe : @DecidableRel (Lex (Π₀ i, α i)) (· ≤ ·) :=
   ltTrichotomyRec (fun f g h => is_true <| Or.inr h) (fun f g h => is_true <| Or.inl <| congr_arg _ h) fun f g h =>
     is_false fun h' => (lt_irrefl _ (h.trans_le h')).elim
 #align dfinsupp.lex.decidable_le Dfinsupp.Lex.decidableLe
 
-/- ./././Mathport/Syntax/Translate/Command.lean:288:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:309:38: unsupported irreducible non-definition -/
 irreducible_def Lex.decidableLt : @DecidableRel (Lex (Π₀ i, α i)) (· < ·) :=
   ltTrichotomyRec (fun f g h => isTrue h) (fun f g h => isFalse h.not_lt) fun f g h => isFalse h.asymm
 #align dfinsupp.lex.decidable_lt Dfinsupp.Lex.decidableLt

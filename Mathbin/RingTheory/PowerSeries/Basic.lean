@@ -752,7 +752,10 @@ well-founded recursion on the coeffients of the inverse.
  the inverse formal power series that depends on
  an inverse of the constant coefficient `inv_of_unit`.-/
 protected noncomputable def Inv.aux (a : R) (φ : MvPowerSeries σ R) : MvPowerSeries σ R
-  | n => if n = 0 then a else -a * ∑ x in n.antidiagonal, if h : x.2 < n then coeff R x.1 φ * inv.aux x.2 else 0
+  | n =>
+    if n = 0 then a
+    else -a * ∑ x in n.antidiagonal, if h : x.2 < n then coeff R x.1 φ * inv.aux x.2 else 0termination_by'
+  ⟨_, Finsupp.lt_wf σ⟩
 #align mv_power_series.inv.aux MvPowerSeries.Inv.aux
 
 theorem coeff_inv_aux [DecidableEq σ] (n : σ →₀ ℕ) (a : R) (φ : MvPowerSeries σ R) :

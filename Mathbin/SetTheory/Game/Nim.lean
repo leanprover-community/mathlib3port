@@ -272,7 +272,7 @@ theorem nim_equiv_iff_eq {o₁ o₂ : Ordinal} : (nim o₁ ≈ nim o₂) ↔ o�
 /-- The Grundy value of an impartial game, the ordinal which corresponds to the game of nim that the
  game is equivalent to -/
 noncomputable def grundyValue : ∀ G : Pgame.{u}, Ordinal.{u}
-  | G => Ordinal.mex.{u, u} fun i => grundy_value (G.moveLeft i)
+  | G => Ordinal.mex.{u, u} fun i => grundy_value (G.moveLeft i)decreasing_by pgame_wf_tac
 #align pgame.grundy_value Pgame.grundyValue
 
 theorem grundy_value_eq_mex_left (G : Pgame) : grundyValue G = Ordinal.mex.{u, u} fun i => grundyValue (G.moveLeft i) :=
@@ -314,7 +314,8 @@ theorem equiv_nim_grundy_value : ∀ (G : Pgame.{u}) [G.Impartial], G ≈ nim (g
       rw [add_move_left_inl, move_left_mk]
       apply (add_congr_left (equiv_nim_grundy_value (G.move_left i))).trans
       simpa only [hi] using impartial.add_self (nim (grundy_value (G.move_left i)))
-      
+      decreasing_by
+  pgame_wf_tac
 #align pgame.equiv_nim_grundy_value Pgame.equiv_nim_grundy_value
 
 theorem grundy_value_eq_iff_equiv_nim {G : Pgame} [G.Impartial] {o : Ordinal} : grundyValue G = o ↔ (G ≈ nim o) :=

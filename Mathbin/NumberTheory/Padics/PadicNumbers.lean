@@ -752,25 +752,17 @@ private def lim : ℚ_[p] :=
 
 theorem complete' : ∃ q : ℚ_[p], ∀ ε > 0, ∃ N, ∀ i ≥ N, padicNormE (q - f i) < ε :=
   ⟨lim f, fun ε hε => by
-    let ⟨N, hN⟩ := exi_rat_seq_conv f (show 0 < ε / 2 from div_pos hε (by norm_num))
-    let ⟨N2, hN2⟩ := padicNormE.defn (lim' f) (show 0 < ε / 2 from div_pos hε (by norm_num))
-    exists max N N2
-    intro i hi
-    suffices padicNormE (lim f - lim' f i + (lim' f i - f i)) < ε by ring_nf  at this <;> exact this
-    · apply lt_of_le_of_lt
-      · apply padic_norm_e.add_le
-        
-      · have : ε = ε / 2 + ε / 2 := by rw [← add_self_div_two ε] <;> simp
-        rw [this]
-        apply add_lt_add
-        · apply hN2
-          exact le_of_max_le_right hi
-          
-        · rw_mod_cast [padic_norm_e.map_sub]
-          apply hN
-          exact le_of_max_le_left hi
-          
-        
+    obtain ⟨N, hN⟩ := exi_rat_seq_conv f (half_pos hε)
+    obtain ⟨N2, hN2⟩ := padicNormE.defn (lim' f) (half_pos hε)
+    refine' ⟨max N N2, fun i hi => _⟩
+    rw [← sub_add_sub_cancel _ (lim' f i : ℚ_[p]) _]
+    refine' (padic_norm_e.add_le _ _).trans_lt _
+    rw [← add_halves ε]
+    apply add_lt_add
+    · apply hN2 _ (le_of_max_le_right hi)
+      
+    · rw [padic_norm_e.map_sub]
+      exact hN _ (le_of_max_le_left hi)
       ⟩
 #align padic.complete' Padic.complete'
 

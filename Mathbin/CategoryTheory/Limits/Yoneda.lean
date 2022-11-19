@@ -161,6 +161,7 @@ instance coyonedaFunctorReflectsLimits : ReflectsLimits (@coyoneda D _) :=
 
 end CategoryTheory
 
-/- ./././Mathport/Syntax/Translate/Command.lean:687:14: unsupported user command assert_not_exists -/
--- These act as a guard that the algebraic hierarchy has not been imported
--- low into the category theory hierarchy again.
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+-- We don't need to have developed any algebra or set theory to reach (at least) this point
+-- in the category theory hierarchy.

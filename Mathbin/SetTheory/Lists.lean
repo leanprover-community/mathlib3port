@@ -444,7 +444,7 @@ mutual
       refine' decidable_of_iff' (a ~ ⟨_, b⟩ ∨ a ∈ l₂) _
       rw [← Lists'.mem_cons]
       rfl
-end
+end termination_by' ⟨_, measure_wf equiv.decidable_meas⟩
 #align lists.equiv.decidable Lists.Equiv.decidable
 #align lists.subset.decidable Lists.Subset.decidable
 #align lists.mem.decidable Lists.Mem.decidable

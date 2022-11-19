@@ -8,6 +8,10 @@ import Mathbin.Order.Synonym
 /-!
 # Comparison
 
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/569
+> Any changes to this file require a corresponding PR to mathlib4.
+
 This file provides basic results about orderings and comparison in linear orders.
 
 
@@ -299,8 +303,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Compare._hyg.3000 : LinearOrder.{u_1} α] {x : α} {y : α} {β : Type.{u_2}} [inst._@.Mathlib.Order.Compare._hyg.3006 : LinearOrder.{u_2} β] {x' : β} {y' : β}, Iff (Eq.{1} Ordering (cmp.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3000))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3000 a b) x y) (cmp.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3006))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3006 a b) x' y')) (Eq.{1} Ordering (cmp.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (LinearOrder.toPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3000))) (fun (a : α) (b : α) => instDecidableLtToLTToPreorderToPartialOrder.{u_1} α inst._@.Mathlib.Order.Compare._hyg.3000 a b) y x) (cmp.{u_2} β (Preorder.toLT.{u_2} β (PartialOrder.toPreorder.{u_2} β (LinearOrder.toPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3006))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u_2} β inst._@.Mathlib.Order.Compare._hyg.3006 a b) y' x'))
 Case conversion may be inaccurate. Consider using '#align cmp_eq_cmp_symm cmp_eq_cmp_symmₓ'. -/
-theorem cmp_eq_cmp_symm : cmp x y = cmp x' y' ↔ cmp y x = cmp y' x' :=
-  ⟨fun h => by rwa [← cmp_swap x', ← cmp_swap, swap_inj], fun h => by rwa [← cmp_swap y', ← cmp_swap, swap_inj]⟩
+theorem cmp_eq_cmp_symm : cmp x y = cmp x' y' ↔ cmp y x = cmp y' x' := by rw [← cmp_swap x', ← cmp_swap x, swap_inj]
 #align cmp_eq_cmp_symm cmp_eq_cmp_symm
 
 /- warning: lt_iff_lt_of_cmp_eq_cmp -> lt_iff_lt_of_cmp_eq_cmp is a dubious translation:

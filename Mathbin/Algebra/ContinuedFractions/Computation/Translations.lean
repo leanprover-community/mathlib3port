@@ -306,7 +306,7 @@ Now let's show how the values of the sequences correspond to one another.
                    [`of `int_fract_pair.seq1]
                    [(Tactic.location "at" (Tactic.locationHyp [`s_nth_eq] []))])
                   []
-                  (tacticRwa__
+                  (Std.Tactic.tacticRwa__
                    "rwa"
                    (Tactic.rwRuleSeq
                     "["
@@ -379,7 +379,7 @@ Now let's show how the values of the sequences correspond to one another.
                   [`of `int_fract_pair.seq1]
                   [(Tactic.location "at" (Tactic.locationHyp [`s_nth_eq] []))])
                  []
-                 (tacticRwa__
+                 (Std.Tactic.tacticRwa__
                   "rwa"
                   (Tactic.rwRuleSeq
                    "["

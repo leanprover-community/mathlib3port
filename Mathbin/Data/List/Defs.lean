@@ -678,7 +678,8 @@ def PermutationsAux.rec {C : List α → List α → Sort v} (H0 : ∀ is, C [] 
       show Prod.Lex _ _ (succ (length ts + length is), length ts) (succ (length ts) + length is, length (t :: ts)) by
         rw [Nat.succ_add] <;> exact Prod.Lex.right _ (lt_succ_self _)
     have h2 : ⟨is, []⟩ ≺ ⟨t :: ts, is⟩ := Prod.Lex.left _ _ (Nat.lt_add_of_pos_left (succ_pos _))
-    H1 t ts is (permutations_aux.rec ts (t :: is)) (permutations_aux.rec is [])
+    H1 t ts is (permutations_aux.rec ts (t :: is)) (permutations_aux.rec is [])termination_by'
+  ⟨(· ≺ ·), @InvImage.wf _ _ _ meas (Prod.lex_wf lt_wf lt_wf)⟩
 #align list.permutations_aux.rec List.PermutationsAux.rec
 
 /-- An auxiliary function for defining `permutations`. `permutations_aux ts is` is the set of all

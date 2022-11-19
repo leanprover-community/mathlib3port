@@ -384,7 +384,7 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
                [(Tactic.location "at" (Tactic.locationHyp [`H] [(patternIgnore (token.«⊢» "⊢"))]))])
               [])
              (group
-              (tacticRwa__
+              (Std.Tactic.tacticRwa__
                "rwa"
                (Tactic.rwRuleSeq
                 "["
@@ -617,7 +617,7 @@ theorem targetAffineLocallyOfOpenCover {P : AffineTargetMorphismProperty} (hP : 
               [(Tactic.location "at" (Tactic.locationHyp [`H] [(patternIgnore (token.«⊢» "⊢"))]))])
              [])
             (group
-             (tacticRwa__
+             (Std.Tactic.tacticRwa__
               "rwa"
               (Tactic.rwRuleSeq
                "["

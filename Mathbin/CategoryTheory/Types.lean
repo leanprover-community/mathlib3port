@@ -5,7 +5,7 @@ Authors: Stephen Morgan, Scott Morrison, Johannes Hölzl
 -/
 import Mathbin.CategoryTheory.EpiMono
 import Mathbin.CategoryTheory.Functor.FullyFaithful
-import Mathbin.Logic.Equiv.Defs
+import Mathbin.Logic.Equiv.Basic
 
 /-!
 # The category `Type`.

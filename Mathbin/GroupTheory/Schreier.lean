@@ -183,8 +183,8 @@ def cardCommutatorBound (n : ℕ) :=
   (n ^ (2 * n)) ^ (n ^ (2 * n + 1) + 1)
 #align subgroup.card_commutator_bound Subgroup.cardCommutatorBound
 
-/-- A theorem of Schur: A theorem of Schur: The size of the commutator subgroup is bounded in terms
-  of the number of commutators. -/
+/-- A theorem of Schur: The size of the commutator subgroup is bounded in terms of the number of
+  commutators. -/
 theorem card_commutator_le_of_finite_commutator_set [Finite (commutatorSet G)] :
     Nat.card (commutator G) ≤ cardCommutatorBound (Nat.card (commutatorSet G)) := by
   have h1 := index_center_le_pow (closureCommutatorRepresentatives G)

@@ -63,7 +63,7 @@ ordered map, ordered set, data structure
 
 universe u
 
-/- ./././Mathport/Syntax/Translate/Command.lean:324:30: infer kinds are unsupported in Lean 4: nil {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:355:30: infer kinds are unsupported in Lean 4: nil {} -/
 /-- An `ordnode α` is a finite set of values, represented as a tree.
   The operations on this type maintain that the tree is balanced
   and correctly stores subtree sizes at each level. -/
@@ -867,7 +867,8 @@ def ofAscListAux₁ : ∀ l : List α, ℕ → Ordnode α × { l' : List α // l
       | (l, ⟨y :: ys, h⟩) =>
         have := Nat.le_succ_of_le h
         let (r, ⟨zs, h'⟩) := of_asc_list_aux₁ ys (s.shiftl 1)
-        (link l y r, ⟨zs, le_trans h' (le_of_lt this)⟩)
+        (link l y r, ⟨zs, le_trans h' (le_of_lt this)⟩)termination_by'
+  ⟨_, measure_wf List.length⟩
 #align ordnode.of_asc_list_aux₁ Ordnode.ofAscListAux₁
 
 /-- Auxiliary definition for `of_asc_list`. -/
@@ -878,7 +879,8 @@ def ofAscListAux₂ : List α → Ordnode α → ℕ → Ordnode α
     match ofAscListAux₁ xs s with
     | (r, ⟨ys, h⟩) =>
       have := Nat.lt_succ_of_le h
-      of_asc_list_aux₂ ys (link l x r) (s.shiftl 1)
+      of_asc_list_aux₂ ys (link l x r) (s.shiftl 1)termination_by'
+  ⟨_, measure_wf List.length⟩
 #align ordnode.of_asc_list_aux₂ Ordnode.ofAscListAux₂
 
 /-- O(n). Build a set from a list which is already sorted. Performs no comparisons.
