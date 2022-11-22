@@ -198,11 +198,11 @@ theorem eq_pow_second_of_chain_of_has_chain {q : Associates M} {n : ℕ} (hn : n
     
 #align divisor_chain.eq_pow_second_of_chain_of_has_chain DivisorChain.eq_pow_second_of_chain_of_has_chain
 
-theorem isPrimePowOfHasChain {q : Associates M} {n : ℕ} (hn : n ≠ 0) {c : Fin (n + 1) → Associates M}
+theorem is_prime_pow_of_has_chain {q : Associates M} {n : ℕ} (hn : n ≠ 0) {c : Fin (n + 1) → Associates M}
     (h₁ : StrictMono c) (h₂ : ∀ {r : Associates M}, r ≤ q ↔ ∃ i, r = c i) (hq : q ≠ 0) : IsPrimePow q :=
   ⟨c 1, n, irreducible_iff_prime.mp (second_of_chain_is_irreducible hn h₁ (@h₂) hq), zero_lt_iff.mpr hn,
     (eq_pow_second_of_chain_of_has_chain hn h₁ (@h₂) hq).symm⟩
-#align divisor_chain.is_prime_pow_of_has_chain DivisorChain.isPrimePowOfHasChain
+#align divisor_chain.is_prime_pow_of_has_chain DivisorChain.is_prime_pow_of_has_chain
 
 end DivisorChain
 
@@ -264,7 +264,7 @@ theorem pow_image_of_prime_by_factor_order_iso_dvd [DecidableEq (Associates M)] 
   exact ne_zero_of_dvd_ne_zero hn (Subtype.prop (d ⟨c₁ 1 ^ s, _⟩))
 #align pow_image_of_prime_by_factor_order_iso_dvd pow_image_of_prime_by_factor_order_iso_dvd
 
-theorem mapPrimeOfFactorOrderIso [DecidableEq (Associates M)] {m p : Associates M} {n : Associates N} (hn : n ≠ 0)
+theorem map_prime_of_factor_order_iso [DecidableEq (Associates M)] {m p : Associates M} {n : Associates N} (hn : n ≠ 0)
     (hp : p ∈ normalizedFactors m) (d : Set.iic m ≃o Set.iic n) :
     Prime (d ⟨p, dvd_of_mem_normalized_factors hp⟩ : Associates N) := by
   rw [← irreducible_iff_prime]
@@ -290,13 +290,13 @@ theorem mapPrimeOfFactorOrderIso [DecidableEq (Associates M)] {m p : Associates 
       
     exact bot_le
     
-#align map_prime_of_factor_order_iso mapPrimeOfFactorOrderIso
+#align map_prime_of_factor_order_iso map_prime_of_factor_order_iso
 
 theorem mem_normalized_factors_factor_order_iso_of_mem_normalized_factors [DecidableEq (Associates M)]
     [DecidableEq (Associates N)] {m p : Associates M} {n : Associates N} (hn : n ≠ 0) (hp : p ∈ normalizedFactors m)
     (d : Set.iic m ≃o Set.iic n) : ↑(d ⟨p, dvd_of_mem_normalized_factors hp⟩) ∈ normalizedFactors n := by
   obtain ⟨q, hq, hq'⟩ :=
-    exists_mem_normalized_factors_of_dvd hn (mapPrimeOfFactorOrderIso hn hp d).Irreducible
+    exists_mem_normalized_factors_of_dvd hn (map_prime_of_factor_order_iso hn hp d).Irreducible
       (d ⟨p, dvd_of_mem_normalized_factors hp⟩).Prop
   rw [associated_iff_eq] at hq'
   rwa [hq']
@@ -406,7 +406,7 @@ theorem mem_normalized_factors_factor_dvd_iso_of_mem_normalized_factors [Decidab
     simp only [Subtype.coe_mk]
   rw [← Associates.prime_mk, this]
   letI := Classical.decEq (Associates M)
-  refine' mapPrimeOfFactorOrderIso (mk_ne_zero.mpr hn) _ _
+  refine' map_prime_of_factor_order_iso (mk_ne_zero.mpr hn) _ _
   obtain ⟨q, hq, hq'⟩ :=
     exists_mem_normalized_factors_of_dvd (mk_ne_zero.mpr hm)
       ((prime_mk p).mpr (prime_of_normalized_factor p (by convert hp))).Irreducible

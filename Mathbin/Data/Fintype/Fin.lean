@@ -57,7 +57,7 @@ theorem Ioi_succ (i : Fin n) : ioi i.succ = (ioi i).map (Fin.succEmbedding _).to
 
 theorem card_filter_univ_succ' (p : Fin (n + 1) → Prop) [DecidablePred p] :
     (univ.filter p).card = ite (p 0) 1 0 + (univ.filter (p ∘ Fin.succ)).card := by
-  rw [Fin.univ_succ, filter_cons, card_disj_union, map_filter, card_map]
+  rw [Fin.univ_succ, filter_cons, card_disj_union, filter_map, card_map]
   split_ifs <;> simp
 #align fin.card_filter_univ_succ' Fin.card_filter_univ_succ'
 

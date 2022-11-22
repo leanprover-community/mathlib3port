@@ -184,7 +184,7 @@ theorem SpecCat.basic_open_hom_ext {X : RingedSpaceCat} {R : CommRingCat} {α β
 def SpecCat.locallyRingedSpaceObj (R : CommRingCat) : LocallyRingedSpaceCat :=
   { SpecCat.sheafedSpaceObj R with
     LocalRing := fun x =>
-      @RingEquiv.localRing _ (show LocalRing (Localization.AtPrime _) by infer_instance) _
+      @RingEquiv.local_ring _ (show LocalRing (Localization.AtPrime _) by infer_instance) _
         (iso.CommRing_iso_to_ring_equiv <| stalkIso R x).symm }
 #align algebraic_geometry.Spec.LocallyRingedSpace_obj AlgebraicGeometry.SpecCat.locallyRingedSpaceObj
 

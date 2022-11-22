@@ -124,7 +124,7 @@ theorem supported_le_supported_iff [Nontrivial R] : supported R s ≤ supported 
 #align mv_polynomial.supported_le_supported_iff MvPolynomial.supported_le_supported_iff
 
 theorem supported_strict_mono [Nontrivial R] : StrictMono (supported R : Set σ → Subalgebra R (MvPolynomial σ R)) :=
-  strict_mono_of_le_iff_le fun _ _ => supported_le_supported_iff.symm
+  strictMono_of_le_iff_le fun _ _ => supported_le_supported_iff.symm
 #align mv_polynomial.supported_strict_mono MvPolynomial.supported_strict_mono
 
 theorem exists_restrict_to_vars (R : Type _) [CommRing R] {F : MvPolynomial σ ℤ} (hF : ↑F.vars ⊆ s) :

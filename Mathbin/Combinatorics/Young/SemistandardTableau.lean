@@ -84,12 +84,21 @@ theorem ext {μ : YoungDiagram} {T T' : Ssyt μ} (h : ∀ i j, T i j = T' i j) :
 
 /-- Copy of an `ssyt μ` with a new `entry` equal to the old one. Useful to fix definitional
 equalities. -/
-protected def copy {μ : YoungDiagram} {T : Ssyt μ} (entry' : ℕ → ℕ → ℕ) (h : entry' = T) : Ssyt μ where
+protected def copy {μ : YoungDiagram} (T : Ssyt μ) (entry' : ℕ → ℕ → ℕ) (h : entry' = T) : Ssyt μ where
   entry := entry'
   row_weak' _ _ _ := h.symm ▸ T.row_weak'
   col_strict' _ _ _ := h.symm ▸ T.col_strict'
   zeros' _ _ := h.symm ▸ T.zeros'
 #align ssyt.copy Ssyt.copy
+
+@[simp]
+theorem coe_copy {μ : YoungDiagram} (T : Ssyt μ) (entry' : ℕ → ℕ → ℕ) (h : entry' = T) : ⇑(T.copy entry' h) = entry' :=
+  rfl
+#align ssyt.coe_copy Ssyt.coe_copy
+
+theorem copy_eq {μ : YoungDiagram} (T : Ssyt μ) (entry' : ℕ → ℕ → ℕ) (h : entry' = T) : T.copy entry' h = T :=
+  FunLike.ext' h
+#align ssyt.copy_eq Ssyt.copy_eq
 
 theorem row_weak {μ : YoungDiagram} (T : Ssyt μ) {i j1 j2 : ℕ} (hj : j1 < j2) (hcell : (i, j2) ∈ μ) : T i j1 ≤ T i j2 :=
   T.row_weak' hj hcell

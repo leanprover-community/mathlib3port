@@ -213,9 +213,9 @@ theorem is_liouville {m : ℕ} (hm : 2 ≤ m) : Liouville (liouvilleNumber m) :=
 
 /- Placing this lemma outside of the `open/closed liouville`-namespace would allow to remove
 `_root_.`, at the cost of some other small weirdness. -/
-theorem isTranscendental {m : ℕ} (hm : 2 ≤ m) : Transcendental ℤ (liouvilleNumber m) :=
+theorem is_transcendental {m : ℕ} (hm : 2 ≤ m) : Transcendental ℤ (liouvilleNumber m) :=
   transcendental (is_liouville hm)
-#align liouville.is_transcendental Liouville.isTranscendental
+#align liouville.is_transcendental Liouville.is_transcendental
 
 end Liouville
 

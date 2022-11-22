@@ -1298,7 +1298,7 @@ unsafe def terminal_goal : tactic Unit :=
   propositional_goal <|>
     subsingleton_goal <|> do
       let g₀ :: _ ← get_goals
-      let mvars ← (fun L => List.erase' L g₀) <$> metavariables
+      let mvars ← (fun L => List.erase L g₀) <$> metavariables
       mvars fun g => do
           let t ← infer_type g >>= instantiate_mvars
           let d ← kdepends_on t g₀
@@ -1581,7 +1581,7 @@ unsafe def get_variables : lean.parser (List (Name × BinderInfo × expr)) :=
 "included" by an `include v` statement and are not (yet) `omit`ed. -/
 unsafe def get_included_variables : lean.parser (List (Name × BinderInfo × expr)) := do
   let ns ← list_include_var_names
-  (List.filter' fun v => v.1 ∈ ns) <$> get_variables
+  (List.filter fun v => v.1 ∈ ns) <$> get_variables
 #align lean.parser.get_included_variables lean.parser.get_included_variables
 
 /-- From the `lean.parser` monad, synthesize a `tactic_state` which includes all of the local

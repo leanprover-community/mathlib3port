@@ -938,12 +938,12 @@ theorem is_adjoint_pair_iff_comp_left_eq_comp_right (f g : Module.EndCat R M) :
     
 #align bilin_form.is_adjoint_pair_iff_comp_left_eq_comp_right BilinForm.is_adjoint_pair_iff_comp_left_eq_comp_right
 
-theorem isAdjointPairZero : IsAdjointPair B B' 0 0 := fun x y => by
+theorem is_adjoint_pair_zero : IsAdjointPair B B' 0 0 := fun x y => by
   simp only [BilinForm.zero_left, BilinForm.zero_right, LinearMap.zero_apply]
-#align bilin_form.is_adjoint_pair_zero BilinForm.isAdjointPairZero
+#align bilin_form.is_adjoint_pair_zero BilinForm.is_adjoint_pair_zero
 
-theorem isAdjointPairId : IsAdjointPair B B 1 1 := fun x y => rfl
-#align bilin_form.is_adjoint_pair_id BilinForm.isAdjointPairId
+theorem is_adjoint_pair_id : IsAdjointPair B B 1 1 := fun x y => rfl
+#align bilin_form.is_adjoint_pair_id BilinForm.is_adjoint_pair_id
 
 theorem IsAdjointPair.add (h : IsAdjointPair B B' f g) (h' : IsAdjointPair B B' f' g') :
     IsAdjointPair B B' (f + f') (g + g') := fun x y => by
@@ -991,7 +991,7 @@ def IsPairSelfAdjoint (f : Module.EndCat R M) :=
 /-- The set of pair-self-adjoint endomorphisms are a submodule of the type of all endomorphisms. -/
 def isPairSelfAdjointSubmodule : Submodule R₂ (Module.EndCat R₂ M₂) where
   carrier := { f | IsPairSelfAdjoint B₂ F₂ f }
-  zero_mem' := isAdjointPairZero
+  zero_mem' := is_adjoint_pair_zero
   add_mem' f g hf hg := hf.add hg
   smul_mem' c f h := h.smul c
 #align bilin_form.is_pair_self_adjoint_submodule BilinForm.isPairSelfAdjointSubmodule
@@ -1463,17 +1463,17 @@ noncomputable def leftAdjointOfNondegenerate (B : BilinForm K V) (b : B.Nondegen
   symmCompOfNondegenerate (B.compRight φ) B b
 #align bilin_form.left_adjoint_of_nondegenerate BilinForm.leftAdjointOfNondegenerate
 
-theorem isAdjointPairLeftAdjointOfNondegenerate (B : BilinForm K V) (b : B.Nondegenerate) (φ : V →ₗ[K] V) :
+theorem is_adjoint_pair_left_adjoint_of_nondegenerate (B : BilinForm K V) (b : B.Nondegenerate) (φ : V →ₗ[K] V) :
     IsAdjointPair B B (B.leftAdjointOfNondegenerate b φ) φ := fun x y =>
   (B.compRight φ).symm_comp_of_nondegenerate_left_apply b y x
-#align bilin_form.is_adjoint_pair_left_adjoint_of_nondegenerate BilinForm.isAdjointPairLeftAdjointOfNondegenerate
+#align bilin_form.is_adjoint_pair_left_adjoint_of_nondegenerate BilinForm.is_adjoint_pair_left_adjoint_of_nondegenerate
 
 /-- Given the nondegenerate bilinear form `B`, the linear map `φ` has a unique left adjoint given by
 `bilin_form.left_adjoint_of_nondegenerate`. -/
 theorem is_adjoint_pair_iff_eq_of_nondegenerate (B : BilinForm K V) (b : B.Nondegenerate) (ψ φ : V →ₗ[K] V) :
     IsAdjointPair B B ψ φ ↔ ψ = B.leftAdjointOfNondegenerate b φ :=
-  ⟨fun h => B.is_adjoint_pair_unique_of_nondegenerate b φ ψ _ h (isAdjointPairLeftAdjointOfNondegenerate _ _ _),
-    fun h => h.symm ▸ isAdjointPairLeftAdjointOfNondegenerate _ _ _⟩
+  ⟨fun h => B.is_adjoint_pair_unique_of_nondegenerate b φ ψ _ h (is_adjoint_pair_left_adjoint_of_nondegenerate _ _ _),
+    fun h => h.symm ▸ is_adjoint_pair_left_adjoint_of_nondegenerate _ _ _⟩
 #align bilin_form.is_adjoint_pair_iff_eq_of_nondegenerate BilinForm.is_adjoint_pair_iff_eq_of_nondegenerate
 
 end LinearAdjoints

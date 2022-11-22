@@ -194,8 +194,8 @@ theorem Equiv.prod_comp' [Fintype α] [Fintype β] [CommMonoid γ] (e : α ≃ �
   (show f = g ∘ e from funext h).symm ▸ e.prod_comp _
 #align equiv.prod_comp' Equiv.prod_comp'
 
-/-- It is equivalent to sum a function over `fin n` or `finset.range n`. -/
-@[to_additive]
+/-- It is equivalent to compute the product of a function over `fin n` or `finset.range n`. -/
+@[to_additive "It is equivalent to sum a function over `fin n` or `finset.range n`."]
 theorem Fin.prod_univ_eq_prod_range [CommMonoid α] (f : ℕ → α) (n : ℕ) : (∏ i : Fin n, f i) = ∏ i in range n, f i :=
   calc
     (∏ i : Fin n, f i) = ∏ i : { x // x ∈ range n }, f i :=

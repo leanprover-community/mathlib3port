@@ -57,7 +57,7 @@ theorem one_lt_zpow (ha : 1 < a) : ∀ n : ℤ, 0 < n → 1 < a ^ n
 #align one_lt_zpow one_lt_zpow
 
 theorem zpow_strict_mono (hx : 1 < a) : StrictMono ((· ^ ·) a : ℤ → α) :=
-  strict_mono_int_of_lt_succ fun n =>
+  strictMono_int_of_lt_succ fun n =>
     have xpos : 0 < a := zero_lt_one.trans hx
     calc
       a ^ n < a ^ n * a := lt_mul_of_one_lt_right (zpow_pos_of_pos xpos _) hx
@@ -66,7 +66,7 @@ theorem zpow_strict_mono (hx : 1 < a) : StrictMono ((· ^ ·) a : ℤ → α) :=
 #align zpow_strict_mono zpow_strict_mono
 
 theorem zpow_strict_anti (h₀ : 0 < a) (h₁ : a < 1) : StrictAnti ((· ^ ·) a : ℤ → α) :=
-  strict_anti_int_of_succ_lt fun n =>
+  strictAnti_int_of_succ_lt fun n =>
     calc
       a ^ (n + 1) = a ^ n * a := zpow_add_one₀ h₀.ne' _
       _ < a ^ n * 1 := (mul_lt_mul_left <| zpow_pos_of_pos h₀ _).2 h₁

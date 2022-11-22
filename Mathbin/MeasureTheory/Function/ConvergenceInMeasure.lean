@@ -175,7 +175,7 @@ theorem seq_tendsto_ae_seq_spec (hfg : TendstoInMeasure μ f atTop g) (n k : ℕ
   measure_theory.exists_seq_tendsto_ae.seq_tendsto_ae_seq_spec MeasureTheory.ExistsSeqTendstoAe.seq_tendsto_ae_seq_spec
 
 theorem seq_tendsto_ae_seq_strict_mono (hfg : TendstoInMeasure μ f atTop g) : StrictMono (seqTendstoAeSeq hfg) := by
-  refine' strict_mono_nat_of_lt_succ fun n => _
+  refine' strictMono_nat_of_lt_succ fun n => _
   rw [seq_tendsto_ae_seq_succ]
   exact lt_of_lt_of_le (lt_add_one <| seq_tendsto_ae_seq hfg n) (le_max_right _ _)
 #align

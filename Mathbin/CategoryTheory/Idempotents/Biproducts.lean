@@ -70,9 +70,8 @@ def bicone [HasFiniteBiproducts C] {J : Type} [Fintype J] (F : J → Karoubi C) 
 end Biproducts
 
 theorem karoubi_has_finite_biproducts [HasFiniteBiproducts C] : HasFiniteBiproducts (Karoubi C) :=
-  { HasBiproductsOfShape := fun J hJ =>
+  { out := fun n =>
       { HasBiproduct := fun F => by classical
-          letI := hJ
           apply has_biproduct_of_total (biproducts.bicone F)
           ext1
           ext1

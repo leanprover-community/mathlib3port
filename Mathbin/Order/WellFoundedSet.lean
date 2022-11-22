@@ -1398,7 +1398,7 @@ theorem partially_well_ordered_on_sublist_forall₂ (r : α → α → Prop) [Is
   rw [iff_not_exists_is_min_bad_seq List.length]
   rintro ⟨f, hf1, hf2⟩
   have hnil : ∀ n, f n ≠ List.nil := fun n con => hf1.2 n n.succ n.lt_succ_self (con.symm ▸ List.SublistForall₂.nil)
-  obtain ⟨g, hg⟩ := h.exists_monotone_subseq (List.head' ∘ f) _
+  obtain ⟨g, hg⟩ := h.exists_monotone_subseq (List.head ∘ f) _
   swap
   · simp only [Set.range_subset_iff, Function.comp_apply]
     exact fun n => hf1.1 n _ (List.head_mem_self (hnil n))

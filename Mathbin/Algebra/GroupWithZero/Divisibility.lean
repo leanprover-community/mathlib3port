@@ -64,7 +64,7 @@ def DvdNotUnit (a b : α) : Prop :=
   a ≠ 0 ∧ ∃ x, ¬IsUnit x ∧ b = a * x
 #align dvd_not_unit DvdNotUnit
 
-theorem dvdNotUnitOfDvdOfNotDvd {a b : α} (hd : a ∣ b) (hnd : ¬b ∣ a) : DvdNotUnit a b := by
+theorem dvd_not_unit_of_dvd_of_not_dvd {a b : α} (hd : a ∣ b) (hnd : ¬b ∣ a) : DvdNotUnit a b := by
   constructor
   · rintro rfl
     exact hnd (dvd_zero _)
@@ -74,7 +74,7 @@ theorem dvdNotUnitOfDvdOfNotDvd {a b : α} (hd : a ∣ b) (hnd : ¬b ∣ a) : Dv
     rintro ⟨u, rfl⟩
     simpa using hnd
     
-#align dvd_not_unit_of_dvd_of_not_dvd dvdNotUnitOfDvdOfNotDvd
+#align dvd_not_unit_of_dvd_of_not_dvd dvd_not_unit_of_dvd_of_not_dvd
 
 end CommMonoidWithZero
 

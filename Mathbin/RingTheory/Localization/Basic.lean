@@ -115,7 +115,7 @@ section
 
 variable (M)
 
-theorem ofLe (N : Submonoid R) (h₁ : M ≤ N) (h₂ : ∀ r ∈ N, IsUnit (algebraMap R S r)) : IsLocalization N S :=
+theorem of_le (N : Submonoid R) (h₁ : M ≤ N) (h₂ : ∀ r ∈ N, IsUnit (algebraMap R S r)) : IsLocalization N S :=
   { map_units := fun r => h₂ r r.2,
     surj := fun s => by
       obtain ⟨⟨x, y, hy⟩, H⟩ := IsLocalization.surj M s
@@ -129,7 +129,7 @@ theorem ofLe (N : Submonoid R) (h₁ : M ≤ N) (h₂ : ∀ r ∈ N, IsUnit (alg
       · rintro ⟨c, h⟩
         simpa only [SetLike.coe_mk, map_mul, (h₂ c c.2).mul_left_inj] using congr_arg (algebraMap R S) h
          }
-#align is_localization.of_le IsLocalization.ofLe
+#align is_localization.of_le IsLocalization.of_le
 
 variable (S)
 
@@ -678,7 +678,7 @@ section
 
 variable (M)
 
-theorem isLocalizationOfAlgEquiv [Algebra R P] [IsLocalization M S] (h : S ≃ₐ[R] P) : IsLocalization M P := by
+theorem is_localization_of_alg_equiv [Algebra R P] [IsLocalization M S] (h : S ≃ₐ[R] P) : IsLocalization M P := by
   constructor
   · intro y
     convert (IsLocalization.map_units S y).map h.to_alg_hom.to_ring_hom.to_monoid_hom
@@ -694,7 +694,7 @@ theorem isLocalizationOfAlgEquiv [Algebra R P] [IsLocalization M S] (h : S ≃�
     rw [← h.symm.to_equiv.injective.eq_iff, ← IsLocalization.eq_iff_exists M S, ← h.symm.commutes, ← h.symm.commutes]
     rfl
     
-#align is_localization.is_localization_of_alg_equiv IsLocalization.isLocalizationOfAlgEquiv
+#align is_localization.is_localization_of_alg_equiv IsLocalization.is_localization_of_alg_equiv
 
 theorem is_localization_iff_of_alg_equiv [Algebra R P] (h : S ≃ₐ[R] P) : IsLocalization M S ↔ IsLocalization M P :=
   ⟨fun _ => is_localization_of_alg_equiv M h, fun _ => is_localization_of_alg_equiv M h.symm⟩
@@ -708,7 +708,7 @@ theorem is_localization_iff_of_ring_equiv (h : S ≃+* P) :
 
 variable (S)
 
-theorem isLocalizationOfBaseRingEquiv [IsLocalization M S] (h : R ≃+* P) :
+theorem is_localization_of_base_ring_equiv [IsLocalization M S] (h : R ≃+* P) :
     @IsLocalization _ (M.map h.toMonoidHom) S _ ((algebraMap R S).comp h.symm.toRingHom).toAlgebra := by
   constructor
   · rintro ⟨_, ⟨y, hy, rfl⟩⟩
@@ -729,7 +729,7 @@ theorem isLocalizationOfBaseRingEquiv [IsLocalization M S] (h : R ≃+* P) :
     simp only [RingEquiv.apply_symm_apply, RingEquiv.map_mul]
     exact ⟨fun ⟨c, e⟩ => ⟨⟨_, _, c.Prop, rfl⟩, e⟩, fun ⟨⟨_, c, h, e₁⟩, e₂⟩ => ⟨⟨_, h⟩, e₁.symm ▸ e₂⟩⟩
     
-#align is_localization.is_localization_of_base_ring_equiv IsLocalization.isLocalizationOfBaseRingEquiv
+#align is_localization.is_localization_of_base_ring_equiv IsLocalization.is_localization_of_base_ring_equiv
 
 theorem is_localization_iff_of_base_ring_equiv (h : R ≃+* P) :
     IsLocalization M S ↔
@@ -1152,8 +1152,8 @@ variable (A : Type _) [CommRing A] [IsDomain A]
 non-zero elements is an integral domain.
 See note [reducible non-instances]. -/
 @[reducible]
-theorem isDomainOfLeNonZeroDivisors [Algebra A S] {M : Submonoid A} [IsLocalization M S] (hM : M ≤ nonZeroDivisors A) :
-    IsDomain S :=
+theorem is_domain_of_le_non_zero_divisors [Algebra A S] {M : Submonoid A} [IsLocalization M S]
+    (hM : M ≤ nonZeroDivisors A) : IsDomain S :=
   { eq_zero_or_eq_zero_of_mul_eq_zero := by
       intro z w h
       cases' surj M z with x hx
@@ -1167,16 +1167,16 @@ theorem isDomainOfLeNonZeroDivisors [Algebra A S] {M : Submonoid A} [IsLocalizat
       · exact Or.inr (eq_zero_of_fst_eq_zero hy H)
         ,
     exists_pair_ne := ⟨(algebraMap A S) 0, (algebraMap A S) 1, fun h => zero_ne_one (IsLocalization.injective S hM h)⟩ }
-#align is_localization.is_domain_of_le_non_zero_divisors IsLocalization.isDomainOfLeNonZeroDivisors
+#align is_localization.is_domain_of_le_non_zero_divisors IsLocalization.is_domain_of_le_non_zero_divisors
 
 variable {A}
 
 /-- The localization at of an integral domain to a set of non-zero elements is an integral domain.
 See note [reducible non-instances]. -/
 @[reducible]
-theorem isDomainLocalization {M : Submonoid A} (hM : M ≤ nonZeroDivisors A) : IsDomain (Localization M) :=
-  isDomainOfLeNonZeroDivisors _ hM
-#align is_localization.is_domain_localization IsLocalization.isDomainLocalization
+theorem is_domain_localization {M : Submonoid A} (hM : M ≤ nonZeroDivisors A) : IsDomain (Localization M) :=
+  is_domain_of_le_non_zero_divisors _ hM
+#align is_localization.is_domain_localization IsLocalization.is_domain_localization
 
 end IsLocalization
 
@@ -1197,7 +1197,7 @@ theorem IsField.localization_map_bijective {R Rₘ : Type _} [CommRing R] [CommR
 /-- If `R` is a field, then localizing at a submonoid not containing `0` adds no new elements. -/
 theorem Field.localization_map_bijective {K Kₘ : Type _} [Field K] [CommRing Kₘ] {M : Submonoid K} (hM : (0 : K) ∉ M)
     [Algebra K Kₘ] [IsLocalization M Kₘ] : Function.Bijective (algebraMap K Kₘ) :=
-  (Field.toIsField K).localization_map_bijective hM
+  (Field.to_is_field K).localization_map_bijective hM
 #align field.localization_map_bijective Field.localization_map_bijective
 
 -- this looks weird due to the `letI` inside the above lemma, but trying to do it the other

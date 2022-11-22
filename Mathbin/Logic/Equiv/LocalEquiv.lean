@@ -276,12 +276,12 @@ def copy (e : LocalEquiv α β) (f : α → β) (hf : ⇑e = f) (g : β → α) 
   right_inv' x := ht ▸ hf ▸ hg ▸ e.right_inv
 #align local_equiv.copy LocalEquiv.copy
 
-theorem copy_eq_self (e : LocalEquiv α β) (f : α → β) (hf : ⇑e = f) (g : β → α) (hg : ⇑e.symm = g) (s : Set α)
+theorem copy_eq (e : LocalEquiv α β) (f : α → β) (hf : ⇑e = f) (g : β → α) (hg : ⇑e.symm = g) (s : Set α)
     (hs : e.source = s) (t : Set β) (ht : e.target = t) : e.copy f hf g hg s hs t ht = e := by
   substs f g s t
   cases e
   rfl
-#align local_equiv.copy_eq_self LocalEquiv.copy_eq_self
+#align local_equiv.copy_eq LocalEquiv.copy_eq
 
 /-- Associating to a local_equiv an equiv between the source and the target -/
 protected def toEquiv : Equiv e.source e.target where
@@ -736,7 +736,7 @@ def transEquiv (e' : β ≃ γ) : LocalEquiv α γ :=
 #align local_equiv.trans_equiv LocalEquiv.transEquiv
 
 theorem trans_equiv_eq_trans (e' : β ≃ γ) : e.transEquiv e' = e.trans e'.toLocalEquiv :=
-  copy_eq_self _ _ _ _ _ _ _ _ _
+  copy_eq _ _ _ _ _ _ _ _ _
 #align local_equiv.trans_equiv_eq_trans LocalEquiv.trans_equiv_eq_trans
 
 /-- Precompose a local equivalence with an equivalence.
@@ -747,7 +747,7 @@ def _root_.equiv.trans_local_equiv (e : α ≃ β) : LocalEquiv α γ :=
 #align local_equiv._root_.equiv.trans_local_equiv local_equiv._root_.equiv.trans_local_equiv
 
 theorem _root_.equiv.trans_local_equiv_eq_trans (e : α ≃ β) : e.transLocalEquiv e' = e.toLocalEquiv.trans e' :=
-  copy_eq_self _ _ _ _ _ _ _ _ _
+  copy_eq _ _ _ _ _ _ _ _ _
 #align local_equiv._root_.equiv.trans_local_equiv_eq_trans local_equiv._root_.equiv.trans_local_equiv_eq_trans
 
 /-- `eq_on_source e e'` means that `e` and `e'` have the same source, and coincide there. Then `e`
@@ -967,7 +967,7 @@ theorem disjoint_union_eq_piecewise (e e' : LocalEquiv α β) (hs : Disjoint e.s
     e.disjointUnion e' hs ht =
       e.piecewise e' e.source e.target e.is_image_source_target
         (e'.is_image_source_target_of_disjoint _ hs.symm ht.symm) :=
-  copy_eq_self _ _ _ _ _ _ _ _ _
+  copy_eq _ _ _ _ _ _ _ _ _
 #align local_equiv.disjoint_union_eq_piecewise LocalEquiv.disjoint_union_eq_piecewise
 
 section Pi

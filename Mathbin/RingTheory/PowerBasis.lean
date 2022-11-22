@@ -213,9 +213,9 @@ theorem minpoly_gen_monic (pb : PowerBasis A S) : Monic (minpolyGen pb) := by
   exact degree_sum_fin_lt _
 #align power_basis.minpoly_gen_monic PowerBasis.minpoly_gen_monic
 
-theorem isIntegralGen (pb : PowerBasis A S) : IsIntegral A pb.gen :=
+theorem is_integral_gen (pb : PowerBasis A S) : IsIntegral A pb.gen :=
   ⟨minpolyGen pb, minpoly_gen_monic pb, aeval_minpoly_gen pb⟩
-#align power_basis.is_integral_gen PowerBasis.isIntegralGen
+#align power_basis.is_integral_gen PowerBasis.is_integral_gen
 
 @[simp]
 theorem nat_degree_minpoly (pb : PowerBasis A S) : (minpoly A pb.gen).natDegree = pb.dim := by

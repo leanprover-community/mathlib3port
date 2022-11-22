@@ -401,9 +401,9 @@ protected theorem nontrivial [Nontrivial β] : Nontrivial α :=
 
 /-- Transfer `is_domain` across an `equiv` -/
 @[reducible]
-protected theorem isDomain [Ring α] [Ring β] [IsDomain β] (e : α ≃+* β) : IsDomain α :=
-  Function.Injective.isDomain e.toRingHom e.Injective
-#align equiv.is_domain Equiv.isDomain
+protected theorem is_domain [Ring α] [Ring β] [IsDomain β] (e : α ≃+* β) : IsDomain α :=
+  Function.Injective.is_domain e.toRingHom e.Injective
+#align equiv.is_domain Equiv.is_domain
 
 /-- Transfer `has_rat_cast` across an `equiv` -/
 @[reducible]
@@ -563,11 +563,11 @@ end Equiv
 namespace RingEquiv
 
 @[reducible]
-protected theorem localRing {A B : Type _} [CommSemiring A] [LocalRing A] [CommSemiring B] (e : A ≃+* B) :
+protected theorem local_ring {A B : Type _} [CommSemiring A] [LocalRing A] [CommSemiring B] (e : A ≃+* B) :
     LocalRing B :=
   haveI := e.symm.to_equiv.nontrivial
-  LocalRing.ofSurjective (e : A →+* B) e.surjective
-#align ring_equiv.local_ring RingEquiv.localRing
+  LocalRing.of_surjective (e : A →+* B) e.surjective
+#align ring_equiv.local_ring RingEquiv.local_ring
 
 end RingEquiv
 

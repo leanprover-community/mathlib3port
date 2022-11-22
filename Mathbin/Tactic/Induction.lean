@@ -48,14 +48,14 @@ initialize
 /-- `trace_eliminate_hyp msg` traces `msg` if the option `trace.eliminate_hyp` is
 `true`.
 -/
-unsafe def trace_eliminate_hyp {α} [has_to_format α] (msg : Thunk' α) : tactic Unit :=
+unsafe def trace_eliminate_hyp {α} [has_to_format α] (msg : Thunk α) : tactic Unit :=
   when_tracing `eliminate_hyp <| trace <| to_fmt "eliminate_hyp: " ++ to_fmt (msg ())
 #align tactic.eliminate.trace_eliminate_hyp tactic.eliminate.trace_eliminate_hyp
 
 /-- `trace_state_eliminate_hyp msg` traces `msg` followed by the tactic state if the
 option `trace.eliminate_hyp` is `true`.
 -/
-unsafe def trace_state_eliminate_hyp {α} [has_to_format α] (msg : Thunk' α) : tactic Unit := do
+unsafe def trace_state_eliminate_hyp {α} [has_to_format α] (msg : Thunk α) : tactic Unit := do
   let state ← read
   trace_eliminate_hyp <| format.join [to_fmt (msg ()), "\n-----\n", to_fmt State, "\n-----"]
 #align tactic.eliminate.trace_state_eliminate_hyp tactic.eliminate.trace_state_eliminate_hyp

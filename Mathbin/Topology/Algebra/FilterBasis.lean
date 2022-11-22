@@ -290,14 +290,14 @@ def topology : TopologicalSpace R :=
 
 /-- If a ring is endowed with a topological structure coming from
 a ring filter basis then it's a topological ring. -/
-instance (priority := 100) isTopologicalRing {R : Type u} [Ring R] (B : RingFilterBasis R) :
+instance (priority := 100) is_topological_ring {R : Type u} [Ring R] (B : RingFilterBasis R) :
     @TopologicalRing R B.topology _ := by
   let B' := B.to_add_group_filter_basis
   letI := B'.topology
   have basis := B'.nhds_zero_has_basis
   have basis' := basis.prod basis
   haveI := B'.is_topological_add_group
-  apply TopologicalRing.ofAddGroupOfNhdsZero
+  apply TopologicalRing.of_add_group_of_nhds_zero
   · rw [basis'.tendsto_iff basis]
     suffices ∀ U ∈ B', ∃ V W, (V ∈ B' ∧ W ∈ B') ∧ ∀ a b, a ∈ V → b ∈ W → a * b ∈ U by simpa
     intro U U_in
@@ -316,7 +316,7 @@ instance (priority := 100) isTopologicalRing {R : Type u} [Ring R] (B : RingFilt
     intro U
     simpa using B.mul_right x₀
     
-#align ring_filter_basis.is_topological_ring RingFilterBasis.isTopologicalRing
+#align ring_filter_basis.is_topological_ring RingFilterBasis.is_topological_ring
 
 end RingFilterBasis
 

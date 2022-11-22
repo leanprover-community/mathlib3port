@@ -56,7 +56,7 @@ variable (K A : Type _) [Field K] [NumberField K] [Field A] [Algebra ℚ A] [IsA
 The images of `x` by the embeddings of `K` in `A` are exactly the roots in `A` of
 the minimal polynomial of `x` over `ℚ`. -/
 theorem range_eval_eq_root_set_minpoly : (range fun φ : K →+* A => φ x) = (minpoly ℚ x).rootSet A := by
-  convert (NumberField.isAlgebraic K).range_eval_eq_root_set_minpoly A x using 1
+  convert (NumberField.is_algebraic K).range_eval_eq_root_set_minpoly A x using 1
   ext a
   exact ⟨fun ⟨φ, hφ⟩ => ⟨φ.toRatAlgHom, hφ⟩, fun ⟨φ, hφ⟩ => ⟨φ.toRingHom, hφ⟩⟩
 #align number_field.embeddings.range_eval_eq_root_set_minpoly NumberField.Embeddings.range_eval_eq_root_set_minpoly
@@ -73,7 +73,7 @@ variable {A : Type _} [NormedField A] [IsAlgClosed A] [NormedAlgebra ℚ A]
 
 theorem coeff_bdd_of_norm_le {B : ℝ} {x : K} (h : ∀ φ : K →+* A, ‖φ x‖ ≤ B) (i : ℕ) :
     ‖(minpoly ℚ x).coeff i‖ ≤ max B 1 ^ finrank ℚ K * (finrank ℚ K).choose (finrank ℚ K / 2) := by
-  have hx := IsSeparable.isIntegral ℚ x
+  have hx := IsSeparable.is_integral ℚ x
   rw [← norm_algebra_map' A, ← coeff_map (algebraMap ℚ A)]
   refine'
     coeff_bdd_of_roots_le _ (minpoly.monic hx) (IsAlgClosed.splitsCodomain _) (minpoly.nat_degree_le hx) (fun z hz => _)
@@ -96,7 +96,7 @@ theorem finite_of_norm_le (B : ℝ) : { x : K | IsIntegral ℤ x ∧ ∀ φ : K 
   have h_map_ℚ_minpoly := minpoly.gcd_domain_eq_field_fractions' ℚ hx.1
   refine' ⟨_, ⟨_, fun i => _⟩, (mem_root_set_iff (minpoly.ne_zero hx.1) x).2 (minpoly.aeval ℤ x)⟩
   · rw [← (minpoly.monic hx.1).nat_degree_map (algebraMap ℤ ℚ), ← h_map_ℚ_minpoly]
-    exact minpoly.nat_degree_le (isIntegralOfIsScalarTower hx.1)
+    exact minpoly.nat_degree_le (is_integral_of_is_scalar_tower hx.1)
     
   rw [mem_Icc, ← abs_le, ← @Int.cast_le ℝ]
   refine' (Eq.trans_le _ <| coeff_bdd_of_norm_le hx.2 i).trans (Nat.le_ceil _)
@@ -122,7 +122,7 @@ theorem pow_eq_one_of_norm_eq_one {x : K} (hxi : IsIntegral ℤ x) (hx : ∀ φ 
     refine' fun a b h hlt => ⟨a - b, tsub_pos_of_lt hlt, _⟩
     rw [← Nat.sub_add_cancel hlt.le, pow_add, mul_left_eq_self₀] at h
     refine' h.resolve_right fun hp => _
-    specialize hx (IsAlgClosed.lift (NumberField.isAlgebraic K)).toRingHom
+    specialize hx (IsAlgClosed.lift (NumberField.is_algebraic K)).toRingHom
     rw [pow_eq_zero hp, map_zero, norm_zero] at hx
     norm_num at hx
     

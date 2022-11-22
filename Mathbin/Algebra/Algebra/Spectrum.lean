@@ -475,7 +475,7 @@ variable (𝕜)
 over an algebraically closed field `𝕜` has non-empty spectrum. -/
 theorem nonempty_of_is_alg_closed_of_finite_dimensional [IsAlgClosed 𝕜] [Nontrivial A] [I : FiniteDimensional 𝕜 A]
     (a : A) : ∃ k : 𝕜, k ∈ σ a := by
-  obtain ⟨p, ⟨h_mon, h_eval_p⟩⟩ := isIntegralOfNoetherian (IsNoetherian.iff_fg.2 I) a
+  obtain ⟨p, ⟨h_mon, h_eval_p⟩⟩ := is_integral_of_noetherian (IsNoetherian.iff_fg.2 I) a
   have nu : ¬IsUnit (aeval a p) := by
     rw [← aeval_def] at h_eval_p
     rw [h_eval_p]

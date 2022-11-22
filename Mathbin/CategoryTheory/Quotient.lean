@@ -188,7 +188,7 @@ theorem lift_unique (Φ : Quotient r ⥤ D) (hΦ : functor r ⋙ Φ = F) : Φ = 
     dsimp [lift, Functor]
     apply Quot.induction_on f
     rintro ff
-    simp only [Quot.lift_on_mk, functor.comp_map]
+    simp only [Quot.liftOn_mk, functor.comp_map]
     congr <;> ext <;> rfl
     
 #align category_theory.quotient.lift_unique CategoryTheory.Quotient.lift_unique

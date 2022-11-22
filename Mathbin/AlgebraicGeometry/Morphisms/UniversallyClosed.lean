@@ -80,7 +80,7 @@ theorem morphism_restrict_base {X Y : SchemeCat} (f : X ⟶ Y) (U : Opens Y.carr
   funext fun x => Subtype.ext <| morphism_restrict_base_coe f U x
 #align algebraic_geometry.morphism_restrict_base AlgebraicGeometry.morphism_restrict_base
 
-theorem universallyClosedIsLocalAtTarget : PropertyIsLocalAtTarget @UniversallyClosed := by
+theorem universally_closed_is_local_at_target : PropertyIsLocalAtTarget @UniversallyClosed := by
   rw [universally_closed_eq]
   apply universally_is_local_at_target_of_morphism_restrict
   · exact
@@ -91,11 +91,11 @@ theorem universallyClosedIsLocalAtTarget : PropertyIsLocalAtTarget @UniversallyC
     simp_rw [topologically, morphism_restrict_base] at H
     exact (is_closed_map_iff_is_closed_map_of_supr_eq_top hU).mpr H
     
-#align algebraic_geometry.universally_closed_is_local_at_target AlgebraicGeometry.universallyClosedIsLocalAtTarget
+#align algebraic_geometry.universally_closed_is_local_at_target AlgebraicGeometry.universally_closed_is_local_at_target
 
 theorem UniversallyClosed.open_cover_iff {X Y : SchemeCat.{u}} (f : X ⟶ Y) (𝒰 : SchemeCat.OpenCover.{u} Y) :
     UniversallyClosed f ↔ ∀ i, UniversallyClosed (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
-  universallyClosedIsLocalAtTarget.open_cover_iff f 𝒰
+  universally_closed_is_local_at_target.open_cover_iff f 𝒰
 #align algebraic_geometry.universally_closed.open_cover_iff AlgebraicGeometry.UniversallyClosed.open_cover_iff
 
 end AlgebraicGeometry

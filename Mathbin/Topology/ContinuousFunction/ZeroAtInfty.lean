@@ -108,6 +108,15 @@ protected def copy (f : C₀(α, β)) (f' : α → β) (h : f' = f) : C₀(α, �
     exact f.zero_at_infty'
 #align zero_at_infty_continuous_map.copy ZeroAtInftyContinuousMap.copy
 
+@[simp]
+theorem coe_copy (f : C₀(α, β)) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align zero_at_infty_continuous_map.coe_copy ZeroAtInftyContinuousMap.coe_copy
+
+theorem copy_eq (f : C₀(α, β)) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align zero_at_infty_continuous_map.copy_eq ZeroAtInftyContinuousMap.copy_eq
+
 theorem eq_of_empty [IsEmpty α] (f g : C₀(α, β)) : f = g :=
   ext <| IsEmpty.elim ‹_›
 #align zero_at_infty_continuous_map.eq_of_empty ZeroAtInftyContinuousMap.eq_of_empty

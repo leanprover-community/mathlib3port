@@ -468,7 +468,7 @@ theorem adjoin_algebraic_to_subalgebra {S : Set E} (hS : ∀ x ∈ S, IsAlgebrai
   simp only [is_algebraic_iff_is_integral] at hS
   have : Algebra.IsIntegral F (Algebra.adjoin F S) := by
     rwa [← le_integral_closure_iff_is_integral, Algebra.adjoin_le_iff]
-  have := isFieldOfIsIntegralOfIsField' this (Field.toIsField F)
+  have := is_field_of_is_integral_of_is_field' this (Field.to_is_field F)
   rw [← ((Algebra.adjoin F S).toIntermediateField' this).eq_adjoin_of_eq_algebra_adjoin F S] <;> rfl
 #align intermediate_field.adjoin_algebraic_to_subalgebra IntermediateField.adjoin_algebraic_to_subalgebra
 
@@ -485,7 +485,7 @@ theorem is_splitting_field_iff {p : F[X]} {K : IntermediateField F E} :
   suffices _ → (Algebra.adjoin F (p.root_set K) = ⊤ ↔ K = adjoin F (p.root_set E)) by
     exact ⟨fun h => ⟨h.1, (this h.1).mp h.2⟩, fun h => ⟨h.1, (this h.1).mpr h.2⟩⟩
   simp_rw [SetLike.ext_iff, ← mem_to_subalgebra, ← SetLike.ext_iff]
-  rw [← K.range_val, adjoin_algebraic_to_subalgebra fun x => isAlgebraicOfMemRootSet]
+  rw [← K.range_val, adjoin_algebraic_to_subalgebra fun x => is_algebraic_of_mem_root_set]
   exact fun hp => (adjoin_root_set_eq_range hp K.val).symm.trans eq_comm
 #align intermediate_field.is_splitting_field_iff IntermediateField.is_splitting_field_iff
 
@@ -890,7 +890,7 @@ theorem fgOfFgToSubalgebra (S : IntermediateField F E) (h : S.toSubalgebra.Fg) :
 #align intermediate_field.fg_of_fg_to_subalgebra IntermediateField.fgOfFgToSubalgebra
 
 theorem fgOfNoetherian (S : IntermediateField F E) [IsNoetherian F E] : S.Fg :=
-  S.fgOfFgToSubalgebra S.toSubalgebra.fgOfNoetherian
+  S.fgOfFgToSubalgebra S.toSubalgebra.fg_of_noetherian
 #align intermediate_field.fg_of_noetherian IntermediateField.fgOfNoetherian
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
@@ -1045,7 +1045,7 @@ theorem Lifts.exists_upper_bound (c : Set (Lifts F E K)) (hc : IsChain (· ≤ �
 /-- Extend a lift `x : lifts F E K` to an element `s : E` whose conjugates are all in `K` -/
 noncomputable def Lifts.liftOfSplits (x : Lifts F E K) {s : E} (h1 : IsIntegral F s)
     (h2 : (minpoly F s).Splits (algebraMap F K)) : Lifts F E K :=
-  let h3 : IsIntegral x.1 s := isIntegralOfIsScalarTower h1
+  let h3 : IsIntegral x.1 s := is_integral_of_is_scalar_tower h1
   let key : (minpoly x.1 s).Splits x.2.toRingHom :=
     splitsOfSplitsOfDvd _ (map_ne_zero (minpoly.ne_zero h1))
       ((splits_map_iff _ _).mpr
@@ -1131,8 +1131,9 @@ theorem sup_to_subalgebra [h1 : FiniteDimensional K E1] [h2 : FiniteDimensional 
       exact (congr_arg (· ∈ S1 ⊔ S2) <| eq_inv_of_mul_eq_one_right <| subtype.ext_iff.mp h).mp y.2
       
   exact
-    isFieldOfIsIntegralOfIsField'
-      (is_integral_sup.mpr ⟨Algebra.isIntegralOfFinite K E1, Algebra.isIntegralOfFinite K E2⟩) (Field.toIsField K)
+    is_field_of_is_integral_of_is_field'
+      (is_integral_sup.mpr ⟨Algebra.is_integral_of_finite K E1, Algebra.is_integral_of_finite K E2⟩)
+      (Field.to_is_field K)
 #align intermediate_field.sup_to_subalgebra IntermediateField.sup_to_subalgebra
 
 instance finiteDimensionalSup [h1 : FiniteDimensional K E1] [h2 : FiniteDimensional K E2] :
@@ -1173,15 +1174,15 @@ instance finiteDimensionalSuprOfFinset {ι : Type _} {f : ι → IntermediateFie
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /-- A compositum of algebraic extensions is algebraic -/
-theorem isAlgebraicSupr {ι : Type _} {f : ι → IntermediateField K L} (h : ∀ i, Algebra.IsAlgebraic K (f i)) :
+theorem is_algebraic_supr {ι : Type _} {f : ι → IntermediateField K L} (h : ∀ i, Algebra.IsAlgebraic K (f i)) :
     Algebra.IsAlgebraic K (⨆ i, f i : IntermediateField K L) := by
   rintro ⟨x, hx⟩
   obtain ⟨s, hx⟩ := exists_finset_of_mem_supr' hx
   rw [is_algebraic_iff, Subtype.coe_mk, ← Subtype.coe_mk x hx, ← is_algebraic_iff]
   haveI : ∀ i : Σi, f i, FiniteDimensional K K⟮⟯ := fun ⟨i, x⟩ =>
     adjoin.finite_dimensional (is_integral_iff.1 (is_algebraic_iff_is_integral.1 (h i x)))
-  apply Algebra.isAlgebraicOfFinite
-#align intermediate_field.is_algebraic_supr IntermediateField.isAlgebraicSupr
+  apply Algebra.is_algebraic_of_finite
+#align intermediate_field.is_algebraic_supr IntermediateField.is_algebraic_supr
 
 end Supremum
 
@@ -1199,8 +1200,8 @@ open IntermediateField
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 /-- `pb.equiv_adjoin_simple` is the equivalence between `K⟮pb.gen⟯` and `L` itself. -/
 noncomputable def equivAdjoinSimple (pb : PowerBasis K L) : K⟮⟯ ≃ₐ[K] L :=
-  (adjoin.powerBasis pb.isIntegralGen).equivOfMinpoly pb
-    (minpoly.eq_of_algebra_map_eq (algebraMap K⟮⟯ L).Injective (adjoin.powerBasis pb.isIntegralGen).isIntegralGen
+  (adjoin.powerBasis pb.is_integral_gen).equivOfMinpoly pb
+    (minpoly.eq_of_algebra_map_eq (algebraMap K⟮⟯ L).Injective (adjoin.powerBasis pb.is_integral_gen).is_integral_gen
       (by rw [adjoin.power_basis_gen, adjoin_simple.algebra_map_gen]))
 #align power_basis.equiv_adjoin_simple PowerBasis.equivAdjoinSimple
 

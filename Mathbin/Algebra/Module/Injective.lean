@@ -61,7 +61,7 @@ theorem Module.injective_object_of_injective_module [Module.Injective.{u, v} R Q
       exact ⟨h, LinearMap.ext eq1⟩ }
 #align module.injective_object_of_injective_module Module.injective_object_of_injective_module
 
-theorem Module.injectiveModuleOfInjectiveObject [CategoryTheory.Injective.{max u v} (⟨Q⟩ : ModuleCat.{max u v} R)] :
+theorem Module.injective_module_of_injective_object [CategoryTheory.Injective.{max u v} (⟨Q⟩ : ModuleCat.{max u v} R)] :
     Module.Injective.{u, v} R Q :=
   { out := fun X Y ins1 ins2 ins3 ins4 f hf g => by
       skip
@@ -69,12 +69,12 @@ theorem Module.injectiveModuleOfInjectiveObject [CategoryTheory.Injective.{max u
           ((ModuleCat.mono_iff_injective _).mpr hf) with
         ⟨h, rfl⟩
       exact ⟨h, fun x => rfl⟩ }
-#align module.injective_module_of_injective_object Module.injectiveModuleOfInjectiveObject
+#align module.injective_module_of_injective_object Module.injective_module_of_injective_object
 
 theorem Module.injective_iff_injective_object :
     Module.Injective.{u, v} R Q ↔ CategoryTheory.Injective.{max u v} (⟨Q⟩ : ModuleCat.{max u v} R) :=
   ⟨fun h => @Module.injective_object_of_injective_module R _ Q _ _ h, fun h =>
-    @Module.injectiveModuleOfInjectiveObject R _ Q _ _ h⟩
+    @Module.injective_module_of_injective_object R _ Q _ _ h⟩
 #align module.injective_iff_injective_object Module.injective_iff_injective_object
 
 /-- An `R`-module `Q` satisfies Baer's criterion if any `R`-linear map from an `ideal R` extends to

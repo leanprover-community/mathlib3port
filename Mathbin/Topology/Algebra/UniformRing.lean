@@ -146,10 +146,10 @@ def extensionHom [CompleteSpace β] [SeparatedSpace β] : Completion α →+* β
         fun a b => by rw [← coe_mul, extension_coe hf, extension_coe hf, extension_coe hf, f.map_mul] }
 #align uniform_space.completion.extension_hom UniformSpace.Completion.extensionHom
 
-instance topRingCompl : TopologicalRing (Completion α) where
+instance top_ring_compl : TopologicalRing (Completion α) where
   continuous_add := continuous_add
   continuous_mul := continuous_mul
-#align uniform_space.completion.top_ring_compl UniformSpace.Completion.topRingCompl
+#align uniform_space.completion.top_ring_compl UniformSpace.Completion.top_ring_compl
 
 /-- The completion map as a ring morphism. -/
 def mapRingHom (hf : Continuous f) : Completion α →+* Completion β :=
@@ -229,11 +229,11 @@ instance commRing [CommRing α] [UniformSpace α] [UniformAddGroup α] [Topologi
     CommRing (Quotient (separationSetoid α)) := by rw [ring_sep_quot α] <;> infer_instance
 #align uniform_space.comm_ring UniformSpace.commRing
 
-instance topologicalRing [CommRing α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
+instance topological_ring [CommRing α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     TopologicalRing (Quotient (separationSetoid α)) := by
-  convert topologicalRingQuotient (⊥ : Ideal α).closure <;> try apply ring_sep_rel
+  convert topological_ring_quotient (⊥ : Ideal α).closure <;> try apply ring_sep_rel
   simp [UniformSpace.commRing]
-#align uniform_space.topological_ring UniformSpace.topologicalRing
+#align uniform_space.topological_ring UniformSpace.topological_ring
 
 end UniformSpace
 

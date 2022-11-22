@@ -227,12 +227,12 @@ theorem to_mul_shift_inj_of_is_primitive {ψ : AddChar R R'} (hψ : IsPrimitive 
 -- This could be used to show that the map above is a bijection.
 -- We leave this for a later occasion.
 /-- When `R` is a field `F`, then a nontrivial additive character is primitive -/
-theorem IsNontrivial.isPrimitive {F : Type u} [Field F] {ψ : AddChar F R'} (hψ : IsNontrivial ψ) : IsPrimitive ψ := by
+theorem IsNontrivial.is_primitive {F : Type u} [Field F] {ψ : AddChar F R'} (hψ : IsNontrivial ψ) : IsPrimitive ψ := by
   intro a ha
   cases' hψ with x h
   use a⁻¹ * x
   rwa [mul_shift_apply, mul_inv_cancel_left₀ ha]
-#align add_char.is_nontrivial.is_primitive AddChar.IsNontrivial.isPrimitive
+#align add_char.is_nontrivial.is_primitive AddChar.IsNontrivial.is_primitive
 
 -- can't prove that they always exist
 /-- Structure for a primitive additive character on a finite ring `R` into a cyclotomic extension
@@ -296,23 +296,23 @@ theorem IsPrimitive.zmod_char_eq_one_iff (n : ℕ+) {ψ : AddChar (Zmod n) C} (h
 
 /-- The converse: if the additive character takes the value `1` only at `0`,
 then it is primitive. -/
-theorem zmodCharPrimitiveOfEqOneOnlyAtZero (n : ℕ) (ψ : AddChar (Zmod n) C) (hψ : ∀ a, ψ a = 1 → a = 0) :
+theorem zmod_char_primitive_of_eq_one_only_at_zero (n : ℕ) (ψ : AddChar (Zmod n) C) (hψ : ∀ a, ψ a = 1 → a = 0) :
     IsPrimitive ψ := by
   refine' fun a ha => (is_nontrivial_iff_ne_trivial _).mpr fun hf => _
   have h : mul_shift ψ a 1 = (1 : AddChar (Zmod n) C) (1 : Zmod n) := congr_fun (congr_arg coeFn hf) 1
   rw [mul_shift_apply, mul_one, MonoidHom.one_apply] at h
   exact ha (hψ a h)
-#align add_char.zmod_char_primitive_of_eq_one_only_at_zero AddChar.zmodCharPrimitiveOfEqOneOnlyAtZero
+#align add_char.zmod_char_primitive_of_eq_one_only_at_zero AddChar.zmod_char_primitive_of_eq_one_only_at_zero
 
 /-- The additive character on `zmod n` associated to a primitive `n`th root of unity
 is primitive -/
-theorem zmodCharPrimitiveOfPrimitiveRoot (n : ℕ+) {ζ : C} (h : IsPrimitiveRoot ζ n) :
+theorem zmod_char_primitive_of_primitive_root (n : ℕ+) {ζ : C} (h : IsPrimitiveRoot ζ n) :
     IsPrimitive (zmodChar n ((IsPrimitiveRoot.iff_def ζ n).mp h).left) := by
   apply zmod_char_primitive_of_eq_one_only_at_zero
   intro a ha
   rw [zmod_char_apply, ← pow_zero ζ] at ha
   exact (Zmod.val_eq_zero a).mp (IsPrimitiveRoot.pow_inj h (Zmod.val_lt a) n.pos ha)
-#align add_char.zmod_char_primitive_of_primitive_root AddChar.zmodCharPrimitiveOfPrimitiveRoot
+#align add_char.zmod_char_primitive_of_primitive_root AddChar.zmod_char_primitive_of_primitive_root
 
 /-- There is a primitive additive character on `zmod n` if the characteristic of the target
 does not divide `n` -/

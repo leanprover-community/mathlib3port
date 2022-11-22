@@ -169,14 +169,14 @@ theorem Ideal.IsHomogeneous.radical_eq {I : Ideal A} (hI : I.IsHomogeneous 𝒜)
   · refine' Inf_le_Inf_of_forall_exists_le _
     rintro J ⟨HJ₁, HJ₂⟩
     refine' ⟨(J.homogeneous_core 𝒜).toIdeal, _, J.to_ideal_homogeneous_core_le _⟩
-    refine' ⟨HomogeneousIdeal.isHomogeneous _, _, HJ₂.homogeneous_core⟩
+    refine' ⟨HomogeneousIdeal.is_homogeneous _, _, HJ₂.homogeneous_core⟩
     refine' hI.to_ideal_homogeneous_core_eq_self.symm.trans_le (Ideal.homogeneous_core_mono _ HJ₁)
     
 #align ideal.is_homogeneous.radical_eq Ideal.IsHomogeneous.radical_eq
 
 theorem Ideal.IsHomogeneous.radical {I : Ideal A} (h : I.IsHomogeneous 𝒜) : I.radical.IsHomogeneous 𝒜 := by
   rw [h.radical_eq]
-  exact Ideal.IsHomogeneous.inf fun _ => And.left
+  exact Ideal.IsHomogeneous.Inf fun _ => And.left
 #align ideal.is_homogeneous.radical Ideal.IsHomogeneous.radical
 
 /-- The radical of a homogenous ideal, as another homogenous ideal. -/

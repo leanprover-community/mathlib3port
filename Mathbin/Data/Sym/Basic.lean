@@ -564,7 +564,7 @@ namespace symOptionSuccEquiv
 it contains a `none`. -/
 def encode [DecidableEq α] (s : Sym (Option α) n.succ) : Sum (Sym (Option α) n) (Sym α n.succ) :=
   if h : none ∈ s then Sum.inl (s.erase none h)
-  else Sum.inr (s.attach.map fun o => Option.get <| Option.ne_none_iff_is_some.1 <| ne_of_mem_of_not_mem o.2 h)
+  else Sum.inr (s.attach.map fun o => Option.get <| Option.ne_none_iff_isSome.1 <| ne_of_mem_of_not_mem o.2 h)
 #align sym_option_succ_equiv.encode SymOptionSuccEquiv.encode
 
 @[simp]
@@ -576,7 +576,7 @@ theorem encode_of_none_mem [DecidableEq α] (s : Sym (Option α) n.succ) (h : no
 @[simp]
 theorem encode_of_not_none_mem [DecidableEq α] (s : Sym (Option α) n.succ) (h : ¬none ∈ s) :
     encode s =
-      Sum.inr (s.attach.map fun o => Option.get <| Option.ne_none_iff_is_some.1 <| ne_of_mem_of_not_mem o.2 h) :=
+      Sum.inr (s.attach.map fun o => Option.get <| Option.ne_none_iff_isSome.1 <| ne_of_mem_of_not_mem o.2 h) :=
   dif_neg h
 #align sym_option_succ_equiv.encode_of_not_none_mem SymOptionSuccEquiv.encode_of_not_none_mem
 

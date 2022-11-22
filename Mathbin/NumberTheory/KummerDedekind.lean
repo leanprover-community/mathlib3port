@@ -233,7 +233,7 @@ noncomputable def normalizedFactorsMapEquivNormalizedFactorsMinPolyMk (hI : IsMa
             (show map I (minpoly R pb.gen) ≠ 0 from Polynomial.map_monic_ne_zero (minpoly.monic pb.is_integral_gen))
               (span_singleton_eq_bot.mp h))).trans
     (normalizedFactorsEquivSpanNormalizedFactors
-        (show map I (minpoly R pb.gen) ≠ 0 from Polynomial.map_monic_ne_zero (minpoly.monic pb.isIntegralGen))).symm
+        (show map I (minpoly R pb.gen) ≠ 0 from Polynomial.map_monic_ne_zero (minpoly.monic pb.is_integral_gen))).symm
 #align
   kummer_dedekind.normalized_factors_map_equiv_normalized_factors_min_poly_mk KummerDedekind.normalizedFactorsMapEquivNormalizedFactorsMinPolyMk
 

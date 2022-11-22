@@ -151,13 +151,13 @@ theorem polynomial_functions_coe (X : Set R) :
 -- if `f : R → R` is an affine equivalence, then pulling back along `f`
 -- induces a normed algebra isomorphism between `polynomial_functions X` and
 -- `polynomial_functions (f ⁻¹' X)`, intertwining the pullback along `f` of `C(R, R)` to itself.
-theorem polynomialFunctionsSeparatesPoints (X : Set R) : (polynomialFunctions X).SeparatesPoints := fun x y h => by
+theorem polynomial_functions_separates_points (X : Set R) : (polynomialFunctions X).SeparatesPoints := fun x y h => by
   -- We use `polynomial.X`, then clean up.
   refine' ⟨_, ⟨⟨_, ⟨⟨Polynomial.x, ⟨Algebra.mem_top, rfl⟩⟩, rfl⟩⟩, _⟩⟩
   dsimp
   simp only [Polynomial.eval_X]
   exact fun h' => h (Subtype.ext h')
-#align polynomial_functions_separates_points polynomialFunctionsSeparatesPoints
+#align polynomial_functions_separates_points polynomial_functions_separates_points
 
 open unitInterval
 

@@ -48,9 +48,10 @@ We define (semi)modularity typeclasses as Prop-valued mixins.
 ## TODO
 
 - Relate atoms and coatoms in modular lattices
-- Prove that a modular lattice is both upper and lower modular.
 -/
 
+
+open Set
 
 variable {α : Type _}
 
@@ -264,6 +265,7 @@ theorem well_founded_gt_exact_sequence {β γ : Type _} [Preorder β] [PartialOr
 #align well_founded_gt_exact_sequence well_founded_gt_exact_sequence
 
 /-- The diamond isomorphism between the intervals `[a ⊓ b, a]` and `[b, a ⊔ b]` -/
+@[simps]
 def infIccOrderIsoIccSup (a b : α) : Set.icc (a ⊓ b) a ≃o Set.icc b (a ⊔ b) where
   toFun x := ⟨x ⊔ b, ⟨le_sup_right, sup_le_sup_right x.Prop.2 b⟩⟩
   invFun x := ⟨a ⊓ x, ⟨inf_le_inf_left a x.Prop.1, inf_le_left⟩⟩
@@ -285,6 +287,53 @@ def infIccOrderIsoIccSup (a b : α) : Set.icc (a ⊓ b) a ≃o Set.icc b (a ⊔ 
       inf_sup_assoc_of_le _ y.prop.2, @sup_comm _ _ b]
     exact inf_le_inf_left _ h
 #align inf_Icc_order_iso_Icc_sup infIccOrderIsoIccSup
+
+theorem inf_strict_mono_on_Icc_sup {a b : α} : StrictMonoOn (fun c => a ⊓ c) (icc b (a ⊔ b)) :=
+  StrictMono.of_restrict (infIccOrderIsoIccSup a b).symm.StrictMono
+#align inf_strict_mono_on_Icc_sup inf_strict_mono_on_Icc_sup
+
+theorem sup_strict_mono_on_Icc_inf {a b : α} : StrictMonoOn (fun c => c ⊔ b) (icc (a ⊓ b) a) :=
+  StrictMono.of_restrict (infIccOrderIsoIccSup a b).StrictMono
+#align sup_strict_mono_on_Icc_inf sup_strict_mono_on_Icc_inf
+
+/-- The diamond isomorphism between the intervals `]a ⊓ b, a[` and `}b, a ⊔ b[`. -/
+@[simps]
+def infIooOrderIsoIooSup (a b : α) : ioo (a ⊓ b) a ≃o ioo b (a ⊔ b) where
+  toFun c :=
+    ⟨c ⊔ b,
+      le_sup_right.trans_lt <| sup_strict_mono_on_Icc_inf (left_mem_Icc.2 inf_le_left) (Ioo_subset_Icc_self c.2) c.2.1,
+      sup_strict_mono_on_Icc_inf (Ioo_subset_Icc_self c.2) (right_mem_Icc.2 inf_le_left) c.2.2⟩
+  invFun c :=
+    ⟨a ⊓ c, inf_strict_mono_on_Icc_sup (left_mem_Icc.2 le_sup_right) (Ioo_subset_Icc_self c.2) c.2.1,
+      inf_le_left.trans_lt' <|
+        inf_strict_mono_on_Icc_sup (Ioo_subset_Icc_self c.2) (right_mem_Icc.2 le_sup_right) c.2.2⟩
+  left_inv c :=
+    Subtype.ext <| by
+      dsimp
+      rw [sup_comm, ← inf_sup_assoc_of_le _ c.prop.2.le, sup_eq_right.2 c.prop.1.le]
+  right_inv c :=
+    Subtype.ext <| by
+      dsimp
+      rw [inf_comm, inf_sup_assoc_of_le _ c.prop.1.le, inf_eq_left.2 c.prop.2.le]
+  map_rel_iff' c d :=
+    @OrderIso.le_iff_le _ _ _ _ (infIccOrderIsoIccSup _ _) ⟨c.1, Ioo_subset_Icc_self c.2⟩ ⟨d.1, Ioo_subset_Icc_self d.2⟩
+#align inf_Ioo_order_iso_Ioo_sup infIooOrderIsoIooSup
+
+-- See note [lower instance priority]
+instance (priority := 100) IsModularLattice.toIsLowerModularLattice : IsLowerModularLattice α :=
+  ⟨fun a b => by
+    simp_rw [covby_iff_Ioo_eq, @sup_comm _ _ a, @inf_comm _ _ a, ← is_empty_coe_sort, right_lt_sup, inf_lt_left,
+      (infIooOrderIsoIooSup _ _).symm.toEquiv.is_empty_congr]
+    exact id⟩
+#align is_modular_lattice.to_is_lower_modular_lattice IsModularLattice.toIsLowerModularLattice
+
+-- See note [lower instance priority]
+instance (priority := 100) IsModularLattice.toIsUpperModularLattice : IsUpperModularLattice α :=
+  ⟨fun a b => by
+    simp_rw [covby_iff_Ioo_eq, ← is_empty_coe_sort, right_lt_sup, inf_lt_left,
+      (infIooOrderIsoIooSup _ _).toEquiv.is_empty_congr]
+    exact id⟩
+#align is_modular_lattice.to_is_upper_modular_lattice IsModularLattice.toIsUpperModularLattice
 
 end IsModularLattice
 

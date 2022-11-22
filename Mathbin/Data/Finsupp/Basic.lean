@@ -124,7 +124,7 @@ theorem graph_eq_empty {f : α →₀ M} : f.graph = ∅ ↔ f = 0 :=
 @[simps]
 def toAlist (f : α →₀ M) : Alist fun x : α => M :=
   ⟨f.graph.toList.map Prod.toSigma, by
-    rw [List.Nodupkeys, List.keys, List.map_map, Prod.fst_comp_to_sigma, List.nodup_map_iff_inj_on]
+    rw [List.Nodupkeys, List.keys, List.map_map, Prod.fst_comp_toSigma, List.nodup_map_iff_inj_on]
     · rintro ⟨b, m⟩ hb ⟨c, n⟩ hc (rfl : b = c)
       rw [mem_to_list, Finsupp.mem_graph_iff] at hb hc
       dsimp at hb hc

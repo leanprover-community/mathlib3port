@@ -641,7 +641,7 @@ theorem rat_cast_im (q : ℚ) : im (q : K) = 0 := by rw [← of_real_rat_cast, o
 -- see Note [lower instance priority]
 /-- ℝ and ℂ are both of characteristic zero.  -/
 instance (priority := 100) char_zero_R_or_C : CharZero K :=
-  char_zero_of_inj_zero fun n h => by rwa [← of_real_nat_cast, of_real_eq_zero, Nat.cast_eq_zero] at h
+  charZero_of_inj_zero fun n h => by rwa [← of_real_nat_cast, of_real_eq_zero, Nat.cast_eq_zero] at h
 #align is_R_or_C.char_zero_R_or_C IsROrC.char_zero_R_or_C
 
 theorem re_eq_add_conj (z : K) : ↑(re z) = (z + conj z) / 2 := by

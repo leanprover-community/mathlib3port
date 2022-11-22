@@ -211,7 +211,7 @@ variable (ι)
 
 /-- The order on `ι →₀ ℕ` is well-founded. -/
 theorem lt_wf : WellFounded (@LT.lt (ι →₀ ℕ) _) :=
-  Subrelation.wf sum_id_lt_of_lt <| InvImage.wf _ Nat.lt_wfRel.wf
+  Subrelation.wf sum_id_lt_of_lt <| InvImage.wf _ Nat.lt_wfRel
 #align finsupp.lt_wf Finsupp.lt_wf
 
 end Finsupp

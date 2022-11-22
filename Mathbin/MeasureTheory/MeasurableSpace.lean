@@ -248,7 +248,7 @@ theorem measurableOfEmpty [IsEmpty α] (f : α → β) : Measurable f :=
 #align measurable_of_empty measurableOfEmpty
 
 theorem measurableOfEmptyCodomain [IsEmpty β] (f : α → β) : Measurable f :=
-  haveI := function.isEmpty f
+  haveI := Function.isEmpty f
   measurableOfEmpty f
 #align measurable_of_empty_codomain measurableOfEmptyCodomain
 

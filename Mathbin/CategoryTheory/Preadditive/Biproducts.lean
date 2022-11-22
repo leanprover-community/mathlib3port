@@ -181,13 +181,13 @@ theorem HasBiproduct.of_has_coproduct {J : Type} [Finite J] (f : J → C) [HasCo
 
 /-- A preadditive category with finite products has finite biproducts. -/
 theorem HasFiniteBiproducts.of_has_finite_products [HasFiniteProducts C] : HasFiniteBiproducts C :=
-  ⟨fun J _ => { HasBiproduct := fun F => has_biproduct.of_has_product _ }⟩
+  ⟨fun n => { HasBiproduct := fun F => HasBiproduct.of_has_product _ }⟩
 #align
   category_theory.limits.has_finite_biproducts.of_has_finite_products CategoryTheory.Limits.HasFiniteBiproducts.of_has_finite_products
 
 /-- A preadditive category with finite coproducts has finite biproducts. -/
 theorem HasFiniteBiproducts.of_has_finite_coproducts [HasFiniteCoproducts C] : HasFiniteBiproducts C :=
-  ⟨fun J _ => { HasBiproduct := fun F => has_biproduct.of_has_coproduct _ }⟩
+  ⟨fun n => { HasBiproduct := fun F => HasBiproduct.of_has_coproduct _ }⟩
 #align
   category_theory.limits.has_finite_biproducts.of_has_finite_coproducts CategoryTheory.Limits.HasFiniteBiproducts.of_has_finite_coproducts
 

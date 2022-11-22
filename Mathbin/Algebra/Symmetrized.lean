@@ -132,7 +132,7 @@ instance [Unique α] : Unique αˢʸᵐ :=
   Unique.mk' _
 
 instance [IsEmpty α] : IsEmpty αˢʸᵐ :=
-  function.isEmpty unsym
+  Function.isEmpty unsym
 
 @[to_additive]
 instance [One α] : One αˢʸᵐ where one := sym 1

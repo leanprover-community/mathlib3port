@@ -222,6 +222,15 @@ protected def copy (f : M →ₛₗ[σ] M₃) (f' : M → M₃) (h : f' = ⇑f) 
   map_smul' := h.symm ▸ f.map_smul'
 #align linear_map.copy LinearMap.copy
 
+@[simp]
+theorem coe_copy (f : M →ₛₗ[σ] M₃) (f' : M → M₃) (h : f' = ⇑f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align linear_map.coe_copy LinearMap.coe_copy
+
+theorem copy_eq (f : M →ₛₗ[σ] M₃) (f' : M → M₃) (h : f' = ⇑f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align linear_map.copy_eq LinearMap.copy_eq
+
 /-- See Note [custom simps projection]. -/
 protected def Simps.apply {R S : Type _} [Semiring R] [Semiring S] (σ : R →+* S) (M M₃ : Type _) [AddCommMonoid M]
     [AddCommMonoid M₃] [Module R M] [Module S M₃] (f : M →ₛₗ[σ] M₃) : M → M₃ :=

@@ -470,7 +470,7 @@ theorem mem_list_to_finmap (a : α) (xs : List (Sigma β)) : a ∈ xs.toFinmap �
   rw [← and_true_iff (a = x_fst)]
   apply and_congr_right
   rintro ⟨⟩
-  simp only [exists_eq, iff_self_iff, heq_iff_eq]
+  simp only [exists_eq, heq_iff_eq]
 #align finmap.mem_list_to_finmap Finmap.mem_list_to_finmap
 
 @[simp]

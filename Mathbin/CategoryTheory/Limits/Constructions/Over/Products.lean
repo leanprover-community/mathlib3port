@@ -155,7 +155,7 @@ theorem over_products_of_wide_pullbacks [HasWidePullbacks.{w} C] {B : C} : HasPr
 
 /-- Given all finite wide pullbacks in `C`, construct finite products in `C/B`. -/
 theorem over_finite_products_of_finite_wide_pullbacks [HasFiniteWidePullbacks C] {B : C} : HasFiniteProducts (Over B) :=
-  ⟨fun J 𝒥 => over_product_of_wide_pullback⟩
+  ⟨fun n => over_product_of_wide_pullback⟩
 #align
   category_theory.over.construct_products.over_finite_products_of_finite_wide_pullbacks CategoryTheory.Over.ConstructProducts.over_finite_products_of_finite_wide_pullbacks
 

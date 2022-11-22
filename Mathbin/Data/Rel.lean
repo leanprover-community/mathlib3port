@@ -153,7 +153,7 @@ theorem image_id (s : Set α) : image (@Eq α) s = s := by
 
 theorem image_comp (s : Rel β γ) (t : Set α) : image (r ∘ s) t = image s (image r t) := by
   ext z
-  simp only [mem_image, comp]
+  simp only [mem_image]
   constructor
   · rintro ⟨x, xt, y, rxy, syz⟩
     exact ⟨y, ⟨x, xt, rxy⟩, syz⟩

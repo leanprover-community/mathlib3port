@@ -43,7 +43,7 @@ abbrev IsFractionRing [CommRing K] [Algebra R K] :=
 #align is_fraction_ring IsFractionRing
 
 /-- The cast from `int` to `rat` as a `fraction_ring`. -/
-instance Rat.isFractionRing : IsFractionRing ℤ ℚ where
+instance Rat.is_fraction_ring : IsFractionRing ℤ ℚ where
   map_units := by
     rintro ⟨x, hx⟩
     rw [mem_non_zero_divisors_iff_ne_zero] at hx
@@ -62,7 +62,7 @@ instance Rat.isFractionRing : IsFractionRing ℤ ℚ where
     rintro ⟨⟨c, hc⟩, h⟩
     apply Int.eq_of_mul_eq_mul_right _ h
     rwa [mem_non_zero_divisors_iff_ne_zero] at hc
-#align rat.is_fraction_ring Rat.isFractionRing
+#align rat.is_fraction_ring Rat.is_fraction_ring
 
 namespace IsFractionRing
 
@@ -105,9 +105,9 @@ variable (A)
 
 /-- A `comm_ring` `K` which is the localization of an integral domain `R` at `R - {0}` is an
 integral domain. -/
-protected theorem isDomain : IsDomain K :=
-  isDomainOfLeNonZeroDivisors _ (le_refl (nonZeroDivisors A))
-#align is_fraction_ring.is_domain IsFractionRing.isDomain
+protected theorem is_domain : IsDomain K :=
+  is_domain_of_le_non_zero_divisors _ (le_refl (nonZeroDivisors A))
+#align is_fraction_ring.is_domain IsFractionRing.is_domain
 
 attribute [local instance] Classical.decEq
 
@@ -138,7 +138,7 @@ protected theorem mul_inv_cancel (x : K) (hx : x ≠ 0) : x * IsFractionRing.inv
 See note [reducible non-instances]. -/
 @[reducible]
 noncomputable def toField : Field K :=
-  { IsFractionRing.isDomain A, show CommRing K by infer_instance with inv := IsFractionRing.inv A,
+  { IsFractionRing.is_domain A, show CommRing K by infer_instance with inv := IsFractionRing.inv A,
     mul_inv_cancel := IsFractionRing.mul_inv_cancel A, inv_zero := dif_pos rfl }
 #align is_fraction_ring.to_field IsFractionRing.toField
 

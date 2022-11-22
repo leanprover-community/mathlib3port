@@ -221,19 +221,19 @@ section Contra
 variable [ContravariantClass α α (· + ·) (· ≤ ·)]
 
 theorem le_add_tsub_swap : a ≤ b + a - b :=
-  Contravariant.add_le_cancellable.le_add_tsub_swap
+  Contravariant.AddLeCancellable.le_add_tsub_swap
 #align le_add_tsub_swap le_add_tsub_swap
 
 theorem le_add_tsub' : a ≤ a + b - b :=
-  Contravariant.add_le_cancellable.le_add_tsub
+  Contravariant.AddLeCancellable.le_add_tsub
 #align le_add_tsub' le_add_tsub'
 
 theorem le_tsub_of_add_le_left (h : a + b ≤ c) : b ≤ c - a :=
-  Contravariant.add_le_cancellable.le_tsub_of_add_le_left h
+  Contravariant.AddLeCancellable.le_tsub_of_add_le_left h
 #align le_tsub_of_add_le_left le_tsub_of_add_le_left
 
 theorem le_tsub_of_add_le_right (h : a + b ≤ c) : a ≤ c - b :=
-  Contravariant.add_le_cancellable.le_tsub_of_add_le_right h
+  Contravariant.AddLeCancellable.le_tsub_of_add_le_right h
 #align le_tsub_of_add_le_right le_tsub_of_add_le_right
 
 end Contra
@@ -337,43 +337,43 @@ section Contra
 variable [ContravariantClass α α (· + ·) (· ≤ ·)]
 
 theorem tsub_eq_of_eq_add (h : a = c + b) : a - b = c :=
-  Contravariant.add_le_cancellable.tsub_eq_of_eq_add h
+  Contravariant.AddLeCancellable.tsub_eq_of_eq_add h
 #align tsub_eq_of_eq_add tsub_eq_of_eq_add
 
 theorem eq_tsub_of_add_eq (h : a + c = b) : a = b - c :=
-  Contravariant.add_le_cancellable.eq_tsub_of_add_eq h
+  Contravariant.AddLeCancellable.eq_tsub_of_add_eq h
 #align eq_tsub_of_add_eq eq_tsub_of_add_eq
 
 theorem tsub_eq_of_eq_add_rev (h : a = b + c) : a - b = c :=
-  Contravariant.add_le_cancellable.tsub_eq_of_eq_add_rev h
+  Contravariant.AddLeCancellable.tsub_eq_of_eq_add_rev h
 #align tsub_eq_of_eq_add_rev tsub_eq_of_eq_add_rev
 
 @[simp]
 theorem add_tsub_cancel_right (a b : α) : a + b - b = a :=
-  Contravariant.add_le_cancellable.add_tsub_cancel_right
+  Contravariant.AddLeCancellable.add_tsub_cancel_right
 #align add_tsub_cancel_right add_tsub_cancel_right
 
 @[simp]
 theorem add_tsub_cancel_left (a b : α) : a + b - a = b :=
-  Contravariant.add_le_cancellable.add_tsub_cancel_left
+  Contravariant.AddLeCancellable.add_tsub_cancel_left
 #align add_tsub_cancel_left add_tsub_cancel_left
 
 theorem lt_add_of_tsub_lt_left (h : a - b < c) : a < b + c :=
-  Contravariant.add_le_cancellable.lt_add_of_tsub_lt_left h
+  Contravariant.AddLeCancellable.lt_add_of_tsub_lt_left h
 #align lt_add_of_tsub_lt_left lt_add_of_tsub_lt_left
 
 theorem lt_add_of_tsub_lt_right (h : a - c < b) : a < b + c :=
-  Contravariant.add_le_cancellable.lt_add_of_tsub_lt_right h
+  Contravariant.AddLeCancellable.lt_add_of_tsub_lt_right h
 #align lt_add_of_tsub_lt_right lt_add_of_tsub_lt_right
 
 /-- This lemma (and some of its corollaries) also holds for `ennreal`, but this proof doesn't work
 for it. Maybe we should add this lemma as field to `has_ordered_sub`? -/
 theorem lt_tsub_of_add_lt_left : a + c < b → c < b - a :=
-  Contravariant.add_le_cancellable.lt_tsub_of_add_lt_left
+  Contravariant.AddLeCancellable.lt_tsub_of_add_lt_left
 #align lt_tsub_of_add_lt_left lt_tsub_of_add_lt_left
 
 theorem lt_tsub_of_add_lt_right : a + c < b → a < b - c :=
-  Contravariant.add_le_cancellable.lt_tsub_of_add_lt_right
+  Contravariant.AddLeCancellable.lt_tsub_of_add_lt_right
 #align lt_tsub_of_add_lt_right lt_tsub_of_add_lt_right
 
 end Contra

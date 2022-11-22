@@ -45,7 +45,7 @@ namespace Parser
 
 section DefnLemmas
 
-variable {α β : Type} (msgs : Thunk' (List String)) (msg : Thunk' String)
+variable {α β : Type} (msgs : Thunk (List String)) (msg : Thunk String)
 
 variable (p q : Parser α) (cb : CharBuffer) (n n' : ℕ) {err : Dlist String}
 
@@ -1108,7 +1108,7 @@ end Done
 
 namespace Static
 
-variable {α β : Type} {p q : Parser α} {msgs : Thunk' (List String)} {msg : Thunk' String} {cb : CharBuffer} {n' n : ℕ}
+variable {α β : Type} {p q : Parser α} {msgs : Thunk (List String)} {msg : Thunk String} {cb : CharBuffer} {n' n : ℕ}
   {err : Dlist String} {a : α} {b : β} {sep : Parser Unit}
 
 theorem not_of_ne (h : p cb n = done n' a) (hne : n ≠ n') : ¬Static p := by
@@ -1402,7 +1402,7 @@ end Static
 
 namespace Bounded
 
-variable {α β : Type} {msgs : Thunk' (List String)} {msg : Thunk' String}
+variable {α β : Type} {msgs : Thunk (List String)} {msg : Thunk String}
 
 variable {p q : Parser α} {cb : CharBuffer} {n n' : ℕ} {err : Dlist String}
 
@@ -1678,7 +1678,7 @@ end Bounded
 
 namespace Unfailing
 
-variable {α β : Type} {p q : Parser α} {msgs : Thunk' (List String)} {msg : Thunk' String} {cb : CharBuffer} {n' n : ℕ}
+variable {α β : Type} {p q : Parser α} {msgs : Thunk (List String)} {msg : Thunk String} {cb : CharBuffer} {n' n : ℕ}
   {err : Dlist String} {a : α} {b : β} {sep : Parser Unit}
 
 theorem of_bounded [p.Bounded] : ¬Unfailing p := by
@@ -1833,7 +1833,7 @@ end Unfailing
 
 namespace ErrStatic
 
-variable {α β : Type} {p q : Parser α} {msgs : Thunk' (List String)} {msg : Thunk' String} {cb : CharBuffer} {n' n : ℕ}
+variable {α β : Type} {p q : Parser α} {msgs : Thunk (List String)} {msg : Thunk String} {cb : CharBuffer} {n' n : ℕ}
   {err : Dlist String} {a : α} {b : β} {sep : Parser Unit}
 
 theorem not_of_ne (h : p cb n = fail n' err) (hne : n ≠ n') : ¬ErrStatic p := by
@@ -2069,7 +2069,7 @@ end ErrStatic
 
 namespace Step
 
-variable {α β : Type} {p q : Parser α} {msgs : Thunk' (List String)} {msg : Thunk' String} {cb : CharBuffer} {n' n : ℕ}
+variable {α β : Type} {p q : Parser α} {msgs : Thunk (List String)} {msg : Thunk String} {cb : CharBuffer} {n' n : ℕ}
   {err : Dlist String} {a : α} {b : β} {sep : Parser Unit}
 
 theorem not_step_of_static_done [Static p] (h : ∃ cb n n' a, p cb n = done n' a) : ¬Step p := by
@@ -2276,7 +2276,7 @@ end Step
 
 section Step
 
-variable {α β : Type} {p q : Parser α} {msgs : Thunk' (List String)} {msg : Thunk' String} {cb : CharBuffer} {n' n : ℕ}
+variable {α β : Type} {p q : Parser α} {msgs : Thunk (List String)} {msg : Thunk String} {cb : CharBuffer} {n' n : ℕ}
   {err : Dlist String} {a : α} {b : β} {sep : Parser Unit}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -2341,7 +2341,7 @@ end Step
 
 namespace Prog
 
-variable {α β : Type} {p q : Parser α} {msgs : Thunk' (List String)} {msg : Thunk' String} {cb : CharBuffer} {n' n : ℕ}
+variable {α β : Type} {p q : Parser α} {msgs : Thunk (List String)} {msg : Thunk String} {cb : CharBuffer} {n' n : ℕ}
   {err : Dlist String} {a : α} {b : β} {sep : Parser Unit}
 
 -- see Note [lower instance priority]
@@ -2533,7 +2533,7 @@ theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Prog → (F
 
 end Prog
 
-variable {α β : Type} {msgs : Thunk' (List String)} {msg : Thunk' String}
+variable {α β : Type} {msgs : Thunk (List String)} {msg : Thunk String}
 
 variable {p q : Parser α} {cb : CharBuffer} {n n' : ℕ} {err : Dlist String}
 

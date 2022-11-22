@@ -116,11 +116,11 @@ theorem exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)] (z : DirectLimit G f
 #align module.direct_limit.exists_of Module.DirectLimit.exists_of
 
 @[elab_as_elim]
-protected theorem inductionOn [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop} (z : DirectLimit G f)
+protected theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop} (z : DirectLimit G f)
     (ih : ∀ i x, C (of R ι G f i x)) : C z :=
   let ⟨i, x, h⟩ := exists_of z
   h ▸ ih i x
-#align module.direct_limit.induction_on Module.DirectLimit.inductionOn
+#align module.direct_limit.induction_on Module.DirectLimit.induction_on
 
 variable {P : Type u₁} [AddCommGroup P] [Module R P] (g : ∀ i, G i →ₗ[R] P)
 
@@ -150,7 +150,7 @@ theorem lift_of {i} (x) : lift R ι G f g Hg (of R ι G f i x) = g i x :=
 theorem lift_unique [Nonempty ι] [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →ₗ[R] P) (x) :
     F x =
       lift R ι G f (fun i => F.comp <| of R ι G f i) (fun i j hij x => by rw [LinearMap.comp_apply, of_f] <;> rfl) x :=
-  (DirectLimit.inductionOn x) fun i x => by rw [lift_of] <;> rfl
+  (DirectLimit.induction_on x) fun i x => by rw [lift_of] <;> rfl
 #align module.direct_limit.lift_unique Module.DirectLimit.lift_unique
 
 section Totalize
@@ -295,7 +295,7 @@ theorem of_f {i j} (hij) (x) : of G f j (f i j hij x) = of G f i x :=
 @[elab_as_elim]
 protected theorem induction_on [Nonempty ι] [IsDirected ι (· ≤ ·)] {C : DirectLimit G f → Prop} (z : DirectLimit G f)
     (ih : ∀ i x, C (of G f i x)) : C z :=
-  Module.DirectLimit.inductionOn z ih
+  Module.DirectLimit.induction_on z ih
 #align add_comm_group.direct_limit.induction_on AddCommGroup.DirectLimit.induction_on
 
 /-- A component that corresponds to zero in the direct limit is already zero in some

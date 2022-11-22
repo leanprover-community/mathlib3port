@@ -400,7 +400,7 @@ theorem of_zero_pow (a : A 0) : ∀ n : ℕ, of _ 0 (a ^ n) = of _ 0 a ^ n
   | n + 1 => by rw [pow_succ, pow_succ, of_zero_mul, of_zero_pow]
 #align direct_sum.of_zero_pow DirectSum.of_zero_pow
 
-instance : HasNatCast (A 0) :=
+instance : NatCast (A 0) :=
   ⟨Gsemiring.natCast⟩
 
 @[simp]
@@ -463,7 +463,7 @@ section Ring
 
 variable [∀ i, AddCommGroup (A i)] [AddMonoid ι] [Gring A]
 
-instance : HasIntCast (A 0) :=
+instance : IntCast (A 0) :=
   ⟨Gring.intCast⟩
 
 @[simp]

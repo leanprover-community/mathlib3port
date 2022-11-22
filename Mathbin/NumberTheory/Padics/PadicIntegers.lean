@@ -279,7 +279,7 @@ instance is_absolute_value : IsAbsoluteValue fun z : ℤ_[p] => ‖z‖ where
 variable {p}
 
 instance : IsDomain ℤ_[p] :=
-  Function.Injective.isDomain (subring p).Subtype Subtype.coe_injective
+  Function.Injective.is_domain (subring p).Subtype Subtype.coe_injective
 
 end PadicInt
 
@@ -627,7 +627,7 @@ section Dvr
 
 
 instance : LocalRing ℤ_[p] :=
-  LocalRing.ofNonunitsAdd <| by simp only [mem_nonunits] <;> exact fun x y => norm_lt_one_add
+  LocalRing.of_nonunits_add <| by simp only [mem_nonunits] <;> exact fun x y => norm_lt_one_add
 
 theorem p_nonnunit : (p : ℤ_[p]) ∈ nonunits ℤ_[p] := by
   have : (p : ℝ)⁻¹ < 1 := inv_lt_one <| by exact_mod_cast hp.1.one_lt
@@ -645,20 +645,20 @@ theorem maximal_ideal_eq_span_p : maximalIdeal ℤ_[p] = Ideal.span {p} := by
     
 #align padic_int.maximal_ideal_eq_span_p PadicInt.maximal_ideal_eq_span_p
 
-theorem primeP : Prime (p : ℤ_[p]) := by
+theorem prime_p : Prime (p : ℤ_[p]) := by
   rw [← Ideal.span_singleton_prime, ← maximal_ideal_eq_span_p]
   · infer_instance
     
   · exact_mod_cast hp.1.NeZero
     
-#align padic_int.prime_p PadicInt.primeP
+#align padic_int.prime_p PadicInt.prime_p
 
 theorem irreducible_p : Irreducible (p : ℤ_[p]) :=
-  Prime.irreducible primeP
+  Prime.irreducible prime_p
 #align padic_int.irreducible_p PadicInt.irreducible_p
 
 instance : DiscreteValuationRing ℤ_[p] :=
-  DiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization
+  DiscreteValuationRing.of_has_unit_mul_pow_irreducible_factorization
     ⟨p, irreducible_p, fun x hx => ⟨x.Valuation.natAbs, unitCoeff hx, by rw [mul_comm, ← unit_coeff_spec hx]⟩⟩
 
 theorem ideal_eq_span_pow_p {s : Ideal ℤ_[p]} (hs : s ≠ ⊥) : ∃ n : ℕ, s = Ideal.span {p ^ n} :=
@@ -709,7 +709,7 @@ theorem algebra_map_apply (x : ℤ_[p]) : algebraMap ℤ_[p] ℚ_[p] x = x :=
   rfl
 #align padic_int.algebra_map_apply PadicInt.algebra_map_apply
 
-instance isFractionRing : IsFractionRing ℤ_[p] ℚ_[p] where
+instance is_fraction_ring : IsFractionRing ℤ_[p] ℚ_[p] where
   map_units := fun ⟨x, hx⟩ => by
     rw [SetLike.coe_mk, algebra_map_apply, is_unit_iff_ne_zero, Ne.def, PadicInt.coe_eq_zero]
     exact mem_non_zero_divisors_iff_ne_zero.mp hx
@@ -742,7 +742,7 @@ instance isFractionRing : IsFractionRing ℤ_[p] ℚ_[p] where
     refine' ⟨fun h => ⟨1, by rw [h]⟩, _⟩
     rintro ⟨⟨c, hc⟩, h⟩
     exact (mul_eq_mul_right_iff.mp h).resolve_right (mem_non_zero_divisors_iff_ne_zero.mp hc)
-#align padic_int.is_fraction_ring PadicInt.isFractionRing
+#align padic_int.is_fraction_ring PadicInt.is_fraction_ring
 
 end FractionRing
 

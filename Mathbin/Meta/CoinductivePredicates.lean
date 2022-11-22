@@ -507,7 +507,7 @@ unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
     let mvars ← apply_core rule { approx := false, NewGoals := NewGoals.all }
     let g
       ←-- analyse relation
-          List.head' <$>
+          List.head <$>
           get_goals
     let List.cons _ m_is ← return <| mvars.dropWhile fun v => v.2 ≠ g
     let tgt ← target

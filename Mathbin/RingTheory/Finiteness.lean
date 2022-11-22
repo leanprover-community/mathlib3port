@@ -657,10 +657,10 @@ theorem id : Finite (RingHom.id A) :=
 
 variable {A}
 
-theorem ofSurjective (f : A →+* B) (hf : Surjective f) : f.Finite :=
+theorem of_surjective (f : A →+* B) (hf : Surjective f) : f.Finite :=
   letI := f.to_algebra
   Module.Finite.of_surjective (Algebra.ofId A B).toLinearMap hf
-#align ring_hom.finite.of_surjective RingHom.Finite.ofSurjective
+#align ring_hom.finite.of_surjective RingHom.Finite.of_surjective
 
 theorem comp {g : B →+* C} {f : A →+* B} (hg : g.Finite) (hf : f.Finite) : (g.comp f).Finite :=
   @Module.Finite.trans A B C _ _ f.toAlgebra _ (g.comp f).toAlgebra g.toAlgebra
@@ -672,14 +672,14 @@ theorem comp {g : B →+* C} {f : A →+* B} (hg : g.Finite) (hf : f.Finite) : (
     hf hg
 #align ring_hom.finite.comp RingHom.Finite.comp
 
-theorem ofCompFinite {f : A →+* B} {g : B →+* C} (h : (g.comp f).Finite) : g.Finite := by
+theorem of_comp_finite {f : A →+* B} {g : B →+* C} (h : (g.comp f).Finite) : g.Finite := by
   letI := f.to_algebra
   letI := g.to_algebra
   letI := (g.comp f).toAlgebra
   letI : IsScalarTower A B C := RestrictScalars.is_scalar_tower A B C
   letI : Module.Finite A C := h
   exact Module.Finite.of_restrict_scalars_finite A B C
-#align ring_hom.finite.of_comp_finite RingHom.Finite.ofCompFinite
+#align ring_hom.finite.of_comp_finite RingHom.Finite.of_comp_finite
 
 end Finite
 
@@ -713,13 +713,13 @@ theorem comp {g : B →ₐ[R] C} {f : A →ₐ[R] B} (hg : g.Finite) (hf : f.Fin
   RingHom.Finite.comp hg hf
 #align alg_hom.finite.comp AlgHom.Finite.comp
 
-theorem ofSurjective (f : A →ₐ[R] B) (hf : Surjective f) : f.Finite :=
-  RingHom.Finite.ofSurjective f hf
-#align alg_hom.finite.of_surjective AlgHom.Finite.ofSurjective
+theorem of_surjective (f : A →ₐ[R] B) (hf : Surjective f) : f.Finite :=
+  RingHom.Finite.of_surjective f hf
+#align alg_hom.finite.of_surjective AlgHom.Finite.of_surjective
 
-theorem ofCompFinite {f : A →ₐ[R] B} {g : B →ₐ[R] C} (h : (g.comp f).Finite) : g.Finite :=
-  RingHom.Finite.ofCompFinite h
-#align alg_hom.finite.of_comp_finite AlgHom.Finite.ofCompFinite
+theorem of_comp_finite {f : A →ₐ[R] B} {g : B →ₐ[R] C} (h : (g.comp f).Finite) : g.Finite :=
+  RingHom.Finite.of_comp_finite h
+#align alg_hom.finite.of_comp_finite AlgHom.Finite.of_comp_finite
 
 end Finite
 

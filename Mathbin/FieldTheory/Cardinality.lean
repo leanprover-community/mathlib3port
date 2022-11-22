@@ -36,7 +36,7 @@ open Cardinal nonZeroDivisors
 universe u
 
 /-- A finite field has prime power cardinality. -/
-theorem Fintype.isPrimePowCardOfField {α} [Fintype α] [Field α] : IsPrimePow ‖α‖ := by
+theorem Fintype.is_prime_pow_card_of_field {α} [Fintype α] [Field α] : IsPrimePow ‖α‖ := by
   cases' CharP.exists α with p _
   haveI hp := Fact.mk (CharP.char_is_prime α p)
   let b := IsNoetherian.finsetBasis (Zmod p) α
@@ -45,11 +45,11 @@ theorem Fintype.isPrimePowCardOfField {α} [Fintype α] [Field α] : IsPrimePow 
     
   rw [← FiniteDimensional.finrank_eq_card_basis b]
   exact finite_dimensional.finrank_pos.ne'
-#align fintype.is_prime_pow_card_of_field Fintype.isPrimePowCardOfField
+#align fintype.is_prime_pow_card_of_field Fintype.is_prime_pow_card_of_field
 
 /-- A `fintype` can be given a field structure iff its cardinality is a prime power. -/
 theorem Fintype.nonempty_field_iff {α} [Fintype α] : Nonempty (Field α) ↔ IsPrimePow ‖α‖ := by
-  refine' ⟨fun ⟨h⟩ => Fintype.isPrimePowCardOfField, _⟩
+  refine' ⟨fun ⟨h⟩ => Fintype.is_prime_pow_card_of_field, _⟩
   rintro ⟨p, n, hp, hn, hα⟩
   haveI := Fact.mk hp.nat_prime
   exact ⟨(Fintype.equivOfCardEq ((GaloisField.card p n hn.ne').trans hα)).symm.Field⟩

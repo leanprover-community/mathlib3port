@@ -122,7 +122,7 @@ theorem chain_of_chain_pmap {S : β → β → Prop} {p : α → Prop} (f : ∀ 
 lean 3 declaration is
   forall {α : Type.{u}} {R : α -> α -> Prop} {l : List.{u} α} {a : α}, (List.Pairwise.{u} α R (List.cons.{u} α a l)) -> (List.Chain.{u} α R a l)
 but is expected to have type
-  forall {α._@.Mathlib.Data.List.Chain._hyg.259 : Type.{u_1}} {R : α._@.Mathlib.Data.List.Chain._hyg.259 -> α._@.Mathlib.Data.List.Chain._hyg.259 -> Prop} {a : α._@.Mathlib.Data.List.Chain._hyg.259} {l : List.{u_1} α._@.Mathlib.Data.List.Chain._hyg.259}, (List.Pairwise.{u_1} α._@.Mathlib.Data.List.Chain._hyg.259 R (List.cons.{u_1} α._@.Mathlib.Data.List.Chain._hyg.259 a l)) -> (List.Chain.{u_1} α._@.Mathlib.Data.List.Chain._hyg.259 R a l)
+  forall {α._@.Mathlib.Data.List.Chain._hyg.263 : Type.{u_1}} {R : α._@.Mathlib.Data.List.Chain._hyg.263 -> α._@.Mathlib.Data.List.Chain._hyg.263 -> Prop} {a : α._@.Mathlib.Data.List.Chain._hyg.263} {l : List.{u_1} α._@.Mathlib.Data.List.Chain._hyg.263}, (List.Pairwise.{u_1} α._@.Mathlib.Data.List.Chain._hyg.263 R (List.cons.{u_1} α._@.Mathlib.Data.List.Chain._hyg.263 a l)) -> (List.Chain.{u_1} α._@.Mathlib.Data.List.Chain._hyg.263 R a l)
 Case conversion may be inaccurate. Consider using '#align list.pairwise.chain List.Pairwise.chainₓ'. -/
 protected theorem Pairwise.chain (p : Pairwise R (a :: l)) : Chain R a l := by
   cases' pairwise_cons.1 p with r p'
@@ -138,7 +138,7 @@ protected theorem Pairwise.chain (p : Pairwise R (a :: l)) : Chain R a l := by
 lean 3 declaration is
   forall {α : Type.{u}} {R : α -> α -> Prop} [_inst_1 : IsTrans.{u} α R] {a : α} {l : List.{u} α}, (List.Chain.{u} α R a l) -> (List.Pairwise.{u} α R (List.cons.{u} α a l))
 but is expected to have type
-  forall {α : Type.{u_1}} {R : α -> α -> Prop} [inst._@.Mathlib.Data.List.Chain._hyg.299 : Trans.{0 0 0 succ u_1 succ u_1 succ u_1} α α α R R R] {a : α} {l : List.{u_1} α}, (List.Chain.{u_1} α R a l) -> (List.Pairwise.{u_1} α R (List.cons.{u_1} α a l))
+  forall {α : Type.{u_1}} {R : α -> α -> Prop} [inst._@.Mathlib.Data.List.Chain._hyg.303 : Trans.{0 0 0 succ u_1 succ u_1 succ u_1} α α α R R R] {a : α} {l : List.{u_1} α}, (List.Chain.{u_1} α R a l) -> (List.Pairwise.{u_1} α R (List.cons.{u_1} α a l))
 Case conversion may be inaccurate. Consider using '#align list.chain.pairwise List.Chain.pairwiseₓ'. -/
 protected theorem Chain.pairwise [IsTrans α R] : ∀ {a : α} {l : List α}, Chain R a l → Pairwise R (a :: l)
   | a, [], chain.nil => pairwise_singleton _ _
@@ -153,7 +153,7 @@ protected theorem Chain.pairwise [IsTrans α R] : ∀ {a : α} {l : List α}, Ch
 lean 3 declaration is
   forall {α : Type.{u}} {R : α -> α -> Prop} [_inst_1 : IsTrans.{u} α R] {a : α} {l : List.{u} α}, Iff (List.Chain.{u} α R a l) (List.Pairwise.{u} α R (List.cons.{u} α a l))
 but is expected to have type
-  forall {α : Type.{u_1}} {R : α -> α -> Prop} [inst._@.Mathlib.Data.List.Chain._hyg.490 : Trans.{0 0 0 succ u_1 succ u_1 succ u_1} α α α R R R] {a : α} {l : List.{u_1} α}, Iff (List.Chain.{u_1} α R a l) (List.Pairwise.{u_1} α R (List.cons.{u_1} α a l))
+  forall {α : Type.{u_1}} {R : α -> α -> Prop} [inst._@.Mathlib.Data.List.Chain._hyg.496 : Trans.{0 0 0 succ u_1 succ u_1 succ u_1} α α α R R R] {a : α} {l : List.{u_1} α}, Iff (List.Chain.{u_1} α R a l) (List.Pairwise.{u_1} α R (List.cons.{u_1} α a l))
 Case conversion may be inaccurate. Consider using '#align list.chain_iff_pairwise List.chain_iff_pairwiseₓ'. -/
 theorem chain_iff_pairwise [IsTrans α R] {a : α} {l : List α} : Chain R a l ↔ Pairwise R (a :: l) :=
   ⟨Chain.pairwise, Pairwise.chain⟩

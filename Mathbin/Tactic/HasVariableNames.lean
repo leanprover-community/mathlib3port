@@ -107,7 +107,7 @@ instance PropCat.hasVariableNames : HasVariableNames Prop :=
   ⟨[`P, `Q, `R]⟩
 #align Prop.has_variable_names PropCat.hasVariableNames
 
-instance {α} [HasVariableNames α] : HasVariableNames (Thunk' α) :=
+instance {α} [HasVariableNames α] : HasVariableNames (Thunk α) :=
   makeInheritingInstance α
 
 instance {α β} : HasVariableNames (Prod α β) :=

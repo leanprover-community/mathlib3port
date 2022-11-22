@@ -129,6 +129,15 @@ protected def copy (f : SpectralMap α β) (f' : α → β) (h : f' = f) : Spect
   ⟨f', h.symm.subst f.spectral'⟩
 #align spectral_map.copy SpectralMap.copy
 
+@[simp]
+theorem coe_copy (f : SpectralMap α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align spectral_map.coe_copy SpectralMap.coe_copy
+
+theorem copy_eq (f : SpectralMap α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align spectral_map.copy_eq SpectralMap.copy_eq
+
 variable (α)
 
 /-- `id` as a `spectral_map`. -/

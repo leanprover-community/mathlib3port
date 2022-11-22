@@ -105,7 +105,7 @@ variable {C : Type u₁} {D : Type u₂} [Category.{v₁} C] [Category.{v₁} D]
 variable (i : D ⥤ C)
 
 theorem reflective_products [HasFiniteProducts C] [Reflective i] : HasFiniteProducts D :=
-  ⟨fun J 𝒥 => has_limits_of_shape_of_reflective i⟩
+  ⟨fun n => has_limits_of_shape_of_reflective i⟩
 #align category_theory.reflective_products CategoryTheory.reflective_products
 
 attribute [local instance] reflective_products

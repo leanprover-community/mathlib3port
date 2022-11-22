@@ -145,7 +145,7 @@ theorem rdrop_while_eq_nil_iff : rdropWhile p l = [] ↔ ∀ x ∈ l, p x := by 
 
 -- it is in this file because it requires `list.infix`
 @[simp]
-theorem drop_while_eq_self_iff : dropWhile' p l = l ↔ ∀ hl : 0 < l.length, ¬p (l.nthLe 0 hl) := by
+theorem drop_while_eq_self_iff : dropWhile p l = l ↔ ∀ hl : 0 < l.length, ¬p (l.nthLe 0 hl) := by
   induction' l with hd tl IH
   · simp
     
@@ -178,7 +178,7 @@ theorem rdrop_while_eq_self_iff : rdropWhile p l = l ↔ ∀ hl : l ≠ [], ¬p 
 
 variable (p) (l)
 
-theorem drop_while_idempotent : dropWhile' p (dropWhile' p l) = dropWhile' p l :=
+theorem drop_while_idempotent : dropWhile p (dropWhile p l) = dropWhile p l :=
   drop_while_eq_self_iff.mpr (drop_while_nth_le_zero_not _ _)
 #align list.drop_while_idempotent List.drop_while_idempotent
 

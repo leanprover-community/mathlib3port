@@ -128,7 +128,7 @@ theorem coe_algebra_map [CommSemiring R] :
 
 /-- The localization map from power series to Laurent series. -/
 @[simps]
-instance ofPowerSeriesLocalization [CommRing R] :
+instance of_power_series_localization [CommRing R] :
     IsLocalization (Submonoid.powers (PowerSeries.x : PowerSeries R)) (LaurentSeries R) where
   map_units := by
     rintro ⟨_, n, rfl⟩
@@ -171,10 +171,10 @@ instance ofPowerSeriesLocalization [CommRing R] :
         Finsupp.single_add, MvPowerSeries.coeff_add_mul_monomial, mul_one] at h
       exact h
       
-#align laurent_series.of_power_series_localization LaurentSeries.ofPowerSeriesLocalization
+#align laurent_series.of_power_series_localization LaurentSeries.of_power_series_localization
 
 instance {K : Type u} [Field K] : IsFractionRing (PowerSeries K) (LaurentSeries K) :=
-  IsLocalization.ofLe (Submonoid.powers (PowerSeries.x : PowerSeries K)) _
+  IsLocalization.of_le (Submonoid.powers (PowerSeries.x : PowerSeries K)) _
     (powers_le_non_zero_divisors_of_no_zero_divisors PowerSeries.X_ne_zero) fun f hf =>
     is_unit_of_mem_non_zero_divisors <| map_mem_non_zero_divisors _ HahnSeries.of_power_series_injective hf
 

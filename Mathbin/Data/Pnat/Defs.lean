@@ -98,10 +98,12 @@ theorem natPred_succPNat (n : ℕ) : n.succPnat.natPred = n :=
 #align nat.nat_pred_succ_pnat Nat.natPred_succPNat
 -/
 
+#print PNat.succPNat_natPred /-
 @[simp]
-theorem _root_.PNat.succPNat_natPred (n : ℕ+) : n.natPred.succPnat = n :=
+theorem PNat.succPNat_natPred (n : ℕ+) : n.natPred.succPnat = n :=
   Subtype.eq <| succ_pred_eq_of_pos n.2
-#align nat._root_.pnat.succ_pnat_nat_pred nat._root_.PNat.succPNat_natPred
+#align nat._root_.pnat.succ_pnat_nat_pred PNat.succPNat_natPred
+-/
 
 #print Nat.toPNat' /-
 /-- Convert a natural number to a pnat. `n+1` is mapped to itself,
@@ -198,9 +200,11 @@ theorem ne_zero (n : ℕ+) : (n : ℕ) ≠ 0 :=
 #align pnat.ne_zero PNat.ne_zero
 -/
 
-instance _root_.NeZero.pnat {a : ℕ+} : NeZero (a : ℕ) :=
+#print NeZero.pnat /-
+instance NeZero.pnat {a : ℕ+} : NeZero (a : ℕ) :=
   ⟨a.NeZero⟩
-#align pnat._root_.ne_zero.pnat pnat._root_.NeZero.pnat
+#align pnat._root_.ne_zero.pnat NeZero.pnat
+-/
 
 #print PNat.toPNat'_coe /-
 theorem toPNat'_coe {n : ℕ} : 0 < n → (n.toPnat' : ℕ) = n :=

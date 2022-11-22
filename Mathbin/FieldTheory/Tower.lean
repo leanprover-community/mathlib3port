@@ -3,6 +3,7 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
+import Mathbin.Data.Nat.Prime
 import Mathbin.RingTheory.AlgebraTower
 import Mathbin.LinearAlgebra.Matrix.FiniteDimensional
 import Mathbin.LinearAlgebra.Matrix.ToLin
@@ -40,7 +41,7 @@ open Cardinal
 
 variable (F : Type u) (K : Type v) (A : Type w)
 
-variable [Field F] [Field K] [AddCommGroup A]
+variable [Field F] [DivisionRing K] [AddCommGroup A]
 
 variable [Algebra F K] [Module K A] [Module F A] [IsScalarTower F K A]
 
@@ -78,8 +79,8 @@ theorem trans [FiniteDimensional F K] [FiniteDimensional K A] : FiniteDimensiona
 
 Note this cannot be an instance as Lean cannot infer `L`.
 -/
-theorem left (L : Type _) [Ring L] [Nontrivial L] [Algebra F L] [Algebra K L] [IsScalarTower F K L]
-    [FiniteDimensional F L] : FiniteDimensional F K :=
+theorem left (K L : Type _) [Field K] [Algebra F K] [Ring L] [Nontrivial L] [Algebra F L] [Algebra K L]
+    [IsScalarTower F K L] [FiniteDimensional F L] : FiniteDimensional F K :=
   FiniteDimensional.ofInjective (IsScalarTower.toAlgHom F K L).toLinearMap (RingHom.injective _)
 #align finite_dimensional.left FiniteDimensional.left
 
@@ -105,6 +106,21 @@ theorem finrank_mul_finrank [FiniteDimensional F K] : finrank F K * finrank K A 
     
 #align finite_dimensional.finrank_mul_finrank FiniteDimensional.finrank_mul_finrank
 
+theorem Subalgebra.is_simple_order_of_finrank_prime (A) [Ring A] [IsDomain A] [Algebra F A] (hp : (finrank F A).Prime) :
+    IsSimpleOrder (Subalgebra F A) :=
+  { to_nontrivial := ⟨⟨⊥, ⊤, fun he => Nat.not_prime_one ((Subalgebra.bot_eq_top_iff_finrank_eq_one.1 he).subst hp)⟩⟩,
+    eq_bot_or_eq_top := fun K => by
+      haveI := finite_dimensional_of_finrank hp.pos
+      letI := divisionRingOfFiniteDimensional F K
+      refine' (hp.eq_one_or_self_of_dvd _ ⟨_, (finrank_mul_finrank F K A).symm⟩).imp _ fun h => _
+      · exact Subalgebra.eq_bot_of_finrank_one
+        
+      · exact Algebra.to_submodule_eq_top.1 (eq_top_of_finrank_eq <| K.finrank_to_submodule.trans h)
+         }
+#align
+  finite_dimensional.subalgebra.is_simple_order_of_finrank_prime FiniteDimensional.Subalgebra.is_simple_order_of_finrank_prime
+
+-- TODO: `intermediate_field` version
 instance linearMap (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroup V] [Module F V] [AddCommGroup W]
     [Module F W] [FiniteDimensional F V] [FiniteDimensional F W] : FiniteDimensional F (V →ₗ[F] W) :=
   let b := Basis.ofVectorSpace F V

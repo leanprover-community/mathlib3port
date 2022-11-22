@@ -947,9 +947,9 @@ theorem Basis.mem_submodule_iff' {P : Submodule R M} (b : Basis ι R P) {x : M} 
     Finsupp.equivFunOnFintype.exists_congr_left.trans <| exists_congr fun c => by simp [Finsupp.sum_fintype]
 #align basis.mem_submodule_iff' Basis.mem_submodule_iff'
 
-theorem coord_equiv_fun_symm (i : ι) (f : ι → R) : b.Coord i (b.equivFun.symm f) = f i :=
+theorem Basis.coord_equiv_fun_symm (i : ι) (f : ι → R) : b.Coord i (b.equivFun.symm f) = f i :=
   b.coord_repr_symm i (Finsupp.equivFunOnFintype.symm f)
-#align coord_equiv_fun_symm coord_equiv_fun_symm
+#align basis.coord_equiv_fun_symm Basis.coord_equiv_fun_symm
 
 end Fintype
 
@@ -1474,13 +1474,7 @@ instance :
 
 end AtomsOfSubmoduleLattice
 
-end DivisionRing
-
-section Field
-
-variable [Field K] [AddCommGroup V] [AddCommGroup V'] [Module K V] [Module K V']
-
-variable {v : ι → V} {s t : Set V} {x y z : V}
+variable {K V}
 
 theorem LinearMap.exists_left_inverse_of_injective (f : V →ₗ[K] V') (hf_inj : f.ker = ⊥) :
     ∃ g : V' →ₗ[K] V, g.comp f = LinearMap.id := by
@@ -1495,7 +1489,7 @@ theorem LinearMap.exists_left_inverse_of_injective (f : V →ₗ[K] V') (hf_inj 
   have BC := this.subset_extend (subset_univ _)
   let hC := Basis.extend this
   haveI : Inhabited V := ⟨0⟩
-  refine' ⟨hC.constr K (C.restrict (inv_fun f)), hB.ext fun b => _⟩
+  refine' ⟨hC.constr ℕ (C.restrict (inv_fun f)), hB.ext fun b => _⟩
   rw [image_subset_iff] at BC
   have fb_eq : f b = hC ⟨f b, BC b.2⟩ := by
     change f b = Basis.extend this _
@@ -1519,7 +1513,7 @@ theorem LinearMap.exists_right_inverse_of_surjective (f : V →ₗ[K] V') (hf_su
   let C := Basis.ofVectorSpaceIndex K V'
   let hC := Basis.ofVectorSpace K V'
   haveI : Inhabited V := ⟨0⟩
-  use hC.constr K (C.restrict (inv_fun f))
+  use hC.constr ℕ (C.restrict (inv_fun f))
   refine' hC.ext fun c => _
   rw [LinearMap.comp_apply, hC.constr_basis]
   simp [right_inverse_inv_fun (LinearMap.range_eq_top.1 hf_surj) c]
@@ -1559,5 +1553,5 @@ theorem quotient_prod_linear_equiv (p : Submodule K V) : Nonempty (((V ⧸ p) ×
   Nonempty.intro <| ((quotientEquivOfIsCompl p q hq).Prod (LinearEquiv.refl _ _)).trans (prodEquivOfIsCompl q p hq.symm)
 #align quotient_prod_linear_equiv quotient_prod_linear_equiv
 
-end Field
+end DivisionRing
 

@@ -118,7 +118,7 @@ variable [CancelCommMonoidWithZero R] [WfDvdMonoid R]
 
 theorem finite_prime_left {a b : R} (ha : Prime a) (hb : b ≠ 0) : multiplicity.Finite a b := by classical
   revert hb
-  refine' WfDvdMonoid.inductionOnIrreducible b (by contradiction) (fun u hu hu' => _) fun b p hb hp ih hpb => _
+  refine' WfDvdMonoid.induction_on_irreducible b (by contradiction) (fun u hu hu' => _) fun b p hb hp ih hpb => _
   · rw [multiplicity.finite_iff_dom, multiplicity.is_unit_right ha.not_unit hu]
     exact PartEnat.dom_coe 0
     

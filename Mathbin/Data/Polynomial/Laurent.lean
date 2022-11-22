@@ -534,7 +534,7 @@ theorem algebra_map_eq_to_laurent (f : R[X]) : algebraMap R[X] R[T;T⁻¹] f = f
   rfl
 #align laurent_polynomial.algebra_map_eq_to_laurent LaurentPolynomial.algebra_map_eq_to_laurent
 
-theorem isLocalization : IsLocalization (Submonoid.closure ({x} : Set R[X])) R[T;T⁻¹] :=
+theorem is_localization : IsLocalization (Submonoid.closure ({x} : Set R[X])) R[T;T⁻¹] :=
   { map_units := fun t => by
       cases' t with t ht
       rcases submonoid.mem_closure_singleton.mp ht with ⟨n, rfl⟩
@@ -555,7 +555,7 @@ theorem isLocalization : IsLocalization (Submonoid.closure ({x} : Set R[X])) R[T
         rcases submonoid.mem_closure_singleton.mp hX with ⟨n, rfl⟩
         exact mul_X_pow_injective n (by simpa only [X_pow_mul] using h)
          }
-#align laurent_polynomial.is_localization LaurentPolynomial.isLocalization
+#align laurent_polynomial.is_localization LaurentPolynomial.is_localization
 
 end CommSemiring
 

@@ -358,7 +358,7 @@ theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup x
       subst a
       subst b
       apply (mem_zip h₃).2
-      simp only [nodupkeys, keys, comp, Prod.fst_to_sigma, map_map]
+      simp only [nodupkeys, keys, comp, Prod.fst_toSigma, map_map]
       rwa [map_fst_zip _ _ (le_of_eq h₆)]
       
     
@@ -470,13 +470,13 @@ protected def shrink {α : Type} [SizeOf α] [DecidableEq α] : ShrinkFn (Inject
       have h₄ : ys' ≤ xs' := le_of_eq (perm.length_eq h₀)
       pure
         ⟨⟨(List.zip xs' ys').map Prod.toSigma, by
-            simp only [comp, map_fst_zip, map_snd_zip, *, Prod.fst_to_sigma, Prod.snd_to_sigma, map_map], by
-            simp only [comp, map_snd_zip, *, Prod.snd_to_sigma, map_map]⟩,
+            simp only [comp, map_fst_zip, map_snd_zip, *, Prod.fst_toSigma, Prod.snd_toSigma, map_map], by
+            simp only [comp, map_snd_zip, *, Prod.snd_toSigma, map_map]⟩,
           by
           revert h₂ <;>
             dsimp [sizeof_lt] <;>
               unfold_wf <;>
-                simp only [has_sizeof._match_1, map_map, comp, map_fst_zip, *, Prod.fst_to_sigma] <;>
+                simp only [has_sizeof._match_1, map_map, comp, map_fst_zip, *, Prod.fst_toSigma] <;>
                   unfold_wf <;> intro h₂ <;> convert h₂⟩
 #align slim_check.injective_function.shrink SlimCheck.InjectiveFunction.shrink
 
@@ -485,8 +485,8 @@ protected def mk (xs ys : List α) (h : xs ~ ys) (h' : ys.Nodup) : InjectiveFunc
   have h₀ : xs.length ≤ ys.length := le_of_eq h.length_eq
   have h₁ : ys.length ≤ xs.length := le_of_eq h.length_eq.symm
   InjectiveFunction.map_to_self (List.toFinmap' (xs.zip ys))
-    (by simp only [list.to_finmap', comp, map_fst_zip, map_snd_zip, *, Prod.fst_to_sigma, Prod.snd_to_sigma, map_map])
-    (by simp only [list.to_finmap', comp, map_snd_zip, *, Prod.snd_to_sigma, map_map])
+    (by simp only [list.to_finmap', comp, map_fst_zip, map_snd_zip, *, Prod.fst_toSigma, Prod.snd_toSigma, map_map])
+    (by simp only [list.to_finmap', comp, map_snd_zip, *, Prod.snd_toSigma, map_map])
 #align slim_check.injective_function.mk SlimCheck.InjectiveFunction.mk
 
 protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Injective (apply f) := by

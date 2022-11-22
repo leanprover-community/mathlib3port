@@ -71,17 +71,17 @@ theorem discr_prime_pow_eq_unit_mul_pow' [IsCyclotomicExtension {p ^ k} ℚ K] (
 
 /-- If `K` is a `p ^ k`-th cyclotomic extension of `ℚ`, then `(adjoin ℤ {ζ})` is the
 integral closure of `ℤ` in `K`. -/
-theorem isIntegralClosureAdjoinSingletonOfPrimePow [hcycl : IsCyclotomicExtension {p ^ k} ℚ K]
+theorem is_integral_closure_adjoin_singleton_of_prime_pow [hcycl : IsCyclotomicExtension {p ^ k} ℚ K]
     (hζ : IsPrimitiveRoot ζ ↑(p ^ k)) : IsIntegralClosure (adjoin ℤ ({ζ} : Set K)) ℤ K := by
   refine' ⟨Subtype.val_injective, fun x => ⟨fun h => ⟨⟨x, _⟩, rfl⟩, _⟩⟩
   swap
   · rintro ⟨y, rfl⟩
     exact
-      IsIntegral.algebraMap
+      IsIntegral.algebra_map
         (le_integral_closure_iff_is_integral.1 (adjoin_le_integral_closure (hζ.is_integral (p ^ k).Pos)) _)
     
   let B := hζ.sub_one_power_basis ℚ
-  have hint : IsIntegral ℤ B.gen := isIntegralSub (hζ.is_integral (p ^ k).Pos) isIntegralOne
+  have hint : IsIntegral ℤ B.gen := is_integral_sub (hζ.is_integral (p ^ k).Pos) is_integral_one
   have H := discr_mul_is_integral_mem_adjoin ℚ hint h
   obtain ⟨u, n, hun⟩ := discr_prime_pow_eq_unit_mul_pow' hζ
   rw [hun] at H
@@ -116,27 +116,27 @@ theorem isIntegralClosureAdjoinSingletonOfPrimePow [hcycl : IsCyclotomicExtensio
     exact Subalgebra.sub_mem _ (self_mem_adjoin_singleton ℤ _) (Subalgebra.one_mem _)
     
 #align
-  is_cyclotomic_extension.rat.is_integral_closure_adjoin_singleton_of_prime_pow IsCyclotomicExtension.Rat.isIntegralClosureAdjoinSingletonOfPrimePow
+  is_cyclotomic_extension.rat.is_integral_closure_adjoin_singleton_of_prime_pow IsCyclotomicExtension.Rat.is_integral_closure_adjoin_singleton_of_prime_pow
 
-theorem isIntegralClosureAdjoinSingletonOfPrime [hcycl : IsCyclotomicExtension {p} ℚ K] (hζ : IsPrimitiveRoot ζ ↑p) :
-    IsIntegralClosure (adjoin ℤ ({ζ} : Set K)) ℤ K := by
+theorem is_integral_closure_adjoin_singleton_of_prime [hcycl : IsCyclotomicExtension {p} ℚ K]
+    (hζ : IsPrimitiveRoot ζ ↑p) : IsIntegralClosure (adjoin ℤ ({ζ} : Set K)) ℤ K := by
   rw [← pow_one p] at hζ hcycl
   exact is_integral_closure_adjoin_singleton_of_prime_pow hζ
 #align
-  is_cyclotomic_extension.rat.is_integral_closure_adjoin_singleton_of_prime IsCyclotomicExtension.Rat.isIntegralClosureAdjoinSingletonOfPrime
+  is_cyclotomic_extension.rat.is_integral_closure_adjoin_singleton_of_prime IsCyclotomicExtension.Rat.is_integral_closure_adjoin_singleton_of_prime
 
 attribute [-instance] CyclotomicField.algebra
 
 /-- The integral closure of `ℤ` inside `cyclotomic_field (p ^ k) ℚ` is
 `cyclotomic_ring (p ^ k) ℤ ℚ`. -/
-theorem cyclotomicRingIsIntegralClosureOfPrimePow :
+theorem cyclotomic_ring_is_integral_closure_of_prime_pow :
     IsIntegralClosure (CyclotomicRing (p ^ k) ℤ ℚ) ℤ (CyclotomicField (p ^ k) ℚ) := by
   haveI : CharZero ℚ := StrictOrderedSemiring.to_char_zero
   have : IsCyclotomicExtension {p ^ k} ℚ (CyclotomicField (p ^ k) ℚ) := by
-    convert CyclotomicField.isCyclotomicExtension (p ^ k) _
+    convert CyclotomicField.is_cyclotomic_extension (p ^ k) _
     · exact Subsingleton.elim _ _
       
-    · exact NeZero.char_zero
+    · exact NeZero.charZero
       
   have hζ := zeta_spec (p ^ k) ℚ (CyclotomicField (p ^ k) ℚ)
   refine' ⟨IsFractionRing.injective _ _, fun x => ⟨fun h => ⟨⟨x, _⟩, rfl⟩, _⟩⟩
@@ -152,22 +152,23 @@ theorem cyclotomicRingIsIntegralClosureOfPrimePow :
       
     
   · have : IsCyclotomicExtension {p ^ k} ℤ (CyclotomicRing (p ^ k) ℤ ℚ) := by
-      convert CyclotomicRing.isCyclotomicExtension _ ℤ ℚ
+      convert CyclotomicRing.is_cyclotomic_extension _ ℤ ℚ
       · exact Subsingleton.elim _ _
         
-      · exact NeZero.char_zero
+      · exact NeZero.charZero
         
     rintro ⟨y, rfl⟩
-    exact IsIntegral.algebraMap ((IsCyclotomicExtension.integral {p ^ k} ℤ _) _)
+    exact IsIntegral.algebra_map ((IsCyclotomicExtension.integral {p ^ k} ℤ _) _)
     
 #align
-  is_cyclotomic_extension.rat.cyclotomic_ring_is_integral_closure_of_prime_pow IsCyclotomicExtension.Rat.cyclotomicRingIsIntegralClosureOfPrimePow
+  is_cyclotomic_extension.rat.cyclotomic_ring_is_integral_closure_of_prime_pow IsCyclotomicExtension.Rat.cyclotomic_ring_is_integral_closure_of_prime_pow
 
-theorem cyclotomicRingIsIntegralClosureOfPrime : IsIntegralClosure (CyclotomicRing p ℤ ℚ) ℤ (CyclotomicField p ℚ) := by
+theorem cyclotomic_ring_is_integral_closure_of_prime :
+    IsIntegralClosure (CyclotomicRing p ℤ ℚ) ℤ (CyclotomicField p ℚ) := by
   rw [← pow_one p]
   exact cyclotomic_ring_is_integral_closure_of_prime_pow
 #align
-  is_cyclotomic_extension.rat.cyclotomic_ring_is_integral_closure_of_prime IsCyclotomicExtension.Rat.cyclotomicRingIsIntegralClosureOfPrime
+  is_cyclotomic_extension.rat.cyclotomic_ring_is_integral_closure_of_prime IsCyclotomicExtension.Rat.cyclotomic_ring_is_integral_closure_of_prime
 
 end IsCyclotomicExtension.Rat
 
@@ -182,7 +183,7 @@ unity and `K` is a `p ^ k`-th cyclotomic extension of `ℚ`. -/
 @[simps]
 noncomputable def _root_.is_primitive_root.adjoin_equiv_ring_of_integers [hcycl : IsCyclotomicExtension {p ^ k} ℚ K]
     (hζ : IsPrimitiveRoot ζ ↑(p ^ k)) : adjoin ℤ ({ζ} : Set K) ≃ₐ[ℤ] 𝓞 K :=
-  let _ := isIntegralClosureAdjoinSingletonOfPrimePow hζ
+  let _ := is_integral_closure_adjoin_singleton_of_prime_pow hζ
   IsIntegralClosure.equiv ℤ (adjoin ℤ ({ζ} : Set K)) K (𝓞 K)
 #align
   is_primitive_root._root_.is_primitive_root.adjoin_equiv_ring_of_integers is_primitive_root._root_.is_primitive_root.adjoin_equiv_ring_of_integers
@@ -190,7 +191,7 @@ noncomputable def _root_.is_primitive_root.adjoin_equiv_ring_of_integers [hcycl 
 /-- The ring of integers of a `p ^ k`-th cyclotomic extension of `ℚ` is a cyclotomic extension. -/
 instance _root_.is_cyclotomic_extension.ring_of_integers [IsCyclotomicExtension {p ^ k} ℚ K] :
     IsCyclotomicExtension {p ^ k} ℤ (𝓞 K) :=
-  let _ := (zeta_spec (p ^ k) ℚ K).adjoinIsCyclotomicExtension ℤ
+  let _ := (zeta_spec (p ^ k) ℚ K).adjoin_is_cyclotomic_extension ℤ
   IsCyclotomicExtension.equiv _ ℤ _ (zeta_spec (p ^ k) ℚ K).adjoinEquivRingOfIntegers
 #align
   is_primitive_root._root_.is_cyclotomic_extension.ring_of_integers is_primitive_root._root_.is_cyclotomic_extension.ring_of_integers
@@ -230,7 +231,7 @@ noncomputable def _root_.is_primitive_root.adjoin_equiv_ring_of_integers' [hcycl
 /-- The ring of integers of a `p`-th cyclotomic extension of `ℚ` is a cyclotomic extension. -/
 instance _root_.is_cyclotomic_extension.ring_of_integers' [IsCyclotomicExtension {p} ℚ K] :
     IsCyclotomicExtension {p} ℤ (𝓞 K) :=
-  let _ := (zeta_spec p ℚ K).adjoinIsCyclotomicExtension ℤ
+  let _ := (zeta_spec p ℚ K).adjoin_is_cyclotomic_extension ℤ
   IsCyclotomicExtension.equiv _ ℤ _ (zeta_spec p ℚ K).adjoinEquivRingOfIntegers'
 #align
   is_primitive_root._root_.is_cyclotomic_extension.ring_of_integers' is_primitive_root._root_.is_cyclotomic_extension.ring_of_integers'

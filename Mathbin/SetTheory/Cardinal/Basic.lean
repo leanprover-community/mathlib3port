@@ -397,7 +397,7 @@ theorem add_def (α β : Type u) : (#α) + (#β) = (#Sum α β) :=
   rfl
 #align cardinal.add_def Cardinal.add_def
 
-instance : HasNatCast Cardinal.{u} :=
+instance : NatCast Cardinal.{u} :=
   ⟨Nat.unaryCast⟩
 
 @[simp]
@@ -1477,6 +1477,11 @@ theorem to_nat_right_inverse : Function.RightInverse (coe : ℕ → Cardinal) to
 theorem to_nat_surjective : Surjective toNat :=
   to_nat_right_inverse.Surjective
 #align cardinal.to_nat_surjective Cardinal.to_nat_surjective
+
+theorem exists_nat_eq_of_le_nat {c : Cardinal} {n : ℕ} (h : c ≤ n) : ∃ m, m ≤ n ∧ c = m :=
+  let he := cast_to_nat_of_lt_aleph_0 (h.trans_lt <| nat_lt_aleph_0 n)
+  ⟨c.toNat, nat_cast_le.1 (he.trans_le h), he.symm⟩
+#align cardinal.exists_nat_eq_of_le_nat Cardinal.exists_nat_eq_of_le_nat
 
 @[simp]
 theorem mk_to_nat_of_infinite [h : Infinite α] : (#α).toNat = 0 :=

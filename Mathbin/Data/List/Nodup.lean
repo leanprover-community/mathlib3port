@@ -141,7 +141,7 @@ theorem nth_le_eq_of_ne_imp_not_nodup (xs : List α) (n m : ℕ) (hn : n < xs.le
 #align list.nth_le_eq_of_ne_imp_not_nodup List.nth_le_eq_of_ne_imp_not_nodup
 
 @[simp]
-theorem nth_le_index_of [DecidableEq α] {l : List α} (H : Nodup l) (n h) : indexOf' (nthLe l n h) l = n :=
+theorem nth_le_index_of [DecidableEq α] {l : List α} (H : Nodup l) (n h) : indexOf (nthLe l n h) l = n :=
   nodup_iff_nth_le_inj.1 H _ _ _ h <| index_of_nth_le <| index_of_lt_length.2 <| nth_le_mem _ _ _
 #align list.nth_le_index_of List.nth_le_index_of
 
@@ -281,7 +281,7 @@ theorem Nodup.pmap {p : α → Prop} {f : ∀ a, p a → β} {l : List α} {H} (
   rw [pmap_eq_map_attach] <;> exact h.attach.map fun ⟨a, ha⟩ ⟨b, hb⟩ h => by congr <;> exact hf a (H _ ha) b (H _ hb) h
 #align list.nodup.pmap List.Nodup.pmap
 
-theorem Nodup.filter (p : α → Prop) [DecidablePred p] {l} : Nodup l → Nodup (filter' p l) :=
+theorem Nodup.filter (p : α → Prop) [DecidablePred p] {l} : Nodup l → Nodup (filter p l) :=
   Pairwise.filter p
 #align list.nodup.filter List.Nodup.filter
 
@@ -290,7 +290,7 @@ theorem nodup_reverse {l : List α} : Nodup (reverse l) ↔ Nodup l :=
   pairwise_reverse.trans <| by simp only [nodup, Ne.def, eq_comm]
 #align list.nodup_reverse List.nodup_reverse
 
-theorem Nodup.erase_eq_filter [DecidableEq α] {l} (d : Nodup l) (a : α) : l.erase a = filter' (· ≠ a) l := by
+theorem Nodup.erase_eq_filter [DecidableEq α] {l} (d : Nodup l) (a : α) : l.erase a = filter (· ≠ a) l := by
   induction' d with b l m d IH
   · rfl
     

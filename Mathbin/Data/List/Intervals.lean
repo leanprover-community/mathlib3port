@@ -109,7 +109,7 @@ theorem inter_consecutive (n m l : ℕ) : ico n m ∩ ico m l = [] := by
 #align list.Ico.inter_consecutive List.ico.inter_consecutive
 
 @[simp]
-theorem bag_inter_consecutive (n m l : ℕ) : List.bagInter' (ico n m) (ico m l) = [] :=
+theorem bag_inter_consecutive (n m l : ℕ) : List.bagInter (ico n m) (ico m l) = [] :=
   (bag_inter_nil_iff_inter_nil _ _).2 (inter_consecutive n m l)
 #align list.Ico.bag_inter_consecutive List.ico.bag_inter_consecutive
 

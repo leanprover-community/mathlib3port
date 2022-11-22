@@ -129,7 +129,7 @@ def Terminates (s : Seq α) : Prop :=
 #align seq.terminates Seq.Terminates
 
 theorem not_terminates_iff {s : Seq α} : ¬s.Terminates ↔ ∀ n, (s.nth n).isSome := by
-  simp [terminates, terminated_at, ← Ne.def, Option.ne_none_iff_is_some]
+  simp [terminates, terminated_at, ← Ne.def, Option.ne_none_iff_isSome]
 #align seq.not_terminates_iff Seq.not_terminates_iff
 
 /-- Functorial action of the functor `option (α × _)` -/

@@ -749,7 +749,7 @@ theorem rat_cast_im (q : ℚ) : (q : ℂ).im = 0 := by rw [← of_real_rat_cast,
 
 
 instance char_zero_complex : CharZero ℂ :=
-  char_zero_of_inj_zero fun n h => by rwa [← of_real_nat_cast, of_real_eq_zero, Nat.cast_eq_zero] at h
+  charZero_of_inj_zero fun n h => by rwa [← of_real_nat_cast, of_real_eq_zero, Nat.cast_eq_zero] at h
 #align complex.char_zero_complex Complex.char_zero_complex
 
 /-- A complex number `z` plus its conjugate `conj z` is `2` times its real part. -/

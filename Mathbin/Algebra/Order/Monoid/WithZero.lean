@@ -3,17 +3,82 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
-import Mathbin.Algebra.Order.Monoid.Canonical.Defs
 import Mathbin.Algebra.Group.WithOne
+import Mathbin.Algebra.GroupWithZero.Default
+import Mathbin.Algebra.Order.Monoid.Canonical.Defs
 
 /-!
 # Adjoining a zero element to an ordered monoid.
 -/
 
 
+open Function
+
 universe u
 
 variable {α : Type u}
+
+/-- Typeclass for expressing that the `0` of a type is less or equal to its `1`. -/
+class ZeroLeOneClass (α : Type _) [Zero α] [One α] [LE α] where
+  zero_le_one : (0 : α) ≤ 1
+#align zero_le_one_class ZeroLeOneClass
+
+/-- A linearly ordered commutative monoid with a zero element. -/
+class LinearOrderedCommMonoidWithZero (α : Type _) extends LinearOrderedCommMonoid α, CommMonoidWithZero α where
+  zero_le_one : (0 : α) ≤ 1
+#align linear_ordered_comm_monoid_with_zero LinearOrderedCommMonoidWithZero
+
+instance (priority := 100) LinearOrderedCommMonoidWithZero.toZeroLeOneClass [LinearOrderedCommMonoidWithZero α] :
+    ZeroLeOneClass α :=
+  { ‹LinearOrderedCommMonoidWithZero α› with }
+#align linear_ordered_comm_monoid_with_zero.to_zero_le_one_class LinearOrderedCommMonoidWithZero.toZeroLeOneClass
+
+instance (priority := 100) CanonicallyOrderedAddMonoid.toZeroLeOneClass [CanonicallyOrderedAddMonoid α] [One α] :
+    ZeroLeOneClass α :=
+  ⟨zero_le 1⟩
+#align canonically_ordered_add_monoid.to_zero_le_one_class CanonicallyOrderedAddMonoid.toZeroLeOneClass
+
+/-- `zero_le_one` with the type argument implicit. -/
+@[simp]
+theorem zero_le_one [Zero α] [One α] [LE α] [ZeroLeOneClass α] : (0 : α) ≤ 1 :=
+  ZeroLeOneClass.zero_le_one
+#align zero_le_one zero_le_one
+
+/-- `zero_le_one` with the type argument explicit. -/
+theorem zero_le_one' (α) [Zero α] [One α] [LE α] [ZeroLeOneClass α] : (0 : α) ≤ 1 :=
+  zero_le_one
+#align zero_le_one' zero_le_one'
+
+theorem zero_le_two [Preorder α] [One α] [AddZeroClass α] [ZeroLeOneClass α] [CovariantClass α α (· + ·) (· ≤ ·)] :
+    (0 : α) ≤ 2 :=
+  add_nonneg zero_le_one zero_le_one
+#align zero_le_two zero_le_two
+
+theorem zero_le_three [Preorder α] [One α] [AddZeroClass α] [ZeroLeOneClass α] [CovariantClass α α (· + ·) (· ≤ ·)] :
+    (0 : α) ≤ 3 :=
+  add_nonneg zero_le_two zero_le_one
+#align zero_le_three zero_le_three
+
+theorem zero_le_four [Preorder α] [One α] [AddZeroClass α] [ZeroLeOneClass α] [CovariantClass α α (· + ·) (· ≤ ·)] :
+    (0 : α) ≤ 4 :=
+  add_nonneg zero_le_two zero_le_two
+#align zero_le_four zero_le_four
+
+theorem one_le_two [LE α] [One α] [AddZeroClass α] [ZeroLeOneClass α] [CovariantClass α α (· + ·) (· ≤ ·)] :
+    (1 : α) ≤ 2 :=
+  calc
+    1 = 1 + 0 := (add_zero 1).symm
+    _ ≤ 1 + 1 := add_le_add_left zero_le_one _
+    
+#align one_le_two one_le_two
+
+theorem one_le_two' [LE α] [One α] [AddZeroClass α] [ZeroLeOneClass α] [CovariantClass α α (swap (· + ·)) (· ≤ ·)] :
+    (1 : α) ≤ 2 :=
+  calc
+    1 = 0 + 1 := (zero_add 1).symm
+    _ ≤ 1 + 1 := add_le_add_right zero_le_one _
+    
+#align one_le_two' one_le_two'
 
 namespace WithZero
 

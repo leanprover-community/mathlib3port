@@ -54,7 +54,7 @@ then they have the same unit elements.
 
 In fact, the two operations are the same, and give a commutative monoid structure,
 see `eckmann_hilton.comm_monoid`. -/
-theorem one : e₁ = e₂ := by simpa only [h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id] using distrib e₂ e₁ e₁ e₂
+theorem one : e₁ = e₂ := by simpa only [h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id] using Distrib e₂ e₁ e₁ e₂
 #align eckmann_hilton.one EckmannHilton.one
 
 /-- If a type carries two unital binary operations that distribute over each other,
@@ -65,8 +65,8 @@ theorem mul : m₁ = m₂ := by
   funext a b
   calc
     m₁ a b = m₁ (m₂ a e₁) (m₂ e₁ b) := by
-      simp only [one h₁ h₂ distrib, h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id]
-    _ = m₂ a b := by simp only [distrib, h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id]
+      simp only [one h₁ h₂ Distrib, h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id]
+    _ = m₂ a b := by simp only [Distrib, h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id]
     
 #align eckmann_hilton.mul EckmannHilton.mul
 
@@ -75,7 +75,7 @@ then these operations are commutative.
 
 In fact, they give a commutative monoid structure, see `eckmann_hilton.comm_monoid`. -/
 theorem mul_comm : IsCommutative _ m₂ :=
-  ⟨fun a b => by simpa [mul h₁ h₂ distrib, h₂.left_id, h₂.right_id] using distrib e₂ a b e₂⟩
+  ⟨fun a b => by simpa [mul h₁ h₂ Distrib, h₂.left_id, h₂.right_id] using Distrib e₂ a b e₂⟩
 #align eckmann_hilton.mul_comm EckmannHilton.mul_comm
 
 /-- If a type carries two unital binary operations that distribute over each other,
@@ -83,7 +83,7 @@ then these operations are associative.
 
 In fact, they give a commutative monoid structure, see `eckmann_hilton.comm_monoid`. -/
 theorem mul_assoc : IsAssociative _ m₂ :=
-  ⟨fun a b c => by simpa [mul h₁ h₂ distrib, h₂.left_id, h₂.right_id] using distrib a b e₂ c⟩
+  ⟨fun a b c => by simpa [mul h₁ h₂ Distrib, h₂.left_id, h₂.right_id] using Distrib a b e₂ c⟩
 #align eckmann_hilton.mul_assoc EckmannHilton.mul_assoc
 
 omit h₁ h₂ distrib
@@ -94,8 +94,8 @@ operations, then the magma structure is a commutative monoid. -/
   to_additive
       "If a type carries a unital additive magma structure that distributes over\na unital binary operations, then the additive magma structure is a commutative additive monoid."]
 def commMonoid [h : MulOneClass X] (distrib : ∀ a b c d, ((a * b) <m₁> c * d) = (a <m₁> c) * b <m₁> d) : CommMonoid X :=
-  { h with mul := (· * ·), one := 1, mul_comm := (mul_comm h₁ MulOneClass.is_unital distrib).comm,
-    mul_assoc := (mul_assoc h₁ MulOneClass.is_unital distrib).assoc }
+  { h with mul := (· * ·), one := 1, mul_comm := (mul_comm h₁ MulOneClass.is_unital Distrib).comm,
+    mul_assoc := (mul_assoc h₁ MulOneClass.is_unital Distrib).assoc }
 #align eckmann_hilton.comm_monoid EckmannHilton.commMonoid
 
 /-- If a type carries a group structure that distributes over a unital binary operation,
@@ -104,7 +104,7 @@ then the group is commutative. -/
   to_additive
       "If a type carries an additive group structure that\ndistributes over a unital binary operation, then the additive group is commutative."]
 def commGroup [G : Group X] (distrib : ∀ a b c d, ((a * b) <m₁> c * d) = (a <m₁> c) * b <m₁> d) : CommGroup X :=
-  { EckmannHilton.commMonoid h₁ distrib, G with }
+  { EckmannHilton.commMonoid h₁ Distrib, G with }
 #align eckmann_hilton.comm_group EckmannHilton.commGroup
 
 end EckmannHilton

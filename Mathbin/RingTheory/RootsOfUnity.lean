@@ -103,8 +103,7 @@ theorem rootsOfUnity.coe_injective {n : ℕ+} : Function.Injective (coe : rootsO
 a positive power equal to one. -/
 @[simps coe_coe]
 def rootsOfUnity.mkOfPowEq (ζ : M) {n : ℕ+} (h : ζ ^ (n : ℕ) = 1) : rootsOfUnity n M :=
-  ⟨Units.mkOfMulEqOne ζ (ζ ^ n.natPred) <| by rwa [← pow_one ζ, ← pow_mul, ← pow_add, one_mul, PNat.one_add_nat_pred],
-    Units.ext <| by simpa⟩
+  ⟨Units.ofPowEqOne ζ n h n.NeZero, Units.pow_of_pow_eq_one _ _⟩
 #align roots_of_unity.mk_of_pow_eq rootsOfUnity.mkOfPowEq
 
 @[simp]
@@ -782,7 +781,7 @@ theorem eq_pow_of_mem_roots_of_unity {k : ℕ+} {ζ ξ : Rˣ} (h : IsPrimitiveRo
 theorem eq_pow_of_pow_eq_one {k : ℕ} {ζ ξ : R} (h : IsPrimitiveRoot ζ k) (hξ : ξ ^ k = 1) (h0 : 0 < k) :
     ∃ i < k, ζ ^ i = ξ := by
   lift ζ to Rˣ using h.is_unit h0
-  lift ξ to Rˣ using is_unit_of_pow_eq_one ξ k hξ h0.ne'
+  lift ξ to Rˣ using is_unit_of_pow_eq_one hξ h0.ne'
   lift k to ℕ+ using h0
   simp only [← Units.coe_pow, ← Units.ext_iff]
   rw [coe_units_iff] at h
@@ -972,14 +971,14 @@ variable {n : ℕ} {K : Type _} [CommRing K] {μ : K} (h : IsPrimitiveRoot μ n)
 include n μ h hpos
 
 /-- `μ` is integral over `ℤ`. -/
-theorem isIntegral : IsIntegral ℤ μ := by
+theorem is_integral : IsIntegral ℤ μ := by
   use X ^ n - 1
   constructor
   · exact monic_X_pow_sub_C 1 (ne_of_lt hpos).symm
     
   · simp only [((IsPrimitiveRoot.iff_def μ n).mp h).left, eval₂_one, eval₂_X_pow, eval₂_sub, sub_self]
     
-#align is_primitive_root.is_integral IsPrimitiveRoot.isIntegral
+#align is_primitive_root.is_integral IsPrimitiveRoot.is_integral
 
 section IsDomain
 
@@ -1114,7 +1113,7 @@ then the minimal polynomials of a primitive `n`-th root of unity `μ`
 and of `μ ^ m` are the same. -/
 theorem minpoly_eq_pow_coprime {m : ℕ} (hcop : Nat.Coprime m n) : minpoly ℤ μ = minpoly ℤ (μ ^ m) := by
   revert n hcop
-  refine' UniqueFactorizationMonoid.inductionOnPrime m _ _ _
+  refine' UniqueFactorizationMonoid.induction_on_prime m _ _ _
   · intro n hn h
     congr
     simpa [(Nat.coprime_zero_left n).mp hn] using h

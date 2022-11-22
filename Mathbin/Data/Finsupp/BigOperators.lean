@@ -38,7 +38,7 @@ theorem List.support_sum_subset [AddMonoid M] (l : List (ι →₀ M)) :
   induction' l with hd tl IH
   · simp
     
-  · simp only [List.sum_cons, List.foldr_cons, Finset.union_comm]
+  · simp only [List.sum_cons, Finset.union_comm]
     refine' finsupp.support_add.trans (Finset.union_subset_union _ IH)
     rfl
     

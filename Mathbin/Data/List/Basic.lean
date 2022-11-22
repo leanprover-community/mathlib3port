@@ -3,9 +3,7 @@ Copyright (c) 2014 Parikshit Khanna. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 -/
-import Mathbin.Algebra.Order.WithZero
-import Mathbin.Data.Nat.Order.Lemmas
-import Mathbin.Data.Set.Function
+import Mathbin.Data.Nat.Order.Basic
 
 /-!
 # Basic properties of lists
@@ -16,13 +14,14 @@ open Function
 
 open Nat hiding one_pos
 
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
 namespace List
 
 universe u v w x
 
 variable {ι : Type _} {α : Type u} {β : Type v} {γ : Type w} {δ : Type x} {l₁ l₂ : List α}
 
-attribute [inline] List.head'
+attribute [inline] List.head
 
 /-- There is only one list of an empty type -/
 instance uniqueOfIsEmpty [IsEmpty α] : Unique (List α) :=
@@ -438,30 +437,6 @@ theorem map_bind (g : β → List γ) (f : α → β) : ∀ l : List α, (List.m
   | [] => rfl
   | a :: l => by simp only [cons_bind, map_cons, map_bind l]
 #align list.map_bind List.map_bind
-
-theorem range_map (f : α → β) : Set.range (map f) = { l | ∀ x ∈ l, x ∈ Set.range f } := by
-  refine'
-    Set.Subset.antisymm (Set.range_subset_iff.2 fun l => forall_mem_map_iff.2 fun y _ => Set.mem_range_self _)
-      fun l hl => _
-  induction' l with a l ihl
-  · exact ⟨[], rfl⟩
-    
-  rcases ihl fun x hx => hl x <| subset_cons _ _ hx with ⟨l, rfl⟩
-  rcases hl a (mem_cons_self _ _) with ⟨a, rfl⟩
-  exact ⟨a :: l, map_cons _ _ _⟩
-#align list.range_map List.range_map
-
-theorem range_map_coe (s : Set α) : Set.range (map (coe : s → α)) = { l | ∀ x ∈ l, x ∈ s } := by
-  rw [range_map, Subtype.range_coe]
-#align list.range_map_coe List.range_map_coe
-
-/-- If each element of a list can be lifted to some type, then the whole list can be lifted to this
-type. -/
-instance canLift (c) (p) [CanLift α β c p] :
-    CanLift (List α) (List β) (List.map c) fun l => ∀ x ∈ l, p x where prf l H := by
-    rw [← Set.mem_range, range_map]
-    exact fun a ha => CanLift.prf a (H a ha)
-#align list.can_lift List.canLift
 
 /-! ### length -/
 
@@ -1473,10 +1448,10 @@ theorem last'_append {l₁ l₂ : List α} {x : α} (h : x ∈ l₂.last') : x �
 /-! ### head(') and tail -/
 
 
-theorem head_eq_head' [Inhabited α] (l : List α) : head' l = (head' l).iget := by cases l <;> rfl
+theorem head_eq_head' [Inhabited α] (l : List α) : head l = (head' l).iget := by cases l <;> rfl
 #align list.head_eq_head' List.head_eq_head'
 
-theorem surjective_head [Inhabited α] : Surjective (@head' α _) := fun x => ⟨[x], rfl⟩
+theorem surjective_head [Inhabited α] : Surjective (@head α _) := fun x => ⟨[x], rfl⟩
 #align list.surjective_head List.surjective_head
 
 theorem surjective_head' : Surjective (@head' α) :=
@@ -1501,12 +1476,12 @@ theorem mem_of_mem_head' {x : α} {l : List α} (h : x ∈ l.head') : x ∈ l :=
 
 /- warning: list.head_cons -> List.head_cons is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : Inhabited.{succ u} α] (a : α) (l : List.{u} α), Eq.{succ u} α (List.head'.{u} α _inst_1 (List.cons.{u} α a l)) a
+  forall {α : Type.{u}} [_inst_1 : Inhabited.{succ u} α] (a : α) (l : List.{u} α), Eq.{succ u} α (List.headₓ.{u} α _inst_1 (List.cons.{u} α a l)) a
 but is expected to have type
   forall {α : Type.{u_1}} {a : α} {l : List.{u_1} α} {h : Ne.{succ u_1} (List.{u_1} α) (List.cons.{u_1} α a l) (List.nil.{u_1} α)}, Eq.{succ u_1} α (List.head.{u_1} α (List.cons.{u_1} α a l) h) a
 Case conversion may be inaccurate. Consider using '#align list.head_cons List.head_consₓ'. -/
 @[simp]
-theorem head_cons [Inhabited α] (a : α) (l : List α) : head' (a :: l) = a :=
+theorem head_cons [Inhabited α] (a : α) (l : List α) : head (a :: l) = a :=
   rfl
 #align list.head_cons List.head_cons
 
@@ -1525,7 +1500,7 @@ theorem tail_cons (a : α) (l : List α) : tail (a :: l) = l :=
 -/
 
 @[simp]
-theorem head_append [Inhabited α] (t : List α) {s : List α} (h : s ≠ []) : head' (s ++ t) = head' s := by
+theorem head_append [Inhabited α] (t : List α) {s : List α} (h : s ≠ []) : head (s ++ t) = head s := by
   induction s
   contradiction
   rfl
@@ -1555,12 +1530,12 @@ theorem cons_head'_tail : ∀ {l : List α} {a : α} (h : a ∈ head' l), a :: t
     simp [h]
 #align list.cons_head'_tail List.cons_head'_tail
 
-theorem head_mem_head' [Inhabited α] : ∀ {l : List α} (h : l ≠ []), head' l ∈ head' l
+theorem head_mem_head' [Inhabited α] : ∀ {l : List α} (h : l ≠ []), head l ∈ head' l
   | [], h => by contradiction
   | a :: l, h => rfl
 #align list.head_mem_head' List.head_mem_head'
 
-theorem cons_head_tail [Inhabited α] {l : List α} (h : l ≠ []) : head' l :: tail l = l :=
+theorem cons_head_tail [Inhabited α] {l : List α} (h : l ≠ []) : head l :: tail l = l :=
   cons_head'_tail (head_mem_head' h)
 #align list.cons_head_tail List.cons_head_tail
 
@@ -1604,7 +1579,7 @@ theorem nth_le_cons {l : List α} {a : α} {n} (hl) :
   · simp [nth_le, h]
     
   cases l
-  · rw [length_singleton, Nat.lt_one_iff] at hl
+  · rw [length_singleton, lt_succ_iff, nonpos_iff_eq_zero] at hl
     contradiction
     
   cases n
@@ -1922,27 +1897,27 @@ section IndexOf
 variable [DecidableEq α]
 
 @[simp]
-theorem index_of_nil (a : α) : indexOf' a [] = 0 :=
+theorem index_of_nil (a : α) : indexOf a [] = 0 :=
   rfl
 #align list.index_of_nil List.index_of_nil
 
-theorem index_of_cons (a b : α) (l : List α) : indexOf' a (b :: l) = if a = b then 0 else succ (indexOf' a l) :=
+theorem index_of_cons (a b : α) (l : List α) : indexOf a (b :: l) = if a = b then 0 else succ (indexOf a l) :=
   rfl
 #align list.index_of_cons List.index_of_cons
 
-theorem index_of_cons_eq {a b : α} (l : List α) : a = b → indexOf' a (b :: l) = 0 := fun e => if_pos e
+theorem index_of_cons_eq {a b : α} (l : List α) : a = b → indexOf a (b :: l) = 0 := fun e => if_pos e
 #align list.index_of_cons_eq List.index_of_cons_eq
 
 @[simp]
-theorem index_of_cons_self (a : α) (l : List α) : indexOf' a (a :: l) = 0 :=
+theorem index_of_cons_self (a : α) (l : List α) : indexOf a (a :: l) = 0 :=
   index_of_cons_eq _ rfl
 #align list.index_of_cons_self List.index_of_cons_self
 
 @[simp]
-theorem index_of_cons_ne {a b : α} (l : List α) : a ≠ b → indexOf' a (b :: l) = succ (indexOf' a l) := fun n => if_neg n
+theorem index_of_cons_ne {a b : α} (l : List α) : a ≠ b → indexOf a (b :: l) = succ (indexOf a l) := fun n => if_neg n
 #align list.index_of_cons_ne List.index_of_cons_ne
 
-theorem index_of_eq_length {a : α} {l : List α} : indexOf' a l = length l ↔ a ∉ l := by
+theorem index_of_eq_length {a : α} {l : List α} : indexOf a l = length l ↔ a ∉ l := by
   induction' l with b l ih
   · exact iff_of_true rfl (not_mem_nil _)
     
@@ -1957,11 +1932,11 @@ theorem index_of_eq_length {a : α} {l : List α} : indexOf' a l = length l ↔ 
 #align list.index_of_eq_length List.index_of_eq_length
 
 @[simp]
-theorem index_of_of_not_mem {l : List α} {a : α} : a ∉ l → indexOf' a l = length l :=
+theorem index_of_of_not_mem {l : List α} {a : α} : a ∉ l → indexOf a l = length l :=
   index_of_eq_length.2
 #align list.index_of_of_not_mem List.index_of_of_not_mem
 
-theorem index_of_le_length {a : α} {l : List α} : indexOf' a l ≤ length l := by
+theorem index_of_le_length {a : α} {l : List α} : indexOf a l ≤ length l := by
   induction' l with b l ih
   · rfl
     
@@ -1974,7 +1949,7 @@ theorem index_of_le_length {a : α} {l : List α} : indexOf' a l ≤ length l :=
   exact succ_le_succ ih
 #align list.index_of_le_length List.index_of_le_length
 
-theorem index_of_lt_length {a} {l : List α} : indexOf' a l < length l ↔ a ∈ l :=
+theorem index_of_lt_length {a} {l : List α} : indexOf a l < length l ↔ a ∈ l :=
   ⟨fun h => Decidable.by_contradiction fun al => ne_of_lt h <| index_of_eq_length.2 al, fun al =>
     (lt_of_le_of_ne index_of_le_length) fun h => index_of_eq_length.1 h al⟩
 #align list.index_of_lt_length List.index_of_lt_length
@@ -2104,7 +2079,7 @@ theorem nth_le_of_eq {L L' : List α} (h : L = L') {i : ℕ} (hi : i < L.length)
 
 @[simp]
 theorem nth_le_singleton (a : α) {n : ℕ} (hn : n < 1) : nthLe [a] n hn = a := by
-  have hn0 : n = 0 := le_zero_iff.1 (le_of_lt_succ hn)
+  have hn0 : n = 0 := Nat.eq_zero_of_le_zero (le_of_lt_succ hn)
   subst hn0 <;> rfl
 #align list.nth_le_singleton List.nth_le_singleton
 
@@ -2200,7 +2175,7 @@ theorem take_one_drop_eq_of_lt_length {l : List α} {n : ℕ} (h : n < l.length)
   · by_cases h₁ : l = []
     · subst h₁
       rw [nth_le_singleton]
-      simp at h
+      simp [lt_succ_iff] at h
       subst h
       simp
       
@@ -2240,12 +2215,12 @@ theorem ext_le {l₁ l₂ : List α} (hl : length l₁ = length l₂) (h : ∀ n
 #align list.ext_le List.ext_le
 
 @[simp]
-theorem index_of_nth_le [DecidableEq α] {a : α} : ∀ {l : List α} (h), nthLe l (indexOf' a l) h = a
+theorem index_of_nth_le [DecidableEq α] {a : α} : ∀ {l : List α} (h), nthLe l (indexOf a l) h = a
   | b :: l, h => by by_cases h' : a = b <;> simp only [h', if_pos, if_false, index_of_cons, nth_le, @index_of_nth_le l]
 #align list.index_of_nth_le List.index_of_nth_le
 
 @[simp]
-theorem index_of_nth [DecidableEq α] {a : α} {l : List α} (h : a ∈ l) : nth l (indexOf' a l) = some a := by
+theorem index_of_nth [DecidableEq α] {a : α} {l : List α} (h : a ∈ l) : nth l (indexOf a l) = some a := by
   rw [nth_le_nth, index_of_nth_le (index_of_lt_length.2 h)]
 #align list.index_of_nth List.index_of_nth
 
@@ -2257,9 +2232,9 @@ theorem nth_le_reverse_aux1 : ∀ (l r : List α) (i h1 h2), nthLe (reverseCore 
 #align list.nth_le_reverse_aux1 List.nth_le_reverse_aux1
 
 theorem index_of_inj [DecidableEq α] {l : List α} {x y : α} (hx : x ∈ l) (hy : y ∈ l) :
-    indexOf' x l = indexOf' y l ↔ x = y :=
+    indexOf x l = indexOf y l ↔ x = y :=
   ⟨fun h => by
-    have : nthLe l (indexOf' x l) (index_of_lt_length.2 hx) = nthLe l (indexOf' y l) (index_of_lt_length.2 hy) := by
+    have : nthLe l (indexOf x l) (index_of_lt_length.2 hx) = nthLe l (indexOf y l) (index_of_lt_length.2 hy) := by
       simp only [h]
     simpa only [index_of_nth_le] , fun h => by subst h⟩
 #align list.index_of_inj List.index_of_inj
@@ -2514,34 +2489,6 @@ theorem mem_insert_nth {a b : α} : ∀ {n : ℕ} {l : List α} (hi : n ≤ l.le
     erw [mem_insert_nth (Nat.le_of_succ_le_succ h), ← or_assoc, or_comm' (a = a'), or_assoc]
 #align list.mem_insert_nth List.mem_insert_nth
 
-theorem inj_on_insert_nth_index_of_not_mem (l : List α) (x : α) (hx : x ∉ l) :
-    Set.InjOn (fun k => insertNth k x l) { n | n ≤ l.length } := by
-  induction' l with hd tl IH
-  · intro n hn m hm h
-    simp only [Set.mem_singleton_iff, Set.set_of_eq_eq_singleton, length, nonpos_iff_eq_zero] at hn hm
-    simp [hn, hm]
-    
-  · intro n hn m hm h
-    simp only [length, Set.mem_set_of_eq] at hn hm
-    simp only [mem_cons_iff, not_or] at hx
-    cases n <;> cases m
-    · rfl
-      
-    · simpa [hx.left] using h
-      
-    · simpa [Ne.symm hx.left] using h
-      
-    · simp only [true_and_iff, eq_self_iff_true, insert_nth_succ_cons] at h
-      rw [Nat.succ_inj']
-      refine' IH hx.right _ _ h
-      · simpa [Nat.succ_le_succ_iff] using hn
-        
-      · simpa [Nat.succ_le_succ_iff] using hm
-        
-      
-    
-#align list.inj_on_insert_nth_index_of_not_mem List.inj_on_insert_nth_index_of_not_mem
-
 theorem insert_nth_of_length_lt (l : List α) (x : α) (n : ℕ) (h : l.length < n) : insertNth n x l = l := by
   induction' l with hd tl IH generalizing n
   · cases n
@@ -2756,7 +2703,7 @@ theorem map_comp_map (g : β → γ) (f : α → β) : map g ∘ map f = map (g 
 #align list.map_comp_map List.map_comp_map
 
 theorem map_filter_eq_foldr (f : α → β) (p : α → Prop) [DecidablePred p] (as : List α) :
-    map f (filter' p as) = foldr (fun a bs => if p a then f a :: bs else bs) [] as := by
+    map f (filter p as) = foldr (fun a bs => if p a then f a :: bs else bs) [] as := by
   induction as
   · rfl
     
@@ -4034,7 +3981,7 @@ theorem sizeof_lt_sizeof_of_mem [SizeOf α] {x : α} {l : List α} (hx : x ∈ l
 lean 3 declaration is
   forall {α : Type.{u}} {β : Type.{v}} (p : α -> Prop) (f : α -> β) (l : List.{u} α) (H : forall (a : α), (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l) -> (p a)), Eq.{succ v} (List.{v} β) (List.pmap.{u v} α β p (fun (a : α) (_x : p a) => f a) l H) (List.map.{u v} α β f l)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (p : α -> Prop) (f : α -> β) (l : List.{u_1} α) (H : forall (a : α), (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l) -> (p a)), Eq.{succ u_2} (List.{u_2} β) (List.pmap.{u_1 u_2} α β p (fun (a : α) (x._@.Mathlib.Data.List.Basic._hyg.1886 : p a) => f a) l H) (List.map.{u_1 u_2} α β f l)
+  forall {α : Type.{u_1}} {β : Type.{u_2}} (p : α -> Prop) (f : α -> β) (l : List.{u_1} α) (H : forall (a : α), (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l) -> (p a)), Eq.{succ u_2} (List.{u_2} β) (List.pmap.{u_1 u_2} α β p (fun (a : α) (x._@.Mathlib.Data.List.Basic._hyg.1916 : p a) => f a) l H) (List.map.{u_1 u_2} α β f l)
 Case conversion may be inaccurate. Consider using '#align list.pmap_eq_map List.pmap_eq_mapₓ'. -/
 @[simp]
 theorem pmap_eq_map (p : α → Prop) (f : α → β) (l : List α) (H) : @pmap _ _ p (fun a _ => f a) l H = map f l := by
@@ -4388,7 +4335,7 @@ theorem filter_map_eq_map (f : α → β) : filterMap (some ∘ f) = map f := by
   constructor <;> rfl
 #align list.filter_map_eq_map List.filter_map_eq_map
 
-theorem filter_map_eq_filter (p : α → Prop) [DecidablePred p] : filterMap (Option.guard p) = filter' p := by
+theorem filter_map_eq_filter (p : α → Prop) [DecidablePred p] : filterMap (Option.guard p) = filter p := by
   funext l
   induction' l with a l IH
   · rfl
@@ -4426,12 +4373,12 @@ theorem filter_map_map (f : α → β) (g : β → Option γ) (l : List α) : fi
 #align list.filter_map_map List.filter_map_map
 
 theorem filter_filter_map (f : α → Option β) (p : β → Prop) [DecidablePred p] (l : List α) :
-    filter' p (filterMap f l) = filterMap (fun x => (f x).filter p) l := by
+    filter p (filterMap f l) = filterMap (fun x => (f x).filter p) l := by
   rw [← filter_map_eq_filter, filter_map_filter_map] <;> rfl
 #align list.filter_filter_map List.filter_filter_map
 
 theorem filter_map_filter (p : α → Prop) [DecidablePred p] (f : α → Option β) (l : List α) :
-    filterMap f (filter' p l) = filterMap (fun x => if p x then f x else none) l := by
+    filterMap f (filter p l) = filterMap (fun x => if p x then f x else none) l := by
   rw [← filter_map_eq_filter, filter_map_filter_map]
   congr
   funext x
@@ -4625,11 +4572,11 @@ theorem filter_singleton {a : α} : [a].filter p = if p a then [a] else [] :=
 #align list.filter_singleton List.filter_singleton
 
 theorem filter_eq_foldr (p : α → Prop) [DecidablePred p] (l : List α) :
-    filter' p l = foldr (fun a out => if p a then a :: out else out) [] l := by induction l <;> simp [*, filter]
+    filter p l = foldr (fun a out => if p a then a :: out else out) [] l := by induction l <;> simp [*, filter]
 #align list.filter_eq_foldr List.filter_eq_foldr
 
 theorem filter_congr' {p q : α → Prop} [DecidablePred p] [DecidablePred q] :
-    ∀ {l : List α}, (∀ x ∈ l, p x ↔ q x) → filter' p l = filter' q l
+    ∀ {l : List α}, (∀ x ∈ l, p x ↔ q x) → filter p l = filter q l
   | [], _ => rfl
   | a :: l, h => by
     rw [forall_mem_cons] at h <;>
@@ -4639,29 +4586,29 @@ theorem filter_congr' {p q : α → Prop} [DecidablePred p] [DecidablePred q] :
 #align list.filter_congr' List.filter_congr'
 
 @[simp]
-theorem filter_subset (l : List α) : filter' p l ⊆ l :=
+theorem filter_subset (l : List α) : filter p l ⊆ l :=
   (filter_sublist l).Subset
 #align list.filter_subset List.filter_subset
 
-theorem of_mem_filter {a : α} : ∀ {l}, a ∈ filter' p l → p a
+theorem of_mem_filter {a : α} : ∀ {l}, a ∈ filter p l → p a
   | b :: l, ain =>
     if pb : p b then
-      have : a ∈ b :: filter' p l := by simpa only [filter_cons_of_pos _ pb] using ain
+      have : a ∈ b :: filter p l := by simpa only [filter_cons_of_pos _ pb] using ain
       Or.elim (eq_or_mem_of_mem_cons this)
         (fun this : a = b => by
           rw [← this] at pb
           exact pb)
-        fun this : a ∈ filter' p l => of_mem_filter this
+        fun this : a ∈ filter p l => of_mem_filter this
     else by
       simp only [filter_cons_of_neg _ pb] at ain
       exact of_mem_filter ain
 #align list.of_mem_filter List.of_mem_filter
 
-theorem mem_of_mem_filter {a : α} {l} (h : a ∈ filter' p l) : a ∈ l :=
+theorem mem_of_mem_filter {a : α} {l} (h : a ∈ filter p l) : a ∈ l :=
   filter_subset l h
 #align list.mem_of_mem_filter List.mem_of_mem_filter
 
-theorem mem_filter_of_mem {a : α} : ∀ {l}, a ∈ l → p a → a ∈ filter' p l
+theorem mem_filter_of_mem {a : α} : ∀ {l}, a ∈ l → p a → a ∈ filter p l
   | _ :: l, Or.inl rfl, pa => by rw [filter_cons_of_pos _ pa] <;> apply mem_cons_self
   | b :: l, Or.inr ain, pa =>
     if pb : p b then by rw [filter_cons_of_pos _ pb] <;> apply mem_cons_of_mem <;> apply mem_filter_of_mem ain pa
@@ -4670,23 +4617,23 @@ theorem mem_filter_of_mem {a : α} : ∀ {l}, a ∈ l → p a → a ∈ filter' 
 
 /- warning: list.mem_filter -> List.mem_filter is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u} α p] {a : α} {l : List.{u} α}, Iff (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a (List.filter'.{u} α p (fun (a : α) => _inst_1 a) l)) (And (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l) (p a))
+  forall {α : Type.{u}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u} α p] {a : α} {l : List.{u} α}, Iff (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a (List.filterₓ.{u} α p (fun (a : α) => _inst_1 a) l)) (And (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l) (p a))
 but is expected to have type
   forall {α._@.Std.Data.List.Lemmas._hyg.21895 : Type.{u_1}} {x : α._@.Std.Data.List.Lemmas._hyg.21895} {p : α._@.Std.Data.List.Lemmas._hyg.21895 -> Bool} {as : List.{u_1} α._@.Std.Data.List.Lemmas._hyg.21895}, Iff (Membership.mem.{u_1 u_1} α._@.Std.Data.List.Lemmas._hyg.21895 (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.21895) (List.instMembershipList.{u_1} α._@.Std.Data.List.Lemmas._hyg.21895) x (List.filter.{u_1} α._@.Std.Data.List.Lemmas._hyg.21895 p as)) (And (Membership.mem.{u_1 u_1} α._@.Std.Data.List.Lemmas._hyg.21895 (List.{u_1} α._@.Std.Data.List.Lemmas._hyg.21895) (List.instMembershipList.{u_1} α._@.Std.Data.List.Lemmas._hyg.21895) x as) (Eq.{1} Bool (p x) Bool.true))
 Case conversion may be inaccurate. Consider using '#align list.mem_filter List.mem_filterₓ'. -/
 @[simp]
-theorem mem_filter {a : α} {l} : a ∈ filter' p l ↔ a ∈ l ∧ p a :=
+theorem mem_filter {a : α} {l} : a ∈ filter p l ↔ a ∈ l ∧ p a :=
   ⟨fun h => ⟨mem_of_mem_filter h, of_mem_filter h⟩, fun ⟨h₁, h₂⟩ => mem_filter_of_mem h₁ h₂⟩
 #align list.mem_filter List.mem_filter
 
-theorem monotone_filter_left (p : α → Prop) [DecidablePred p] ⦃l l' : List α⦄ (h : l ⊆ l') :
-    filter' p l ⊆ filter' p l' := by
+theorem monotone_filter_left (p : α → Prop) [DecidablePred p] ⦃l l' : List α⦄ (h : l ⊆ l') : filter p l ⊆ filter p l' :=
+  by
   intro x hx
   rw [mem_filter] at hx⊢
   exact ⟨h hx.left, hx.right⟩
 #align list.monotone_filter_left List.monotone_filter_left
 
-theorem filter_eq_self {l} : filter' p l = l ↔ ∀ a ∈ l, p a := by
+theorem filter_eq_self {l} : filter p l = l ↔ ∀ a ∈ l, p a := by
   induction' l with a l ih
   · exact iff_of_true rfl (forall_mem_nil _)
     
@@ -4700,17 +4647,17 @@ theorem filter_eq_self {l} : filter' p l = l ↔ ∀ a ∈ l, p a := by
     
 #align list.filter_eq_self List.filter_eq_self
 
-theorem filter_length_eq_length {l} : (filter' p l).length = l.length ↔ ∀ a ∈ l, p a :=
+theorem filter_length_eq_length {l} : (filter p l).length = l.length ↔ ∀ a ∈ l, p a :=
   Iff.trans ⟨l.filter_sublist.eq_of_length, congr_arg List.length⟩ filter_eq_self
 #align list.filter_length_eq_length List.filter_length_eq_length
 
-theorem filter_eq_nil {l} : filter' p l = [] ↔ ∀ a ∈ l, ¬p a := by
+theorem filter_eq_nil {l} : filter p l = [] ↔ ∀ a ∈ l, ¬p a := by
   simp only [eq_nil_iff_forall_not_mem, mem_filter, not_and]
 #align list.filter_eq_nil List.filter_eq_nil
 
 variable (p)
 
-theorem Sublist.filter {l₁ l₂} (s : l₁ <+ l₂) : filter' p l₁ <+ filter' p l₂ :=
+theorem Sublist.filter {l₁ l₂} (s : l₁ <+ l₂) : filter p l₁ <+ filter p l₂ :=
   filter_map_eq_filter p ▸ s.filterMap _
 #align list.sublist.filter List.Sublist.filter
 
@@ -4735,12 +4682,12 @@ theorem monotone_filter_right (l : List α) ⦃p q : α → Prop⦄ [DecidablePr
     
 #align list.monotone_filter_right List.monotone_filter_right
 
-theorem map_filter (f : β → α) (l : List β) : filter' p (map f l) = map f (filter' (p ∘ f) l) := by
+theorem map_filter (f : β → α) (l : List β) : filter p (map f l) = map f (filter (p ∘ f) l) := by
   rw [← filter_map_eq_map, filter_filter_map, filter_map_filter] <;> rfl
 #align list.map_filter List.map_filter
 
 @[simp]
-theorem filter_filter (q) [DecidablePred q] : ∀ l, filter' p (filter' q l) = filter' (fun a => p a ∧ q a) l
+theorem filter_filter (q) [DecidablePred q] : ∀ l, filter p (filter q l) = filter (fun a => p a ∧ q a) l
   | [] => rfl
   | a :: l => by
     by_cases hp : p a <;>
@@ -4749,17 +4696,17 @@ theorem filter_filter (q) [DecidablePred q] : ∀ l, filter' p (filter' q l) = f
 #align list.filter_filter List.filter_filter
 
 @[simp]
-theorem filter_true {h : DecidablePred fun a : α => True} (l : List α) : @filter' α (fun _ => True) h l = l := by
+theorem filter_true {h : DecidablePred fun a : α => True} (l : List α) : @filter α (fun _ => True) h l = l := by
   convert filter_eq_self.2 fun _ _ => trivial
 #align list.filter_true List.filter_true
 
 @[simp]
-theorem filter_false {h : DecidablePred fun a : α => False} (l : List α) : @filter' α (fun _ => False) h l = [] := by
+theorem filter_false {h : DecidablePred fun a : α => False} (l : List α) : @filter α (fun _ => False) h l = [] := by
   convert filter_eq_nil.2 fun _ _ => id
 #align list.filter_false List.filter_false
 
 @[simp]
-theorem span_eq_take_drop : ∀ l : List α, span' p l = (takeWhile p l, dropWhile' p l)
+theorem span_eq_take_drop : ∀ l : List α, span p l = (takeWhile p l, dropWhile p l)
   | [] => rfl
   | a :: l =>
     if pa : p a then by simp only [span, if_pos pa, span_eq_take_drop l, take_while, drop_while]
@@ -4767,7 +4714,7 @@ theorem span_eq_take_drop : ∀ l : List α, span' p l = (takeWhile p l, dropWhi
 #align list.span_eq_take_drop List.span_eq_take_drop
 
 @[simp]
-theorem take_while_append_drop : ∀ l : List α, takeWhile p l ++ dropWhile' p l = l
+theorem take_while_append_drop : ∀ l : List α, takeWhile p l ++ dropWhile p l = l
   | [] => rfl
   | a :: l =>
     if pa : p a then by rw [take_while, drop_while, if_pos pa, if_pos pa, cons_append, take_while_append_drop l]
@@ -4791,7 +4738,7 @@ theorem drop_while_nth_le_zero_not (l : List α) (hl : 0 < (l.dropWhile p).lengt
 variable {p} {l : List α}
 
 @[simp]
-theorem drop_while_eq_nil_iff : dropWhile' p l = [] ↔ ∀ x ∈ l, p x := by
+theorem drop_while_eq_nil_iff : dropWhile p l = [] ↔ ∀ x ∈ l, p x := by
   induction' l with x xs IH
   · simp [drop_while]
     
@@ -5001,7 +4948,7 @@ theorem erase_nil (a : α) : [].erase a = [] :=
 
 /- warning: list.erase_cons -> List.erase_cons is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] (a : α) (b : α) (l : List.{u} α), Eq.{succ u} (List.{u} α) (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) (List.cons.{u} α b l) a) (ite.{succ u} (List.{u} α) (Eq.{succ u} α b a) (_inst_1 b a) l (List.cons.{u} α b (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) l a)))
+  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] (a : α) (b : α) (l : List.{u} α), Eq.{succ u} (List.{u} α) (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) (List.cons.{u} α b l) a) (ite.{succ u} (List.{u} α) (Eq.{succ u} α b a) (_inst_1 b a) l (List.cons.{u} α b (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) l a)))
 but is expected to have type
   forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.20462 : DecidableEq.{succ u_1} α] (a : α) (b : α) (l : List.{u_1} α), Eq.{succ u_1} (List.{u_1} α) (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.20462 a b)) (List.cons.{u_1} α b l) a) (ite.{succ u_1} (List.{u_1} α) (Eq.{succ u_1} α b a) (inst._@.Std.Data.List.Lemmas._hyg.20462 b a) l (List.cons.{u_1} α b (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.20462 a b)) l a)))
 Case conversion may be inaccurate. Consider using '#align list.erase_cons List.erase_consₓ'. -/
@@ -5011,7 +4958,7 @@ theorem erase_cons (a b : α) (l : List α) : (b :: l).erase a = if b = a then l
 
 /- warning: list.erase_cons_head -> List.erase_cons_head is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] (a : α) (l : List.{u} α), Eq.{succ u} (List.{u} α) (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) (List.cons.{u} α a l) a) l
+  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] (a : α) (l : List.{u} α), Eq.{succ u} (List.{u} α) (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) (List.cons.{u} α a l) a) l
 but is expected to have type
   forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.20558 : DecidableEq.{succ u_1} α] (a : α) (l : List.{u_1} α), Eq.{succ u_1} (List.{u_1} α) (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.20558 a b)) (List.cons.{u_1} α a l) a) l
 Case conversion may be inaccurate. Consider using '#align list.erase_cons_head List.erase_cons_headₓ'. -/
@@ -5021,7 +4968,7 @@ theorem erase_cons_head (a : α) (l : List α) : (a :: l).erase a = l := by simp
 
 /- warning: list.erase_cons_tail -> List.erase_cons_tail is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] {a : α} {b : α} (l : List.{u} α), (Ne.{succ u} α b a) -> (Eq.{succ u} (List.{u} α) (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) (List.cons.{u} α b l) a) (List.cons.{u} α b (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) l a)))
+  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] {a : α} {b : α} (l : List.{u} α), (Ne.{succ u} α b a) -> (Eq.{succ u} (List.{u} α) (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) (List.cons.{u} α b l) a) (List.cons.{u} α b (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) l a)))
 but is expected to have type
   forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.20585 : DecidableEq.{succ u_1} α] {a : α} {b : α} (l : List.{u_1} α), (Ne.{succ u_1} α b a) -> (Eq.{succ u_1} (List.{u_1} α) (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.20585 a b)) (List.cons.{u_1} α b l) a) (List.cons.{u_1} α b (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.20585 a b)) l a)))
 Case conversion may be inaccurate. Consider using '#align list.erase_cons_tail List.erase_cons_tailₓ'. -/
@@ -5039,7 +4986,7 @@ theorem erase_eq_erasep (a : α) (l : List α) : l.erase a = l.erasep (Eq a) := 
 
 /- warning: list.erase_of_not_mem -> List.erase_of_not_mem is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] {a : α} {l : List.{u} α}, (Not (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l)) -> (Eq.{succ u} (List.{u} α) (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) l a) l)
+  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] {a : α} {l : List.{u} α}, (Not (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l)) -> (Eq.{succ u} (List.{u} α) (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) l a) l)
 but is expected to have type
   forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.20738 : DecidableEq.{succ u_1} α] {a : α} {l : List.{u_1} α}, (Not (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l)) -> (Eq.{succ u_1} (List.{u_1} α) (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.20738 a b)) l a) l)
 Case conversion may be inaccurate. Consider using '#align list.erase_of_not_mem List.erase_of_not_memₓ'. -/
@@ -5050,7 +4997,7 @@ theorem erase_of_not_mem {a : α} {l : List α} (h : a ∉ l) : l.erase a = l :=
 
 /- warning: list.exists_erase_eq -> List.exists_erase_eq is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] {a : α} {l : List.{u} α}, (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l) -> (Exists.{succ u} (List.{u} α) (fun (l₁ : List.{u} α) => Exists.{succ u} (List.{u} α) (fun (l₂ : List.{u} α) => And (Not (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l₁)) (And (Eq.{succ u} (List.{u} α) l (Append.append.{u} (List.{u} α) (List.hasAppend.{u} α) l₁ (List.cons.{u} α a l₂))) (Eq.{succ u} (List.{u} α) (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) l a) (Append.append.{u} (List.{u} α) (List.hasAppend.{u} α) l₁ l₂))))))
+  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] {a : α} {l : List.{u} α}, (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l) -> (Exists.{succ u} (List.{u} α) (fun (l₁ : List.{u} α) => Exists.{succ u} (List.{u} α) (fun (l₂ : List.{u} α) => And (Not (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l₁)) (And (Eq.{succ u} (List.{u} α) l (Append.append.{u} (List.{u} α) (List.hasAppend.{u} α) l₁ (List.cons.{u} α a l₂))) (Eq.{succ u} (List.{u} α) (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) l a) (Append.append.{u} (List.{u} α) (List.hasAppend.{u} α) l₁ l₂))))))
 but is expected to have type
   forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.20885 : DecidableEq.{succ u_1} α] {a : α} {l : List.{u_1} α}, (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l) -> (Exists.{succ u_1} (List.{u_1} α) (fun (l₁ : List.{u_1} α) => Exists.{succ u_1} (List.{u_1} α) (fun (l₂ : List.{u_1} α) => And (Not (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l₁)) (And (Eq.{succ u_1} (List.{u_1} α) l (HAppend.hAppend.{u_1 u_1 u_1} (List.{u_1} α) (List.{u_1} α) (List.{u_1} α) (instHAppend.{u_1} (List.{u_1} α) (List.instAppendList.{u_1} α)) l₁ (List.cons.{u_1} α a l₂))) (Eq.{succ u_1} (List.{u_1} α) (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.20885 a b)) l a) (HAppend.hAppend.{u_1 u_1 u_1} (List.{u_1} α) (List.{u_1} α) (List.{u_1} α) (instHAppend.{u_1} (List.{u_1} α) (List.instAppendList.{u_1} α)) l₁ l₂))))))
 Case conversion may be inaccurate. Consider using '#align list.exists_erase_eq List.exists_erase_eqₓ'. -/
@@ -5062,7 +5009,7 @@ theorem exists_erase_eq {a : α} {l : List α} (h : a ∈ l) : ∃ l₁ l₂, a 
 
 /- warning: list.length_erase_of_mem -> List.length_erase_of_mem is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] {a : α} {l : List.{u} α}, (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l) -> (Eq.{1} Nat (List.length.{u} α (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) l a)) (Nat.pred (List.length.{u} α l)))
+  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] {a : α} {l : List.{u} α}, (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l) -> (Eq.{1} Nat (List.length.{u} α (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) l a)) (Nat.pred (List.length.{u} α l)))
 but is expected to have type
   forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.21075 : DecidableEq.{succ u_1} α] {a : α} {l : List.{u_1} α}, (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l) -> (Eq.{1} Nat (List.length.{u_1} α (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.21075 a b)) l a)) (Nat.pred (List.length.{u_1} α l)))
 Case conversion may be inaccurate. Consider using '#align list.length_erase_of_mem List.length_erase_of_memₓ'. -/
@@ -5078,7 +5025,7 @@ theorem length_erase_add_one {a : α} {l : List α} (h : a ∈ l) : (l.erase a).
 
 /- warning: list.erase_append_left -> List.erase_append_left is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] {a : α} {l₁ : List.{u} α} (l₂ : List.{u} α), (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l₁) -> (Eq.{succ u} (List.{u} α) (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) (Append.append.{u} (List.{u} α) (List.hasAppend.{u} α) l₁ l₂) a) (Append.append.{u} (List.{u} α) (List.hasAppend.{u} α) (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) l₁ a) l₂))
+  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] {a : α} {l₁ : List.{u} α} (l₂ : List.{u} α), (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l₁) -> (Eq.{succ u} (List.{u} α) (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) (Append.append.{u} (List.{u} α) (List.hasAppend.{u} α) l₁ l₂) a) (Append.append.{u} (List.{u} α) (List.hasAppend.{u} α) (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) l₁ a) l₂))
 but is expected to have type
   forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.21142 : DecidableEq.{succ u_1} α] {a : α} {l₁ : List.{u_1} α} (l₂ : List.{u_1} α), (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l₁) -> (Eq.{succ u_1} (List.{u_1} α) (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.21142 a b)) (HAppend.hAppend.{u_1 u_1 u_1} (List.{u_1} α) (List.{u_1} α) (List.{u_1} α) (instHAppend.{u_1} (List.{u_1} α) (List.instAppendList.{u_1} α)) l₁ l₂) a) (HAppend.hAppend.{u_1 u_1 u_1} (List.{u_1} α) (List.{u_1} α) (List.{u_1} α) (instHAppend.{u_1} (List.{u_1} α) (List.instAppendList.{u_1} α)) (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.21142 a b)) l₁ a) l₂))
 Case conversion may be inaccurate. Consider using '#align list.erase_append_left List.erase_append_leftₓ'. -/
@@ -5088,7 +5035,7 @@ theorem erase_append_left {a : α} {l₁ : List α} (l₂) (h : a ∈ l₁) : (l
 
 /- warning: list.erase_append_right -> List.erase_append_right is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] {a : α} {l₁ : List.{u} α} (l₂ : List.{u} α), (Not (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l₁)) -> (Eq.{succ u} (List.{u} α) (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) (Append.append.{u} (List.{u} α) (List.hasAppend.{u} α) l₁ l₂) a) (Append.append.{u} (List.{u} α) (List.hasAppend.{u} α) l₁ (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) l₂ a)))
+  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] {a : α} {l₁ : List.{u} α} (l₂ : List.{u} α), (Not (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l₁)) -> (Eq.{succ u} (List.{u} α) (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) (Append.append.{u} (List.{u} α) (List.hasAppend.{u} α) l₁ l₂) a) (Append.append.{u} (List.{u} α) (List.hasAppend.{u} α) l₁ (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) l₂ a)))
 but is expected to have type
   forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.21196 : DecidableEq.{succ u_1} α] {a : α} {l₁ : List.{u_1} α} (l₂ : List.{u_1} α), (Not (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l₁)) -> (Eq.{succ u_1} (List.{u_1} α) (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.21196 a b)) (HAppend.hAppend.{u_1 u_1 u_1} (List.{u_1} α) (List.{u_1} α) (List.{u_1} α) (instHAppend.{u_1} (List.{u_1} α) (List.instAppendList.{u_1} α)) l₁ l₂) a) (HAppend.hAppend.{u_1 u_1 u_1} (List.{u_1} α) (List.{u_1} α) (List.{u_1} α) (instHAppend.{u_1} (List.{u_1} α) (List.instAppendList.{u_1} α)) l₁ (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.21196 a b)) l₂ a)))
 Case conversion may be inaccurate. Consider using '#align list.erase_append_right List.erase_append_rightₓ'. -/
@@ -5098,7 +5045,7 @@ theorem erase_append_right {a : α} {l₁ : List α} (l₂) (h : a ∉ l₁) : (
 
 /- warning: list.erase_sublist -> List.erase_sublist is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] (a : α) (l : List.{u} α), List.Sublist.{u} α (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) l a) l
+  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] (a : α) (l : List.{u} α), List.Sublist.{u} α (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) l a) l
 but is expected to have type
   forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.21301 : DecidableEq.{succ u_1} α] (a : α) (l : List.{u_1} α), List.Sublist.{u_1} α (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.21301 a b)) l a) l
 Case conversion may be inaccurate. Consider using '#align list.erase_sublist List.erase_sublistₓ'. -/
@@ -5107,7 +5054,7 @@ theorem erase_sublist (a : α) (l : List α) : l.erase a <+ l := by rw [erase_eq
 
 /- warning: list.erase_subset -> List.erase_subset is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] (a : α) (l : List.{u} α), HasSubset.Subset.{u} (List.{u} α) (List.hasSubset.{u} α) (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) l a) l
+  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] (a : α) (l : List.{u} α), HasSubset.Subset.{u} (List.{u} α) (List.hasSubset.{u} α) (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) l a) l
 but is expected to have type
   forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.21325 : DecidableEq.{succ u_1} α] (a : α) (l : List.{u_1} α), HasSubset.Subset.{u_1} (List.{u_1} α) (List.instHasSubsetList.{u_1} α) (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.21325 a b)) l a) l
 Case conversion may be inaccurate. Consider using '#align list.erase_subset List.erase_subsetₓ'. -/
@@ -5121,7 +5068,7 @@ theorem Sublist.erase (a : α) {l₁ l₂ : List α} (h : l₁ <+ l₂) : l₁.e
 
 /- warning: list.mem_of_mem_erase -> List.mem_of_mem_erase is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] {a : α} {b : α} {l : List.{u} α}, (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) l b)) -> (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l)
+  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] {a : α} {b : α} {l : List.{u} α}, (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) l b)) -> (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l)
 but is expected to have type
   forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.21381 : DecidableEq.{succ u_1} α] {a : α} {b : α} {l : List.{u_1} α}, (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.21381 a b)) l b)) -> (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l)
 Case conversion may be inaccurate. Consider using '#align list.mem_of_mem_erase List.mem_of_mem_eraseₓ'. -/
@@ -5131,7 +5078,7 @@ theorem mem_of_mem_erase {a b : α} {l : List α} : a ∈ l.erase b → a ∈ l 
 
 /- warning: list.mem_erase_of_ne -> List.mem_erase_of_ne is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] {a : α} {b : α} {l : List.{u} α}, (Ne.{succ u} α a b) -> (Iff (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) l b)) (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l))
+  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] {a : α} {b : α} {l : List.{u} α}, (Ne.{succ u} α a b) -> (Iff (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) l b)) (Membership.Mem.{u u} α (List.{u} α) (List.hasMem.{u} α) a l))
 but is expected to have type
   forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.21407 : DecidableEq.{succ u_1} α] {a : α} {b : α} {l : List.{u_1} α}, (Ne.{succ u_1} α a b) -> (Iff (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.21407 a b)) l b)) (Membership.mem.{u_1 u_1} α (List.{u_1} α) (List.instMembershipList.{u_1} α) a l))
 Case conversion may be inaccurate. Consider using '#align list.mem_erase_of_ne List.mem_erase_of_neₓ'. -/
@@ -5142,7 +5089,7 @@ theorem mem_erase_of_ne {a b : α} {l : List α} (ab : a ≠ b) : a ∈ l.erase 
 
 /- warning: list.erase_comm -> List.erase_comm is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] (a : α) (b : α) (l : List.{u} α), Eq.{succ u} (List.{u} α) (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) l a) b) (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) (List.erase'.{u} α (fun (a : α) (b : α) => _inst_1 a b) l b) a)
+  forall {α : Type.{u}} [_inst_1 : DecidableEq.{succ u} α] (a : α) (b : α) (l : List.{u} α), Eq.{succ u} (List.{u} α) (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) l a) b) (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) (List.eraseₓ.{u} α (fun (a : α) (b : α) => _inst_1 a b) l b) a)
 but is expected to have type
   forall {α : Type.{u_1}} [inst._@.Std.Data.List.Lemmas._hyg.21449 : DecidableEq.{succ u_1} α] (a : α) (b : α) (l : List.{u_1} α), Eq.{succ u_1} (List.{u_1} α) (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.21449 a b)) (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.21449 a b)) l a) b) (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.21449 a b)) (List.erase.{u_1} α (instBEq.{u_1} α (fun (a : α) (b : α) => inst._@.Std.Data.List.Lemmas._hyg.21449 a b)) l b) a)
 Case conversion may be inaccurate. Consider using '#align list.erase_comm List.erase_commₓ'. -/
@@ -5172,7 +5119,7 @@ theorem map_erase [DecidableEq β] {f : α → β} (finj : Injective f) {a : α}
 #align list.map_erase List.map_erase
 
 theorem map_foldl_erase [DecidableEq β] {f : α → β} (finj : Injective f) {l₁ l₂ : List α} :
-    map f (foldl List.erase' l₁ l₂) = foldl (fun l a => l.erase (f a)) (map f l₁) l₂ := by
+    map f (foldl List.erase l₁ l₂) = foldl (fun l a => l.erase (f a)) (map f l₁) l₂ := by
   induction l₂ generalizing l₁ <;> [rfl, simp only [foldl_cons, map_erase finj, *]]
 #align list.map_foldl_erase List.map_foldl_erase
 
@@ -5192,7 +5139,7 @@ theorem diff_nil (l : List α) : l.diff [] = l :=
 
 @[simp]
 theorem diff_cons (l₁ l₂ : List α) (a : α) : l₁.diff (a :: l₂) = (l₁.erase a).diff l₂ :=
-  if h : a ∈ l₁ then by simp only [List.diff', if_pos h] else by simp only [List.diff', if_neg h, erase_of_not_mem h]
+  if h : a ∈ l₁ then by simp only [List.diff, if_pos h] else by simp only [List.diff, if_neg h, erase_of_not_mem h]
 #align list.diff_cons List.diff_cons
 
 theorem diff_cons_right (l₁ l₂ : List α) (a : α) : l₁.diff (a :: l₂) = (l₁.diff l₂).erase a := by
@@ -5221,7 +5168,7 @@ theorem cons_diff (a : α) (l₁ l₂ : List α) :
   · simp
     
   · simp only [mem_cons_iff, *, false_or_iff, diff_cons_right]
-    split_ifs with h₂ <;> simp [diff_erase, List.erase', hne, hne.symm]
+    split_ifs with h₂ <;> simp [diff_erase, List.erase, hne, hne.symm]
     
 #align list.cons_diff List.cons_diff
 
@@ -5233,7 +5180,7 @@ theorem cons_diff_of_not_mem {a : α} {l₂ : List α} (h : a ∉ l₂) (l₁ : 
   by rw [cons_diff, if_neg h]
 #align list.cons_diff_of_not_mem List.cons_diff_of_not_mem
 
-theorem diff_eq_foldl : ∀ l₁ l₂ : List α, l₁.diff l₂ = foldl List.erase' l₁ l₂
+theorem diff_eq_foldl : ∀ l₁ l₂ : List α, l₁.diff l₂ = foldl List.erase l₁ l₂
   | l₁, [] => rfl
   | l₁, a :: l₂ => (diff_cons l₁ l₂ a).trans (diff_eq_foldl _ _)
 #align list.diff_eq_foldl List.diff_eq_foldl

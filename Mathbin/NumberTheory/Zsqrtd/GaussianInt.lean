@@ -250,7 +250,7 @@ instance : EuclideanDomain ℤ[i] :=
       simp [div_def]
       rfl,
     quotient_mul_add_remainder_eq := fun _ _ => by simp [mod_def], R := _,
-    r_well_founded := measure_wf (Int.natAbs ∘ norm), remainderLt := nat_abs_norm_mod_lt,
+    r_well_founded := measure_wf (Int.natAbs ∘ norm), remainder_lt := nat_abs_norm_mod_lt,
     mul_left_not_lt := fun a b hb0 => not_lt_of_ge <| norm_le_norm_mul_left a hb0 }
 
 open PrincipalIdealRing
@@ -326,17 +326,17 @@ theorem sq_add_sq_of_nat_prime_of_not_irreducible (p : ℕ) [hp : Fact p.Prime] 
   ⟨a.re.natAbs, a.im.natAbs, by simpa [nat_abs_norm_eq, sq] using hnap⟩
 #align gaussian_int.sq_add_sq_of_nat_prime_of_not_irreducible GaussianInt.sq_add_sq_of_nat_prime_of_not_irreducible
 
-theorem primeOfNatPrimeOfModFourEqThree (p : ℕ) [hp : Fact p.Prime] (hp3 : p % 4 = 3) : Prime (p : ℤ[i]) :=
+theorem prime_of_nat_prime_of_mod_four_eq_three (p : ℕ) [hp : Fact p.Prime] (hp3 : p % 4 = 3) : Prime (p : ℤ[i]) :=
   irreducible_iff_prime.1 <|
     Classical.by_contradiction fun hpi =>
       let ⟨a, b, hab⟩ := sq_add_sq_of_nat_prime_of_not_irreducible p hpi
       have : ∀ a b : Zmod 4, a ^ 2 + b ^ 2 ≠ p := by erw [← Zmod.nat_cast_mod p 4, hp3] <;> exact by decide
       this a b (hab ▸ by simp)
-#align gaussian_int.prime_of_nat_prime_of_mod_four_eq_three GaussianInt.primeOfNatPrimeOfModFourEqThree
+#align gaussian_int.prime_of_nat_prime_of_mod_four_eq_three GaussianInt.prime_of_nat_prime_of_mod_four_eq_three
 
 /-- A prime natural number is prime in `ℤ[i]` if and only if it is `3` mod `4` -/
 theorem prime_iff_mod_four_eq_three_of_nat_prime (p : ℕ) [hp : Fact p.Prime] : Prime (p : ℤ[i]) ↔ p % 4 = 3 :=
-  ⟨mod_four_eq_three_of_nat_prime_of_prime p, primeOfNatPrimeOfModFourEqThree p⟩
+  ⟨mod_four_eq_three_of_nat_prime_of_prime p, prime_of_nat_prime_of_mod_four_eq_three p⟩
 #align gaussian_int.prime_iff_mod_four_eq_three_of_nat_prime GaussianInt.prime_iff_mod_four_eq_three_of_nat_prime
 
 end GaussianInt

@@ -177,6 +177,15 @@ protected def copy (f : TopHom α β) (f' : α → β) (h : f' = f) : TopHom α 
   map_top' := h.symm ▸ f.map_top'
 #align top_hom.copy TopHom.copy
 
+@[simp]
+theorem coe_copy (f : TopHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align top_hom.coe_copy TopHom.coe_copy
+
+theorem copy_eq (f : TopHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align top_hom.copy_eq TopHom.copy_eq
+
 instance : Inhabited (TopHom α β) :=
   ⟨⟨fun _ => ⊤, rfl⟩⟩
 
@@ -357,6 +366,15 @@ protected def copy (f : BotHom α β) (f' : α → β) (h : f' = f) : BotHom α 
   toFun := f'
   map_bot' := h.symm ▸ f.map_bot'
 #align bot_hom.copy BotHom.copy
+
+@[simp]
+theorem coe_copy (f : BotHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align bot_hom.coe_copy BotHom.coe_copy
+
+theorem copy_eq (f : BotHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align bot_hom.copy_eq BotHom.copy_eq
 
 instance : Inhabited (BotHom α β) :=
   ⟨⟨fun _ => ⊥, rfl⟩⟩
@@ -543,6 +561,15 @@ definitional equalities. -/
 protected def copy (f : BoundedOrderHom α β) (f' : α → β) (h : f' = f) : BoundedOrderHom α β :=
   { f.toOrderHom.copy f' h, f.toTopHom.copy f' h, f.toBotHom.copy f' h with }
 #align bounded_order_hom.copy BoundedOrderHom.copy
+
+@[simp]
+theorem coe_copy (f : BoundedOrderHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align bounded_order_hom.coe_copy BoundedOrderHom.coe_copy
+
+theorem copy_eq (f : BoundedOrderHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align bounded_order_hom.copy_eq BoundedOrderHom.copy_eq
 
 variable (α)
 

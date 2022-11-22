@@ -280,11 +280,11 @@ def Biproduct.isColimit (F : J → C) [HasBiproduct F] : IsColimit (Biproduct.bi
   (getBiproductData F).IsBilimit.IsColimit
 #align category_theory.limits.biproduct.is_colimit CategoryTheory.Limits.Biproduct.isColimit
 
-instance (priority := 100) has_product_of_has_biproduct [HasBiproduct F] : HasLimit (Discrete.functor F) :=
+instance (priority := 100) has_product_of_has_biproduct [HasBiproduct F] : HasProduct F :=
   HasLimit.mk { Cone := (Biproduct.bicone F).toCone, IsLimit := Biproduct.isLimit F }
 #align category_theory.limits.has_product_of_has_biproduct CategoryTheory.Limits.has_product_of_has_biproduct
 
-instance (priority := 100) has_coproduct_of_has_biproduct [HasBiproduct F] : HasColimit (Discrete.functor F) :=
+instance (priority := 100) has_coproduct_of_has_biproduct [HasBiproduct F] : HasCoproduct F :=
   HasColimit.mk { Cocone := (Biproduct.bicone F).toCocone, IsColimit := Biproduct.isColimit F }
 #align category_theory.limits.has_coproduct_of_has_biproduct CategoryTheory.Limits.has_coproduct_of_has_biproduct
 
@@ -300,21 +300,38 @@ class HasBiproductsOfShape : Prop where
 
 attribute [instance] has_biproducts_of_shape.has_biproduct
 
+/- ./././Mathport/Syntax/Translate/Command.lean:379:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- `has_finite_biproducts C` represents a choice of biproduct for every family of objects in `C`
 indexed by a finite type. -/
 class HasFiniteBiproducts : Prop where
-  HasBiproductsOfShape : ∀ (J : Type) [Fintype J], HasBiproductsOfShape J C
+  out : ∀ n, HasBiproductsOfShape (Fin n) C
 #align category_theory.limits.has_finite_biproducts CategoryTheory.Limits.HasFiniteBiproducts
 
-attribute [instance] has_finite_biproducts.has_biproducts_of_shape
+variable {J}
+
+theorem has_biproducts_of_shape_of_equiv {K : Type w'} [HasBiproductsOfShape K C] (e : J ≃ K) :
+    HasBiproductsOfShape J C :=
+  ⟨fun F =>
+    let ⟨⟨h⟩⟩ := HasBiproductsOfShape.has_biproduct (F ∘ e.symm)
+    let ⟨c, hc⟩ := h
+    has_biproduct.mk <| by
+      simpa only [(· ∘ ·), e.symm_apply_apply] using limit_bicone.mk (c.whisker e) ((c.whisker_is_bilimit_iff _).2 hc)⟩
+#align category_theory.limits.has_biproducts_of_shape_of_equiv CategoryTheory.Limits.has_biproducts_of_shape_of_equiv
+
+instance (priority := 100) has_biproducts_of_shape_finite [HasFiniteBiproducts C] [Finite J] :
+    HasBiproductsOfShape J C := by
+  rcases Finite.exists_equiv_fin J with ⟨n, ⟨e⟩⟩
+  haveI := has_finite_biproducts.out C n
+  exact has_biproducts_of_shape_of_equiv C e
+#align category_theory.limits.has_biproducts_of_shape_finite CategoryTheory.Limits.has_biproducts_of_shape_finite
 
 instance (priority := 100) has_finite_products_of_has_finite_biproducts [HasFiniteBiproducts C] :
-    HasFiniteProducts C where out J _ := ⟨fun F => has_limit_of_iso discrete.nat_iso_functor.symm⟩
+    HasFiniteProducts C where out n := ⟨fun F => has_limit_of_iso Discrete.natIsoFunctor.symm⟩
 #align
   category_theory.limits.has_finite_products_of_has_finite_biproducts CategoryTheory.Limits.has_finite_products_of_has_finite_biproducts
 
 instance (priority := 100) has_finite_coproducts_of_has_finite_biproducts [HasFiniteBiproducts C] :
-    HasFiniteCoproducts C where out J _ := ⟨fun F => has_colimit_of_iso discrete.nat_iso_functor⟩
+    HasFiniteCoproducts C where out n := ⟨fun F => has_colimit_of_iso Discrete.natIsoFunctor⟩
 #align
   category_theory.limits.has_finite_coproducts_of_has_finite_biproducts CategoryTheory.Limits.has_finite_coproducts_of_has_finite_biproducts
 

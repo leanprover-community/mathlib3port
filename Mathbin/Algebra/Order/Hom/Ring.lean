@@ -203,6 +203,15 @@ protected def copy (f : α →+*o β) (f' : α → β) (h : f' = f) : α →+*o 
   { f.toRingHom.copy f' h, f.toOrderAddMonoidHom.copy f' h with }
 #align order_ring_hom.copy OrderRingHom.copy
 
+@[simp]
+theorem coe_copy (f : α →+*o β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align order_ring_hom.coe_copy OrderRingHom.coe_copy
+
+theorem copy_eq (f : α →+*o β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align order_ring_hom.copy_eq OrderRingHom.copy_eq
+
 variable (α)
 
 /-- The identity as an ordered ring homomorphism. -/

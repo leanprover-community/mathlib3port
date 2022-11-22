@@ -2083,7 +2083,7 @@ theorem enum_ord_range {f : Ordinal → Ordinal} (hf : StrictMono f) : enumOrd (
 @[simp]
 theorem enum_ord_univ : enumOrd Set.univ = id := by
   rw [← range_id]
-  exact enum_ord_range strict_mono_id
+  exact enum_ord_range strictMono_id
 #align ordinal.enum_ord_univ Ordinal.enum_ord_univ
 
 @[simp]

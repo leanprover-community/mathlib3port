@@ -3,6 +3,7 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
+import Mathbin.Data.List.Lemmas
 import Mathbin.Data.List.Perm
 
 /-!
@@ -309,7 +310,7 @@ end Mem
 instance : Singleton α (Multiset α) :=
   ⟨fun a => a ::ₘ 0⟩
 
-instance : LawfulSingleton α (Multiset α) :=
+instance : IsLawfulSingleton α (Multiset α) :=
   ⟨fun a => rfl⟩
 
 @[simp]
@@ -848,7 +849,7 @@ theorem well_founded_lt : WellFounded ((· < ·) : Multiset α → Multiset α �
 
 /-- `repeat a n` is the multiset containing only `a` with multiplicity `n`. -/
 def repeat (a : α) (n : ℕ) : Multiset α :=
-  repeat' a n
+  repeat a n
 #align multiset.repeat Multiset.repeat
 
 theorem coe_repeat (a : α) (n : ℕ) : (List.repeat a n : Multiset α) = repeat a n :=
@@ -1875,7 +1876,7 @@ variable (p : α → Prop) [DecidablePred p]
 /-- `filter p s` returns the elements in `s` (with the same multiplicities)
   which satisfy `p`, and removes the rest. -/
 def filter (s : Multiset α) : Multiset α :=
-  Quot.liftOn s (fun l => (filter' p l : Multiset α)) fun l₁ l₂ h => Quot.sound <| h.filter p
+  Quot.liftOn s (fun l => (filter p l : Multiset α)) fun l₁ l₂ h => Quot.sound <| h.filter p
 #align multiset.filter Multiset.filter
 
 @[simp]

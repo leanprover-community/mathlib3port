@@ -248,13 +248,13 @@ theorem coe_one : ↑(1 : selfAdjoint R) = (1 : R) :=
 instance [Nontrivial R] : Nontrivial (selfAdjoint R) :=
   ⟨⟨0, 1, Subtype.ne_of_val_ne zero_ne_one⟩⟩
 
-instance : HasNatCast (selfAdjoint R) :=
+instance : NatCast (selfAdjoint R) :=
   ⟨fun n =>
     ⟨n,
       Nat.recOn n (by simpa using zero_mem (selfAdjoint R)) fun k hk =>
         (@Nat.cast_succ R _ k).symm ▸ add_mem hk (is_self_adjoint_one R)⟩⟩
 
-instance : HasIntCast (selfAdjoint R) :=
+instance : IntCast (selfAdjoint R) :=
   ⟨fun n =>
     ⟨n, by
       cases n <;> simp [show ↑n ∈ selfAdjoint R from (n : selfAdjoint R).2]

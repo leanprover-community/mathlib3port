@@ -225,10 +225,12 @@ theorem toLex_symm_eq : (@toLex α).symm = ofLex :=
 #align to_lex_symm_eq toLex_symm_eq
 -/
 
+#print ofLex_symm_eq /-
 @[simp]
 theorem ofLex_symm_eq : (@ofLex α).symm = toLex :=
   rfl
 #align of_lex_symm_eq ofLex_symm_eq
+-/
 
 #print toLex_ofLex /-
 @[simp]

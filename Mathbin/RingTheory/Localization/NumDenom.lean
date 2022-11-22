@@ -85,7 +85,7 @@ theorem eq_zero_of_num_eq_zero {x : K} (h : num A x = 0) : x = 0 :=
   num_mul_denom_eq_num_iff_eq'.mp (by rw [zero_mul, h, RingHom.map_zero])
 #align is_fraction_ring.eq_zero_of_num_eq_zero IsFractionRing.eq_zero_of_num_eq_zero
 
-theorem isIntegerOfIsUnitDenom {x : K} (h : IsUnit (denom A x : A)) : IsInteger A x := by
+theorem is_integer_of_is_unit_denom {x : K} (h : IsUnit (denom A x : A)) : IsInteger A x := by
   cases' h with d hd
   have d_ne_zero : algebraMap A K (denom A x) ≠ 0 :=
     IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors (denom A x).2
@@ -94,7 +94,7 @@ theorem isIntegerOfIsUnitDenom {x : K} (h : IsUnit (denom A x : A)) : IsInteger 
   rw [map_mul, map_units_inv, hd]
   apply mul_left_cancel₀ d_ne_zero
   rw [← mul_assoc, mul_inv_cancel d_ne_zero, one_mul, mk'_spec']
-#align is_fraction_ring.is_integer_of_is_unit_denom IsFractionRing.isIntegerOfIsUnitDenom
+#align is_fraction_ring.is_integer_of_is_unit_denom IsFractionRing.is_integer_of_is_unit_denom
 
 theorem is_unit_denom_of_num_eq_zero {x : K} (h : num A x = 0) : IsUnit (denom A x : A) :=
   num_denom_reduced A x (h.symm ▸ dvd_zero _) dvd_rfl

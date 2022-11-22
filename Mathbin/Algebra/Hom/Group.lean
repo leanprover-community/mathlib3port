@@ -760,6 +760,16 @@ protected def OneHom.copy {hM : One M} {hN : One N} (f : OneHom M N) (f' : M →
   map_one' := h.symm ▸ f.map_one'
 #align one_hom.copy OneHom.copy
 
+@[simp, to_additive]
+theorem OneHom.coe_copy {hM : One M} {hN : One N} (f : OneHom M N) (f' : M → N) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align one_hom.coe_copy OneHom.coe_copy
+
+@[to_additive]
+theorem OneHom.coe_copy_eq {hM : One M} {hN : One N} (f : OneHom M N) (f' : M → N) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align one_hom.coe_copy_eq OneHom.coe_copy_eq
+
 /-- Copy of a `mul_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
 @[to_additive "Copy of an `add_hom` with a new `to_fun` equal to the old one. Useful to fix\ndefinitional equalities."]
@@ -767,6 +777,16 @@ protected def MulHom.copy {hM : Mul M} {hN : Mul N} (f : M →ₙ* N) (f' : M �
   toFun := f'
   map_mul' := h.symm ▸ f.map_mul'
 #align mul_hom.copy MulHom.copy
+
+@[simp, to_additive]
+theorem MulHom.coe_copy {hM : Mul M} {hN : Mul N} (f : M →ₙ* N) (f' : M → N) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align mul_hom.coe_copy MulHom.coe_copy
+
+@[to_additive]
+theorem MulHom.coe_copy_eq {hM : Mul M} {hN : Mul N} (f : M →ₙ* N) (f' : M → N) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align mul_hom.coe_copy_eq MulHom.coe_copy_eq
 
 /-- Copy of a `monoid_hom` with a new `to_fun` equal to the old one. Useful to fix
 definitional equalities. -/
@@ -777,12 +797,35 @@ protected def MonoidHom.copy {hM : MulOneClass M} {hN : MulOneClass N} (f : M �
   { f.toOneHom.copy f' h, f.toMulHom.copy f' h with }
 #align monoid_hom.copy MonoidHom.copy
 
+@[simp, to_additive]
+theorem MonoidHom.coe_copy {hM : MulOneClass M} {hN : MulOneClass N} (f : M →* N) (f' : M → N) (h : f' = f) :
+    ⇑(f.copy f' h) = f' :=
+  rfl
+#align monoid_hom.coe_copy MonoidHom.coe_copy
+
+@[to_additive]
+theorem MonoidHom.copy_eq {hM : MulOneClass M} {hN : MulOneClass N} (f : M →* N) (f' : M → N) (h : f' = f) :
+    f.copy f' h = f :=
+  FunLike.ext' h
+#align monoid_hom.copy_eq MonoidHom.copy_eq
+
 /-- Copy of a `monoid_hom` with a new `to_fun` equal to the old one. Useful to fix
 definitional equalities. -/
 protected def MonoidWithZeroHom.copy {hM : MulZeroOneClass M} {hN : MulZeroOneClass N} (f : M →*₀ N) (f' : M → N)
     (h : f' = f) : M →* N :=
   { f.toZeroHom.copy f' h, f.toMonoidHom.copy f' h with }
 #align monoid_with_zero_hom.copy MonoidWithZeroHom.copy
+
+@[simp]
+theorem MonoidWithZeroHom.coe_copy {hM : MulZeroOneClass M} {hN : MulZeroOneClass N} (f : M →*₀ N) (f' : M → N)
+    (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align monoid_with_zero_hom.coe_copy MonoidWithZeroHom.coe_copy
+
+theorem MonoidWithZeroHom.copy_eq {hM : MulZeroOneClass M} {hN : MulZeroOneClass N} (f : M →*₀ N) (f' : M → N)
+    (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align monoid_with_zero_hom.copy_eq MonoidWithZeroHom.copy_eq
 
 @[to_additive]
 protected theorem OneHom.map_one [One M] [One N] (f : OneHom M N) : f 1 = 1 :=

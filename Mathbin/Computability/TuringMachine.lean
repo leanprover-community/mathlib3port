@@ -213,7 +213,7 @@ protected theorem ListBlank.induction_on {Γ} [Inhabited Γ] {p : ListBlank Γ �
 
 /-- The head of a `list_blank` is well defined. -/
 def ListBlank.head {Γ} [Inhabited Γ] (l : ListBlank Γ) : Γ :=
-  l.liftOn List.head'
+  l.liftOn List.head
     (by
       rintro _ _ ⟨i, rfl⟩
       cases a

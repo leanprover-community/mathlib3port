@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 -/
 import Mathbin.Data.Nat.Order.Basic
+import Mathbin.Data.Set.Basic
 import Mathbin.Algebra.Ring.Divisibility
 import Mathbin.Algebra.GroupWithZero.Divisibility
 
@@ -21,6 +22,27 @@ universe u v
 variable {m n k : ℕ}
 
 namespace Nat
+
+/-! ### Sets -/
+
+
+instance Subtype.orderBot (s : Set ℕ) [DecidablePred (· ∈ s)] [h : Nonempty s] : OrderBot s where
+  bot := ⟨Nat.find (nonempty_subtype.1 h), Nat.find_spec (nonempty_subtype.1 h)⟩
+  bot_le x := Nat.find_min' _ x.2
+#align nat.subtype.order_bot Nat.Subtype.orderBot
+
+instance Subtype.semilatticeSup (s : Set ℕ) : SemilatticeSup s :=
+  { Subtype.linearOrder s, LinearOrder.toLattice with }
+#align nat.subtype.semilattice_sup Nat.Subtype.semilatticeSup
+
+theorem Subtype.coe_bot {s : Set ℕ} [DecidablePred (· ∈ s)] [h : Nonempty s] :
+    ((⊥ : s) : ℕ) = Nat.find (nonempty_subtype.1 h) :=
+  rfl
+#align nat.subtype.coe_bot Nat.Subtype.coe_bot
+
+theorem set_eq_univ {S : Set ℕ} : S = Set.univ ↔ 0 ∈ S ∧ ∀ k : ℕ, k ∈ S → k + 1 ∈ S :=
+  ⟨by rintro rfl <;> simp, fun ⟨h0, hs⟩ => Set.eq_univ_of_forall (set_induction h0 hs)⟩
+#align nat.set_eq_univ Nat.set_eq_univ
 
 /-! ### `succ` -/
 

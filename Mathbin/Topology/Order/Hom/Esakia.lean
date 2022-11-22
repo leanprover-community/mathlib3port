@@ -134,6 +134,15 @@ protected def copy (f : PseudoEpimorphism α β) (f' : α → β) (h : f' = f) :
   ⟨f.toOrderHom.copy f' h, by simpa only [h.symm, to_fun_eq_coe] using f.exists_map_eq_of_map_le'⟩
 #align pseudo_epimorphism.copy PseudoEpimorphism.copy
 
+@[simp]
+theorem coe_copy (f : PseudoEpimorphism α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align pseudo_epimorphism.coe_copy PseudoEpimorphism.coe_copy
+
+theorem copy_eq (f : PseudoEpimorphism α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align pseudo_epimorphism.copy_eq PseudoEpimorphism.copy_eq
+
 variable (α)
 
 /-- `id` as a `pseudo_epimorphism`. -/
@@ -256,6 +265,15 @@ equalities. -/
 protected def copy (f : EsakiaHom α β) (f' : α → β) (h : f' = f) : EsakiaHom α β :=
   ⟨f.toContinuousOrderHom.copy f' h, by simpa only [h.symm, to_fun_eq_coe] using f.exists_map_eq_of_map_le'⟩
 #align esakia_hom.copy EsakiaHom.copy
+
+@[simp]
+theorem coe_copy (f : EsakiaHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align esakia_hom.coe_copy EsakiaHom.coe_copy
+
+theorem copy_eq (f : EsakiaHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align esakia_hom.copy_eq EsakiaHom.copy_eq
 
 variable (α)
 

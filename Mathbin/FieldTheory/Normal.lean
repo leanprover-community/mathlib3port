@@ -34,19 +34,19 @@ variable (F K : Type _) [Field F] [Field K] [Algebra F K]
 /-- Typeclass for normal field extension: `K` is a normal extension of `F` iff the minimal
 polynomial of every element `x` in `K` splits in `K`, i.e. every conjugate of `x` is in `K`. -/
 class Normal : Prop where
-  isAlgebraic' : Algebra.IsAlgebraic F K
+  is_algebraic' : Algebra.IsAlgebraic F K
   splits' (x : K) : Splits (algebraMap F K) (minpoly F x)
 #align normal Normal
 
 variable {F K}
 
-theorem Normal.isAlgebraic (h : Normal F K) (x : K) : IsAlgebraic F x :=
-  Normal.isAlgebraic' x
-#align normal.is_algebraic Normal.isAlgebraic
+theorem Normal.is_algebraic (h : Normal F K) (x : K) : IsAlgebraic F x :=
+  Normal.is_algebraic' x
+#align normal.is_algebraic Normal.is_algebraic
 
-theorem Normal.isIntegral (h : Normal F K) (x : K) : IsIntegral F x :=
+theorem Normal.is_integral (h : Normal F K) (x : K) : IsIntegral F x :=
   is_algebraic_iff_is_integral.mp (h.IsAlgebraic x)
-#align normal.is_integral Normal.isIntegral
+#align normal.is_integral Normal.is_integral
 
 theorem Normal.splits (h : Normal F K) (x : K) : Splits (algebraMap F K) (minpoly F x) :=
   Normal.splits' x
@@ -63,7 +63,7 @@ theorem Normal.out : Normal F K → ∀ x : K, IsIntegral F x ∧ Splits (algebr
 variable (F K)
 
 instance normalSelf : Normal F F :=
-  ⟨fun x => isIntegralAlgebraMap.IsAlgebraic F, fun x => (minpoly.eq_X_sub_C' x).symm ▸ splitsXSubC _⟩
+  ⟨fun x => is_integral_algebra_map.IsAlgebraic F, fun x => (minpoly.eq_X_sub_C' x).symm ▸ splitsXSubC _⟩
 #align normal_self normalSelf
 
 variable {K}
@@ -73,7 +73,7 @@ variable (K)
 theorem Normal.exists_is_splitting_field [h : Normal F K] [FiniteDimensional F K] :
     ∃ p : F[X], IsSplittingField F K p := by
   let s := Basis.ofVectorSpace F K
-  refine' ⟨∏ x, minpoly F (s x), (splits_prod _) fun x hx => h.splits (s x), Subalgebra.to_submodule_injective _⟩
+  refine' ⟨∏ x, minpoly F (s x), (splits_prod _) fun x hx => h.splits (s x), subalgebra.to_submodule.injective _⟩
   rw [Algebra.top_to_submodule, eq_top_iff, ← s.span_eq, Submodule.span_le, Set.range_subset_iff]
   refine' fun x =>
     Algebra.subset_adjoin
@@ -94,7 +94,7 @@ theorem Normal.towerTopOfNormal [h : Normal F E] : Normal K E :=
     cases' h.out x with hx hhx
     rw [algebra_map_eq F K E] at hhx
     exact
-      ⟨isIntegralOfIsScalarTower hx,
+      ⟨is_integral_of_is_scalar_tower hx,
         Polynomial.splitsOfSplitsOfDvd (algebraMap K E) (Polynomial.map_ne_zero (minpoly.ne_zero hx))
           ((Polynomial.splits_map_iff (algebraMap F K) (algebraMap K E)).mpr hhx)
           (minpoly.dvd_map_of_is_scalar_tower F K x)⟩
@@ -108,7 +108,7 @@ theorem AlgHom.normal_bijective [h : Normal F E] (ϕ : E →ₐ[F] K) : Function
       minpoly.mem_range_of_degree_eq_one E x
         (h2.def.resolve_left (minpoly.ne_zero h1)
           (minpoly.irreducible
-            (isIntegralOfIsScalarTower ((is_integral_algebra_map_iff (algebraMap K E).Injective).mp h1)))
+            (is_integral_of_is_scalar_tower ((is_integral_algebra_map_iff (algebraMap K E).Injective).mp h1)))
           (minpoly.dvd E x
             ((algebraMap K E).Injective
               (by
@@ -123,7 +123,7 @@ variable {F} {E} {E' : Type _} [Field E'] [Algebra F E']
 theorem Normal.ofAlgEquiv [h : Normal F E] (f : E ≃ₐ[F] E') : Normal F E' :=
   normal_iff.2 fun x => by
     cases' h.out (f.symm x) with hx hhx
-    have H := mapIsIntegral f.to_alg_hom hx
+    have H := map_is_integral f.to_alg_hom hx
     rw [AlgEquiv.to_alg_hom_eq_coe, AlgEquiv.coe_alg_hom, AlgEquiv.apply_symm_apply] at H
     use H
     apply Polynomial.splitsOfSplitsOfDvd (algebraMap F E') (minpoly.ne_zero hx)
@@ -152,7 +152,7 @@ theorem Normal.ofIsSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : N
     
   refine' normal_iff.2 fun x => _
   haveI hFE : FiniteDimensional F E := is_splitting_field.finite_dimensional E p
-  have Hx : IsIntegral F x := isIntegralOfNoetherian (IsNoetherian.iff_fg.2 hFE) x
+  have Hx : IsIntegral F x := is_integral_of_noetherian (IsNoetherian.iff_fg.2 hFE) x
   refine' ⟨Hx, Or.inr _⟩
   rintro q q_irred ⟨r, hr⟩
   let D := AdjoinRoot q
@@ -190,8 +190,8 @@ theorem Normal.ofIsSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : N
   suffices ⊤ ≤ IntermediateField.adjoin C S by
     refine' IntermediateField.alg_hom_mk_adjoin_splits' (top_le_iff.mp this) fun y hy => _
     rcases multiset.mem_map.mp (multiset.mem_to_finset.mp hy) with ⟨z, hz1, hz2⟩
-    have Hz : IsIntegral F z := isIntegralOfNoetherian (IsNoetherian.iff_fg.2 hFE) z
-    use show IsIntegral C y from isIntegralOfNoetherian (IsNoetherian.iff_fg.2 (FiniteDimensional.right F C D)) y
+    have Hz : IsIntegral F z := is_integral_of_noetherian (IsNoetherian.iff_fg.2 hFE) z
+    use show IsIntegral C y from is_integral_of_noetherian (IsNoetherian.iff_fg.2 (FiniteDimensional.right F C D)) y
     apply splits_of_splits_of_dvd (algebraMap C E) (map_ne_zero (minpoly.ne_zero Hz))
     · rw [splits_map_iff, ← algebra_map_eq F C E]
       exact
@@ -271,8 +271,8 @@ def AlgHom.restrictNormalAux [h : Normal F E] : (toAlgHom F E K₁).range →ₐ
         Or.resolve_left (h.splits z).def (minpoly.ne_zero (h.is_integral z)) (minpoly.irreducible _)
           (minpoly.dvd E _ (by simp [aeval_alg_hom_apply]))
       simp only [AlgHom.to_ring_hom_eq_coe, AlgHom.coe_to_ring_hom]
-      suffices IsIntegral F _ by exact isIntegralOfIsScalarTower this
-      exact mapIsIntegral ϕ (mapIsIntegral (to_alg_hom F E K₁) (h.is_integral z))⟩
+      suffices IsIntegral F _ by exact is_integral_of_is_scalar_tower this
+      exact map_is_integral ϕ (map_is_integral (to_alg_hom F E K₁) (h.is_integral z))⟩
   map_zero' := Subtype.ext ϕ.map_zero
   map_one' := Subtype.ext ϕ.map_one
   map_add' x y := Subtype.ext (ϕ.map_add x y)
@@ -359,7 +359,7 @@ noncomputable def AlgHom.liftNormal [h : Normal F E] : E →ₐ[F] E :=
     Nonempty.some <|
       @IntermediateField.alg_hom_mk_adjoin_splits' _ _ _ _ _ _ _
         ((IsScalarTower.toAlgHom F K₂ E).comp ϕ).toRingHom.toAlgebra _ (IntermediateField.adjoin_univ _ _) fun x hx =>
-        ⟨isIntegralOfIsScalarTower (h.out x).1,
+        ⟨is_integral_of_is_scalar_tower (h.out x).1,
           splitsOfSplitsOfDvd _ (map_ne_zero (minpoly.ne_zero (h.out x).1))
             (by
               rw [splits_map_iff, ← IsScalarTower.algebra_map_eq]

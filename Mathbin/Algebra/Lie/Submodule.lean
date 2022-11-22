@@ -160,7 +160,7 @@ theorem coe_copy (S : LieSubmodule R L M) (s : Set M) (hs : s = ↑S) : (S.copy 
 #align lie_submodule.coe_copy LieSubmodule.coe_copy
 
 theorem copy_eq (S : LieSubmodule R L M) (s : Set M) (hs : s = ↑S) : S.copy s hs = S :=
-  coe_submodule_injective (SetLike.coe_injective hs)
+  SetLike.coe_injective hs
 #align lie_submodule.copy_eq LieSubmodule.copy_eq
 
 instance : LieRingModule L N where
@@ -1052,10 +1052,10 @@ theorem ideal_range_eq_top_of_surjective (h : Function.Surjective f) : f.idealRa
   exact LieSubmodule.top_coe_submodule
 #align lie_hom.ideal_range_eq_top_of_surjective LieHom.ideal_range_eq_top_of_surjective
 
-theorem isIdealMorphismOfSurjective (h : Function.Surjective f) : f.IsIdealMorphism := by
+theorem is_ideal_morphism_of_surjective (h : Function.Surjective f) : f.IsIdealMorphism := by
   rw [is_ideal_morphism_def, f.ideal_range_eq_top_of_surjective h, f.range_eq_top.mpr h,
     LieIdeal.top_coe_lie_subalgebra]
-#align lie_hom.is_ideal_morphism_of_surjective LieHom.isIdealMorphismOfSurjective
+#align lie_hom.is_ideal_morphism_of_surjective LieHom.is_ideal_morphism_of_surjective
 
 end LieHom
 
@@ -1194,10 +1194,10 @@ theorem incl_ideal_range : I.incl.idealRange = I := by
   use I
 #align lie_ideal.incl_ideal_range LieIdeal.incl_ideal_range
 
-theorem inclIsIdealMorphism : I.incl.IsIdealMorphism := by
+theorem incl_is_ideal_morphism : I.incl.IsIdealMorphism := by
   rw [I.incl.is_ideal_morphism_def, incl_ideal_range]
   exact (I : LieSubalgebra R L).incl_range.symm
-#align lie_ideal.incl_is_ideal_morphism LieIdeal.inclIsIdealMorphism
+#align lie_ideal.incl_is_ideal_morphism LieIdeal.incl_is_ideal_morphism
 
 end LieIdeal
 

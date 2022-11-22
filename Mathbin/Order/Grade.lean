@@ -225,7 +225,7 @@ instance Preorder.toGradeBoundedOrder : GradeBoundedOrder α α where
   grade := id
   is_min_grade _ := id
   is_max_grade _ := id
-  grade_strict_mono := strict_mono_id
+  grade_strict_mono := strictMono_id
   covby_grade a b := id
 #align preorder.to_grade_bounded_order Preorder.toGradeBoundedOrder
 

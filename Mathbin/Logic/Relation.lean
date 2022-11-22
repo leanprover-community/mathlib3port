@@ -7,11 +7,11 @@ import Mathbin.Tactic.Basic
 import Mathbin.Logic.Relator
 
 /-!
-THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-https://github.com/leanprover-community/mathlib4/pull/565
-Any changes to this file require a corresponding PR to mathlib4.
-
 # Relation closures
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/565
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the reflexive, transitive, and reflexive transitive closures of relations.
 It also proves some basic results on definitions in core, such as `eqv_gen`.
@@ -165,7 +165,7 @@ local infixr:80 " ∘r " => Relation.Comp
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> β -> Prop}, Eq.{(max (succ u_1) (succ u_2) 1)} (α -> β -> Prop) (Relation.Comp.{u_1 u_2 u_2} α β β r (Eq.{succ u_2} β)) r
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> β -> Prop}, Eq.{(max (succ u_1) (succ u_2))} (α -> β -> Prop) (Relation.Comp.{u_1 u_2 u_2} α β β r (fun (x._@.Mathlib.Logic.Relation._hyg.1341 : β) (x._@.Mathlib.Logic.Relation._hyg.1343 : β) => Eq.{succ u_2} β x._@.Mathlib.Logic.Relation._hyg.1341 x._@.Mathlib.Logic.Relation._hyg.1343)) r
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> β -> Prop}, Eq.{(max (succ u_1) (succ u_2))} (α -> β -> Prop) (Relation.Comp.{u_1 u_2 u_2} α β β r (fun (x._@.Mathlib.Logic.Relation._hyg.1359 : β) (x._@.Mathlib.Logic.Relation._hyg.1361 : β) => Eq.{succ u_2} β x._@.Mathlib.Logic.Relation._hyg.1359 x._@.Mathlib.Logic.Relation._hyg.1361)) r
 Case conversion may be inaccurate. Consider using '#align relation.comp_eq Relation.comp_eqₓ'. -/
 theorem comp_eq : r ∘r (· = ·) = r :=
   funext fun a => funext fun b => propext <| Iff.intro (fun ⟨c, h, Eq⟩ => Eq ▸ h) fun h => ⟨b, h, rfl⟩
@@ -175,7 +175,7 @@ theorem comp_eq : r ∘r (· = ·) = r :=
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> β -> Prop}, Eq.{(max (succ u_1) (succ u_2) 1)} (α -> β -> Prop) (Relation.Comp.{u_1 u_1 u_2} α α β (Eq.{succ u_1} α) r) r
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> β -> Prop}, Eq.{(max (succ u_1) (succ u_2))} (α -> β -> Prop) (Relation.Comp.{u_1 u_1 u_2} α α β (fun (x._@.Mathlib.Logic.Relation._hyg.1441 : α) (x._@.Mathlib.Logic.Relation._hyg.1443 : α) => Eq.{succ u_1} α x._@.Mathlib.Logic.Relation._hyg.1441 x._@.Mathlib.Logic.Relation._hyg.1443) r) r
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> β -> Prop}, Eq.{(max (succ u_1) (succ u_2))} (α -> β -> Prop) (Relation.Comp.{u_1 u_1 u_2} α α β (fun (x._@.Mathlib.Logic.Relation._hyg.1467 : α) (x._@.Mathlib.Logic.Relation._hyg.1469 : α) => Eq.{succ u_1} α x._@.Mathlib.Logic.Relation._hyg.1467 x._@.Mathlib.Logic.Relation._hyg.1469) r) r
 Case conversion may be inaccurate. Consider using '#align relation.eq_comp Relation.eq_compₓ'. -/
 theorem eq_comp : (· = ·) ∘r r = r :=
   funext fun a => funext fun b => propext <| Iff.intro (fun ⟨c, Eq, h⟩ => Eq.symm ▸ h) fun h => ⟨a, rfl, h⟩
@@ -560,7 +560,8 @@ theorem _root_.well_founded.trans_gen (h : WellFounded r) : WellFounded (TransGe
 
 section TransGen
 
-theorem trans_gen_eq_self (trans : Transitive r) : TransGen r = r :=
+#print Relation.transGen_eq_self /-
+theorem transGen_eq_self (trans : Transitive r) : TransGen r = r :=
   funext fun a =>
     funext fun b =>
       propext <|
@@ -568,17 +569,22 @@ theorem trans_gen_eq_self (trans : Transitive r) : TransGen r = r :=
           induction h
           case single c hc => exact hc
           case tail c d hac hcd hac => exact trans hac hcd, TransGen.single⟩
-#align relation.trans_gen_eq_self Relation.trans_gen_eq_self
+#align relation.trans_gen_eq_self Relation.transGen_eq_self
+-/
 
-theorem transitive_trans_gen : Transitive (TransGen r) := fun a b c => TransGen.trans
-#align relation.transitive_trans_gen Relation.transitive_trans_gen
+#print Relation.transitive_transGen /-
+theorem transitive_transGen : Transitive (TransGen r) := fun a b c => TransGen.trans
+#align relation.transitive_trans_gen Relation.transitive_transGen
+-/
 
 instance : IsTrans α (TransGen r) :=
   ⟨@TransGen.trans α r⟩
 
-theorem trans_gen_idem : TransGen (TransGen r) = TransGen r :=
-  trans_gen_eq_self transitive_trans_gen
-#align relation.trans_gen_idem Relation.trans_gen_idem
+#print Relation.transGen_idem /-
+theorem transGen_idem : TransGen (TransGen r) = TransGen r :=
+  transGen_eq_self transitive_transGen
+#align relation.trans_gen_idem Relation.transGen_idem
+-/
 
 /- warning: relation.trans_gen.lift -> Relation.TransGen.lift is a dubious translation:
 lean 3 declaration is
@@ -714,10 +720,12 @@ theorem ReflTransGen.lift' {p : β → β → Prop} {a b : α} (f : α → β) (
 #align relation.refl_trans_gen.lift' Relation.ReflTransGen.lift'
 -/
 
+#print Relation.reflTransGen_closed /-
 theorem reflTransGen_closed {p : α → α → Prop} :
     (∀ a b, r a b → ReflTransGen p a b) → ReflTransGen r a b → ReflTransGen p a b :=
   ReflTransGen.lift' id
-#align relation.refl_trans_gen_closed RElation.reflTransGen_closed
+#align relation.refl_trans_gen_closed Relation.reflTransGen_closed
+-/
 
 #print Relation.ReflTransGen.swap /-
 theorem ReflTransGen.swap (h : ReflTransGen r b a) : ReflTransGen (swap r) a b := by
@@ -813,10 +821,12 @@ theorem equivalence_join (hr : Reflexive r) (ht : Transitive r) (h : ∀ a b c, 
 #align relation.equivalence_join Relation.equivalence_join
 -/
 
-theorem equivalence_join_refl_trans_gen (h : ∀ a b c, r a b → r a c → ∃ d, ReflGen r b d ∧ ReflTransGen r c d) :
+#print Relation.equivalence_join_reflTransGen /-
+theorem equivalence_join_reflTransGen (h : ∀ a b c, r a b → r a c → ∃ d, ReflGen r b d ∧ ReflTransGen r c d) :
     Equivalence (Join (ReflTransGen r)) :=
   equivalence_join reflexive_reflTransGen transitive_reflTransGen fun a b c => church_rosser h
-#align relation.equivalence_join_refl_trans_gen Relation.equivalence_join_refl_trans_gen
+#align relation.equivalence_join_refl_trans_gen Relation.equivalence_join_reflTransGen
+-/
 
 #print Relation.join_of_equivalence /-
 theorem join_of_equivalence {r' : α → α → Prop} (hr : Equivalence r) (h : ∀ a b, r' a b → r a b) : Join r' a b → r a b
@@ -835,10 +845,12 @@ theorem reflTransGen_of_transitive_reflexive {r' : α → α → Prop} (hr : Ref
 #align relation.refl_trans_gen_of_transitive_reflexive Relation.reflTransGen_of_transitive_reflexive
 -/
 
-theorem refl_trans_gen_of_equivalence {r' : α → α → Prop} (hr : Equivalence r) :
+#print Relation.reflTransGen_of_equivalence /-
+theorem reflTransGen_of_equivalence {r' : α → α → Prop} (hr : Equivalence r) :
     (∀ a b, r' a b → r a b) → ReflTransGen r' a b → r a b :=
   reflTransGen_of_transitive_reflexive hr.1 hr.2.2
-#align relation.refl_trans_gen_of_equivalence Relation.refl_trans_gen_of_equivalence
+#align relation.refl_trans_gen_of_equivalence Relation.reflTransGen_of_equivalence
+-/
 
 end Join
 

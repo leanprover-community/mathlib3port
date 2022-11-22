@@ -943,7 +943,7 @@ instance QuotientGroup.complete_space' (G : Type u) [Group G] [TopologicalSpace 
     since `x` is Cauchy, this implies it converges. -/
   rcases cauchy_seq_tendsto_of_complete x'_cauchy with ⟨x₀, hx₀⟩
   refine'
-    ⟨↑x₀, tendsto_nhds_of_cauchy_seq_of_subseq hx (strict_mono_nat_of_lt_succ fun n => (hφ (n + 1)).1).tendsto_at_top _⟩
+    ⟨↑x₀, tendsto_nhds_of_cauchy_seq_of_subseq hx (strictMono_nat_of_lt_succ fun n => (hφ (n + 1)).1).tendsto_at_top _⟩
   convert ((continuous_coinduced_rng : Continuous (coe : G → G ⧸ N)).Tendsto x₀).comp hx₀
   exact funext fun n => (x' n).snd
 #align quotient_group.complete_space' QuotientGroup.complete_space'

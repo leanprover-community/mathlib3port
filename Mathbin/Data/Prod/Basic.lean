@@ -7,11 +7,11 @@ import Mathbin.Tactic.Basic
 import Mathbin.Logic.Function.Basic
 
 /-!
-THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-https://github.com/leanprover-community/mathlib4/pull/545
-Any changes to this file require a corresponding PR to mathlib4.
-
 # Extra facts about `prod`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/545
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines `prod.swap : α × β → β × α` and proves various simple lemmas about `prod`.
 -/
@@ -272,7 +272,7 @@ theorem fst_injective [Subsingleton β] : Function.Injective (@fst α β) := fun
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Subsingleton.{succ u_1} α], Function.Injective.{(max (succ u_1) (succ u_2)) succ u_2} (Prod.{u_1 u_2} α β) β (Prod.snd.{u_1 u_2} α β)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Data.Prod.Basic._hyg.1087 : Subsingleton.{succ u_1} α], Function.Injective.{(max (succ u_1) (succ u_2)) succ u_2} (Prod.{u_1 u_2} α β) β (Prod.snd.{u_1 u_2} α β)
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Data.Prod.Basic._hyg.1113 : Subsingleton.{succ u_1} α], Function.Injective.{(max (succ u_1) (succ u_2)) succ u_2} (Prod.{u_1 u_2} α β) β (Prod.snd.{u_1 u_2} α β)
 Case conversion may be inaccurate. Consider using '#align prod.snd_injective Prod.snd_injectiveₓ'. -/
 theorem snd_injective [Subsingleton α] : Function.Injective (@snd α β) := fun x y h => ext (Subsingleton.elim _ _) h
 #align prod.snd_injective Prod.snd_injective
@@ -449,7 +449,7 @@ instance Lex.decidable [DecidableEq α] (r : α → α → Prop) (s : β → β 
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} (r : α -> α -> Prop) (s : β -> β -> Prop) [_inst_1 : IsRefl.{u_1} α r] (x : Prod.{u_1 u_2} α β), Prod.Lex.{u_1 u_2} α β r s x x
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (r : α -> α -> Prop) (s : β -> β -> Prop) [inst._@.Mathlib.Data.Prod.Basic._hyg.1855 : IsRefl.{u_1} α r] (x : Prod.{u_1 u_2} α β), Prod.Lex.{u_1 u_2} α β r s x x
+  forall {α : Type.{u_1}} {β : Type.{u_2}} (r : α -> α -> Prop) (s : β -> β -> Prop) [inst._@.Mathlib.Data.Prod.Basic._hyg.1891 : IsRefl.{u_1} α r] (x : Prod.{u_1 u_2} α β), Prod.Lex.{u_1 u_2} α β r s x x
 Case conversion may be inaccurate. Consider using '#align prod.lex.refl_left Prod.Lex.refl_leftₓ'. -/
 @[refl]
 theorem Lex.refl_left (r : α → α → Prop) (s : β → β → Prop) [IsRefl α r] : ∀ x, Prod.Lex r s x x
@@ -475,7 +475,7 @@ instance is_refl_right {r : α → α → Prop} {s : β → β → Prop} [IsRefl
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> α -> Prop} {s : β -> β -> Prop} [_inst_1 : IsTrans.{u_1} α r] [_inst_2 : IsTrans.{u_2} β s] {x : Prod.{u_1 u_2} α β} {y : Prod.{u_1 u_2} α β} {z : Prod.{u_1 u_2} α β}, (Prod.Lex.{u_1 u_2} α β r s x y) -> (Prod.Lex.{u_1 u_2} α β r s y z) -> (Prod.Lex.{u_1 u_2} α β r s x z)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> α -> Prop} {s : β -> β -> Prop} [inst._@.Mathlib.Data.Prod.Basic._hyg.2060 : IsTrans.{u_1} α r] [inst._@.Mathlib.Data.Prod.Basic._hyg.2064 : IsTrans.{u_2} β s] {x : Prod.{u_1 u_2} α β} {y : Prod.{u_1 u_2} α β} {z : Prod.{u_1 u_2} α β}, (Prod.Lex.{u_1 u_2} α β r s x y) -> (Prod.Lex.{u_1 u_2} α β r s y z) -> (Prod.Lex.{u_1 u_2} α β r s x z)
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {r : α -> α -> Prop} {s : β -> β -> Prop} [inst._@.Mathlib.Data.Prod.Basic._hyg.2096 : IsTrans.{u_1} α r] [inst._@.Mathlib.Data.Prod.Basic._hyg.2100 : IsTrans.{u_2} β s] {x : Prod.{u_1 u_2} α β} {y : Prod.{u_1 u_2} α β} {z : Prod.{u_1 u_2} α β}, (Prod.Lex.{u_1 u_2} α β r s x y) -> (Prod.Lex.{u_1 u_2} α β r s y z) -> (Prod.Lex.{u_1 u_2} α β r s x z)
 Case conversion may be inaccurate. Consider using '#align prod.lex.trans Prod.Lex.transₓ'. -/
 @[trans]
 theorem Lex.trans {r : α → α → Prop} {s : β → β → Prop} [IsTrans α r] [IsTrans β s] :
@@ -497,14 +497,14 @@ instance {r : α → α → Prop} {s : β → β → Prop} [IsStrictOrder α r] 
     | (a₁, b₁), (a₂, b₂), lex.right _ _, lex.left _ _ hr₂ => (irrefl _ hr₂).elim
     | (a₁, b₁), (a₂, b₂), lex.right _ hs₁, lex.right _ hs₂ => antisymm hs₁ hs₂ ▸ rfl⟩
 
-#print Prod.is_total_left /-
-instance is_total_left {r : α → α → Prop} {s : β → β → Prop} [IsTotal α r] : IsTotal (α × β) (Lex r s) :=
+#print Prod.isTotal_left /-
+instance isTotal_left {r : α → α → Prop} {s : β → β → Prop} [IsTotal α r] : IsTotal (α × β) (Lex r s) :=
   ⟨fun ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ => (IsTotal.total a₁ a₂).imp (Lex.left _ _) (Lex.left _ _)⟩
-#align prod.is_total_left Prod.is_total_left
+#align prod.is_total_left Prod.isTotal_left
 -/
 
-#print Prod.is_total_right /-
-instance is_total_right {r : α → α → Prop} {s : β → β → Prop} [IsTrichotomous α r] [IsTotal β s] :
+#print Prod.isTotal_right /-
+instance isTotal_right {r : α → α → Prop} {s : β → β → Prop} [IsTrichotomous α r] [IsTotal β s] :
     IsTotal (α × β) (Lex r s) :=
   ⟨fun ⟨i, a⟩ ⟨j, b⟩ => by
     obtain hij | rfl | hji := trichotomous_of r i j
@@ -514,7 +514,7 @@ instance is_total_right {r : α → α → Prop} {s : β → β → Prop} [IsTri
       
     · exact Or.inr (lex.left _ _ hji)
       ⟩
-#align prod.is_total_right Prod.is_total_right
+#align prod.is_total_right Prod.isTotal_right
 -/
 
 end Prod

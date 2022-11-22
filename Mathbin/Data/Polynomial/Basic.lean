@@ -262,7 +262,7 @@ theorem of_finsupp_eq_one {a} : (⟨a⟩ : R[X]) = 1 ↔ a = 1 := by rw [← of_
 instance : Inhabited R[X] :=
   ⟨0⟩
 
-instance : HasNatCast R[X] :=
+instance : NatCast R[X] :=
   ⟨fun n => Polynomial.of_finsupp n⟩
 
 instance : Semiring R[X] :=
@@ -658,10 +658,6 @@ theorem coeff_C_zero : coeff (c a) 0 = a :=
 theorem coeff_C_ne_zero (h : n ≠ 0) : (c a).coeff n = 0 := by rw [coeff_C, if_neg h]
 #align polynomial.coeff_C_ne_zero Polynomial.coeff_C_ne_zero
 
-theorem Nontrivial.of_polynomial_ne (h : p ≠ q) : Nontrivial R :=
-  (nontrivial_of_ne 0 1) fun h01 => h <| by rw [← mul_one p, ← mul_one q, ← C_1, ← h01, C_0, mul_zero, mul_zero]
-#align polynomial.nontrivial.of_polynomial_ne Polynomial.Nontrivial.of_polynomial_ne
-
 theorem monomial_eq_C_mul_X : ∀ {n}, monomial n a = c a * X ^ n
   | 0 => (mul_one _).symm
   | n + 1 =>
@@ -672,24 +668,29 @@ theorem monomial_eq_C_mul_X : ∀ {n}, monomial n a = c a * X ^ n
       
 #align polynomial.monomial_eq_C_mul_X Polynomial.monomial_eq_C_mul_X
 
+theorem C_injective : Injective (c : R → R[X]) :=
+  monomial_injective 0
+#align polynomial.C_injective Polynomial.C_injective
+
 @[simp]
 theorem C_inj : c a = c b ↔ a = b :=
-  ⟨fun h => coeff_C_zero.symm.trans (h.symm ▸ coeff_C_zero), congr_arg c⟩
+  C_injective.eq_iff
 #align polynomial.C_inj Polynomial.C_inj
 
 @[simp]
 theorem C_eq_zero : c a = 0 ↔ a = 0 :=
-  calc
-    c a = 0 ↔ c a = c 0 := by rw [C_0]
-    _ ↔ a = 0 := C_inj
-    
+  C_injective.eq_iff' (map_zero c)
 #align polynomial.C_eq_zero Polynomial.C_eq_zero
 
 theorem subsingleton_iff_subsingleton : Subsingleton R[X] ↔ Subsingleton R :=
-  ⟨fun h => subsingleton_iff.mpr fun a b => C_inj.mp (subsingleton_iff.mp h _ _), by
+  ⟨@Injective.subsingleton _ _ _ C_injective, by
     intro
     infer_instance⟩
 #align polynomial.subsingleton_iff_subsingleton Polynomial.subsingleton_iff_subsingleton
+
+theorem Nontrivial.of_polynomial_ne (h : p ≠ q) : Nontrivial R :=
+  (subsingleton_or_nontrivial R).resolve_left fun hI => h <| Subsingleton.elim _ _
+#align polynomial.nontrivial.of_polynomial_ne Polynomial.Nontrivial.of_polynomial_ne
 
 theorem forall_eq_iff_forall_eq : (∀ f g : R[X], f = g) ↔ ∀ a b : R, a = b := by
   simpa only [← subsingleton_iff] using subsingleton_iff_subsingleton
@@ -1125,7 +1126,7 @@ section Ring
 
 variable [Ring R]
 
-instance : HasIntCast R[X] :=
+instance : IntCast R[X] :=
   ⟨fun n => of_finsupp n⟩
 
 instance : Ring R[X] :=

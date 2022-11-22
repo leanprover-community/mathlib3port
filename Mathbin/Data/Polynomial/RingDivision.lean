@@ -230,7 +230,7 @@ section Ring
 variable [Ring R] [IsDomain R] {p q : R[X]}
 
 instance : IsDomain R[X] :=
-  { Polynomial.noZeroDivisors, Polynomial.nontrivial with }
+  { Polynomial.no_zero_divisors, Polynomial.nontrivial with }
 
 end Ring
 
@@ -291,32 +291,32 @@ theorem degree_coe_units (u : R[X]ˣ) : degree (u : R[X]) = 0 :=
   degree_eq_zero_of_is_unit ⟨u, rfl⟩
 #align polynomial.degree_coe_units Polynomial.degree_coe_units
 
-theorem primeXSubC (r : R) : Prime (X - c r) :=
+theorem prime_X_sub_C (r : R) : Prime (X - c r) :=
   ⟨X_sub_C_ne_zero r, not_is_unit_X_sub_C r, fun _ _ => by
     simp_rw [dvd_iff_is_root, is_root.def, eval_mul, mul_eq_zero]
     exact id⟩
-#align polynomial.prime_X_sub_C Polynomial.primeXSubC
+#align polynomial.prime_X_sub_C Polynomial.prime_X_sub_C
 
-theorem primeX : Prime (x : R[X]) := by
+theorem prime_X : Prime (x : R[X]) := by
   convert prime_X_sub_C (0 : R)
   simp
-#align polynomial.prime_X Polynomial.primeX
+#align polynomial.prime_X Polynomial.prime_X
 
-theorem Monic.primeOfDegreeEqOne (hp1 : degree p = 1) (hm : Monic p) : Prime p :=
+theorem Monic.prime_of_degree_eq_one (hp1 : degree p = 1) (hm : Monic p) : Prime p :=
   have : p = X - c (-p.coeff 0) := by simpa [hm.leading_coeff] using eq_X_add_C_of_degree_eq_one hp1
-  this.symm ▸ primeXSubC _
-#align polynomial.monic.prime_of_degree_eq_one Polynomial.Monic.primeOfDegreeEqOne
+  this.symm ▸ prime_X_sub_C _
+#align polynomial.monic.prime_of_degree_eq_one Polynomial.Monic.prime_of_degree_eq_one
 
 theorem irreducible_X_sub_C (r : R) : Irreducible (X - c r) :=
-  (primeXSubC r).Irreducible
+  (prime_X_sub_C r).Irreducible
 #align polynomial.irreducible_X_sub_C Polynomial.irreducible_X_sub_C
 
 theorem irreducible_X : Irreducible (x : R[X]) :=
-  Prime.irreducible primeX
+  Prime.irreducible prime_X
 #align polynomial.irreducible_X Polynomial.irreducible_X
 
 theorem Monic.irreducible_of_degree_eq_one (hp1 : degree p = 1) (hm : Monic p) : Irreducible p :=
-  (hm.primeOfDegreeEqOne hp1).Irreducible
+  (hm.prime_of_degree_eq_one hp1).Irreducible
 #align polynomial.monic.irreducible_of_degree_eq_one Polynomial.Monic.irreducible_of_degree_eq_one
 
 theorem eq_of_monic_of_associated (hp : p.Monic) (hq : q.Monic) (hpq : Associated p q) : p = q := by

@@ -91,7 +91,7 @@ theorem coe_int_mem (n : ℤ) : (n : R) ∈ s := by simp only [← zsmul_one, zs
 
 namespace SubringClass
 
-instance (priority := 75) toHasIntCast : HasIntCast s :=
+instance (priority := 75) toHasIntCast : IntCast s :=
   ⟨fun n => ⟨n, coe_int_mem s n⟩⟩
 #align subring_class.to_has_int_cast SubringClass.toHasIntCast
 
@@ -114,7 +114,7 @@ instance (priority := 75) toCommRing {R} [CommRing R] [SetLike S R] [SubringClas
 -- Prefer subclasses of `ring` over subclasses of `subring_class`.
 /-- A subring of a domain is a domain. -/
 instance (priority := 75) {R} [Ring R] [IsDomain R] [SetLike S R] [SubringClass S R] : IsDomain s :=
-  { SubsemiringClass.nontrivial s, SubsemiringClass.noZeroDivisors s with }
+  { SubsemiringClass.nontrivial s, SubsemiringClass.no_zero_divisors s with }
 
 -- Prefer subclasses of `ring` over subclasses of `subring_class`.
 /-- A subring of an `ordered_ring` is an `ordered_ring`. -/

@@ -114,7 +114,7 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
   -- If `b` is already small enough, then the remainders are equal and we are done.
   by_cases le_b : b.nat_degree ≤ ⌈-log ε / log (Fintype.card Fq)⌉₊
   · obtain ⟨i₀, i₁, i_ne, mod_eq⟩ :=
-      exists_eq_polynomial le_rfl b le_b (fun i => A i % b) fun i => EuclideanDomain.modLt (A i) hb
+      exists_eq_polynomial le_rfl b le_b (fun i => A i % b) fun i => EuclideanDomain.mod_lt (A i) hb
     refine' ⟨i₀, i₁, i_ne, _⟩
     simp only at mod_eq
     rwa [mod_eq, sub_self, AbsoluteValue.map_zero, Int.cast_zero]
@@ -122,7 +122,7 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
   -- Otherwise, it suffices to choose two elements whose difference is of small enough degree.
   rw [not_le] at le_b
   obtain ⟨i₀, i₁, i_ne, deg_lt⟩ :=
-    exists_approx_polynomial_aux le_rfl b (fun i => A i % b) fun i => EuclideanDomain.modLt (A i) hb
+    exists_approx_polynomial_aux le_rfl b (fun i => A i % b) fun i => EuclideanDomain.mod_lt (A i) hb
   simp only at deg_lt
   use i₀, i₁, i_ne
   -- Again, if the remainders are equal we are done.
@@ -271,7 +271,7 @@ theorem exists_partition_polynomial (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : Fq[
 /-- `λ p, fintype.card Fq ^ degree p` is an admissible absolute value.
 We set `q ^ degree 0 = 0`. -/
 noncomputable def cardPowDegreeIsAdmissible : IsAdmissible (cardPowDegree : AbsoluteValue Fq[X] ℤ) :=
-  { @cardPowDegreeIsEuclidean Fq _ _ with card := fun ε => Fintype.card Fq ^ ⌈-log ε / log (Fintype.card Fq)⌉₊,
+  { @card_pow_degree_is_euclidean Fq _ _ with card := fun ε => Fintype.card Fq ^ ⌈-log ε / log (Fintype.card Fq)⌉₊,
     exists_partition' := fun n ε hε b hb => exists_partition_polynomial n hε hb }
 #align polynomial.card_pow_degree_is_admissible Polynomial.cardPowDegreeIsAdmissible
 

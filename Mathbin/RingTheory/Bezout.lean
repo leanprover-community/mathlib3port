@@ -121,9 +121,9 @@ theorem _root_.function.surjective.is_bezout {S : Type v} [CommRing S] (f : R �
     
 #align is_bezout._root_.function.surjective.is_bezout is_bezout._root_.function.surjective.is_bezout
 
-instance (priority := 100) ofIsPrincipalIdealRing [IsPrincipalIdealRing R] : IsBezout R :=
+instance (priority := 100) of_is_principal_ideal_ring [IsPrincipalIdealRing R] : IsBezout R :=
   ⟨fun I _ => IsPrincipalIdealRing.principal I⟩
-#align is_bezout.of_is_principal_ideal_ring IsBezout.ofIsPrincipalIdealRing
+#align is_bezout.of_is_principal_ideal_ring IsBezout.of_is_principal_ideal_ring
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration

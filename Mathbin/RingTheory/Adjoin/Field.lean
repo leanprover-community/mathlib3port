@@ -47,12 +47,6 @@ def AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly {R : Type _} [CommRing R] [Al
 
 open Finset
 
-/-- If a `subalgebra` is finite_dimensional as a submodule then it is `finite_dimensional`. -/
-theorem FiniteDimensional.ofSubalgebraToSubmodule {K V : Type _} [Field K] [Ring V] [Algebra K V] {s : Subalgebra K V}
-    (h : FiniteDimensional K s.toSubmodule) : FiniteDimensional K s :=
-  h
-#align finite_dimensional.of_subalgebra_to_submodule FiniteDimensional.ofSubalgebraToSubmodule
-
 /-- If `K` and `L` are field extensions of `F` and we have `s : finset K` such that
 the minimal polynomial of each `x ∈ s` splits in `L` then `algebra.adjoin F s` embeds in `L`. -/
 theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F K] [Algebra F L] (s : Finset K) :
@@ -72,7 +66,7 @@ theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F
   haveI : FiniteDimensional F (Algebra.adjoin F (↑s : Set K)) :=
     ((Submodule.fg_iff_finite_dimensional _).1 (fg_adjoin_of_finite s.finite_to_set H3)).ofSubalgebraToSubmodule
   letI := fieldOfFiniteDimensional F (Algebra.adjoin F (↑s : Set K))
-  have H5 : IsIntegral (Algebra.adjoin F (↑s : Set K)) a := isIntegralOfIsScalarTower H1
+  have H5 : IsIntegral (Algebra.adjoin F (↑s : Set K)) a := is_integral_of_is_scalar_tower H1
   have H6 : (minpoly (Algebra.adjoin F (↑s : Set K)) a).Splits (algebraMap (Algebra.adjoin F (↑s : Set K)) L) := by
     refine'
       Polynomial.splitsOfSplitsOfDvd _

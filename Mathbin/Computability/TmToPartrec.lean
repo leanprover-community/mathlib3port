@@ -309,7 +309,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
     rw [(_ : Pfun.fix _ _ = pure _)]
     swap
     exact Part.eq_some_iff.2 (this 0 n (zero_add n))
-    simp only [List.head', pure_bind, List.tail_cons]
+    simp only [List.head, pure_bind, List.tail_cons]
   intro a b e
   induction' b with b IH generalizing a e
   · refine' Pfun.mem_fix_iff.2 (Or.inl <| Part.eq_some_iff.1 _)
@@ -328,9 +328,9 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
   simp only [Part.map_eq_map, Part.map_some, Vector.cons_val, Pfun.coe_val, show ∀ x, pure x = [x] from fun _ => rfl] at
     hf⊢
   refine' Part.ext fun x => _
-  simp only [rfind, Part.bind_eq_bind, Part.pure_eq_some, Part.map_eq_map, Part.bind_some, exists_prop, eval,
-    List.head', pred_eval, Part.map_some, Bool.false_eq_decide_iff, Part.mem_bind_iff, List.length, Part.mem_map_iff,
-    Nat.mem_rfind, List.tail, Bool.true_eq_decide_iff, Part.mem_some_iff, Part.map_bind]
+  simp only [rfind, Part.bind_eq_bind, Part.pure_eq_some, Part.map_eq_map, Part.bind_some, exists_prop, eval, List.head,
+    pred_eval, Part.map_some, Bool.false_eq_decide_iff, Part.mem_bind_iff, List.length, Part.mem_map_iff, Nat.mem_rfind,
+    List.tail, Bool.true_eq_decide_iff, Part.mem_some_iff, Part.map_bind]
   constructor
   · rintro ⟨v', h1, rfl⟩
     suffices
@@ -354,7 +354,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
     have := Pfun.mem_fix_iff.1 h2
     simp only [hf, Part.bind_some] at this
     split_ifs  at this
-    · simp only [List.head', exists_false, or_false_iff, Part.mem_some_iff, List.tail_cons, false_and_iff] at this
+    · simp only [List.head, exists_false, or_false_iff, Part.mem_some_iff, List.tail_cons, false_and_iff] at this
       subst this
       exact ⟨_, ⟨h, hm⟩, rfl⟩
       
@@ -379,7 +379,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
     · exact this
       
     refine' IH (fun m h' => hm (Nat.lt_succ_of_lt h')) (Pfun.mem_fix_iff.2 (Or.inr ⟨_, _, this⟩))
-    simp only [hf, hm n.lt_succ_self, Part.bind_some, List.head', eq_self_iff_true, if_false, Part.mem_some_iff,
+    simp only [hf, hm n.lt_succ_self, Part.bind_some, List.head, eq_self_iff_true, if_false, Part.mem_some_iff,
       and_self_iff, List.tail_cons]
     
 #align turing.to_partrec.code.exists_code Turing.ToPartrec.Code.exists_code
@@ -626,7 +626,7 @@ theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
             c = cfg.then c' (cont.fix f k) →
               reaches step (step_normal f cont.halt v) c' →
                 ∃ v₁ ∈ f.eval v,
-                  ∃ v₂ ∈ if List.head' v₁ = 0 then pure v₁.tail else f.fix.eval v₁.tail, x ∈ eval step (cfg.ret k v₂)
+                  ∃ v₂ ∈ if List.head v₁ = 0 then pure v₁.tail else f.fix.eval v₁.tail, x ∈ eval step (cfg.ret k v₂)
       by
       intro h
       obtain ⟨v₁, hv₁, v₂, hv₂, h₃⟩ := this _ h _ _ (step_normal_then _ cont.halt _ _) refl_trans_gen.refl
@@ -1666,7 +1666,7 @@ theorem tr_ret_respects (k v s) :
     cases n
     · simp
       
-    rw [tr_list, List.head', tr_nat, Nat.cast_succ, Num.add_one, Num.succ, List.tail]
+    rw [tr_list, List.head, tr_nat, Nat.cast_succ, Num.add_one, Num.succ, List.tail]
     cases (n : Num).succ' <;> exact ⟨rfl, rfl⟩
   by_cases v.head = 0 <;> simp [h] at this⊢
   · obtain ⟨c, h₁, h₂⟩ := IH v.tail (tr_list v).head'

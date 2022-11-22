@@ -28,9 +28,9 @@ variable {M : Matrix n n R}
 
 namespace Matrix
 
-theorem isIntegral : IsIntegral R M :=
+theorem is_integral : IsIntegral R M :=
   ⟨M.charpoly, ⟨charpoly_monic M, aeval_self_charpoly M⟩⟩
-#align matrix.is_integral Matrix.isIntegral
+#align matrix.is_integral Matrix.is_integral
 
 theorem minpoly_dvd_charpoly {K : Type _} [Field K] (M : Matrix n n K) : minpoly K M ∣ M.charpoly :=
   minpoly.dvd _ _ (aeval_self_charpoly M)

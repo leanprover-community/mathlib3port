@@ -477,7 +477,7 @@ theorem eqv_gen_step_iff_join_red : EqvGen Red.Step L₁ L₂ ↔ Join Red L₁ 
       have : EqvGen (Join Red) L₁ L₂ := h.mono fun a b => join_red_of_step
       equivalence_join_red.eqv_gen_iff.1 this)
     ((join_of_equivalence (EqvGen.is_equivalence _)) fun a b =>
-      refl_trans_gen_of_equivalence (EqvGen.is_equivalence _) EqvGen.rel)
+      reflTransGen_of_equivalence (EqvGen.is_equivalence _) EqvGen.rel)
 #align free_group.eqv_gen_step_iff_join_red FreeGroup.eqv_gen_step_iff_join_red
 
 end FreeGroup
@@ -1609,7 +1609,7 @@ instance Red.decidableRel : DecidableRel (@Red α)
 
 /-- A list containing every word that `w₁` reduces to. -/
 def Red.enum (L₁ : List (α × Bool)) : List (List (α × Bool)) :=
-  List.filter' (fun L₂ => Red L₁ L₂) (List.sublists L₁)
+  List.filter (fun L₂ => Red L₁ L₂) (List.sublists L₁)
 #align free_group.red.enum FreeGroup.Red.enum
 
 theorem Red.enum.sound (H : L₂ ∈ Red.enum L₁) : Red L₁ L₂ :=

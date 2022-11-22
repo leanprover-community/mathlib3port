@@ -428,8 +428,8 @@ instance (priority := 100) semi_normed_ring_top_monoid [NonUnitalSemiNormedRing 
 
 -- see Note [lower instance priority]
 /-- A seminormed ring is a topological ring. -/
-instance (priority := 100) semiNormedTopRing [NonUnitalSemiNormedRing α] : TopologicalRing α where
-#align semi_normed_top_ring semiNormedTopRing
+instance (priority := 100) semi_normed_top_ring [NonUnitalSemiNormedRing α] : TopologicalRing α where
+#align semi_normed_top_ring semi_normed_top_ring
 
 section NormedDivisionRing
 

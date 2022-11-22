@@ -126,7 +126,7 @@ theorem trichotomy (a : ℤ) (b : ℕ) : J(a | b) = 0 ∨ J(a | b) = 1 ∨ J(a |
       intro _ ha'
       rcases list.mem_pmap.mp ha' with ⟨p, hp, rfl⟩
       haveI : Fact p.prime := ⟨prime_of_mem_factors hp⟩
-      exact quadraticCharIsQuadratic (Zmod p) a)
+      exact quadratic_char_is_quadratic (Zmod p) a)
 #align jacobi_sym.trichotomy jacobiSym.trichotomy
 
 /-- The symbol `J(1 | b)` has the value `1`. -/

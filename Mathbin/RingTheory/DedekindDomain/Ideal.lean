@@ -76,7 +76,7 @@ theorem inv_zero' : (0 : FractionalIdeal R₁⁰ K)⁻¹ = 0 :=
 #align fractional_ideal.inv_zero' FractionalIdeal.inv_zero'
 
 theorem inv_nonzero {J : FractionalIdeal R₁⁰ K} (h : J ≠ 0) :
-    J⁻¹ = ⟨(1 : FractionalIdeal R₁⁰ K) / J, FractionalIdeal.fractionalDivOfNonzero h⟩ :=
+    J⁻¹ = ⟨(1 : FractionalIdeal R₁⁰ K) / J, FractionalIdeal.fractional_div_of_nonzero h⟩ :=
   FractionalIdeal.div_nonzero _
 #align fractional_ideal.inv_nonzero FractionalIdeal.inv_nonzero
 
@@ -554,11 +554,11 @@ theorem mul_left_le_iff [IsDedekindDomain A] {J : FractionalIdeal A⁰ K} (hJ : 
 #align fractional_ideal.mul_left_le_iff FractionalIdeal.mul_left_le_iff
 
 theorem mul_right_strict_mono [IsDedekindDomain A] {I : FractionalIdeal A⁰ K} (hI : I ≠ 0) : StrictMono (· * I) :=
-  strict_mono_of_le_iff_le fun _ _ => (mul_right_le_iff hI).symm
+  strictMono_of_le_iff_le fun _ _ => (mul_right_le_iff hI).symm
 #align fractional_ideal.mul_right_strict_mono FractionalIdeal.mul_right_strict_mono
 
 theorem mul_left_strict_mono [IsDedekindDomain A] {I : FractionalIdeal A⁰ K} (hI : I ≠ 0) : StrictMono ((· * ·) I) :=
-  strict_mono_of_le_iff_le fun _ _ => (mul_left_le_iff hI).symm
+  strictMono_of_le_iff_le fun _ _ => (mul_left_le_iff hI).symm
 #align fractional_ideal.mul_left_strict_mono FractionalIdeal.mul_left_strict_mono
 
 /-- This is also available as `_root_.div_eq_mul_inv`, using the
@@ -646,7 +646,8 @@ theorem Ideal.dvd_not_unit_iff_lt {I J : Ideal A} : DvdNotUnit I J ↔ J < I :=
           have : H = 1 := mul_left_cancel₀ hI (by rw [← hmul, h, mul_one])
           show IsUnit H from this.symm ▸ is_unit_one)
         hunit),
-    fun h => dvdNotUnitOfDvdOfNotDvd (Ideal.dvd_iff_le.mpr (le_of_lt h)) (mt Ideal.dvd_iff_le.mp (not_le_of_lt h))⟩
+    fun h =>
+    dvd_not_unit_of_dvd_of_not_dvd (Ideal.dvd_iff_le.mpr (le_of_lt h)) (mt Ideal.dvd_iff_le.mp (not_le_of_lt h))⟩
 #align ideal.dvd_not_unit_iff_lt Ideal.dvd_not_unit_iff_lt
 
 instance :
@@ -657,8 +658,8 @@ instance :
     ext
     rw [Ideal.dvd_not_unit_iff_lt]
 
-instance Ideal.uniqueFactorizationMonoid : UniqueFactorizationMonoid (Ideal A) :=
-  { Ideal.wfDvdMonoid with
+instance Ideal.unique_factorization_monoid : UniqueFactorizationMonoid (Ideal A) :=
+  { Ideal.wf_dvd_monoid with
     irreducible_iff_prime := fun P =>
       ⟨fun hirr =>
         ⟨hirr.NeZero, hirr.not_unit, fun I J => by
@@ -673,7 +674,7 @@ instance Ideal.uniqueFactorizationMonoid : UniqueFactorizationMonoid (Ideal A) :
           exact
             ⟨x * y, Ideal.mul_mem_mul x_mem y_mem, mt this.is_prime.mem_or_mem (not_or_of_not x_not_mem y_not_mem)⟩⟩,
         Prime.irreducible⟩ }
-#align ideal.unique_factorization_monoid Ideal.uniqueFactorizationMonoid
+#align ideal.unique_factorization_monoid Ideal.unique_factorization_monoid
 
 instance Ideal.normalizationMonoid : NormalizationMonoid (Ideal A) :=
   normalizationMonoidOfUniqueUnits
@@ -695,21 +696,21 @@ theorem Ideal.is_prime_of_prime {P : Ideal A} (h : Prime P) : IsPrime P := by
     
 #align ideal.is_prime_of_prime Ideal.is_prime_of_prime
 
-theorem Ideal.primeOfIsPrime {P : Ideal A} (hP : P ≠ ⊥) (h : IsPrime P) : Prime P := by
+theorem Ideal.prime_of_is_prime {P : Ideal A} (hP : P ≠ ⊥) (h : IsPrime P) : Prime P := by
   refine' ⟨hP, mt ideal.is_unit_iff.mp h.ne_top, fun I J hIJ => _⟩
   simpa only [Ideal.dvd_iff_le] using h.mul_le.mp (Ideal.le_of_dvd hIJ)
-#align ideal.prime_of_is_prime Ideal.primeOfIsPrime
+#align ideal.prime_of_is_prime Ideal.prime_of_is_prime
 
 /-- In a Dedekind domain, the (nonzero) prime elements of the monoid with zero `ideal A`
 are exactly the prime ideals. -/
 theorem Ideal.prime_iff_is_prime {P : Ideal A} (hP : P ≠ ⊥) : Prime P ↔ IsPrime P :=
-  ⟨Ideal.is_prime_of_prime, Ideal.primeOfIsPrime hP⟩
+  ⟨Ideal.is_prime_of_prime, Ideal.prime_of_is_prime hP⟩
 #align ideal.prime_iff_is_prime Ideal.prime_iff_is_prime
 
 /-- In a Dedekind domain, the the prime ideals are the zero ideal together with the prime elements
 of the monoid with zero `ideal A`. -/
 theorem Ideal.is_prime_iff_bot_or_prime {P : Ideal A} : IsPrime P ↔ P = ⊥ ∨ Prime P :=
-  ⟨fun hp => (eq_or_ne P ⊥).imp_right fun hp0 => Ideal.primeOfIsPrime hp0 hp, fun hp =>
+  ⟨fun hp => (eq_or_ne P ⊥).imp_right fun hp0 => Ideal.prime_of_is_prime hp0 hp, fun hp =>
     hp.elim (fun h => h.symm ▸ Ideal.bot_prime) Ideal.is_prime_of_prime⟩
 #align ideal.is_prime_iff_bot_or_prime Ideal.is_prime_iff_bot_or_prime
 
@@ -733,7 +734,7 @@ theorem Ideal.eq_prime_pow_of_succ_lt_of_le {P I : Ideal A} [P_prime : P.IsPrime
     (hlt : P ^ (i + 1) < I) (hle : I ≤ P ^ i) : I = P ^ i := by
   letI := Classical.decEq (Ideal A)
   refine' le_antisymm hle _
-  have P_prime' := Ideal.primeOfIsPrime hP P_prime
+  have P_prime' := Ideal.prime_of_is_prime hP P_prime
   have : I ≠ ⊥ := (lt_of_le_of_lt bot_le hlt).ne'
   have := pow_ne_zero i hP
   have := pow_ne_zero (i + 1) hP
@@ -804,7 +805,7 @@ theorem Ideal.exist_integer_multiples_not_mem {J : Ideal A} (hJ : J ≠ ⊤) {ι
     
   · rw [← coe_ideal_top]
     -- And multiplying by `I⁻¹` is indeed strictly monotone.
-    exact strict_mono_of_le_iff_le (fun _ _ => (coe_ideal_le_coe_ideal K).symm) (lt_top_iff_ne_top.mpr hJ)
+    exact strictMono_of_le_iff_le (fun _ _ => (coe_ideal_le_coe_ideal K).symm) (lt_top_iff_ne_top.mpr hJ)
     
 #align ideal.exist_integer_multiples_not_mem Ideal.exist_integer_multiples_not_mem
 
@@ -992,7 +993,7 @@ instance is_maximal : v.asIdeal.IsMaximal :=
 #align is_dedekind_domain.height_one_spectrum.is_maximal IsDedekindDomain.HeightOneSpectrum.is_maximal
 
 theorem prime : Prime v.asIdeal :=
-  Ideal.primeOfIsPrime v.ne_bot v.IsPrime
+  Ideal.prime_of_is_prime v.ne_bot v.IsPrime
 #align is_dedekind_domain.height_one_spectrum.prime IsDedekindDomain.HeightOneSpectrum.prime
 
 theorem irreducible : Irreducible v.asIdeal :=
@@ -1341,7 +1342,7 @@ where `P i` ranges over the prime factors of `I` and `e i` over the multipliciti
 noncomputable def IsDedekindDomain.quotientEquivPiFactors {I : Ideal R} (hI : I ≠ ⊥) :
     R ⧸ I ≃+* ∀ P : (factors I).toFinset, R ⧸ (P : Ideal R) ^ (factors I).count P :=
   IsDedekindDomain.quotientEquivPiOfProdEq _ _ _
-    (fun P : (factors I).toFinset => primeOfFactor _ (Multiset.mem_to_finset.mp P.Prop))
+    (fun P : (factors I).toFinset => prime_of_factor _ (Multiset.mem_to_finset.mp P.Prop))
     (fun i j hij => Subtype.coe_injective.Ne hij)
     (calc
       (∏ P : (factors I).toFinset, (P : Ideal R) ^ (factors I).count (P : Ideal R)) =
@@ -1447,7 +1448,7 @@ noncomputable def normalizedFactorsEquivSpanNormalizedFactors {r : R} (hr : r �
         letI : i.is_prime := is_prime_of_prime (prime_of_normalized_factor i hi)
         obtain ⟨a, ha, ha'⟩ :=
           exists_mem_normalized_factors_of_dvd hr
-            (Submodule.IsPrincipal.primeGeneratorOfIsPrime i (prime_of_normalized_factor i hi).NeZero).Irreducible _
+            (Submodule.IsPrincipal.prime_generator_of_is_prime i (prime_of_normalized_factor i hi).NeZero).Irreducible _
         · use ⟨a, ha⟩
           simp only [Subtype.coe_mk, Subtype.mk_eq_mk, ← span_singleton_eq_span_singleton.mpr ha',
             Ideal.span_singleton_generator]

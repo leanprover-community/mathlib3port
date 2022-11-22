@@ -23,7 +23,7 @@ namespace Function
 /-- Pullback a `linear_ordered_semifield` under an injective map. -/
 @[reducible]
 def Injective.linearOrderedSemifield [LinearOrderedSemifield α] [Zero β] [One β] [Add β] [Mul β] [Pow β ℕ] [HasSmul ℕ β]
-    [HasNatCast β] [Inv β] [Div β] [Pow β ℤ] [HasSup β] [HasInf β] (f : β → α) (hf : Injective f) (zero : f 0 = 0)
+    [NatCast β] [Inv β] [Div β] [Pow β ℤ] [HasSup β] [HasInf β] (f : β → α) (hf : Injective f) (zero : f 0 = 0)
     (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
     (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n)
@@ -37,7 +37,7 @@ def Injective.linearOrderedSemifield [LinearOrderedSemifield α] [Zero β] [One 
 /-- Pullback a `linear_ordered_field` under an injective map. -/
 @[reducible]
 def Injective.linearOrderedField [LinearOrderedField α] [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [Pow β ℕ]
-    [HasSmul ℕ β] [HasSmul ℤ β] [HasSmul ℚ β] [HasNatCast β] [HasIntCast β] [HasRatCast β] [Inv β] [Div β] [Pow β ℤ]
+    [HasSmul ℕ β] [HasSmul ℤ β] [HasSmul ℚ β] [NatCast β] [IntCast β] [HasRatCast β] [Inv β] [Div β] [Pow β ℤ]
     [HasSup β] [HasInf β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
     (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y)

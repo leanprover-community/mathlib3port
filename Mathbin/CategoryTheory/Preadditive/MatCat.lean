@@ -165,20 +165,20 @@ See however `iso_biproduct_embedding`.
 instance has_finite_biproducts :
     HasFiniteBiproducts
       (Mat_
-        C) where HasBiproductsOfShape J 𝒟 :=
+        C) where out n :=
     { HasBiproduct := fun f =>
         has_biproduct_of_total
-          { x := ⟨Σj : J, (f j).ι, fun p => (f p.1).x p.2⟩,
+          { x := ⟨Σj, (f j).ι, fun p => (f p.1).x p.2⟩,
             π := fun j x y => by
               dsimp at x⊢
               refine' if h : x.1 = j then _ else 0
-              refine' if h' : @Eq.ndrec J x.1 (fun j => (f j).ι) x.2 _ h = y then _ else 0
+              refine' if h' : @Eq.ndrec (Fin n) x.1 (fun j => (f j).ι) x.2 _ h = y then _ else 0
               apply eq_to_hom
               substs h h',-- Notice we were careful not to use `subst` until we had a goal in `Prop`.
             ι := fun j x y => by
               dsimp at y⊢
               refine' if h : y.1 = j then _ else 0
-              refine' if h' : @Eq.ndrec J y.1 (fun j => (f j).ι) y.2 _ h = x then _ else 0
+              refine' if h' : @Eq.ndrec _ y.1 (fun j => (f j).ι) y.2 _ h = x then _ else 0
               apply eq_to_hom
               substs h h',
             ι_π := fun j j' => by

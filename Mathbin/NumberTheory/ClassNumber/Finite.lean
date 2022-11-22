@@ -393,14 +393,14 @@ algebraic extension of `R`, that includes some extra assumptions.
 -/
 noncomputable def fintypeOfAdmissibleOfFinite [IsDedekindDomain R] : Fintype (ClassGroup S) := by
   letI := Classical.decEq L
-  letI := IsIntegralClosure.isFractionRingOfFiniteExtension R K L S
+  letI := IsIntegralClosure.is_fraction_ring_of_finite_extension R K L S
   letI := IsIntegralClosure.isDedekindDomain R K L S
   choose s b hb_int using FiniteDimensional.exists_is_basis_integral R K L
   obtain ⟨n, b⟩ := Submodule.basisOfPidOfLeSpan _ (IsIntegralClosure.range_le_span_dual_basis S b hb_int)
   let bS := b.map ((LinearMap.quotKerEquivRange _).symm ≪≫ₗ _)
   refine'
     fintype_of_admissible_of_algebraic L bS adm fun x =>
-      (IsFractionRing.is_algebraic_iff R K L).mpr (Algebra.isAlgebraicOfFinite _ _ x)
+      (IsFractionRing.is_algebraic_iff R K L).mpr (Algebra.is_algebraic_of_finite _ _ x)
   · rw [linear_map.ker_eq_bot.mpr]
     · exact Submodule.quotEquivOfEqBot _ rfl
       

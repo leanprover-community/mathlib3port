@@ -229,7 +229,7 @@ theorem quadratic_char_eq_pow_of_char_ne_two' (hF : ringChar F ≠ 2) (a : F) :
 variable (F)
 
 /-- The quadratic character is quadratic as a multiplicative character. -/
-theorem quadraticCharIsQuadratic : (quadraticChar F).IsQuadratic := by
+theorem quadratic_char_is_quadratic : (quadraticChar F).IsQuadratic := by
   intro a
   by_cases ha : a = 0
   · left
@@ -239,13 +239,13 @@ theorem quadraticCharIsQuadratic : (quadraticChar F).IsQuadratic := by
   · right
     exact quadratic_char_dichotomy ha
     
-#align quadratic_char_is_quadratic quadraticCharIsQuadratic
+#align quadratic_char_is_quadratic quadratic_char_is_quadratic
 
 variable {F}
 
 /-- The quadratic character is nontrivial as a multiplicative character
 when the domain has odd characteristic. -/
-theorem quadraticCharIsNontrivial (hF : ringChar F ≠ 2) : (quadraticChar F).IsNontrivial := by
+theorem quadratic_char_is_nontrivial (hF : ringChar F ≠ 2) : (quadraticChar F).IsNontrivial := by
   rcases quadratic_char_exists_neg_one hF with ⟨a, ha⟩
   have hu : IsUnit a := by
     by_contra hf
@@ -254,7 +254,7 @@ theorem quadraticCharIsNontrivial (hF : ringChar F ≠ 2) : (quadraticChar F).Is
   refine' ⟨hu.unit, (_ : quadraticChar F a ≠ 1)⟩
   rw [ha]
   norm_num
-#align quadratic_char_is_nontrivial quadraticCharIsNontrivial
+#align quadratic_char_is_nontrivial quadratic_char_is_nontrivial
 
 /-- The number of solutions to `x^2 = a` is determined by the quadratic character. -/
 theorem quadratic_char_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
@@ -300,7 +300,7 @@ open BigOperators
 
 /-- The sum over the values of the quadratic character is zero when the characteristic is odd. -/
 theorem quadratic_char_sum_zero (hF : ringChar F ≠ 2) : (∑ a : F, quadraticChar F a) = 0 :=
-  IsNontrivial.sum_eq_zero (quadraticCharIsNontrivial hF)
+  IsNontrivial.sum_eq_zero (quadratic_char_is_nontrivial hF)
 #align quadratic_char_sum_zero quadratic_char_sum_zero
 
 end quadraticChar
@@ -348,7 +348,7 @@ theorem FiniteField.is_square_neg_one_iff : IsSquare (-1 : F) ↔ Fintype.card F
 
 /-- The value of the quadratic character at `2` -/
 theorem quadratic_char_two [DecidableEq F] (hF : ringChar F ≠ 2) : quadraticChar F 2 = χ₈ (Fintype.card F) :=
-  IsQuadratic.eq_of_eq_coe (quadraticCharIsQuadratic F) isQuadraticχ₈ hF
+  IsQuadratic.eq_of_eq_coe (quadratic_char_is_quadratic F) is_quadratic_χ₈ hF
     ((quadratic_char_eq_pow_of_char_ne_two' hF 2).trans (FiniteField.two_pow_card hF))
 #align quadratic_char_two quadratic_char_two
 
@@ -415,10 +415,10 @@ theorem quadratic_char_card_card [DecidableEq F] (hF : ringChar F ≠ 2) {F' : T
     simp only [IsUnit.unit_spec, ring_hom_comp_apply, eq_int_cast, Ne.def, ha]
     rw [Int.cast_neg, Int.cast_one]
     exact Ring.neg_one_ne_one_of_char_ne_two hF'
-  have hχ₂ : χ.is_quadratic := is_quadratic.comp (quadraticCharIsQuadratic F) _
+  have hχ₂ : χ.is_quadratic := is_quadratic.comp (quadratic_char_is_quadratic F) _
   have h := Char.card_pow_card hχ₁ hχ₂ h hF'
   rw [← quadratic_char_eq_pow_of_char_ne_two' hF'] at h
-  exact (is_quadratic.eq_of_eq_coe (quadraticCharIsQuadratic F') (quadraticCharIsQuadratic F) hF' h).symm
+  exact (is_quadratic.eq_of_eq_coe (quadratic_char_is_quadratic F') (quadratic_char_is_quadratic F) hF' h).symm
 #align quadratic_char_card_card quadratic_char_card_card
 
 /-- The value of the quadratic character at an odd prime `p` different from `ring_char F`. -/

@@ -43,27 +43,29 @@ instance : IsEmpty False :=
 instance : IsEmpty (Fin 0) :=
   ⟨fun n => Nat.not_lt_zero n.1 n.2⟩
 
-protected theorem function.isEmpty [IsEmpty β] (f : α → β) : IsEmpty α :=
+#print Function.isEmpty /-
+protected theorem Function.isEmpty [IsEmpty β] (f : α → β) : IsEmpty α :=
   ⟨fun x => IsEmpty.false (f x)⟩
-#align function.is_empty function.isEmpty
+#align function.is_empty Function.isEmpty
+-/
 
 instance {p : α → Sort _} [h : Nonempty α] [∀ x, IsEmpty (p x)] : IsEmpty (∀ x, p x) :=
-  h.elim fun x => function.isEmpty <| Function.eval x
+  h.elim fun x => Function.isEmpty <| Function.eval x
 
 instance PProd.is_empty_left [IsEmpty α] : IsEmpty (PProd α β) :=
-  function.isEmpty PProd.fst
+  Function.isEmpty PProd.fst
 #align pprod.is_empty_left PProd.is_empty_left
 
 instance PProd.is_empty_right [IsEmpty β] : IsEmpty (PProd α β) :=
-  function.isEmpty PProd.snd
+  Function.isEmpty PProd.snd
 #align pprod.is_empty_right PProd.is_empty_right
 
 instance Prod.is_empty_left {α β} [IsEmpty α] : IsEmpty (α × β) :=
-  function.isEmpty Prod.fst
+  Function.isEmpty Prod.fst
 #align prod.is_empty_left Prod.is_empty_left
 
 instance Prod.is_empty_right {α β} [IsEmpty β] : IsEmpty (α × β) :=
-  function.isEmpty Prod.snd
+  Function.isEmpty Prod.snd
 #align prod.is_empty_right Prod.is_empty_right
 
 instance [IsEmpty α] [IsEmpty β] : IsEmpty (PSum α β) :=
@@ -89,7 +91,7 @@ instance Subtype.is_empty_false : IsEmpty { a : α // False } :=
 #align subtype.is_empty_false Subtype.is_empty_false
 
 instance Sigma.is_empty_left {α} [IsEmpty α] {E : α → Type _} : IsEmpty (Sigma E) :=
-  function.isEmpty Sigma.fst
+  Function.isEmpty Sigma.fst
 #align sigma.is_empty_left Sigma.is_empty_left
 
 -- Test that `pi.is_empty` finds this instance.
@@ -268,9 +270,11 @@ theorem isEmpty_plift {α} : IsEmpty (PLift α) ↔ IsEmpty α := by simp only [
 #align is_empty_plift isEmpty_plift
 -/
 
+#print wellFounded_of_isEmpty /-
 theorem wellFounded_of_isEmpty {α} [IsEmpty α] (r : α → α → Prop) : WellFounded r :=
   ⟨isEmptyElim⟩
 #align well_founded_of_empty wellFounded_of_isEmpty
+-/
 
 variable (α)
 
@@ -289,6 +293,12 @@ theorem not_isEmpty_of_nonempty [h : Nonempty α] : ¬IsEmpty α :=
 
 variable {α}
 
+/- warning: function.extend_of_empty -> Function.extend_of_isEmpty is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} [_inst_1 : IsEmpty.{u_1} α] (f : α -> β) (g : α -> γ) (h : β -> γ), Eq.{(imax u_2 u_3)} (β -> γ) (Function.extend.{u_1 u_2 u_3} α β γ f g h) h
+but is expected to have type
+  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} [inst._@.Mathlib.Logic.IsEmpty._hyg.1016 : IsEmpty.{u_1} α] (f : α -> β) (g : α -> γ) (h : β -> γ), Eq.{(imax u_2 u_3)} (β -> γ) (Function.extend.{u_1 u_2 u_3} α β γ f g h) h
+Case conversion may be inaccurate. Consider using '#align function.extend_of_empty Function.extend_of_isEmptyₓ'. -/
 theorem Function.extend_of_isEmpty [IsEmpty α] (f : α → β) (g : α → γ) (h : β → γ) : Function.extend f g h = h :=
   funext fun x => (Function.extend_apply' _ _ _) fun ⟨a, h⟩ => isEmptyElim a
 #align function.extend_of_empty Function.extend_of_isEmpty

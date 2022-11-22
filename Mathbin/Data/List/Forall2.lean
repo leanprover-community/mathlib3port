@@ -140,7 +140,7 @@ theorem _root_.relator.right_unique.forall₂ (hr : RightUnique R) : RightUnique
 #align list._root_.relator.right_unique.forall₂ list._root_.relator.right_unique.forall₂
 
 theorem _root_.relator.bi_unique.forall₂ (hr : BiUnique R) : BiUnique (Forall₂ R) :=
-  ⟨hr.left.Forall₂, hr.right.Forall₂⟩
+  ⟨hr.left.forall₂, hr.right.forall₂⟩
 #align list._root_.relator.bi_unique.forall₂ list._root_.relator.bi_unique.forall₂
 
 theorem Forall₂.length_eq : ∀ {l₁ l₂}, Forall₂ R l₁ l₂ → length l₁ = length l₂
@@ -260,7 +260,7 @@ theorem rel_foldr : ((R ⇒ P ⇒ P) ⇒ P ⇒ Forall₂ R ⇒ P) foldr foldr
 #align list.rel_foldr List.rel_foldr
 
 theorem rel_filter {p : α → Prop} {q : β → Prop} [DecidablePred p] [DecidablePred q] (hpq : (R ⇒ (· ↔ ·)) p q) :
-    (Forall₂ R ⇒ Forall₂ R) (filter' p) (filter' q)
+    (Forall₂ R ⇒ Forall₂ R) (filter p) (filter q)
   | _, _, forall₂.nil => Forall₂.nil
   | a :: as, b :: bs, forall₂.cons h₁ h₂ => by
     by_cases p a

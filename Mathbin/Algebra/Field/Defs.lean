@@ -187,14 +187,14 @@ structure IsField (R : Type u) [Semiring R] : Prop where
 #align is_field IsField
 
 /-- Transferring from `semifield` to `is_field`. -/
-theorem Semifield.toIsField (R : Type u) [Semifield R] : IsField R :=
+theorem Semifield.to_is_field (R : Type u) [Semifield R] : IsField R :=
   { ‹Semifield R› with mul_inv_cancel := fun a ha => ⟨a⁻¹, mul_inv_cancel ha⟩ }
-#align semifield.to_is_field Semifield.toIsField
+#align semifield.to_is_field Semifield.to_is_field
 
 /-- Transferring from `field` to `is_field`. -/
-theorem Field.toIsField (R : Type u) [Field R] : IsField R :=
-  Semifield.toIsField _
-#align field.to_is_field Field.toIsField
+theorem Field.to_is_field (R : Type u) [Field R] : IsField R :=
+  Semifield.to_is_field _
+#align field.to_is_field Field.to_is_field
 
 @[simp]
 theorem IsField.nontrivial {R : Type u} [Semiring R] (h : IsField R) : Nontrivial R :=

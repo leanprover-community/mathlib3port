@@ -51,7 +51,7 @@ the set of elements of `l`. -/
 @[simps]
 def nthLeEquiv (l : List α) (H : Nodup l) : Fin (length l) ≃ { x // x ∈ l } where
   toFun i := ⟨nthLe l i i.2, nth_le_mem l i i.2⟩
-  invFun x := ⟨indexOf' (↑x) l, index_of_lt_length.2 x.2⟩
+  invFun x := ⟨indexOf (↑x) l, index_of_lt_length.2 x.2⟩
   left_inv i := by simp [H]
   right_inv x := by simp
 #align list.nodup.nth_le_equiv List.Nodup.nthLeEquiv
@@ -100,7 +100,7 @@ theorem coe_nth_le_iso_apply : (H.nthLeIso l i : α) = nthLe l i i.2 :=
 #align list.sorted.coe_nth_le_iso_apply List.Sorted.coe_nth_le_iso_apply
 
 @[simp]
-theorem coe_nth_le_iso_symm_apply : ((H.nthLeIso l).symm x : ℕ) = indexOf' (↑x) l :=
+theorem coe_nth_le_iso_symm_apply : ((H.nthLeIso l).symm x : ℕ) = indexOf (↑x) l :=
   rfl
 #align list.sorted.coe_nth_le_iso_symm_apply List.Sorted.coe_nth_le_iso_symm_apply
 

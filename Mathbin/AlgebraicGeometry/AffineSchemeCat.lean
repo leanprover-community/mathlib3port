@@ -352,7 +352,7 @@ theorem IsAffineOpen.basic_open_is_affine {X : SchemeCat} {U : Opens X.carrier} 
 #align algebraic_geometry.is_affine_open.basic_open_is_affine AlgebraicGeometry.IsAffineOpen.basic_open_is_affine
 
 theorem IsAffineOpen.map_restrict_basic_open {X : SchemeCat} (r : X.Presheaf.obj (op ⊤)) {U : Opens X.carrier}
-    (hU : IsAffineOpen U) : IsAffineOpen ((Opens.map (X.ofRestrict (X.basicOpen r).OpenEmbedding).1.base).obj U) := by
+    (hU : IsAffineOpen U) : IsAffineOpen ((Opens.map (X.of_restrict (X.basicOpen r).OpenEmbedding).1.base).obj U) := by
   apply (is_affine_open_iff_of_is_open_immersion (X.of_restrict (X.basic_open r).OpenEmbedding) _).mp
   delta PresheafedSpace.is_open_immersion.open_functor
   dsimp
@@ -473,7 +473,7 @@ instance {X : SchemeCat} {U : Opens X.carrier} (hU : IsAffineOpen U) (f : X.Pres
     
   infer_instance
 
-theorem isLocalizationBasicOpen {X : SchemeCat} {U : Opens X.carrier} (hU : IsAffineOpen U)
+theorem is_localization_basic_open {X : SchemeCat} {U : Opens X.carrier} (hU : IsAffineOpen U)
     (f : X.Presheaf.obj (op U)) : IsLocalization.Away f (X.Presheaf.obj (op <| X.basicOpen f)) := by
   apply
     (IsLocalization.is_localization_iff_of_ring_equiv (Submonoid.powers f)
@@ -491,28 +491,28 @@ theorem isLocalizationBasicOpen {X : SchemeCat} {U : Opens X.carrier} (hU : IsAf
   dsimp
   simp only [category.assoc, ← functor.map_comp, ← op_comp]
   apply structure_sheaf.to_open_res
-#align algebraic_geometry.is_localization_basic_open AlgebraicGeometry.isLocalizationBasicOpen
+#align algebraic_geometry.is_localization_basic_open AlgebraicGeometry.is_localization_basic_open
 
 instance {X : SchemeCat} [IsAffine X] (r : X.Presheaf.obj (op ⊤)) :
     IsLocalization.Away r (X.Presheaf.obj (op <| X.basicOpen r)) :=
-  isLocalizationBasicOpen (top_is_affine_open X) r
+  is_localization_basic_open (top_is_affine_open X) r
 
-theorem isLocalizationOfEqBasicOpen {X : SchemeCat} {U V : Opens X.carrier} (i : V ⟶ U) (hU : IsAffineOpen U)
+theorem is_localization_of_eq_basic_open {X : SchemeCat} {U V : Opens X.carrier} (i : V ⟶ U) (hU : IsAffineOpen U)
     (r : X.Presheaf.obj (op U)) (e : V = X.basicOpen r) :
     @IsLocalization.Away _ r (X.Presheaf.obj (op V)) _ (X.Presheaf.map i.op).toAlgebra := by
   subst e
   convert is_localization_basic_open hU r using 3
-#align algebraic_geometry.is_localization_of_eq_basic_open AlgebraicGeometry.isLocalizationOfEqBasicOpen
+#align algebraic_geometry.is_localization_of_eq_basic_open AlgebraicGeometry.is_localization_of_eq_basic_open
 
 instance ΓRestrictAlgebra {X : SchemeCat} {Y : TopCat} {f : Y ⟶ X.carrier} (hf : OpenEmbedding f) :
     Algebra (SchemeCat.Γ.obj (op X)) (SchemeCat.Γ.obj (op <| X.restrict hf)) :=
-  (SchemeCat.Γ.map (X.ofRestrict hf).op).toAlgebra
+  (SchemeCat.Γ.map (X.of_restrict hf).op).toAlgebra
 #align algebraic_geometry.Γ_restrict_algebra AlgebraicGeometry.ΓRestrictAlgebra
 
-instance ΓRestrictIsLocalization (X : SchemeCat.{u}) [IsAffine X] (r : SchemeCat.Γ.obj (op X)) :
+instance Γ_restrict_is_localization (X : SchemeCat.{u}) [IsAffine X] (r : SchemeCat.Γ.obj (op X)) :
     IsLocalization.Away r (SchemeCat.Γ.obj (op <| X.restrict (X.basicOpen r).OpenEmbedding)) :=
-  isLocalizationOfEqBasicOpen _ (top_is_affine_open X) r (Opens.open_embedding_obj_top _)
-#align algebraic_geometry.Γ_restrict_is_localization AlgebraicGeometry.ΓRestrictIsLocalization
+  is_localization_of_eq_basic_open _ (top_is_affine_open X) r (Opens.open_embedding_obj_top _)
+#align algebraic_geometry.Γ_restrict_is_localization AlgebraicGeometry.Γ_restrict_is_localization
 
 theorem basic_open_basic_open_is_basic_open {X : SchemeCat} {U : Opens X.carrier} (hU : IsAffineOpen U)
     (f : X.Presheaf.obj (op U)) (g : X.Presheaf.obj (op <| X.basicOpen f)) :
@@ -591,7 +591,7 @@ theorem IsAffineOpen.is_localization_stalk_aux {X : SchemeCat} (U : Opens X.carr
 #align
   algebraic_geometry.is_affine_open.is_localization_stalk_aux AlgebraicGeometry.IsAffineOpen.is_localization_stalk_aux
 
-theorem IsAffineOpen.isLocalizationStalk {X : SchemeCat} {U : Opens X.carrier} (hU : IsAffineOpen U) (x : U) :
+theorem IsAffineOpen.is_localization_stalk {X : SchemeCat} {U : Opens X.carrier} (hU : IsAffineOpen U) (x : U) :
     IsLocalization.AtPrime (X.Presheaf.stalk x) (hU.primeIdealOf x).asIdeal := by
   haveI : is_affine _ := hU
   haveI : Nonempty U := ⟨x⟩
@@ -634,7 +634,7 @@ theorem IsAffineOpen.isLocalizationStalk {X : SchemeCat} {U : Opens X.carrier} (
   erw [CategoryTheory.Functor.map_id]
   rw [category.id_comp]
   rfl
-#align algebraic_geometry.is_affine_open.is_localization_stalk AlgebraicGeometry.IsAffineOpen.isLocalizationStalk
+#align algebraic_geometry.is_affine_open.is_localization_stalk AlgebraicGeometry.IsAffineOpen.is_localization_stalk
 
 /-- The basic open set of a section `f` on an an affine open as an `X.affine_opens`. -/
 @[simps]

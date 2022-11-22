@@ -115,7 +115,7 @@ instance : Coe ℝ≥0 ℝ≥0∞ :=
 
 instance canLift :
     CanLift ℝ≥0∞ ℝ≥0 coe fun r =>
-      r ≠ ∞ where prf x hx := ⟨Option.get <| Option.ne_none_iff_is_some.1 hx, Option.some_get _⟩
+      r ≠ ∞ where prf x hx := ⟨Option.get <| Option.ne_none_iff_isSome.1 hx, Option.some_get _⟩
 #align ennreal.can_lift Ennreal.canLift
 
 @[simp]

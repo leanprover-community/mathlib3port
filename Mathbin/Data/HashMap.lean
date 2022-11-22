@@ -305,7 +305,7 @@ theorem Valid.modify {sz : ℕ} (v : valid bkts sz) :
     · subst i
       rw [bkts', Array'.read_write, hfl]
       have := @valid.idx _ _ _ v bidx a
-      simp only [hl, List.mem_append, or_imp, forall_and] at this⊢
+      simp only [hl, List.mem_append, or_imp] at this⊢
       exact ⟨⟨this.1.1, hal _⟩, this.2⟩
       
     · rw [bkts', Array'.read_write_of_ne _ _ h]

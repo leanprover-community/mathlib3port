@@ -69,9 +69,9 @@ theorem aeval_self_charpoly : aeval f f.charpoly = 0 := by
   exact aeval_self_charpoly _
 #align linear_map.aeval_self_charpoly LinearMap.aeval_self_charpoly
 
-theorem isIntegral : IsIntegral R f :=
+theorem is_integral : IsIntegral R f :=
   ⟨f.charpoly, ⟨charpoly_monic f, aeval_self_charpoly f⟩⟩
-#align linear_map.is_integral LinearMap.isIntegral
+#align linear_map.is_integral LinearMap.is_integral
 
 theorem minpoly_dvd_charpoly {K : Type u} {M : Type v} [Field K] [AddCommGroup M] [Module K M] [FiniteDimensional K M]
     (f : M →ₗ[K] M) : minpoly K f ∣ f.charpoly :=

@@ -281,7 +281,7 @@ theorem is_maximal_comap_of_is_integral_of_is_maximal (hRS : Algebra.IsIntegral 
   refine' quotient.maximal_of_is_field _ _
   haveI : is_prime (I.comap (algebraMap R S)) := comap_is_prime _ _
   exact
-    isFieldOfIsIntegralOfIsField (isIntegralQuotientOfIsIntegral hRS) algebra_map_quotient_injective
+    is_field_of_is_integral_of_is_field (is_integral_quotient_of_is_integral hRS) algebra_map_quotient_injective
       (by rwa [← quotient.maximal_ideal_iff_is_field_quotient])
 #align ideal.is_maximal_comap_of_is_integral_of_is_maximal Ideal.is_maximal_comap_of_is_integral_of_is_maximal
 
@@ -299,19 +299,19 @@ variable [Algebra R A] [Algebra A S] [IsScalarTower R A S] [IsIntegralClosure A 
 theorem IsIntegralClosure.comap_lt_comap {I J : Ideal A} [I.IsPrime] (I_lt_J : I < J) :
     I.comap (algebraMap R A) < J.comap (algebraMap R A) :=
   let ⟨I_le_J, x, hxJ, hxI⟩ := SetLike.lt_iff_le_and_exists.mp I_lt_J
-  comap_lt_comap_of_integral_mem_sdiff I_le_J ⟨hxJ, hxI⟩ (IsIntegralClosure.isIntegral R S x)
+  comap_lt_comap_of_integral_mem_sdiff I_le_J ⟨hxJ, hxI⟩ (IsIntegralClosure.is_integral R S x)
 #align ideal.is_integral_closure.comap_lt_comap Ideal.IsIntegralClosure.comap_lt_comap
 
 theorem IsIntegralClosure.is_maximal_of_is_maximal_comap (I : Ideal A) [I.IsPrime]
     (hI : IsMaximal (I.comap (algebraMap R A))) : IsMaximal I :=
-  is_maximal_of_is_integral_of_is_maximal_comap (fun x => IsIntegralClosure.isIntegral R S x) I hI
+  is_maximal_of_is_integral_of_is_maximal_comap (fun x => IsIntegralClosure.is_integral R S x) I hI
 #align ideal.is_integral_closure.is_maximal_of_is_maximal_comap Ideal.IsIntegralClosure.is_maximal_of_is_maximal_comap
 
 variable [IsDomain A]
 
 theorem IsIntegralClosure.comap_ne_bot [Nontrivial R] {I : Ideal A} (I_ne_bot : I ≠ ⊥) : I.comap (algebraMap R A) ≠ ⊥ :=
   let ⟨x, x_mem, x_ne_zero⟩ := I.ne_bot_iff.mp I_ne_bot
-  comap_ne_bot_of_integral_mem x_ne_zero x_mem (IsIntegralClosure.isIntegral R S x)
+  comap_ne_bot_of_integral_mem x_ne_zero x_mem (IsIntegralClosure.is_integral R S x)
 #align ideal.is_integral_closure.comap_ne_bot Ideal.IsIntegralClosure.comap_ne_bot
 
 theorem IsIntegralClosure.eq_bot_of_comap_eq_bot [Nontrivial R] {I : Ideal A} : I.comap (algebraMap R A) = ⊥ → I = ⊥ :=
@@ -354,11 +354,11 @@ theorem exists_ideal_over_prime_of_is_integral' (H : Algebra.IsIntegral R S) (P 
   let Rₚ := Localization P.prime_compl
   let Sₚ := Localization (Algebra.algebraMapSubmonoid S P.prime_compl)
   letI : IsDomain (Localization (Algebra.algebraMapSubmonoid S P.prime_compl)) :=
-    IsLocalization.isDomainLocalization (le_non_zero_divisors_of_no_zero_divisors hP0)
+    IsLocalization.is_domain_localization (le_non_zero_divisors_of_no_zero_divisors hP0)
   obtain ⟨Qₚ : Ideal Sₚ, Qₚ_maximal⟩ := exists_maximal Sₚ
   haveI Qₚ_max : is_maximal (comap _ Qₚ) :=
     @is_maximal_comap_of_is_integral_of_is_maximal Rₚ _ Sₚ _ (localizationAlgebra P.prime_compl S)
-      (isIntegralLocalization H) _ Qₚ_maximal
+      (is_integral_localization H) _ Qₚ_maximal
   refine' ⟨comap (algebraMap S Sₚ) Qₚ, ⟨comap_is_prime _ Qₚ, _⟩⟩
   convert Localization.AtPrime.comap_maximal_ideal
   rw [comap_comap, ← LocalRing.eq_maximal_ideal Qₚ_max, ← IsLocalization.map_comp _]
@@ -374,8 +374,8 @@ theorem exists_ideal_over_prime_of_is_integral (H : Algebra.IsIntegral R S) (P :
     [IsPrime I] (hIP : I.comap (algebraMap R S) ≤ P) : ∃ Q ≥ I, IsPrime Q ∧ Q.comap (algebraMap R S) = P := by
   let quot := R ⧸ I.comap (algebraMap R S)
   obtain ⟨Q' : Ideal (S ⧸ I), ⟨Q'_prime, hQ'⟩⟩ :=
-    @exists_ideal_over_prime_of_is_integral' Quot _ (S ⧸ I) _ Ideal.quotientAlgebra _ (isIntegralQuotientOfIsIntegral H)
-      (map (Quotient.mk'' (I.comap (algebraMap R S))) P)
+    @exists_ideal_over_prime_of_is_integral' Quot _ (S ⧸ I) _ Ideal.quotientAlgebra _
+      (is_integral_quotient_of_is_integral H) (map (Quotient.mk'' (I.comap (algebraMap R S))) P)
       (map_is_prime_of_surjective quotient.mk_surjective (by simp [hIP]))
       (le_trans (le_of_eq ((RingHom.injective_iff_ker_eq_bot _).1 algebra_map_quotient_injective)) bot_le)
   haveI := Q'_prime

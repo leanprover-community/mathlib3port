@@ -68,9 +68,9 @@ class IsPrincipalIdealRing (R : Type u) [Ring R] : Prop where
 
 attribute [instance] IsPrincipalIdealRing.principal
 
-instance (priority := 100) DivisionRing.isPrincipalIdealRing (K : Type u) [DivisionRing K] :
+instance (priority := 100) DivisionRing.is_principal_ideal_ring (K : Type u) [DivisionRing K] :
     IsPrincipalIdealRing K where principal S := by rcases Ideal.eq_bot_or_top S with (rfl | rfl) <;> infer_instance
-#align division_ring.is_principal_ideal_ring DivisionRing.isPrincipalIdealRing
+#align division_ring.is_principal_ideal_ring DivisionRing.is_principal_ideal_ring
 
 end
 
@@ -120,12 +120,12 @@ theorem mem_iff_generator_dvd (S : Ideal R) [S.IsPrincipal] {x : R} : x ∈ S �
   (mem_iff_eq_smul_generator S).trans (exists_congr fun a => by simp only [mul_comm, smul_eq_mul])
 #align submodule.is_principal.mem_iff_generator_dvd Submodule.IsPrincipal.mem_iff_generator_dvd
 
-theorem primeGeneratorOfIsPrime (S : Ideal R) [Submodule.IsPrincipal S] [is_prime : S.IsPrime] (ne_bot : S ≠ ⊥) :
+theorem prime_generator_of_is_prime (S : Ideal R) [Submodule.IsPrincipal S] [is_prime : S.IsPrime] (ne_bot : S ≠ ⊥) :
     Prime (generator S) :=
   ⟨fun h => ne_bot ((eq_bot_iff_generator_eq_zero S).2 h), fun h =>
     is_prime.ne_top (S.eq_top_of_is_unit_mem (generator_mem S) h), fun _ _ => by
     simpa only [← mem_iff_generator_dvd S] using is_prime.2⟩
-#align submodule.is_principal.prime_generator_of_is_prime Submodule.IsPrincipal.primeGeneratorOfIsPrime
+#align submodule.is_principal.prime_generator_of_is_prime Submodule.IsPrincipal.prime_generator_of_is_prime
 
 -- Note that the converse may not hold if `ϕ` is not injective.
 theorem generator_map_dvd_of_mem {N : Submodule R M} (ϕ : M →ₗ[R] R) [(N.map ϕ).IsPrincipal] {x : M} (hx : x ∈ N) :
@@ -185,7 +185,7 @@ theorem mod_mem_iff {S : Ideal R} {x y : R} (hy : y ∈ S) : x % y ∈ S ↔ x �
 #align mod_mem_iff mod_mem_iff
 
 -- see Note [lower instance priority]
-instance (priority := 100) EuclideanDomain.toPrincipalIdealDomain :
+instance (priority := 100) EuclideanDomain.to_principal_ideal_domain :
     IsPrincipalIdealRing
       R where principal S :=
     ⟨if h : { x : R | x ∈ S ∧ x ≠ 0 }.Nonempty then
@@ -215,13 +215,13 @@ instance (priority := 100) EuclideanDomain.toPrincipalIdealDomain :
           Submodule.ext fun a => by
             rw [← @Submodule.bot_coe R R _ _ _, span_eq, Submodule.mem_bot] <;>
               exact ⟨fun haS => by_contradiction fun ha0 => h ⟨a, ⟨haS, ha0⟩⟩, fun h₁ => h₁.symm ▸ S.zero_mem⟩⟩⟩
-#align euclidean_domain.to_principal_ideal_domain EuclideanDomain.toPrincipalIdealDomain
+#align euclidean_domain.to_principal_ideal_domain EuclideanDomain.to_principal_ideal_domain
 
 end
 
-theorem IsField.isPrincipalIdealRing {R : Type _} [CommRing R] (h : IsField R) : IsPrincipalIdealRing R :=
-  @EuclideanDomain.toPrincipalIdealDomain R (@Field.toEuclideanDomain R h.toField)
-#align is_field.is_principal_ideal_ring IsField.isPrincipalIdealRing
+theorem IsField.is_principal_ideal_ring {R : Type _} [CommRing R] (h : IsField R) : IsPrincipalIdealRing R :=
+  @EuclideanDomain.to_principal_ideal_domain R (@Field.toEuclideanDomain R h.toField)
+#align is_field.is_principal_ideal_ring IsField.is_principal_ideal_ring
 
 namespace PrincipalIdealRing
 
@@ -295,10 +295,10 @@ theorem ring_hom_mem_submonoid_of_factors_subset_of_units_subset {R S : Type _} 
 
 -- see Note [lower instance priority]
 /-- A principal ideal domain has unique factorization -/
-instance (priority := 100) toUniqueFactorizationMonoid : UniqueFactorizationMonoid R :=
-  { (IsNoetherianRing.wfDvdMonoid : WfDvdMonoid R) with
+instance (priority := 100) to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
+  { (IsNoetherianRing.wf_dvd_monoid : WfDvdMonoid R) with
     irreducible_iff_prime := fun _ => PrincipalIdealRing.irreducible_iff_prime }
-#align principal_ideal_ring.to_unique_factorization_monoid PrincipalIdealRing.toUniqueFactorizationMonoid
+#align principal_ideal_ring.to_unique_factorization_monoid PrincipalIdealRing.to_unique_factorization_monoid
 
 end
 
@@ -327,10 +327,10 @@ theorem Ideal.IsPrincipal.of_comap (f : R →+* S) (hf : Function.Surjective f) 
 #align ideal.is_principal.of_comap Ideal.IsPrincipal.of_comap
 
 /-- The surjective image of a principal ideal ring is again a principal ideal ring. -/
-theorem IsPrincipalIdealRing.ofSurjective [IsPrincipalIdealRing R] (f : R →+* S) (hf : Function.Surjective f) :
+theorem IsPrincipalIdealRing.of_surjective [IsPrincipalIdealRing R] (f : R →+* S) (hf : Function.Surjective f) :
     IsPrincipalIdealRing S :=
   ⟨fun I => Ideal.IsPrincipal.of_comap f hf I⟩
-#align is_principal_ideal_ring.of_surjective IsPrincipalIdealRing.ofSurjective
+#align is_principal_ideal_ring.of_surjective IsPrincipalIdealRing.of_surjective
 
 end Surjective
 
@@ -411,7 +411,7 @@ theorem is_coprime_of_irreducible_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0))
 
 theorem is_coprime_of_prime_dvd {x y : R} (nonzero : ¬(x = 0 ∧ y = 0)) (H : ∀ z : R, Prime z → z ∣ x → ¬z ∣ y) :
     IsCoprime x y :=
-  (is_coprime_of_irreducible_dvd nonzero) fun z zi => H z <| GcdMonoid.primeOfIrreducible zi
+  (is_coprime_of_irreducible_dvd nonzero) fun z zi => H z <| GcdMonoid.prime_of_irreducible zi
 #align is_coprime_of_prime_dvd is_coprime_of_prime_dvd
 
 theorem Irreducible.coprime_iff_not_dvd {p n : R} (pp : Irreducible p) : IsCoprime p n ↔ ¬p ∣ n := by

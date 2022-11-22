@@ -322,9 +322,9 @@ instance of_prime_scalar_tower (A : ValuationSubring K) (P : Ideal A) [P.IsPrime
   IsScalarTower.subalgebra' A K K _
 #align valuation_subring.of_prime_scalar_tower ValuationSubring.of_prime_scalar_tower
 
-instance ofPrimeLocalization (A : ValuationSubring K) (P : Ideal A) [P.IsPrime] :
-    IsLocalization.AtPrime (A.ofPrime P) P := by apply Localization.subalgebra.isLocalizationOfField K
-#align valuation_subring.of_prime_localization ValuationSubring.ofPrimeLocalization
+instance of_prime_localization (A : ValuationSubring K) (P : Ideal A) [P.IsPrime] :
+    IsLocalization.AtPrime (A.ofPrime P) P := by apply Localization.subalgebra.is_localization_of_field K
+#align valuation_subring.of_prime_localization ValuationSubring.of_prime_localization
 
 theorem le_of_prime (A : ValuationSubring K) (P : Ideal A) [P.IsPrime] : A ≤ ofPrime A P := fun a ha =>
   Subalgebra.algebra_map_mem _ (⟨a, ha⟩ : A)
@@ -798,7 +798,8 @@ theorem ker_unit_group_to_residue_field_units :
 #align valuation_subring.ker_unit_group_to_residue_field_units ValuationSubring.ker_unit_group_to_residue_field_units
 
 theorem surjective_unit_group_to_residue_field_units : Function.Surjective A.unitGroupToResidueFieldUnits :=
-  (LocalRing.surjective_units_map_of_local_ring_hom _ Ideal.Quotient.mk_surjective LocalRing.isLocalRingHomResidue).comp
+  (LocalRing.surjective_units_map_of_local_ring_hom _ Ideal.Quotient.mk_surjective
+        LocalRing.is_local_ring_hom_residue).comp
     (MulEquiv.surjective _)
 #align
   valuation_subring.surjective_unit_group_to_residue_field_units ValuationSubring.surjective_unit_group_to_residue_field_units

@@ -390,7 +390,7 @@ section
 variable [NonAssocRing R]
 
 theorem char_p_to_char_zero (R : Type _) [AddGroupWithOne R] [CharP R 0] : CharZero R :=
-  char_zero_of_inj_zero fun n h0 => eq_zero_of_zero_dvd ((cast_eq_zero_iff R 0 n).mp h0)
+  charZero_of_inj_zero fun n h0 => eq_zero_of_zero_dvd ((cast_eq_zero_iff R 0 n).mp h0)
 #align char_p.char_p_to_char_zero CharP.char_p_to_char_zero
 
 theorem cast_eq_mod (p : ℕ) [CharP R p] (k : ℕ) : (k : R) = (k % p : ℕ) :=

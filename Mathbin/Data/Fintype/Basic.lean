@@ -521,7 +521,7 @@ used to construct preimages. -/
 noncomputable def ofInjective [Fintype β] (f : α → β) (H : Function.Injective f) : Fintype α :=
   letI := Classical.dec
   if hα : Nonempty α then
-    letI := Classical.inhabitedOfNonempty hα
+    letI := Classical.inhabited_of_nonempty hα
     of_surjective (inv_fun f) (inv_fun_surjective H)
   else ⟨∅, fun x => (hα ⟨x⟩).elim⟩
 #align fintype.of_injective Fintype.ofInjective

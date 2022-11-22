@@ -1532,19 +1532,27 @@ theorem support_transfer : (p.transfer H hp).support = p.support := by
   induction p <;> simp only [*, transfer, eq_self_iff_true, and_self_iff, support_nil, support_cons]
 #align simple_graph.walk.support_transfer SimpleGraph.Walk.support_transfer
 
-theorem transfer_is_path (pp : p.IsPath) : (p.transfer H hp).IsPath := by
+@[simp]
+theorem length_transfer : (p.transfer H hp).length = p.length := by induction p <;> simp [*]
+#align simple_graph.walk.length_transfer SimpleGraph.Walk.length_transfer
+
+variable {p}
+
+protected theorem IsPath.transfer (pp : p.IsPath) : (p.transfer H hp).IsPath := by
   induction p <;> simp only [transfer, is_path.nil, cons_is_path_iff, support_transfer] at pp⊢
   · tauto
     
-#align simple_graph.walk.transfer_is_path SimpleGraph.Walk.transfer_is_path
+#align simple_graph.walk.is_path.transfer SimpleGraph.Walk.IsPath.transfer
 
-theorem transfer_is_cycle (p : G.Walk u u) (hp) (pc : p.IsCycle) : (p.transfer H hp).IsCycle := by
+protected theorem IsCycle.transfer {p : G.Walk u u} (pc : p.IsCycle) (hp) : (p.transfer H hp).IsCycle := by
   cases p <;> simp only [transfer, is_cycle.not_of_nil, cons_is_cycle_iff, transfer, edges_transfer] at pc⊢
   · exact pc
     
-  · exact ⟨transfer_is_path _ _ pc.left, pc.right⟩
+  · exact ⟨pc.left.transfer _, pc.right⟩
     
-#align simple_graph.walk.transfer_is_cycle SimpleGraph.Walk.transfer_is_cycle
+#align simple_graph.walk.is_cycle.transfer SimpleGraph.Walk.IsCycle.transfer
+
+variable (p)
 
 @[simp]
 theorem transfer_transfer {K : SimpleGraph V} (hp' : ∀ e, e ∈ p.edges → e ∈ K.edgeSet) :
@@ -1595,7 +1603,7 @@ variable {G}
 
 /-- Given a walk that avoids a set of edges, produce a walk in the graph
 with those edges deleted. -/
-@[simp, reducible]
+@[reducible]
 def toDeleteEdges (s : Set (Sym2 V)) {v w : V} (p : G.Walk v w) (hp : ∀ e, e ∈ p.edges → ¬e ∈ s) :
     (G.deleteEdges s).Walk v w :=
   p.transfer _
@@ -1603,6 +1611,18 @@ def toDeleteEdges (s : Set (Sym2 V)) {v w : V} (p : G.Walk v w) (hp : ∀ e, e �
       simp only [edge_set_delete_edges, Set.mem_diff]
       exact fun e ep => ⟨edges_subset_edge_set p ep, hp e ep⟩)
 #align simple_graph.walk.to_delete_edges SimpleGraph.Walk.toDeleteEdges
+
+@[simp]
+theorem to_delete_edges_nil (s : Set (Sym2 V)) {v : V} (hp) : (Walk.nil : G.Walk v v).toDeleteEdges s hp = walk.nil :=
+  rfl
+#align simple_graph.walk.to_delete_edges_nil SimpleGraph.Walk.to_delete_edges_nil
+
+@[simp]
+theorem to_delete_edges_cons (s : Set (Sym2 V)) {u v w : V} (h : G.Adj u v) (p : G.Walk v w) (hp) :
+    (Walk.cons h p).toDeleteEdges s hp =
+      Walk.cons ⟨h, hp _ (Or.inl rfl)⟩ ((p.toDeleteEdges s) fun _ he => hp _ <| Or.inr he) :=
+  rfl
+#align simple_graph.walk.to_delete_edges_cons SimpleGraph.Walk.to_delete_edges_cons
 
 /-- Given a walk that avoids an edge, create a walk in the subgraph with that edge deleted.
 This is an abbreviation for `simple_graph.walk.to_delete_edges`. -/
@@ -1618,11 +1638,15 @@ theorem map_to_delete_edges_eq (s : Set (Sym2 V)) {v w : V} {p : G.Walk v w} (hp
   rw [← transfer_eq_map_of_le, transfer_transfer, transfer_self]
 #align simple_graph.walk.map_to_delete_edges_eq SimpleGraph.Walk.map_to_delete_edges_eq
 
-theorem IsPath.to_delete_edges (s : Set (Sym2 V)) {v w : V} {p : G.Walk v w} (h : p.IsPath) (hp) :
-    (p.toDeleteEdges s hp).IsPath := by
-  rw [← map_to_delete_edges_eq s hp] at h
-  exact h.of_map
+protected theorem IsPath.to_delete_edges (s : Set (Sym2 V)) {v w : V} {p : G.Walk v w} (h : p.IsPath) (hp) :
+    (p.toDeleteEdges s hp).IsPath :=
+  h.transfer _
 #align simple_graph.walk.is_path.to_delete_edges SimpleGraph.Walk.IsPath.to_delete_edges
+
+protected theorem IsCycle.to_delete_edges (s : Set (Sym2 V)) {v : V} {p : G.Walk v v} (h : p.IsCycle) (hp) :
+    (p.toDeleteEdges s hp).IsCycle :=
+  h.transfer _
+#align simple_graph.walk.is_cycle.to_delete_edges SimpleGraph.Walk.IsCycle.to_delete_edges
 
 @[simp]
 theorem to_delete_edges_copy (s : Set (Sym2 V)) {u v u' v'} (p : G.Walk u v) (hu : u = u') (hv : v = v') (h) :

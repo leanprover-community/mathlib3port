@@ -232,7 +232,7 @@ theorem PowerBasis.trace_gen_eq_sum_roots [Nontrivial S] (pb : PowerBasis K S)
     (hf : (minpoly K pb.gen).Splits (algebraMap K F)) :
     algebraMap K F (trace K S pb.gen) = ((minpoly K pb.gen).map (algebraMap K F)).roots.Sum := by
   rw [PowerBasis.trace_gen_eq_next_coeff_minpoly, RingHom.map_neg, ← next_coeff_map (algebraMap K F).Injective,
-    sum_roots_eq_next_coeff_of_monic_of_split ((minpoly.monic (PowerBasis.isIntegralGen _)).map _)
+    sum_roots_eq_next_coeff_of_monic_of_split ((minpoly.monic (PowerBasis.is_integral_gen _)).map _)
       ((splits_id_iff_splits _).2 hf),
     neg_neg]
 #align power_basis.trace_gen_eq_sum_roots PowerBasis.trace_gen_eq_sum_roots
@@ -247,7 +247,7 @@ theorem trace_gen_eq_zero {x : L} (hx : ¬IsIntegral K x) : Algebra.trace K K⟮
   rw [trace_eq_zero_of_not_exists_basis, LinearMap.zero_apply]
   contrapose! hx
   obtain ⟨s, ⟨b⟩⟩ := hx
-  refine' isIntegralOfMemOfFg K⟮⟯.toSubalgebra _ x _
+  refine' is_integral_of_mem_of_fg K⟮⟯.toSubalgebra _ x _
   · exact (Submodule.fg_iff_finite_dimensional _).mpr (FiniteDimensional.ofFintypeBasis b)
     
   · exact subset_adjoin K _ (Set.mem_singleton x)
@@ -305,11 +305,11 @@ variable [Algebra R L] [Algebra L F] [Algebra R F] [IsScalarTower R L F]
 
 open Polynomial
 
-theorem Algebra.isIntegralTrace [FiniteDimensional L F] {x : F} (hx : IsIntegral R x) :
+theorem Algebra.is_integral_trace [FiniteDimensional L F] {x : F} (hx : IsIntegral R x) :
     IsIntegral R (Algebra.trace L F x) := by
-  have hx' : _root_.is_integral L x := isIntegralOfIsScalarTower hx
+  have hx' : _root_.is_integral L x := is_integral_of_is_scalar_tower hx
   rw [← is_integral_algebra_map_iff (algebraMap L (AlgebraicClosure F)).Injective, trace_eq_sum_roots]
-  · refine' (IsIntegral.multisetSum _).nsmul _
+  · refine' (IsIntegral.multiset_sum _).nsmul _
     intro y hy
     rw [mem_roots_map (minpoly.ne_zero hx')] at hy
     use minpoly R x, minpoly.monic hx
@@ -320,7 +320,7 @@ theorem Algebra.isIntegralTrace [FiniteDimensional L F] {x : F} (hx : IsIntegral
     
   · infer_instance
     
-#align algebra.is_integral_trace Algebra.isIntegralTrace
+#align algebra.is_integral_trace Algebra.is_integral_trace
 
 section EqSumEmbeddings
 
@@ -354,7 +354,7 @@ theorem sum_embeddings_eq_finrank_mul [FiniteDimensional K F] [IsSeparable K F] 
       finrank L F • (@Finset.univ (PowerBasis.AlgHom.fintype pb)).Sum fun σ : L →ₐ[K] E => σ pb.gen :=
   by
   haveI : FiniteDimensional L F := FiniteDimensional.right K L F
-  haveI : IsSeparable L F := isSeparableTowerTopOfIsSeparable K L F
+  haveI : IsSeparable L F := is_separable_tower_top_of_is_separable K L F
   letI : Fintype (L →ₐ[K] E) := PowerBasis.AlgHom.fintype pb
   letI : ∀ f : L →ₐ[K] E, Fintype (@AlgHom L F E _ _ _ _ f.to_ring_hom.to_algebra) := _
   -- will be solved by unification
@@ -374,13 +374,13 @@ theorem sum_embeddings_eq_finrank_mul [FiniteDimensional K F] [IsSeparable K F] 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 theorem trace_eq_sum_embeddings [FiniteDimensional K L] [IsSeparable K L] {x : L} :
     algebraMap K E (Algebra.trace K L x) = ∑ σ : L →ₐ[K] E, σ x := by
-  have hx := IsSeparable.isIntegral K x
+  have hx := IsSeparable.is_integral K x
   rw [trace_eq_trace_adjoin K x, Algebra.smul_def, RingHom.map_mul, ← adjoin.power_basis_gen hx,
     trace_eq_sum_embeddings_gen E (adjoin.power_basis hx) (IsAlgClosed.splitsCodomain _), ← Algebra.smul_def,
     algebra_map_smul]
   · exact (sum_embeddings_eq_finrank_mul L E (adjoin.power_basis hx)).symm
     
-  · haveI := isSeparableTowerBotOfIsSeparable K K⟮⟯ L
+  · haveI := is_separable_tower_bot_of_is_separable K K⟮⟯ L
     exact IsSeparable.separable K _
     
 #align trace_eq_sum_embeddings trace_eq_sum_embeddings
@@ -393,7 +393,7 @@ theorem trace_eq_sum_automorphisms (x : L) [FiniteDimensional K L] [IsGalois K L
   · rw [← trace_eq_sum_embeddings (AlgebraicClosure L)]
     · simp only [algebra_map_eq_smul_one, smul_one_smul]
       
-    · exact IsGalois.toIsSeparable
+    · exact IsGalois.to_is_separable
       
     
   · intro σ

@@ -222,7 +222,7 @@ theorem discr_power_basis_eq_norm [IsSeparable K L] :
   have hroots : ∀ σ : L →ₐ[K] E, σ pb.gen ∈ (map (algebraMap K E) (minpoly K pb.gen)).roots := by
     intro σ
     rw [mem_roots, is_root.def, eval_map, ← aeval_def, aeval_alg_hom_apply]
-    repeat' simp [minpoly.ne_zero (IsSeparable.isIntegral K pb.gen)]
+    repeat' simp [minpoly.ne_zero (IsSeparable.is_integral K pb.gen)]
   apply (algebraMap K E).Injective
   rw [RingHom.map_mul, RingHom.map_pow, RingHom.map_neg, RingHom.map_one, discr_power_basis_eq_prod'' _ _ _ e]
   congr
@@ -232,7 +232,7 @@ theorem discr_power_basis_eq_norm [IsSeparable K L] :
   skip
   ext
   rw [← aeval_alg_hom_apply,
-    aeval_root_derivative_of_splits (minpoly.monic (IsSeparable.isIntegral K pb.gen)) (IsAlgClosed.splitsCodomain _)
+    aeval_root_derivative_of_splits (minpoly.monic (IsSeparable.is_integral K pb.gen)) (IsAlgClosed.splitsCodomain _)
       (hroots σ),
     ← Finset.prod_mk _ (hnodup.erase _)]
   rw [prod_sigma', prod_sigma']
@@ -259,7 +259,7 @@ theorem discr_power_basis_eq_norm [IsSeparable K L] :
     · rw [aeval_def, eval₂_eq_eval_map, ← is_root.def, ← mem_roots]
       · exact Multiset.erase_subset _ _ hσ
         
-      · simp [minpoly.ne_zero (IsSeparable.isIntegral K pb.gen)]
+      · simp [minpoly.ne_zero (IsSeparable.is_integral K pb.gen)]
         
       
     · replace h := AlgHom.congr_fun (Equiv.injective _ h) pb.gen
@@ -280,10 +280,10 @@ local notation "is_integral" => IsIntegral
 
 /-- If `K` and `L` are fields and `is_scalar_tower R K L`, and `b : ι → L` satisfies
 ` ∀ i, is_integral R (b i)`, then `is_integral R (discr K b)`. -/
-theorem discrIsIntegral {b : ι → L} (h : ∀ i, is_integral R (b i)) : is_integral R (discr K b) := by classical
+theorem discr_is_integral {b : ι → L} (h : ∀ i, is_integral R (b i)) : is_integral R (discr K b) := by classical
   rw [discr_def]
-  exact IsIntegral.det fun i j => is_integral_trace (isIntegralMul (h i) (h j))
-#align algebra.discr_is_integral Algebra.discrIsIntegral
+  exact IsIntegral.det fun i j => is_integral_trace (is_integral_mul (h i) (h j))
+#align algebra.discr_is_integral Algebra.discr_is_integral
 
 /-- If `b` and `b'` are `ℚ`-bases of a number field `K` such that
 `∀ i j, is_integral ℤ (b.to_matrix b' i j)` and `∀ i j, is_integral ℤ (b'.to_matrix b i j)` then
@@ -354,13 +354,14 @@ theorem discr_mul_is_integral_mem_adjoin [IsDomain R] [IsSeparable K L] [IsInteg
   by_cases hji : j = i
   · simp only [update_column_apply, hji, eq_self_iff_true, PowerBasis.coe_basis]
     exact
-      mem_bot.2 (IsIntegrallyClosed.is_integral_iff.1 <| is_integral_trace <| isIntegralMul hz <| IsIntegral.pow hint _)
+      mem_bot.2
+        (IsIntegrallyClosed.is_integral_iff.1 <| is_integral_trace <| is_integral_mul hz <| IsIntegral.pow hint _)
     
   · simp only [update_column_apply, hji, PowerBasis.coe_basis]
     exact
       mem_bot.2
         (IsIntegrallyClosed.is_integral_iff.1 <|
-          is_integral_trace <| isIntegralMul (IsIntegral.pow hint _) (IsIntegral.pow hint _))
+          is_integral_trace <| is_integral_mul (IsIntegral.pow hint _) (IsIntegral.pow hint _))
     
 #align algebra.discr_mul_is_integral_mem_adjoin Algebra.discr_mul_is_integral_mem_adjoin
 

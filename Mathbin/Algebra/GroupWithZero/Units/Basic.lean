@@ -256,12 +256,12 @@ alias is_unit_iff_ne_zero ↔ _ Ne.is_unit
 attribute [protected] Ne.is_unit
 
 -- see Note [lower instance priority]
-instance (priority := 10) GroupWithZero.noZeroDivisors : NoZeroDivisors G₀ :=
+instance (priority := 10) GroupWithZero.no_zero_divisors : NoZeroDivisors G₀ :=
   { (‹_› : GroupWithZero G₀) with
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b h => by
       contrapose! h
       exact (Units.mk0 a h.1 * Units.mk0 b h.2).NeZero }
-#align group_with_zero.no_zero_divisors GroupWithZero.noZeroDivisors
+#align group_with_zero.no_zero_divisors GroupWithZero.no_zero_divisors
 
 -- see Note [lower instance priority]
 instance (priority := 10) GroupWithZero.cancelMonoidWithZero : CancelMonoidWithZero G₀ :=

@@ -183,6 +183,15 @@ protected def copy (Q : QuadraticForm R M) (Q' : M → R) (h : Q' = ⇑Q) : Quad
   exists_companion' := h.symm ▸ Q.exists_companion'
 #align quadratic_form.copy QuadraticForm.copy
 
+@[simp]
+theorem coe_copy (Q : QuadraticForm R M) (Q' : M → R) (h : Q' = ⇑Q) : ⇑(Q.copy Q' h) = Q' :=
+  rfl
+#align quadratic_form.coe_copy QuadraticForm.coe_copy
+
+theorem copy_eq (Q : QuadraticForm R M) (Q' : M → R) (h : Q' = ⇑Q) : Q.copy Q' h = Q :=
+  FunLike.ext' h
+#align quadratic_form.copy_eq QuadraticForm.copy_eq
+
 end FunLike
 
 section Semiring

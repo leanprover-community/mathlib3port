@@ -428,7 +428,7 @@ theorem extraction_of_frequently_at_top' {P : ℕ → Prop} (h : ∀ N, ∃ n > 
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, P (φ n) := by
   choose u hu using h
   cases' forall_and_distrib.mp hu with hu hu'
-  exact ⟨u ∘ Nat.rec 0 fun n v => u v, strict_mono_nat_of_lt_succ fun n => hu _, fun n => hu' _⟩
+  exact ⟨u ∘ Nat.rec 0 fun n v => u v, strictMono_nat_of_lt_succ fun n => hu _, fun n => hu' _⟩
 #align filter.extraction_of_frequently_at_top' Filter.extraction_of_frequently_at_top'
 
 theorem extraction_of_frequently_at_top {P : ℕ → Prop} (h : ∃ᶠ n in at_top, P n) :
@@ -448,7 +448,7 @@ theorem extraction_forall_of_frequently {P : ℕ → ℕ → Prop} (h : ∀ n, �
   choose u hu hu' using h
   use (fun n => Nat.recOn n (u 0 0) fun n v => u (n + 1) v : ℕ → ℕ)
   constructor
-  · apply strict_mono_nat_of_lt_succ
+  · apply strictMono_nat_of_lt_succ
     intro n
     apply hu
     

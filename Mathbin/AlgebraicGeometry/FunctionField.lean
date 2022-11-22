@@ -121,7 +121,7 @@ theorem generic_point_eq_bot_of_affine (R : CommRingCat) [IsDomain R] :
   simp [is_generic_point_def, ← PrimeSpectrum.zero_locus_vanishing_ideal_eq_closure]
 #align algebraic_geometry.generic_point_eq_bot_of_affine AlgebraicGeometry.generic_point_eq_bot_of_affine
 
-instance functionFieldIsFractionRingOfAffine (R : CommRingCat.{u}) [IsDomain R] :
+instance function_field_is_fraction_ring_of_affine (R : CommRingCat.{u}) [IsDomain R] :
     IsFractionRing R (SchemeCat.spec.obj <| op R).functionField := by
   convert structure_sheaf.is_localization.to_stalk R _
   delta IsFractionRing IsLocalization.AtPrime
@@ -130,7 +130,7 @@ instance functionFieldIsFractionRingOfAffine (R : CommRingCat.{u}) [IsDomain R] 
   ext
   exact mem_non_zero_divisors_iff_ne_zero
 #align
-  algebraic_geometry.function_field_is_fraction_ring_of_affine AlgebraicGeometry.functionFieldIsFractionRingOfAffine
+  algebraic_geometry.function_field_is_fraction_ring_of_affine AlgebraicGeometry.function_field_is_fraction_ring_of_affine
 
 instance {X : SchemeCat} [IsIntegral X] {U : Opens X.carrier} [hU : Nonempty U] :
     IsIntegral (X.restrict U.OpenEmbedding) :=
@@ -157,7 +157,7 @@ theorem IsAffineOpen.prime_ideal_of_generic_point {X : SchemeCat} [IsIntegral X]
 #align
   algebraic_geometry.is_affine_open.prime_ideal_of_generic_point AlgebraicGeometry.IsAffineOpen.prime_ideal_of_generic_point
 
-theorem functionFieldIsFractionRingOfIsAffineOpen [IsIntegral X] (U : Opens X.carrier) (hU : IsAffineOpen U)
+theorem function_field_is_fraction_ring_of_is_affine_open [IsIntegral X] (U : Opens X.carrier) (hU : IsAffineOpen U)
     [hU' : Nonempty U] : IsFractionRing (X.Presheaf.obj <| op U) X.functionField := by
   haveI : is_affine _ := hU
   haveI : Nonempty (X.restrict U.open_embedding).carrier := hU'
@@ -176,7 +176,7 @@ theorem functionFieldIsFractionRingOfIsAffineOpen [IsIntegral X] (U : Opens X.ca
   ext
   exact mem_non_zero_divisors_iff_ne_zero
 #align
-  algebraic_geometry.function_field_is_fraction_ring_of_is_affine_open AlgebraicGeometry.functionFieldIsFractionRingOfIsAffineOpen
+  algebraic_geometry.function_field_is_fraction_ring_of_is_affine_open AlgebraicGeometry.function_field_is_fraction_ring_of_is_affine_open
 
 instance (x : X.carrier) : IsAffine (X.affineCover.obj x) :=
   AlgebraicGeometry.specIsAffine _
@@ -187,7 +187,7 @@ instance [h : IsIntegral X] (x : X.carrier) : IsFractionRing (X.Presheaf.stalk x
   haveI : Nonempty U := ⟨⟨_, X.affine_cover.covers x⟩⟩
   have hU : is_affine_open U := range_is_affine_open_of_open_immersion (X.affine_cover.map x)
   exact
-    @IsFractionRing.isFractionRingOfIsDomainOfIsLocalization _ _ _ _ _ _ _ _ _ _ _
+    @IsFractionRing.is_fraction_ring_of_is_domain_of_is_localization _ _ _ _ _ _ _ _ _ _ _
       (hU.is_localization_stalk ⟨x, X.affine_cover.covers x⟩) (function_field_is_fraction_ring_of_is_affine_open X U hU)
 
 end AlgebraicGeometry

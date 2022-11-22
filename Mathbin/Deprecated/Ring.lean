@@ -86,9 +86,9 @@ namespace IsRingHom
 variable {β : Type v} [Ring α] [Ring β]
 
 /-- A map of rings that is a semiring homomorphism is also a ring homomorphism. -/
-theorem ofSemiring {f : α → β} (H : IsSemiringHom f) : IsRingHom f :=
+theorem of_semiring {f : α → β} (H : IsSemiringHom f) : IsRingHom f :=
   { H with }
-#align is_ring_hom.of_semiring IsRingHom.ofSemiring
+#align is_ring_hom.of_semiring IsRingHom.of_semiring
 
 variable {f : α → β} (hf : IsRingHom f) {x y : α}
 
@@ -125,9 +125,9 @@ theorem comp (hf : IsRingHom f) {γ} [Ring γ] {g : β → γ} (hg : IsRingHom g
 #align is_ring_hom.comp IsRingHom.comp
 
 /-- A ring homomorphism is also a semiring homomorphism. -/
-theorem toIsSemiringHom (hf : IsRingHom f) : IsSemiringHom f :=
+theorem to_is_semiring_hom (hf : IsRingHom f) : IsSemiringHom f :=
   { ‹IsRingHom f› with map_zero := map_zero hf }
-#align is_ring_hom.to_is_semiring_hom IsRingHom.toIsSemiringHom
+#align is_ring_hom.to_is_semiring_hom IsRingHom.to_is_semiring_hom
 
 theorem to_is_add_group_hom (hf : IsRingHom f) : IsAddGroupHom f :=
   { map_add := fun _ _ => hf.map_add }
@@ -153,15 +153,15 @@ theorem coe_of {f : α → β} (hf : IsSemiringHom f) : ⇑(of hf) = f :=
   rfl
 #align ring_hom.coe_of RingHom.coe_of
 
-theorem toIsSemiringHom (f : α →+* β) : IsSemiringHom f :=
+theorem to_is_semiring_hom (f : α →+* β) : IsSemiringHom f :=
   { map_zero := f.map_zero, map_one := f.map_one, map_add := f.map_add, map_mul := f.map_mul }
-#align ring_hom.to_is_semiring_hom RingHom.toIsSemiringHom
+#align ring_hom.to_is_semiring_hom RingHom.to_is_semiring_hom
 
 end
 
-theorem toIsRingHom {α γ} [Ring α] [Ring γ] (g : α →+* γ) : IsRingHom g :=
-  IsRingHom.ofSemiring g.toIsSemiringHom
-#align ring_hom.to_is_ring_hom RingHom.toIsRingHom
+theorem to_is_ring_hom {α γ} [Ring α] [Ring γ] (g : α →+* γ) : IsRingHom g :=
+  IsRingHom.of_semiring g.to_is_semiring_hom
+#align ring_hom.to_is_ring_hom RingHom.to_is_ring_hom
 
 end RingHom
 

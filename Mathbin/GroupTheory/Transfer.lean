@@ -237,6 +237,11 @@ theorem ker_transfer_sylow_is_complement' : IsComplement' (transferSylow P hP).k
   exact is_complement'_of_disjoint_and_mul_eq_univ (disjoint_iff.2 hf.1) hf.2
 #align monoid_hom.ker_transfer_sylow_is_complement' MonoidHom.ker_transfer_sylow_is_complement'
 
+theorem not_dvd_card_ker_transfer_sylow : ¬p ∣ Nat.card (transferSylow P hP).ker :=
+  (ker_transfer_sylow_is_complement' P hP).index_eq_card ▸ not_dvd_index_sylow P <|
+    mt index_eq_zero_of_relindex_eq_zero index_ne_zero_of_finite
+#align monoid_hom.not_dvd_card_ker_transfer_sylow MonoidHom.not_dvd_card_ker_transfer_sylow
+
 theorem ker_transfer_sylow_disjoint : Disjoint (transferSylow P hP).ker ↑P :=
   (ker_transfer_sylow_is_complement' P hP).Disjoint
 #align monoid_hom.ker_transfer_sylow_disjoint MonoidHom.ker_transfer_sylow_disjoint

@@ -107,7 +107,7 @@ instance : IsDomain (ringOfIntegers Fq F) :=
   (ringOfIntegers Fq F).IsDomain
 
 instance : IsIntegralClosure (ringOfIntegers Fq F) Fq[X] F :=
-  integralClosure.isIntegralClosure _ _
+  integralClosure.is_integral_closure _ _
 
 variable [Algebra (Ratfunc Fq) F] [IsScalarTower Fq[X] (Ratfunc Fq) F]
 
@@ -123,14 +123,14 @@ theorem algebra_map_injective : Function.Injective ⇑(algebraMap Fq[X] (ringOfI
 #align function_field.ring_of_integers.algebra_map_injective FunctionField.ringOfIntegers.algebra_map_injective
 
 theorem not_is_field : ¬IsField (ringOfIntegers Fq F) := by
-  simpa [← (IsIntegralClosure.isIntegralAlgebra Fq[X] F).is_field_iff_is_field (algebra_map_injective Fq F)] using
+  simpa [← (IsIntegralClosure.is_integral_algebra Fq[X] F).is_field_iff_is_field (algebra_map_injective Fq F)] using
     Polynomial.not_is_field Fq
 #align function_field.ring_of_integers.not_is_field FunctionField.ringOfIntegers.not_is_field
 
 variable [FunctionField Fq F]
 
 instance : IsFractionRing (ringOfIntegers Fq F) F :=
-  integralClosure.isFractionRingOfFiniteExtension (Ratfunc Fq) F
+  integralClosure.is_fraction_ring_of_finite_extension (Ratfunc Fq) F
 
 instance : IsIntegrallyClosed (ringOfIntegers Fq F) :=
   integralClosure.isIntegrallyClosedOfFiniteExtension (Ratfunc Fq)

@@ -174,6 +174,12 @@ def decidablePrime1 (p : ℕ) : Decidable (Prime p) :=
 theorem prime_two : Prime 2 := by decide
 #align nat.prime_two Nat.prime_two
 
+theorem Prime.five_le_of_ne_two_of_ne_three {p : ℕ} (hp : p.Prime) (h_two : p ≠ 2) (h_three : p ≠ 3) : 5 ≤ p := by
+  by_contra' h
+  revert h_two h_three hp
+  decide!
+#align nat.prime.five_le_of_ne_two_of_ne_three Nat.Prime.five_le_of_ne_two_of_ne_three
+
 end
 
 theorem Prime.pred_pos {p : ℕ} (pp : Prime p) : 0 < pred p :=
@@ -502,6 +508,10 @@ theorem Prime.eq_two_or_odd' {p : ℕ} (hp : Prime p) : p = 2 ∨ Odd p :=
 theorem Prime.even_iff {p : ℕ} (hp : Prime p) : Even p ↔ p = 2 := by
   rw [even_iff_two_dvd, prime_dvd_prime_iff_eq prime_two hp, eq_comm]
 #align nat.prime.even_iff Nat.Prime.even_iff
+
+theorem Prime.odd_of_ne_two {p : ℕ} (hp : p.Prime) (h_two : p ≠ 2) : Odd p :=
+  hp.eq_two_or_odd'.resolve_left h_two
+#align nat.prime.odd_of_ne_two Nat.Prime.odd_of_ne_two
 
 /-- A prime `p` satisfies `p % 2 = 1` if and only if `p ≠ 2`. -/
 theorem Prime.mod_two_eq_one_iff_ne_two {p : ℕ} [Fact p.Prime] : p % 2 = 1 ↔ p ≠ 2 := by
@@ -1385,13 +1395,13 @@ end Nat
 
 namespace Int
 
-theorem primeTwo : Prime (2 : ℤ) :=
+theorem prime_two : Prime (2 : ℤ) :=
   Nat.prime_iff_prime_int.mp Nat.prime_two
-#align int.prime_two Int.primeTwo
+#align int.prime_two Int.prime_two
 
-theorem primeThree : Prime (3 : ℤ) :=
+theorem prime_three : Prime (3 : ℤ) :=
   Nat.prime_iff_prime_int.mp Nat.prime_three
-#align int.prime_three Int.primeThree
+#align int.prime_three Int.prime_three
 
 end Int
 

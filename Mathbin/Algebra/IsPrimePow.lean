@@ -40,15 +40,21 @@ theorem not_is_prime_pow_zero [NoZeroDivisors R] : ¬IsPrimePow (0 : R) := by
   simp
 #align not_is_prime_pow_zero not_is_prime_pow_zero
 
-theorem not_is_prime_pow_one : ¬IsPrimePow (1 : R) := by
-  simp only [is_prime_pow_def, not_exists, not_and', and_imp]
-  intro x n hn hx ht
-  exact ht.not_unit (is_unit_of_pow_eq_one x n hx hn.ne')
+theorem IsPrimePow.not_unit {n : R} (h : IsPrimePow n) : ¬IsUnit n :=
+  let ⟨p, k, hp, hk, hn⟩ := h
+  hn ▸ (is_unit_pow_iff hk.ne').Not.mpr hp.not_unit
+#align is_prime_pow.not_unit IsPrimePow.not_unit
+
+theorem IsUnit.not_is_prime_pow {n : R} (h : IsUnit n) : ¬IsPrimePow n := fun h' => h'.not_unit h
+#align is_unit.not_is_prime_pow IsUnit.not_is_prime_pow
+
+theorem not_is_prime_pow_one : ¬IsPrimePow (1 : R) :=
+  is_unit_one.not_is_prime_pow
 #align not_is_prime_pow_one not_is_prime_pow_one
 
-theorem Prime.isPrimePow {p : R} (hp : Prime p) : IsPrimePow p :=
+theorem Prime.is_prime_pow {p : R} (hp : Prime p) : IsPrimePow p :=
   ⟨p, 1, hp, zero_lt_one, by simp⟩
-#align prime.is_prime_pow Prime.isPrimePow
+#align prime.is_prime_pow Prime.is_prime_pow
 
 theorem IsPrimePow.pow {n : R} (hn : IsPrimePow n) {k : ℕ} (hk : k ≠ 0) : IsPrimePow (n ^ k) :=
   let ⟨p, k', hp, hk', hn⟩ := hn
@@ -68,9 +74,9 @@ theorem is_prime_pow_nat_iff (n : ℕ) : IsPrimePow n ↔ ∃ p k : ℕ, Nat.Pri
   simp only [is_prime_pow_def, Nat.prime_iff]
 #align is_prime_pow_nat_iff is_prime_pow_nat_iff
 
-theorem Nat.Prime.isPrimePow {p : ℕ} (hp : p.Prime) : IsPrimePow p :=
+theorem Nat.Prime.is_prime_pow {p : ℕ} (hp : p.Prime) : IsPrimePow p :=
   hp.Prime.IsPrimePow
-#align nat.prime.is_prime_pow Nat.Prime.isPrimePow
+#align nat.prime.is_prime_pow Nat.Prime.is_prime_pow
 
 theorem is_prime_pow_nat_iff_bounded (n : ℕ) :
     IsPrimePow n ↔ ∃ p : ℕ, p ≤ n ∧ ∃ k : ℕ, k ≤ n ∧ p.Prime ∧ 0 < k ∧ p ^ k = n := by

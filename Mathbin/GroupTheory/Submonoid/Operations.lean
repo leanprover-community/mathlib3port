@@ -927,7 +927,7 @@ theorem mem_mrange {f : F} {y : N} : y ∈ mrange f ↔ ∃ x, f x = y :=
 
 @[to_additive]
 theorem mrange_eq_map (f : F) : mrange f = (⊤ : Submonoid M).map f :=
-  copy_eq _
+  Submonoid.copy_eq _
 #align monoid_hom.mrange_eq_map MonoidHom.mrange_eq_map
 
 omit mc

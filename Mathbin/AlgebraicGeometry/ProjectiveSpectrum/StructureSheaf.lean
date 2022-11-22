@@ -413,7 +413,7 @@ def ProjCat.stalkIso' (x : ProjectiveSpectrum.top 𝒜) :
 def ProjCat.toLocallyRingedSpace : LocallyRingedSpaceCat :=
   { ProjCat.toSheafedSpace 𝒜 with
     LocalRing := fun x =>
-      @RingEquiv.localRing _ (show LocalRing (at x) from inferInstance) _ (ProjCat.stalkIso' 𝒜 x).symm }
+      @RingEquiv.local_ring _ (show LocalRing (at x) from inferInstance) _ (ProjCat.stalkIso' 𝒜 x).symm }
 #align algebraic_geometry.Proj.to_LocallyRingedSpace AlgebraicGeometry.ProjCat.toLocallyRingedSpace
 
 end

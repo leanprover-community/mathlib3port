@@ -156,9 +156,9 @@ theorem one_div_mul_sub_mul_one_div_eq_one_div_add_one_div (ha : a ≠ 0) (hb : 
 #align one_div_mul_sub_mul_one_div_eq_one_div_add_one_div one_div_mul_sub_mul_one_div_eq_one_div_add_one_div
 
 -- see Note [lower instance priority]
-instance (priority := 100) DivisionRing.isDomain : IsDomain K :=
+instance (priority := 100) DivisionRing.is_domain : IsDomain K :=
   { ‹DivisionRing K›, (by infer_instance : NoZeroDivisors K) with }
-#align division_ring.is_domain DivisionRing.isDomain
+#align division_ring.is_domain DivisionRing.is_domain
 
 end DivisionRing
 
@@ -207,9 +207,9 @@ theorem div_sub' (a b c : K) (hc : c ≠ 0) : a / c - b = (a - c * b) / c := by 
 #align div_sub' div_sub'
 
 -- see Note [lower instance priority]
-instance (priority := 100) Field.isDomain : IsDomain K :=
-  { DivisionRing.isDomain with }
-#align field.is_domain Field.isDomain
+instance (priority := 100) Field.is_domain : IsDomain K :=
+  { DivisionRing.is_domain with }
+#align field.is_domain Field.is_domain
 
 end Field
 
@@ -243,7 +243,7 @@ end NoncomputableDefs
 /-- Pullback a `division_semiring` along an injective function. -/
 @[reducible]
 protected def Function.Injective.divisionSemiring [DivisionSemiring β] [Zero α] [Mul α] [Add α] [One α] [Inv α] [Div α]
-    [HasSmul ℕ α] [Pow α ℕ] [Pow α ℤ] [HasNatCast α] (f : α → β) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    [HasSmul ℕ α] [Pow α ℕ] [Pow α ℤ] [NatCast α] (f : α → β) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n)
@@ -255,8 +255,8 @@ protected def Function.Injective.divisionSemiring [DivisionSemiring β] [Zero α
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.divisionRing [DivisionRing K] {K'} [Zero K'] [One K'] [Add K'] [Mul K'] [Neg K']
-    [Sub K'] [Inv K'] [Div K'] [HasSmul ℕ K'] [HasSmul ℤ K'] [HasSmul ℚ K'] [Pow K' ℕ] [Pow K' ℤ] [HasNatCast K']
-    [HasIntCast K'] [HasRatCast K'] (f : K' → K) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    [Sub K'] [Inv K'] [Div K'] [HasSmul ℕ K'] [HasSmul ℤ K'] [HasSmul ℚ K'] [Pow K' ℕ] [Pow K' ℤ] [NatCast K']
+    [IntCast K'] [HasRatCast K'] (f : K' → K) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
     (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x)
@@ -274,7 +274,7 @@ protected def Function.Injective.divisionRing [DivisionRing K] {K'} [Zero K'] [O
 /-- Pullback a `field` along an injective function. -/
 @[reducible]
 protected def Function.Injective.semifield [Semifield β] [Zero α] [Mul α] [Add α] [One α] [Inv α] [Div α] [HasSmul ℕ α]
-    [Pow α ℕ] [Pow α ℤ] [HasNatCast α] (f : α → β) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    [Pow α ℕ] [Pow α ℤ] [NatCast α] (f : α → β) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n)
@@ -286,7 +286,7 @@ protected def Function.Injective.semifield [Semifield β] [Zero α] [Mul α] [Ad
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.field [Field K] {K'} [Zero K'] [Mul K'] [Add K'] [Neg K'] [Sub K'] [One K'] [Inv K']
-    [Div K'] [HasSmul ℕ K'] [HasSmul ℤ K'] [HasSmul ℚ K'] [Pow K' ℕ] [Pow K' ℤ] [HasNatCast K'] [HasIntCast K']
+    [Div K'] [HasSmul ℕ K'] [HasSmul ℤ K'] [HasSmul ℚ K'] [Pow K' ℕ] [Pow K' ℤ] [NatCast K'] [IntCast K']
     [HasRatCast K'] (f : K' → K) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
     (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y)

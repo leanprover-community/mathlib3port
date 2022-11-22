@@ -355,7 +355,7 @@ open ContinuousMap
 
 /-- If a conjugation-invariant subalgebra of `C(X, 𝕜)` separates points, then the real subalgebra
 of its purely real-valued elements also separates points. -/
-theorem Subalgebra.SeparatesPoints.isROrCToReal {A : Subalgebra 𝕜 C(X, 𝕜)} (hA : A.SeparatesPoints)
+theorem Subalgebra.SeparatesPoints.is_R_or_C_to_real {A : Subalgebra 𝕜 C(X, 𝕜)} (hA : A.SeparatesPoints)
     (hA' : ConjInvariantSubalgebra (A.restrictScalars ℝ)) :
     ((A.restrictScalars ℝ).comap (ofRealAm.compLeftContinuous ℝ continuous_of_real)).SeparatesPoints := by
   intro x₁ x₂ hx
@@ -382,7 +382,7 @@ theorem Subalgebra.SeparatesPoints.isROrCToReal {A : Subalgebra 𝕜 C(X, 𝕜)}
     simpa only [comp_apply, ContinuousMap.coe_sub, coe_const, Pi.sub_apply, coe_mk, sub_self, map_zero, Ne.def,
       norm_sq_eq_zero] using this
     
-#align subalgebra.separates_points.is_R_or_C_to_real Subalgebra.SeparatesPoints.isROrCToReal
+#align subalgebra.separates_points.is_R_or_C_to_real Subalgebra.SeparatesPoints.is_R_or_C_to_real
 
 variable [CompactSpace X]
 

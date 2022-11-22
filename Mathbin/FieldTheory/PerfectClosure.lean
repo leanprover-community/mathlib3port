@@ -169,9 +169,9 @@ theorem lift_on_mk {L : Sort _} (f : ℕ × K → L) (hf : ∀ x y, R K p x y �
 #align perfect_closure.lift_on_mk PerfectClosure.lift_on_mk
 
 @[elab_as_elim]
-theorem inductionOn (x : PerfectClosure K p) {q : PerfectClosure K p → Prop} (h : ∀ x, q (mk K p x)) : q x :=
+theorem induction_on (x : PerfectClosure K p) {q : PerfectClosure K p → Prop} (h : ∀ x, q (mk K p x)) : q x :=
   Quot.induction_on x h
-#align perfect_closure.induction_on PerfectClosure.inductionOn
+#align perfect_closure.induction_on PerfectClosure.induction_on
 
 variable (K p)
 
@@ -463,7 +463,7 @@ instance : Field (PerfectClosure K p) :=
   { (inferInstance : Inv (PerfectClosure K p)), (inferInstance : CommRing (PerfectClosure K p)) with
     exists_pair_ne := ⟨0, 1, fun H => zero_ne_one ((eq_iff _ _ _ _).1 H)⟩,
     mul_inv_cancel := fun e =>
-      (inductionOn e) fun ⟨m, x⟩ H =>
+      (induction_on e) fun ⟨m, x⟩ H =>
         have := mt (eq_iff _ _ _ _).2 H
         (eq_iff _ _ _ _).2
           (by
@@ -478,11 +478,11 @@ instance : PerfectRing (PerfectClosure K p) p where
       match x, y, H with
       | _, _, r.intro n x => Quot.sound (R.intro _ _)
   frobenius_pth_root' e :=
-    inductionOn e fun ⟨n, x⟩ => by
+    induction_on e fun ⟨n, x⟩ => by
       simp only [lift_on_mk, frobenius_mk]
       exact (Quot.sound <| r.intro _ _).symm
   pth_root_frobenius' e :=
-    inductionOn e fun ⟨n, x⟩ => by
+    induction_on e fun ⟨n, x⟩ => by
       simp only [lift_on_mk, frobenius_mk]
       exact (Quot.sound <| r.intro _ _).symm
 

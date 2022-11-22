@@ -6,11 +6,11 @@ Authors: Yury Kudryashov
 import Mathbin.Logic.Function.Basic
 
 /-!
-THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-https://github.com/leanprover-community/mathlib4/pull/533
-Any changes to this file require a corresponding PR to mathlib4.
-
 # Semiconjugate and commuting maps
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/533
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define the following predicates:
 
@@ -228,22 +228,37 @@ theorem comp {f' : β → γ} {gc : γ → γ → γ} (hf' : Semiconj₂ f' gb g
     Semiconj₂ (f' ∘ f) ga gc := fun x y => by simp only [hf'.eq, hf.eq, comp_app]
 #align function.semiconj₂.comp Function.Semiconj₂.comp
 
-theorem is_associative_right [IsAssociative α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) :
-    IsAssociative β gb :=
+/- warning: function.semiconj₂.is_associative_right -> Function.Semiconj₂.isAssociative_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β} [_inst_1 : IsAssociative.{u_1} α ga], (Function.Semiconj₂.{u_1 u_2} α β f ga gb) -> (Function.Surjective.{succ u_1 succ u_2} α β f) -> (IsAssociative.{u_2} β gb)
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β} [inst._@.Mathlib.Logic.Function.Conjugate._hyg.1095 : IsAssociative.{u_1} α ga], (Function.Semiconj₂.{u_1 u_2} α β f ga gb) -> (Function.Surjective.{succ u_1 succ u_2} α β f) -> (IsAssociative.{u_2} β gb)
+Case conversion may be inaccurate. Consider using '#align function.semiconj₂.is_associative_right Function.Semiconj₂.isAssociative_rightₓ'. -/
+theorem isAssociative_right [IsAssociative α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) : IsAssociative β gb :=
   ⟨h_surj.forall₃.2 fun x₁ x₂ x₃ => by simp only [← h.eq, @IsAssociative.assoc _ ga]⟩
-#align function.semiconj₂.is_associative_right Function.Semiconj₂.is_associative_right
+#align function.semiconj₂.is_associative_right Function.Semiconj₂.isAssociative_right
 
-theorem is_associative_left [IsAssociative β gb] (h : Semiconj₂ f ga gb) (h_inj : Injective f) : IsAssociative α ga :=
+#print Function.Semiconj₂.isAssociative_left /-
+theorem isAssociative_left [IsAssociative β gb] (h : Semiconj₂ f ga gb) (h_inj : Injective f) : IsAssociative α ga :=
   ⟨fun x₁ x₂ x₃ => h_inj <| by simp only [h.eq, @IsAssociative.assoc _ gb]⟩
-#align function.semiconj₂.is_associative_left Function.Semiconj₂.is_associative_left
+#align function.semiconj₂.is_associative_left Function.Semiconj₂.isAssociative_left
+-/
 
-theorem is_idempotent_right [IsIdempotent α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) : IsIdempotent β gb :=
+/- warning: function.semiconj₂.is_idempotent_right -> Function.Semiconj₂.isIdempotent_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β} [_inst_1 : IsIdempotent.{u_1} α ga], (Function.Semiconj₂.{u_1 u_2} α β f ga gb) -> (Function.Surjective.{succ u_1 succ u_2} α β f) -> (IsIdempotent.{u_2} β gb)
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β} [inst._@.Mathlib.Logic.Function.Conjugate._hyg.1195 : IsIdempotent.{u_1} α ga], (Function.Semiconj₂.{u_1 u_2} α β f ga gb) -> (Function.Surjective.{succ u_1 succ u_2} α β f) -> (IsIdempotent.{u_2} β gb)
+Case conversion may be inaccurate. Consider using '#align function.semiconj₂.is_idempotent_right Function.Semiconj₂.isIdempotent_rightₓ'. -/
+theorem isIdempotent_right [IsIdempotent α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) : IsIdempotent β gb :=
   ⟨h_surj.forall.2 fun x => by simp only [← h.eq, @IsIdempotent.idempotent _ ga]⟩
-#align function.semiconj₂.is_idempotent_right Function.Semiconj₂.is_idempotent_right
+#align function.semiconj₂.is_idempotent_right Function.Semiconj₂.isIdempotent_right
 
-theorem is_idempotent_left [IsIdempotent β gb] (h : Semiconj₂ f ga gb) (h_inj : Injective f) : IsIdempotent α ga :=
+#print Function.Semiconj₂.isIdempotent_left /-
+theorem isIdempotent_left [IsIdempotent β gb] (h : Semiconj₂ f ga gb) (h_inj : Injective f) : IsIdempotent α ga :=
   ⟨fun x => h_inj <| by rw [h.eq, @IsIdempotent.idempotent _ gb]⟩
-#align function.semiconj₂.is_idempotent_left Function.Semiconj₂.is_idempotent_left
+#align function.semiconj₂.is_idempotent_left Function.Semiconj₂.isIdempotent_left
+-/
 
 end Semiconj₂
 

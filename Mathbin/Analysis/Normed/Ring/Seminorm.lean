@@ -64,7 +64,7 @@ attribute [nolint doc_blame]
 
 You should extend this class when you extend `ring_seminorm`. -/
 class RingSeminormClass (F : Type _) (α : outParam <| Type _) [NonUnitalNonAssocRing α] extends
-  AddGroupSeminormClass F α, SubmultiplicativeHomClass F α ℝ
+  AddGroupSeminormClass F α, SubMultiplicativeHomClass F α ℝ
 #align ring_seminorm_class RingSeminormClass
 
 /-- `ring_norm_class F α` states that `F` is a type of norms on the ring `α`.

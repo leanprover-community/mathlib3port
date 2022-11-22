@@ -711,7 +711,7 @@ end WithTopEquiv
 theorem lt_wf : @WellFounded PartEnat (· < ·) := by classical
   change WellFounded fun a b : PartEnat => a < b
   simp_rw [← to_with_top_lt]
-  exact InvImage.wf _ (WithTop.well_founded_lt Nat.lt_wfRel.wf)
+  exact InvImage.wf _ (WithTop.well_founded_lt Nat.lt_wfRel)
 #align part_enat.lt_wf PartEnat.lt_wf
 
 instance : WellFoundedLt PartEnat :=

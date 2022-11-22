@@ -34,7 +34,7 @@ theorem irrational_iff_ne_rational (x : ℝ) : Irrational x ↔ ∀ a b : ℤ, x
 /-- A transcendental real number is irrational. -/
 theorem Transcendental.irrational {r : ℝ} (tr : Transcendental ℚ r) : Irrational r := by
   rintro ⟨a, rfl⟩
-  exact tr (isAlgebraicAlgebraMap a)
+  exact tr (is_algebraic_algebra_map a)
 #align transcendental.irrational Transcendental.irrational
 
 /-!

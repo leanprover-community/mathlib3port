@@ -92,7 +92,7 @@ def StableUnderComposition : Prop :=
 
 variable {P}
 
-theorem StableUnderComposition.respectsIso (hP : RingHom.StableUnderComposition @P)
+theorem StableUnderComposition.respects_iso (hP : RingHom.StableUnderComposition @P)
     (hP' : ∀ {R S : Type _} [CommRing R] [CommRing S] (e : R ≃+* S), P e.to_ring_hom) : RingHom.RespectsIso @P := by
   constructor
   · introv H
@@ -105,7 +105,7 @@ theorem StableUnderComposition.respectsIso (hP : RingHom.StableUnderComposition 
     apply hP
     exacts[hP' e, H]
     
-#align ring_hom.stable_under_composition.respects_iso RingHom.StableUnderComposition.respectsIso
+#align ring_hom.stable_under_composition.respects_iso RingHom.StableUnderComposition.respects_iso
 
 end StableUnderComposition
 
@@ -119,7 +119,7 @@ def StableUnderBaseChange : Prop :=
       P (algebraMap R T) → P (algebra.tensor_product.include_left.to_ring_hom : S →+* TensorProduct R S T)
 #align ring_hom.stable_under_base_change RingHom.StableUnderBaseChange
 
-theorem StableUnderBaseChange.pushoutInl (hP : RingHom.StableUnderBaseChange @P) (hP' : RingHom.RespectsIso @P)
+theorem StableUnderBaseChange.pushout_inl (hP : RingHom.StableUnderBaseChange @P) (hP' : RingHom.RespectsIso @P)
     {R S T : CommRingCat} (f : R ⟶ S) (g : R ⟶ T) (H : P g) : P (pushout.inl : S ⟶ pushout f g) := by
   rw [←
     show _ = pushout.inl from
@@ -127,7 +127,7 @@ theorem StableUnderBaseChange.pushoutInl (hP : RingHom.StableUnderBaseChange @P)
     hP'.cancel_right_is_iso]
   apply hP
   exact H
-#align ring_hom.stable_under_base_change.pushout_inl RingHom.StableUnderBaseChange.pushoutInl
+#align ring_hom.stable_under_base_change.pushout_inl RingHom.StableUnderBaseChange.pushout_inl
 
 end StableUnderBaseChange
 

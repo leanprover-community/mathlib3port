@@ -51,7 +51,7 @@ theorem map_lt_map_iff {x y : R} (h : abv.IsEuclidean) : abv x < abv y ↔ x ≺
 attribute [simp] map_lt_map_iff
 
 theorem sub_mod_lt (h : abv.IsEuclidean) (a : R) {b : R} (hb : b ≠ 0) : abv (a % b) < abv b :=
-  h.map_lt_map_iff.mpr (EuclideanDomain.modLt a hb)
+  h.map_lt_map_iff.mpr (EuclideanDomain.mod_lt a hb)
 #align absolute_value.is_euclidean.sub_mod_lt AbsoluteValue.IsEuclidean.sub_mod_lt
 
 end IsEuclidean
@@ -64,10 +64,10 @@ open Int
 
 -- TODO: generalize to `linear_ordered_euclidean_domain`s if we ever get a definition of those
 /-- `abs : ℤ → ℤ` is a Euclidean absolute value -/
-protected theorem absIsEuclidean : IsEuclidean (AbsoluteValue.abs : AbsoluteValue ℤ ℤ) :=
+protected theorem abs_is_euclidean : IsEuclidean (AbsoluteValue.abs : AbsoluteValue ℤ ℤ) :=
   { map_lt_map_iff' := fun x y =>
       show abs x < abs y ↔ natAbs x < natAbs y by rw [abs_eq_nat_abs, abs_eq_nat_abs, coe_nat_lt] }
-#align absolute_value.abs_is_euclidean AbsoluteValue.absIsEuclidean
+#align absolute_value.abs_is_euclidean AbsoluteValue.abs_is_euclidean
 
 end Int
 

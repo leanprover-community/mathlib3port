@@ -133,7 +133,7 @@ theorem PowerBasis.norm_gen_eq_prod_roots [Algebra K S] (pb : PowerBasis K S)
     (hf : (minpoly K pb.gen).Splits (algebraMap K F)) :
     algebraMap K F (norm K pb.gen) = ((minpoly K pb.gen).map (algebraMap K F)).roots.Prod := by
   rw [power_basis.norm_gen_eq_coeff_zero_minpoly, ← pb.nat_degree_minpoly, RingHom.map_mul, ← coeff_map,
-    prod_roots_eq_coeff_zero_of_monic_of_split ((minpoly.monic (PowerBasis.isIntegralGen _)).map _)
+    prod_roots_eq_coeff_zero_of_monic_of_split ((minpoly.monic (PowerBasis.is_integral_gen _)).map _)
       ((splits_id_iff_splits _).2 hf),
     nat_degree_map, map_pow, ← mul_assoc, ← mul_pow]
   simp
@@ -198,9 +198,9 @@ variable (K)
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/
 theorem norm_eq_norm_adjoin [FiniteDimensional K L] [IsSeparable K L] (x : L) :
     norm K x = norm K (AdjoinSimple.gen K x) ^ finrank K⟮⟯ L := by
-  letI := isSeparableTowerTopOfIsSeparable K K⟮⟯ L
+  letI := is_separable_tower_top_of_is_separable K K⟮⟯ L
   let pbL := Field.powerBasisOfFiniteOfSeparable K⟮⟯ L
-  let pbx := IntermediateField.adjoin.powerBasis (IsSeparable.isIntegral K x)
+  let pbx := IntermediateField.adjoin.powerBasis (IsSeparable.is_integral K x)
   rw [← adjoin_simple.algebra_map_gen K x, norm_eq_matrix_det (pbx.basis.smul pbL.basis) _,
     smul_left_mul_matrix_algebra_map, det_block_diagonal, norm_eq_matrix_det pbx.basis]
   simp only [Finset.card_fin, Finset.prod_const]
@@ -218,7 +218,7 @@ theorem _root_.intermediate_field.adjoin_simple.norm_gen_eq_one {x : L} (hx : ¬
   rw [norm_eq_one_of_not_exists_basis]
   contrapose! hx
   obtain ⟨s, ⟨b⟩⟩ := hx
-  refine' isIntegralOfMemOfFg K⟮⟯.toSubalgebra _ x _
+  refine' is_integral_of_mem_of_fg K⟮⟯.toSubalgebra _ x _
   · exact (Submodule.fg_iff_finite_dimensional _).mpr (of_fintype_basis b)
     
   · exact IntermediateField.subset_adjoin K _ (Set.mem_singleton x)
@@ -283,7 +283,7 @@ theorem prod_embeddings_eq_finrank_pow [Algebra L F] [IsScalarTower K L F] [IsAl
       ((@Finset.univ (PowerBasis.AlgHom.fintype pb)).Prod fun σ : L →ₐ[K] E => σ pb.gen) ^ finrank L F :=
   by
   haveI : FiniteDimensional L F := FiniteDimensional.right K L F
-  haveI : IsSeparable L F := isSeparableTowerTopOfIsSeparable K L F
+  haveI : IsSeparable L F := is_separable_tower_top_of_is_separable K L F
   letI : Fintype (L →ₐ[K] E) := PowerBasis.AlgHom.fintype pb
   letI : ∀ f : L →ₐ[K] E, Fintype (@AlgHom L F E _ _ _ _ f.to_ring_hom.to_algebra) := _
   rw [Fintype.prod_equiv algHomEquivSigma (fun σ : F →ₐ[K] E => _) fun σ => σ.1 pb.gen, ← Finset.univ_sigma_univ,
@@ -308,12 +308,12 @@ of `K`, the norm (down to `K`) of an element `x` of `L` is equal to the product 
 of `x` over all the `K`-embeddings `σ`  of `L` into `E`. -/
 theorem norm_eq_prod_embeddings [FiniteDimensional K L] [IsSeparable K L] [IsAlgClosed E] {x : L} :
     algebraMap K E (norm K x) = ∏ σ : L →ₐ[K] E, σ x := by
-  have hx := IsSeparable.isIntegral K x
+  have hx := IsSeparable.is_integral K x
   rw [norm_eq_norm_adjoin K x, RingHom.map_pow, ← adjoin.power_basis_gen hx,
     norm_eq_prod_embeddings_gen E (adjoin.power_basis hx) (IsAlgClosed.splitsCodomain _)]
   · exact (prod_embeddings_eq_finrank_pow L E (adjoin.power_basis hx)).symm
     
-  · haveI := isSeparableTowerBotOfIsSeparable K K⟮⟯ L
+  · haveI := is_separable_tower_bot_of_is_separable K K⟮⟯ L
     exact IsSeparable.separable K _
     
 #align algebra.norm_eq_prod_embeddings Algebra.norm_eq_prod_embeddings
@@ -332,11 +332,11 @@ theorem norm_eq_prod_automorphisms [FiniteDimensional K L] [IsGalois K L] {x : L
     
 #align algebra.norm_eq_prod_automorphisms Algebra.norm_eq_prod_automorphisms
 
-theorem isIntegralNorm [Algebra S L] [Algebra S K] [IsScalarTower S K L] [IsSeparable K L] [FiniteDimensional K L]
+theorem is_integral_norm [Algebra S L] [Algebra S K] [IsScalarTower S K L] [IsSeparable K L] [FiniteDimensional K L]
     {x : L} (hx : IsIntegral S x) : IsIntegral S (norm K x) := by
-  have hx' : _root_.is_integral K x := isIntegralOfIsScalarTower hx
+  have hx' : _root_.is_integral K x := is_integral_of_is_scalar_tower hx
   rw [← is_integral_algebra_map_iff (algebraMap K (AlgebraicClosure L)).Injective, norm_eq_prod_roots]
-  · refine' (IsIntegral.multisetProd fun y hy => _).pow _
+  · refine' (IsIntegral.multiset_prod fun y hy => _).pow _
     rw [mem_roots_map (minpoly.ne_zero hx')] at hy
     use minpoly S x, minpoly.monic hx
     rw [← aeval_def] at hy⊢
@@ -346,7 +346,7 @@ theorem isIntegralNorm [Algebra S L] [Algebra S K] [IsScalarTower S K L] [IsSepa
     
   · infer_instance
     
-#align algebra.is_integral_norm Algebra.isIntegralNorm
+#align algebra.is_integral_norm Algebra.is_integral_norm
 
 end EqProdEmbeddings
 

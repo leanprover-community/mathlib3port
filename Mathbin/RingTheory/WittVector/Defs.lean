@@ -212,10 +212,10 @@ instance hasNatPow : Pow (𝕎 R) ℕ :=
   ⟨fun x n => eval (wittPow p n) ![x]⟩
 #align witt_vector.has_nat_pow WittVector.hasNatPow
 
-instance : HasNatCast (𝕎 R) :=
+instance : NatCast (𝕎 R) :=
   ⟨Nat.unaryCast⟩
 
-instance : HasIntCast (𝕎 R) :=
+instance : IntCast (𝕎 R) :=
   ⟨Int.castDef⟩
 
 end RingOperations

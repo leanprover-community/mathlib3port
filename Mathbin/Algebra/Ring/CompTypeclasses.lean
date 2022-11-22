@@ -111,9 +111,9 @@ would be `ring_hom_inv_pair e e`. Indeed, this declaration is not currently used
 See note [reducible non-instances].
 -/
 @[reducible]
-theorem ofRingEquiv (e : R₁ ≃+* R₂) : RingHomInvPair (↑e : R₁ →+* R₂) ↑e.symm :=
+theorem of_ring_equiv (e : R₁ ≃+* R₂) : RingHomInvPair (↑e : R₁ →+* R₂) ↑e.symm :=
   ⟨e.symm_to_ring_hom_comp_to_ring_hom, e.symm.symm_to_ring_hom_comp_to_ring_hom⟩
-#align ring_hom_inv_pair.of_ring_equiv RingHomInvPair.ofRingEquiv
+#align ring_hom_inv_pair.of_ring_equiv RingHomInvPair.of_ring_equiv
 
 /-- Swap the direction of a `ring_hom_inv_pair`. This is not an instance as it would loop, and better
 instances are often available and may often be preferrable to using this one. Indeed, this
@@ -136,11 +136,11 @@ instance ids : RingHomCompTriple (RingHom.id R₁) σ₁₂ σ₁₂ :=
     simp⟩
 #align ring_hom_comp_triple.ids RingHomCompTriple.ids
 
-instance rightIds : RingHomCompTriple σ₁₂ (RingHom.id R₂) σ₁₂ :=
+instance right_ids : RingHomCompTriple σ₁₂ (RingHom.id R₂) σ₁₂ :=
   ⟨by
     ext
     simp⟩
-#align ring_hom_comp_triple.right_ids RingHomCompTriple.rightIds
+#align ring_hom_comp_triple.right_ids RingHomCompTriple.right_ids
 
 end RingHomCompTriple
 
@@ -158,9 +158,9 @@ namespace RingHomSurjective
 
 -- The linter gives a false positive, since `σ₂` is an out_param
 @[nolint dangerous_instance]
-instance (priority := 100) invPair {σ₁ : R₁ →+* R₂} {σ₂ : R₂ →+* R₁} [RingHomInvPair σ₁ σ₂] : RingHomSurjective σ₁ :=
+instance (priority := 100) inv_pair {σ₁ : R₁ →+* R₂} {σ₂ : R₂ →+* R₁} [RingHomInvPair σ₁ σ₂] : RingHomSurjective σ₁ :=
   ⟨fun x => ⟨σ₂ x, RingHomInvPair.comp_apply_eq₂⟩⟩
-#align ring_hom_surjective.inv_pair RingHomSurjective.invPair
+#align ring_hom_surjective.inv_pair RingHomSurjective.inv_pair
 
 instance ids : RingHomSurjective (RingHom.id R₁) :=
   ⟨is_surjective⟩

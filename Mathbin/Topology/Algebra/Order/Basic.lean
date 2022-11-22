@@ -3276,7 +3276,7 @@ theorem IsLub.exists_seq_strict_mono_tendsto_of_not_mem {t : Set α} {x : α} [I
       
     · exact (hf n.succ _ IH).2.2.1
       
-  have S : StrictMono u := strict_mono_nat_of_lt_succ fun n => (hf n.succ _ (I n)).2.1
+  have S : StrictMono u := strictMono_nat_of_lt_succ fun n => (hf n.succ _ (I n)).2.1
   refine' ⟨u, S, I, hs.tendsto_right_iff.2 fun n _ => _, fun n => _⟩
   · simp only [ge_iff_le, eventually_at_top]
     refine' ⟨n, fun p hp => _⟩

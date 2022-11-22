@@ -353,9 +353,9 @@ def Function.swap₂ {ι₁ ι₂ : Sort _} {κ₁ : ι₁ → Sort _} {κ₂ : 
 /-- If `x : α . tac_name` then `x.out : α`. These are definitionally equal, but this can
 nevertheless be useful for various reasons, e.g. to apply further projection notation or in an
 argument to `simp`. -/
-def autoParam'.out {α : Sort _} {n : Name} (x : autoParam' α n) : α :=
+def autoParam.out {α : Sort _} {n : Name} (x : autoParam α n) : α :=
   x
-#align auto_param.out autoParam'.out
+#align auto_param.out autoParamₓ.out
 
 /-- If `x : α := d` then `x.out : α`. These are definitionally equal, but this can
 nevertheless be useful for various reasons, e.g. to apply further projection notation or in an
@@ -1199,6 +1199,12 @@ protected theorem Decidable.or_congr_left' [Decidable c] (h : ¬c → (a ↔ b))
   exact imp_congr_right h
 #align decidable.or_congr_left Decidable.or_congr_left'
 
+/- warning: or_congr_left -> or_congr_left' is a dubious translation:
+lean 3 declaration is
+  forall {a : Prop} {b : Prop} {c : Prop}, ((Not c) -> (Iff a b)) -> (Iff (Or a c) (Or b c))
+but is expected to have type
+  forall {c : Prop} {a : Prop} {b : Prop}, ((Not c) -> (Iff a b)) -> (Iff (Or a c) (Or b c))
+Case conversion may be inaccurate. Consider using '#align or_congr_left or_congr_left'ₓ'. -/
 theorem or_congr_left' (h : ¬c → (a ↔ b)) : a ∨ c ↔ b ∨ c :=
   Decidable.or_congr_left' h
 #align or_congr_left or_congr_left'
@@ -1725,7 +1731,7 @@ theorem ball_cond_comm {α} {s : α → Prop} {p : α → α → Prop} :
 lean 3 declaration is
   forall {α : outParam.{succ (succ u_1)} Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Membership.{u_1 u_2} α β] {s : β} {p : α -> α -> Prop}, Iff (forall (a : α), (Membership.Mem.{u_1 u_2} α β _inst_1 a s) -> (forall (b : α), (Membership.Mem.{u_1 u_2} α β _inst_1 b s) -> (p a b))) (forall (a : α) (b : α), (Membership.Mem.{u_1 u_2} α β _inst_1 a s) -> (Membership.Mem.{u_1 u_2} α β _inst_1 b s) -> (p a b))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Logic.Basic._hyg.2972 : Membership.{u_1 u_2} α β] {s : β} {p : α -> α -> Prop}, Iff (forall (a : α), (Membership.mem.{u_1 u_2} α β inst._@.Mathlib.Logic.Basic._hyg.2972 a s) -> (forall (b : α), (Membership.mem.{u_1 u_2} α β inst._@.Mathlib.Logic.Basic._hyg.2972 b s) -> (p a b))) (forall (a : α) (b : α), (Membership.mem.{u_1 u_2} α β inst._@.Mathlib.Logic.Basic._hyg.2972 a s) -> (Membership.mem.{u_1 u_2} α β inst._@.Mathlib.Logic.Basic._hyg.2972 b s) -> (p a b))
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Logic.Basic._hyg.3116 : Membership.{u_1 u_2} α β] {s : β} {p : α -> α -> Prop}, Iff (forall (a : α), (Membership.mem.{u_1 u_2} α β inst._@.Mathlib.Logic.Basic._hyg.3116 a s) -> (forall (b : α), (Membership.mem.{u_1 u_2} α β inst._@.Mathlib.Logic.Basic._hyg.3116 b s) -> (p a b))) (forall (a : α) (b : α), (Membership.mem.{u_1 u_2} α β inst._@.Mathlib.Logic.Basic._hyg.3116 a s) -> (Membership.mem.{u_1 u_2} α β inst._@.Mathlib.Logic.Basic._hyg.3116 b s) -> (p a b))
 Case conversion may be inaccurate. Consider using '#align ball_mem_comm ball_mem_commₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 theorem ball_mem_comm {α β} [Membership α β] {s : β} {p : α → α → Prop} :
@@ -1850,7 +1856,7 @@ theorem heq_of_cast_eq : ∀ {α β : Sort _} {a : α} {a' : β} (e : α = β) (
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_1}} {a : α} {a' : β} {e : Eq.{succ u_1} Sort.{u_1} α β}, Iff (Eq.{u_1} β (cast.{u_1} α β e a) a') (HEq.{u_1} α a β a')
 but is expected to have type
-  forall {a._@.Init.Prelude.168.Mathlib.Logic.Basic._hyg.3584 : Sort.{u_1}} {a._@.Init.Prelude.170.Mathlib.Logic.Basic._hyg.3585 : Sort.{u_1}} {e : Eq.{succ u_1} Sort.{u_1} a._@.Init.Prelude.168.Mathlib.Logic.Basic._hyg.3584 a._@.Init.Prelude.170.Mathlib.Logic.Basic._hyg.3585} {a : a._@.Init.Prelude.168.Mathlib.Logic.Basic._hyg.3584} {a' : a._@.Init.Prelude.170.Mathlib.Logic.Basic._hyg.3585}, Iff (Eq.{u_1} a._@.Init.Prelude.170.Mathlib.Logic.Basic._hyg.3585 (cast.{u_1} a._@.Init.Prelude.168.Mathlib.Logic.Basic._hyg.3584 a._@.Init.Prelude.170.Mathlib.Logic.Basic._hyg.3585 e a) a') (HEq.{u_1} a._@.Init.Prelude.168.Mathlib.Logic.Basic._hyg.3584 a a._@.Init.Prelude.170.Mathlib.Logic.Basic._hyg.3585 a')
+  forall {a._@.Init.Prelude.168.Mathlib.Logic.Basic._hyg.3732 : Sort.{u_1}} {a._@.Init.Prelude.170.Mathlib.Logic.Basic._hyg.3733 : Sort.{u_1}} {e : Eq.{succ u_1} Sort.{u_1} a._@.Init.Prelude.168.Mathlib.Logic.Basic._hyg.3732 a._@.Init.Prelude.170.Mathlib.Logic.Basic._hyg.3733} {a : a._@.Init.Prelude.168.Mathlib.Logic.Basic._hyg.3732} {a' : a._@.Init.Prelude.170.Mathlib.Logic.Basic._hyg.3733}, Iff (Eq.{u_1} a._@.Init.Prelude.170.Mathlib.Logic.Basic._hyg.3733 (cast.{u_1} a._@.Init.Prelude.168.Mathlib.Logic.Basic._hyg.3732 a._@.Init.Prelude.170.Mathlib.Logic.Basic._hyg.3733 e a) a') (HEq.{u_1} a._@.Init.Prelude.168.Mathlib.Logic.Basic._hyg.3732 a a._@.Init.Prelude.170.Mathlib.Logic.Basic._hyg.3733 a')
 Case conversion may be inaccurate. Consider using '#align cast_eq_iff_heq cast_eq_iff_heqₓ'. -/
 theorem cast_eq_iff_heq {α β : Sort _} {a : α} {a' : β} {e : α = β} : cast e a = a' ↔ HEq a a' :=
   ⟨heq_of_cast_eq _, fun h => by cases h <;> rfl⟩
@@ -1870,7 +1876,7 @@ theorem rec_heq_of_heq {β} {C : α → Sort _} {x : C a} {y : β} (eq : a = b) 
 lean 3 declaration is
   forall {α : Sort.{u_1}} {x₁ : α} {x₂ : α} {y₁ : α} {y₂ : α}, (Eq.{u_1} α x₁ y₁) -> (Eq.{u_1} α x₂ y₂) -> (Iff (Eq.{u_1} α x₁ x₂) (Eq.{u_1} α y₁ y₂))
 but is expected to have type
-  forall {α._@.Mathlib.Logic.Basic._hyg.3723 : Sort.{u_1}} {x₁ : α._@.Mathlib.Logic.Basic._hyg.3723} {y₁ : α._@.Mathlib.Logic.Basic._hyg.3723} {x₂ : α._@.Mathlib.Logic.Basic._hyg.3723} {y₂ : α._@.Mathlib.Logic.Basic._hyg.3723}, (Eq.{u_1} α._@.Mathlib.Logic.Basic._hyg.3723 x₁ y₁) -> (Eq.{u_1} α._@.Mathlib.Logic.Basic._hyg.3723 x₂ y₂) -> (Iff (Eq.{u_1} α._@.Mathlib.Logic.Basic._hyg.3723 x₁ x₂) (Eq.{u_1} α._@.Mathlib.Logic.Basic._hyg.3723 y₁ y₂))
+  forall {α._@.Mathlib.Logic.Basic._hyg.3873 : Sort.{u_1}} {x₁ : α._@.Mathlib.Logic.Basic._hyg.3873} {y₁ : α._@.Mathlib.Logic.Basic._hyg.3873} {x₂ : α._@.Mathlib.Logic.Basic._hyg.3873} {y₂ : α._@.Mathlib.Logic.Basic._hyg.3873}, (Eq.{u_1} α._@.Mathlib.Logic.Basic._hyg.3873 x₁ y₁) -> (Eq.{u_1} α._@.Mathlib.Logic.Basic._hyg.3873 x₂ y₂) -> (Iff (Eq.{u_1} α._@.Mathlib.Logic.Basic._hyg.3873 x₁ x₂) (Eq.{u_1} α._@.Mathlib.Logic.Basic._hyg.3873 y₁ y₂))
 Case conversion may be inaccurate. Consider using '#align eq.congr Eq.congrₓ'. -/
 protected theorem Eq.congr {x₁ x₂ y₁ y₂ : α} (h₁ : x₁ = y₁) (h₂ : x₂ = y₂) : x₁ = x₂ ↔ y₁ = y₂ := by
   subst h₁
@@ -2595,14 +2601,18 @@ theorem forall_or_left {q : Prop} {p : α → Prop} : (∀ x, q ∨ p x) ↔ q �
 #align forall_or_distrib_left forall_or_left
 -/
 
+#print Decidable.forall_or_right /-
 -- See Note [decidable namespace]
 protected theorem Decidable.forall_or_right {q : Prop} {p : α → Prop} [Decidable q] : (∀ x, p x ∨ q) ↔ (∀ x, p x) ∨ q :=
   by simp [or_comm', Decidable.forall_or_left]
 #align decidable.forall_or_distrib_right Decidable.forall_or_right
+-/
 
+#print forall_or_right /-
 theorem forall_or_right {q : Prop} {p : α → Prop} : (∀ x, p x ∨ q) ↔ (∀ x, p x) ∨ q :=
   Decidable.forall_or_right
 #align forall_or_distrib_right forall_or_right
+-/
 
 /- warning: exists_prop -> exists_prop is a dubious translation:
 lean 3 declaration is
@@ -2741,7 +2751,7 @@ theorem forall_true_left (p : True → Prop) : (∀ x, p x) ↔ p True.intro :=
 lean 3 declaration is
   forall {α : Sort.{u_1}} {p : α -> Sort.{u_2}} [_inst_1 : forall (x : α), Subsingleton.{u_2} (p x)] {q : forall (x : α), (p x) -> Prop} {b : Prop}, (ExistsUnique.{u_1} α (fun (x : α) => ExistsUnique.{u_2} (p x) (fun (h : p x) => q x h))) -> (forall (x : α) (h : p x), (q x h) -> (forall (y : α) (hy : p y), (q y hy) -> (Eq.{u_1} α y x)) -> b) -> b
 but is expected to have type
-  forall {α : Sort.{u_1}} {p : α -> Sort.{u_2}} [inst._@.Mathlib.Logic.Basic._hyg.8557 : forall (x : α), Subsingleton.{u_2} (p x)] {q : forall (x : α), (p x) -> Prop} {b : Prop}, (ExistsUnique.{u_1} α (fun (x : α) => ExistsUnique.{u_2} (p x) (fun (h : p x) => q x h))) -> (forall (x : α) (h : p x), (q x h) -> (forall (y : α) (hy : p y), (q y hy) -> (Eq.{u_1} α y x)) -> b) -> b
+  forall {α : Sort.{u_1}} {p : α -> Sort.{u_2}} [inst._@.Mathlib.Logic.Basic._hyg.8791 : forall (x : α), Subsingleton.{u_2} (p x)] {q : forall (x : α), (p x) -> Prop} {b : Prop}, (ExistsUnique.{u_1} α (fun (x : α) => ExistsUnique.{u_2} (p x) (fun (h : p x) => q x h))) -> (forall (x : α) (h : p x), (q x h) -> (forall (y : α) (hy : p y), (q y hy) -> (Eq.{u_1} α y x)) -> b) -> b
 Case conversion may be inaccurate. Consider using '#align exists_unique.elim2 ExistsUnique.elim₂ₓ'. -/
 theorem ExistsUnique.elim₂ {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)] {q : ∀ (x) (h : p x), Prop}
     {b : Prop} (h₂ : ∃! (x : _)(h : p x), q x h)
@@ -2751,6 +2761,12 @@ theorem ExistsUnique.elim₂ {α : Sort _} {p : α → Sort _} [∀ x, Subsingle
   exact fun x ⟨hxp, hxq⟩ H => h₁ x hxp hxq fun y hyp hyq => H y ⟨hyp, hyq⟩
 #align exists_unique.elim2 ExistsUnique.elim₂
 
+/- warning: exists_unique.intro2 -> ExistsUnique.intro₂ is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {p : α -> Sort.{u_2}} [_inst_1 : forall (x : α), Subsingleton.{u_2} (p x)] {q : forall (x : α), (p x) -> Prop} (w : α) (hp : p w), (q w hp) -> (forall (y : α) (hy : p y), (q y hy) -> (Eq.{u_1} α y w)) -> (ExistsUnique.{u_1} α (fun (x : α) => ExistsUnique.{u_2} (p x) (fun (hx : p x) => q x hx)))
+but is expected to have type
+  forall {α : Sort.{u_1}} {p : α -> Sort.{u_2}} [inst._@.Mathlib.Logic.Basic._hyg.8927 : forall (x : α), Subsingleton.{u_2} (p x)] {q : forall (x : α), (p x) -> Prop} (w : α) (hp : p w), (q w hp) -> (forall (y : α) (hy : p y), (q y hy) -> (Eq.{u_1} α y w)) -> (ExistsUnique.{u_1} α (fun (x : α) => ExistsUnique.{u_2} (p x) (fun (hx : p x) => q x hx)))
+Case conversion may be inaccurate. Consider using '#align exists_unique.intro2 ExistsUnique.intro₂ₓ'. -/
 theorem ExistsUnique.intro₂ {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)] {q : ∀ (x : α) (h : p x), Prop}
     (w : α) (hp : p w) (hq : q w hp) (H : ∀ (y) (hy : p y), q y hy → y = w) : ∃! (x : _)(hx : p x), q x hx := by
   simp only [exists_unique_iff_exists]
@@ -2768,6 +2784,12 @@ theorem ExistsUnique.exists₂ {α : Sort _} {p : α → Sort _} {q : ∀ (x : �
   h.exists.imp fun x hx => hx.exists
 #align exists_unique.exists2 ExistsUnique.exists₂
 
+/- warning: exists_unique.unique2 -> ExistsUnique.unique₂ is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u_1}} {p : α -> Sort.{u_2}} [_inst_1 : forall (x : α), Subsingleton.{u_2} (p x)] {q : forall (x : α), (p x) -> Prop}, (ExistsUnique.{u_1} α (fun (x : α) => ExistsUnique.{u_2} (p x) (fun (hx : p x) => q x hx))) -> (forall {y₁ : α} {y₂ : α} (hpy₁ : p y₁), (q y₁ hpy₁) -> (forall (hpy₂ : p y₂), (q y₂ hpy₂) -> (Eq.{u_1} α y₁ y₂)))
+but is expected to have type
+  forall {α : Sort.{u_1}} {p : α -> Sort.{u_2}} [inst._@.Mathlib.Logic.Basic._hyg.9123 : forall (x : α), Subsingleton.{u_2} (p x)] {q : forall (x : α), (p x) -> Prop}, (ExistsUnique.{u_1} α (fun (x : α) => ExistsUnique.{u_2} (p x) (fun (hx : p x) => q x hx))) -> (forall {y₁ : α} {y₂ : α} (hpy₁ : p y₁), (q y₁ hpy₁) -> (forall (hpy₂ : p y₂), (q y₂ hpy₂) -> (Eq.{u_1} α y₁ y₂)))
+Case conversion may be inaccurate. Consider using '#align exists_unique.unique2 ExistsUnique.unique₂ₓ'. -/
 theorem ExistsUnique.unique₂ {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)] {q : ∀ (x : α) (hx : p x), Prop}
     (h : ∃! (x : _)(hx : p x), q x hx) {y₁ y₂ : α} (hpy₁ : p y₁) (hqy₁ : q y₁ hpy₁) (hpy₂ : p y₂) (hqy₂ : q y₂ hpy₂) :
     y₁ = y₂ := by
@@ -2847,9 +2869,11 @@ protected noncomputable def byContradiction' {α : Sort _} (H : ¬(α → False)
 #align classical.by_contradiction' Classical.byContradiction'
 -/
 
+#print Classical.choice_of_byContradiction' /-
 /-- `classical.by_contradiction'` is equivalent to lean's axiom `classical.choice`. -/
 def choice_of_byContradiction' {α : Sort _} (contra : ¬(α → False) → α) : Nonempty α → α := fun H => contra H.elim
-#align classical.choice_of_by_contradiction' choice_of_byContradiction'
+#align classical.choice_of_by_contradiction' Classical.choice_of_byContradiction'
+-/
 
 end Classical
 
@@ -2997,9 +3021,11 @@ theorem ball_true_iff (p : α → Prop) : (∀ x, p x → True) ↔ True :=
 #align ball_true_iff ball_true_iff
 -/
 
+#print ball_and /-
 theorem ball_and : (∀ x h, P x h ∧ Q x h) ↔ (∀ x h, P x h) ∧ ∀ x h, Q x h :=
   Iff.trans (forall_congr' fun x => forall_and) forall_and
 #align ball_and_distrib ball_and
+-/
 
 #print bex_or /-
 theorem bex_or : (∃ x h, P x h ∨ Q x h) ↔ (∃ x h, P x h) ∨ ∃ x h, Q x h :=
@@ -3212,7 +3238,7 @@ theorem apply_ite : f (ite P a b) = ite P (f a) (f b) :=
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} (f : α -> β -> γ) (P : Prop) [_inst_3 : Decidable P] (a : P -> α) (b : (Not P) -> α) (c : P -> β) (d : (Not P) -> β), Eq.{u_3} γ (f (dite.{u_1} α P _inst_3 a b) (dite.{u_2} β P _inst_3 c d)) (dite.{u_3} γ P _inst_3 (fun (h : P) => f (a h) (c h)) (fun (h : Not P) => f (b h) (d h)))
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : Sort.{u_3}} {γ : Sort.{u_1}} (f : α -> β -> γ) (P : Prop) [inst._@.Mathlib.Logic.Basic._hyg.13300 : Decidable P] (a : P -> α) (b : (Not P) -> α) (c : P -> β) (d : (Not P) -> β), Eq.{u_1} γ (f (dite.{u_2} α P inst._@.Mathlib.Logic.Basic._hyg.13300 a b) (dite.{u_3} β P inst._@.Mathlib.Logic.Basic._hyg.13300 c d)) (dite.{u_1} γ P inst._@.Mathlib.Logic.Basic._hyg.13300 (fun (h : P) => f (a h) (c h)) (fun (h : Not P) => f (b h) (d h)))
+  forall {α : Sort.{u_2}} {β : Sort.{u_3}} {γ : Sort.{u_1}} (f : α -> β -> γ) (P : Prop) [inst._@.Mathlib.Logic.Basic._hyg.13622 : Decidable P] (a : P -> α) (b : (Not P) -> α) (c : P -> β) (d : (Not P) -> β), Eq.{u_1} γ (f (dite.{u_2} α P inst._@.Mathlib.Logic.Basic._hyg.13622 a b) (dite.{u_3} β P inst._@.Mathlib.Logic.Basic._hyg.13622 c d)) (dite.{u_1} γ P inst._@.Mathlib.Logic.Basic._hyg.13622 (fun (h : P) => f (a h) (c h)) (fun (h : Not P) => f (b h) (d h)))
 Case conversion may be inaccurate. Consider using '#align apply_dite2 apply_dite₂ₓ'. -/
 /-- A two-argument function applied to two `dite`s is a `dite` of that two-argument function
 applied to each of the branches. -/
@@ -3225,7 +3251,7 @@ theorem apply_dite₂ (f : α → β → γ) (P : Prop) [Decidable P] (a : P →
 lean 3 declaration is
   forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} (f : α -> β -> γ) (P : Prop) [_inst_3 : Decidable P] (a : α) (b : α) (c : β) (d : β), Eq.{u_3} γ (f (ite.{u_1} α P _inst_3 a b) (ite.{u_2} β P _inst_3 c d)) (ite.{u_3} γ P _inst_3 (f a c) (f b d))
 but is expected to have type
-  forall {α : Sort.{u_2}} {β : Sort.{u_3}} {γ : Sort.{u_1}} (f : α -> β -> γ) (P : Prop) [inst._@.Mathlib.Logic.Basic._hyg.13452 : Decidable P] (a : α) (b : α) (c : β) (d : β), Eq.{u_1} γ (f (ite.{u_2} α P inst._@.Mathlib.Logic.Basic._hyg.13452 a b) (ite.{u_3} β P inst._@.Mathlib.Logic.Basic._hyg.13452 c d)) (ite.{u_1} γ P inst._@.Mathlib.Logic.Basic._hyg.13452 (f a c) (f b d))
+  forall {α : Sort.{u_2}} {β : Sort.{u_3}} {γ : Sort.{u_1}} (f : α -> β -> γ) (P : Prop) [inst._@.Mathlib.Logic.Basic._hyg.13778 : Decidable P] (a : α) (b : α) (c : β) (d : β), Eq.{u_1} γ (f (ite.{u_2} α P inst._@.Mathlib.Logic.Basic._hyg.13778 a b) (ite.{u_3} β P inst._@.Mathlib.Logic.Basic._hyg.13778 c d)) (ite.{u_1} γ P inst._@.Mathlib.Logic.Basic._hyg.13778 (f a c) (f b d))
 Case conversion may be inaccurate. Consider using '#align apply_ite2 apply_ite₂ₓ'. -/
 /-- A two-argument function applied to two `ite`s is a `ite` of that two-argument function
 applied to each of the branches. -/

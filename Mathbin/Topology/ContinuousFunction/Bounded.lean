@@ -1334,7 +1334,7 @@ theorem pow_apply (n : ℕ) (f : α →ᵇ R) (v : α) : (f ^ n) v = f v ^ n :=
   rfl
 #align bounded_continuous_function.pow_apply BoundedContinuousFunction.pow_apply
 
-instance : HasNatCast (α →ᵇ R) :=
+instance : NatCast (α →ᵇ R) :=
   ⟨fun n => BoundedContinuousFunction.const _ n⟩
 
 @[simp, norm_cast]
@@ -1342,7 +1342,7 @@ theorem coe_nat_cast (n : ℕ) : ((n : α →ᵇ R) : α → R) = n :=
   rfl
 #align bounded_continuous_function.coe_nat_cast BoundedContinuousFunction.coe_nat_cast
 
-instance : HasIntCast (α →ᵇ R) :=
+instance : IntCast (α →ᵇ R) :=
   ⟨fun n => BoundedContinuousFunction.const _ n⟩
 
 @[simp, norm_cast]

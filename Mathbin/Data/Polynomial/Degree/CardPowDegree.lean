@@ -92,7 +92,7 @@ theorem card_pow_degree_nonzero (p : Fq[X]) (hp : p ≠ 0) : cardPowDegree p = F
   if_neg hp
 #align polynomial.card_pow_degree_nonzero Polynomial.card_pow_degree_nonzero
 
-theorem cardPowDegreeIsEuclidean : IsEuclidean (cardPowDegree : AbsoluteValue Fq[X] ℤ) :=
+theorem card_pow_degree_is_euclidean : IsEuclidean (cardPowDegree : AbsoluteValue Fq[X] ℤ) :=
   have card_pos : 0 < Fintype.card Fq := Fintype.card_pos_iff.mpr inferInstance
   have pow_pos : ∀ n, 0 < (Fintype.card Fq : ℤ) ^ n := fun n => pow_pos (Int.coe_nat_pos.mpr card_pos) n
   { map_lt_map_iff' := fun p q => by
@@ -107,7 +107,7 @@ theorem cardPowDegreeIsEuclidean : IsEuclidean (cardPowDegree : AbsoluteValue Fq
       · rw [degree_eq_nat_degree hp, degree_eq_nat_degree hq, WithBot.coe_lt_coe, pow_lt_pow_iff]
         exact_mod_cast @Fintype.one_lt_card Fq _ _
          }
-#align polynomial.card_pow_degree_is_euclidean Polynomial.cardPowDegreeIsEuclidean
+#align polynomial.card_pow_degree_is_euclidean Polynomial.card_pow_degree_is_euclidean
 
 end Polynomial
 

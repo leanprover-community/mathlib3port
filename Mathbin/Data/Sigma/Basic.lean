@@ -9,11 +9,11 @@ import Mathbin.Tactic.Ext
 import Mathbin.Logic.Function.Basic
 
 /-!
-THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-https://github.com/leanprover-community/mathlib4/pull/449
-Any changes to this file require a corresponding PR to mathlib4.
-
 # Sigma types
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/479
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file proves basic results about sigma types.
 
@@ -255,49 +255,49 @@ def Prod.toSigma {α β} (p : α × β) : Σ_ : α, β :=
 #align prod.to_sigma Prod.toSigma
 -/
 
-/- warning: prod.fst_comp_to_sigma -> Prod.fst_comp_to_sigma is a dubious translation:
+/- warning: prod.fst_comp_to_sigma -> Prod.fst_comp_toSigma is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}}, Eq.{(max (succ u_1) (succ u_2))} ((Prod.{u_1 u_2} α β) -> α) (Function.comp.{(max (succ u_1) (succ u_2)) (max (succ u_1) (succ u_2)) succ u_1} (Prod.{u_1 u_2} α β) (Sigma.{u_1 u_2} α (fun (_x : α) => β)) α (Sigma.fst.{u_1 u_2} α (fun (_x : α) => β)) (Prod.toSigma.{u_1 u_2} α β)) (Prod.fst.{u_1 u_2} α β)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}}, Eq.{(max (succ u_2) (succ u_1))} ((Prod.{u_1 u_2} α β) -> α) (Function.comp.{(max (succ u_2) (succ u_1)) (max (succ u_2) (succ u_1)) succ u_1} (Prod.{u_1 u_2} α β) (Sigma.{u_1 u_2} α (fun (x._@.Mathlib.Data.Sigma.Basic._hyg.1762 : α) => β)) α (Sigma.fst.{u_1 u_2} α (fun (x._@.Mathlib.Data.Sigma.Basic._hyg.1762 : α) => β)) (Prod.toSigma.{u_1 u_2} α β)) (Prod.fst.{u_1 u_2} α β)
-Case conversion may be inaccurate. Consider using '#align prod.fst_comp_to_sigma Prod.fst_comp_to_sigmaₓ'. -/
+  forall {α : Type.{u_1}} {β : Type.{u_2}}, Eq.{(max (succ u_2) (succ u_1))} ((Prod.{u_1 u_2} α β) -> α) (Function.comp.{(max (succ u_2) (succ u_1)) (max (succ u_2) (succ u_1)) succ u_1} (Prod.{u_1 u_2} α β) (Sigma.{u_1 u_2} α (fun (x._@.Mathlib.Data.Sigma.Basic._hyg.1792 : α) => β)) α (Sigma.fst.{u_1 u_2} α (fun (x._@.Mathlib.Data.Sigma.Basic._hyg.1792 : α) => β)) (Prod.toSigma.{u_1 u_2} α β)) (Prod.fst.{u_1 u_2} α β)
+Case conversion may be inaccurate. Consider using '#align prod.fst_comp_to_sigma Prod.fst_comp_toSigmaₓ'. -/
 @[simp]
-theorem Prod.fst_comp_to_sigma {α β} : Sigma.fst ∘ @Prod.toSigma α β = Prod.fst :=
+theorem Prod.fst_comp_toSigma {α β} : Sigma.fst ∘ @Prod.toSigma α β = Prod.fst :=
   rfl
-#align prod.fst_comp_to_sigma Prod.fst_comp_to_sigma
+#align prod.fst_comp_to_sigma Prod.fst_comp_toSigma
 
-/- warning: prod.fst_to_sigma -> Prod.fst_to_sigma is a dubious translation:
+/- warning: prod.fst_to_sigma -> Prod.fst_toSigma is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} (x : Prod.{u_1 u_2} α β), Eq.{succ u_1} α (Sigma.fst.{u_1 u_2} α (fun (_x : α) => β) (Prod.toSigma.{u_1 u_2} α β x)) (Prod.fst.{u_1 u_2} α β x)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (x : Prod.{u_1 u_2} α β), Eq.{succ u_1} α (Sigma.fst.{u_1 u_2} α (fun (x._@.Mathlib.Data.Sigma.Basic._hyg.1762 : α) => β) (Prod.toSigma.{u_1 u_2} α β x)) (Prod.fst.{u_1 u_2} α β x)
-Case conversion may be inaccurate. Consider using '#align prod.fst_to_sigma Prod.fst_to_sigmaₓ'. -/
+  forall {α : Type.{u_1}} {β : Type.{u_2}} (x : Prod.{u_1 u_2} α β), Eq.{succ u_1} α (Sigma.fst.{u_1 u_2} α (fun (x._@.Mathlib.Data.Sigma.Basic._hyg.1792 : α) => β) (Prod.toSigma.{u_1 u_2} α β x)) (Prod.fst.{u_1 u_2} α β x)
+Case conversion may be inaccurate. Consider using '#align prod.fst_to_sigma Prod.fst_toSigmaₓ'. -/
 @[simp]
-theorem Prod.fst_to_sigma {α β} (x : α × β) : (Prod.toSigma x).fst = x.fst :=
+theorem Prod.fst_toSigma {α β} (x : α × β) : (Prod.toSigma x).fst = x.fst :=
   rfl
-#align prod.fst_to_sigma Prod.fst_to_sigma
+#align prod.fst_to_sigma Prod.fst_toSigma
 
-/- warning: prod.snd_to_sigma -> Prod.snd_to_sigma is a dubious translation:
+/- warning: prod.snd_to_sigma -> Prod.snd_toSigma is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} (x : Prod.{u_1 u_2} α β), Eq.{succ u_2} β (Sigma.snd.{u_1 u_2} α (fun (_x : α) => β) (Prod.toSigma.{u_1 u_2} α β x)) (Prod.snd.{u_1 u_2} α β x)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (x : Prod.{u_1 u_2} α β), Eq.{succ u_2} β (Sigma.snd.{u_1 u_2} α (fun (x._@.Mathlib.Data.Sigma.Basic._hyg.1762 : α) => β) (Prod.toSigma.{u_1 u_2} α β x)) (Prod.snd.{u_1 u_2} α β x)
-Case conversion may be inaccurate. Consider using '#align prod.snd_to_sigma Prod.snd_to_sigmaₓ'. -/
+  forall {α : Type.{u_1}} {β : Type.{u_2}} (x : Prod.{u_1 u_2} α β), Eq.{succ u_2} β (Sigma.snd.{u_1 u_2} α (fun (x._@.Mathlib.Data.Sigma.Basic._hyg.1792 : α) => β) (Prod.toSigma.{u_1 u_2} α β x)) (Prod.snd.{u_1 u_2} α β x)
+Case conversion may be inaccurate. Consider using '#align prod.snd_to_sigma Prod.snd_toSigmaₓ'. -/
 @[simp]
-theorem Prod.snd_to_sigma {α β} (x : α × β) : (Prod.toSigma x).snd = x.snd :=
+theorem Prod.snd_toSigma {α β} (x : α × β) : (Prod.toSigma x).snd = x.snd :=
   rfl
-#align prod.snd_to_sigma Prod.snd_to_sigma
+#align prod.snd_to_sigma Prod.snd_toSigma
 
-/- warning: prod.to_sigma_mk -> Prod.to_sigma_mk is a dubious translation:
+/- warning: prod.to_sigma_mk -> Prod.toSigma_mk is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} (x : α) (y : β), Eq.{(max (succ u_1) (succ u_2))} (Sigma.{u_1 u_2} α (fun (_x : α) => β)) (Prod.toSigma.{u_1 u_2} α β (Prod.mk.{u_1 u_2} α β x y)) (Sigma.mk.{u_1 u_2} α (fun (_x : α) => β) x y)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (x : α) (y : β), Eq.{(max (succ u_2) (succ u_1))} (Sigma.{u_1 u_2} α (fun (x._@.Mathlib.Data.Sigma.Basic._hyg.1762 : α) => β)) (Prod.toSigma.{u_1 u_2} α β (Prod.mk.{u_1 u_2} α β x y)) (Sigma.mk.{u_1 u_2} α (fun (x._@.Mathlib.Data.Sigma.Basic._hyg.1762 : α) => β) x y)
-Case conversion may be inaccurate. Consider using '#align prod.to_sigma_mk Prod.to_sigma_mkₓ'. -/
+  forall {α : Type.{u_1}} {β : Type.{u_2}} (x : α) (y : β), Eq.{(max (succ u_2) (succ u_1))} (Sigma.{u_1 u_2} α (fun (x._@.Mathlib.Data.Sigma.Basic._hyg.1792 : α) => β)) (Prod.toSigma.{u_1 u_2} α β (Prod.mk.{u_1 u_2} α β x y)) (Sigma.mk.{u_1 u_2} α (fun (x._@.Mathlib.Data.Sigma.Basic._hyg.1792 : α) => β) x y)
+Case conversion may be inaccurate. Consider using '#align prod.to_sigma_mk Prod.toSigma_mkₓ'. -/
 @[simp]
-theorem Prod.to_sigma_mk {α β} (x : α) (y : β) : (x, y).toSigma = ⟨x, y⟩ :=
+theorem Prod.toSigma_mk {α β} (x : α) (y : β) : (x, y).toSigma = ⟨x, y⟩ :=
   rfl
-#align prod.to_sigma_mk Prod.to_sigma_mk
+#align prod.to_sigma_mk Prod.toSigma_mk
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:66:14: unsupported tactic `reflect_name #[] -/
 -- we generate this manually as `@[derive has_reflect]` fails

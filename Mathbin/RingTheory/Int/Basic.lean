@@ -35,7 +35,7 @@ instance : WfDvdMonoid ℕ :=
   ⟨by
     refine'
       RelHomClass.well_founded (⟨fun x : ℕ => if x = 0 then (⊤ : ℕ∞) else x, _⟩ : DvdNotUnit →r (· < ·))
-        (WithTop.well_founded_lt Nat.lt_wfRel.wf)
+        (WithTop.well_founded_lt Nat.lt_wfRel)
     intro a b h
     cases a
     · exfalso
@@ -351,7 +351,7 @@ end multiplicity
 
 theorem induction_on_primes {P : ℕ → Prop} (h₀ : P 0) (h₁ : P 1) (h : ∀ p a : ℕ, p.Prime → P a → P (p * a)) (n : ℕ) :
     P n := by
-  apply UniqueFactorizationMonoid.inductionOnPrime
+  apply UniqueFactorizationMonoid.induction_on_prime
   exact h₀
   · intro n h
     rw [Nat.is_unit_iff.1 h]

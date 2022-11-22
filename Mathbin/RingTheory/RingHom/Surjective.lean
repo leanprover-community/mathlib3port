@@ -21,18 +21,18 @@ open TensorProduct Algebra.TensorProduct
 -- mathport name: exprsurjective
 local notation "surjective" => fun {X Y : Type _} [CommRing X] [CommRing Y] => fun f : X →+* Y => Function.Surjective f
 
-theorem surjectiveStableUnderComposition : StableUnderComposition surjective := by
+theorem surjective_stable_under_composition : StableUnderComposition surjective := by
   introv R hf hg
   exact hg.comp hf
-#align ring_hom.surjective_stable_under_composition RingHom.surjectiveStableUnderComposition
+#align ring_hom.surjective_stable_under_composition RingHom.surjective_stable_under_composition
 
-theorem surjectiveRespectsIso : RespectsIso surjective := by
+theorem surjective_respects_iso : RespectsIso surjective := by
   apply surjective_stable_under_composition.respects_iso
   intros
   exact e.surjective
-#align ring_hom.surjective_respects_iso RingHom.surjectiveRespectsIso
+#align ring_hom.surjective_respects_iso RingHom.surjective_respects_iso
 
-theorem surjectiveStableUnderBaseChange : StableUnderBaseChange surjective := by classical
+theorem surjective_stable_under_base_change : StableUnderBaseChange surjective := by classical
   introv R h
   skip
   intro x
@@ -47,11 +47,11 @@ theorem surjectiveStableUnderBaseChange : StableUnderBaseChange surjective := by
   · obtain ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩ := ex, ey
     exact ⟨x + y, map_add _ x y⟩
     
-#align ring_hom.surjective_stable_under_base_change RingHom.surjectiveStableUnderBaseChange
+#align ring_hom.surjective_stable_under_base_change RingHom.surjective_stable_under_base_change
 
 open BigOperators
 
-theorem surjectiveOfLocalizationSpan : OfLocalizationSpan surjective := by
+theorem surjective_of_localization_span : OfLocalizationSpan surjective := by
   introv R hs H
   skip
   letI := f.to_algebra
@@ -82,7 +82,7 @@ theorem surjectiveOfLocalizationSpan : OfLocalizationSpan surjective := by
     rw [map_pow] at hm
     refine' ⟨n + m, _, hm⟩
     
-#align ring_hom.surjective_of_localization_span RingHom.surjectiveOfLocalizationSpan
+#align ring_hom.surjective_of_localization_span RingHom.surjective_of_localization_span
 
 end RingHom
 

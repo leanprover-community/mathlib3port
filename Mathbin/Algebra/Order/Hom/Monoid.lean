@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
 import Mathbin.Algebra.Hom.Group
-import Mathbin.Order.Hom.Basic
 import Mathbin.Algebra.Order.Group.Instances
+import Mathbin.Algebra.Order.Monoid.WithZero
+import Mathbin.Order.Hom.Basic
 
 /-!
 # Ordered monoid and group homomorphisms
@@ -211,15 +212,15 @@ theorem monotone_iff_map_nonneg : Monotone (f : α → β) ↔ ∀ a, 0 ≤ a �
 #align monotone_iff_map_nonneg monotone_iff_map_nonneg
 
 theorem antitone_iff_map_nonpos : Antitone (f : α → β) ↔ ∀ a, 0 ≤ a → f a ≤ 0 :=
-  monotone_to_dual_comp_iff.symm.trans <| monotone_iff_map_nonneg _
+  monotone_toDual_comp_iff.symm.trans <| monotone_iff_map_nonneg _
 #align antitone_iff_map_nonpos antitone_iff_map_nonpos
 
 theorem monotone_iff_map_nonpos : Monotone (f : α → β) ↔ ∀ a ≤ 0, f a ≤ 0 :=
-  antitone_comp_of_dual_iff.symm.trans <| antitone_iff_map_nonpos _
+  antitone_comp_ofDual_iff.symm.trans <| antitone_iff_map_nonpos _
 #align monotone_iff_map_nonpos monotone_iff_map_nonpos
 
 theorem antitone_iff_map_nonneg : Antitone (f : α → β) ↔ ∀ a ≤ 0, 0 ≤ f a :=
-  monotone_comp_of_dual_iff.symm.trans <| monotone_iff_map_nonneg _
+  monotone_comp_ofDual_iff.symm.trans <| monotone_iff_map_nonneg _
 #align antitone_iff_map_nonneg antitone_iff_map_nonneg
 
 variable [CovariantClass β β (· + ·) (· < ·)]
@@ -233,15 +234,15 @@ theorem strict_mono_iff_map_pos : StrictMono (f : α → β) ↔ ∀ a, 0 < a �
 #align strict_mono_iff_map_pos strict_mono_iff_map_pos
 
 theorem strict_anti_iff_map_neg : StrictAnti (f : α → β) ↔ ∀ a, 0 < a → f a < 0 :=
-  strict_mono_to_dual_comp_iff.symm.trans <| strict_mono_iff_map_pos _
+  strictMono_toDual_comp_iff.symm.trans <| strict_mono_iff_map_pos _
 #align strict_anti_iff_map_neg strict_anti_iff_map_neg
 
 theorem strict_mono_iff_map_neg : StrictMono (f : α → β) ↔ ∀ a < 0, f a < 0 :=
-  strict_anti_comp_of_dual_iff.symm.trans <| strict_anti_iff_map_neg _
+  strictAnti_comp_ofDual_iff.symm.trans <| strict_anti_iff_map_neg _
 #align strict_mono_iff_map_neg strict_mono_iff_map_neg
 
 theorem strict_anti_iff_map_pos : StrictAnti (f : α → β) ↔ ∀ a < 0, 0 < f a :=
-  strict_mono_comp_of_dual_iff.symm.trans <| strict_mono_iff_map_pos _
+  strictMono_comp_ofDual_iff.symm.trans <| strict_mono_iff_map_pos _
 #align strict_anti_iff_map_pos strict_anti_iff_map_pos
 
 end OrderedAddCommGroup
@@ -323,8 +324,18 @@ definitional equalities. -/
 @[to_additive
       "Copy of an `order_monoid_hom` with a new `to_fun` equal to the old one. Useful to fix\ndefinitional equalities."]
 protected def copy (f : α →*o β) (f' : α → β) (h : f' = f) : α →*o β :=
-  { f.toMonoidHom.copy f' <| h with toFun := f', monotone' := h.symm.subst f.monotone' }
+  { f.toMonoidHom.copy f' h with toFun := f', monotone' := h.symm.subst f.monotone' }
 #align order_monoid_hom.copy OrderMonoidHom.copy
+
+@[simp, to_additive]
+theorem coe_copy (f : α →*o β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align order_monoid_hom.coe_copy OrderMonoidHom.coe_copy
+
+@[to_additive]
+theorem copy_eq (f : α →*o β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align order_monoid_hom.copy_eq OrderMonoidHom.copy_eq
 
 variable (α)
 
@@ -562,11 +573,20 @@ theorem to_monoid_with_zero_hom_injective : Injective (toMonoidWithZeroHom : _ �
 #align
   order_monoid_with_zero_hom.to_monoid_with_zero_hom_injective OrderMonoidWithZeroHom.to_monoid_with_zero_hom_injective
 
-/-- Copy of an `order_monoid_hom` with a new `to_fun` equal to the old one. Useful to fix
+/-- Copy of an `order_monoid_with_zero_hom` with a new `to_fun` equal to the old one. Useful to fix
 definitional equalities. -/
-protected def copy (f : α →*o β) (f' : α → β) (h : f' = f) : α →*o β :=
-  { f.toMonoidHom.copy f' h with toFun := f', monotone' := h.symm.subst f.monotone' }
+protected def copy (f : α →*₀o β) (f' : α → β) (h : f' = f) : α →*o β :=
+  { f.toOrderMonoidHom.copy f' h, f.toMonoidWithZeroHom.copy f' h with toFun := f' }
 #align order_monoid_with_zero_hom.copy OrderMonoidWithZeroHom.copy
+
+@[simp]
+theorem coe_copy (f : α →*₀o β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align order_monoid_with_zero_hom.coe_copy OrderMonoidWithZeroHom.coe_copy
+
+theorem copy_eq (f : α →*₀o β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align order_monoid_with_zero_hom.copy_eq OrderMonoidWithZeroHom.copy_eq
 
 variable (α)
 

@@ -55,9 +55,9 @@ instance (priority := 75) toNonUnitalNonAssocSemiring : NonUnitalNonAssocSemirin
 #align
   non_unital_subsemiring_class.to_non_unital_non_assoc_semiring NonUnitalSubsemiringClass.toNonUnitalNonAssocSemiring
 
-instance noZeroDivisors [NoZeroDivisors R] : NoZeroDivisors s :=
+instance no_zero_divisors [NoZeroDivisors R] : NoZeroDivisors s :=
   Subtype.coe_injective.NoZeroDivisors coe rfl fun x y => rfl
-#align non_unital_subsemiring_class.no_zero_divisors NonUnitalSubsemiringClass.noZeroDivisors
+#align non_unital_subsemiring_class.no_zero_divisors NonUnitalSubsemiringClass.no_zero_divisors
 
 /-- The natural non-unital ring hom from a non-unital subsemiring of a non-unital semiring `R` to
 `R`. -/

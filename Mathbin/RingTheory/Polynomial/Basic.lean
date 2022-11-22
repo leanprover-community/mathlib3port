@@ -757,13 +757,14 @@ theorem polynomial_quotient_equiv_quotient_polynomial_map_mk (I : Ideal R) (f : 
   ideal.polynomial_quotient_equiv_quotient_polynomial_map_mk Ideal.polynomial_quotient_equiv_quotient_polynomial_map_mk
 
 /-- If `P` is a prime ideal of `R`, then `R[x]/(P)` is an integral domain. -/
-theorem isDomainMapCQuotient {P : Ideal R} (H : IsPrime P) : IsDomain (R[X] ⧸ (map (c : R →+* R[X]) P : Ideal R[X])) :=
-  RingEquiv.isDomain (Polynomial (R ⧸ P)) (polynomialQuotientEquivQuotientPolynomial P).symm
-#align ideal.is_domain_map_C_quotient Ideal.isDomainMapCQuotient
+theorem is_domain_map_C_quotient {P : Ideal R} (H : IsPrime P) :
+    IsDomain (R[X] ⧸ (map (c : R →+* R[X]) P : Ideal R[X])) :=
+  RingEquiv.is_domain (Polynomial (R ⧸ P)) (polynomialQuotientEquivQuotientPolynomial P).symm
+#align ideal.is_domain_map_C_quotient Ideal.is_domain_map_C_quotient
 
 /-- If `P` is a prime ideal of `R`, then `P.R[x]` is a prime ideal of `R[x]`. -/
 theorem is_prime_map_C_of_is_prime {P : Ideal R} (H : IsPrime P) : IsPrime (map (c : R →+* R[X]) P : Ideal R[X]) :=
-  (Quotient.is_domain_iff_prime (map c P : Ideal R[X])).mp (isDomainMapCQuotient H)
+  (Quotient.is_domain_iff_prime (map c P : Ideal R[X])).mp (is_domain_map_C_quotient H)
 #align ideal.is_prime_map_C_of_is_prime Ideal.is_prime_map_C_of_is_prime
 
 /-- Given any ring `R` and an ideal `I` of `R[X]`, we get a map `R → R[x] → R[x]/I`.
@@ -813,7 +814,7 @@ variable (σ) {r : R}
 namespace Polynomial
 
 theorem prime_C_iff : Prime (c r) ↔ Prime r :=
-  ⟨comapPrime c (evalRingHom (0 : R)) fun r => eval_C, fun hr => by
+  ⟨comap_prime c (evalRingHom (0 : R)) fun r => eval_C, fun hr => by
     have := hr.1
     rw [← Ideal.span_singleton_prime] at hr⊢
     · convert Ideal.is_prime_map_C_of_is_prime hr using 1
@@ -845,7 +846,7 @@ private theorem prime_C_iff_of_fintype [Fintype σ] : Prime (c r : MvPolynomial 
 #align mv_polynomial.prime_C_iff_of_fintype mv_polynomial.prime_C_iff_of_fintype
 
 theorem prime_C_iff : Prime (c r : MvPolynomial σ R) ↔ Prime r :=
-  ⟨comapPrime c constantCoeff (constant_coeff_C _), fun hr =>
+  ⟨comap_prime c constantCoeff (constant_coeff_C _), fun hr =>
     ⟨fun h =>
       hr.1 <| by
         rw [← C_inj, h]
@@ -900,7 +901,7 @@ instance (priority := 100) {R : Type _} [CommRing R] [IsDomain R] [WfDvdMonoid R
       RelHomClass.well_founded
         (⟨fun p : R[X] => ((if p = 0 then ⊤ else ↑p.degree : WithTop (WithBot ℕ)), p.leadingCoeff), _⟩ :
           DvdNotUnit →r Prod.Lex (· < ·) DvdNotUnit)
-        (Prod.lex_wf (WithTop.well_founded_lt <| WithBot.well_founded_lt Nat.lt_wfRel.wf)
+        (Prod.lex_wf (WithTop.well_founded_lt <| WithBot.well_founded_lt Nat.lt_wfRel)
           ‹WfDvdMonoid R›.well_founded_dvd_not_unit)
     rintro a b ⟨ane0, ⟨c, ⟨not_unit_c, rfl⟩⟩⟩
     rw [Polynomial.degree_mul, if_neg ane0]
@@ -1130,25 +1131,25 @@ with variables indexed by `fin n` form an integral domain.
 This fact is proven inductively,
 and then used to prove the general case without any finiteness hypotheses.
 See `mv_polynomial.no_zero_divisors` for the general case. -/
-theorem noZeroDivisorsFin (R : Type u) [CommSemiring R] [NoZeroDivisors R] :
+theorem no_zero_divisors_fin (R : Type u) [CommSemiring R] [NoZeroDivisors R] :
     ∀ n : ℕ, NoZeroDivisors (MvPolynomial (Fin n) R)
   | 0 => (MvPolynomial.isEmptyAlgEquiv R _).Injective.NoZeroDivisors _ (map_zero _) (map_mul _)
   | n + 1 =>
     haveI := no_zero_divisors_fin n
     (MvPolynomial.finSuccEquiv R n).Injective.NoZeroDivisors _ (map_zero _) (map_mul _)
-#align mv_polynomial.no_zero_divisors_fin MvPolynomial.noZeroDivisorsFin
+#align mv_polynomial.no_zero_divisors_fin MvPolynomial.no_zero_divisors_fin
 
 /-- Auxiliary definition:
 Multivariate polynomials in finitely many variables over an integral domain form an integral domain.
 This fact is proven by transport of structure from the `mv_polynomial.no_zero_divisors_fin`,
 and then used to prove the general case without finiteness hypotheses.
 See `mv_polynomial.no_zero_divisors` for the general case. -/
-theorem noZeroDivisorsOfFinite (R : Type u) (σ : Type v) [CommSemiring R] [Finite σ] [NoZeroDivisors R] :
+theorem no_zero_divisors_of_finite (R : Type u) (σ : Type v) [CommSemiring R] [Finite σ] [NoZeroDivisors R] :
     NoZeroDivisors (MvPolynomial σ R) := by
   cases nonempty_fintype σ
   haveI := no_zero_divisors_fin R (Fintype.card σ)
   exact (rename_equiv R (Fintype.equivFin σ)).Injective.NoZeroDivisors _ (map_zero _) (map_mul _)
-#align mv_polynomial.no_zero_divisors_of_finite MvPolynomial.noZeroDivisorsOfFinite
+#align mv_polynomial.no_zero_divisors_of_finite MvPolynomial.no_zero_divisors_of_finite
 
 instance {R : Type u} [CommSemiring R] [NoZeroDivisors R] {σ : Type v} : NoZeroDivisors (MvPolynomial σ R) :=
   ⟨fun p q h => by
@@ -1161,14 +1162,14 @@ instance {R : Type u} [CommSemiring R] [NoZeroDivisors R] {σ : Type v} : NoZero
       by
       apply rename_injective _ Subtype.val_injective
       simpa using h
-    letI := MvPolynomial.noZeroDivisorsOfFinite R { x // x ∈ s ∪ t }
+    letI := MvPolynomial.no_zero_divisors_of_finite R { x // x ∈ s ∪ t }
     rw [mul_eq_zero] at this
     cases this <;> [left, right]
     all_goals simpa using congr_arg (rename Subtype.val) this⟩
 
 /-- The multivariate polynomial ring over an integral domain is an integral domain. -/
 instance {R : Type u} {σ : Type v} [CommRing R] [IsDomain R] : IsDomain (MvPolynomial σ R) :=
-  { MvPolynomial.noZeroDivisors, AddMonoidAlgebra.nontrivial with }
+  { MvPolynomial.no_zero_divisors, AddMonoidAlgebra.nontrivial with }
 
 theorem map_mv_polynomial_eq_eval₂ {S : Type _} [CommRing S] [Finite σ] (ϕ : MvPolynomial σ R →+* S)
     (p : MvPolynomial σ R) : ϕ p = MvPolynomial.eval₂ (ϕ.comp MvPolynomial.c) (fun s => ϕ (MvPolynomial.x s)) p := by
@@ -1314,11 +1315,11 @@ open UniqueFactorizationMonoid
 
 namespace Polynomial
 
-instance (priority := 100) uniqueFactorizationMonoid : UniqueFactorizationMonoid D[X] := by
+instance (priority := 100) unique_factorization_monoid : UniqueFactorizationMonoid D[X] := by
   haveI := Inhabited.default (NormalizationMonoid D)
   haveI := to_normalized_gcd_monoid D
-  exact ufmOfGcdOfWfDvdMonoid
-#align polynomial.unique_factorization_monoid Polynomial.uniqueFactorizationMonoid
+  exact ufm_of_gcd_of_wf_dvd_monoid
+#align polynomial.unique_factorization_monoid Polynomial.unique_factorization_monoid
 
 end Polynomial
 
@@ -1331,7 +1332,7 @@ private theorem unique_factorization_monoid_of_fintype [Fintype σ] : UniqueFact
       infer_instance
       
     · apply (finSuccEquiv D d).toMulEquiv.symm.UniqueFactorizationMonoid
-      exact Polynomial.uniqueFactorizationMonoid
+      exact Polynomial.unique_factorization_monoid
       
 #align mv_polynomial.unique_factorization_monoid_of_fintype mv_polynomial.unique_factorization_monoid_of_fintype
 

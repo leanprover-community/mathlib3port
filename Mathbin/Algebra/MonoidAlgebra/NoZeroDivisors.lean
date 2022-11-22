@@ -85,7 +85,7 @@ theorem Right.exists_add_of_mem_support_single_mul [AddRightCancelSemigroup A] {
 
 /-- If `R` is a semiring with no non-trivial zero-divisors and `A` is a left-ordered add right
 cancel semigroup, then `add_monoid_algebra R A` also contains no non-zero zero-divisors. -/
-theorem NoZeroDivisors.ofLeftOrdered [NoZeroDivisors R] [AddRightCancelSemigroup A] [LinearOrder A]
+theorem NoZeroDivisors.of_left_ordered [NoZeroDivisors R] [AddRightCancelSemigroup A] [LinearOrder A]
     [CovariantClass A A (· + ·) (· < ·)] : NoZeroDivisors (AddMonoidAlgebra R A) :=
   ⟨fun f g fg => by
     contrapose! fg
@@ -127,11 +127,11 @@ theorem NoZeroDivisors.ofLeftOrdered [NoZeroDivisors R] [AddRightCancelSemigroup
           
         
       ⟩
-#align add_monoid_algebra.no_zero_divisors.of_left_ordered AddMonoidAlgebra.NoZeroDivisors.ofLeftOrdered
+#align add_monoid_algebra.no_zero_divisors.of_left_ordered AddMonoidAlgebra.NoZeroDivisors.of_left_ordered
 
 /-- If `R` is a semiring with no non-trivial zero-divisors and `A` is a right-ordered add left
 cancel semigroup, then `add_monoid_algebra R A` also contains no non-zero zero-divisors. -/
-theorem NoZeroDivisors.ofRightOrdered [NoZeroDivisors R] [AddLeftCancelSemigroup A] [LinearOrder A]
+theorem NoZeroDivisors.of_right_ordered [NoZeroDivisors R] [AddLeftCancelSemigroup A] [LinearOrder A]
     [CovariantClass A A (Function.swap (· + ·)) (· < ·)] : NoZeroDivisors (AddMonoidAlgebra R A) :=
   ⟨fun f g fg => by
     contrapose! fg
@@ -173,7 +173,7 @@ theorem NoZeroDivisors.ofRightOrdered [NoZeroDivisors R] [AddLeftCancelSemigroup
           
         
       ⟩
-#align add_monoid_algebra.no_zero_divisors.of_right_ordered AddMonoidAlgebra.NoZeroDivisors.ofRightOrdered
+#align add_monoid_algebra.no_zero_divisors.of_right_ordered AddMonoidAlgebra.NoZeroDivisors.of_right_ordered
 
 end LeftOrRightOrderability
 

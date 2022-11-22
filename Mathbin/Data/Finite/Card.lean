@@ -141,7 +141,7 @@ theorem card_le_of_surjective' {f : α → β} (hf : Function.Surjective f) (h :
 theorem card_eq_zero_of_surjective {f : α → β} (hf : Function.Surjective f) (h : Nat.card β = 0) : Nat.card α = 0 := by
   cases finite_or_infinite β
   · haveI := card_eq_zero_iff.mp h
-    haveI := function.isEmpty f
+    haveI := Function.isEmpty f
     exact Nat.card_of_is_empty
     
   · haveI := Infinite.of_surjective f hf

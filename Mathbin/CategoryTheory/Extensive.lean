@@ -622,7 +622,7 @@ theorem is_van_kampen_colimit_of_evaluation [HasPullbacks D] [HasColimitsOfShape
 #align category_theory.is_van_kampen_colimit_of_evaluation CategoryTheory.is_van_kampen_colimit_of_evaluation
 
 instance [HasPullbacks C] [FinitaryExtensive C] : FinitaryExtensive (D ⥤ C) :=
-  haveI : has_finite_coproducts (D ⥤ C) := ⟨fun J hJ => limits.functor_category_has_colimits_of_shape⟩
+  haveI : has_finite_coproducts (D ⥤ C) := ⟨fun n => limits.functor_category_has_colimits_of_shape⟩
   ⟨fun X Y c hc =>
     is_van_kampen_colimit_of_evaluation _ c fun x => finitary_extensive.van_kampen _ <| preserves_colimit.preserves hc⟩
 

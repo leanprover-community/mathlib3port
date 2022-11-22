@@ -244,6 +244,15 @@ protected def copy (f : HeytingHom α β) (f' : α → β) (h : f' = f) : Heytin
   map_himp' := by simpa only [h] using map_himp f
 #align heyting_hom.copy HeytingHom.copy
 
+@[simp]
+theorem coe_copy (f : HeytingHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align heyting_hom.coe_copy HeytingHom.coe_copy
+
+theorem copy_eq (f : HeytingHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align heyting_hom.copy_eq HeytingHom.copy_eq
+
 variable (α)
 
 /-- `id` as a `heyting_hom`. -/
@@ -349,6 +358,15 @@ protected def copy (f : CoheytingHom α β) (f' : α → β) (h : f' = f) : Cohe
   map_sdiff' := by simpa only [h] using map_sdiff f
 #align coheyting_hom.copy CoheytingHom.copy
 
+@[simp]
+theorem coe_copy (f : CoheytingHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align coheyting_hom.coe_copy CoheytingHom.coe_copy
+
+theorem copy_eq (f : CoheytingHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align coheyting_hom.copy_eq CoheytingHom.copy_eq
+
 variable (α)
 
 /-- `id` as a `coheyting_hom`. -/
@@ -453,6 +471,15 @@ protected def copy (f : BiheytingHom α β) (f' : α → β) (h : f' = f) : Bihe
   map_himp' := by simpa only [h] using map_himp f
   map_sdiff' := by simpa only [h] using map_sdiff f
 #align biheyting_hom.copy BiheytingHom.copy
+
+@[simp]
+theorem coe_copy (f : BiheytingHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align biheyting_hom.coe_copy BiheytingHom.coe_copy
+
+theorem copy_eq (f : BiheytingHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align biheyting_hom.copy_eq BiheytingHom.copy_eq
 
 variable (α)
 

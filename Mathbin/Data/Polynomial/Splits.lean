@@ -343,7 +343,7 @@ theorem eq_X_sub_C_of_splits_of_single_root {x : K} {h : K[X]} (h_splits : Split
 
 section UFD
 
-attribute [local instance] PrincipalIdealRing.toUniqueFactorizationMonoid
+attribute [local instance] PrincipalIdealRing.to_unique_factorization_monoid
 
 -- mathport name: «expr ~ᵤ »
 local infixl:50 " ~ᵤ " => Associated
@@ -369,7 +369,7 @@ theorem splitsOfExistsMultiset {f : K[X]} {s : Multiset L}
 #align polynomial.splits_of_exists_multiset Polynomial.splitsOfExistsMultiset
 
 theorem splitsOfSplitsId {f : K[X]} : Splits (RingHom.id K) f → Splits i f :=
-  UniqueFactorizationMonoid.inductionOnPrime f (fun _ => splitsZero _)
+  UniqueFactorizationMonoid.induction_on_prime f (fun _ => splitsZero _)
     (fun _ hu _ => splitsOfDegreeLeOne _ ((is_unit_iff_degree_eq_zero.1 hu).symm ▸ by decide)) fun a p ha0 hp ih hfi =>
     splitsMul _
       (splitsOfDegreeEqOne _

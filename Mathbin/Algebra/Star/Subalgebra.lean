@@ -457,14 +457,14 @@ theorem _root_.subalgebra.star_closure_eq_adjoin (S : Subalgebra R A) : S.starCl
 
 /-- If some predicate holds for all `x ∈ (s : set A)` and this predicate is closed under the
 `algebra_map`, addition, multiplication and star operations, then it holds for `a ∈ adjoin R s`. -/
-theorem adjoinInduction {s : Set A} {p : A → Prop} {a : A} (h : a ∈ adjoin R s) (Hs : ∀ x : A, x ∈ s → p x)
+theorem adjoin_induction {s : Set A} {p : A → Prop} {a : A} (h : a ∈ adjoin R s) (Hs : ∀ x : A, x ∈ s → p x)
     (Halg : ∀ r : R, p (algebraMap R A r)) (Hadd : ∀ x y : A, p x → p y → p (x + y))
     (Hmul : ∀ x y : A, p x → p y → p (x * y)) (Hstar : ∀ x : A, p x → p (star x)) : p a :=
-  Algebra.adjoinInduction h (fun x hx => hx.elim (fun hx => Hs x hx) fun hx => star_star x ▸ Hstar _ (Hs _ hx)) Halg
+  Algebra.adjoin_induction h (fun x hx => hx.elim (fun hx => Hs x hx) fun hx => star_star x ▸ Hstar _ (Hs _ hx)) Halg
     Hadd Hmul
-#align star_subalgebra.adjoin_induction StarSubalgebra.adjoinInduction
+#align star_subalgebra.adjoin_induction StarSubalgebra.adjoin_induction
 
-theorem adjoinInduction₂ {s : Set A} {p : A → A → Prop} {a b : A} (ha : a ∈ adjoin R s) (hb : b ∈ adjoin R s)
+theorem adjoin_induction₂ {s : Set A} {p : A → A → Prop} {a b : A} (ha : a ∈ adjoin R s) (hb : b ∈ adjoin R s)
     (Hs : ∀ x : A, x ∈ s → ∀ y : A, y ∈ s → p x y) (Halg : ∀ r₁ r₂ : R, p (algebraMap R A r₁) (algebraMap R A r₂))
     (Halg_left : ∀ (r : R) (x : A), x ∈ s → p (algebraMap R A r) x)
     (Halg_right : ∀ (r : R) (x : A), x ∈ s → p x (algebraMap R A r))
@@ -474,7 +474,7 @@ theorem adjoinInduction₂ {s : Set A} {p : A → A → Prop} {a b : A} (ha : a 
     (Hmul_right : ∀ x y₁ y₂ : A, p x y₁ → p x y₂ → p x (y₁ * y₂)) (Hstar : ∀ x y : A, p x y → p (star x) (star y))
     (Hstar_left : ∀ x y : A, p x y → p (star x) y) (Hstar_right : ∀ x y : A, p x y → p x (star y)) : p a b := by
   refine'
-    Algebra.adjoinInduction₂ ha hb (fun x hx y hy => _) Halg (fun r x hx => _) (fun r x hx => _) Hadd_left Hadd_right
+    Algebra.adjoin_induction₂ ha hb (fun x hx y hy => _) Halg (fun r x hx => _) (fun r x hx => _) Hadd_left Hadd_right
       Hmul_left Hmul_right
   · cases hx <;> cases hy
     exacts[Hs x hx y hy, star_star y ▸ Hstar_right _ _ (Hs _ hx _ hy), star_star x ▸ Hstar_left _ _ (Hs _ hx _ hy),
@@ -486,10 +486,10 @@ theorem adjoinInduction₂ {s : Set A} {p : A → A → Prop} {a b : A} (ha : a 
   · cases hx
     exacts[Halg_right _ _ hx, star_star x ▸ Hstar_left _ _ (Halg_right r _ hx)]
     
-#align star_subalgebra.adjoin_induction₂ StarSubalgebra.adjoinInduction₂
+#align star_subalgebra.adjoin_induction₂ StarSubalgebra.adjoin_induction₂
 
 /-- The difference with `star_subalgebra.adjoin_induction` is that this acts on the subtype. -/
-theorem adjoinInduction' {s : Set A} {p : adjoin R s → Prop} (a : adjoin R s)
+theorem adjoin_induction' {s : Set A} {p : adjoin R s → Prop} (a : adjoin R s)
     (Hs : ∀ (x) (h : x ∈ s), p ⟨x, subset_adjoin R s h⟩) (Halg : ∀ r, p (algebraMap R _ r))
     (Hadd : ∀ x y, p x → p y → p (x + y)) (Hmul : ∀ x y, p x → p y → p (x * y)) (Hstar : ∀ x, p x → p (star x)) : p a :=
   (Subtype.recOn a) fun b hb => by
@@ -499,7 +499,7 @@ theorem adjoinInduction' {s : Set A} {p : adjoin R s → Prop} (a : adjoin R s)
       fun x y hx hy => (Exists.elim hx) fun hx' hx => (Exists.elim hy) fun hy' hy => ⟨add_mem hx' hy', Hadd _ _ hx hy⟩,
       fun x y hx hy => (Exists.elim hx) fun hx' hx => (Exists.elim hy) fun hy' hy => ⟨mul_mem hx' hy', Hmul _ _ hx hy⟩,
       fun x hx => Exists.elim hx fun hx' hx => ⟨star_mem hx', Hstar _ hx⟩]
-#align star_subalgebra.adjoin_induction' StarSubalgebra.adjoinInduction'
+#align star_subalgebra.adjoin_induction' StarSubalgebra.adjoin_induction'
 
 variable (R)
 

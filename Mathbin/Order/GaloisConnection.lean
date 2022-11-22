@@ -590,7 +590,7 @@ theorem u_le_u_iff [Preorder α] [Preorder β] (gi : GaloisInsertion l u) {a b} 
 #align galois_insertion.u_le_u_iff GaloisInsertion.u_le_u_iff
 
 theorem strict_mono_u [Preorder α] [Preorder β] (gi : GaloisInsertion l u) : StrictMono u :=
-  strict_mono_of_le_iff_le fun _ _ => gi.u_le_u_iff.symm
+  strictMono_of_le_iff_le fun _ _ => gi.u_le_u_iff.symm
 #align galois_insertion.strict_mono_u GaloisInsertion.strict_mono_u
 
 theorem is_lub_of_u_image [Preorder α] [Preorder β] (gi : GaloisInsertion l u) {s : Set β} {a : α}

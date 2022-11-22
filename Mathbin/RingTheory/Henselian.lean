@@ -62,7 +62,7 @@ open BigOperators Polynomial
 
 open LocalRing Polynomial Function
 
-theorem isLocalRingHomOfLeJacobsonBot {R : Type _} [CommRing R] (I : Ideal R) (h : I ≤ Ideal.jacobson ⊥) :
+theorem is_local_ring_hom_of_le_jacobson_bot {R : Type _} [CommRing R] (I : Ideal R) (h : I ≤ Ideal.jacobson ⊥) :
     IsLocalRingHom (Ideal.Quotient.mk I) := by
   constructor
   intro a h
@@ -80,7 +80,7 @@ theorem isLocalRingHomOfLeJacobsonBot {R : Type _} [CommRing R] (I : Ideal R) (h
   specialize h1 1
   simp at h1
   exact h1.1
-#align is_local_ring_hom_of_le_jacobson_bot isLocalRingHomOfLeJacobsonBot
+#align is_local_ring_hom_of_le_jacobson_bot is_local_ring_hom_of_le_jacobson_bot
 
 /-- A ring `R` is *Henselian* at an ideal `I` if the following condition holds:
 for every polynomial `f` over `R`, with a *simple* root `a₀` over the quotient ring `R/I`,
@@ -1063,7 +1063,7 @@ instance (R : Type _) [CommRing R] [hR : HenselianLocalRing R] : HenselianRing R
 
 -- see Note [lower instance priority]
 /-- A ring `R` that is `I`-adically complete is Henselian at `I`. -/
-instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R] (I : Ideal R) [IsAdicComplete I R] :
+instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing R] (I : Ideal R) [IsAdicComplete I R] :
     HenselianRing R I where
   jac := IsAdicComplete.le_jacobson_bot _
   is_henselian := by
@@ -1095,7 +1095,7 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R
       exact (ih.eval f).trans h₁
     have hf'c : ∀ n, IsUnit (f'.eval (c n)) := by
       intro n
-      haveI := isLocalRingHomOfLeJacobsonBot I (IsAdicComplete.le_jacobson_bot I)
+      haveI := is_local_ring_hom_of_le_jacobson_bot I (IsAdicComplete.le_jacobson_bot I)
       apply is_unit_of_map_unit (Ideal.Quotient.mk I)
       convert h₂ using 1
       exact smodeq.def.mp ((hc_mod n).eval _)
@@ -1163,5 +1163,5 @@ instance (priority := 100) IsAdicComplete.henselianRing (R : Type _) [CommRing R
       rw [Smodeq.zero, Ideal.neg_mem_iff]
       exact Ideal.mul_mem_right _ _ h₁
       
-#align is_adic_complete.henselian_ring IsAdicComplete.henselianRing
+#align is_adic_complete.henselian_ring IsAdicComplete.henselian_ring
 

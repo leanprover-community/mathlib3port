@@ -261,14 +261,14 @@ theorem Pairwise.filter_map {S : β → β → Prop} (f : α → Option β)
 #align list.pairwise.filter_map List.Pairwise.filter_map
 
 theorem pairwise_filter (p : α → Prop) [DecidablePred p] {l : List α} :
-    Pairwise R (filter' p l) ↔ Pairwise (fun x y => p x → p y → R x y) l := by
+    Pairwise R (filter p l) ↔ Pairwise (fun x y => p x → p y → R x y) l := by
   rw [← filter_map_eq_filter, pairwise_filter_map]
   apply pairwise.iff
   intros
   simp only [Option.mem_def, Option.guard_eq_some, and_imp, forall_eq']
 #align list.pairwise_filter List.pairwise_filter
 
-theorem Pairwise.filter (p : α → Prop) [DecidablePred p] : Pairwise R l → Pairwise R (filter' p l) :=
+theorem Pairwise.filter (p : α → Prop) [DecidablePred p] : Pairwise R l → Pairwise R (filter p l) :=
   Pairwise.sublist (filter_sublist _)
 #align list.pairwise.filter List.Pairwise.filter
 

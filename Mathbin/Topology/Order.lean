@@ -626,7 +626,7 @@ instance sierpinskiSpace : TopologicalSpace Prop :=
 #align sierpinski_space sierpinskiSpace
 
 theorem continuous_empty_function [TopologicalSpace α] [TopologicalSpace β] [IsEmpty β] (f : α → β) : Continuous f :=
-  letI := function.isEmpty f
+  letI := Function.isEmpty f
   continuous_of_discrete_topology
 #align continuous_empty_function continuous_empty_function
 

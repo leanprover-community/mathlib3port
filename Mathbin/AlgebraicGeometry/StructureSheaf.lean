@@ -83,7 +83,7 @@ instance (U : Opens (PrimeSpectrum.top R)) (x : U) : Algebra R (Localizations R 
 
 instance (U : Opens (PrimeSpectrum.top R)) (x : U) :
     IsLocalization.AtPrime (Localizations R x) (x : PrimeSpectrum.top R).asIdeal :=
-  Localization.isLocalization
+  Localization.is_localization
 
 variable {R}
 
@@ -895,11 +895,11 @@ theorem stalk_algebra_map (p : PrimeSpectrum R) (r : R) :
 #align algebraic_geometry.structure_sheaf.stalk_algebra_map AlgebraicGeometry.StructureSheaf.stalk_algebra_map
 
 /-- Stalk of the structure sheaf at a prime p as localization of R -/
-instance IsLocalization.toStalk (p : PrimeSpectrum R) :
+instance IsLocalization.to_stalk (p : PrimeSpectrum R) :
     IsLocalization.AtPrime ((structureSheaf R).Presheaf.stalk p) p.asIdeal := by
   convert
     (IsLocalization.is_localization_iff_of_ring_equiv _ (stalk_iso R p).symm.commRingIsoToRingEquiv).mp
-      Localization.isLocalization
+      Localization.is_localization
   apply Algebra.algebra_ext
   intro
   rw [stalk_algebra_map]
@@ -907,7 +907,7 @@ instance IsLocalization.toStalk (p : PrimeSpectrum R) :
   erw [iso.eq_comp_inv]
   exact to_stalk_comp_stalk_to_fiber_ring_hom R p
 #align
-  algebraic_geometry.structure_sheaf.is_localization.to_stalk AlgebraicGeometry.StructureSheaf.IsLocalization.toStalk
+  algebraic_geometry.structure_sheaf.is_localization.to_stalk AlgebraicGeometry.StructureSheaf.IsLocalization.to_stalk
 
 instance openAlgebra (U : (Opens (PrimeSpectrum R))ᵒᵖ) : Algebra R ((structureSheaf R).val.obj U) :=
   (toOpen R (unop U)).toAlgebra
@@ -920,17 +920,17 @@ theorem open_algebra_map (U : (Opens (PrimeSpectrum R))ᵒᵖ) (r : R) :
 #align algebraic_geometry.structure_sheaf.open_algebra_map AlgebraicGeometry.StructureSheaf.open_algebra_map
 
 /-- Sections of the structure sheaf of Spec R on a basic open as localization of R -/
-instance IsLocalization.toBasicOpen (r : R) : IsLocalization.Away r ((structureSheaf R).val.obj (op <| basicOpen r)) :=
-  by
+instance IsLocalization.to_basic_open (r : R) :
+    IsLocalization.Away r ((structureSheaf R).val.obj (op <| basicOpen r)) := by
   convert
     (IsLocalization.is_localization_iff_of_ring_equiv _ (basic_open_iso R r).symm.commRingIsoToRingEquiv).mp
-      Localization.isLocalization
+      Localization.is_localization
   apply Algebra.algebra_ext
   intro x
   congr 1
   exact (localization_to_basic_open R r).symm
 #align
-  algebraic_geometry.structure_sheaf.is_localization.to_basic_open AlgebraicGeometry.StructureSheaf.IsLocalization.toBasicOpen
+  algebraic_geometry.structure_sheaf.is_localization.to_basic_open AlgebraicGeometry.StructureSheaf.IsLocalization.to_basic_open
 
 instance to_basic_open_epi (r : R) : Epi (toOpen R (basicOpen r)) :=
   ⟨fun S f g h => by

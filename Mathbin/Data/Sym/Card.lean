@@ -80,7 +80,7 @@ protected def e2 {n k : ℕ} : { s : Sym (Fin n.succ.succ) k // ↑0 ∉ s } ≃
   invFun s := ⟨map (Fin.succAbove 0) s, (mt mem_map.1) (not_exists.2 fun t => not_and.2 fun _ => Fin.succ_above_ne _ t)⟩
   left_inv s := by
     obtain ⟨s, hs⟩ := s
-    simp only [Fin.zero_succ_above, map_map, comp_app]
+    simp only [map_map, comp_app]
     nth_rw_rhs 0 [← map_id' s]
     refine' Sym.map_congr fun v hv => _
     simp [Fin.pred_above_zero (ne_of_mem_of_not_mem hv hs)]
@@ -105,7 +105,7 @@ theorem card_sym_fin_eq_multichoose (n k : ℕ) : card (Sym (Fin n) k) = multich
   · intro x y h1 h2
     rw [multichoose_succ_succ, ← h1, ← h2, add_comm]
     cases x
-    · simp only [card_eq_zero_iff, Nat.zero_eq, card_unique, self_eq_add_right]
+    · simp only [card_eq_zero_iff, card_unique, self_eq_add_right]
       infer_instance
       
     rw [← card_sum]

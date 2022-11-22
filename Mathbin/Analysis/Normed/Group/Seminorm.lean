@@ -73,7 +73,7 @@ attribute [nolint doc_blame] AddGroupSeminorm.toZeroHom AddGroupNorm.toAddGroupS
 /-- `add_group_seminorm_class F α` states that `F` is a type of seminorms on the additive group `α`.
 
 You should extend this class when you extend `add_group_seminorm`. -/
-class AddGroupSeminormClass (F : Type _) (α : outParam <| Type _) [AddGroup α] extends SubadditiveHomClass F α ℝ where
+class AddGroupSeminormClass (F : Type _) (α : outParam <| Type _) [AddGroup α] extends SubAdditiveHomClass F α ℝ where
   map_zero (f : F) : f 0 = 0
   map_neg_eq_map (f : F) (a : α) : f (-a) = f a
 #align add_group_seminorm_class AddGroupSeminormClass
@@ -82,7 +82,7 @@ class AddGroupSeminormClass (F : Type _) (α : outParam <| Type _) [AddGroup α]
 
 You should extend this class when you extend `group_seminorm`. -/
 @[to_additive]
-class GroupSeminormClass (F : Type _) (α : outParam <| Type _) [Group α] extends MulLeAddHomClass F α ℝ where
+class GroupSeminormClass (F : Type _) (α : outParam <| Type _) [Group α] extends MulLEAddHomClass F α ℝ where
   map_one_eq_zero (f : F) : f 1 = 0
   map_inv_eq_map (f : F) (a : α) : f a⁻¹ = f a
 #align group_seminorm_class GroupSeminormClass
@@ -160,7 +160,7 @@ end GroupSeminormClass
 -- See note [lower instance priority]
 @[to_additive]
 instance (priority := 100) GroupSeminormClass.toNonnegHomClass [Group E] [GroupSeminormClass F E] :
-    NonnegHomClass F E ℝ :=
+    NonNegHomClass F E ℝ :=
   { ‹GroupSeminormClass F E› with
     map_nonneg := fun f a =>
       nonneg_of_mul_nonneg_right

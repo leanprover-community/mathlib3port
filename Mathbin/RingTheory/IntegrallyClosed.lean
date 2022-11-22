@@ -66,7 +66,7 @@ theorem is_integrally_closed_iff_is_integral_closure : IsIntegrallyClosed R ↔ 
       refine' ⟨IsFractionRing.injective _ _, fun x => ⟨cl, _⟩⟩
       rintro ⟨y, y_eq⟩
       rw [← y_eq]
-      exact isIntegralAlgebraMap
+      exact is_integral_algebra_map
       
     · rintro ⟨-, cl⟩ x hx
       exact cl.mp hx
@@ -92,7 +92,7 @@ theorem is_integral_iff {x : K} : IsIntegral R x ↔ ∃ y : R, algebraMap R K y
 
 theorem exists_algebra_map_eq_of_is_integral_pow {x : K} {n : ℕ} (hn : 0 < n) (hx : IsIntegral R <| x ^ n) :
     ∃ y : R, algebraMap R K y = x :=
-  is_integral_iff.mp <| isIntegralOfPow hn hx
+  is_integral_iff.mp <| is_integral_of_pow hn hx
 #align
   is_integrally_closed.exists_algebra_map_eq_of_is_integral_pow IsIntegrallyClosed.exists_algebra_map_eq_of_is_integral_pow
 

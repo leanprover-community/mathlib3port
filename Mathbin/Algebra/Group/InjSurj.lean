@@ -115,7 +115,7 @@ protected def monoid [Monoid M₂] (f : M₁ → M₂) (hf : Injective f) (one :
 if it admits an injective map that preserves `0`, `1` and `+` to an additive monoid with one.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def addMonoidWithOne {M₁} [Zero M₁] [One M₁] [Add M₁] [HasSmul ℕ M₁] [HasNatCast M₁] [AddMonoidWithOne M₂]
+protected def addMonoidWithOne {M₁} [Zero M₁] [One M₁] [Add M₁] [HasSmul ℕ M₁] [NatCast M₁] [AddMonoidWithOne M₂]
     (f : M₁ → M₂) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (nat_cast : ∀ n : ℕ, f n = n) : AddMonoidWithOne M₁ :=
   { hf.AddMonoid f zero add nsmul with natCast := coe, nat_cast_zero := hf (by erw [nat_cast, Nat.cast_zero, zero]),
@@ -252,8 +252,8 @@ if it admits an injective map that preserves `0`, `1` and `+` to an additive gro
 See note [reducible non-instances]. -/
 @[reducible]
 protected def addGroupWithOne {M₁} [Zero M₁] [One M₁] [Add M₁] [HasSmul ℕ M₁] [Neg M₁] [Sub M₁] [HasSmul ℤ M₁]
-    [HasNatCast M₁] [HasIntCast M₁] [AddGroupWithOne M₂] (f : M₁ → M₂) (hf : Injective f) (zero : f 0 = 0)
-    (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
+    [NatCast M₁] [IntCast M₁] [AddGroupWithOne M₂] (f : M₁ → M₂) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    (add : ∀ x y, f (x + y) = f x + f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x)
     (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) : AddGroupWithOne M₁ :=
   { hf.AddGroup f zero add neg sub nsmul zsmul, hf.AddMonoidWithOne f zero one add nsmul nat_cast with intCast := coe,
@@ -339,7 +339,7 @@ protected def monoid [Monoid M₁] (f : M₁ → M₂) (hf : Surjective f) (one 
 if it admits a surjective map that preserves `0`, `1` and `*` from an additive monoid with one.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def addMonoidWithOne {M₂} [Zero M₂] [One M₂] [Add M₂] [HasSmul ℕ M₂] [HasNatCast M₂] [AddMonoidWithOne M₁]
+protected def addMonoidWithOne {M₂} [Zero M₂] [One M₂] [Add M₂] [HasSmul ℕ M₂] [NatCast M₂] [AddMonoidWithOne M₁]
     (f : M₁ → M₂) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (nat_cast : ∀ n : ℕ, f n = n) : AddMonoidWithOne M₂ :=
   { hf.AddMonoid f zero add nsmul with natCast := coe,
@@ -410,8 +410,8 @@ protected def group [Group M₁] (f : M₁ → M₂) (hf : Surjective f) (one : 
 if it admits a surjective map that preserves `0`, `1`, and `+` to an additive group with one.
 See note [reducible non-instances]. -/
 protected def addGroupWithOne {M₂} [Zero M₂] [One M₂] [Add M₂] [Neg M₂] [Sub M₂] [HasSmul ℕ M₂] [HasSmul ℤ M₂]
-    [HasNatCast M₂] [HasIntCast M₂] [AddGroupWithOne M₁] (f : M₁ → M₂) (hf : Surjective f) (zero : f 0 = 0)
-    (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
+    [NatCast M₂] [IntCast M₂] [AddGroupWithOne M₁] (f : M₁ → M₂) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
+    (add : ∀ x y, f (x + y) = f x + f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x)
     (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) : AddGroupWithOne M₂ :=
   { hf.AddMonoidWithOne f zero one add nsmul nat_cast, hf.AddGroup f zero add neg sub nsmul zsmul with intCast := coe,

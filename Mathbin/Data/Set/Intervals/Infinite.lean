@@ -19,7 +19,7 @@ variable {α : Type _} [Preorder α]
 /-- A nonempty preorder with no maximal element is infinite. This is not an instance to avoid
 a cycle with `infinite α → nontrivial α → nonempty α`. -/
 theorem NoMaxOrder.infinite [Nonempty α] [NoMaxOrder α] : Infinite α :=
-  let ⟨f, hf⟩ := Nat.exists_strict_mono α
+  let ⟨f, hf⟩ := Nat.exists_strictMono α
   Infinite.of_injective f hf.Injective
 #align no_max_order.infinite NoMaxOrder.infinite
 

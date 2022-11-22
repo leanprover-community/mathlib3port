@@ -72,7 +72,7 @@ theorem dvd_of_le_of_aleph_0_le (ha : a ≠ 0) (h : a ≤ b) (hb : ℵ₀ ≤ b)
 #align cardinal.dvd_of_le_of_aleph_0_le Cardinal.dvd_of_le_of_aleph_0_le
 
 @[simp]
-theorem primeOfAleph0Le (ha : ℵ₀ ≤ a) : Prime a := by
+theorem prime_of_aleph_0_le (ha : ℵ₀ ≤ a) : Prime a := by
   refine' ⟨(aleph_0_pos.trans_le ha).ne', _, fun b c hbc => _⟩
   · rw [is_unit_iff]
     exact (one_lt_aleph_0.trans_le ha).ne'
@@ -84,7 +84,7 @@ theorem primeOfAleph0Le (ha : ℵ₀ ≤ a) : Prime a := by
   left
   have habc := le_of_dvd hz hbc
   rwa [mul_eq_max' <| ha.trans <| habc, max_def', if_pos h] at hbc
-#align cardinal.prime_of_aleph_0_le Cardinal.primeOfAleph0Le
+#align cardinal.prime_of_aleph_0_le Cardinal.prime_of_aleph_0_le
 
 theorem not_irreducible_of_aleph_0_le (ha : ℵ₀ ≤ a) : ¬Irreducible a := by
   rw [irreducible_iff, not_and_or]

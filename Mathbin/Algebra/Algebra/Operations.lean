@@ -162,20 +162,20 @@ theorem mul_to_add_submonoid (M N : Submodule R A) : (M * N).toAddSubmonoid = M.
 #align submodule.mul_to_add_submonoid Submodule.mul_to_add_submonoid
 
 @[elab_as_elim]
-protected theorem mulInductionOn {C : A → Prop} {r : A} (hr : r ∈ M * N) (hm : ∀ m ∈ M, ∀ n ∈ N, C (m * n))
+protected theorem mul_induction_on {C : A → Prop} {r : A} (hr : r ∈ M * N) (hm : ∀ m ∈ M, ∀ n ∈ N, C (m * n))
     (ha : ∀ x y, C x → C y → C (x + y)) : C r := by
   rw [← mem_to_add_submonoid, mul_to_add_submonoid] at hr
   exact AddSubmonoid.mul_induction_on hr hm ha
-#align submodule.mul_induction_on Submodule.mulInductionOn
+#align submodule.mul_induction_on Submodule.mul_induction_on
 
 /-- A dependent version of `mul_induction_on`. -/
 @[elab_as_elim]
-protected theorem mulInductionOn' {C : ∀ r, r ∈ M * N → Prop} (hm : ∀ m ∈ M, ∀ n ∈ N, C (m * n) (mul_mem_mul ‹_› ‹_›))
+protected theorem mul_induction_on' {C : ∀ r, r ∈ M * N → Prop} (hm : ∀ m ∈ M, ∀ n ∈ N, C (m * n) (mul_mem_mul ‹_› ‹_›))
     (ha : ∀ x hx y hy, C x hx → C y hy → C (x + y) (add_mem ‹_› ‹_›)) {r : A} (hr : r ∈ M * N) : C r hr := by
   refine' Exists.elim _ fun (hr : r ∈ M * N) (hc : C r hr) => hc
   exact
-    Submodule.mulInductionOn hr (fun x hx y hy => ⟨_, hm _ hx _ hy⟩) fun x y ⟨_, hx⟩ ⟨_, hy⟩ => ⟨_, ha _ _ _ _ hx hy⟩
-#align submodule.mul_induction_on' Submodule.mulInductionOn'
+    Submodule.mul_induction_on hr (fun x hx y hy => ⟨_, hm _ hx _ hy⟩) fun x y ⟨_, hx⟩ ⟨_, hy⟩ => ⟨_, ha _ _ _ _ hx hy⟩
+#align submodule.mul_induction_on' Submodule.mul_induction_on'
 
 variable (R)
 
@@ -404,7 +404,7 @@ theorem le_pow_to_add_submonoid {n : ℕ} : M.toAddSubmonoid ^ n ≤ (M ^ n).toA
 
 /-- Dependent version of `submodule.pow_induction_on_left`. -/
 @[elab_as_elim]
-protected theorem powInductionOnLeft' {C : ∀ (n : ℕ) (x), x ∈ M ^ n → Prop}
+protected theorem pow_induction_on_left' {C : ∀ (n : ℕ) (x), x ∈ M ^ n → Prop}
     (hr : ∀ r : R, C 0 (algebraMap _ _ r) (algebra_map_mem r))
     (hadd : ∀ x y i hx hy, C i x hx → C i y hy → C i (x + y) (add_mem ‹_› ‹_›))
     (hmul : ∀ m ∈ M, ∀ (i x hx), C i x hx → C i.succ (m * x) (mul_mem_mul H hx)) {x : A} {n : ℕ} (hx : x ∈ M ^ n) :
@@ -415,13 +415,13 @@ protected theorem powInductionOnLeft' {C : ∀ (n : ℕ) (x), x ∈ M ^ n → Pr
     exact hr r
     
   exact
-    Submodule.mulInductionOn' (fun m hm x ih => hmul _ hm _ _ _ (n_ih ih)) (fun x hx y hy Cx Cy => hadd _ _ _ _ _ Cx Cy)
-      hx
-#align submodule.pow_induction_on_left' Submodule.powInductionOnLeft'
+    Submodule.mul_induction_on' (fun m hm x ih => hmul _ hm _ _ _ (n_ih ih))
+      (fun x hx y hy Cx Cy => hadd _ _ _ _ _ Cx Cy) hx
+#align submodule.pow_induction_on_left' Submodule.pow_induction_on_left'
 
 /-- Dependent version of `submodule.pow_induction_on_right`. -/
 @[elab_as_elim]
-protected theorem powInductionOnRight' {C : ∀ (n : ℕ) (x), x ∈ M ^ n → Prop}
+protected theorem pow_induction_on_right' {C : ∀ (n : ℕ) (x), x ∈ M ^ n → Prop}
     (hr : ∀ r : R, C 0 (algebraMap _ _ r) (algebra_map_mem r))
     (hadd : ∀ x y i hx hy, C i x hx → C i y hy → C i (x + y) (add_mem ‹_› ‹_›))
     (hmul : ∀ i x hx, C i x hx → ∀ m ∈ M, C i.succ (x * m) ((pow_succ' M i).symm ▸ mul_mem_mul hx H)) {x : A} {n : ℕ}
@@ -435,27 +435,27 @@ protected theorem powInductionOnRight' {C : ∀ (n : ℕ) (x), x ∈ M ^ n → P
   simp_rw [pow_succ']
   intro hx
   exact
-    Submodule.mulInductionOn' (fun m hm x ih => hmul _ _ hm (n_ih _) _ ih) (fun x hx y hy Cx Cy => hadd _ _ _ _ _ Cx Cy)
-      hx
-#align submodule.pow_induction_on_right' Submodule.powInductionOnRight'
+    Submodule.mul_induction_on' (fun m hm x ih => hmul _ _ hm (n_ih _) _ ih)
+      (fun x hx y hy Cx Cy => hadd _ _ _ _ _ Cx Cy) hx
+#align submodule.pow_induction_on_right' Submodule.pow_induction_on_right'
 
 /-- To show a property on elements of `M ^ n` holds, it suffices to show that it holds for scalars,
 is closed under addition, and holds for `m * x` where `m ∈ M` and it holds for `x` -/
 @[elab_as_elim]
-protected theorem powInductionOnLeft {C : A → Prop} (hr : ∀ r : R, C (algebraMap _ _ r))
+protected theorem pow_induction_on_left {C : A → Prop} (hr : ∀ r : R, C (algebraMap _ _ r))
     (hadd : ∀ x y, C x → C y → C (x + y)) (hmul : ∀ m ∈ M, ∀ (x), C x → C (m * x)) {x : A} {n : ℕ} (hx : x ∈ M ^ n) :
     C x :=
-  Submodule.powInductionOnLeft' M hr (fun x y i hx hy => hadd x y) (fun m hm i x hx => hmul _ hm _) hx
-#align submodule.pow_induction_on_left Submodule.powInductionOnLeft
+  Submodule.pow_induction_on_left' M hr (fun x y i hx hy => hadd x y) (fun m hm i x hx => hmul _ hm _) hx
+#align submodule.pow_induction_on_left Submodule.pow_induction_on_left
 
 /-- To show a property on elements of `M ^ n` holds, it suffices to show that it holds for scalars,
 is closed under addition, and holds for `x * m` where `m ∈ M` and it holds for `x` -/
 @[elab_as_elim]
-protected theorem powInductionOnRight {C : A → Prop} (hr : ∀ r : R, C (algebraMap _ _ r))
+protected theorem pow_induction_on_right {C : A → Prop} (hr : ∀ r : R, C (algebraMap _ _ r))
     (hadd : ∀ x y, C x → C y → C (x + y)) (hmul : ∀ x, C x → ∀ m ∈ M, C (x * m)) {x : A} {n : ℕ} (hx : x ∈ M ^ n) :
     C x :=
-  Submodule.powInductionOnRight' M hr (fun x y i hx hy => hadd x y) (fun i x hx => hmul _) hx
-#align submodule.pow_induction_on_right Submodule.powInductionOnRight
+  Submodule.pow_induction_on_right' M hr (fun x y i hx hy => hadd x y) (fun i x hx => hmul _) hx
+#align submodule.pow_induction_on_right Submodule.pow_induction_on_right
 
 /-- `submonoid.map` as a `monoid_with_zero_hom`, when applied to `alg_hom`s. -/
 @[simps]

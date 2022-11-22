@@ -51,7 +51,7 @@ theorem exists_partition_int (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : ℤ} (hb :
 
 /-- `abs : ℤ → ℤ` is an admissible absolute value -/
 noncomputable def absIsAdmissible : IsAdmissible AbsoluteValue.abs :=
-  { AbsoluteValue.absIsEuclidean with card := fun ε => ⌈1 / ε⌉₊,
+  { AbsoluteValue.abs_is_euclidean with card := fun ε => ⌈1 / ε⌉₊,
     exists_partition' := fun n ε hε b hb => exists_partition_int n hε hb }
 #align absolute_value.abs_is_admissible AbsoluteValue.absIsAdmissible
 

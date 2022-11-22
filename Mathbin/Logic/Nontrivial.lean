@@ -259,7 +259,7 @@ instance Option.nontrivial [Nonempty α] : Nontrivial (Option α) := by
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1 succ u_2} α β f) -> (Nontrivial.{u_2} β)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Logic.Nontrivial._hyg.975 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1 succ u_2} α β f) -> (Nontrivial.{u_2} β)
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Logic.Nontrivial._hyg.995 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1 succ u_2} α β f) -> (Nontrivial.{u_2} β)
 Case conversion may be inaccurate. Consider using '#align function.injective.nontrivial Function.Injective.nontrivialₓ'. -/
 /-- Pushforward a `nontrivial` instance along an injective function. -/
 protected theorem Function.Injective.nontrivial [Nontrivial α] {f : α → β} (hf : Function.Injective f) : Nontrivial β :=
@@ -285,7 +285,7 @@ protected theorem Function.Surjective.nontrivial [Nontrivial β] {f : α → β}
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} [_inst_1 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1 succ u_2} α β f) -> (forall (y : β), Exists.{succ u_1} α (fun (x : α) => Ne.{succ u_2} β (f x) y))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Logic.Nontrivial._hyg.1133 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1 succ u_2} α β f) -> (forall (y : β), Exists.{succ u_1} α (fun (x : α) => Ne.{succ u_2} β (f x) y))
+  forall {α : Type.{u_1}} {β : Type.{u_2}} [inst._@.Mathlib.Logic.Nontrivial._hyg.1155 : Nontrivial.{u_1} α] {f : α -> β}, (Function.Injective.{succ u_1 succ u_2} α β f) -> (forall (y : β), Exists.{succ u_1} α (fun (x : α) => Ne.{succ u_2} β (f x) y))
 Case conversion may be inaccurate. Consider using '#align function.injective.exists_ne Function.Injective.exists_neₓ'. -/
 /-- An injective function from a nontrivial type has an argument at
 which it does not take a given value. -/

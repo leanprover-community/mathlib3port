@@ -270,12 +270,12 @@ then `P` holds on all elements of `ratfunc K`.
 
 See also `induction_on`, which is a recursion principle defined in terms of `algebra_map`.
 -/
-protected irreducible_def inductionOn' {P : Ratfunc K → Prop} :
+protected irreducible_def induction_on' {P : Ratfunc K → Prop} :
   ∀ (x : Ratfunc K) (f : ∀ (p q : K[X]) (hq : q ≠ 0), P (Ratfunc.mk p q)), P x
   | ⟨x⟩, f =>
     Localization.induction_on x fun ⟨p, q⟩ => by
       simpa only [mk_coe_def, Localization.mk_eq_mk'] using f p q (mem_non_zero_divisors_iff_ne_zero.mp q.2)
-#align ratfunc.induction_on' Ratfunc.inductionOn'
+#align ratfunc.induction_on' Ratfunc.induction_on'
 
 end Rec
 
@@ -975,10 +975,10 @@ then `P` holds on all elements of `ratfunc K`.
 
 See also `induction_on'`, which is a recursion principle defined in terms of `ratfunc.mk`.
 -/
-protected theorem inductionOn {P : Ratfunc K → Prop} (x : Ratfunc K)
+protected theorem induction_on {P : Ratfunc K → Prop} (x : Ratfunc K)
     (f : ∀ (p q : K[X]) (hq : q ≠ 0), P (algebraMap _ (Ratfunc K) p / algebraMap _ _ q)) : P x :=
   x.inductionOn' fun p q hq => by simpa using f p q hq
-#align ratfunc.induction_on Ratfunc.inductionOn
+#align ratfunc.induction_on Ratfunc.induction_on
 
 theorem of_fraction_ring_mk' (x : K[X]) (y : K[X]⁰) :
     of_fraction_ring (IsLocalization.mk' _ x y) = IsLocalization.mk' (Ratfunc K) x y := by

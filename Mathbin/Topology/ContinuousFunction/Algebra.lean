@@ -78,19 +78,19 @@ theorem one_comp [One γ] (g : C(α, β)) : (1 : C(β, γ)).comp g = 1 :=
   rfl
 #align continuous_map.one_comp ContinuousMap.one_comp
 
-instance [HasNatCast β] : HasNatCast C(α, β) :=
+instance [NatCast β] : NatCast C(α, β) :=
   ⟨fun n => ContinuousMap.const _ n⟩
 
 @[simp, norm_cast]
-protected theorem coe_nat_cast [HasNatCast β] (n : ℕ) : ((n : C(α, β)) : α → β) = n :=
+protected theorem coe_nat_cast [NatCast β] (n : ℕ) : ((n : C(α, β)) : α → β) = n :=
   rfl
 #align continuous_map.coe_nat_cast ContinuousMap.coe_nat_cast
 
-instance [HasIntCast β] : HasIntCast C(α, β) :=
+instance [IntCast β] : IntCast C(α, β) :=
   ⟨fun n => ContinuousMap.const _ n⟩
 
 @[simp, norm_cast]
-protected theorem coe_int_cast [HasIntCast β] (n : ℤ) : ((n : C(α, β)) : α → β) = n :=
+protected theorem coe_int_cast [IntCast β] (n : ℤ) : ((n : C(α, β)) : α → β) = n :=
   rfl
 #align continuous_map.coe_int_cast ContinuousMap.coe_int_cast
 

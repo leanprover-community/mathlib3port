@@ -137,7 +137,7 @@ theorem is_satisfiable_directed_union_iff {ι : Type _} [Nonempty ι] {T : ι �
 theorem is_satisfiable_union_distinct_constants_theory_of_card_le (T : L.TheoryCat) (s : Set α) (M : Type w')
     [Nonempty M] [L.StructureCat M] [M ⊨ T] (h : Cardinal.lift.{w'} (#s) ≤ Cardinal.lift.{w} (#M)) :
     ((L.lhomWithConstants α).onTheory T ∪ L.distinctConstantsTheory s).IsSatisfiable := by
-  haveI : Inhabited M := Classical.inhabitedOfNonempty inferInstance
+  haveI : Inhabited M := Classical.inhabited_of_nonempty inferInstance
   rw [Cardinal.lift_mk_le'] at h
   letI : (constants_on α).StructureCat M := constants_on.Structure (Function.extend coe h.some default)
   have : M ⊨ (L.Lhom_with_constants α).onTheory T ∪ L.distinct_constants_theory s := by

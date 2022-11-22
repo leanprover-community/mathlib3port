@@ -38,9 +38,9 @@ def Transcendental (x : A) : Prop :=
   ¬IsAlgebraic R x
 #align transcendental Transcendental
 
-theorem isTranscendentalOfSubsingleton [Subsingleton R] (x : A) : Transcendental R x := fun ⟨p, h, _⟩ =>
+theorem is_transcendental_of_subsingleton [Subsingleton R] (x : A) : Transcendental R x := fun ⟨p, h, _⟩ =>
   h <| Subsingleton.elim p 0
-#align is_transcendental_of_subsingleton isTranscendentalOfSubsingleton
+#align is_transcendental_of_subsingleton is_transcendental_of_subsingleton
 
 variable {R}
 
@@ -90,65 +90,65 @@ variable [CommRing S] [Ring A] [Algebra R A] [Algebra R S] [Algebra S A]
 variable [IsScalarTower R S A]
 
 /-- An integral element of an algebra is algebraic.-/
-theorem IsIntegral.isAlgebraic [Nontrivial R] {x : A} : IsIntegral R x → IsAlgebraic R x := fun ⟨p, hp, hpx⟩ =>
+theorem IsIntegral.is_algebraic [Nontrivial R] {x : A} : IsIntegral R x → IsAlgebraic R x := fun ⟨p, hp, hpx⟩ =>
   ⟨p, hp.NeZero, hpx⟩
-#align is_integral.is_algebraic IsIntegral.isAlgebraic
+#align is_integral.is_algebraic IsIntegral.is_algebraic
 
 variable {R}
 
-theorem isAlgebraicZero [Nontrivial R] : IsAlgebraic R (0 : A) :=
+theorem is_algebraic_zero [Nontrivial R] : IsAlgebraic R (0 : A) :=
   ⟨_, X_ne_zero, aeval_X 0⟩
-#align is_algebraic_zero isAlgebraicZero
+#align is_algebraic_zero is_algebraic_zero
 
 /-- An element of `R` is algebraic, when viewed as an element of the `R`-algebra `A`. -/
-theorem isAlgebraicAlgebraMap [Nontrivial R] (x : R) : IsAlgebraic R (algebraMap R A x) :=
+theorem is_algebraic_algebra_map [Nontrivial R] (x : R) : IsAlgebraic R (algebraMap R A x) :=
   ⟨_, X_sub_C_ne_zero x, by rw [_root_.map_sub, aeval_X, aeval_C, sub_self]⟩
-#align is_algebraic_algebra_map isAlgebraicAlgebraMap
+#align is_algebraic_algebra_map is_algebraic_algebra_map
 
-theorem isAlgebraicOne [Nontrivial R] : IsAlgebraic R (1 : A) := by
+theorem is_algebraic_one [Nontrivial R] : IsAlgebraic R (1 : A) := by
   rw [← _root_.map_one _]
-  exact isAlgebraicAlgebraMap 1
-#align is_algebraic_one isAlgebraicOne
+  exact is_algebraic_algebra_map 1
+#align is_algebraic_one is_algebraic_one
 
-theorem isAlgebraicNat [Nontrivial R] (n : ℕ) : IsAlgebraic R (n : A) := by
+theorem is_algebraic_nat [Nontrivial R] (n : ℕ) : IsAlgebraic R (n : A) := by
   rw [← map_nat_cast _]
-  exact isAlgebraicAlgebraMap n
-#align is_algebraic_nat isAlgebraicNat
+  exact is_algebraic_algebra_map n
+#align is_algebraic_nat is_algebraic_nat
 
-theorem isAlgebraicInt [Nontrivial R] (n : ℤ) : IsAlgebraic R (n : A) := by
+theorem is_algebraic_int [Nontrivial R] (n : ℤ) : IsAlgebraic R (n : A) := by
   rw [← _root_.map_int_cast (algebraMap R A)]
-  exact isAlgebraicAlgebraMap n
-#align is_algebraic_int isAlgebraicInt
+  exact is_algebraic_algebra_map n
+#align is_algebraic_int is_algebraic_int
 
-theorem isAlgebraicRat (R : Type u) {A : Type v} [DivisionRing A] [Field R] [Algebra R A] (n : ℚ) :
+theorem is_algebraic_rat (R : Type u) {A : Type v} [DivisionRing A] [Field R] [Algebra R A] (n : ℚ) :
     IsAlgebraic R (n : A) := by
   rw [← map_rat_cast (algebraMap R A)]
-  exact isAlgebraicAlgebraMap n
-#align is_algebraic_rat isAlgebraicRat
+  exact is_algebraic_algebra_map n
+#align is_algebraic_rat is_algebraic_rat
 
-theorem isAlgebraicOfMemRootSet {R : Type u} {A : Type v} [Field R] [Field A] [Algebra R A] {p : R[X]} {x : A}
+theorem is_algebraic_of_mem_root_set {R : Type u} {A : Type v} [Field R] [Field A] [Algebra R A] {p : R[X]} {x : A}
     (hx : x ∈ p.rootSet A) : IsAlgebraic R x :=
   ⟨p, ne_zero_of_mem_root_set hx, aeval_eq_zero_of_mem_root_set hx⟩
-#align is_algebraic_of_mem_root_set isAlgebraicOfMemRootSet
+#align is_algebraic_of_mem_root_set is_algebraic_of_mem_root_set
 
 open IsScalarTower
 
-theorem isAlgebraicAlgebraMapOfIsAlgebraic {a : S} : IsAlgebraic R a → IsAlgebraic R (algebraMap S A a) :=
+theorem is_algebraic_algebra_map_of_is_algebraic {a : S} : IsAlgebraic R a → IsAlgebraic R (algebraMap S A a) :=
   fun ⟨f, hf₁, hf₂⟩ => ⟨f, hf₁, by rw [aeval_algebra_map_apply, hf₂, map_zero]⟩
-#align is_algebraic_algebra_map_of_is_algebraic isAlgebraicAlgebraMapOfIsAlgebraic
+#align is_algebraic_algebra_map_of_is_algebraic is_algebraic_algebra_map_of_is_algebraic
 
 /-- This is slightly more general than `is_algebraic_algebra_map_of_is_algebraic` in that it
   allows noncommutative intermediate rings `A`. -/
-theorem isAlgebraicAlgHomOfIsAlgebraic {B} [Ring B] [Algebra R B] (f : A →ₐ[R] B) {a : A} (h : IsAlgebraic R a) :
+theorem is_algebraic_alg_hom_of_is_algebraic {B} [Ring B] [Algebra R B] (f : A →ₐ[R] B) {a : A} (h : IsAlgebraic R a) :
     IsAlgebraic R (f a) :=
   let ⟨p, hp, ha⟩ := h
   ⟨p, hp, by rw [aeval_alg_hom, f.comp_apply, ha, map_zero]⟩
-#align is_algebraic_alg_hom_of_is_algebraic isAlgebraicAlgHomOfIsAlgebraic
+#align is_algebraic_alg_hom_of_is_algebraic is_algebraic_alg_hom_of_is_algebraic
 
 /-- Transfer `algebra.is_algebraic` across an `alg_equiv`. -/
 theorem _root_.alg_equiv.is_algebraic {B} [Ring B] [Algebra R B] (e : A ≃ₐ[R] B) (h : Algebra.IsAlgebraic R A) :
     Algebra.IsAlgebraic R B := fun b => by
-  convert ← isAlgebraicAlgHomOfIsAlgebraic e.to_alg_hom (h _) <;> apply e.apply_symm_apply
+  convert ← is_algebraic_alg_hom_of_is_algebraic e.to_alg_hom (h _) <;> apply e.apply_symm_apply
 #align _root_.alg_equiv.is_algebraic _root_.alg_equiv.is_algebraic
 
 theorem _root_.alg_equiv.is_algebraic_iff {B} [Ring B] [Algebra R B] (e : A ≃ₐ[R] B) :
@@ -158,20 +158,21 @@ theorem _root_.alg_equiv.is_algebraic_iff {B} [Ring B] [Algebra R B] (e : A ≃�
 
 theorem is_algebraic_algebra_map_iff {a : S} (h : Function.Injective (algebraMap S A)) :
     IsAlgebraic R (algebraMap S A a) ↔ IsAlgebraic R a :=
-  ⟨fun ⟨p, hp0, hp⟩ => ⟨p, hp0, h (by rwa [map_zero, ← aeval_algebra_map_apply])⟩, isAlgebraicAlgebraMapOfIsAlgebraic⟩
+  ⟨fun ⟨p, hp0, hp⟩ => ⟨p, hp0, h (by rwa [map_zero, ← aeval_algebra_map_apply])⟩,
+    is_algebraic_algebra_map_of_is_algebraic⟩
 #align is_algebraic_algebra_map_iff is_algebraic_algebra_map_iff
 
-theorem isAlgebraicOfPow {r : A} {n : ℕ} (hn : 0 < n) (ht : IsAlgebraic R (r ^ n)) : IsAlgebraic R r := by
+theorem is_algebraic_of_pow {r : A} {n : ℕ} (hn : 0 < n) (ht : IsAlgebraic R (r ^ n)) : IsAlgebraic R r := by
   obtain ⟨p, p_nonzero, hp⟩ := ht
   refine' ⟨Polynomial.expand _ n p, _, _⟩
   · rwa [Polynomial.expand_ne_zero hn]
     
   · rwa [Polynomial.expand_aeval n p r]
     
-#align is_algebraic_of_pow isAlgebraicOfPow
+#align is_algebraic_of_pow is_algebraic_of_pow
 
 theorem Transcendental.pow {r : A} (ht : Transcendental R r) {n : ℕ} (hn : 0 < n) : Transcendental R (r ^ n) :=
-  fun ht' => ht <| isAlgebraicOfPow hn ht'
+  fun ht' => ht <| is_algebraic_of_pow hn ht'
 #align transcendental.pow Transcendental.pow
 
 end zero_ne_one
@@ -182,7 +183,7 @@ variable {K : Type u} {A : Type v} [Field K] [Ring A] [Algebra K A]
 
 /-- An element of an algebra over a field is algebraic if and only if it is integral.-/
 theorem is_algebraic_iff_is_integral {x : A} : IsAlgebraic K x ↔ IsIntegral K x := by
-  refine' ⟨_, IsIntegral.isAlgebraic K⟩
+  refine' ⟨_, IsIntegral.is_algebraic K⟩
   rintro ⟨p, hp, hpx⟩
   refine' ⟨_, monic_mul_leading_coeff_inv hp, _⟩
   rw [← aeval_def, AlgHom.map_mul, hpx, zero_mul]
@@ -206,10 +207,10 @@ variable [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A]
 
 /-- If L is an algebraic field extension of K and A is an algebraic algebra over L,
 then A is algebraic over K. -/
-theorem isAlgebraicTrans (L_alg : IsAlgebraic K L) (A_alg : IsAlgebraic L A) : IsAlgebraic K A := by
+theorem is_algebraic_trans (L_alg : IsAlgebraic K L) (A_alg : IsAlgebraic L A) : IsAlgebraic K A := by
   simp only [IsAlgebraic, is_algebraic_iff_is_integral] at L_alg A_alg⊢
-  exact isIntegralTrans L_alg A_alg
-#align algebra.is_algebraic_trans Algebra.isAlgebraicTrans
+  exact is_integral_trans L_alg A_alg
+#align algebra.is_algebraic_trans Algebra.is_algebraic_trans
 
 variable (K L)
 
@@ -223,31 +224,31 @@ theorem _root_.is_algebraic_of_larger_base_of_injective (hinj : Function.Injecti
 
 /-- If A is an algebraic algebra over R, then A is algebraic over S when S is an extension of R,
   and the map from `R` to `S` is injective. -/
-theorem isAlgebraicOfLargerBaseOfInjective (hinj : Function.Injective (algebraMap R S)) (A_alg : IsAlgebraic R A) :
-    IsAlgebraic S A := fun x => isAlgebraicOfLargerBaseOfInjective hinj (A_alg x)
-#align algebra.is_algebraic_of_larger_base_of_injective Algebra.isAlgebraicOfLargerBaseOfInjective
+theorem is_algebraic_of_larger_base_of_injective (hinj : Function.Injective (algebraMap R S))
+    (A_alg : IsAlgebraic R A) : IsAlgebraic S A := fun x => is_algebraic_of_larger_base_of_injective hinj (A_alg x)
+#align algebra.is_algebraic_of_larger_base_of_injective Algebra.is_algebraic_of_larger_base_of_injective
 
 /-- If x is a algebraic over K, then x is algebraic over L when L is an extension of K -/
 theorem _root_.is_algebraic_of_larger_base {x : A} (A_alg : IsAlgebraic K x) : IsAlgebraic L x :=
-  isAlgebraicOfLargerBaseOfInjective (algebraMap K L).Injective A_alg
+  is_algebraic_of_larger_base_of_injective (algebraMap K L).Injective A_alg
 #align algebra._root_.is_algebraic_of_larger_base algebra._root_.is_algebraic_of_larger_base
 
 /-- If A is an algebraic algebra over K, then A is algebraic over L when L is an extension of K -/
-theorem isAlgebraicOfLargerBase (A_alg : IsAlgebraic K A) : IsAlgebraic L A :=
-  isAlgebraicOfLargerBaseOfInjective (algebraMap K L).Injective A_alg
-#align algebra.is_algebraic_of_larger_base Algebra.isAlgebraicOfLargerBase
+theorem is_algebraic_of_larger_base (A_alg : IsAlgebraic K A) : IsAlgebraic L A :=
+  is_algebraic_of_larger_base_of_injective (algebraMap K L).Injective A_alg
+#align algebra.is_algebraic_of_larger_base Algebra.is_algebraic_of_larger_base
 
 variable (K L)
 
 /-- A field extension is integral if it is finite. -/
-theorem isIntegralOfFinite [FiniteDimensional K L] : Algebra.IsIntegral K L := fun x =>
-  isIntegralOfSubmoduleNoetherian ⊤ (IsNoetherian.iff_fg.2 inferInstance) x Algebra.mem_top
-#align algebra.is_integral_of_finite Algebra.isIntegralOfFinite
+theorem is_integral_of_finite [FiniteDimensional K L] : Algebra.IsIntegral K L := fun x =>
+  is_integral_of_submodule_noetherian ⊤ (IsNoetherian.iff_fg.2 inferInstance) x Algebra.mem_top
+#align algebra.is_integral_of_finite Algebra.is_integral_of_finite
 
 /-- A field extension is algebraic if it is finite. -/
-theorem isAlgebraicOfFinite [finite : FiniteDimensional K L] : IsAlgebraic K L :=
-  Algebra.is_algebraic_iff_is_integral.mpr (isIntegralOfFinite K L)
-#align algebra.is_algebraic_of_finite Algebra.isAlgebraicOfFinite
+theorem is_algebraic_of_finite [finite : FiniteDimensional K L] : IsAlgebraic K L :=
+  Algebra.is_algebraic_iff_is_integral.mpr (is_integral_of_finite K L)
+#align algebra.is_algebraic_of_finite Algebra.is_algebraic_of_finite
 
 variable {K L}
 
@@ -262,7 +263,7 @@ theorem IsAlgebraic.alg_hom_bijective (ha : Algebra.IsAlgebraic K L) (f : L →�
 #align algebra.is_algebraic.alg_hom_bijective Algebra.IsAlgebraic.alg_hom_bijective
 
 theorem _root_.alg_hom.bijective [FiniteDimensional K L] (ϕ : L →ₐ[K] L) : Function.Bijective ϕ :=
-  (Algebra.isAlgebraicOfFinite K L).alg_hom_bijective ϕ
+  (Algebra.is_algebraic_of_finite K L).alg_hom_bijective ϕ
 #align algebra._root_.alg_hom.bijective algebra._root_.alg_hom.bijective
 
 variable (K L)
@@ -284,7 +285,7 @@ noncomputable def IsAlgebraic.algEquivEquivAlgHom (ha : Algebra.IsAlgebraic K L)
 /-- Bijection between algebra equivalences and algebra homomorphisms -/
 @[reducible]
 noncomputable def _root_.alg_equiv_equiv_alg_hom [FiniteDimensional K L] : (L ≃ₐ[K] L) ≃* (L →ₐ[K] L) :=
-  (Algebra.isAlgebraicOfFinite K L).algEquivEquivAlgHom K L
+  (Algebra.is_algebraic_of_finite K L).algEquivEquivAlgHom K L
 #align algebra._root_.alg_equiv_equiv_alg_hom algebra._root_.alg_equiv_equiv_alg_hom
 
 end Algebra
@@ -298,7 +299,7 @@ theorem exists_integral_multiple [Algebra R S] {z : S} (hz : IsAlgebraic R z)
   rcases hz with ⟨p, p_ne_zero, px⟩
   set a := p.leading_coeff with a_def
   have a_ne_zero : a ≠ 0 := mt polynomial.leading_coeff_eq_zero.mp p_ne_zero
-  have y_integral : IsIntegral R (algebraMap R S a) := isIntegralAlgebraMap
+  have y_integral : IsIntegral R (algebraMap R S a) := is_integral_algebra_map
   have x_integral : IsIntegral R (z * algebraMap R S a) :=
     ⟨p.integral_normalization, monic_integral_normalization p_ne_zero, integral_normalization_aeval_eq_zero px inj⟩
   exact ⟨⟨_, x_integral⟩, a, a_ne_zero, rfl⟩
@@ -377,11 +378,11 @@ theorem Subalgebra.inv_mem_of_algebraic {x : A} (hx : IsAlgebraic K (x : L)) : (
 #align subalgebra.inv_mem_of_algebraic Subalgebra.inv_mem_of_algebraic
 
 /-- In an algebraic extension L/K, an intermediate subalgebra is a field. -/
-theorem Subalgebra.isFieldOfAlgebraic (hKL : Algebra.IsAlgebraic K L) : IsField A :=
+theorem Subalgebra.is_field_of_algebraic (hKL : Algebra.IsAlgebraic K L) : IsField A :=
   { show Nontrivial A by infer_instance, Subalgebra.toCommRing A with
     mul_inv_cancel := fun a ha =>
       ⟨⟨a⁻¹, A.inv_mem_of_algebraic (hKL a)⟩, Subtype.ext (mul_inv_cancel (mt (Subalgebra.coe_eq_zero _).mp ha))⟩ }
-#align subalgebra.is_field_of_algebraic Subalgebra.isFieldOfAlgebraic
+#align subalgebra.is_field_of_algebraic Subalgebra.is_field_of_algebraic
 
 end Field
 

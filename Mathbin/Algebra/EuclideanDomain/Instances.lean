@@ -23,7 +23,7 @@ instance Int.euclideanDomain : EuclideanDomain ℤ :=
     Quotient := (· / ·), quotient_zero := Int.div_zero, remainder := (· % ·),
     quotient_mul_add_remainder_eq := fun a b => Int.div_add_mod _ _, R := fun a b => a.natAbs < b.natAbs,
     r_well_founded := measure_wf fun a => Int.natAbs a,
-    remainderLt := fun a b b0 =>
+    remainder_lt := fun a b b0 =>
       Int.coe_nat_lt.1 <| by
         rw [Int.natAbs_of_nonneg (Int.mod_nonneg _ b0), ← Int.abs_eq_nat_abs]
         exact Int.mod_lt _ b0,
@@ -41,7 +41,7 @@ instance (priority := 100) Field.toEuclideanDomain {K : Type _} [Field K] : Eucl
     R := fun a b => a = 0 ∧ b ≠ 0,
     r_well_founded :=
       WellFounded.intro fun a => (Acc.intro _) fun b ⟨hb, hna⟩ => (Acc.intro _) fun c ⟨hc, hnb⟩ => False.elim <| hnb hb,
-    remainderLt := fun a b hnb => by simp [hnb],
+    remainder_lt := fun a b hnb => by simp [hnb],
     mul_left_not_lt := fun a b hnb ⟨hab, hna⟩ => Or.cases_on (mul_eq_zero.1 hab) hna hnb }
 #align field.to_euclidean_domain Field.toEuclideanDomain
 

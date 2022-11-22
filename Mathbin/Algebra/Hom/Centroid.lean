@@ -136,6 +136,15 @@ protected def copy (f : CentroidHom α) (f' : α → α) (h : f' = f) : Centroid
     map_mul_right' := fun a b => by simp_rw [h, map_mul_right] }
 #align centroid_hom.copy CentroidHom.copy
 
+@[simp]
+theorem coe_copy (f : CentroidHom α) (f' : α → α) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align centroid_hom.coe_copy CentroidHom.coe_copy
+
+theorem copy_eq (f : CentroidHom α) (f' : α → α) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align centroid_hom.copy_eq CentroidHom.copy_eq
+
 variable (α)
 
 /-- `id` as a `centroid_hom`. -/
@@ -322,7 +331,7 @@ theorem to_End_nsmul (x : CentroidHom α) (n : ℕ) : (n • x).toEnd = n • x.
 instance : AddCommMonoid (CentroidHom α) :=
   coe_to_add_monoid_hom_injective.AddCommMonoid _ to_End_zero to_End_add to_End_nsmul
 
-instance : HasNatCast (CentroidHom α) where natCast n := n • 1
+instance : NatCast (CentroidHom α) where natCast n := n • 1
 
 @[simp, norm_cast]
 theorem coe_nat_cast (n : ℕ) : ⇑(n : CentroidHom α) = n • id :=
@@ -388,7 +397,7 @@ instance hasZsmul : HasSmul ℤ (CentroidHom α) :=
         rw [map_mul_right f, ← smul_mul_assoc] }⟩
 #align centroid_hom.has_zsmul CentroidHom.hasZsmul
 
-instance : HasIntCast (CentroidHom α) where intCast z := z • 1
+instance : IntCast (CentroidHom α) where intCast z := z • 1
 
 @[simp, norm_cast]
 theorem coe_int_cast (z : ℤ) : ⇑(z : CentroidHom α) = z • id :=

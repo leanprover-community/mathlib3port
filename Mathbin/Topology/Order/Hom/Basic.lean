@@ -107,6 +107,15 @@ protected def copy (f : α →Co β) (f' : α → β) (h : f' = f) : α →Co β
   ⟨f.toOrderHom.copy f' <| h, h.symm.subst f.continuous_to_fun⟩
 #align continuous_order_hom.copy ContinuousOrderHom.copy
 
+@[simp]
+theorem coe_copy (f : α →Co β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align continuous_order_hom.coe_copy ContinuousOrderHom.coe_copy
+
+theorem copy_eq (f : α →Co β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align continuous_order_hom.copy_eq ContinuousOrderHom.copy_eq
+
 variable (α)
 
 /-- `id` as a `continuous_order_hom`. -/

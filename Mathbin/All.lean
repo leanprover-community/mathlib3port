@@ -340,7 +340,6 @@ import Mathbin.Algebra.Order.Sub.WithTop
 import Mathbin.Algebra.Order.ToIntervalMod
 import Mathbin.Algebra.Order.UpperLower
 import Mathbin.Algebra.Order.WithZero
-import Mathbin.Algebra.Order.ZeroLeOne
 import Mathbin.Algebra.Parity
 import Mathbin.Algebra.PemptyInstances
 import Mathbin.Algebra.Periodic
@@ -1336,6 +1335,7 @@ import Mathbin.Data.List.Infix
 import Mathbin.Data.List.Intervals
 import Mathbin.Data.List.Join
 import Mathbin.Data.List.Lattice
+import Mathbin.Data.List.Lemmas
 import Mathbin.Data.List.Lex
 import Mathbin.Data.List.MinMax
 import Mathbin.Data.List.NatAntidiagonal
@@ -2641,6 +2641,7 @@ import Mathbin.Tactic.PiInstances
 import Mathbin.Tactic.Polyrith
 import Mathbin.Tactic.Positivity
 import Mathbin.Tactic.PrettyCases
+import Mathbin.Tactic.PrintSorry
 import Mathbin.Tactic.ProjectDir
 import Mathbin.Tactic.Protected
 import Mathbin.Tactic.PushNeg

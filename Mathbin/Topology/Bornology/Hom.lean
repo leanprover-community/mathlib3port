@@ -88,6 +88,15 @@ protected def copy (f : LocallyBoundedMap α β) (f' : α → β) (h : f' = f) :
   ⟨f', h.symm ▸ f.comap_cobounded_le'⟩
 #align locally_bounded_map.copy LocallyBoundedMap.copy
 
+@[simp]
+theorem coe_copy (f : LocallyBoundedMap α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align locally_bounded_map.coe_copy LocallyBoundedMap.coe_copy
+
+theorem copy_eq (f : LocallyBoundedMap α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align locally_bounded_map.copy_eq LocallyBoundedMap.copy_eq
+
 /-- Construct a `locally_bounded_map` from the fact that the function maps bounded sets to bounded
 sets. -/
 def ofMapBounded (f : α → β) (h) : LocallyBoundedMap α β :=

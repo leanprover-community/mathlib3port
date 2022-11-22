@@ -119,7 +119,7 @@ theorem foldr_with_index_eq_foldr_enum (f : ℕ → α → β → β) (b : β) (
 end FoldrWithIndex
 
 theorem indexes_values_eq_filter_enum (p : α → Prop) [DecidablePred p] (as : List α) :
-    indexesValues p as = filter' (p ∘ Prod.snd) (enum as) := by
+    indexesValues p as = filter (p ∘ Prod.snd) (enum as) := by
   simp [indexes_values, foldr_with_index_eq_foldr_enum, uncurry, filter_eq_foldr]
 #align list.indexes_values_eq_filter_enum List.indexes_values_eq_filter_enum
 

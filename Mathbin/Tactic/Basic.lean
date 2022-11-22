@@ -20,6 +20,7 @@ import Mathbin.Tactic.MkIffOfInductiveProp
 import Mathbin.Tactic.NormCast
 import Mathbin.Tactic.Obviously
 import Mathbin.Tactic.PrettyCases
+import Mathbin.Tactic.PrintSorry
 import Mathbin.Tactic.Protected
 import Mathbin.Tactic.PushNeg
 import Mathbin.Tactic.Replacer

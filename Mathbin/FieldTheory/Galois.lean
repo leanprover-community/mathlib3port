@@ -44,17 +44,17 @@ variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
 /-- A field extension E/F is galois if it is both separable and normal. Note that in mathlib
 a separable extension of fields is by definition algebraic. -/
 class IsGalois : Prop where
-  [toIsSeparable : IsSeparable F E]
+  [to_is_separable : IsSeparable F E]
   [toNormal : Normal F E]
 #align is_galois IsGalois
 
 variable {F E}
 
 theorem is_galois_iff : IsGalois F E ↔ IsSeparable F E ∧ Normal F E :=
-  ⟨fun h => ⟨h.1, h.2⟩, fun h => { toIsSeparable := h.1, toNormal := h.2 }⟩
+  ⟨fun h => ⟨h.1, h.2⟩, fun h => { to_is_separable := h.1, toNormal := h.2 }⟩
 #align is_galois_iff is_galois_iff
 
-attribute [instance] IsGalois.toIsSeparable IsGalois.toNormal
+attribute [instance] IsGalois.to_is_separable IsGalois.toNormal
 
 -- see Note [lower instance priority]
 variable (F E)
@@ -152,7 +152,7 @@ variable (F K E : Type _) [Field F] [Field K] [Field E] {E' : Type _} [Field E']
 variable [Algebra F K] [Algebra F E] [Algebra K E] [IsScalarTower F K E]
 
 theorem IsGalois.towerTopOfIsGalois [IsGalois F E] : IsGalois K E :=
-  { toIsSeparable := isSeparableTowerTopOfIsSeparable F K E, toNormal := Normal.towerTopOfNormal F K E }
+  { to_is_separable := is_separable_tower_top_of_is_separable F K E, toNormal := Normal.towerTopOfNormal F K E }
 #align is_galois.tower_top_of_is_galois IsGalois.towerTopOfIsGalois
 
 variable {F E}
@@ -174,7 +174,7 @@ theorem is_galois_iff_is_galois_bot : IsGalois (⊥ : IntermediateField F E) E �
 #align is_galois_iff_is_galois_bot is_galois_iff_is_galois_bot
 
 theorem IsGalois.ofAlgEquiv [h : IsGalois F E] (f : E ≃ₐ[F] E') : IsGalois F E' :=
-  { toIsSeparable := IsSeparable.ofAlgHom F E f.symm, toNormal := Normal.ofAlgEquiv f }
+  { to_is_separable := IsSeparable.of_alg_hom F E f.symm, toNormal := Normal.ofAlgEquiv f }
 #align is_galois.of_alg_equiv IsGalois.ofAlgEquiv
 
 theorem AlgEquiv.transfer_galois (f : E ≃ₐ[F] E') : IsGalois F E ↔ IsGalois F E' :=
@@ -390,7 +390,7 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.I
     [Fintype (K →ₐ[F] E)]
     [Fintype (K⟮⟯.restrictScalars F →ₐ[F] E)] :
     Fintype.card (K⟮⟯.restrictScalars F →ₐ[F] E) = Fintype.card (K →ₐ[F] E) * finrank K K⟮⟯ := by
-  have h : IsIntegral K x := isIntegralOfIsScalarTower (isIntegralOfNoetherian (IsNoetherian.iff_fg.2 hFE) x)
+  have h : IsIntegral K x := is_integral_of_is_scalar_tower (is_integral_of_noetherian (IsNoetherian.iff_fg.2 hFE) x)
   have h1 : p ≠ 0 := fun hp => by rwa [hp, Polynomial.map_zero, Polynomial.roots_zero] at hx
   have h2 : minpoly K x ∣ p.map (algebraMap F K) := by
     apply minpoly.dvd
@@ -434,7 +434,7 @@ theorem ofSeparableSplittingField [sp : p.IsSplittingField F E] (hp : p.Separabl
       Fintype.card_congr
         ((algEquivEquivAlgHom F E).toEquiv.trans (intermediate_field.top_equiv.symm.arrow_congr AlgEquiv.refl))
   apply IntermediateField.inductionOnAdjoinFinset s P
-  · have key := IntermediateField.card_alg_hom_adjoin_integral F (show IsIntegral F (0 : E) from isIntegralZero)
+  · have key := IntermediateField.card_alg_hom_adjoin_integral F (show IsIntegral F (0 : E) from is_integral_zero)
     rw [minpoly.zero, Polynomial.nat_degree_X] at key
     specialize key Polynomial.separable_X (Polynomial.splitsX (algebraMap F E))
     rw [← @Subalgebra.finrank_bot F E _ _ _, ← IntermediateField.bot_to_subalgebra] at key

@@ -49,7 +49,7 @@ theorem length_eq_countp_add_countp (l) : length l = countp p l + countp (fun a 
     ac_rfl
 #align list.length_eq_countp_add_countp List.length_eq_countp_add_countp
 
-theorem countp_eq_length_filter (l) : countp p l = length (filter' p l) := by
+theorem countp_eq_length_filter (l) : countp p l = length (filter p l) := by
   induction' l with x l ih <;> [rfl, by_cases p x] <;> [simp only [filter_cons_of_pos _ h, countp, ih, if_pos h],
       simp only [countp_cons_of_neg _ _ h, ih, filter_cons_of_neg _ h]] <;>
     rfl
@@ -83,7 +83,7 @@ theorem countp_eq_length {l} : countp p l = l.length ↔ ∀ a ∈ l, p a := by
   rw [countp_eq_length_filter, filter_length_eq_length]
 #align list.countp_eq_length List.countp_eq_length
 
-theorem length_filter_lt_length_iff_exists (l) : length (filter' p l) < length l ↔ ∃ x ∈ l, ¬p x := by
+theorem length_filter_lt_length_iff_exists (l) : length (filter p l) < length l ↔ ∃ x ∈ l, ¬p x := by
   rw [length_eq_countp_add_countp p l, ← countp_pos, countp_eq_length_filter, lt_add_iff_pos_right]
 #align list.length_filter_lt_length_iff_exists List.length_filter_lt_length_iff_exists
 
@@ -92,7 +92,7 @@ theorem Sublist.countp_le (s : l₁ <+ l₂) : countp p l₁ ≤ countp p l₂ :
 #align list.sublist.countp_le List.Sublist.countp_le
 
 @[simp]
-theorem countp_filter (l : List α) : countp p (filter' q l) = countp (fun a => p a ∧ q a) l := by
+theorem countp_filter (l : List α) : countp p (filter q l) = countp (fun a => p a ∧ q a) l := by
   simp only [countp_eq_length_filter, filter_filter]
 #align list.countp_filter List.countp_filter
 
@@ -236,7 +236,7 @@ theorem count_repeat (a : α) (n : ℕ) : count a (repeat a n) = n := by
 theorem le_count_iff_repeat_sublist {a : α} {l : List α} {n : ℕ} : n ≤ count a l ↔ repeat a n <+ l :=
   ⟨fun h =>
     ((repeat_sublist_repeat a).2 h).trans <| by
-      have : filter' (Eq a) l = repeat a (count a l) :=
+      have : filter (Eq a) l = repeat a (count a l) :=
         eq_repeat.2 ⟨by simp only [count, countp_eq_length_filter], fun b m => (of_mem_filter m).symm⟩
       rw [← this] <;> apply filter_sublist,
     fun h => by simpa only [count_repeat] using h.count_le a⟩
@@ -247,7 +247,7 @@ theorem repeat_count_eq_of_count_eq_length {a : α} {l : List α} (h : count a l
 #align list.repeat_count_eq_of_count_eq_length List.repeat_count_eq_of_count_eq_length
 
 @[simp]
-theorem count_filter {p} [DecidablePred p] {a} {l : List α} (h : p a) : count a (filter' p l) = count a l := by
+theorem count_filter {p} [DecidablePred p] {a} {l : List α} (h : p a) : count a (filter p l) = count a l := by
   simp only [count, countp_filter,
     show (fun b => a = b ∧ p b) = Eq a by
       ext b
@@ -287,7 +287,7 @@ theorem count_erase (a b : α) : ∀ l : List α, count a (l.erase b) = count a 
 #align list.count_erase List.count_erase
 
 @[simp]
-theorem count_erase_self (a : α) (l : List α) : count a (List.erase' l a) = count a l - 1 := by
+theorem count_erase_self (a : α) (l : List α) : count a (List.erase l a) = count a l - 1 := by
   rw [count_erase, if_pos rfl]
 #align list.count_erase_self List.count_erase_self
 

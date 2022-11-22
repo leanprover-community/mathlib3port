@@ -56,7 +56,7 @@ theorem GradedAlgebra.lift_ι_eq (i : ℕ)
     GradedAlgebra.liftι R M x = DirectSum.of (fun i => ↥((ι R).range ^ i : Submodule R (ExteriorAlgebra R M))) i x := by
   cases' x with x hx
   dsimp only [Subtype.coe_mk, DirectSum.lof_eq_of]
-  refine' Submodule.powInductionOnLeft' _ (fun r => _) (fun x y i hx hy ihx ihy => _) (fun m hm i x hx ih => _) hx
+  refine' Submodule.pow_induction_on_left' _ (fun r => _) (fun x y i hx hy ihx ihy => _) (fun m hm i x hx ih => _) hx
   · rw [AlgHom.commutes, DirectSum.algebra_map_apply]
     rfl
     

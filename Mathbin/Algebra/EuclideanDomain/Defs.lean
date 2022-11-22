@@ -77,7 +77,7 @@ class EuclideanDomain (R : Type u) extends CommRing R, Nontrivial R where
   quotient_mul_add_remainder_eq : ∀ a b, b * Quotient a b + remainder a b = a
   R : R → R → Prop
   r_well_founded : WellFounded r
-  remainderLt : ∀ (a) {b}, b ≠ 0 → r (remainder a b) b
+  remainder_lt : ∀ (a) {b}, b ≠ 0 → r (remainder a b) b
   mul_left_not_lt : ∀ (a) {b}, b ≠ 0 → ¬r (a * b) a
 #align euclidean_domain EuclideanDomain
 
@@ -123,9 +123,9 @@ theorem mod_eq_sub_mul_div {R : Type _} [EuclideanDomain R] (a b : R) : a % b = 
     
 #align euclidean_domain.mod_eq_sub_mul_div EuclideanDomain.mod_eq_sub_mul_div
 
-theorem modLt : ∀ (a) {b : R}, b ≠ 0 → a % b ≺ b :=
-  EuclideanDomain.remainderLt
-#align euclidean_domain.mod_lt EuclideanDomain.modLt
+theorem mod_lt : ∀ (a) {b : R}, b ≠ 0 → a % b ≺ b :=
+  EuclideanDomain.remainder_lt
+#align euclidean_domain.mod_lt EuclideanDomain.mod_lt
 
 theorem mul_right_not_lt {a : R} (b) (h : a ≠ 0) : ¬a * b ≺ b := by
   rw [mul_comm]
@@ -165,7 +165,7 @@ theorem Gcd.induction {P : R → R → Prop} : ∀ a b : R, (∀ x, P 0 x) → (
   | a => fun b H0 H1 =>
     if a0 : a = 0 then a0.symm ▸ H0 _
     else
-      have h := modLt b a0
+      have h := mod_lt b a0
       H1 _ _ a0 (gcd.induction (b % a) a H0 H1)termination_by'
   ⟨_, r_well_founded⟩
 #align euclidean_domain.gcd.induction EuclideanDomain.Gcd.induction
@@ -182,7 +182,7 @@ def gcd : R → R → R
   | a => fun b =>
     if a0 : a = 0 then b
     else
-      have h := modLt b a0
+      have h := mod_lt b a0
       gcd (b % a) a termination_by'
   ⟨_, r_well_founded⟩
 #align euclidean_domain.gcd EuclideanDomain.gcd
@@ -206,7 +206,7 @@ def xgcdAux : R → R → R → R → R → R → R × R × R
   | r => fun s t r' s' t' =>
     if hr : r = 0 then (r', s', t')
     else
-      have : r' % r ≺ r := modLt _ hr
+      have : r' % r ≺ r := mod_lt _ hr
       let q := r' / r
       xgcd_aux (r' % r) (s' - q * s) (t' - q * t) r s t termination_by'
   ⟨_, r_well_founded⟩

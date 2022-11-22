@@ -81,8 +81,8 @@ theorem AtPrime.nontrivial [IsLocalization.AtPrime S I] : Nontrivial S :=
 
 attribute [local instance] at_prime.nontrivial
 
-theorem AtPrime.localRing [IsLocalization.AtPrime S I] : LocalRing S :=
-  LocalRing.ofNonunitsAdd
+theorem AtPrime.local_ring [IsLocalization.AtPrime S I] : LocalRing S :=
+  LocalRing.of_nonunits_add
     (by
       intro x y hx hy hu
       cases' is_unit_iff_exists_inv.1 hu with z hxyz
@@ -103,16 +103,16 @@ theorem AtPrime.localRing [IsLocalization.AtPrime S I] : LocalRing S :=
           (hp.mem_or_mem <| (hp.mem_or_mem this).resolve_right t.2)
       rw [← ht, mul_assoc]
       exact I.mul_mem_right _ (I.add_mem (I.mul_mem_right _ <| this hx) (I.mul_mem_right _ <| this hy)))
-#align is_localization.at_prime.local_ring IsLocalization.AtPrime.localRing
+#align is_localization.at_prime.local_ring IsLocalization.AtPrime.local_ring
 
 end IsLocalization
 
 namespace Localization
 
 /-- The localization of `R` at the complement of a prime ideal is a local ring. -/
-instance AtPrime.localRing : LocalRing (Localization I.primeCompl) :=
-  IsLocalization.AtPrime.localRing (Localization I.primeCompl) I
-#align localization.at_prime.local_ring Localization.AtPrime.localRing
+instance AtPrime.local_ring : LocalRing (Localization I.primeCompl) :=
+  IsLocalization.AtPrime.local_ring (Localization I.primeCompl) I
+#align localization.at_prime.local_ring Localization.AtPrime.local_ring
 
 end Localization
 
@@ -124,9 +124,9 @@ variable {A : Type _} [CommRing A] [IsDomain A]
 
 /-- The localization of an integral domain at the complement of a prime ideal is an integral domain.
 -/
-instance isDomainOfLocalAtPrime {P : Ideal A} (hp : P.IsPrime) : IsDomain (Localization.AtPrime P) :=
-  isDomainLocalization P.prime_compl_le_non_zero_divisors
-#align is_localization.is_domain_of_local_at_prime IsLocalization.isDomainOfLocalAtPrime
+instance is_domain_of_local_at_prime {P : Ideal A} (hp : P.IsPrime) : IsDomain (Localization.AtPrime P) :=
+  is_domain_localization P.prime_compl_le_non_zero_divisors
+#align is_localization.is_domain_of_local_at_prime IsLocalization.is_domain_of_local_at_prime
 
 namespace AtPrime
 
@@ -143,7 +143,7 @@ theorem is_unit_to_map_iff (x : R) : IsUnit ((algebraMap R S) x) ↔ x ∈ I.pri
 
 -- Can't use typeclasses to infer the `local_ring` instance, so use an `opt_param` instead
 -- (since `local_ring` is a `Prop`, there should be no unification issues.)
-theorem to_map_mem_maximal_iff (x : R) (h : LocalRing S := localRing S I) :
+theorem to_map_mem_maximal_iff (x : R) (h : LocalRing S := local_ring S I) :
     algebraMap R S x ∈ LocalRing.maximalIdeal S ↔ x ∈ I :=
   not_iff_not.mp <| by
     simpa only [LocalRing.mem_maximal_ideal, mem_nonunits_iff, not_not] using is_unit_to_map_iff S I x
@@ -154,7 +154,7 @@ theorem is_unit_mk'_iff (x : R) (y : I.primeCompl) : IsUnit (mk' S x y) ↔ x �
     is_unit_iff_exists_inv.mpr ⟨mk' S ↑y ⟨x, h⟩, mk'_mul_mk'_eq_one ⟨x, h⟩ y⟩⟩
 #align is_localization.at_prime.is_unit_mk'_iff IsLocalization.AtPrime.is_unit_mk'_iff
 
-theorem mk'_mem_maximal_iff (x : R) (y : I.primeCompl) (h : LocalRing S := localRing S I) :
+theorem mk'_mem_maximal_iff (x : R) (y : I.primeCompl) (h : LocalRing S := local_ring S I) :
     mk' S x y ∈ LocalRing.maximalIdeal S ↔ x ∈ I :=
   not_iff_not.mp <| by simpa only [LocalRing.mem_maximal_ideal, mem_nonunits_iff, not_not] using is_unit_mk'_iff S I x y
 #align is_localization.at_prime.mk'_mem_maximal_iff IsLocalization.AtPrime.mk'_mem_maximal_iff
@@ -222,14 +222,14 @@ theorem local_ring_hom_mk' (J : Ideal P) [hJ : J.IsPrime] (f : R →+* P) (hIJ :
   map_mk' _ _ _
 #align localization.local_ring_hom_mk' Localization.local_ring_hom_mk'
 
-instance isLocalRingHomLocalRingHom (J : Ideal P) [hJ : J.IsPrime] (f : R →+* P) (hIJ : I = J.comap f) :
+instance is_local_ring_hom_local_ring_hom (J : Ideal P) [hJ : J.IsPrime] (f : R →+* P) (hIJ : I = J.comap f) :
     IsLocalRingHom (localRingHom I J f hIJ) :=
   IsLocalRingHom.mk fun x hx => by
     rcases IsLocalization.mk'_surjective I.prime_compl x with ⟨r, s, rfl⟩
     rw [local_ring_hom_mk'] at hx
     rw [at_prime.is_unit_mk'_iff] at hx⊢
     exact fun hr => hx ((set_like.ext_iff.mp hIJ r).mp hr)
-#align localization.is_local_ring_hom_local_ring_hom Localization.isLocalRingHomLocalRingHom
+#align localization.is_local_ring_hom_local_ring_hom Localization.is_local_ring_hom_local_ring_hom
 
 theorem local_ring_hom_unique (J : Ideal P) [hJ : J.IsPrime] (f : R →+* P) (hIJ : I = J.comap f)
     {j : Localization.AtPrime I →+* Localization.AtPrime J}

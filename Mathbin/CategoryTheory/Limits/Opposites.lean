@@ -341,18 +341,19 @@ theorem has_coproducts_of_opposite [HasProducts.{v₂} Cᵒᵖ] : HasCoproducts.
   has_coproducts_of_shape_of_opposite X
 #align category_theory.limits.has_coproducts_of_opposite CategoryTheory.Limits.has_coproducts_of_opposite
 
-instance has_finite_coproducts_opposite [HasFiniteProducts C] : HasFiniteCoproducts Cᵒᵖ where out J _ := inferInstance
+instance has_finite_coproducts_opposite [HasFiniteProducts C] :
+    HasFiniteCoproducts Cᵒᵖ where out n := Limits.has_coproducts_of_shape_opposite _
 #align category_theory.limits.has_finite_coproducts_opposite CategoryTheory.Limits.has_finite_coproducts_opposite
 
 theorem has_finite_coproducts_of_opposite [HasFiniteProducts Cᵒᵖ] : HasFiniteCoproducts C :=
-  { out := fun J _ => has_coproducts_of_shape_of_opposite J }
+  { out := fun n => has_coproducts_of_shape_of_opposite _ }
 #align category_theory.limits.has_finite_coproducts_of_opposite CategoryTheory.Limits.has_finite_coproducts_of_opposite
 
-instance has_finite_products_opposite [HasFiniteCoproducts C] : HasFiniteProducts Cᵒᵖ where out J _ := inferInstance
+instance has_finite_products_opposite [HasFiniteCoproducts C] : HasFiniteProducts Cᵒᵖ where out n := inferInstance
 #align category_theory.limits.has_finite_products_opposite CategoryTheory.Limits.has_finite_products_opposite
 
 theorem has_finite_products_of_opposite [HasFiniteCoproducts Cᵒᵖ] : HasFiniteProducts C :=
-  { out := fun J _ => has_products_of_shape_of_opposite J }
+  { out := fun n => has_products_of_shape_of_opposite _ }
 #align category_theory.limits.has_finite_products_of_opposite CategoryTheory.Limits.has_finite_products_of_opposite
 
 instance has_equalizers_opposite [HasCoequalizers C] : HasEqualizers Cᵒᵖ := by

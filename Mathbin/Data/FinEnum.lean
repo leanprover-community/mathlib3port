@@ -145,7 +145,7 @@ theorem Finset.mem_enum [DecidableEq α] (s : Finset α) (xs : List α) : s ∈ 
       
     intro h
     exists s \ ({xs_hd} : Finset α)
-    simp only [and_imp, union_comm, mem_sdiff, mem_singleton]
+    simp only [and_imp, mem_sdiff, mem_singleton]
     simp only [or_iff_not_imp_left] at h
     exists h
     by_cases xs_hd ∈ s
@@ -157,7 +157,7 @@ theorem Finset.mem_enum [DecidableEq α] (s : Finset α) (xs : List α) : s ∈ 
       symm
       simp only [sdiff_eq_self]
       intro a
-      simp only [and_imp, mem_inter, mem_singleton, not_mem_empty]
+      simp only [and_imp, mem_inter, mem_singleton]
       rintro h₀ rfl
       apply h h₀
       

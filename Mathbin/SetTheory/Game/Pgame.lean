@@ -1380,7 +1380,7 @@ instance : Add Pgame.{u} :=
       ⟩
 
 /-- The pre-game `((0+1)+⋯)+1`. -/
-instance : HasNatCast Pgame :=
+instance : NatCast Pgame :=
   ⟨Nat.unaryCast⟩
 
 @[simp]

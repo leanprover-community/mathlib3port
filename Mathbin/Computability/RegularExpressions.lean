@@ -357,7 +357,7 @@ theorem star_rmatch_iff (P : RegularExpression α) :
           
         
       termination_by'
-  ⟨fun L₁ L₂ : List _ => L₁.length < L₂.length, InvImage.wf _ Nat.lt_wfRel.wf⟩
+  ⟨fun L₁ L₂ : List _ => L₁.length < L₂.length, InvImage.wf _ Nat.lt_wfRel⟩
 #align regular_expression.star_rmatch_iff RegularExpression.star_rmatch_iff
 
 @[simp]

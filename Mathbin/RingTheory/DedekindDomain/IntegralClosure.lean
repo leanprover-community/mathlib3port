@@ -67,7 +67,7 @@ theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type 
   let db := (trace_form K L).dualBasis (trace_form_nondegenerate K L) b
   rintro _ ⟨x, rfl⟩
   simp only [LinearMap.coe_restrict_scalars_eq_coe, Algebra.linear_map_apply]
-  have hx : IsIntegral A (algebraMap C L x) := (IsIntegralClosure.isIntegral A L x).algebraMap
+  have hx : IsIntegral A (algebraMap C L x) := (IsIntegralClosure.is_integral A L x).algebraMap
   rsuffices ⟨c, x_eq⟩ : ∃ c : ι → A, algebraMap C L x = ∑ i, c i • db i
   · rw [x_eq]
     refine' Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span _)
@@ -83,7 +83,7 @@ theorem IsIntegralClosure.range_le_span_dual_basis [IsSeparable K L] {ι : Type 
     rw [← IsScalarTower.algebra_map_smul K (Classical.choose (hc' i)) (db i)]
   refine' ⟨fun i => db.repr (algebraMap C L x) i, fun i => _, (db.sum_repr _).symm⟩
   rw [BilinForm.dual_basis_repr_apply]
-  exact is_integral_trace (isIntegralMul hx (hb_int i))
+  exact is_integral_trace (is_integral_mul hx (hb_int i))
 #align is_integral_closure.range_le_span_dual_basis IsIntegralClosure.range_le_span_dual_basis
 
 theorem integral_closure_le_span_dual_basis [IsSeparable K L] {ι : Type _} [Fintype ι] [DecidableEq ι] (b : Basis ι K L)
@@ -116,10 +116,10 @@ theorem exists_integral_multiples (s : Finset L) : ∃ (y : _)(_ : y ≠ (0 : A)
     refine' ⟨y * y', mul_ne_zero hy hy', fun x'' hx'' => _⟩
     rcases finset.mem_insert.mp hx'' with (rfl | hx'')
     · rw [mul_smul, Algebra.smul_def, Algebra.smul_def, mul_comm _ x'', hx']
-      exact isIntegralMul isIntegralAlgebraMap x'.2
+      exact is_integral_mul is_integral_algebra_map x'.2
       
     · rw [mul_comm, mul_smul, Algebra.smul_def]
-      exact isIntegralMul isIntegralAlgebraMap (hs _ hx'')
+      exact is_integral_mul is_integral_algebra_map (hs _ hx'')
       
     · rw [IsScalarTower.algebra_map_eq A K L]
       apply (algebraMap K L).Injective.comp
@@ -208,10 +208,10 @@ Can't be an instance since `A`, `K` or `L` can't be inferred. See also the insta
 and `C := integral_closure A L`.
 -/
 theorem IsIntegralClosure.isDedekindDomain [h : IsDedekindDomain A] : IsDedekindDomain C :=
-  haveI : IsFractionRing C L := IsIntegralClosure.isFractionRingOfFiniteExtension A K L C
+  haveI : IsFractionRing C L := IsIntegralClosure.is_fraction_ring_of_finite_extension A K L C
   ⟨IsIntegralClosure.is_noetherian_ring A K L C, h.dimension_le_one.is_integral_closure _ L _,
     (is_integrally_closed_iff L).mpr fun x hx =>
-      ⟨IsIntegralClosure.mk' C x (isIntegralTrans (IsIntegralClosure.isIntegralAlgebra A L) _ hx),
+      ⟨IsIntegralClosure.mk' C x (is_integral_trans (IsIntegralClosure.is_integral_algebra A L) _ hx),
         IsIntegralClosure.algebra_map_mk' _ _ _⟩⟩
 #align is_integral_closure.is_dedekind_domain IsIntegralClosure.isDedekindDomain
 

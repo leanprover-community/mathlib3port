@@ -227,10 +227,12 @@ theorem cmpLE_toDual [LE α] [@DecidableRel α (· ≤ ·)] (x y : α) : cmpLE (
 #align cmp_le_to_dual cmpLE_toDual
 -/
 
+#print cmpLE_ofDual /-
 @[simp]
 theorem cmpLE_ofDual [LE α] [@DecidableRel α (· ≤ ·)] (x y : αᵒᵈ) : cmpLE (ofDual x) (ofDual y) = cmpLE y x :=
   rfl
 #align cmp_le_of_dual cmpLE_ofDual
+-/
 
 /- warning: cmp_to_dual clashes with cmp_le_to_dual -> cmpLE_toDual
 warning: cmp_to_dual -> cmpLE_toDual is a dubious translation:
@@ -249,7 +251,7 @@ warning: cmp_of_dual -> cmpLE_ofDual is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u_1}} [_inst_1 : LT.{u_1} α] [_inst_2 : DecidableRel.{succ u_1} α (LT.lt.{u_1} α _inst_1)] (x : OrderDual.{u_1} α) (y : OrderDual.{u_1} α), Eq.{1} Ordering (cmp.{u_1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b) (coeFn.{(max 1 (succ u_1)) succ u_1} (Equiv.{succ u_1 succ u_1} (OrderDual.{u_1} α) α) (fun (_x : Equiv.{succ u_1 succ u_1} (OrderDual.{u_1} α) α) => (OrderDual.{u_1} α) -> α) (Equiv.hasCoeToFun.{succ u_1 succ u_1} (OrderDual.{u_1} α) α) (OrderDual.ofDual.{u_1} α) x) (coeFn.{(max 1 (succ u_1)) succ u_1} (Equiv.{succ u_1 succ u_1} (OrderDual.{u_1} α) α) (fun (_x : Equiv.{succ u_1 succ u_1} (OrderDual.{u_1} α) α) => (OrderDual.{u_1} α) -> α) (Equiv.hasCoeToFun.{succ u_1 succ u_1} (OrderDual.{u_1} α) α) (OrderDual.ofDual.{u_1} α) y)) (cmp.{u_1} (OrderDual.{u_1} α) (OrderDual.hasLt.{u_1} α _inst_1) (fun (a : OrderDual.{u_1} α) (b : OrderDual.{u_1} α) => _inst_2 b a) y x)
 but is expected to have type
-  PUnit.{0}
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Order.Compare._hyg.2550 : LE.{u_1} α] [inst._@.Mathlib.Order.Compare._hyg.2553 : DecidableRel.{succ u_1} α (fun (x._@.Mathlib.Order.Compare._hyg.2559 : α) (x._@.Mathlib.Order.Compare._hyg.2561 : α) => LE.le.{u_1} α inst._@.Mathlib.Order.Compare._hyg.2550 x._@.Mathlib.Order.Compare._hyg.2559 x._@.Mathlib.Order.Compare._hyg.2561)] (x : OrderDual.{u_1} α) (y : OrderDual.{u_1} α), Eq.{1} Ordering (cmpLE.{u_1} α inst._@.Mathlib.Order.Compare._hyg.2550 (fun (a : α) (b : α) => inst._@.Mathlib.Order.Compare._hyg.2553 a b) (Equiv.toFun.{succ u_1 succ u_1} (OrderDual.{u_1} α) α (OrderDual.ofDual.{u_1} α) x) (Equiv.toFun.{succ u_1 succ u_1} (OrderDual.{u_1} α) α (OrderDual.ofDual.{u_1} α) y)) (cmpLE.{u_1} (OrderDual.{u_1} α) (OrderDual.instLEOrderDual.{u_1} α inst._@.Mathlib.Order.Compare._hyg.2550) (fun (a : OrderDual.{u_1} α) (b : OrderDual.{u_1} α) => inst._@.Mathlib.Order.Compare._hyg.2553 b a) y x)
 Case conversion may be inaccurate. Consider using '#align cmp_of_dual cmpLE_ofDualₓ'. -/
 @[simp]
 theorem cmpLE_ofDual [LT α] [@DecidableRel α (· < ·)] (x y : αᵒᵈ) : cmp (ofDual x) (ofDual y) = cmp y x :=

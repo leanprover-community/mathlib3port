@@ -305,7 +305,7 @@ theorem Int.two_pow_two_pow_add_two_pow_two_pow {x y : ℤ} (hx : ¬2 ∣ x) (hx
 
 theorem Int.two_pow_two_pow_sub_pow_two_pow {x y : ℤ} (n : ℕ) (hxy : 4 ∣ x - y) (hx : ¬2 ∣ x) :
     multiplicity 2 (x ^ 2 ^ n - y ^ 2 ^ n) = multiplicity 2 (x - y) + n := by
-  simp only [pow_two_pow_sub_pow_two_pow n, multiplicity.mul Int.primeTwo, multiplicity.Finset.prod Int.primeTwo,
+  simp only [pow_two_pow_sub_pow_two_pow n, multiplicity.mul Int.prime_two, multiplicity.Finset.prod Int.prime_two,
     add_comm, Nat.cast_one, Finset.sum_const, Finset.card_range, nsmul_one,
     Int.two_pow_two_pow_add_two_pow_two_pow hx hxy]
 #align int.two_pow_two_pow_sub_pow_two_pow Int.two_pow_two_pow_sub_pow_two_pow
@@ -324,7 +324,7 @@ theorem Int.two_pow_sub_pow' {x y : ℤ} (n : ℕ) (hxy : 4 ∣ x - y) (hx : ¬2
     PartEnat.coe_get]
   · norm_cast
     
-  · exact Int.primeTwo
+  · exact Int.prime_two
     
   · simpa only [even_iff_two_dvd] using hx_odd.pow.sub_odd hy_odd.pow
     
@@ -355,8 +355,8 @@ theorem Int.two_pow_sub_pow {x y : ℤ} {n : ℕ} (hxy : 2 ∣ x - y) (hx : ¬2 
       
     · simp only [Int.odd_iff_not_even, even_iff_two_dvd, hx, not_false_iff]
       
-  rw [Int.two_pow_sub_pow' d hxy4 _, sq_sub_sq, ← Int.ofNat_mul_out, multiplicity.mul Int.primeTwo,
-    multiplicity.mul Int.primeTwo]
+  rw [Int.two_pow_sub_pow' d hxy4 _, sq_sub_sq, ← Int.ofNat_mul_out, multiplicity.mul Int.prime_two,
+    multiplicity.mul Int.prime_two]
   suffices multiplicity (2 : ℤ) ↑(2 : ℕ) = 1 by rw [this, add_comm (1 : PartEnat), ← add_assoc]
   · norm_cast
     rw [multiplicity.multiplicity_self _ _]

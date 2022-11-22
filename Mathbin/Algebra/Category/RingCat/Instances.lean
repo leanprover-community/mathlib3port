@@ -41,19 +41,19 @@ instance Localization.epi' {R : CommRingCat} (M : Submonoid R) :
   exact IsLocalization.epi M _
 #align localization.epi' Localization.epi'
 
-instance CommRingCat.isLocalRingHomComp {R S T : CommRingCat} (f : R ⟶ S) (g : S ⟶ T) [IsLocalRingHom g]
+instance CommRingCat.is_local_ring_hom_comp {R S T : CommRingCat} (f : R ⟶ S) (g : S ⟶ T) [IsLocalRingHom g]
     [IsLocalRingHom f] : IsLocalRingHom (f ≫ g) :=
-  isLocalRingHomComp _ _
-#align CommRing.is_local_ring_hom_comp CommRingCat.isLocalRingHomComp
+  is_local_ring_hom_comp _ _
+#align CommRing.is_local_ring_hom_comp CommRingCat.is_local_ring_hom_comp
 
-theorem isLocalRingHomOfIso {R S : CommRingCat} (f : R ≅ S) : IsLocalRingHom f.Hom :=
+theorem is_local_ring_hom_of_iso {R S : CommRingCat} (f : R ≅ S) : IsLocalRingHom f.Hom :=
   { map_nonunit := fun a ha => by
       convert f.inv.is_unit_map ha
       rw [CategoryTheory.Iso.hom_inv_id_apply] }
-#align is_local_ring_hom_of_iso isLocalRingHomOfIso
+#align is_local_ring_hom_of_iso is_local_ring_hom_of_iso
 
 -- see Note [lower instance priority]
-instance (priority := 100) isLocalRingHomOfIsIso {R S : CommRingCat} (f : R ⟶ S) [IsIso f] : IsLocalRingHom f :=
-  isLocalRingHomOfIso (asIso f)
-#align is_local_ring_hom_of_is_iso isLocalRingHomOfIsIso
+instance (priority := 100) is_local_ring_hom_of_is_iso {R S : CommRingCat} (f : R ⟶ S) [IsIso f] : IsLocalRingHom f :=
+  is_local_ring_hom_of_iso (asIso f)
+#align is_local_ring_hom_of_is_iso is_local_ring_hom_of_is_iso
 

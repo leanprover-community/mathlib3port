@@ -1042,7 +1042,7 @@ instance (p : ℕ) [hp : Fact p.Prime] : IsDomain (Zmod p) := by
   cases p
   · exact (Nat.not_prime_zero hp.out).elim
     
-  exact @Field.isDomain (Zmod _) (Zmod.field _)
+  exact @Field.is_domain (Zmod _) (Zmod.field _)
 
 end Zmod
 

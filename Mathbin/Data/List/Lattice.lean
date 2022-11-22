@@ -384,7 +384,7 @@ theorem cons_bag_inter_of_neg (l₁ : List α) (h : a ∉ l₂) : (a :: l₁).ba
   cases l₂
   · simp only [bag_inter_nil]
     
-  simp only [erase_of_not_mem h, List.bagInter', if_neg h]
+  simp only [erase_of_not_mem h, List.bagInter, if_neg h]
 #align list.cons_bag_inter_of_neg List.cons_bag_inter_of_neg
 
 @[simp]

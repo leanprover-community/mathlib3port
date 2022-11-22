@@ -94,19 +94,19 @@ def Fg (S : Subalgebra R A) : Prop :=
   ∃ t : Finset A, Algebra.adjoin R ↑t = S
 #align subalgebra.fg Subalgebra.Fg
 
-theorem fgAdjoinFinset (s : Finset A) : (Algebra.adjoin R (↑s : Set A)).Fg :=
+theorem fg_adjoin_finset (s : Finset A) : (Algebra.adjoin R (↑s : Set A)).Fg :=
   ⟨s, rfl⟩
-#align subalgebra.fg_adjoin_finset Subalgebra.fgAdjoinFinset
+#align subalgebra.fg_adjoin_finset Subalgebra.fg_adjoin_finset
 
 theorem fg_def {S : Subalgebra R A} : S.Fg ↔ ∃ t : Set A, Set.Finite t ∧ Algebra.adjoin R t = S :=
   Iff.symm Set.exists_finite_iff_finset
 #align subalgebra.fg_def Subalgebra.fg_def
 
-theorem fgBot : (⊥ : Subalgebra R A).Fg :=
+theorem fg_bot : (⊥ : Subalgebra R A).Fg :=
   ⟨∅, Algebra.adjoin_empty R A⟩
-#align subalgebra.fg_bot Subalgebra.fgBot
+#align subalgebra.fg_bot Subalgebra.fg_bot
 
-theorem fgOfFgToSubmodule {S : Subalgebra R A} : S.toSubmodule.Fg → S.Fg := fun ⟨t, ht⟩ =>
+theorem fg_of_fg_to_submodule {S : Subalgebra R A} : S.toSubmodule.Fg → S.Fg := fun ⟨t, ht⟩ =>
   ⟨t,
     le_antisymm (Algebra.adjoin_le fun x hx => show x ∈ S.toSubmodule from ht ▸ subset_span hx) <|
       show S.toSubmodule ≤ (Algebra.adjoin R ↑t).toSubmodule from fun x hx =>
@@ -114,19 +114,19 @@ theorem fgOfFgToSubmodule {S : Subalgebra R A} : S.toSubmodule.Fg → S.Fg := fu
           (show x ∈ span R ↑t by
             rw [ht]
             exact hx)⟩
-#align subalgebra.fg_of_fg_to_submodule Subalgebra.fgOfFgToSubmodule
+#align subalgebra.fg_of_fg_to_submodule Subalgebra.fg_of_fg_to_submodule
 
-theorem fgOfNoetherian [IsNoetherian R A] (S : Subalgebra R A) : S.Fg :=
-  fgOfFgToSubmodule (IsNoetherian.noetherian S.toSubmodule)
-#align subalgebra.fg_of_noetherian Subalgebra.fgOfNoetherian
+theorem fg_of_noetherian [IsNoetherian R A] (S : Subalgebra R A) : S.Fg :=
+  fg_of_fg_to_submodule (IsNoetherian.noetherian S.toSubmodule)
+#align subalgebra.fg_of_noetherian Subalgebra.fg_of_noetherian
 
-theorem fgOfSubmoduleFg (h : (⊤ : Submodule R A).Fg) : (⊤ : Subalgebra R A).Fg :=
+theorem fg_of_submodule_fg (h : (⊤ : Submodule R A).Fg) : (⊤ : Subalgebra R A).Fg :=
   let ⟨s, hs⟩ := h
   ⟨s,
-    to_submodule_injective <| by
+    toSubmodule.Injective <| by
       rw [Algebra.top_to_submodule, eq_top_iff, ← hs, span_le]
       exact Algebra.subset_adjoin⟩
-#align subalgebra.fg_of_submodule_fg Subalgebra.fgOfSubmoduleFg
+#align subalgebra.fg_of_submodule_fg Subalgebra.fg_of_submodule_fg
 
 theorem Fg.prod {S : Subalgebra R A} {T : Subalgebra R B} (hS : S.Fg) (hT : T.Fg) : (S.Prod T).Fg := by
   obtain ⟨s, hs⟩ := fg_def.1 hS
@@ -151,25 +151,25 @@ theorem Fg.map {S : Subalgebra R A} (f : A →ₐ[R] B) (hs : S.Fg) : (S.map f).
 
 end
 
-theorem fgOfFgMap (S : Subalgebra R A) (f : A →ₐ[R] B) (hf : Function.Injective f) (hs : (S.map f).Fg) : S.Fg :=
+theorem fg_of_fg_map (S : Subalgebra R A) (f : A →ₐ[R] B) (hf : Function.Injective f) (hs : (S.map f).Fg) : S.Fg :=
   let ⟨s, hs⟩ := hs
   ⟨(s.Preimage f) fun _ _ _ _ h => hf h,
     map_injective hf <| by
       rw [← Algebra.adjoin_image, Finset.coe_preimage, Set.image_preimage_eq_of_subset, hs]
       rw [← AlgHom.coe_range, ← Algebra.adjoin_le_iff, hs, ← Algebra.map_top]
       exact map_mono le_top⟩
-#align subalgebra.fg_of_fg_map Subalgebra.fgOfFgMap
+#align subalgebra.fg_of_fg_map Subalgebra.fg_of_fg_map
 
 theorem fg_top (S : Subalgebra R A) : (⊤ : Subalgebra R S).Fg ↔ S.Fg :=
   ⟨fun h => by
     rw [← S.range_val, ← Algebra.map_top]
     exact fg.map _ h, fun h =>
-    fgOfFgMap _ S.val Subtype.val_injective <| by
+    fg_of_fg_map _ S.val Subtype.val_injective <| by
       rw [Algebra.map_top, range_val]
       exact h⟩
 #align subalgebra.fg_top Subalgebra.fg_top
 
-theorem inductionOnAdjoin [IsNoetherian R A] (P : Subalgebra R A → Prop) (base : P ⊥)
+theorem induction_on_adjoin [IsNoetherian R A] (P : Subalgebra R A → Prop) (base : P ⊥)
     (ih : ∀ (S : Subalgebra R A) (x : A), P S → P (Algebra.adjoin R (insert x S))) (S : Subalgebra R A) : P S := by
   classical
   obtain ⟨t, rfl⟩ := S.fg_of_noetherian
@@ -179,7 +179,7 @@ theorem inductionOnAdjoin [IsNoetherian R A] (P : Subalgebra R A → Prop) (base
   intro x t hxt h
   rw [Finset.coe_insert]
   simpa only [Algebra.adjoin_insert_adjoin] using ih _ x h
-#align subalgebra.induction_on_adjoin Subalgebra.inductionOnAdjoin
+#align subalgebra.induction_on_adjoin Subalgebra.induction_on_adjoin
 
 end Subalgebra
 

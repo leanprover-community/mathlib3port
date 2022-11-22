@@ -257,12 +257,12 @@ variable (p)
 
 See also `frobenius_is_poly`. -/
 @[is_poly]
-theorem frobeniusFunIsPoly : IsPoly p fun R _Rcr => @frobeniusFun p R _ _Rcr :=
+theorem frobenius_fun_is_poly : IsPoly p fun R _Rcr => @frobeniusFun p R _ _Rcr :=
   ⟨⟨frobeniusPoly p, by
       intros
       funext n
       apply coeff_frobenius_fun⟩⟩
-#align witt_vector.frobenius_fun_is_poly WittVector.frobeniusFunIsPoly
+#align witt_vector.frobenius_fun_is_poly WittVector.frobenius_fun_is_poly
 
 variable {p}
 
@@ -283,13 +283,13 @@ def frobenius : 𝕎 R →+* 𝕎 R where
   toFun := frobeniusFun
   map_zero' := by
     refine'
-      is_poly.ext ((frobenius_fun_is_poly p).comp WittVector.zeroIsPoly)
-        (WittVector.zeroIsPoly.comp (frobenius_fun_is_poly p)) _ _ 0
+      is_poly.ext ((frobenius_fun_is_poly p).comp WittVector.zero_is_poly)
+        (WittVector.zero_is_poly.comp (frobenius_fun_is_poly p)) _ _ 0
     ghost_simp
   map_one' := by
     refine'
-      is_poly.ext ((frobenius_fun_is_poly p).comp WittVector.oneIsPoly)
-        (WittVector.oneIsPoly.comp (frobenius_fun_is_poly p)) _ _ 0
+      is_poly.ext ((frobenius_fun_is_poly p).comp WittVector.one_is_poly)
+        (WittVector.one_is_poly.comp (frobenius_fun_is_poly p)) _ _ 0
     ghost_simp
   map_add' := by ghost_calc _ _ <;> ghost_simp
   map_mul' := by ghost_calc _ _ <;> ghost_simp
@@ -308,9 +308,9 @@ variable (p)
 
 /-- `frobenius` is tautologically a polynomial function. -/
 @[is_poly]
-theorem frobeniusIsPoly : IsPoly p fun R _Rcr => @frobenius p R _ _Rcr :=
-  frobeniusFunIsPoly _
-#align witt_vector.frobenius_is_poly WittVector.frobeniusIsPoly
+theorem frobenius_is_poly : IsPoly p fun R _Rcr => @frobenius p R _ _Rcr :=
+  frobenius_fun_is_poly _
+#align witt_vector.frobenius_is_poly WittVector.frobenius_is_poly
 
 section CharP
 

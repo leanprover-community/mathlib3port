@@ -106,24 +106,12 @@ private theorem has_product_fin : ∀ (n : ℕ) (f : Fin n → C), HasProduct f
     apply has_limit.mk ⟨_, extend_fan_is_limit f (limit.is_limit _) (limit.is_limit _)⟩
 #align category_theory.has_product_fin category_theory.has_product_fin
 
-/-- If `C` has a terminal object and binary products, then it has limits of shape
-`discrete (fin n)` for any `n : ℕ`.
-This is a helper lemma for `has_finite_products_of_has_binary_and_terminal`, which is more general
-than this.
--/
-private theorem has_limits_of_shape_fin (n : ℕ) : HasLimitsOfShape (Discrete (Fin n)) C :=
-  { HasLimit := fun K => by
-      letI := has_product_fin n fun n => K.obj ⟨n⟩
-      let this : (discrete.functor fun n => K.obj ⟨n⟩) ≅ K := discrete.nat_iso fun ⟨i⟩ => iso.refl _
-      apply has_limit_of_iso this }
-#align category_theory.has_limits_of_shape_fin category_theory.has_limits_of_shape_fin
-
 /-- If `C` has a terminal object and binary products, then it has finite products. -/
-theorem has_finite_products_of_has_binary_and_terminal : HasFiniteProducts C :=
-  ⟨fun J 𝒥 => by
-    skip
-    apply has_limits_of_shape_of_equivalence (discrete.equivalence (Fintype.equivFin J)).symm
-    refine' has_limits_of_shape_fin (Fintype.card J)⟩
+theorem has_finite_products_of_has_binary_and_terminal : HasFiniteProducts C := by
+  refine' ⟨fun n => ⟨fun K => _⟩⟩
+  letI := has_product_fin n fun n => K.obj ⟨n⟩
+  let this : (discrete.functor fun n => K.obj ⟨n⟩) ≅ K := discrete.nat_iso fun ⟨i⟩ => iso.refl _
+  apply has_limit_of_iso this
 #align
   category_theory.has_finite_products_of_has_binary_and_terminal CategoryTheory.has_finite_products_of_has_binary_and_terminal
 
@@ -272,24 +260,12 @@ private theorem has_coproduct_fin : ∀ (n : ℕ) (f : Fin n → C), HasCoproduc
     apply has_colimit.mk ⟨_, extend_cofan_is_colimit f (colimit.is_colimit _) (colimit.is_colimit _)⟩
 #align category_theory.has_coproduct_fin category_theory.has_coproduct_fin
 
-/-- If `C` has an initial object and binary coproducts, then it has colimits of shape
-`discrete (fin n)` for any `n : ℕ`.
-This is a helper lemma for `has_cofinite_products_of_has_binary_and_terminal`, which is more general
-than this.
--/
-private theorem has_colimits_of_shape_fin (n : ℕ) : HasColimitsOfShape (Discrete (Fin n)) C :=
-  { HasColimit := fun K => by
-      letI := has_coproduct_fin n fun n => K.obj ⟨n⟩
-      let this : K ≅ discrete.functor fun n => K.obj ⟨n⟩ := discrete.nat_iso fun ⟨i⟩ => iso.refl _
-      apply has_colimit_of_iso this }
-#align category_theory.has_colimits_of_shape_fin category_theory.has_colimits_of_shape_fin
-
 /-- If `C` has an initial object and binary coproducts, then it has finite coproducts. -/
-theorem has_finite_coproducts_of_has_binary_and_initial : HasFiniteCoproducts C :=
-  ⟨fun J 𝒥 => by
-    skip
-    apply has_colimits_of_shape_of_equivalence (discrete.equivalence (Fintype.equivFin J)).symm
-    refine' has_colimits_of_shape_fin (Fintype.card J)⟩
+theorem has_finite_coproducts_of_has_binary_and_initial : HasFiniteCoproducts C := by
+  refine' ⟨fun n => ⟨fun K => _⟩⟩
+  letI := has_coproduct_fin n fun n => K.obj ⟨n⟩
+  let this : K ≅ discrete.functor fun n => K.obj ⟨n⟩ := discrete.nat_iso fun ⟨i⟩ => iso.refl _
+  apply has_colimit_of_iso this
 #align
   category_theory.has_finite_coproducts_of_has_binary_and_initial CategoryTheory.has_finite_coproducts_of_has_binary_and_initial
 

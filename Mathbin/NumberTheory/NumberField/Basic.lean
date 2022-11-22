@@ -55,9 +55,9 @@ include nf
 -- See note [lower instance priority]
 attribute [instance] NumberField.to_char_zero NumberField.toFiniteDimensional
 
-protected theorem isAlgebraic : Algebra.IsAlgebraic ℚ K :=
-  Algebra.isAlgebraicOfFinite _ _
-#align number_field.is_algebraic NumberField.isAlgebraic
+protected theorem is_algebraic : Algebra.IsAlgebraic ℚ K :=
+  Algebra.is_algebraic_of_finite _ _
+#align number_field.is_algebraic NumberField.is_algebraic
 
 omit nf
 
@@ -74,12 +74,13 @@ theorem mem_ring_of_integers (x : K) : x ∈ 𝓞 K ↔ IsIntegral ℤ x :=
   Iff.rfl
 #align number_field.mem_ring_of_integers NumberField.mem_ring_of_integers
 
-theorem isIntegralOfMemRingOfIntegers {K : Type _} [Field K] {x : K} (hx : x ∈ 𝓞 K) : IsIntegral ℤ (⟨x, hx⟩ : 𝓞 K) := by
+theorem is_integral_of_mem_ring_of_integers {K : Type _} [Field K] {x : K} (hx : x ∈ 𝓞 K) :
+    IsIntegral ℤ (⟨x, hx⟩ : 𝓞 K) := by
   obtain ⟨P, hPm, hP⟩ := hx
   refine' ⟨P, hPm, _⟩
   rw [← Polynomial.aeval_def, ← Subalgebra.coe_eq_zero, Polynomial.aeval_subalgebra_coe, Polynomial.aeval_def,
     Subtype.coe_mk, hP]
-#align number_field.is_integral_of_mem_ring_of_integers NumberField.isIntegralOfMemRingOfIntegers
+#align number_field.is_integral_of_mem_ring_of_integers NumberField.is_integral_of_mem_ring_of_integers
 
 /-- Given an algebra between two fields, create an algebra between their two rings of integers.
 
@@ -88,7 +89,7 @@ For now, this is not an instance by default as it creates an equal-but-not-defeq
 will likely change in Lean 4. -/
 def ringOfIntegersAlgebra [Algebra K L] : Algebra (𝓞 K) (𝓞 L) :=
   RingHom.toAlgebra
-    { toFun := fun k => ⟨algebraMap K L k, IsIntegral.algebraMap k.2⟩,
+    { toFun := fun k => ⟨algebraMap K L k, IsIntegral.algebra_map k.2⟩,
       map_zero' := Subtype.ext <| by simp only [Subtype.coe_mk, Subalgebra.coe_zero, map_zero],
       map_one' := Subtype.ext <| by simp only [Subtype.coe_mk, Subalgebra.coe_one, map_one],
       map_add' := fun x y => Subtype.ext <| by simp only [map_add, Subalgebra.coe_add, Subtype.coe_mk],
@@ -100,21 +101,21 @@ namespace RingOfIntegers
 variable {K}
 
 instance [NumberField K] : IsFractionRing (𝓞 K) K :=
-  integralClosure.isFractionRingOfFiniteExtension ℚ _
+  integralClosure.is_fraction_ring_of_finite_extension ℚ _
 
 instance : IsIntegralClosure (𝓞 K) ℤ K :=
-  integralClosure.isIntegralClosure _ _
+  integralClosure.is_integral_closure _ _
 
 instance [NumberField K] : IsIntegrallyClosed (𝓞 K) :=
   integralClosure.isIntegrallyClosedOfFiniteExtension ℚ
 
-theorem isIntegralCoe (x : 𝓞 K) : IsIntegral ℤ (x : K) :=
+theorem is_integral_coe (x : 𝓞 K) : IsIntegral ℤ (x : K) :=
   x.2
-#align number_field.ring_of_integers.is_integral_coe NumberField.ringOfIntegers.isIntegralCoe
+#align number_field.ring_of_integers.is_integral_coe NumberField.ringOfIntegers.is_integral_coe
 
 theorem map_mem {F L : Type _} [Field L] [CharZero K] [CharZero L] [AlgHomClass F ℚ K L] (f : F) (x : 𝓞 K) :
     f x ∈ 𝓞 L :=
-  (mem_ring_of_integers _ _).2 <| mapIsIntegralInt f <| ringOfIntegers.isIntegralCoe x
+  (mem_ring_of_integers _ _).2 <| map_is_integral_int f <| ringOfIntegers.is_integral_coe x
 #align number_field.ring_of_integers.map_mem NumberField.ringOfIntegers.map_mem
 
 /-- The ring of integers of `K` are equivalent to any integral closure of `ℤ` in `K` -/
@@ -134,7 +135,7 @@ instance [NumberField K] : IsNoetherian ℤ (𝓞 K) :=
 theorem not_is_field [NumberField K] : ¬IsField (𝓞 K) := by
   have h_inj : Function.Injective ⇑(algebraMap ℤ (𝓞 K)) := RingHom.injective_int (algebraMap ℤ (𝓞 K))
   intro hf
-  exact Int.not_is_field (((IsIntegralClosure.isIntegralAlgebra ℤ K).is_field_iff_is_field h_inj).mpr hf)
+  exact Int.not_is_field (((IsIntegralClosure.is_integral_algebra ℤ K).is_field_iff_is_field h_inj).mpr hf)
 #align number_field.ring_of_integers.not_is_field NumberField.ringOfIntegers.not_is_field
 
 instance [NumberField K] : IsDedekindDomain (𝓞 K) :=

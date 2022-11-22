@@ -45,27 +45,27 @@ def IsInteger (a : S) : Prop :=
 
 end
 
-theorem isIntegerZero : IsInteger R (0 : S) :=
+theorem is_integer_zero : IsInteger R (0 : S) :=
   Subring.zero_mem _
-#align is_localization.is_integer_zero IsLocalization.isIntegerZero
+#align is_localization.is_integer_zero IsLocalization.is_integer_zero
 
-theorem isIntegerOne : IsInteger R (1 : S) :=
+theorem is_integer_one : IsInteger R (1 : S) :=
   Subring.one_mem _
-#align is_localization.is_integer_one IsLocalization.isIntegerOne
+#align is_localization.is_integer_one IsLocalization.is_integer_one
 
-theorem isIntegerAdd {a b : S} (ha : IsInteger R a) (hb : IsInteger R b) : IsInteger R (a + b) :=
+theorem is_integer_add {a b : S} (ha : IsInteger R a) (hb : IsInteger R b) : IsInteger R (a + b) :=
   Subring.add_mem _ ha hb
-#align is_localization.is_integer_add IsLocalization.isIntegerAdd
+#align is_localization.is_integer_add IsLocalization.is_integer_add
 
-theorem isIntegerMul {a b : S} (ha : IsInteger R a) (hb : IsInteger R b) : IsInteger R (a * b) :=
+theorem is_integer_mul {a b : S} (ha : IsInteger R a) (hb : IsInteger R b) : IsInteger R (a * b) :=
   Subring.mul_mem _ ha hb
-#align is_localization.is_integer_mul IsLocalization.isIntegerMul
+#align is_localization.is_integer_mul IsLocalization.is_integer_mul
 
-theorem isIntegerSmul {a : R} {b : S} (hb : IsInteger R b) : IsInteger R (a • b) := by
+theorem is_integer_smul {a : R} {b : S} (hb : IsInteger R b) : IsInteger R (a • b) := by
   rcases hb with ⟨b', hb⟩
   use a * b'
   rw [← hb, (algebraMap R S).map_mul, Algebra.smul_def]
-#align is_localization.is_integer_smul IsLocalization.isIntegerSmul
+#align is_localization.is_integer_smul IsLocalization.is_integer_smul
 
 variable (M) {S} [IsLocalization M S]
 

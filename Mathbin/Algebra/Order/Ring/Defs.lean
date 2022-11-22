@@ -3,11 +3,12 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Yaël Dillies
 -/
-import Mathbin.Order.MinMax
-import Mathbin.Algebra.Ring.Defs
-import Mathbin.Algebra.Order.Monoid.Cancel.Defs
 import Mathbin.Algebra.Order.Group.Defs
+import Mathbin.Algebra.Order.Monoid.Cancel.Defs
+import Mathbin.Algebra.Order.Monoid.WithZero
 import Mathbin.Algebra.Order.Ring.Lemmas
+import Mathbin.Algebra.Ring.Defs
+import Mathbin.Order.MinMax
 import Mathbin.Tactic.Nontriviality
 
 /-!
@@ -255,7 +256,7 @@ theorem bit1_mono : Monotone (bit1 : α → α) := fun a b h => add_le_add_right
 lean 3 declaration is
   forall {α : Type.{u}} [_inst_1 : OrderedSemiring.{u} α] {a : α}, (LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (OrderedAddCommMonoid.toPartialOrder.{u} α (OrderedSemiring.toOrderedAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1)))))))) a) -> (forall (n : Nat), LE.le.{u} α (Preorder.toLE.{u} α (PartialOrder.toPreorder.{u} α (OrderedAddCommMonoid.toPartialOrder.{u} α (OrderedSemiring.toOrderedAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1)))))))) (HPow.hPow.{u 0 u} α Nat α (instHPow.{u 0} α Nat (Monoid.hasPow.{u} α (MonoidWithZero.toMonoid.{u} α (Semiring.toMonoidWithZero.{u} α (OrderedSemiring.toSemiring.{u} α _inst_1))))) a n))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.547 : OrderedSemiring.{u_1} α] {a : α}, (LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.547))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.547))))) a) -> (forall (n : Nat), LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.547))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.547))))) (HPow.hPow.{u_1 0 u_1} α Nat α (instHPow.{u_1 0} α Nat (Monoid.Pow.{u_1} α (MonoidWithZero.toMonoid.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.547))))) a n))
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.268 : OrderedSemiring.{u_1} α] {a : α}, (LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.268))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.268))))) a) -> (forall (n : Nat), LE.le.{u_1} α (Preorder.toLE.{u_1} α (PartialOrder.toPreorder.{u_1} α (OrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.268))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.268))))) (HPow.hPow.{u_1 0 u_1} α Nat α (instHPow.{u_1 0} α Nat (Monoid.Pow.{u_1} α (MonoidWithZero.toMonoid.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.268))))) a n))
 Case conversion may be inaccurate. Consider using '#align pow_nonneg pow_nonnegₓ'. -/
 @[simp]
 theorem pow_nonneg (H : 0 ≤ a) : ∀ n : ℕ, 0 ≤ a ^ n
@@ -591,7 +592,7 @@ theorem mul_lt_mul' (hac : a ≤ c) (hbd : b < d) (hb : 0 ≤ b) (hc : 0 < c) : 
 lean 3 declaration is
   forall {α : Type.{u}} [_inst_1 : StrictOrderedSemiring.{u} α] {a : α}, (LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (OrderedCancelAddCommMonoid.toPartialOrder.{u} α (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (StrictOrderedSemiring.toSemiring.{u} α _inst_1)))))))) a) -> (forall (n : Nat), LT.lt.{u} α (Preorder.toLT.{u} α (PartialOrder.toPreorder.{u} α (OrderedCancelAddCommMonoid.toPartialOrder.{u} α (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{u} α _inst_1)))) (OfNat.ofNat.{u} α 0 (OfNat.mk.{u} α 0 (Zero.zero.{u} α (MulZeroClass.toHasZero.{u} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u} α (Semiring.toNonAssocSemiring.{u} α (StrictOrderedSemiring.toSemiring.{u} α _inst_1)))))))) (HPow.hPow.{u 0 u} α Nat α (instHPow.{u 0} α Nat (Monoid.hasPow.{u} α (MonoidWithZero.toMonoid.{u} α (Semiring.toMonoidWithZero.{u} α (StrictOrderedSemiring.toSemiring.{u} α _inst_1))))) a n))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.520 : StrictOrderedSemiring.{u_1} α] {a : α}, (LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (StrictOrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.520))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (StrictOrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.520))))) a) -> (forall (n : Nat), LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (StrictOrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.520))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (StrictOrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.520))))) (HPow.hPow.{u_1 0 u_1} α Nat α (instHPow.{u_1 0} α Nat (Monoid.Pow.{u_1} α (MonoidWithZero.toMonoid.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (StrictOrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.520))))) a n))
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.241 : StrictOrderedSemiring.{u_1} α] {a : α}, (LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (StrictOrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.241))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (StrictOrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.241))))) a) -> (forall (n : Nat), LT.lt.{u_1} α (Preorder.toLT.{u_1} α (PartialOrder.toPreorder.{u_1} α (StrictOrderedSemiring.toPartialOrder.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.241))) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (StrictOrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.241))))) (HPow.hPow.{u_1 0 u_1} α Nat α (instHPow.{u_1 0} α Nat (Monoid.Pow.{u_1} α (MonoidWithZero.toMonoid.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (StrictOrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.241))))) a n))
 Case conversion may be inaccurate. Consider using '#align pow_pos pow_posₓ'. -/
 @[simp]
 theorem pow_pos (H : 0 < a) : ∀ n : ℕ, 0 < a ^ n
@@ -1140,7 +1141,7 @@ instance (priority := 100) LinearOrderedRing.toLinearOrderedAddCommGroup : Linea
 #align linear_ordered_ring.to_linear_ordered_add_comm_group LinearOrderedRing.toLinearOrderedAddCommGroup
 
 -- see Note [lower instance priority]
-instance (priority := 100) LinearOrderedRing.isDomain : IsDomain α :=
+instance (priority := 100) LinearOrderedRing.is_domain : IsDomain α :=
   { ‹LinearOrderedRing α› with
     eq_zero_or_eq_zero_of_mul_eq_zero := by
       intro a b hab
@@ -1149,7 +1150,7 @@ instance (priority := 100) LinearOrderedRing.isDomain : IsDomain α :=
       cases' lt_or_gt_of_ne h.1 with ha ha <;> cases' lt_or_gt_of_ne h.2 with hb hb
       exacts[(mul_pos_of_neg_of_neg ha hb).Ne.symm, (mul_neg_of_neg_of_pos ha hb).Ne, (mul_neg_of_pos_of_neg ha hb).Ne,
         (mul_pos ha hb).Ne.symm] }
-#align linear_ordered_ring.is_domain LinearOrderedRing.isDomain
+#align linear_ordered_ring.is_domain LinearOrderedRing.is_domain
 
 theorem mul_pos_iff : 0 < a * b ↔ 0 < a ∧ 0 < b ∨ a < 0 ∧ b < 0 :=
   ⟨pos_and_pos_or_neg_and_neg_of_mul_pos, fun h => h.elim (and_imp.2 mul_pos) (and_imp.2 mul_pos_of_neg_of_neg)⟩

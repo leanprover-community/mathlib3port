@@ -139,7 +139,7 @@ private unsafe def param_substitutions (ctxt : List expr) :
       match s with
         | some e => return (e, [])
         | none =>
-          let ctxt' := List.filter' (fun v => occurs v t) ctxt
+          let ctxt' := List.filter (fun v => occurs v t) ctxt
           let ty := pis ctxt' t
           if bi = BinderInfo.inst_implicit then do
             guard (bi = BinderInfo.inst_implicit)

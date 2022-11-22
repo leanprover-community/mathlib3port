@@ -45,7 +45,7 @@ namespace RingSubgroupsBasis
 
 variable {A ι : Type _} [Ring A]
 
-theorem ofComm {A ι : Type _} [CommRing A] (B : ι → AddSubgroup A) (inter : ∀ i j, ∃ k, B k ≤ B i ⊓ B j)
+theorem of_comm {A ι : Type _} [CommRing A] (B : ι → AddSubgroup A) (inter : ∀ i j, ∃ k, B k ≤ B i ⊓ B j)
     (mul : ∀ i, ∃ j, (B j : Set A) * B j ⊆ B i)
     (left_mul : ∀ x : A, ∀ i, ∃ j, (B j : Set A) ⊆ (fun y : A => x * y) ⁻¹' B i) : RingSubgroupsBasis B :=
   { inter, mul, leftMul,
@@ -54,7 +54,7 @@ theorem ofComm {A ι : Type _} [CommRing A] (B : ι → AddSubgroup A) (inter : 
       cases' leftMul x i with j hj
       use j
       simpa [mul_comm] using hj }
-#align ring_subgroups_basis.of_comm RingSubgroupsBasis.ofComm
+#align ring_subgroups_basis.of_comm RingSubgroupsBasis.of_comm
 
 /-- Every subgroups basis on a ring leads to a ring filter basis. -/
 def toRingFilterBasis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B) : RingFilterBasis A where
@@ -194,18 +194,18 @@ namespace SubmodulesRingBasis
 
 variable {B : ι → Submodule R A} (hB : SubmodulesRingBasis B)
 
-theorem toRingSubgroupsBasis (hB : SubmodulesRingBasis B) : RingSubgroupsBasis fun i => (B i).toAddSubgroup := by
-  apply RingSubgroupsBasis.ofComm (fun i => (B i).toAddSubgroup) hB.inter hB.mul
+theorem to_ring_subgroups_basis (hB : SubmodulesRingBasis B) : RingSubgroupsBasis fun i => (B i).toAddSubgroup := by
+  apply RingSubgroupsBasis.of_comm (fun i => (B i).toAddSubgroup) hB.inter hB.mul
   intro a i
   rcases hB.left_mul a i with ⟨j, hj⟩
   use j
   rintro b (b_in : b ∈ B j)
   exact hj ⟨b, b_in, rfl⟩
-#align submodules_ring_basis.to_ring_subgroups_basis SubmodulesRingBasis.toRingSubgroupsBasis
+#align submodules_ring_basis.to_ring_subgroups_basis SubmodulesRingBasis.to_ring_subgroups_basis
 
 /-- The topology associated to a basis of submodules in an algebra. -/
 def topology [Nonempty ι] (hB : SubmodulesRingBasis B) : TopologicalSpace A :=
-  hB.toRingSubgroupsBasis.topology
+  hB.to_ring_subgroups_basis.topology
 #align submodules_ring_basis.topology SubmodulesRingBasis.topology
 
 end SubmodulesRingBasis
@@ -317,11 +317,11 @@ view definitionaly gives the same topology on `A`.
 variable [TopologicalSpace R] {B : ι → Submodule R A} (hB : SubmodulesRingBasis B)
   (hsmul : ∀ (m : A) (i : ι), ∀ᶠ a : R in 𝓝 0, a • m ∈ B i)
 
-theorem SubmodulesRingBasis.toSubmodulesBasis : SubmodulesBasis B :=
+theorem SubmodulesRingBasis.to_submodules_basis : SubmodulesBasis B :=
   { inter := hB.inter, smul := hsmul }
-#align submodules_ring_basis.to_submodules_basis SubmodulesRingBasis.toSubmodulesBasis
+#align submodules_ring_basis.to_submodules_basis SubmodulesRingBasis.to_submodules_basis
 
-example [Nonempty ι] : hB.topology = (hB.toSubmodulesBasis hsmul).topology :=
+example [Nonempty ι] : hB.topology = (hB.to_submodules_basis hsmul).topology :=
   rfl
 
 end
@@ -334,7 +334,7 @@ structure RingFilterBasis.SubmodulesBasis (BR : RingFilterBasis R) (B : ι → S
   smul : ∀ (m : M) (i : ι), ∃ U ∈ BR, U ⊆ (fun a => a • m) ⁻¹' B i
 #align ring_filter_basis.submodules_basis RingFilterBasis.SubmodulesBasis
 
-theorem RingFilterBasis.submodulesBasisIsBasis (BR : RingFilterBasis R) {B : ι → Submodule R M}
+theorem RingFilterBasis.submodules_basis_is_basis (BR : RingFilterBasis R) {B : ι → Submodule R M}
     (hB : BR.SubmodulesBasis B) : @SubmodulesBasis ι R _ M _ _ BR.topology B :=
   { inter := hB.inter,
     smul := by
@@ -342,13 +342,13 @@ theorem RingFilterBasis.submodulesBasisIsBasis (BR : RingFilterBasis R) {B : ι 
       intro m i
       rcases hB.smul m i with ⟨V, V_in, hV⟩
       exact mem_of_superset (BR.to_add_group_filter_basis.mem_nhds_zero V_in) hV }
-#align ring_filter_basis.submodules_basis_is_basis RingFilterBasis.submodulesBasisIsBasis
+#align ring_filter_basis.submodules_basis_is_basis RingFilterBasis.submodules_basis_is_basis
 
 /-- The module filter basis associated to a ring filter basis and a compatible submodule basis.
 This allows to build a topological module structure compatible with the given module structure
 and the topology associated to the given ring filter basis. -/
 def RingFilterBasis.moduleFilterBasis [Nonempty ι] (BR : RingFilterBasis R) {B : ι → Submodule R M}
     (hB : BR.SubmodulesBasis B) : @ModuleFilterBasis R M _ BR.topology _ _ :=
-  @SubmodulesBasis.toModuleFilterBasis ι R _ M _ _ BR.topology _ _ (BR.submodulesBasisIsBasis hB)
+  @SubmodulesBasis.toModuleFilterBasis ι R _ M _ _ BR.topology _ _ (BR.submodules_basis_is_basis hB)
 #align ring_filter_basis.module_filter_basis RingFilterBasis.moduleFilterBasis
 

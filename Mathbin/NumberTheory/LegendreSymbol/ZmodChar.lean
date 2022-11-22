@@ -43,10 +43,10 @@ def χ₄ : MulChar (Zmod 4) ℤ where
 #align zmod.χ₄ Zmod.χ₄
 
 /-- `χ₄` takes values in `{0, 1, -1}` -/
-theorem isQuadraticχ₄ : χ₄.IsQuadratic := by
+theorem is_quadratic_χ₄ : χ₄.IsQuadratic := by
   intro a
   decide!
-#align zmod.is_quadratic_χ₄ Zmod.isQuadraticχ₄
+#align zmod.is_quadratic_χ₄ Zmod.is_quadratic_χ₄
 
 /-- The value of `χ₄ n`, for `n : ℕ`, depends only on `n % 4`. -/
 theorem χ₄_nat_mod_four (n : ℕ) : χ₄ n = χ₄ (n % 4 : ℕ) := by rw [← Zmod.nat_cast_mod n 4]
@@ -128,10 +128,10 @@ def χ₈ : MulChar (Zmod 8) ℤ where
 #align zmod.χ₈ Zmod.χ₈
 
 /-- `χ₈` takes values in `{0, 1, -1}` -/
-theorem isQuadraticχ₈ : χ₈.IsQuadratic := by
+theorem is_quadratic_χ₈ : χ₈.IsQuadratic := by
   intro a
   decide!
-#align zmod.is_quadratic_χ₈ Zmod.isQuadraticχ₈
+#align zmod.is_quadratic_χ₈ Zmod.is_quadratic_χ₈
 
 /-- The value of `χ₈ n`, for `n : ℕ`, depends only on `n % 8`. -/
 theorem χ₈_nat_mod_eight (n : ℕ) : χ₈ n = χ₈ (n % 8 : ℕ) := by rw [← Zmod.nat_cast_mod n 8]
@@ -165,10 +165,10 @@ def χ₈' : MulChar (Zmod 8) ℤ where
 #align zmod.χ₈' Zmod.χ₈'
 
 /-- `χ₈'` takes values in `{0, 1, -1}` -/
-theorem isQuadraticχ₈' : χ₈'.IsQuadratic := by
+theorem is_quadratic_χ₈' : χ₈'.IsQuadratic := by
   intro a
   decide!
-#align zmod.is_quadratic_χ₈' Zmod.isQuadraticχ₈'
+#align zmod.is_quadratic_χ₈' Zmod.is_quadratic_χ₈'
 
 /-- An explicit description of `χ₈'` on integers / naturals -/
 theorem χ₈'_int_eq_if_mod_eight (n : ℤ) : χ₈' n = if n % 2 = 0 then 0 else if n % 8 = 1 ∨ n % 8 = 3 then 1 else -1 := by

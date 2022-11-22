@@ -71,7 +71,7 @@ variable [Mul α] [Zero α] [Preorder α]
 lean 3 declaration is
   forall (α : Type.{u_1}) [_inst_1 : Mul.{u_1} α] [_inst_2 : Zero.{u_1} α] [_inst_3 : Preorder.{u_1} α], Prop
 but is expected to have type
-  forall (α : Type.{u}) [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.405 : MulZeroClass.{u} α] [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.408 : PartialOrder.{u} α], Prop
+  forall (α : Type.{u}) [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.126 : MulZeroClass.{u} α] [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.129 : PartialOrder.{u} α], Prop
 Case conversion may be inaccurate. Consider using '#align pos_mul_mono PosMulMonoₓ'. -/
 /-- `pos_mul_mono α` is an abbreviation for `covariant_class α≥0 α (λ x y, x * y) (≤)`,
 expressing that multiplication by nonnegative elements on the left is monotone. -/
@@ -89,7 +89,7 @@ abbrev MulPosMono : Prop :=
 lean 3 declaration is
   forall (α : Type.{u_1}) [_inst_1 : Mul.{u_1} α] [_inst_2 : Zero.{u_1} α] [_inst_3 : Preorder.{u_1} α], Prop
 but is expected to have type
-  forall (α : Type.{u}) [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.347 : MulZeroClass.{u} α] [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.350 : PartialOrder.{u} α], Prop
+  forall (α : Type.{u}) [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.68 : MulZeroClass.{u} α] [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.71 : PartialOrder.{u} α], Prop
 Case conversion may be inaccurate. Consider using '#align pos_mul_strict_mono PosMulStrictMonoₓ'. -/
 /-- `pos_mul_strict_mono α` is an abbreviation for `covariant_class α>0 α (λ x y, x * y) (<)`,
 expressing that multiplication by positive elements on the left is strictly monotone. -/

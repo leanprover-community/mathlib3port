@@ -10,6 +10,10 @@ import Mathbin.Algebra.NeZero
 /-!
 # Typeclasses for groups with an adjoined zero element
 
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/563
+> Any changes to this file require a corresponding PR to mathlib4.
+
 This file provides just the typeclass definitions, and the projection lemmas that expose their
 members.
 
@@ -52,17 +56,13 @@ theorem mul_zero (a : M₀) : a * 0 = 0 :=
 
 end MulZeroClass
 
-/- warning: no_zero_divisors -> NoZeroDivisors is a dubious translation:
-lean 3 declaration is
-  forall (M₀ : Type.{u_4}) [_inst_1 : Mul.{u_4} M₀] [_inst_2 : Zero.{u_4} M₀], Prop
-but is expected to have type
-  forall (α : Type.{u}) [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.341 : MonoidWithZero.{u} α], Prop
-Case conversion may be inaccurate. Consider using '#align no_zero_divisors NoZeroDivisorsₓ'. -/
+#print NoZeroDivisors /-
 /-- Predicate typeclass for expressing that `a * b = 0` implies `a = 0` or `b = 0`
 for all `a` and `b` of type `G₀`. -/
 class NoZeroDivisors (M₀ : Type _) [Mul M₀] [Zero M₀] : Prop where
   eq_zero_or_eq_zero_of_mul_eq_zero : ∀ {a b : M₀}, a * b = 0 → a = 0 ∨ b = 0
 #align no_zero_divisors NoZeroDivisors
+-/
 
 export NoZeroDivisors (eq_zero_or_eq_zero_of_mul_eq_zero)
 
@@ -99,6 +99,7 @@ instance (priority := 100) MonoidWithZero.toSemigroupWithZero (M₀ : Type _) [M
 #align monoid_with_zero.to_semigroup_with_zero MonoidWithZero.toSemigroupWithZero
 -/
 
+#print CancelMonoidWithZero /-
 /-- A type `M` is a `cancel_monoid_with_zero` if it is a monoid with zero element, `0` is left
 and right absorbing, and left/right multiplication by a non-zero element is injective. -/
 @[protect_proj]
@@ -106,39 +107,68 @@ class CancelMonoidWithZero (M₀ : Type _) extends MonoidWithZero M₀ where
   mul_left_cancel_of_ne_zero : ∀ {a b c : M₀}, a ≠ 0 → a * b = a * c → b = c
   mul_right_cancel_of_ne_zero : ∀ {a b c : M₀}, b ≠ 0 → a * b = c * b → a = c
 #align cancel_monoid_with_zero CancelMonoidWithZero
+-/
 
 section CancelMonoidWithZero
 
 variable [CancelMonoidWithZero M₀] {a b c : M₀}
 
+/- warning: mul_left_cancel₀ -> mul_left_cancel₀ is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u_1}} [_inst_1 : CancelMonoidWithZero.{u_1} M₀] {a : M₀} {b : M₀} {c : M₀}, (Ne.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ (MulZeroOneClass.toMulZeroClass.{u_1} M₀ (MonoidWithZero.toMulZeroOneClass.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ _inst_1)))))))) -> (Eq.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ (MulZeroOneClass.toMulZeroClass.{u_1} M₀ (MonoidWithZero.toMulZeroOneClass.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ _inst_1))))) a b) (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ (MulZeroOneClass.toMulZeroClass.{u_1} M₀ (MonoidWithZero.toMulZeroOneClass.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ _inst_1))))) a c)) -> (Eq.{succ u_1} M₀ b c)
+but is expected to have type
+  forall {M₀ : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.335 : CancelMonoidWithZero.{u_1} M₀] {a : M₀} {b : M₀} {c : M₀}, (Ne.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MonoidWithZero.toZero.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.335))))) -> (Eq.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ (MulZeroOneClass.toMulZeroClass.{u_1} M₀ (MonoidWithZero.toMulZeroOneClass.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.335))))) a b) (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ (MulZeroOneClass.toMulZeroClass.{u_1} M₀ (MonoidWithZero.toMulZeroOneClass.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.335))))) a c)) -> (Eq.{succ u_1} M₀ b c)
+Case conversion may be inaccurate. Consider using '#align mul_left_cancel₀ mul_left_cancel₀ₓ'. -/
 theorem mul_left_cancel₀ (ha : a ≠ 0) (h : a * b = a * c) : b = c :=
   CancelMonoidWithZero.mul_left_cancel_of_ne_zero ha h
 #align mul_left_cancel₀ mul_left_cancel₀
 
+/- warning: mul_right_cancel₀ -> mul_right_cancel₀ is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u_1}} [_inst_1 : CancelMonoidWithZero.{u_1} M₀] {a : M₀} {b : M₀} {c : M₀}, (Ne.{succ u_1} M₀ b (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ (MulZeroOneClass.toMulZeroClass.{u_1} M₀ (MonoidWithZero.toMulZeroOneClass.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ _inst_1)))))))) -> (Eq.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ (MulZeroOneClass.toMulZeroClass.{u_1} M₀ (MonoidWithZero.toMulZeroOneClass.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ _inst_1))))) a b) (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ (MulZeroOneClass.toMulZeroClass.{u_1} M₀ (MonoidWithZero.toMulZeroOneClass.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ _inst_1))))) c b)) -> (Eq.{succ u_1} M₀ a c)
+but is expected to have type
+  forall {M₀ : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.368 : CancelMonoidWithZero.{u_1} M₀] {a : M₀} {b : M₀} {c : M₀}, (Ne.{succ u_1} M₀ b (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MonoidWithZero.toZero.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.368))))) -> (Eq.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ (MulZeroOneClass.toMulZeroClass.{u_1} M₀ (MonoidWithZero.toMulZeroOneClass.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.368))))) a b) (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ (MulZeroOneClass.toMulZeroClass.{u_1} M₀ (MonoidWithZero.toMulZeroOneClass.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.368))))) c b)) -> (Eq.{succ u_1} M₀ a c)
+Case conversion may be inaccurate. Consider using '#align mul_right_cancel₀ mul_right_cancel₀ₓ'. -/
 theorem mul_right_cancel₀ (hb : b ≠ 0) (h : a * b = c * b) : a = c :=
   CancelMonoidWithZero.mul_right_cancel_of_ne_zero hb h
 #align mul_right_cancel₀ mul_right_cancel₀
 
+/- warning: mul_right_injective₀ -> mul_right_injective₀ is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u_1}} [_inst_1 : CancelMonoidWithZero.{u_1} M₀] {a : M₀}, (Ne.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ (MulZeroOneClass.toMulZeroClass.{u_1} M₀ (MonoidWithZero.toMulZeroOneClass.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ _inst_1)))))))) -> (Function.Injective.{succ u_1 succ u_1} M₀ M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ (MulZeroOneClass.toMulZeroClass.{u_1} M₀ (MonoidWithZero.toMulZeroOneClass.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ _inst_1))))) a))
+but is expected to have type
+  forall {M₀ : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.401 : CancelMonoidWithZero.{u_1} M₀] {a : M₀}, (Ne.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MonoidWithZero.toZero.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.401))))) -> (Function.Injective.{succ u_1 succ u_1} M₀ M₀ ((fun (x._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.419 : M₀) (x._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.421 : M₀) => HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ (MulZeroOneClass.toMulZeroClass.{u_1} M₀ (MonoidWithZero.toMulZeroOneClass.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.401))))) x._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.419 x._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.421) a))
+Case conversion may be inaccurate. Consider using '#align mul_right_injective₀ mul_right_injective₀ₓ'. -/
 theorem mul_right_injective₀ (ha : a ≠ 0) : Function.Injective ((· * ·) a) := fun b c => mul_left_cancel₀ ha
 #align mul_right_injective₀ mul_right_injective₀
 
+/- warning: mul_left_injective₀ -> mul_left_injective₀ is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u_1}} [_inst_1 : CancelMonoidWithZero.{u_1} M₀] {b : M₀}, (Ne.{succ u_1} M₀ b (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ (MulZeroOneClass.toMulZeroClass.{u_1} M₀ (MonoidWithZero.toMulZeroOneClass.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ _inst_1)))))))) -> (Function.Injective.{succ u_1 succ u_1} M₀ M₀ (fun (a : M₀) => HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ (MulZeroOneClass.toMulZeroClass.{u_1} M₀ (MonoidWithZero.toMulZeroOneClass.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ _inst_1))))) a b))
+but is expected to have type
+  forall {M₀ : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.445 : CancelMonoidWithZero.{u_1} M₀] {b : M₀}, (Ne.{succ u_1} M₀ b (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MonoidWithZero.toZero.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.445))))) -> (Function.Injective.{succ u_1 succ u_1} M₀ M₀ (fun (a : M₀) => HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ (MulZeroOneClass.toMulZeroClass.{u_1} M₀ (MonoidWithZero.toMulZeroOneClass.{u_1} M₀ (CancelMonoidWithZero.toMonoidWithZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.445))))) a b))
+Case conversion may be inaccurate. Consider using '#align mul_left_injective₀ mul_left_injective₀ₓ'. -/
 theorem mul_left_injective₀ (hb : b ≠ 0) : Function.Injective fun a => a * b := fun a c => mul_right_cancel₀ hb
 #align mul_left_injective₀ mul_left_injective₀
 
 end CancelMonoidWithZero
 
+#print CommMonoidWithZero /-
 /-- A type `M` is a commutative “monoid with zero” if it is a commutative monoid with zero
 element, and `0` is left and right absorbing. -/
 @[protect_proj]
 class CommMonoidWithZero (M₀ : Type _) extends CommMonoid M₀, MonoidWithZero M₀
 #align comm_monoid_with_zero CommMonoidWithZero
+-/
 
+#print CancelCommMonoidWithZero /-
 /-- A type `M` is a `cancel_comm_monoid_with_zero` if it is a commutative monoid with zero element,
  `0` is left and right absorbing,
   and left/right multiplication by a non-zero element is injective. -/
 @[protect_proj]
 class CancelCommMonoidWithZero (M₀ : Type _) extends CommMonoidWithZero M₀, CancelMonoidWithZero M₀
 #align cancel_comm_monoid_with_zero CancelCommMonoidWithZero
+-/
 
 #print GroupWithZero /-
 /-- A type `G₀` is a “group with zero” if it is a monoid with zero element (distinct from `1`)
@@ -170,6 +200,7 @@ theorem mul_inv_cancel {a : G₀} (h : a ≠ 0) : a * a⁻¹ = 1 :=
 
 end GroupWithZero
 
+#print CommGroupWithZero /-
 /-- A type `G₀` is a commutative “group with zero”
 if it is a commutative monoid with zero element (distinct from `1`)
 such that every nonzero element is invertible.
@@ -177,6 +208,7 @@ The type is required to come with an “inverse” function, and the inverse of 
 @[protect_proj]
 class CommGroupWithZero (G₀ : Type _) extends CommMonoidWithZero G₀, GroupWithZero G₀
 #align comm_group_with_zero CommGroupWithZero
+-/
 
 section NeZero
 
@@ -186,6 +218,12 @@ variable [MulZeroOneClass M₀] [Nontrivial M₀] {a b : M₀}
 
 variable (M₀)
 
+/- warning: ne_zero.one -> NeZero.one is a dubious translation:
+lean 3 declaration is
+  forall (M₀ : Type.{u_1}) [_inst_1 : MulZeroOneClass.{u_1} M₀] [_inst_2 : Nontrivial.{u_1} M₀], NeZero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ (MulZeroOneClass.toMulZeroClass.{u_1} M₀ _inst_1)) (OfNat.ofNat.{u_1} M₀ 1 (OfNat.mk.{u_1} M₀ 1 (One.one.{u_1} M₀ (MulOneClass.toHasOne.{u_1} M₀ (MulZeroOneClass.toMulOneClass.{u_1} M₀ _inst_1)))))
+but is expected to have type
+  forall (M₀ : Type.{u_1}) [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.677 : MulZeroOneClass.{u_1} M₀] [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.680 : Nontrivial.{u_1} M₀], NeZero.{u_1} M₀ (MulZeroOneClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.677) (OfNat.ofNat.{u_1} M₀ 1 (One.toOfNat1.{u_1} M₀ (MulOneClass.toOne.{u_1} M₀ (MulZeroOneClass.toMulOneClass.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.677))))
+Case conversion may be inaccurate. Consider using '#align ne_zero.one NeZero.oneₓ'. -/
 /-- In a nontrivial monoid with zero, zero and one are different. -/
 instance NeZero.one : NeZero (1 : M₀) :=
   ⟨by
@@ -202,6 +240,12 @@ instance NeZero.one : NeZero (1 : M₀) :=
 
 variable {M₀}
 
+/- warning: pullback_nonzero -> pullback_nonzero is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u_1}} {M₀' : Type.{u_2}} [_inst_1 : MulZeroOneClass.{u_1} M₀] [_inst_2 : Nontrivial.{u_1} M₀] [_inst_3 : Zero.{u_2} M₀'] [_inst_4 : One.{u_2} M₀'] (f : M₀' -> M₀), (Eq.{succ u_1} M₀ (f (OfNat.ofNat.{u_2} M₀' 0 (OfNat.mk.{u_2} M₀' 0 (Zero.zero.{u_2} M₀' _inst_3)))) (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ (MulZeroOneClass.toMulZeroClass.{u_1} M₀ _inst_1)))))) -> (Eq.{succ u_1} M₀ (f (OfNat.ofNat.{u_2} M₀' 1 (OfNat.mk.{u_2} M₀' 1 (One.one.{u_2} M₀' _inst_4)))) (OfNat.ofNat.{u_1} M₀ 1 (OfNat.mk.{u_1} M₀ 1 (One.one.{u_1} M₀ (MulOneClass.toHasOne.{u_1} M₀ (MulZeroOneClass.toMulOneClass.{u_1} M₀ _inst_1)))))) -> (Nontrivial.{u_2} M₀')
+but is expected to have type
+  forall {M₀ : Type.{u_2}} {M₀' : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.872 : MulZeroOneClass.{u_2} M₀] [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.875 : Nontrivial.{u_2} M₀] [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.880 : Zero.{u_1} M₀'] [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.883 : One.{u_1} M₀'] (f : M₀' -> M₀), (Eq.{succ u_2} M₀ (f (OfNat.ofNat.{u_1} M₀' 0 (Zero.toOfNat0.{u_1} M₀' inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.880))) (OfNat.ofNat.{u_2} M₀ 0 (Zero.toOfNat0.{u_2} M₀ (MulZeroOneClass.toZero.{u_2} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.872)))) -> (Eq.{succ u_2} M₀ (f (OfNat.ofNat.{u_1} M₀' 1 (One.toOfNat1.{u_1} M₀' inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.883))) (OfNat.ofNat.{u_2} M₀ 1 (One.toOfNat1.{u_2} M₀ (MulOneClass.toOne.{u_2} M₀ (MulZeroOneClass.toMulOneClass.{u_2} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.872))))) -> (Nontrivial.{u_1} M₀')
+Case conversion may be inaccurate. Consider using '#align pullback_nonzero pullback_nonzeroₓ'. -/
 /-- Pullback a `nontrivial` instance along a function sending `0` to `0` and `1` to `1`. -/
 theorem pullback_nonzero [Zero M₀'] [One M₀'] (f : M₀' → M₀) (zero : f 0 = 0) (one : f 1 = 1) : Nontrivial M₀' :=
   ⟨⟨0, 1,
@@ -216,16 +260,34 @@ section MulZeroClass
 
 variable [MulZeroClass M₀]
 
+/- warning: mul_eq_zero_of_left -> mul_eq_zero_of_left is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} M₀] {a : M₀}, (Eq.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1))))) -> (forall (b : M₀), Eq.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1)) a b) (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)))))
+but is expected to have type
+  forall {M₀ : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.969 : MulZeroClass.{u_1} M₀] {a : M₀}, (Eq.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.969)))) -> (forall (b : M₀), Eq.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.969)) a b) (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.969))))
+Case conversion may be inaccurate. Consider using '#align mul_eq_zero_of_left mul_eq_zero_of_leftₓ'. -/
 theorem mul_eq_zero_of_left {a : M₀} (h : a = 0) (b : M₀) : a * b = 0 :=
   h.symm ▸ zero_mul b
 #align mul_eq_zero_of_left mul_eq_zero_of_left
 
+/- warning: mul_eq_zero_of_right -> mul_eq_zero_of_right is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} M₀] (a : M₀) {b : M₀}, (Eq.{succ u_1} M₀ b (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1))))) -> (Eq.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1)) a b) (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)))))
+but is expected to have type
+  forall {M₀ : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.997 : MulZeroClass.{u_1} M₀] (a : M₀) {b : M₀}, (Eq.{succ u_1} M₀ b (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.997)))) -> (Eq.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.997)) a b) (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.997))))
+Case conversion may be inaccurate. Consider using '#align mul_eq_zero_of_right mul_eq_zero_of_rightₓ'. -/
 theorem mul_eq_zero_of_right (a : M₀) {b : M₀} (h : b = 0) : a * b = 0 :=
   h.symm ▸ mul_zero a
 #align mul_eq_zero_of_right mul_eq_zero_of_right
 
 variable [NoZeroDivisors M₀] {a b : M₀}
 
+/- warning: mul_eq_zero -> mul_eq_zero is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} M₀] [_inst_2 : NoZeroDivisors.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1) (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)] {a : M₀} {b : M₀}, Iff (Eq.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1)) a b) (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1))))) (Or (Eq.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1))))) (Eq.{succ u_1} M₀ b (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1))))))
+but is expected to have type
+  forall {M₀ : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1041 : MulZeroClass.{u_1} M₀] [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1044 : NoZeroDivisors.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1041) (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1041)] {a : M₀} {b : M₀}, Iff (Eq.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1041)) a b) (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1041)))) (Or (Eq.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1041)))) (Eq.{succ u_1} M₀ b (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1041)))))
+Case conversion may be inaccurate. Consider using '#align mul_eq_zero mul_eq_zeroₓ'. -/
 /-- If `α` has no zero divisors, then the product of two elements equals zero iff one of them
 equals zero. -/
 @[simp]
@@ -233,40 +295,88 @@ theorem mul_eq_zero : a * b = 0 ↔ a = 0 ∨ b = 0 :=
   ⟨eq_zero_or_eq_zero_of_mul_eq_zero, fun o => o.elim (fun h => mul_eq_zero_of_left h b) (mul_eq_zero_of_right a)⟩
 #align mul_eq_zero mul_eq_zero
 
+/- warning: zero_eq_mul -> zero_eq_mul is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} M₀] [_inst_2 : NoZeroDivisors.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1) (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)] {a : M₀} {b : M₀}, Iff (Eq.{succ u_1} M₀ (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)))) (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1)) a b)) (Or (Eq.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1))))) (Eq.{succ u_1} M₀ b (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1))))))
+but is expected to have type
+  forall {M₀ : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1096 : MulZeroClass.{u_1} M₀] [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1099 : NoZeroDivisors.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1096) (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1096)] {a : M₀} {b : M₀}, Iff (Eq.{succ u_1} M₀ (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1096))) (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1096)) a b)) (Or (Eq.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1096)))) (Eq.{succ u_1} M₀ b (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1096)))))
+Case conversion may be inaccurate. Consider using '#align zero_eq_mul zero_eq_mulₓ'. -/
 /-- If `α` has no zero divisors, then the product of two elements equals zero iff one of them
 equals zero. -/
 @[simp]
 theorem zero_eq_mul : 0 = a * b ↔ a = 0 ∨ b = 0 := by rw [eq_comm, mul_eq_zero]
 #align zero_eq_mul zero_eq_mul
 
+/- warning: mul_ne_zero_iff -> mul_ne_zero_iff is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} M₀] [_inst_2 : NoZeroDivisors.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1) (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)] {a : M₀} {b : M₀}, Iff (Ne.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1)) a b) (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1))))) (And (Ne.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1))))) (Ne.{succ u_1} M₀ b (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1))))))
+but is expected to have type
+  forall {M₀ : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1161 : MulZeroClass.{u_1} M₀] [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1164 : NoZeroDivisors.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1161) (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1161)] {a : M₀} {b : M₀}, Iff (Ne.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1161)) a b) (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1161)))) (And (Ne.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1161)))) (Ne.{succ u_1} M₀ b (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1161)))))
+Case conversion may be inaccurate. Consider using '#align mul_ne_zero_iff mul_ne_zero_iffₓ'. -/
 /-- If `α` has no zero divisors, then the product of two elements is nonzero iff both of them
 are nonzero. -/
 theorem mul_ne_zero_iff : a * b ≠ 0 ↔ a ≠ 0 ∧ b ≠ 0 :=
   mul_eq_zero.Not.trans not_or
 #align mul_ne_zero_iff mul_ne_zero_iff
 
+/- warning: mul_eq_zero_comm -> mul_eq_zero_comm is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} M₀] [_inst_2 : NoZeroDivisors.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1) (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)] {a : M₀} {b : M₀}, Iff (Eq.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1)) a b) (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1))))) (Eq.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1)) b a) (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)))))
+but is expected to have type
+  forall {M₀ : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1201 : MulZeroClass.{u_1} M₀] [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1204 : NoZeroDivisors.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1201) (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1201)] {a : M₀} {b : M₀}, Iff (Eq.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1201)) a b) (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1201)))) (Eq.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1201)) b a) (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1201))))
+Case conversion may be inaccurate. Consider using '#align mul_eq_zero_comm mul_eq_zero_commₓ'. -/
 /-- If `α` has no zero divisors, then for elements `a, b : α`, `a * b` equals zero iff so is
 `b * a`. -/
 theorem mul_eq_zero_comm : a * b = 0 ↔ b * a = 0 :=
   mul_eq_zero.trans <| (or_comm' _ _).trans mul_eq_zero.symm
 #align mul_eq_zero_comm mul_eq_zero_comm
 
+/- warning: mul_ne_zero_comm -> mul_ne_zero_comm is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} M₀] [_inst_2 : NoZeroDivisors.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1) (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)] {a : M₀} {b : M₀}, Iff (Ne.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1)) a b) (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1))))) (Ne.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1)) b a) (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)))))
+but is expected to have type
+  forall {M₀ : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1236 : MulZeroClass.{u_1} M₀] [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1239 : NoZeroDivisors.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1236) (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1236)] {a : M₀} {b : M₀}, Iff (Ne.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1236)) a b) (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1236)))) (Ne.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1236)) b a) (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1236))))
+Case conversion may be inaccurate. Consider using '#align mul_ne_zero_comm mul_ne_zero_commₓ'. -/
 /-- If `α` has no zero divisors, then for elements `a, b : α`, `a * b` is nonzero iff so is
 `b * a`. -/
 theorem mul_ne_zero_comm : a * b ≠ 0 ↔ b * a ≠ 0 :=
   mul_eq_zero_comm.Not
 #align mul_ne_zero_comm mul_ne_zero_comm
 
+/- warning: mul_self_eq_zero -> mul_self_eq_zero is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} M₀] [_inst_2 : NoZeroDivisors.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1) (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)] {a : M₀}, Iff (Eq.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1)) a a) (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1))))) (Eq.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)))))
+but is expected to have type
+  forall {M₀ : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1271 : MulZeroClass.{u_1} M₀] [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1274 : NoZeroDivisors.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1271) (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1271)] {a : M₀}, Iff (Eq.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1271)) a a) (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1271)))) (Eq.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1271))))
+Case conversion may be inaccurate. Consider using '#align mul_self_eq_zero mul_self_eq_zeroₓ'. -/
 theorem mul_self_eq_zero : a * a = 0 ↔ a = 0 := by simp
 #align mul_self_eq_zero mul_self_eq_zero
 
+/- warning: zero_eq_mul_self -> zero_eq_mul_self is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} M₀] [_inst_2 : NoZeroDivisors.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1) (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)] {a : M₀}, Iff (Eq.{succ u_1} M₀ (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)))) (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1)) a a)) (Eq.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)))))
+but is expected to have type
+  forall {M₀ : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1303 : MulZeroClass.{u_1} M₀] [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1306 : NoZeroDivisors.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1303) (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1303)] {a : M₀}, Iff (Eq.{succ u_1} M₀ (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1303))) (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1303)) a a)) (Eq.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1303))))
+Case conversion may be inaccurate. Consider using '#align zero_eq_mul_self zero_eq_mul_selfₓ'. -/
 theorem zero_eq_mul_self : 0 = a * a ↔ a = 0 := by simp
 #align zero_eq_mul_self zero_eq_mul_self
 
+/- warning: mul_self_ne_zero -> mul_self_ne_zero is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} M₀] [_inst_2 : NoZeroDivisors.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1) (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)] {a : M₀}, Iff (Ne.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1)) a a) (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1))))) (Ne.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)))))
+but is expected to have type
+  forall {M₀ : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1335 : MulZeroClass.{u_1} M₀] [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1338 : NoZeroDivisors.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1335) (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1335)] {a : M₀}, Iff (Ne.{succ u_1} M₀ (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1335)) a a) (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1335)))) (Ne.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1335))))
+Case conversion may be inaccurate. Consider using '#align mul_self_ne_zero mul_self_ne_zeroₓ'. -/
 theorem mul_self_ne_zero : a * a ≠ 0 ↔ a ≠ 0 :=
   mul_self_eq_zero.Not
 #align mul_self_ne_zero mul_self_ne_zero
 
+/- warning: zero_ne_mul_self -> zero_ne_mul_self is a dubious translation:
+lean 3 declaration is
+  forall {M₀ : Type.{u_1}} [_inst_1 : MulZeroClass.{u_1} M₀] [_inst_2 : NoZeroDivisors.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1) (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)] {a : M₀}, Iff (Ne.{succ u_1} M₀ (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)))) (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toHasMul.{u_1} M₀ _inst_1)) a a)) (Ne.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (OfNat.mk.{u_1} M₀ 0 (Zero.zero.{u_1} M₀ (MulZeroClass.toHasZero.{u_1} M₀ _inst_1)))))
+but is expected to have type
+  forall {M₀ : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1366 : MulZeroClass.{u_1} M₀] [inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1369 : NoZeroDivisors.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1366) (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1366)] {a : M₀}, Iff (Ne.{succ u_1} M₀ (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1366))) (HMul.hMul.{u_1 u_1 u_1} M₀ M₀ M₀ (instHMul.{u_1} M₀ (MulZeroClass.toMul.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1366)) a a)) (Ne.{succ u_1} M₀ a (OfNat.ofNat.{u_1} M₀ 0 (Zero.toOfNat0.{u_1} M₀ (MulZeroClass.toZero.{u_1} M₀ inst._@.Mathlib.Algebra.GroupWithZero.Defs._hyg.1366))))
+Case conversion may be inaccurate. Consider using '#align zero_ne_mul_self zero_ne_mul_selfₓ'. -/
 theorem zero_ne_mul_self : 0 ≠ a * a ↔ a ≠ 0 :=
   zero_eq_mul_self.Not
 #align zero_ne_mul_self zero_ne_mul_self

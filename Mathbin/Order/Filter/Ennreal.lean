@@ -65,7 +65,7 @@ theorem limsup_const_mul_of_ne_top {u : α → ℝ≥0∞} {a : ℝ≥0∞} (ha_
         ⟨fun x => by simp [← mul_assoc, inv_mul_cancel ha_zero ha_top], fun x => by
           simp [g, ← mul_assoc, mul_inv_cancel ha_zero ha_top]⟩⟩
   have hg_mono : StrictMono g :=
-    Monotone.strict_mono_of_injective (fun _ _ _ => by rwa [mul_le_mul_left ha_zero ha_top]) hg_bij.1
+    Monotone.strictMono_of_injective (fun _ _ _ => by rwa [mul_le_mul_left ha_zero ha_top]) hg_bij.1
   let g_iso := StrictMono.orderIsoOfSurjective g hg_mono hg_bij.2
   refine' (OrderIso.limsup_apply g_iso _ _ _ _).symm
   all_goals

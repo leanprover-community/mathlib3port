@@ -47,12 +47,12 @@ end MulZeroClass
 section NoZeroDivisors
 
 /-- Pushforward a `no_zero_divisors` instance along an injective function. -/
-protected theorem Function.Injective.noZeroDivisors [Mul M₀] [Zero M₀] [Mul M₀'] [Zero M₀'] [NoZeroDivisors M₀']
+protected theorem Function.Injective.no_zero_divisors [Mul M₀] [Zero M₀] [Mul M₀'] [Zero M₀'] [NoZeroDivisors M₀']
     (f : M₀ → M₀') (hf : Injective f) (zero : f 0 = 0) (mul : ∀ x y, f (x * y) = f x * f y) : NoZeroDivisors M₀ :=
   { eq_zero_or_eq_zero_of_mul_eq_zero := fun x y H =>
       have : f x * f y = 0 := by rw [← mul, H, zero]
       (eq_zero_or_eq_zero_of_mul_eq_zero this).imp (fun H => hf <| by rwa [zero]) fun H => hf <| by rwa [zero] }
-#align function.injective.no_zero_divisors Function.Injective.noZeroDivisors
+#align function.injective.no_zero_divisors Function.Injective.no_zero_divisors
 
 end NoZeroDivisors
 

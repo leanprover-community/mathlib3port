@@ -47,12 +47,6 @@ def succNthValUnits (n : ℕ) (a : Units k) (A : 𝕎 k) (bs : Fin (n + 1) → k
   -↑(a⁻¹ ^ p ^ (n + 1)) * (A.coeff (n + 1) * ↑(a⁻¹ ^ p ^ (n + 1)) + nthRemainder p n (truncateFun (n + 1) A) bs)
 #align witt_vector.succ_nth_val_units WittVector.succNthValUnits
 
-/- warning: witt_vector.inverse_coeff -> WittVector.inverseCoeff is a dubious translation:
-lean 3 declaration is
-  forall {p : Nat} [hp : Fact (Nat.Prime p)] {k : Type.{u_1}} [_inst_1 : CommRing.{u_1} k] [_inst_2 : CharP.{u_1} k (AddGroupWithOne.toAddMonoidWithOne.{u_1} k (NonAssocRing.toAddGroupWithOne.{u_1} k (Ring.toNonAssocRing.{u_1} k (CommRing.toRing.{u_1} k _inst_1)))) p], (Units.{u_1} k (Ring.toMonoid.{u_1} k (CommRing.toRing.{u_1} k _inst_1))) -> (WittVector.{u_1} p k) -> Nat -> k
-but is expected to have type
-  PUnit.{succ (succ u_1)}
-Case conversion may be inaccurate. Consider using '#align witt_vector.inverse_coeff WittVector.inverseCoeffₓ'. -/
 /-- Recursively defines the sequence of coefficients for the inverse to a Witt vector whose first entry
 is a unit.
 -/
@@ -173,13 +167,13 @@ https://github.com/leanprover/lean4/issues/1102
 -/
 /-- The ring of Witt Vectors of a perfect field of positive characteristic is a DVR.
 -/
-theorem discreteValuationRing : DiscreteValuationRing (𝕎 k) :=
-  DiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization
+theorem discrete_valuation_ring : DiscreteValuationRing (𝕎 k) :=
+  DiscreteValuationRing.of_has_unit_mul_pow_irreducible_factorization
     (by
       refine' ⟨p, Irreducible p, fun x hx => _⟩
       obtain ⟨n, b, hb⟩ := exists_eq_pow_p_mul' x hx
       exact ⟨n, b, hb.symm⟩)
-#align witt_vector.discrete_valuation_ring WittVector.discreteValuationRing
+#align witt_vector.discrete_valuation_ring WittVector.discrete_valuation_ring
 
 end PerfectField
 

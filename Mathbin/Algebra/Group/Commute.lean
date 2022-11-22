@@ -290,21 +290,26 @@ theorem units_coe_iff : Commute (u₁ : M) u₂ ↔ Commute u₁ u₂ :=
   SemiconjBy.units_coe_iff
 #align commute.units_coe_iff Commute.units_coe_iff
 
+/-- If the product of two commuting elements is a unit, then the left multiplier is a unit. -/
+@[to_additive "If the sum of two commuting elements is an additive unit, then the left summand is an\nadditive unit."]
+def _root_.units.left_of_mul (u : Mˣ) (a b : M) (hu : a * b = u) (hc : Commute a b) : Mˣ where
+  val := a
+  inv := b * ↑u⁻¹
+  val_inv := by rw [← mul_assoc, hu, u.mul_inv]
+  inv_val := by
+    have : Commute a u := hu ▸ (Commute.refl _).mul_right hc
+    rw [← this.units_inv_right.right_comm, ← hc.eq, hu, u.mul_inv]
+#align commute._root_.units.left_of_mul commute._root_.units.left_of_mul
+
+/-- If the product of two commuting elements is a unit, then the right multiplier is a unit. -/
+@[to_additive "If the sum of two commuting elements is an additive unit, then the right summand is\nan additive unit."]
+def _root_.units.right_of_mul (u : Mˣ) (a b : M) (hu : a * b = u) (hc : Commute a b) : Mˣ :=
+  u.leftOfMul b a (hc.Eq ▸ hu) hc.symm
+#align commute._root_.units.right_of_mul commute._root_.units.right_of_mul
+
 @[to_additive]
-theorem is_unit_mul_iff (h : Commute a b) : IsUnit (a * b) ↔ IsUnit a ∧ IsUnit b := by
-  refine' ⟨_, fun H => H.1.mul H.2⟩
-  rintro ⟨u, hu⟩
-  have : b * ↑u⁻¹ * a = 1 := by
-    have : Commute a u := hu.symm ▸ (Commute.refl _).mul_right h
-    rw [← this.units_inv_right.right_comm, ← h.eq, ← hu, u.mul_inv]
-  constructor
-  · refine' ⟨⟨a, b * ↑u⁻¹, _, this⟩, rfl⟩
-    rw [← mul_assoc, ← hu, u.mul_inv]
-    
-  · rw [mul_assoc] at this
-    refine' ⟨⟨b, ↑u⁻¹ * a, this, _⟩, rfl⟩
-    rw [mul_assoc, ← hu, u.inv_mul]
-    
+theorem is_unit_mul_iff (h : Commute a b) : IsUnit (a * b) ↔ IsUnit a ∧ IsUnit b :=
+  ⟨fun ⟨u, hu⟩ => ⟨(u.leftOfMul a b hu.symm h).IsUnit, (u.rightOfMul a b hu.symm h).IsUnit⟩, fun H => H.1.mul H.2⟩
 #align commute.is_unit_mul_iff Commute.is_unit_mul_iff
 
 @[simp, to_additive]

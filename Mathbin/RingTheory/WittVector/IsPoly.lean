@@ -218,20 +218,20 @@ class IsPoly (f : ∀ ⦃R⦄ [CommRing R], WittVector p R → 𝕎 R) : Prop wh
 #align witt_vector.is_poly WittVector.IsPoly
 
 /-- The identity function on Witt vectors is a polynomial function. -/
-instance idIsPoly : IsPoly p fun _ _ => id :=
+instance id_is_poly : IsPoly p fun _ _ => id :=
   ⟨⟨x, by
       intros
       simp only [aeval_X, id]⟩⟩
-#align witt_vector.id_is_poly WittVector.idIsPoly
+#align witt_vector.id_is_poly WittVector.id_is_poly
 
-instance idIsPolyI' : IsPoly p fun _ _ a => a :=
-  WittVector.idIsPoly _
-#align witt_vector.id_is_poly_i' WittVector.idIsPolyI'
+instance id_is_poly_i' : IsPoly p fun _ _ a => a :=
+  WittVector.id_is_poly _
+#align witt_vector.id_is_poly_i' WittVector.id_is_poly_i'
 
 namespace IsPoly
 
 instance : Inhabited (IsPoly p fun _ _ => id) :=
-  ⟨WittVector.idIsPoly p⟩
+  ⟨WittVector.id_is_poly p⟩
 
 variable {p}
 
@@ -452,7 +452,7 @@ Users are expected to use the non-instance versions manually.
 
 /-- The additive negation is a polynomial function on Witt vectors. -/
 @[is_poly]
-theorem negIsPoly : IsPoly p fun R _ => @Neg.neg (𝕎 R) _ :=
+theorem neg_is_poly : IsPoly p fun R _ => @Neg.neg (𝕎 R) _ :=
   ⟨⟨fun n => rename Prod.snd (wittNeg p n), by
       intros
       funext n
@@ -461,19 +461,19 @@ theorem negIsPoly : IsPoly p fun R _ => @Neg.neg (𝕎 R) _ :=
       ext ⟨i, k⟩
       fin_cases i
       rfl⟩⟩
-#align witt_vector.neg_is_poly WittVector.negIsPoly
+#align witt_vector.neg_is_poly WittVector.neg_is_poly
 
 section ZeroOne
 
 /- To avoid a theory of 0-ary functions (a.k.a. constants)
 we model them as constant unary functions. -/
 /-- The function that is constantly zero on Witt vectors is a polynomial function. -/
-instance zeroIsPoly : IsPoly p fun _ _ _ => 0 :=
+instance zero_is_poly : IsPoly p fun _ _ _ => 0 :=
   ⟨⟨0, by
       intros
       funext n
       simp only [Pi.zero_apply, AlgHom.map_zero, zero_coeff]⟩⟩
-#align witt_vector.zero_is_poly WittVector.zeroIsPoly
+#align witt_vector.zero_is_poly WittVector.zero_is_poly
 
 @[simp]
 theorem bind₁_zero_witt_polynomial (n : ℕ) : bind₁ (0 : ℕ → MvPolynomial ℕ R) (wittPolynomial p R n) = 0 := by
@@ -504,7 +504,7 @@ theorem bind₁_one_poly_witt_polynomial (n : ℕ) : bind₁ onePoly (wittPolyno
 #align witt_vector.bind₁_one_poly_witt_polynomial WittVector.bind₁_one_poly_witt_polynomial
 
 /-- The function that is constantly one on Witt vectors is a polynomial function. -/
-instance oneIsPoly : IsPoly p fun _ _ _ => 1 :=
+instance one_is_poly : IsPoly p fun _ _ _ => 1 :=
   ⟨⟨onePoly, by
       intros
       funext n
@@ -513,7 +513,7 @@ instance oneIsPoly : IsPoly p fun _ _ _ => 1 :=
         
       · simp only [one_poly, Nat.succ_pos', one_coeff_eq_of_pos, if_neg n.succ_ne_zero, AlgHom.map_zero]
         ⟩⟩
-#align witt_vector.one_is_poly WittVector.oneIsPoly
+#align witt_vector.one_is_poly WittVector.one_is_poly
 
 end ZeroOne
 
@@ -563,13 +563,13 @@ variable {p}
 /-- The composition of a binary polynomial function
  with a unary polynomial function in the first argument is polynomial. -/
 theorem comp_left {g f} (hg : IsPoly₂ p g) (hf : IsPoly p f) : IsPoly₂ p fun R _Rcr x y => g (f x) y :=
-  hg.comp hf (WittVector.idIsPoly _)
+  hg.comp hf (WittVector.id_is_poly _)
 #align witt_vector.is_poly₂.comp_left WittVector.IsPoly₂.comp_left
 
 /-- The composition of a binary polynomial function
  with a unary polynomial function in the second argument is polynomial. -/
 theorem comp_right {g f} (hg : IsPoly₂ p g) (hf : IsPoly p f) : IsPoly₂ p fun R _Rcr x y => g x (f y) :=
-  hg.comp (WittVector.idIsPoly p) hf
+  hg.comp (WittVector.id_is_poly p) hf
 #align witt_vector.is_poly₂.comp_right WittVector.IsPoly₂.comp_right
 
 include hp

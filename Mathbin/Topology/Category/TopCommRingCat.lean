@@ -24,7 +24,7 @@ structure TopCommRingCat where
   α : Type u
   [isCommRing : CommRing α]
   [isTopologicalSpace : TopologicalSpace α]
-  [isTopologicalRing : TopologicalRing α]
+  [is_topological_ring : TopologicalRing α]
 #align TopCommRing TopCommRingCat
 
 namespace TopCommRingCat
@@ -71,9 +71,9 @@ instance forgetCommRing (R : TopCommRingCat) : CommRing ((forget TopCommRingCat)
   R.isCommRing
 #align TopCommRing.forget_comm_ring TopCommRingCat.forgetCommRing
 
-instance forgetTopologicalRing (R : TopCommRingCat) : TopologicalRing ((forget TopCommRingCat).obj R) :=
-  R.isTopologicalRing
-#align TopCommRing.forget_topological_ring TopCommRingCat.forgetTopologicalRing
+instance forget_topological_ring (R : TopCommRingCat) : TopologicalRing ((forget TopCommRingCat).obj R) :=
+  R.is_topological_ring
+#align TopCommRing.forget_topological_ring TopCommRingCat.forget_topological_ring
 
 instance hasForgetToCommRing : HasForget₂ TopCommRingCat CommRingCat :=
   HasForget₂.mk' (fun R => CommRingCat.of R) (fun x => rfl) (fun R S f => f.val) fun R S f => HEq.rfl
@@ -93,9 +93,10 @@ instance forgetToTopCommRing (R : TopCommRingCat) : CommRing ((forget₂ TopComm
   R.isCommRing
 #align TopCommRing.forget_to_Top_comm_ring TopCommRingCat.forgetToTopCommRing
 
-instance forgetToTopTopologicalRing (R : TopCommRingCat) : TopologicalRing ((forget₂ TopCommRingCat TopCat).obj R) :=
-  R.isTopologicalRing
-#align TopCommRing.forget_to_Top_topological_ring TopCommRingCat.forgetToTopTopologicalRing
+instance forget_to_Top_topological_ring (R : TopCommRingCat) :
+    TopologicalRing ((forget₂ TopCommRingCat TopCat).obj R) :=
+  R.is_topological_ring
+#align TopCommRing.forget_to_Top_topological_ring TopCommRingCat.forget_to_Top_topological_ring
 
 /-- The forgetful functors to `Type` do not reflect isomorphisms,
 but the forgetful functor from `TopCommRing` to `Top` does.

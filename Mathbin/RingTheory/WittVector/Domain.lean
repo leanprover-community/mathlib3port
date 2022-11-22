@@ -126,7 +126,7 @@ instance [CharP R p] [NoZeroDivisors R] : NoZeroDivisors (𝕎 R) :=
     refine' mul_ne_zero (pow_ne_zero _ hwa0) (pow_ne_zero _ hwb0)⟩
 
 instance [CharP R p] [IsDomain R] : IsDomain (𝕎 R) :=
-  { WittVector.noZeroDivisors, WittVector.nontrivial with }
+  { WittVector.no_zero_divisors, WittVector.nontrivial with }
 
 end WittVector
 

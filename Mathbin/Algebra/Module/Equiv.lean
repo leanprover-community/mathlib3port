@@ -600,7 +600,7 @@ end
 /-- Interpret a `ring_equiv` `f` as an `f`-semilinear equiv. -/
 @[simps]
 def _root_.ring_equiv.to_semilinear_equiv (f : R ≃+* S) : by
-    haveI := RingHomInvPair.ofRingEquiv f <;>
+    haveI := RingHomInvPair.of_ring_equiv f <;>
       haveI := RingHomInvPair.symm (↑f : R →+* S) (f.symm : S →+* R) <;> exact R ≃ₛₗ[(↑f : R →+* S)] S :=
   { f with toFun := f, map_smul' := f.map_mul }
 #align linear_equiv._root_.ring_equiv.to_semilinear_equiv linear_equiv._root_.ring_equiv.to_semilinear_equiv

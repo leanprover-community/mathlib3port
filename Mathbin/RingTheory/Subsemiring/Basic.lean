@@ -85,12 +85,12 @@ instance nontrivial [Nontrivial R] : Nontrivial s :=
   (nontrivial_of_ne 0 1) fun H => zero_ne_one (congr_arg Subtype.val H)
 #align subsemiring_class.nontrivial SubsemiringClass.nontrivial
 
-instance noZeroDivisors [NoZeroDivisors R] :
+instance no_zero_divisors [NoZeroDivisors R] :
     NoZeroDivisors
       s where eq_zero_or_eq_zero_of_mul_eq_zero x y h :=
     Or.cases_on (eq_zero_or_eq_zero_of_mul_eq_zero <| Subtype.ext_iff.mp h) (fun h => Or.inl <| Subtype.eq h) fun h =>
       Or.inr <| Subtype.eq h
-#align subsemiring_class.no_zero_divisors SubsemiringClass.noZeroDivisors
+#align subsemiring_class.no_zero_divisors SubsemiringClass.no_zero_divisors
 
 instance : CoeIsRingHom s R :=
   { SubmonoidClass.coeIsMonoidHom s, AddSubmonoidClass.coeIsAddMonoidHom s with }
@@ -382,12 +382,12 @@ protected theorem pow_mem {R : Type _} [Semiring R] (s : Subsemiring R) {x : R} 
   pow_mem hx n
 #align subsemiring.pow_mem Subsemiring.pow_mem
 
-instance noZeroDivisors [NoZeroDivisors R] :
+instance no_zero_divisors [NoZeroDivisors R] :
     NoZeroDivisors
       s where eq_zero_or_eq_zero_of_mul_eq_zero x y h :=
     Or.cases_on (eq_zero_or_eq_zero_of_mul_eq_zero <| Subtype.ext_iff.mp h) (fun h => Or.inl <| Subtype.eq h) fun h =>
       Or.inr <| Subtype.eq h
-#align subsemiring.no_zero_divisors Subsemiring.noZeroDivisors
+#align subsemiring.no_zero_divisors Subsemiring.no_zero_divisors
 
 /-- A subsemiring of a `semiring` is a `semiring`. -/
 instance toSemiring {R} [Semiring R] (s : Subsemiring R) : Semiring s :=

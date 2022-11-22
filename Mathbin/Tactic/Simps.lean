@@ -365,7 +365,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
                         not been overrriden by the user. -/
                 do
                   let (is_class, proj_nm) ← notation_class_attr class_nm
-                  let proj_nm ← proj_nm <|> (e class_nm).map List.head'
+                  let proj_nm ← proj_nm <|> (e class_nm).map List.head
                   let (raw_expr, lambda_raw_expr) ←
                     if is_class then do
                         guard <| args = 1

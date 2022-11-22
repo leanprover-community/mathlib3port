@@ -7,6 +7,10 @@ Authors: Scott Morrison, Jannis Limperg
 /-!
 # Monadic instances for `ulift` and `plift`
 
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/638
+> Any changes to this file require a corresponding PR to mathlib4.
+
 In this file we define `monad` and `is_lawful_monad` instances on `plift` and `ulift`. -/
 
 
@@ -16,41 +20,59 @@ namespace PLift
 
 variable {α : Sort u} {β : Sort v}
 
+#print PLift.map /-
 /-- Functorial action. -/
 protected def map (f : α → β) (a : PLift α) : PLift β :=
   PLift.up (f a.down)
 #align plift.map PLift.map
+-/
 
+#print PLift.map_up /-
 @[simp]
 theorem map_up (f : α → β) (a : α) : (PLift.up a).map f = PLift.up (f a) :=
   rfl
 #align plift.map_up PLift.map_up
+-/
 
+#print PLift.pure /-
 /-- Embedding of pure values. -/
 @[simp]
 protected def pure : α → PLift α :=
   up
 #align plift.pure PLift.pure
+-/
 
+/- warning: plift.seq -> PLift.seq is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u}} {β : Sort.{v}}, (PLift.{(imax u v)} (α -> β)) -> (PLift.{u} α) -> (PLift.{v} β)
+but is expected to have type
+  forall {α : Sort.{u}} {β : Sort.{v}}, (PLift.{(imax u v)} (α -> β)) -> (Unit -> (PLift.{u} α)) -> (PLift.{v} β)
+Case conversion may be inaccurate. Consider using '#align plift.seq PLift.seqₓ'. -/
 /-- Applicative sequencing. -/
 protected def seq (f : PLift (α → β)) (x : PLift α) : PLift β :=
   PLift.up (f.down x.down)
 #align plift.seq PLift.seq
 
+#print PLift.seq_up /-
 @[simp]
 theorem seq_up (f : α → β) (x : α) : (PLift.up f).seq (PLift.up x) = PLift.up (f x) :=
   rfl
 #align plift.seq_up PLift.seq_up
+-/
 
+#print PLift.bind /-
 /-- Monadic bind. -/
 protected def bind (a : PLift α) (f : α → PLift β) : PLift β :=
   f a.down
 #align plift.bind PLift.bind
+-/
 
+#print PLift.bind_up /-
 @[simp]
 theorem bind_up (a : α) (f : α → PLift β) : (PLift.up a).bind f = f a :=
   rfl
 #align plift.bind_up PLift.bind_up
+-/
 
 instance : Monad PLift where
   map := @PLift.map
@@ -74,10 +96,12 @@ instance : LawfulMonad PLift where
   pure_bind α β x f := rfl
   bind_assoc := fun α β γ ⟨x⟩ f g => rfl
 
+#print PLift.rec.constant /-
 @[simp]
 theorem rec.constant {α : Sort u} {β : Type v} (b : β) : (@PLift.rec α (fun _ => β) fun _ => b) = fun _ => b :=
   funext fun x => PLift.casesOn x fun a => Eq.refl (PLift.rec (fun a' => b) { down := a })
 #align plift.rec.constant PLift.rec.constant
+-/
 
 end PLift
 
@@ -85,37 +109,75 @@ namespace ULift
 
 variable {α : Type u} {β : Type v}
 
+/- warning: ulift.map -> ULift.map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Type.{v}}, (α -> β) -> (ULift.{u_1 u} α) -> (ULift.{u_2 v} β)
+but is expected to have type
+  forall {α : Type.{u}} {β : Type.{v}}, (α -> β) -> (ULift.{u_1 u} α) -> (ULift.{u v} β)
+Case conversion may be inaccurate. Consider using '#align ulift.map ULift.mapₓ'. -/
 /-- Functorial action. -/
 protected def map (f : α → β) (a : ULift α) : ULift β :=
   ULift.up (f a.down)
 #align ulift.map ULift.map
 
+/- warning: ulift.map_up -> ULift.map_up is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Type.{v}} (f : α -> β) (a : α), Eq.{succ (max v u_1)} (ULift.{u_1 v} β) (ULift.map.{u v u_2 u_1} α β f (ULift.up.{u_2 u} α a)) (ULift.up.{u_1 v} β (f a))
+but is expected to have type
+  forall {α : Type.{u}} {β : Type.{v}} (f : α -> β) (a : α), Eq.{(max (succ u) (succ v))} (ULift.{u v} β) (ULift.map.{u v u} α β f (ULift.up.{u u} α a)) (ULift.up.{u v} β (f a))
+Case conversion may be inaccurate. Consider using '#align ulift.map_up ULift.map_upₓ'. -/
 @[simp]
 theorem map_up (f : α → β) (a : α) : (ULift.up a).map f = ULift.up (f a) :=
   rfl
 #align ulift.map_up ULift.map_up
 
+#print ULift.pure /-
 /-- Embedding of pure values. -/
 @[simp]
 protected def pure : α → ULift α :=
   up
 #align ulift.pure ULift.pure
+-/
 
+/- warning: ulift.seq -> ULift.seq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Type.{v}}, (ULift.{u_1 (max u v)} (α -> β)) -> (ULift.{u_2 u} α) -> (ULift.{u_3 v} β)
+but is expected to have type
+  forall {α : Type.{u_1}} {β : Type.{u_2}}, (ULift.{u_3 (max u_1 u_2)} (α -> β)) -> (Unit -> (ULift.{u_4 u_1} α)) -> (ULift.{u u_2} β)
+Case conversion may be inaccurate. Consider using '#align ulift.seq ULift.seqₓ'. -/
 /-- Applicative sequencing. -/
 protected def seq (f : ULift (α → β)) (x : ULift α) : ULift β :=
   ULift.up (f.down x.down)
 #align ulift.seq ULift.seq
 
+/- warning: ulift.seq_up clashes with ULift.seq_up -> ULift.seq_up
+warning: ulift.seq_up -> ULift.seq_up is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Type.{v}} (f : α -> β) (x : α), Eq.{succ (max v u_1)} (ULift.{u_1 v} β) (ULift.seq.{u v u_2 u_3 u_1} α β (ULift.up.{u_2 (max u v)} (α -> β) f) (ULift.up.{u_3 u} α x)) (ULift.up.{u_1 v} β (f x))
+but is expected to have type
+  forall {α : Type.{u}} {β : Type.{v}} (f : α -> β) (x : α), Eq.{(max (succ v) (succ u_1))} (ULift.{u_1 v} β) (ULift.seq.{u_1 u v u_2 u_3} α β (ULift.up.{u_2 (max u v)} (α -> β) f) (fun (x._@.Mathlib.Control.ULift._hyg.808 : Unit) => ULift.up.{u_3 u} α x)) (ULift.up.{u_1 v} β (f x))
+Case conversion may be inaccurate. Consider using '#align ulift.seq_up ULift.seq_upₓ'. -/
 @[simp]
 theorem seq_up (f : α → β) (x : α) : (ULift.up f).seq (ULift.up x) = ULift.up (f x) :=
   rfl
 #align ulift.seq_up ULift.seq_up
 
+/- warning: ulift.bind clashes with ULift.bind -> ULift.bind
+Case conversion may be inaccurate. Consider using '#align ulift.bind ULift.bindₓ'. -/
+#print ULift.bind /-
 /-- Monadic bind. -/
 protected def bind (a : ULift α) (f : α → ULift β) : ULift β :=
   f a.down
 #align ulift.bind ULift.bind
+-/
 
+/- warning: ulift.bind_up clashes with ULift.bind_up -> ULift.bind_up
+warning: ulift.bind_up -> ULift.bind_up is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Type.{v}} (a : α) (f : α -> (ULift.{u_1 v} β)), Eq.{succ (max v u_1)} (ULift.{u_1 v} β) (ULift.bind.{u v u_2 u_1} α β (ULift.up.{u_2 u} α a) f) (f a)
+but is expected to have type
+  forall {α : Type.{u}} {β : Type.{v}} (a : α) (f : α -> (ULift.{u_1 v} β)), Eq.{(max (succ v) (succ u_1))} (ULift.{u_1 v} β) (ULift.bind.{u v u_2 u_1} α β (ULift.up.{u_2 u} α a) f) (f a)
+Case conversion may be inaccurate. Consider using '#align ulift.bind_up ULift.bind_upₓ'. -/
 @[simp]
 theorem bind_up (a : α) (f : α → ULift β) : (ULift.up a).bind f = f a :=
   rfl
@@ -150,6 +212,13 @@ instance : LawfulMonad ULift where
     cases f x
     rfl
 
+/- warning: ulift.rec.constant clashes with ULift.rec.constant -> ULift.rec.constant
+warning: ulift.rec.constant -> ULift.rec.constant is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u}} {β : Sort.{v}} (b : β), Eq.{(imax (succ (max u u_1)) v)} (forall (n : ULift.{u_1 u} α), (fun (_x : ULift.{u_1 u} α) => β) n) (ULift.rec.{v u_1 u} α (fun (_x : ULift.{u_1 u} α) => β) (fun (_x : α) => b)) (fun (_x : ULift.{u_1 u} α) => b)
+but is expected to have type
+  forall {α : Type.{u}} {β : Sort.{v}} (b : β), Eq.{(imax (max (succ u) (succ u_1)) v)} ((ULift.{u_1 u} α) -> β) (ULift.rec.{v u_1 u} α (fun (x._@.Mathlib.Control.ULift._hyg.1315 : ULift.{u_1 u} α) => β) (fun (x._@.Mathlib.Control.ULift._hyg.1320 : α) => b)) (fun (x._@.Mathlib.Control.ULift._hyg.1326 : ULift.{u_1 u} α) => b)
+Case conversion may be inaccurate. Consider using '#align ulift.rec.constant ULift.rec.constantₓ'. -/
 @[simp]
 theorem rec.constant {α : Type u} {β : Sort v} (b : β) : (@ULift.rec α (fun _ => β) fun _ => b) = fun _ => b :=
   funext fun x => ULift.casesOn x fun a => Eq.refl (ULift.rec (fun a' => b) { down := a })

@@ -309,14 +309,19 @@ instance toLinearOrderedCommRing {R A} [CommRing R] [LinearOrderedCommRing A] [A
 
 end
 
-/-- Convert a `subalgebra` to `submodule` -/
-def toSubmodule : Submodule R A where
-  carrier := S
-  zero_mem' := (0 : S).2
-  add_mem' x y hx hy := (⟨x, hx⟩ + ⟨y, hy⟩ : S).2
-  smul_mem' c x hx := (Algebra.smul_def c x).symm ▸ (⟨algebraMap R A c, S.range_le ⟨c, rfl⟩⟩ * ⟨x, hx⟩ : S).2
+/-- The forgetful map from `subalgebra` to `submodule` as an `order_embedding` -/
+def toSubmodule : Subalgebra R A ↪o Submodule R A where
+  toEmbedding :=
+    { toFun := fun S =>
+        { carrier := S, zero_mem' := (0 : S).2, add_mem' := fun x y hx hy => (⟨x, hx⟩ + ⟨y, hy⟩ : S).2,
+          smul_mem' := fun c x hx =>
+            (Algebra.smul_def c x).symm ▸ (⟨algebraMap R A c, S.range_le ⟨c, rfl⟩⟩ * ⟨x, hx⟩ : S).2 },
+      inj' := fun S T h => ext <| by apply SetLike.ext_iff.1 h }
+  map_rel_iff' S T := SetLike.coe_subset_coe.symm.trans SetLike.coe_subset_coe
 #align subalgebra.to_submodule Subalgebra.toSubmodule
 
+/- TODO: bundle other forgetful maps between algebraic substructures, e.g.
+  `to_subsemiring` and `to_subring` in this file. -/
 @[simp]
 theorem mem_to_submodule {x} : x ∈ S.toSubmodule ↔ x ∈ S :=
   Iff.rfl
@@ -326,14 +331,6 @@ theorem mem_to_submodule {x} : x ∈ S.toSubmodule ↔ x ∈ S :=
 theorem coe_to_submodule (S : Subalgebra R A) : (↑S.toSubmodule : Set A) = S :=
   rfl
 #align subalgebra.coe_to_submodule Subalgebra.coe_to_submodule
-
-theorem to_submodule_injective : Function.Injective (toSubmodule : Subalgebra R A → Submodule R A) := fun S T h =>
-  ext fun x => by rw [← mem_to_submodule, ← mem_to_submodule, h]
-#align subalgebra.to_submodule_injective Subalgebra.to_submodule_injective
-
-theorem to_submodule_inj {S U : Subalgebra R A} : S.toSubmodule = U.toSubmodule ↔ S = U :=
-  to_submodule_injective.eq_iff
-#align subalgebra.to_submodule_inj Subalgebra.to_submodule_inj
 
 section
 
@@ -516,14 +513,14 @@ theorem coe_comap (S : Subalgebra R B) (f : A →ₐ[R] B) : (S.comap f : Set A)
   rfl
 #align subalgebra.coe_comap Subalgebra.coe_comap
 
-instance noZeroDivisors {R A : Type _} [CommSemiring R] [Semiring A] [NoZeroDivisors A] [Algebra R A]
+instance no_zero_divisors {R A : Type _} [CommSemiring R] [Semiring A] [NoZeroDivisors A] [Algebra R A]
     (S : Subalgebra R A) : NoZeroDivisors S :=
   S.toSubsemiring.NoZeroDivisors
-#align subalgebra.no_zero_divisors Subalgebra.noZeroDivisors
+#align subalgebra.no_zero_divisors Subalgebra.no_zero_divisors
 
-instance isDomain {R A : Type _} [CommRing R] [Ring A] [IsDomain A] [Algebra R A] (S : Subalgebra R A) : IsDomain S :=
-  Subring.isDomain S.toSubring
-#align subalgebra.is_domain Subalgebra.isDomain
+instance is_domain {R A : Type _} [CommRing R] [Ring A] [IsDomain A] [Algebra R A] (S : Subalgebra R A) : IsDomain S :=
+  Subring.is_domain S.toSubring
+#align subalgebra.is_domain Subalgebra.is_domain
 
 end Subalgebra
 
@@ -780,7 +777,7 @@ theorem top_to_subring {R A : Type _} [CommRing R] [Ring A] [Algebra R A] : (⊤
 
 @[simp]
 theorem to_submodule_eq_top {S : Subalgebra R A} : S.toSubmodule = ⊤ ↔ S = ⊤ :=
-  Subalgebra.to_submodule_injective.eq_iff' top_to_submodule
+  Subalgebra.toSubmodule.Injective.eq_iff' top_to_submodule
 #align algebra.to_submodule_eq_top Algebra.to_submodule_eq_top
 
 @[simp]

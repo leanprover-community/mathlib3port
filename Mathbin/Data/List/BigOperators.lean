@@ -7,9 +7,14 @@ import Mathbin.Data.List.Forall2
 import Mathbin.Algebra.Group.Opposite
 import Mathbin.Algebra.GroupPower.Basic
 import Mathbin.Algebra.GroupWithZero.Commute
+import Mathbin.Algebra.GroupWithZero.Divisibility
+import Mathbin.Algebra.Order.WithZero
 import Mathbin.Algebra.Ring.Basic
+import Mathbin.Algebra.Ring.Divisibility
 import Mathbin.Algebra.Ring.Commute
 import Mathbin.Data.Int.Basic
+import Mathbin.Data.Int.Units
+import Mathbin.Data.Set.Basic
 
 /-!
 # Sums and products from lists
@@ -144,6 +149,16 @@ theorem prod_is_unit : ∀ {L : List M} (u : ∀ m ∈ L, IsUnit m), IsUnit L.Pr
     simp only [List.prod_cons]
     exact IsUnit.mul (u h (mem_cons_self h t)) (prod_is_unit fun m mt => u m (mem_cons_of_mem h mt))
 #align list.prod_is_unit List.prod_is_unit
+
+@[to_additive]
+theorem prod_is_unit_iff {α : Type _} [CommMonoid α] {L : List α} : IsUnit L.Prod ↔ ∀ m ∈ L, IsUnit m := by
+  refine' ⟨fun h => _, prod_is_unit⟩
+  induction' L with m L ih
+  · exact fun m' h' => False.elim (not_mem_nil m' h')
+    
+  rw [prod_cons, IsUnit.mul_iff] at h
+  exact fun m' h' => Or.elim (eq_or_mem_of_mem_cons h') (fun H => H.substr h.1) fun H => ih h.2 _ H
+#align list.prod_is_unit_iff List.prod_is_unit_iff
 
 @[simp, to_additive]
 theorem prod_take_mul_prod_drop : ∀ (L : List M) (i : ℕ), (L.take i).Prod * (L.drop i).Prod = L.Prod
@@ -500,6 +515,20 @@ theorem prod_eq_one [Monoid M] {l : List M} (hl : ∀ x ∈ l, x = (1 : M)) : l.
   trans (prod_eq_pow_card l 1 hl) (one_pow l.length)
 #align list.prod_eq_one List.prod_eq_one
 
+@[to_additive]
+theorem exists_mem_ne_one_of_prod_ne_one [Monoid M] {l : List M} (h : l.Prod ≠ 1) : ∃ x ∈ l, x ≠ (1 : M) := by
+  simpa only [not_forall] using mt prod_eq_one h
+#align list.exists_mem_ne_one_of_prod_ne_one List.exists_mem_ne_one_of_prod_ne_one
+
+/-- If a product of integers is `-1`, then at least one factor must be `-1`. -/
+theorem neg_one_mem_of_prod_eq_neg_one {l : List ℤ} (h : l.Prod = -1) : (-1 : ℤ) ∈ l := by
+  obtain ⟨x, h₁, h₂⟩ := exists_mem_ne_one_of_prod_ne_one (ne_of_eq_of_ne h (by decide))
+  exact
+    Or.resolve_left (int.is_unit_iff.mp (prod_is_unit_iff.mp (h.symm ▸ IsUnit.neg is_unit_one : IsUnit l.prod) x h₁))
+        h₂ ▸
+      h₁
+#align list.neg_one_mem_of_prod_eq_neg_one List.neg_one_mem_of_prod_eq_neg_one
+
 /-- If all elements in a list are bounded below by `1`, then the length of the list is bounded
 by the sum of the elements. -/
 theorem length_le_sum_of_one_le (L : List ℕ) (h : ∀ i ∈ L, 1 ≤ i) : L.length ≤ L.Sum := by
@@ -524,9 +553,9 @@ theorem sum_le_foldr_max [AddMonoid M] [AddMonoid N] [LinearOrder N] (f : M → 
 theorem prod_erase [DecidableEq M] [CommMonoid M] {a} : ∀ {l : List M}, a ∈ l → a * (l.erase a).Prod = l.Prod
   | b :: l, h => by
     obtain rfl | ⟨ne, h⟩ := Decidable.List.eq_or_ne_mem_of_mem h
-    · simp only [List.erase', if_pos, prod_cons]
+    · simp only [List.erase, if_pos, prod_cons]
       
-    · simp only [List.erase', if_neg (mt Eq.symm Ne), prod_cons, prod_erase h, mul_left_comm a b]
+    · simp only [List.erase, if_neg (mt Eq.symm Ne), prod_cons, prod_erase h, mul_left_comm a b]
       
 #align list.prod_erase List.prod_erase
 

@@ -5,11 +5,11 @@ Authors: Leonardo de Moura, Jeremy Avigad
 -/
 
 /-!
-THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-https://github.com/leanprover-community/mathlib4/pull/534
-Any changes to this file require a corresponding PR to mathlib4.
-
 # booleans
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/534
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file proves various trivial lemmas about booleans and their
 relation to decidable propositions.
@@ -106,13 +106,11 @@ theorem decide_or (p q : Prop) [Decidable p] [Decidable q] : decide (p ∨ q) = 
 #align bool.to_bool_or Bool.decide_or
 -/
 
-/- warning: bool.to_bool_eq clashes with bool.decide_eq -> Bool.to_bool_eq
-Case conversion may be inaccurate. Consider using '#align bool.to_bool_eq Bool.to_bool_eqₓ'. -/
-#print Bool.to_bool_eq /-
+#print Bool.decide_eq /-
 @[simp]
-theorem to_bool_eq {p q : Prop} [Decidable p] [Decidable q] : decide p = decide q ↔ (p ↔ q) :=
+theorem decide_eq {p q : Prop} [Decidable p] [Decidable q] : decide p = decide q ↔ (p ↔ q) :=
   ⟨fun h => (coe_decide p).symm.trans <| by simp [h], Bool.decide_congr⟩
-#align bool.to_bool_eq Bool.to_bool_eq
+#align bool.to_bool_eq Bool.decide_eq
 -/
 
 #print Bool.not_false' /-

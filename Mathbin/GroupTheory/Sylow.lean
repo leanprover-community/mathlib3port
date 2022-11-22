@@ -155,7 +155,7 @@ instance Sylow.nonempty : Nonempty (Sylow p G) :=
 #align sylow.nonempty Sylow.nonempty
 
 noncomputable instance Sylow.inhabited : Inhabited (Sylow p G) :=
-  Classical.inhabitedOfNonempty Sylow.nonempty
+  Classical.inhabited_of_nonempty Sylow.nonempty
 #align sylow.inhabited Sylow.inhabited
 
 theorem Sylow.exists_comap_eq_of_ker_is_p_group {H : Type _} [Group H] (P : Sylow p H) {f : H →* G}

@@ -22,8 +22,8 @@ theorem IsPrimePow.min_fac_pow_factorization_eq {n : ℕ} (hn : IsPrimePow n) : 
   rw [hp.pow_min_fac hk.ne', hp.factorization_pow, Finsupp.single_eq_same]
 #align is_prime_pow.min_fac_pow_factorization_eq IsPrimePow.min_fac_pow_factorization_eq
 
-theorem isPrimePowOfMinFacPowFactorizationEq {n : ℕ} (h : n.minFac ^ n.factorization n.minFac = n) (hn : n ≠ 1) :
-    IsPrimePow n := by
+theorem is_prime_pow_of_min_fac_pow_factorization_eq {n : ℕ} (h : n.minFac ^ n.factorization n.minFac = n)
+    (hn : n ≠ 1) : IsPrimePow n := by
   rcases eq_or_ne n 0 with (rfl | hn')
   · simpa using h
     
@@ -31,11 +31,11 @@ theorem isPrimePowOfMinFacPowFactorizationEq {n : ℕ} (h : n.minFac ^ n.factori
   rw [pos_iff_ne_zero, ← Finsupp.mem_support_iff, Nat.factor_iff_mem_factorization,
     Nat.mem_factors_iff_dvd hn' (Nat.min_fac_prime hn)]
   apply Nat.min_fac_dvd
-#align is_prime_pow_of_min_fac_pow_factorization_eq isPrimePowOfMinFacPowFactorizationEq
+#align is_prime_pow_of_min_fac_pow_factorization_eq is_prime_pow_of_min_fac_pow_factorization_eq
 
 theorem is_prime_pow_iff_min_fac_pow_factorization_eq {n : ℕ} (hn : n ≠ 1) :
     IsPrimePow n ↔ n.minFac ^ n.factorization n.minFac = n :=
-  ⟨fun h => h.min_fac_pow_factorization_eq, fun h => isPrimePowOfMinFacPowFactorizationEq h hn⟩
+  ⟨fun h => h.min_fac_pow_factorization_eq, fun h => is_prime_pow_of_min_fac_pow_factorization_eq h hn⟩
 #align is_prime_pow_iff_min_fac_pow_factorization_eq is_prime_pow_iff_min_fac_pow_factorization_eq
 
 theorem is_prime_pow_iff_factorization_eq_single {n : ℕ} :

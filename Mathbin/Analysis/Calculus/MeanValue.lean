@@ -886,7 +886,7 @@ theorem Convex.strict_mono_on_of_deriv_pos {D : Set ℝ} (hD : Convex ℝ D) {f 
 Note that we don't require differentiability explicitly as it already implied by the derivative
 being strictly positive. -/
 theorem strict_mono_of_deriv_pos {f : ℝ → ℝ} (hf' : ∀ x, 0 < deriv f x) : StrictMono f :=
-  strict_mono_on_univ.1 <|
+  strictMonoOn_univ.1 <|
     convex_univ.strict_mono_on_of_deriv_pos
       (fun z _ => (differentiableAtOfDerivNeZero (hf' z).ne').DifferentiableWithinAt.ContinuousWithinAt) fun x _ =>
       hf' x
@@ -904,7 +904,7 @@ theorem Convex.monotone_on_of_deriv_nonneg {D : Set ℝ} (hD : Convex ℝ D) {f 
 /-- Let `f : ℝ → ℝ` be a differentiable function. If `f'` is nonnegative, then
 `f` is a monotone function. -/
 theorem monotone_of_deriv_nonneg {f : ℝ → ℝ} (hf : Differentiable ℝ f) (hf' : ∀ x, 0 ≤ deriv f x) : Monotone f :=
-  monotone_on_univ.1 <|
+  monotoneOn_univ.1 <|
     convex_univ.monotone_on_of_deriv_nonneg hf.Continuous.ContinuousOn hf.DifferentiableOn fun x _ => hf' x
 #align monotone_of_deriv_nonneg monotone_of_deriv_nonneg
 
@@ -923,7 +923,7 @@ theorem Convex.strict_anti_on_of_deriv_neg {D : Set ℝ} (hD : Convex ℝ D) {f 
 Note that we don't require differentiability explicitly as it already implied by the derivative
 being strictly negative. -/
 theorem strict_anti_of_deriv_neg {f : ℝ → ℝ} (hf' : ∀ x, deriv f x < 0) : StrictAnti f :=
-  strict_anti_on_univ.1 <|
+  strictAntiOn_univ.1 <|
     convex_univ.strict_anti_on_of_deriv_neg
       (fun z _ => (differentiableAtOfDerivNeZero (hf' z).Ne).DifferentiableWithinAt.ContinuousWithinAt) fun x _ => hf' x
 #align strict_anti_of_deriv_neg strict_anti_of_deriv_neg
@@ -940,7 +940,7 @@ theorem Convex.antitone_on_of_deriv_nonpos {D : Set ℝ} (hD : Convex ℝ D) {f 
 /-- Let `f : ℝ → ℝ` be a differentiable function. If `f'` is nonpositive, then
 `f` is an antitone function. -/
 theorem antitone_of_deriv_nonpos {f : ℝ → ℝ} (hf : Differentiable ℝ f) (hf' : ∀ x, deriv f x ≤ 0) : Antitone f :=
-  antitone_on_univ.1 <|
+  antitoneOn_univ.1 <|
     convex_univ.antitone_on_of_deriv_nonpos hf.Continuous.ContinuousOn hf.DifferentiableOn fun x _ => hf' x
 #align antitone_of_deriv_nonpos antitone_of_deriv_nonpos
 

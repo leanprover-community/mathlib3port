@@ -143,7 +143,7 @@ theorem right_induction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (alg
   have : x ∈ ⊤ := Submodule.mem_top
   rw [← supr_ι_range_eq_top] at this
   apply Submodule.supr_induction _ this (fun i x hx => _) _ h_add
-  · refine' Submodule.powInductionOnRight _ hr h_add (fun x px m => _) hx
+  · refine' Submodule.pow_induction_on_right _ hr h_add (fun x px m => _) hx
     rintro ⟨m, rfl⟩
     exact h_ι_mul _ _ px
     

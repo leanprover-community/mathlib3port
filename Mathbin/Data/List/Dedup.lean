@@ -113,7 +113,7 @@ theorem sum_map_count_dedup_filter_eq_countp (p : α → Prop) [DecidablePred p]
       by_cases ha : a ∈ as
       · simp [dedup_cons_of_mem ha]
         
-      · simp only [dedup_cons_of_not_mem ha, List.filter']
+      · simp only [dedup_cons_of_not_mem ha, List.filter]
         split_ifs with hp <;> simp [List.map_cons, List.sum_cons, List.count_eq_zero.2 ha, zero_add]
         
       

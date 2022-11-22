@@ -995,7 +995,7 @@ theorem coe_insert (a : α) (s : Finset α) : ↑(insert a s) = (insert a s : Se
 theorem mem_insert_coe {s : Finset α} {x y : α} : x ∈ insert y s ↔ x ∈ insert y (s : Set α) := by simp
 #align finset.mem_insert_coe Finset.mem_insert_coe
 
-instance : LawfulSingleton α (Finset α) :=
+instance : IsLawfulSingleton α (Finset α) :=
   ⟨fun a => by
     ext
     simp⟩
@@ -2890,7 +2890,7 @@ theorem to_finset_cons (a : α) (s : Multiset α) : toFinset (a ::ₘ s) = inser
 
 @[simp]
 theorem to_finset_singleton (a : α) : toFinset ({a} : Multiset α) = {a} := by
-  rw [← cons_zero, to_finset_cons, to_finset_zero, LawfulSingleton.insert_emptyc_eq]
+  rw [← cons_zero, to_finset_cons, to_finset_zero, IsLawfulSingleton.insert_emptyc_eq]
 #align multiset.to_finset_singleton Multiset.to_finset_singleton
 
 @[simp]
@@ -3199,8 +3199,13 @@ theorem map_embedding_apply : mapEmbedding f s = map f s :=
   rfl
 #align finset.map_embedding_apply Finset.map_embedding_apply
 
-theorem map_filter {p : β → Prop} [DecidablePred p] : (s.map f).filter p = (s.filter (p ∘ f)).map f :=
+theorem filter_map {p : β → Prop} [DecidablePred p] : (s.map f).filter p = (s.filter (p ∘ f)).map f :=
   eq_of_veq (map_filter _ _ _)
+#align finset.filter_map Finset.filter_map
+
+theorem map_filter {f : α ≃ β} {p : α → Prop} [DecidablePred p] :
+    (s.filter p).map f.toEmbedding = (s.map f.toEmbedding).filter (p ∘ f.symm) := by
+  simp only [filter_map, Function.comp, Equiv.to_embedding_apply, Equiv.symm_apply_apply]
 #align finset.map_filter Finset.map_filter
 
 @[simp]

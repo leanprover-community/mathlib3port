@@ -126,7 +126,7 @@ theorem filter_snd_eq_antidiagonal (n m : ℕ) :
     ext
     simp
   rw [← map_swap_antidiagonal]
-  simp [map_filter, this, filter_fst_eq_antidiagonal, apply_ite (Finset.map _)]
+  simp [filter_map, this, filter_fst_eq_antidiagonal, apply_ite (Finset.map _)]
 #align finset.nat.filter_snd_eq_antidiagonal Finset.Nat.filter_snd_eq_antidiagonal
 
 section EquivProd

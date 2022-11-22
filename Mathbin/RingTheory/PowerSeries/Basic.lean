@@ -823,7 +823,7 @@ variable [CommRing R]
 
 /-- Multivariate formal power series over a local ring form a local ring. -/
 instance [LocalRing R] : LocalRing (MvPowerSeries σ R) :=
-  LocalRing.ofIsUnitOrIsUnitOneSubSelf <| by
+  LocalRing.of_is_unit_or_is_unit_one_sub_self <| by
     intro φ
     rcases LocalRing.is_unit_or_is_unit_one_sub_self (constant_coeff σ R φ) with (⟨u, h⟩ | ⟨u, h⟩) <;> [left, right] <;>
       · refine' is_unit_of_mul_eq_one _ _ (mul_inv_of_unit _ u _)
@@ -840,7 +840,7 @@ variable {S : Type _} [CommRing R] [CommRing S] (f : R →+* S) [IsLocalRingHom 
 -- Thanks to the linter for informing us that  this instance does
 -- not actually need R and S to be local rings!
 /-- The map `A[[X]] → B[[X]]` induced by a local ring hom `A → B` is local -/
-instance map.isLocalRingHom : IsLocalRingHom (map σ f) :=
+instance map.is_local_ring_hom : IsLocalRingHom (map σ f) :=
   ⟨by
     rintro φ ⟨ψ, h⟩
     replace h := congr_arg (constant_coeff σ S) h
@@ -849,7 +849,7 @@ instance map.isLocalRingHom : IsLocalRingHom (map σ f) :=
     rw [h] at this
     rcases is_unit_of_map_unit f _ this with ⟨c, hc⟩
     exact is_unit_of_mul_eq_one φ (inv_of_unit φ c) (mul_inv_of_unit φ c hc.symm)⟩
-#align mv_power_series.map.is_local_ring_hom MvPowerSeries.map.isLocalRingHom
+#align mv_power_series.map.is_local_ring_hom MvPowerSeries.map.is_local_ring_hom
 
 end LocalRing
 
@@ -1898,14 +1898,14 @@ theorem span_X_is_prime : (Ideal.span ({x} : Set (PowerSeries R))).IsPrime := by
 #align power_series.span_X_is_prime PowerSeries.span_X_is_prime
 
 /-- The variable of the power series ring over an integral domain is prime.-/
-theorem xPrime : Prime (x : PowerSeries R) := by
+theorem X_prime : Prime (x : PowerSeries R) := by
   rw [← Ideal.span_singleton_prime]
   · exact span_X_is_prime
     
   · intro h
     simpa using congr_arg (coeff R 1) h
     
-#align power_series.X_prime PowerSeries.xPrime
+#align power_series.X_prime PowerSeries.X_prime
 
 theorem rescale_injective {a : R} (ha : a ≠ 0) : Function.Injective (rescale a) := by
   intro p q h
@@ -1924,14 +1924,14 @@ section LocalRing
 
 variable {S : Type _} [CommRing R] [CommRing S] (f : R →+* S) [IsLocalRingHom f]
 
-instance map.isLocalRingHom : IsLocalRingHom (map f) :=
-  MvPowerSeries.map.isLocalRingHom f
-#align power_series.map.is_local_ring_hom PowerSeries.map.isLocalRingHom
+instance map.is_local_ring_hom : IsLocalRingHom (map f) :=
+  MvPowerSeries.map.is_local_ring_hom f
+#align power_series.map.is_local_ring_hom PowerSeries.map.is_local_ring_hom
 
 variable [LocalRing R] [LocalRing S]
 
 instance : LocalRing (PowerSeries R) :=
-  MvPowerSeries.localRing
+  MvPowerSeries.local_ring
 
 end LocalRing
 

@@ -96,12 +96,12 @@ theorem laurent_C (x : R) : laurent r (c x) = c x := by rw [← algebra_map_C, l
 
 @[simp]
 theorem laurent_at_zero : laurent 0 f = f := by
-  induction f using Ratfunc.inductionOn
+  induction f using Ratfunc.induction_on
   simp
 #align ratfunc.laurent_at_zero Ratfunc.laurent_at_zero
 
 theorem laurent_laurent : laurent r (laurent s f) = laurent (r + s) f := by
-  induction f using Ratfunc.inductionOn
+  induction f using Ratfunc.induction_on
   simp_rw [laurent_div, taylor_taylor]
 #align ratfunc.laurent_laurent Ratfunc.laurent_laurent
 

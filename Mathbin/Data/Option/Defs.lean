@@ -5,11 +5,11 @@ Authors: Mario Carneiro
 -/
 
 /-!
-THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-https://github.com/leanprover-community/mathlib4/pull/504
-Any changes to this file require a corresponding PR to mathlib4.
-
 # Extra definitions on `option`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/504
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines more operations involving `option α`. Lemmas about them are located in other
 files under `data.option.`.
@@ -88,7 +88,7 @@ instance decidableForallMem {p : α → Prop} [DecidablePred p] : ∀ o : Option
 lean 3 declaration is
   forall {α : Type.{u_1}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u_1} α p] (o : Option.{u_1} α), Decidable (Exists.{succ u_1} α (fun (a : α) => Exists.{0} (Membership.Mem.{u_1 u_1} α (Option.{u_1} α) (Option.hasMem.{u_1} α) a o) (fun (H : Membership.Mem.{u_1 u_1} α (Option.{u_1} α) (Option.hasMem.{u_1} α) a o) => p a)))
 but is expected to have type
-  forall {α : Type.{u_1}} {p : α -> Prop} [inst._@.Mathlib.Data.Option.Defs._hyg.389 : DecidablePred.{succ u_1} α p] (o : Option.{u_1} α), Decidable (Exists.{succ u_1} α (fun (a : α) => And (Membership.mem.{u_1 u_1} α (Option.{u_1} α) (Option.instMembershipOption.{u_1} α) a o) (p a)))
+  forall {α : Type.{u_1}} {p : α -> Prop} [inst._@.Mathlib.Data.Option.Defs._hyg.395 : DecidablePred.{succ u_1} α p] (o : Option.{u_1} α), Decidable (Exists.{succ u_1} α (fun (a : α) => And (Membership.mem.{u_1 u_1} α (Option.{u_1} α) (Option.instMembershipOption.{u_1} α) a o) (p a)))
 Case conversion may be inaccurate. Consider using '#align option.decidable_exists_mem Option.decidableExistsMemₓ'. -/
 instance decidableExistsMem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∃ a ∈ o, p a)
   | none => isFalse fun ⟨a, ⟨h, _⟩⟩ => by cases h

@@ -416,7 +416,7 @@ instance : Insert PSet PSet :=
 instance : Singleton PSet PSet :=
   ⟨fun s => insert s ∅⟩
 
-instance : LawfulSingleton PSet PSet :=
+instance : IsLawfulSingleton PSet PSet :=
   ⟨fun _ => rfl⟩
 
 instance (x y : PSet) : Inhabited (insert x y).type :=
@@ -856,7 +856,7 @@ instance : Insert SetCat SetCat :=
 instance : Singleton SetCat SetCat :=
   ⟨fun x => insert x ∅⟩
 
-instance : LawfulSingleton SetCat SetCat :=
+instance : IsLawfulSingleton SetCat SetCat :=
   ⟨fun x => rfl⟩
 
 @[simp]

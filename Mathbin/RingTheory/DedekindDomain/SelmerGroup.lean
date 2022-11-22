@@ -218,10 +218,10 @@ theorem from_unit_ker [hn : Fact <| 0 < n] : (@fromUnit R _ _ _ K _ _ _ n).ker =
     rw [Units.coe_pow] at hv
     rw [← inv_pow, Units.inv_mk, Units.coe_pow] at hi
     rcases@IsIntegrallyClosed.exists_algebra_map_eq_of_is_integral_pow R _ _ _ _ _ _ _ v _ hn.out
-        (hv.symm ▸ isIntegralAlgebraMap) with
+        (hv.symm ▸ is_integral_algebra_map) with
       ⟨v', rfl⟩
     rcases@IsIntegrallyClosed.exists_algebra_map_eq_of_is_integral_pow R _ _ _ _ _ _ _ i _ hn.out
-        (hi.symm ▸ isIntegralAlgebraMap) with
+        (hi.symm ▸ is_integral_algebra_map) with
       ⟨i', rfl⟩
     rw [← map_mul, map_eq_one_iff _ <| NoZeroSmulDivisors.algebra_map_injective R K] at vi
     rw [← map_mul, map_eq_one_iff _ <| NoZeroSmulDivisors.algebra_map_injective R K] at iv

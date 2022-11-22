@@ -1346,6 +1346,13 @@ theorem StrictAntiOn.comp_strict_mono_on [Preorder α] [Preorder β] [Preorder �
   fun x hx y hy hxy => hg (hs hx) (hs hy) <| hf hx hy hxy
 #align strict_anti_on.comp_strict_mono_on StrictAntiOn.comp_strict_mono_on
 
+@[simp]
+theorem strict_mono_restrict [Preorder α] [Preorder β] {f : α → β} {s : Set α} :
+    StrictMono (s.restrict f) ↔ StrictMonoOn f s := by simp [Set.restrict, StrictMono, StrictMonoOn]
+#align strict_mono_restrict strict_mono_restrict
+
+alias strict_mono_restrict ↔ _root_.strict_mono.of_restrict _root_.strict_mono_on.restrict
+
 theorem StrictMono.cod_restrict [Preorder α] [Preorder β] {f : α → β} (hf : StrictMono f) {s : Set β}
     (hs : ∀ x, f x ∈ s) : StrictMono (Set.codRestrict f s hs) :=
   hf

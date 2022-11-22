@@ -288,12 +288,12 @@ theorem antivary_id_iff : Antivary f id ↔ Antitone f :=
 
 @[simp]
 theorem monovary_on_id_iff : MonovaryOn f id s ↔ MonotoneOn f s :=
-  monotone_on_iff_forall_lt.symm
+  monotoneOn_iff_forall_lt.symm
 #align monovary_on_id_iff monovary_on_id_iff
 
 @[simp]
 theorem antivary_on_id_iff : AntivaryOn f id s ↔ AntitoneOn f s :=
-  antitone_on_iff_forall_lt.symm
+  antitoneOn_iff_forall_lt.symm
 #align antivary_on_id_iff antivary_on_id_iff
 
 end PartialOrder

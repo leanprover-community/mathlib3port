@@ -68,11 +68,11 @@ variable (p)
 
 /-- Multiplication by `n` is a polynomial function. -/
 @[is_poly]
-theorem mulNIsPoly (n : ℕ) : IsPoly p fun R _Rcr x => x * n :=
+theorem mul_n_is_poly (n : ℕ) : IsPoly p fun R _Rcr x => x * n :=
   ⟨⟨wittMulN p n, fun R _Rcr x => by
       funext k
       exact mul_n_coeff n x k⟩⟩
-#align witt_vector.mul_n_is_poly WittVector.mulNIsPoly
+#align witt_vector.mul_n_is_poly WittVector.mul_n_is_poly
 
 @[simp]
 theorem bind₁_witt_mul_n_witt_polynomial (n k : ℕ) :

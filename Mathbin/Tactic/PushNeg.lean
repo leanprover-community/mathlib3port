@@ -112,7 +112,7 @@ private unsafe
                           do
                             let distrib ← get_bool_option `trace.push_neg.use_distrib ff
                               if
-                                distrib
+                                Distrib
                                 then
                                 do
                                   let pr ← mk_app ` ` not_and_distrib_eq [ a , b ]

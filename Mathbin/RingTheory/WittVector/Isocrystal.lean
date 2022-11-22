@@ -84,13 +84,13 @@ def FractionRing.frobeniusRingHom : K(p, k) →+* K(p, k) :=
 -- mathport name: witt_vector.frobenius_ring_hom
 scoped[Isocrystal] notation "φ(" p ", " k ")" => WittVector.FractionRing.frobeniusRingHom p k
 
-instance invPair₁ : RingHomInvPair φ(p, k) _ :=
-  RingHomInvPair.ofRingEquiv (FractionRing.frobenius p k)
-#align witt_vector.inv_pair₁ WittVector.invPair₁
+instance inv_pair₁ : RingHomInvPair φ(p, k) _ :=
+  RingHomInvPair.of_ring_equiv (FractionRing.frobenius p k)
+#align witt_vector.inv_pair₁ WittVector.inv_pair₁
 
-instance invPair₂ : RingHomInvPair ((FractionRing.frobenius p k).symm : K(p, k) →+* K(p, k)) _ :=
-  RingHomInvPair.ofRingEquiv (FractionRing.frobenius p k).symm
-#align witt_vector.inv_pair₂ WittVector.invPair₂
+instance inv_pair₂ : RingHomInvPair ((FractionRing.frobenius p k).symm : K(p, k) →+* K(p, k)) _ :=
+  RingHomInvPair.of_ring_equiv (FractionRing.frobenius p k).symm
+#align witt_vector.inv_pair₂ WittVector.inv_pair₂
 
 -- mathport name: frobenius_ring_hom.linear_map
 scoped[Isocrystal]

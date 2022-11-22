@@ -107,7 +107,7 @@ theorem coe_submodule_le_coe_submodule (h : M ≤ nonZeroDivisors R) {I J : Idea
 
 @[mono]
 theorem coe_submodule_strict_mono (h : M ≤ nonZeroDivisors R) : StrictMono (coeSubmodule S : Ideal R → Submodule R S) :=
-  strict_mono_of_le_iff_le fun _ _ => (coe_submodule_le_coe_submodule h).symm
+  strictMono_of_le_iff_le fun _ _ => (coe_submodule_le_coe_submodule h).symm
 #align is_localization.coe_submodule_strict_mono IsLocalization.coe_submodule_strict_mono
 
 variable (S) {Q M}
@@ -202,7 +202,7 @@ theorem coe_submodule_le_coe_submodule {I J : Ideal R} : coeSubmodule K I ≤ co
 
 @[mono]
 theorem coe_submodule_strict_mono : StrictMono (coeSubmodule K : Ideal R → Submodule R K) :=
-  strict_mono_of_le_iff_le fun _ _ => coe_submodule_le_coe_submodule.symm
+  strictMono_of_le_iff_le fun _ _ => coe_submodule_le_coe_submodule.symm
 #align is_fraction_ring.coe_submodule_strict_mono IsFractionRing.coe_submodule_strict_mono
 
 variable (R K)

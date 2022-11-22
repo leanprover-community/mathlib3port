@@ -99,6 +99,15 @@ protected def copy (f : CocompactMap α β) (f' : α → β) (h : f' = f) : Coco
 #align cocompact_map.copy CocompactMap.copy
 
 @[simp]
+theorem coe_copy (f : CocompactMap α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align cocompact_map.coe_copy CocompactMap.coe_copy
+
+theorem copy_eq (f : CocompactMap α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align cocompact_map.copy_eq CocompactMap.copy_eq
+
+@[simp]
 theorem coe_mk (f : C(α, β)) (h : Tendsto f (cocompact α) (cocompact β)) : ⇑(⟨f, h⟩ : CocompactMap α β) = f :=
   rfl
 #align cocompact_map.coe_mk CocompactMap.coe_mk

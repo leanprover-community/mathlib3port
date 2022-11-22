@@ -244,10 +244,10 @@ end minpoly
 
 end Fintype
 
-theorem isIntegral [Finite G] (x : F) : IsIntegral (FixedPoints.subfield G F) x := by
+theorem is_integral [Finite G] (x : F) : IsIntegral (FixedPoints.subfield G F) x := by
   cases nonempty_fintype G
   exact ⟨minpoly G F x, minpoly.monic G F x, minpoly.eval₂ G F x⟩
-#align fixed_points.is_integral FixedPoints.isIntegral
+#align fixed_points.is_integral FixedPoints.is_integral
 
 section Fintype
 
@@ -271,7 +271,7 @@ section Finite
 variable [Finite G]
 
 instance normal : Normal (FixedPoints.subfield G F) F :=
-  ⟨fun x => (isIntegral G F x).IsAlgebraic _, fun x =>
+  ⟨fun x => (is_integral G F x).IsAlgebraic _, fun x =>
     (Polynomial.splits_id_iff_splits _).1 <| by
       cases nonempty_fintype G
       rw [← minpoly_eq_minpoly, minpoly, coe_algebra_map, ← Subfield.toSubring.subtype_eq_subtype,
@@ -280,7 +280,7 @@ instance normal : Normal (FixedPoints.subfield G F) F :=
 #align fixed_points.normal FixedPoints.normal
 
 instance separable : IsSeparable (FixedPoints.subfield G F) F :=
-  ⟨isIntegral G F, fun x => by
+  ⟨is_integral G F, fun x => by
     cases nonempty_fintype G
     -- this was a plain rw when we were using unbundled subrings
     erw [← minpoly_eq_minpoly, ← Polynomial.separable_map (FixedPoints.subfield G F).Subtype, minpoly,

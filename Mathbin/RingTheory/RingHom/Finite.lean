@@ -18,18 +18,18 @@ open TensorProduct
 
 open TensorProduct Algebra.TensorProduct
 
-theorem finiteStableUnderComposition : StableUnderComposition @Finite := by
+theorem finite_stable_under_composition : StableUnderComposition @Finite := by
   introv R hf hg
   exact hg.comp hf
-#align ring_hom.finite_stable_under_composition RingHom.finiteStableUnderComposition
+#align ring_hom.finite_stable_under_composition RingHom.finite_stable_under_composition
 
-theorem finiteRespectsIso : RespectsIso @Finite := by
+theorem finite_respects_iso : RespectsIso @Finite := by
   apply finite_stable_under_composition.respects_iso
   intros
   exact Finite.of_surjective _ e.to_equiv.surjective
-#align ring_hom.finite_respects_iso RingHom.finiteRespectsIso
+#align ring_hom.finite_respects_iso RingHom.finite_respects_iso
 
-theorem finiteStableUnderBaseChange : StableUnderBaseChange @Finite := by classical
+theorem finite_stable_under_base_change : StableUnderBaseChange @Finite := by classical
   introv R h
   skip
   replace h : Module.Finite R T := by
@@ -44,7 +44,7 @@ theorem finiteStableUnderBaseChange : StableUnderBaseChange @Finite := by classi
     rw [Algebra.smul_def]
     rfl
   exact inferInstance
-#align ring_hom.finite_stable_under_base_change RingHom.finiteStableUnderBaseChange
+#align ring_hom.finite_stable_under_base_change RingHom.finite_stable_under_base_change
 
 end RingHom
 

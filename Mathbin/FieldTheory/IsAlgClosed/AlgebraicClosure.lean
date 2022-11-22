@@ -127,15 +127,15 @@ theorem AdjoinMonic.algebra_map : algebraMap k (AdjoinMonic k) = (Ideal.Quotient
   rfl
 #align algebraic_closure.adjoin_monic.algebra_map AlgebraicClosure.AdjoinMonic.algebra_map
 
-theorem AdjoinMonic.isIntegral (z : AdjoinMonic k) : IsIntegral k z :=
+theorem AdjoinMonic.is_integral (z : AdjoinMonic k) : IsIntegral k z :=
   let ⟨p, hp⟩ := Ideal.Quotient.mk_surjective z
   hp ▸
-    MvPolynomial.induction_on p (fun x => isIntegralAlgebraMap) (fun p q => isIntegralAdd) fun p f ih =>
-      @isIntegralMul _ _ _ _ _ _ (Ideal.Quotient.mk _ _) ih
+    MvPolynomial.induction_on p (fun x => is_integral_algebra_map) (fun p q => is_integral_add) fun p f ih =>
+      @is_integral_mul _ _ _ _ _ _ (Ideal.Quotient.mk _ _) ih
         ⟨f, f.2.1, by
           erw [adjoin_monic.algebra_map, ← hom_eval₂, Ideal.Quotient.eq_zero_iff_mem]
           exact le_max_ideal k (Ideal.subset_span ⟨f, rfl⟩)⟩
-#align algebraic_closure.adjoin_monic.is_integral AlgebraicClosure.AdjoinMonic.isIntegral
+#align algebraic_closure.adjoin_monic.is_integral AlgebraicClosure.AdjoinMonic.is_integral
 
 theorem AdjoinMonic.exists_root {f : k[X]} (hfm : f.Monic) (hfi : Irreducible f) :
     ∃ x : AdjoinMonic k, f.eval₂ (toAdjoinMonic k) x = 0 :=
@@ -221,10 +221,10 @@ instance Step.scalar_tower (n) : IsScalarTower k (Step k n) (Step k (n + 1)) :=
     @Nat.le_rec_on_succ (Step k) 0 n n.zero_le (n + 1).zero_le (fun n => toStepSucc k n) z
 #align algebraic_closure.step.scalar_tower AlgebraicClosure.Step.scalar_tower
 
-theorem Step.isIntegral (n) : ∀ z : Step k n, IsIntegral k z :=
-  (Nat.recOn n fun z => isIntegralAlgebraMap) fun n ih z =>
-    isIntegralTrans ih _ (AdjoinMonic.isIntegral (Step k n) z : _)
-#align algebraic_closure.step.is_integral AlgebraicClosure.Step.isIntegral
+theorem Step.is_integral (n) : ∀ z : Step k n, IsIntegral k z :=
+  (Nat.recOn n fun z => is_integral_algebra_map) fun n ih z =>
+    is_integral_trans ih _ (AdjoinMonic.is_integral (Step k n) z : _)
+#align algebraic_closure.step.is_integral AlgebraicClosure.Step.is_integral
 
 instance toStepOfLe.directed_system : DirectedSystem (Step k) fun i j h => toStepOfLe k i j h :=
   ⟨fun i x h => Nat.le_rec_on_self x, fun i₁ i₂ i₃ h₁₂ h₂₃ x => (Nat.le_rec_on_trans h₁₂ h₂₃ x).symm⟩
@@ -299,14 +299,14 @@ def ofStepHom (n) : Step k n →ₐ[k] AlgebraicClosure k :=
   { ofStep k n with commutes' := fun x => Ring.DirectLimit.of_f n.zero_le x }
 #align algebraic_closure.of_step_hom AlgebraicClosure.ofStepHom
 
-theorem isAlgebraic : Algebra.IsAlgebraic k (AlgebraicClosure k) := fun z =>
+theorem is_algebraic : Algebra.IsAlgebraic k (AlgebraicClosure k) := fun z =>
   is_algebraic_iff_is_integral.2 <|
     let ⟨n, x, hx⟩ := exists_of_step k z
-    hx ▸ mapIsIntegral (ofStepHom k n) (Step.isIntegral k n x)
-#align algebraic_closure.is_algebraic AlgebraicClosure.isAlgebraic
+    hx ▸ map_is_integral (ofStepHom k n) (Step.is_integral k n x)
+#align algebraic_closure.is_algebraic AlgebraicClosure.is_algebraic
 
 instance : IsAlgClosure k (AlgebraicClosure k) :=
-  ⟨AlgebraicClosure.isAlgClosed k, isAlgebraic k⟩
+  ⟨AlgebraicClosure.isAlgClosed k, is_algebraic k⟩
 
 end AlgebraicClosure
 

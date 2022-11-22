@@ -1026,7 +1026,7 @@ theorem list_head' : Primrec (@List.head' α) :=
   (list_cases Primrec.id (const none) (option_some_iff.2 <| fst.comp snd).to₂).of_eq fun l => by cases l <;> rfl
 #align primrec.list_head' Primrec.list_head'
 
-theorem list_head [Inhabited α] : Primrec (@List.head' α _) :=
+theorem list_head [Inhabited α] : Primrec (@List.head α _) :=
   (option_iget.comp list_head').of_eq fun l => l.head_eq_head'.symm
 #align primrec.list_head Primrec.list_head
 
@@ -1120,7 +1120,7 @@ theorem list_find_index {f : α → List β} {p : α → β → Prop} [∀ a b, 
     fun a => Eq.symm <| by dsimp <;> induction' f a with b l <;> [rfl, simp [*, List.findIndex]]
 #align primrec.list_find_index Primrec.list_find_index
 
-theorem list_index_of [DecidableEq α] : Primrec₂ (@List.indexOf' α _) :=
+theorem list_index_of [DecidableEq α] : Primrec₂ (@List.indexOf α _) :=
   to₂ <| list_find_index snd <| Primrec.eq.comp₂ (fst.comp fst).to₂ snd.to₂
 #align primrec.list_index_of Primrec.list_index_of
 

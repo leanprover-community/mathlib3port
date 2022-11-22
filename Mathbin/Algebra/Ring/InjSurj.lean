@@ -77,7 +77,7 @@ protected def Function.Injective.nonUnitalSemiring {α : Type u} [NonUnitalSemir
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.nonAssocSemiring {α : Type u} [NonAssocSemiring α] {β : Type v} [Zero β] [One β]
-    [Mul β] [Add β] [HasSmul ℕ β] [HasNatCast β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    [Mul β] [Add β] [HasSmul ℕ β] [NatCast β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (nat_cast : ∀ n : ℕ, f n = n) : NonAssocSemiring β :=
   { hf.AddMonoidWithOne f zero one add nsmul nat_cast, hf.NonUnitalNonAssocSemiring f zero add mul nsmul,
@@ -88,7 +88,7 @@ protected def Function.Injective.nonAssocSemiring {α : Type u} [NonAssocSemirin
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.semiring {α : Type u} [Semiring α] {β : Type v} [Zero β] [One β] [Add β] [Mul β]
-    [Pow β ℕ] [HasSmul ℕ β] [HasNatCast β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    [Pow β ℕ] [HasSmul ℕ β] [NatCast β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (nat_cast : ∀ n : ℕ, f n = n) : Semiring β :=
@@ -118,7 +118,7 @@ protected def Function.Surjective.nonUnitalSemiring {α : Type u} [NonUnitalSemi
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.nonAssocSemiring {α : Type u} [NonAssocSemiring α] {β : Type v} [Zero β] [One β]
-    [Add β] [Mul β] [HasSmul ℕ β] [HasNatCast β] (f : α → β) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
+    [Add β] [Mul β] [HasSmul ℕ β] [NatCast β] (f : α → β) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (nat_cast : ∀ n : ℕ, f n = n) : NonAssocSemiring β :=
   { hf.AddMonoidWithOne f zero one add nsmul nat_cast, hf.NonUnitalNonAssocSemiring f zero add mul nsmul,
@@ -129,7 +129,7 @@ protected def Function.Surjective.nonAssocSemiring {α : Type u} [NonAssocSemiri
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.semiring {α : Type u} [Semiring α] {β : Type v} [Zero β] [One β] [Add β] [Mul β]
-    [Pow β ℕ] [HasSmul ℕ β] [HasNatCast β] (f : α → β) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
+    [Pow β ℕ] [HasSmul ℕ β] [NatCast β] (f : α → β) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (nat_cast : ∀ n : ℕ, f n = n) : Semiring β :=
@@ -170,7 +170,7 @@ variable [CommSemiring α] [CommSemiring β] {a b c : α}
 /-- Pullback a `semiring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.commSemiring [Zero γ] [One γ] [Add γ] [Mul γ] [HasSmul ℕ γ] [HasNatCast γ] [Pow γ ℕ]
+protected def Function.Injective.commSemiring [Zero γ] [One γ] [Add γ] [Mul γ] [HasSmul ℕ γ] [NatCast γ] [Pow γ ℕ]
     (f : γ → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) : CommSemiring γ :=
@@ -180,7 +180,7 @@ protected def Function.Injective.commSemiring [Zero γ] [One γ] [Add γ] [Mul �
 /-- Pushforward a `semiring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Surjective.commSemiring [Zero γ] [One γ] [Add γ] [Mul γ] [HasSmul ℕ γ] [HasNatCast γ] [Pow γ ℕ]
+protected def Function.Surjective.commSemiring [Zero γ] [One γ] [Add γ] [Mul γ] [HasSmul ℕ γ] [NatCast γ] [Pow γ ℕ]
     (f : α → γ) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
     (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (nat_cast : ∀ n : ℕ, f n = n) : CommSemiring γ :=
@@ -302,7 +302,7 @@ variable [NonAssocRing α]
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.nonAssocRing [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β]
-    [HasSmul ℤ β] [HasNatCast β] [HasIntCast β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    [HasSmul ℤ β] [NatCast β] [IntCast β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
     (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (gsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) :
@@ -316,7 +316,7 @@ protected def Function.Injective.nonAssocRing [Zero β] [One β] [Add β] [Mul �
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.nonAssocRing [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β]
-    [HasSmul ℤ β] [HasNatCast β] [HasIntCast β] (f : α → β) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
+    [HasSmul ℤ β] [NatCast β] [IntCast β] (f : α → β) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
     (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (gsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) :
@@ -336,7 +336,7 @@ variable [Ring α] {a b c d e : α}
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.ring [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β] [HasSmul ℤ β]
-    [Pow β ℕ] [HasNatCast β] [HasIntCast β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    [Pow β ℕ] [NatCast β] [IntCast β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
     (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
@@ -349,7 +349,7 @@ protected def Function.Injective.ring [Zero β] [One β] [Add β] [Mul β] [Neg 
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.ring [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β] [HasSmul ℤ β]
-    [Pow β ℕ] [HasNatCast β] [HasIntCast β] (f : α → β) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
+    [Pow β ℕ] [NatCast β] [IntCast β] (f : α → β) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
     (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
@@ -394,7 +394,7 @@ variable [CommRing α] {a b c : α}
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.commRing [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β] [HasSmul ℤ β]
-    [Pow β ℕ] [HasNatCast β] [HasIntCast β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    [Pow β ℕ] [NatCast β] [IntCast β] (f : β → α) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
     (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
@@ -406,7 +406,7 @@ protected def Function.Injective.commRing [Zero β] [One β] [Add β] [Mul β] [
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.commRing [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasSmul ℕ β] [HasSmul ℤ β]
-    [Pow β ℕ] [HasNatCast β] [HasIntCast β] (f : α → β) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
+    [Pow β ℕ] [NatCast β] [IntCast β] (f : α → β) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
     (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)

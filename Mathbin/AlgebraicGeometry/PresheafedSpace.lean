@@ -339,7 +339,7 @@ def ofRestrict {U : TopCat} (X : PresheafedSpaceCat.{v, v, u} C) {f : U ⟶ (X :
 #align algebraic_geometry.PresheafedSpace.of_restrict AlgebraicGeometry.PresheafedSpaceCat.ofRestrict
 
 instance of_restrict_mono {U : TopCat} (X : PresheafedSpaceCat C) (f : U ⟶ X.1) (hf : OpenEmbedding f) :
-    Mono (X.ofRestrict hf) := by
+    Mono (X.of_restrict hf) := by
   haveI : mono f := (TopCat.mono_iff_injective _).mpr hf.inj
   constructor
   intro Z g₁ g₂ eq
@@ -374,7 +374,7 @@ theorem restrict_top_presheaf (X : PresheafedSpaceCat C) :
   algebraic_geometry.PresheafedSpace.restrict_top_presheaf AlgebraicGeometry.PresheafedSpaceCat.restrict_top_presheaf
 
 theorem of_restrict_top_c (X : PresheafedSpaceCat C) :
-    (X.ofRestrict (Opens.open_embedding ⊤)).c =
+    (X.of_restrict (Opens.open_embedding ⊤)).c =
       eqToHom
         (by
           rw [restrict_top_presheaf, ← presheaf.pushforward.comp_eq]
@@ -412,7 +412,7 @@ def toRestrictTop (X : PresheafedSpaceCat C) : X ⟶ X.restrict (Opens.open_embe
 -/
 @[simps]
 def restrictTopIso (X : PresheafedSpaceCat C) : X.restrict (Opens.open_embedding ⊤) ≅ X where
-  Hom := X.ofRestrict _
+  Hom := X.of_restrict _
   inv := X.toRestrictTop
   hom_inv_id' :=
     ext _ _ ((ConcreteCategory.hom_ext _ _) fun ⟨x, _⟩ => rfl) <| by

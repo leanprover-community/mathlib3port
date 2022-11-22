@@ -240,6 +240,15 @@ protected def copy (f : α →o β) (f' : α → β) (h : f' = f) : α →o β :
   ⟨f', h.symm.subst f.monotone'⟩
 #align order_hom.copy OrderHom.copy
 
+@[simp]
+theorem coe_copy (f : α →o β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align order_hom.coe_copy OrderHom.coe_copy
+
+theorem copy_eq (f : α →o β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align order_hom.copy_eq OrderHom.copy_eq
+
 /-- The identity function as bundled monotone function. -/
 @[simps (config := { fullyApplied := false })]
 def id : α →o α :=

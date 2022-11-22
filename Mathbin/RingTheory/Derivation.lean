@@ -186,7 +186,7 @@ theorem leibniz_pow (n : ℕ) : D (a ^ n) = n • a ^ (n - 1) • D a := by
 #align derivation.leibniz_pow Derivation.leibniz_pow
 
 theorem eq_on_adjoin {s : Set A} (h : Set.EqOn D1 D2 s) : Set.EqOn D1 D2 (adjoin R s) := fun x hx =>
-  Algebra.adjoinInduction hx h (fun r => (D1.map_algebra_map r).trans (D2.map_algebra_map r).symm)
+  Algebra.adjoin_induction hx h (fun r => (D1.map_algebra_map r).trans (D2.map_algebra_map r).symm)
     (fun x y hx hy => by simp only [map_add, *]) fun x y hx hy => by simp only [leibniz, *]
 #align derivation.eq_on_adjoin Derivation.eq_on_adjoin
 
@@ -1273,7 +1273,7 @@ theorem KaehlerDifferential.map_surjective_of_surjective (h : Function.Surjectiv
 /-- The lift of the map `Ω[A⁄R] →ₗ[A] Ω[B⁄R]` to the base change along `A → B`.
 This is the first map in the exact sequence `B ⊗[A] Ω[A⁄R] → Ω[B⁄R] → Ω[B⁄A] → 0`. -/
 noncomputable def KaehlerDifferential.mapBaseChange : B ⊗[A] Ω[A⁄R] →ₗ[B] Ω[B⁄R] :=
-  (TensorProduct.isBaseChange A (Ω[A⁄R]) B).lift (KaehlerDifferential.map R R A B)
+  (TensorProduct.is_base_change A (Ω[A⁄R]) B).lift (KaehlerDifferential.map R R A B)
 #align kaehler_differential.map_base_change KaehlerDifferential.mapBaseChange
 
 @[simp]

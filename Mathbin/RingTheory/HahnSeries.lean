@@ -882,7 +882,7 @@ instance {Γ} [LinearOrderedCancelAddCommMonoid Γ] [NonUnitalNonAssocSemiring R
     simp [coeff_order_ne_zero, hx, xy]
 
 instance {Γ} [LinearOrderedCancelAddCommMonoid Γ] [Ring R] [IsDomain R] : IsDomain (HahnSeries Γ R) :=
-  { HahnSeries.noZeroDivisors, HahnSeries.nontrivial, HahnSeries.ring with }
+  { HahnSeries.no_zero_divisors, HahnSeries.nontrivial, HahnSeries.ring with }
 
 @[simp]
 theorem order_mul {Γ} [LinearOrderedCancelAddCommMonoid Γ] [NonUnitalNonAssocSemiring R] [NoZeroDivisors R]
@@ -1115,7 +1115,7 @@ variable [Semiring R]
 @[simps]
 def toPowerSeries : HahnSeries ℕ R ≃+* PowerSeries R where
   toFun f := PowerSeries.mk f.coeff
-  invFun f := ⟨fun n => PowerSeries.coeff R n f, (Nat.lt_wfRel.wf.IsWf _).IsPwo⟩
+  invFun f := ⟨fun n => PowerSeries.coeff R n f, (Nat.lt_wfRel.IsWf _).IsPwo⟩
   left_inv f := by
     ext
     simp
@@ -1871,7 +1871,7 @@ theorem is_unit_iff {x : HahnSeries Γ R} : IsUnit x ↔ IsUnit (x.coeff x.order
 end IsDomain
 
 instance [Field R] : Field (HahnSeries Γ R) :=
-  { HahnSeries.isDomain, HahnSeries.commRing with
+  { HahnSeries.is_domain, HahnSeries.commRing with
     inv := fun x =>
       if x0 : x = 0 then 0
       else

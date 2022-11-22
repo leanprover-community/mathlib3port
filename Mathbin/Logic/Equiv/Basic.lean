@@ -980,7 +980,7 @@ def uniqueCongr (e : α ≃ β) : Unique α ≃ Unique β where
 
 /-- If `α` is equivalent to `β`, then `is_empty α` is equivalent to `is_empty β`. -/
 theorem is_empty_congr (e : α ≃ β) : IsEmpty α ↔ IsEmpty β :=
-  ⟨fun h => @function.isEmpty _ _ h e.symm, fun h => @function.isEmpty _ _ h e⟩
+  ⟨fun h => @Function.isEmpty _ _ h e.symm, fun h => @Function.isEmpty _ _ h e⟩
 #align equiv.is_empty_congr Equiv.is_empty_congr
 
 protected theorem is_empty (e : α ≃ β) [IsEmpty β] : IsEmpty α :=

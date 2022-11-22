@@ -144,7 +144,7 @@ noncomputable def atOne [IsLocalization.Away (1 : R) S] : R ≃ₐ[R] S :=
   @atUnit R _ S _ _ (1 : R) is_unit_one _
 #align is_localization.at_one IsLocalization.atOne
 
-theorem awayOfIsUnitOfBijective {R : Type _} (S : Type _) [CommRing R] [CommRing S] [Algebra R S] {r : R}
+theorem away_of_is_unit_of_bijective {R : Type _} (S : Type _) [CommRing R] [CommRing S] [Algebra R S] {r : R}
     (hr : IsUnit r) (H : Function.Bijective (algebraMap R S)) : IsLocalization.Away r S :=
   { map_units := by
       rintro ⟨_, n, rfl⟩
@@ -161,7 +161,7 @@ theorem awayOfIsUnitOfBijective {R : Type _} (S : Type _) [CommRing R] [CommRing
       · rintro ⟨⟨_, n, rfl⟩, e⟩
         exact (hr.pow _).mul_left_inj.mp e
          }
-#align is_localization.away_of_is_unit_of_bijective IsLocalization.awayOfIsUnitOfBijective
+#align is_localization.away_of_is_unit_of_bijective IsLocalization.away_of_is_unit_of_bijective
 
 end AtUnits
 
@@ -205,13 +205,13 @@ noncomputable def Localization.awayEquivAdjoin (r : R) : Away r ≃ₐ[R] Adjoin
     (Subsingleton.elim _ _) (Subsingleton.elim _ _)
 #align localization.away_equiv_adjoin Localization.awayEquivAdjoin
 
-theorem IsLocalization.adjoinInv (r : R) : IsLocalization.Away r (AdjoinRoot <| c r * X - 1) :=
-  IsLocalization.isLocalizationOfAlgEquiv _ (Localization.awayEquivAdjoin r)
-#align is_localization.adjoin_inv IsLocalization.adjoinInv
+theorem IsLocalization.adjoin_inv (r : R) : IsLocalization.Away r (AdjoinRoot <| c r * X - 1) :=
+  IsLocalization.is_localization_of_alg_equiv _ (Localization.awayEquivAdjoin r)
+#align is_localization.adjoin_inv IsLocalization.adjoin_inv
 
-theorem IsLocalization.Away.finitePresentation (r : R) {S} [CommRing S] [Algebra R S] [IsLocalization.Away r S] :
+theorem IsLocalization.Away.finite_presentation (r : R) {S} [CommRing S] [Algebra R S] [IsLocalization.Away r S] :
     Algebra.FinitePresentation R S :=
-  (AdjoinRoot.finitePresentation _).Equiv <|
+  (AdjoinRoot.finite_presentation _).Equiv <|
     (Localization.awayEquivAdjoin r).symm.trans <| IsLocalization.algEquiv (Submonoid.powers r) _ _
-#align is_localization.away.finite_presentation IsLocalization.Away.finitePresentation
+#align is_localization.away.finite_presentation IsLocalization.Away.finite_presentation
 

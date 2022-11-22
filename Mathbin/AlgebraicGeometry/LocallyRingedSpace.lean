@@ -108,7 +108,7 @@ instance {X Y : LocallyRingedSpaceCat} (f : X ⟶ Y) (x : X) : IsLocalRingHom (P
 def id (X : LocallyRingedSpaceCat) : Hom X X :=
   ⟨𝟙 _, fun x => by
     erw [PresheafedSpace.stalk_map.id]
-    apply isLocalRingHomId⟩
+    apply is_local_ring_hom_id⟩
 #align algebraic_geometry.LocallyRingedSpace.id AlgebraicGeometry.LocallyRingedSpaceCat.id
 
 instance (X : LocallyRingedSpaceCat) : Inhabited (Hom X X) :=
@@ -118,7 +118,7 @@ instance (X : LocallyRingedSpaceCat) : Inhabited (Hom X X) :=
 def comp {X Y Z : LocallyRingedSpaceCat} (f : Hom X Y) (g : Hom Y Z) : Hom X Z :=
   ⟨f.val ≫ g.val, fun x => by
     erw [PresheafedSpace.stalk_map.comp]
-    exact @isLocalRingHomComp _ _ _ _ _ _ _ _ (f.2 _) (g.2 _)⟩
+    exact @is_local_ring_hom_comp _ _ _ _ _ _ _ _ (f.2 _) (g.2 _)⟩
 #align algebraic_geometry.LocallyRingedSpace.comp AlgebraicGeometry.LocallyRingedSpaceCat.comp
 
 /-- The category of locally ringed spaces. -/
@@ -224,14 +224,14 @@ def restrict {U : TopCat} (X : LocallyRingedSpaceCat) {f : U ⟶ X.toTop} (h : O
     intro x
     dsimp at *
     -- We show that the stalk of the restriction is isomorphic to the original stalk,
-    apply @RingEquiv.localRing _ _ _ (X.local_ring (f x))
+    apply @RingEquiv.local_ring _ _ _ (X.local_ring (f x))
     exact (X.to_PresheafedSpace.restrict_stalk_iso h x).symm.commRingIsoToRingEquiv
   toSheafedSpace := X.toSheafedSpace.restrict h
 #align algebraic_geometry.LocallyRingedSpace.restrict AlgebraicGeometry.LocallyRingedSpaceCat.restrict
 
 /-- The canonical map from the restriction to the supspace. -/
 def ofRestrict {U : TopCat} (X : LocallyRingedSpaceCat) {f : U ⟶ X.toTop} (h : OpenEmbedding f) : X.restrict h ⟶ X :=
-  ⟨X.toPresheafedSpace.ofRestrict h, fun x => inferInstance⟩
+  ⟨X.toPresheafedSpace.of_restrict h, fun x => inferInstance⟩
 #align algebraic_geometry.LocallyRingedSpace.of_restrict AlgebraicGeometry.LocallyRingedSpaceCat.ofRestrict
 
 /-- The restriction of a locally ringed space `X` to the top subspace is isomorphic to `X` itself.

@@ -39,7 +39,7 @@ def ofInt (n : ℤ) : ℚ :=
 #align rat.of_int Rat.ofInt
 -/
 
-instance : HasIntCast ℚ :=
+instance : IntCast ℚ :=
   ⟨ofInt⟩
 
 @[simp]
@@ -98,7 +98,7 @@ warning: rat.mk -> Rat.mk is a dubious translation:
 lean 3 declaration is
   Int -> Int -> Rat
 but is expected to have type
-  forall (num : Int) (den : Nat), (autoParam.{0} (Ne.{1} Nat den (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) _auto._@.Std.Data.Rat._hyg.3) -> (autoParam.{0} (Nat.coprime (Int.natAbs num) den) _auto._@.Std.Data.Rat._hyg.32) -> Rat
+  forall (num : Int) (den : Nat), (autoParam.{0} (Ne.{1} Nat den (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) _auto._@.Std.Data.Rat.Basic._hyg.4) -> (autoParam.{0} (Nat.coprime (Int.natAbs num) den) _auto._@.Std.Data.Rat.Basic._hyg.33) -> Rat
 Case conversion may be inaccurate. Consider using '#align rat.mk Rat.mkₓ'. -/
 /-- Form the quotient `n / d` where `n d : ℤ`. -/
 def mk : ℤ → ℤ → ℚ
@@ -116,6 +116,12 @@ theorem mk_nat_eq (n d) : mkNat n d = n /. d :=
   rfl
 #align rat.mk_nat_eq Rat.mk_nat_eq
 
+/- warning: rat.mk_zero -> Rat.mk_zero is a dubious translation:
+lean 3 declaration is
+  forall (n : Int), Eq.{1} Rat (Rat.mk n (OfNat.ofNat.{0} Int 0 (OfNat.mk.{0} Int 0 (Zero.zero.{0} Int Int.hasZero)))) (OfNat.ofNat.{0} Rat 0 (OfNat.mk.{0} Rat 0 (Zero.zero.{0} Rat Rat.hasZero)))
+but is expected to have type
+  forall {n : Nat}, Eq.{1} Rat (mkRat (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) n) (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0))
+Case conversion may be inaccurate. Consider using '#align rat.mk_zero Rat.mk_zeroₓ'. -/
 @[simp]
 theorem mk_zero (n) : n /. 0 = 0 :=
   rfl

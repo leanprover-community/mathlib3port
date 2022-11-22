@@ -115,18 +115,19 @@ theorem denom_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : (denom A 
 /-- Integral root theorem:
 if `r : f.codomain` is a root of a monic polynomial over the ufd `A`,
 then `r` is an integer -/
-theorem isIntegerOfIsRootOfMonic {p : A[X]} (hp : Monic p) {r : K} (hr : aeval r p = 0) : IsInteger A r :=
-  isIntegerOfIsUnitDenom (is_unit_of_dvd_one _ (hp ▸ denom_dvd_of_is_root hr))
-#align is_integer_of_is_root_of_monic isIntegerOfIsRootOfMonic
+theorem is_integer_of_is_root_of_monic {p : A[X]} (hp : Monic p) {r : K} (hr : aeval r p = 0) : IsInteger A r :=
+  is_integer_of_is_unit_denom (is_unit_of_dvd_one _ (hp ▸ denom_dvd_of_is_root hr))
+#align is_integer_of_is_root_of_monic is_integer_of_is_root_of_monic
 
 namespace UniqueFactorizationMonoid
 
-theorem integerOfIntegral {x : K} : IsIntegral A x → IsInteger A x := fun ⟨p, hp, hx⟩ => isIntegerOfIsRootOfMonic hp hx
-#align unique_factorization_monoid.integer_of_integral UniqueFactorizationMonoid.integerOfIntegral
+theorem integer_of_integral {x : K} : IsIntegral A x → IsInteger A x := fun ⟨p, hp, hx⟩ =>
+  is_integer_of_is_root_of_monic hp hx
+#align unique_factorization_monoid.integer_of_integral UniqueFactorizationMonoid.integer_of_integral
 
 -- See library note [lower instance priority]
 instance (priority := 100) : IsIntegrallyClosed A :=
-  ⟨fun x => integerOfIntegral⟩
+  ⟨fun x => integer_of_integral⟩
 
 end UniqueFactorizationMonoid
 

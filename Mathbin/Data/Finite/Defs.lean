@@ -104,6 +104,16 @@ theorem not_infinite_iff_finite : ¬Infinite α ↔ Finite α :=
   not_finite_iff_infinite.not_right.symm
 #align not_infinite_iff_finite not_infinite_iff_finite
 
+theorem Equiv.infinite_iff (e : α ≃ β) : Infinite α ↔ Infinite β :=
+  not_finite_iff_infinite.symm.trans <| e.finite_iff.Not.trans not_finite_iff_infinite
+#align equiv.infinite_iff Equiv.infinite_iff
+
+instance [Infinite α] : Infinite (PLift α) :=
+  Equiv.plift.infinite_iff.2 ‹_›
+
+instance {α : Type v} [Infinite α] : Infinite (ULift.{u} α) :=
+  Equiv.ulift.infinite_iff.2 ‹_›
+
 theorem finite_or_infinite (α : Sort _) : Finite α ∨ Infinite α :=
   or_iff_not_imp_left.2 <| not_finite_iff_infinite.1
 #align finite_or_infinite finite_or_infinite

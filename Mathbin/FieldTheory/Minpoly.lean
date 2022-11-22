@@ -178,14 +178,14 @@ theorem eq_X_sub_C_of_algebra_map_inj (a : A) (hf : Function.Injective (algebraM
   nontriviality A
   have hdegle : (minpoly A (algebraMap A B a)).natDegree ≤ 1 := by
     apply WithBot.coe_le_coe.1
-    rw [← degree_eq_nat_degree (NeZero (@isIntegralAlgebraMap A B _ _ _ a)), WithTop.coe_one, ← degree_X_sub_C a]
+    rw [← degree_eq_nat_degree (NeZero (@is_integral_algebra_map A B _ _ _ a)), WithTop.coe_one, ← degree_X_sub_C a]
     refine' min A (algebraMap A B a) (monic_X_sub_C a) _
     simp only [aeval_C, aeval_X, AlgHom.map_sub, sub_self]
   have hdeg : (minpoly A (algebraMap A B a)).degree = 1 := by
-    apply (degree_eq_iff_nat_degree_eq (NeZero (@isIntegralAlgebraMap A B _ _ _ a))).2
-    apply le_antisymm hdegle (nat_degree_pos (@isIntegralAlgebraMap A B _ _ _ a))
+    apply (degree_eq_iff_nat_degree_eq (NeZero (@is_integral_algebra_map A B _ _ _ a))).2
+    apply le_antisymm hdegle (nat_degree_pos (@is_integral_algebra_map A B _ _ _ a))
   have hrw := eq_X_add_C_of_degree_eq_one hdeg
-  simp only [monic (@isIntegralAlgebraMap A B _ _ _ a), one_mul, monic.leading_coeff, RingHom.map_one] at hrw
+  simp only [monic (@is_integral_algebra_map A B _ _ _ a), one_mul, monic.leading_coeff, RingHom.map_one] at hrw
   have h0 : (minpoly A (algebraMap A B a)).coeff 0 = -a := by
     have hroot := aeval A (algebraMap A B a)
     rw [hrw, add_comm] at hroot
@@ -294,7 +294,7 @@ theorem degree_le_of_ne_zero {p : A[X]} (pnz : p ≠ 0) (hp : Polynomial.aeval x
 #align minpoly.degree_le_of_ne_zero minpoly.degree_le_of_ne_zero
 
 theorem ne_zero_of_finite_field_extension (e : B) [FiniteDimensional A B] : minpoly A e ≠ 0 :=
-  minpoly.ne_zero <| isIntegralOfNoetherian (IsNoetherian.iff_fg.2 inferInstance) _
+  minpoly.ne_zero <| is_integral_of_noetherian (IsNoetherian.iff_fg.2 inferInstance) _
 #align minpoly.ne_zero_of_finite_field_extension minpoly.ne_zero_of_finite_field_extension
 
 /-- The minimal polynomial of an element `x` is uniquely characterized by its defining property:
@@ -481,7 +481,7 @@ theorem gcd_domain_eq_field_fractions' [Algebra K S] [IsScalarTower R K S] :
     minpoly K s = (minpoly R s).map (algebraMap R K) := by
   let L := FractionRing S
   rw [← gcd_domain_eq_field_fractions K L hs]
-  refine' minpoly.eq_of_algebra_map_eq (IsFractionRing.injective S L) (isIntegralOfIsScalarTower hs) rfl
+  refine' minpoly.eq_of_algebra_map_eq (IsFractionRing.injective S L) (is_integral_of_is_scalar_tower hs) rfl
 #align minpoly.gcd_domain_eq_field_fractions' minpoly.gcd_domain_eq_field_fractions'
 
 variable [NoZeroSmulDivisors R S]

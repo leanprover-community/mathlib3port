@@ -308,7 +308,7 @@ section
 variable (A : Type u) [CommRing A] [IsDomain A] [ValuationRing A]
 
 instance (priority := 100) : LocalRing A :=
-  LocalRing.ofIsUnitOrIsUnitOneSubSelf
+  LocalRing.of_is_unit_or_is_unit_one_sub_self
     (by
       intro a
       obtain ⟨c, h | h⟩ := ValuationRing.cond a (1 - a)
@@ -645,7 +645,7 @@ include hh
 
 /-- If `𝒪` satisfies `v.integers 𝒪` where `v` is a valuation on a field, then `𝒪`
 is a valuation ring. -/
-theorem ofIntegers : ValuationRing 𝒪 := by
+theorem of_integers : ValuationRing 𝒪 := by
   constructor
   intro a b
   cases le_total (v (algebraMap 𝒪 K a)) (v (algebraMap 𝒪 K b))
@@ -657,7 +657,7 @@ theorem ofIntegers : ValuationRing 𝒪 := by
     use c
     exact Or.inl hc.symm
     
-#align valuation_ring.of_integers ValuationRing.ofIntegers
+#align valuation_ring.of_integers ValuationRing.of_integers
 
 end
 
@@ -666,7 +666,7 @@ section
 variable (K : Type u) [Field K]
 
 /-- A field is a valuation ring. -/
-instance (priority := 100) ofField : ValuationRing K := by
+instance (priority := 100) of_field : ValuationRing K := by
   constructor
   intro a b
   by_cases b = 0
@@ -679,7 +679,7 @@ instance (priority := 100) ofField : ValuationRing K := by
     field_simp
     rw [mul_comm]
     
-#align valuation_ring.of_field ValuationRing.ofField
+#align valuation_ring.of_field ValuationRing.of_field
 
 end
 
@@ -688,7 +688,7 @@ section
 variable (A : Type u) [CommRing A] [IsDomain A] [DiscreteValuationRing A]
 
 /-- A DVR is a valuation ring. -/
-instance (priority := 100) ofDiscreteValuationRing : ValuationRing A := by
+instance (priority := 100) of_discrete_valuation_ring : ValuationRing A := by
   constructor
   intro a b
   by_cases ha : a = 0
@@ -719,7 +719,7 @@ instance (priority := 100) ofDiscreteValuationRing : ValuationRing A := by
     congr 2
     linarith
     
-#align valuation_ring.of_discrete_valuation_ring ValuationRing.ofDiscreteValuationRing
+#align valuation_ring.of_discrete_valuation_ring ValuationRing.of_discrete_valuation_ring
 
 end
 

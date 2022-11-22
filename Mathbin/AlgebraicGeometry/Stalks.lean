@@ -91,7 +91,7 @@ theorem restrict_stalk_iso_inv_eq_germ {U : TopCat} (X : PresheafedSpaceCat.{v} 
   algebraic_geometry.PresheafedSpace.restrict_stalk_iso_inv_eq_germ AlgebraicGeometry.PresheafedSpaceCat.restrict_stalk_iso_inv_eq_germ
 
 theorem restrict_stalk_iso_inv_eq_of_restrict {U : TopCat} (X : PresheafedSpaceCat.{v} C) {f : U ⟶ (X : TopCat.{v})}
-    (h : OpenEmbedding f) (x : U) : (X.restrictStalkIso h x).inv = stalkMap (X.ofRestrict h) x := by
+    (h : OpenEmbedding f) (x : U) : (X.restrictStalkIso h x).inv = stalkMap (X.of_restrict h) x := by
   ext V
   induction V using Opposite.rec
   let i : (h.is_open_map.functor_nhds x).obj ((open_nhds.map f x).obj V) ⟶ V :=
@@ -105,7 +105,7 @@ theorem restrict_stalk_iso_inv_eq_of_restrict {U : TopCat} (X : PresheafedSpaceC
   algebraic_geometry.PresheafedSpace.restrict_stalk_iso_inv_eq_of_restrict AlgebraicGeometry.PresheafedSpaceCat.restrict_stalk_iso_inv_eq_of_restrict
 
 instance of_restrict_stalk_map_is_iso {U : TopCat} (X : PresheafedSpaceCat.{v} C) {f : U ⟶ (X : TopCat.{v})}
-    (h : OpenEmbedding f) (x : U) : IsIso (stalkMap (X.ofRestrict h) x) := by
+    (h : OpenEmbedding f) (x : U) : IsIso (stalkMap (X.of_restrict h) x) := by
   rw [← restrict_stalk_iso_inv_eq_of_restrict]
   infer_instance
 #align

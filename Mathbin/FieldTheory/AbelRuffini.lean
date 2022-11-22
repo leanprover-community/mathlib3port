@@ -101,13 +101,8 @@ theorem gal_X_pow_sub_one_is_solvable (n : ℕ) : IsSolvable (X ^ n - 1 : F[X]).
   rw [mem_root_set hn'', AlgHom.map_sub, aeval_X_pow, aeval_one, sub_eq_zero] at ha
   have key : ∀ σ : (X ^ n - 1 : F[X]).Gal, ∃ m : ℕ, σ a = a ^ m := by
     intro σ
-    obtain ⟨m, hm⟩ :=
-      map_root_of_unity_eq_pow_self σ.to_alg_hom
-        ⟨IsUnit.unit (is_unit_of_pow_eq_one a n ha hn), by
-          ext
-          rwa [Units.coe_pow, IsUnit.unit_spec, Subtype.coe_mk n hn']⟩
-    use m
-    convert hm
+    lift n to ℕ+ using hn'
+    exact map_root_of_unity_eq_pow_self σ.to_alg_hom (rootsOfUnity.mkOfPowEq a ha)
   obtain ⟨c, hc⟩ := key σ
   obtain ⟨d, hd⟩ := key τ
   rw [σ.mul_apply, τ.mul_apply, hc, τ.map_pow, hd, σ.map_pow, hc, ← pow_mul, pow_mul']
@@ -291,16 +286,16 @@ theorem induction (P : solvableByRad F E → Prop) (base : ∀ α : F, P (algebr
     
 #align solvable_by_rad.induction solvableByRad.induction
 
-theorem isIntegral (α : solvableByRad F E) : IsIntegral F α := by
+theorem is_integral (α : solvableByRad F E) : IsIntegral F α := by
   revert α
   apply solvableByRad.induction
-  · exact fun _ => isIntegralAlgebraMap
+  · exact fun _ => is_integral_algebra_map
     
-  · exact fun _ _ => isIntegralAdd
+  · exact fun _ _ => is_integral_add
     
-  · exact fun _ => isIntegralNeg
+  · exact fun _ => is_integral_neg
     
-  · exact fun _ _ => isIntegralMul
+  · exact fun _ _ => is_integral_mul
     
   · exact fun α hα =>
       Subalgebra.inv_mem_of_algebraic (integralClosure F (solvableByRad F E))
@@ -314,7 +309,7 @@ theorem isIntegral (α : solvableByRad F E) : IsIntegral F α := by
     rwa [← leading_coeff_eq_zero, leading_coeff_comp, leading_coeff_X_pow, one_pow, mul_one] at h
     rwa [nat_degree_X_pow]
     
-#align solvable_by_rad.is_integral solvableByRad.isIntegral
+#align solvable_by_rad.is_integral solvableByRad.is_integral
 
 /-- The statement to be proved inductively -/
 def P (α : solvableByRad F E) : Prop :=

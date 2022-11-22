@@ -25,7 +25,7 @@ universe u v w x
 variable {α β γ δ ε ζ : Type _}
 
 instance [DecidableEq α] : SDiff (List α) :=
-  ⟨List.diff'⟩
+  ⟨List.diff⟩
 
 #print List.splitAt /-
 /-- Split a list at an index.
@@ -81,13 +81,6 @@ def concat : List α → α → List α
 #align list.concat List.concat
 -/
 
-/- warning: list.head' clashes with list.head -> List.head'
-warning: list.head' -> List.head' is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u_1}}, (List.{u_1} α) -> (Option.{u_1} α)
-but is expected to have type
-  forall {α : Type.{u}} [_inst_1 : Inhabited.{succ u} α], (List.{u} α) -> α
-Case conversion may be inaccurate. Consider using '#align list.head' List.head'ₓ'. -/
 /-- `head' xs` returns the first element of `xs` if `xs` is non-empty;
 it returns `none` otherwise -/
 @[simp]

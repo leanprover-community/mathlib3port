@@ -703,7 +703,7 @@ theorem LipschitzWith.compHasLocallyBoundedVariationOn {f : E → F} {C : ℝ≥
 
 theorem LipschitzOnWith.hasLocallyBoundedVariationOn {f : ℝ → E} {C : ℝ≥0} {s : Set ℝ} (hf : LipschitzOnWith C f s) :
     HasLocallyBoundedVariationOn f s :=
-  hf.compHasLocallyBoundedVariationOn (maps_to_id _) (@monotone_on_id ℝ _ s).HasLocallyBoundedVariationOn
+  hf.compHasLocallyBoundedVariationOn (maps_to_id _) (@monotoneOn_id ℝ _ s).HasLocallyBoundedVariationOn
 #align lipschitz_on_with.has_locally_bounded_variation_on LipschitzOnWith.hasLocallyBoundedVariationOn
 
 theorem LipschitzWith.hasLocallyBoundedVariationOn {f : ℝ → E} {C : ℝ≥0} (hf : LipschitzWith C f) (s : Set ℝ) :

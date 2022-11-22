@@ -200,12 +200,10 @@ protected def symm (e : α ≃ β) : β ≃ α :=
 #align equiv.symm Equiv.symm
 -/
 
-#print Equiv.Simps.symmApply /-
 /-- See Note [custom simps projection] -/
 def Simps.symmApply (e : α ≃ β) : β → α :=
   e.symm
 #align equiv.simps.symm_apply Equiv.Simps.symmApply
--/
 
 initialize_simps_projections Equiv (toFun → apply, invFun → symmApply)
 
@@ -799,7 +797,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.equiv_empty_equiv Equiv.equivEmptyEquivₓ'. -/
 /-- `α` is equivalent to an empty type iff `α` is empty. -/
 def equivEmptyEquiv (α : Sort u) : α ≃ Empty ≃ IsEmpty α :=
-  ⟨fun e => function.isEmpty e, @equivEmpty α, fun e => ext fun x => (e x).elim, fun p => rfl⟩
+  ⟨fun e => Function.isEmpty e, @equivEmpty α, fun e => ext fun x => (e x).elim, fun p => rfl⟩
 #align equiv.equiv_empty_equiv Equiv.equivEmptyEquiv
 
 #print Equiv.propEquivPEmpty /-

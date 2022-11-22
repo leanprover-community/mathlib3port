@@ -45,7 +45,7 @@ section ConformalIntoComplexNormed
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedSpace ℂ E] {z : ℂ} {g : ℂ →L[ℝ] E} {f : ℂ → E}
 
 theorem isConformalMapComplexLinear {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0) : IsConformalMap (map.restrictScalars ℝ) := by
-  have minor₁ : ‖map 1‖ ≠ 0 := by simpa [ext_ring_iff] using nonzero
+  have minor₁ : ‖map 1‖ ≠ 0 := by simpa only [ext_ring_iff, Ne.def, norm_eq_zero] using nonzero
   refine' ⟨‖map 1‖, minor₁, ⟨‖map 1‖⁻¹ • map, _⟩, _⟩
   · intro x
     simp only [LinearMap.smul_apply]
@@ -53,10 +53,12 @@ theorem isConformalMapComplexLinear {map : ℂ →L[ℂ] E} (nonzero : map ≠ 0
     nth_rw 0 [this]
     rw [_root_.coe_coe map, LinearMap.coe_coe_is_scalar_tower]
     simp only [map.coe_coe, map.map_smul, norm_smul, norm_inv, norm_norm]
-    field_simp [minor₁]
+    field_simp only [one_mul]
     
   · ext1
-    simp [minor₁]
+    simp only [minor₁, LinearMap.smul_apply, _root_.coe_coe, LinearMap.coe_coe_is_scalar_tower,
+      ContinuousLinearMap.coe_coe, coe_restrict_scalars', coe_smul', LinearIsometry.coe_to_continuous_linear_map,
+      LinearIsometry.coe_mk, Pi.smul_apply, smul_inv_smul₀, Ne.def, not_false_iff]
     
 #align is_conformal_map_complex_linear isConformalMapComplexLinear
 
@@ -109,15 +111,16 @@ theorem is_conformal_map_iff_is_complex_or_conj_linear :
   · rintro ⟨⟨map, rfl⟩ | ⟨map, hmap⟩, h₂⟩
     · refine' isConformalMapComplexLinear _
       contrapose! h₂ with w
-      simp [w]
+      simp only [w, restrict_scalars_zero]
       
     · have minor₁ : g = map.restrict_scalars ℝ ∘L ↑conj_cle := by
         ext1
-        simp [hmap]
+        simp only [hmap, coe_comp', ContinuousLinearEquiv.coe_coe, Function.comp_apply, conj_cle_apply,
+          star_ring_end_self_apply]
       rw [minor₁] at h₂⊢
       refine' isConformalMapComplexLinearConj _
       contrapose! h₂ with w
-      simp [w]
+      simp only [w, restrict_scalars_zero, zero_comp]
       
     
 #align is_conformal_map_iff_is_complex_or_conj_linear is_conformal_map_iff_is_complex_or_conj_linear

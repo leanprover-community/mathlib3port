@@ -43,12 +43,16 @@ theorem coe_nat_succ_pos (n : ℕ) : 0 < (n.succ : ℤ) :=
 
 section cast
 
-#print Int.cast_mul /-
+/- warning: int.cast_mul -> Int.cast_mul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u_3}} [_inst_1 : NonAssocRing.{u_3} α] (m : Int) (n : Int), Eq.{succ u_3} α ((fun (a : Type) (b : Type.{u_3}) [self : HasLiftT.{1 succ u_3} a b] => self.0) Int α (HasLiftT.mk.{1 succ u_3} Int α (CoeTCₓ.coe.{1 succ u_3} Int α (Int.castCoe.{u_3} α (AddGroupWithOne.toHasIntCast.{u_3} α (NonAssocRing.toAddGroupWithOne.{u_3} α _inst_1))))) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.hasMul) m n)) (HMul.hMul.{u_3 u_3 u_3} α α α (instHMul.{u_3} α (Distrib.toHasMul.{u_3} α (NonUnitalNonAssocSemiring.toDistrib.{u_3} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u_3} α (NonAssocRing.toNonUnitalNonAssocRing.{u_3} α _inst_1))))) ((fun (a : Type) (b : Type.{u_3}) [self : HasLiftT.{1 succ u_3} a b] => self.0) Int α (HasLiftT.mk.{1 succ u_3} Int α (CoeTCₓ.coe.{1 succ u_3} Int α (Int.castCoe.{u_3} α (AddGroupWithOne.toHasIntCast.{u_3} α (NonAssocRing.toAddGroupWithOne.{u_3} α _inst_1))))) m) ((fun (a : Type) (b : Type.{u_3}) [self : HasLiftT.{1 succ u_3} a b] => self.0) Int α (HasLiftT.mk.{1 succ u_3} Int α (CoeTCₓ.coe.{1 succ u_3} Int α (Int.castCoe.{u_3} α (AddGroupWithOne.toHasIntCast.{u_3} α (NonAssocRing.toAddGroupWithOne.{u_3} α _inst_1))))) n))
+but is expected to have type
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Data.Int.Cast._hyg.8 : Ring.{u_1} α] (m : Int) (n : Int), Eq.{succ u_1} α (Int.cast.{u_1} α (Ring.toIntCast.{u_1} α inst._@.Mathlib.Data.Int.Cast._hyg.8) (HMul.hMul.{0 0 0} Int Int Int (instHMul.{0} Int Int.instMulInt) m n)) (HMul.hMul.{u_1 u_1 u_1} α α α (instHMul.{u_1} α (NonUnitalNonAssocRing.toMul.{u_1} α (NonAssocRing.toNonUnitalNonAssocRing.{u_1} α (Ring.toNonAssocRing.{u_1} α inst._@.Mathlib.Data.Int.Cast._hyg.8)))) (Int.cast.{u_1} α (Ring.toIntCast.{u_1} α inst._@.Mathlib.Data.Int.Cast._hyg.8) m) (Int.cast.{u_1} α (Ring.toIntCast.{u_1} α inst._@.Mathlib.Data.Int.Cast._hyg.8) n))
+Case conversion may be inaccurate. Consider using '#align int.cast_mul Int.cast_mulₓ'. -/
 theorem cast_mul [NonAssocRing α] : ∀ m n, ((m * n : ℤ) : α) = m * n := fun m =>
   Int.inductionOn' m 0 (by simp [cast_zero]) (fun k _ ih n => by simp [add_mul, ih, cast_add, cast_one]) fun k _ ih n =>
     by simp [sub_mul, ih, cast_sub, cast_one]
 #align int.cast_mul Int.cast_mul
--/
 
 @[simp, norm_cast]
 theorem cast_ite [AddGroupWithOne α] (P : Prop) [Decidable P] (m n : ℤ) : ((ite P m n : ℤ) : α) = ite P m n :=
@@ -120,7 +124,7 @@ theorem cast_le [OrderedRing α] [Nontrivial α] {m n : ℤ} : (m : α) ≤ n �
 #align int.cast_le Int.cast_le
 
 theorem cast_strict_mono [OrderedRing α] [Nontrivial α] : StrictMono (coe : ℤ → α) :=
-  strict_mono_of_le_iff_le fun m n => cast_le.symm
+  strictMono_of_le_iff_le fun m n => cast_le.symm
 #align int.cast_strict_mono Int.cast_strict_mono
 
 @[simp, norm_cast]
@@ -326,7 +330,7 @@ end NonAssocRing
 lean 3 declaration is
   forall (n : Int), Eq.{1} Int ((fun (a : Type) (b : Type) [self : HasLiftT.{1 1} a b] => self.0) Int Int (HasLiftT.mk.{1 1} Int Int (CoeTCₓ.coe.{1 1} Int Int (Int.castCoe.{0} Int (AddGroupWithOne.toHasIntCast.{0} Int (NonAssocRing.toAddGroupWithOne.{0} Int (Ring.toNonAssocRing.{0} Int Int.ring)))))) n) n
 but is expected to have type
-  forall {n : Int}, Eq.{1} Int (Int.cast.{0} Int (Ring.toAddGroupWithOne.{0} Int (CommRing.toRing.{0} Int Int.instCommRingInt)) n) n
+  forall {n : Int}, Eq.{1} Int (Int.cast.{0} Int (Ring.toIntCast.{0} Int (CommRing.toRing.{0} Int Int.instCommRingInt)) n) n
 Case conversion may be inaccurate. Consider using '#align int.cast_id Int.cast_idₓ'. -/
 @[simp, norm_cast]
 theorem Int.cast_id (n : ℤ) : ↑n = n :=
@@ -340,9 +344,9 @@ theorem Int.cast_ring_hom_int : Int.castRingHom ℤ = RingHom.id ℤ :=
 
 namespace Pi
 
-variable {π : ι → Type _} [∀ i, HasIntCast (π i)]
+variable {π : ι → Type _} [∀ i, IntCast (π i)]
 
-instance : HasIntCast (∀ i, π i) := by refine_struct { .. } <;> pi_instance_derive_field
+instance : IntCast (∀ i, π i) := by refine_struct { .. } <;> pi_instance_derive_field
 
 theorem int_apply (n : ℤ) (i : ι) : (n : ∀ i, π i) i = n :=
   rfl
@@ -355,7 +359,7 @@ theorem coe_int (n : ℤ) : (n : ∀ i, π i) = fun _ => n :=
 
 end Pi
 
-theorem Sum.elim_int_cast_int_cast {α β γ : Type _} [HasIntCast γ] (n : ℤ) : Sum.elim (n : α → γ) (n : β → γ) = n :=
+theorem Sum.elim_int_cast_int_cast {α β γ : Type _} [IntCast γ] (n : ℤ) : Sum.elim (n : α → γ) (n : β → γ) = n :=
   @Sum.elim_lam_const_lam_const α β γ n
 #align sum.elim_int_cast_int_cast Sum.elim_int_cast_int_cast
 
@@ -388,7 +392,7 @@ end MulOpposite
 
 open OrderDual
 
-instance [h : HasIntCast α] : HasIntCast αᵒᵈ :=
+instance [h : IntCast α] : IntCast αᵒᵈ :=
   h
 
 instance [h : AddGroupWithOne α] : AddGroupWithOne αᵒᵈ :=
@@ -398,19 +402,19 @@ instance [h : AddCommGroupWithOne α] : AddCommGroupWithOne αᵒᵈ :=
   h
 
 @[simp]
-theorem to_dual_int_cast [HasIntCast α] (n : ℤ) : toDual (n : α) = n :=
+theorem to_dual_int_cast [IntCast α] (n : ℤ) : toDual (n : α) = n :=
   rfl
 #align to_dual_int_cast to_dual_int_cast
 
 @[simp]
-theorem of_dual_int_cast [HasIntCast α] (n : ℤ) : (ofDual n : α) = n :=
+theorem of_dual_int_cast [IntCast α] (n : ℤ) : (ofDual n : α) = n :=
   rfl
 #align of_dual_int_cast of_dual_int_cast
 
 /-! ### Lexicographic order -/
 
 
-instance [h : HasIntCast α] : HasIntCast (Lex α) :=
+instance [h : IntCast α] : IntCast (Lex α) :=
   h
 
 instance [h : AddGroupWithOne α] : AddGroupWithOne (Lex α) :=
@@ -420,12 +424,12 @@ instance [h : AddCommGroupWithOne α] : AddCommGroupWithOne (Lex α) :=
   h
 
 @[simp]
-theorem to_lex_int_cast [HasIntCast α] (n : ℤ) : toLex (n : α) = n :=
+theorem to_lex_int_cast [IntCast α] (n : ℤ) : toLex (n : α) = n :=
   rfl
 #align to_lex_int_cast to_lex_int_cast
 
 @[simp]
-theorem of_lex_int_cast [HasIntCast α] (n : ℤ) : (ofLex n : α) = n :=
+theorem of_lex_int_cast [IntCast α] (n : ℤ) : (ofLex n : α) = n :=
   rfl
 #align of_lex_int_cast of_lex_int_cast
 

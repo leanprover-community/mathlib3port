@@ -999,14 +999,6 @@ theorem dim_fin_fun (n : ℕ) : Module.rank K (Fin n → K) = n := by simp [dim_
 
 end Fintype
 
-end DivisionRing
-
-section Field
-
-variable [Field K] [AddCommGroup V] [Module K V] [AddCommGroup V₁] [Module K V₁]
-
-variable [AddCommGroup V'] [Module K V']
-
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
      (Command.declModifiers [] [] [] [] [] [])
@@ -1234,7 +1226,7 @@ theorem exists_mem_ne_zero_of_dim_pos {s : Submodule K V} (h : 0 < Module.rank K
   exists_mem_ne_zero_of_ne_bot fun eq => by rw [Eq, dim_bot] at h <;> exact lt_irrefl _ h
 #align exists_mem_ne_zero_of_dim_pos exists_mem_ne_zero_of_dim_pos
 
-end Field
+end DivisionRing
 
 section rank
 
@@ -1273,9 +1265,11 @@ theorem rank_comp_le2 (g : V →ₗ[K] V') (f : V' →ₗ[K] V'₁) : rank (f.co
 
 end
 
-section Field
+end rank
 
-variable [Field K] [AddCommGroup V] [Module K V] [AddCommGroup V₁] [Module K V₁]
+section DivisionRing
+
+variable [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup V₁] [Module K V₁]
 
 variable [AddCommGroup V'] [Module K V']
 
@@ -1300,14 +1294,6 @@ theorem rank_finset_sum_le {η} (s : Finset η) (f : η → V →ₗ[K] V') : ra
   @Finset.sum_hom_rel _ _ _ _ _ (fun a b => rank a ≤ b) f (fun d => rank (f d)) s (le_of_eq rank_zero) fun i g c h =>
     le_trans (rank_add_le _ _) (add_le_add_left h _)
 #align rank_finset_sum_le rank_finset_sum_le
-
-end Field
-
-end rank
-
-section DivisionRing
-
-variable [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup V'] [Module K V']
 
 /-- The `ι` indexed basis on `V`, where `ι` is an empty type and `V` is zero-dimensional.
 
@@ -1448,12 +1434,6 @@ theorem Module.rank_le_one_iff_top_is_principal : Module.rank K V ≤ 1 ↔ (⊤
   rw [← Submodule.rank_le_one_iff_is_principal, dim_top]
 #align module.rank_le_one_iff_top_is_principal Module.rank_le_one_iff_top_is_principal
 
-end DivisionRing
-
-section Field
-
-variable [Field K] [AddCommGroup V] [Module K V] [AddCommGroup V'] [Module K V']
-
 theorem le_rank_iff_exists_linear_independent {c : Cardinal} {f : V →ₗ[K] V'} :
     c ≤ rank f ↔ ∃ s : Set V, Cardinal.lift.{v'} (#s) = Cardinal.lift.{v} c ∧ LinearIndependent K fun x : s => f x := by
   rcases f.range_restrict.exists_right_inverse_of_surjective f.range_range_restrict with ⟨g, hg⟩
@@ -1492,7 +1472,7 @@ theorem le_rank_iff_exists_linear_independent_finset {n : ℕ} {f : V →ₗ[K] 
     
 #align le_rank_iff_exists_linear_independent_finset le_rank_iff_exists_linear_independent_finset
 
-end Field
+end DivisionRing
 
 end Module
 

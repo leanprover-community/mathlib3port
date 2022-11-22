@@ -274,7 +274,7 @@ private theorem ne_from_not_eq {α} : ∀ x y : α, x ≠ y ↔ ¬x = y := fun _
 /-- `mk_cache names` creates a `norm_cast_cache`. It infers the proper `norm_cast` attributes
 for names in `names`, and collects the lemmas attributed with specific `norm_cast` attributes.
 -/
-unsafe def mk_cache (attr : Thunk' norm_cast_attr_ty) (names : List Name) : tactic norm_cast_cache := do
+unsafe def mk_cache (attr : Thunk norm_cast_attr_ty) (names : List Name) : tactic norm_cast_cache := do
   let cache
     ←-- names has the declarations in reverse order
           names.mfoldr

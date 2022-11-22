@@ -657,7 +657,7 @@ theorem lift_unique (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R 
 
 end LocalizedModule
 
-instance localizedModuleIsLocalizedModule : IsLocalizedModule S (LocalizedModule.mkLinearMap S M) where
+instance localized_module_is_localized_module : IsLocalizedModule S (LocalizedModule.mkLinearMap S M) where
   map_units s :=
     ⟨⟨algebraMap R (Module.EndCat R (LocalizedModule S M)) s, LocalizedModule.divBy s,
         FunLike.ext _ _ <| LocalizedModule.mul_by_div_by s, FunLike.ext _ _ <| LocalizedModule.div_by_mul_by s⟩,
@@ -675,7 +675,7 @@ instance localizedModuleIsLocalizedModule : IsLocalizedModule S (LocalizedModule
   eq_iff_exists m1 m2 :=
     { mp := fun eq1 => by simpa only [one_smul] using localized_module.mk_eq.mp eq1,
       mpr := fun ⟨c, eq1⟩ => LocalizedModule.mk_eq.mpr ⟨c, by simpa only [one_smul] using eq1⟩ }
-#align localized_module_is_localized_module localizedModuleIsLocalizedModule
+#align localized_module_is_localized_module localized_module_is_localized_module
 
 namespace IsLocalizedModule
 

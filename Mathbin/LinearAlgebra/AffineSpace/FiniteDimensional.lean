@@ -571,7 +571,7 @@ theorem coplanar_insert_iff_of_mem_affine_span {s : Set P} {p : P} (h : p ∈ af
 
 end AffineSpace'
 
-section Field
+section DivisionRing
 
 variable {k : Type _} {V : Type _} {P : Type _}
 
@@ -579,7 +579,7 @@ include V
 
 open AffineSubspace FiniteDimensional Module
 
-variable [Field k] [AddCommGroup V] [Module k V] [affine_space V P]
+variable [DivisionRing k] [AddCommGroup V] [Module k V] [affine_space V P]
 
 /-- Adding a point to a finite-dimensional subspace increases the dimension by at most one. -/
 theorem finrank_vector_span_insert_le (s : AffineSubspace k P) (p : P) :
@@ -655,5 +655,5 @@ theorem coplanarTriple (p₁ p₂ p₃ : P) : Coplanar k ({p₁, p₂, p₃} : S
   (collinearPair k p₂ p₃).coplanarInsert p₁
 #align coplanar_triple coplanarTriple
 
-end Field
+end DivisionRing
 

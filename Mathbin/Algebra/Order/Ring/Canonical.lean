@@ -81,9 +81,9 @@ namespace CanonicallyOrderedCommSemiring
 variable [CanonicallyOrderedCommSemiring α] {a b : α}
 
 -- see Note [lower instance priority]
-instance (priority := 100) toNoZeroDivisors : NoZeroDivisors α :=
+instance (priority := 100) to_no_zero_divisors : NoZeroDivisors α :=
   ⟨CanonicallyOrderedCommSemiring.eq_zero_or_eq_zero_of_mul_eq_zero⟩
-#align canonically_ordered_comm_semiring.to_no_zero_divisors CanonicallyOrderedCommSemiring.toNoZeroDivisors
+#align canonically_ordered_comm_semiring.to_no_zero_divisors CanonicallyOrderedCommSemiring.to_no_zero_divisors
 
 -- see Note [lower instance priority]
 instance (priority := 100) to_covariant_mul_le : CovariantClass α α (· * ·) (· ≤ ·) := by
@@ -135,11 +135,11 @@ end AddLeCancellable
 variable [ContravariantClass α α (· + ·) (· ≤ ·)]
 
 theorem mul_tsub (a b c : α) : a * (b - c) = a * b - a * c :=
-  Contravariant.add_le_cancellable.mul_tsub
+  Contravariant.AddLeCancellable.mul_tsub
 #align mul_tsub mul_tsub
 
 theorem tsub_mul (a b c : α) : (a - b) * c = a * c - b * c :=
-  Contravariant.add_le_cancellable.tsub_mul
+  Contravariant.AddLeCancellable.tsub_mul
 #align tsub_mul tsub_mul
 
 end Sub

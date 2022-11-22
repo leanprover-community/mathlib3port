@@ -179,7 +179,7 @@ theorem injective_of_forall_ne_is_some (f : α ≃. β) (a₂ : α) (h : ∀ a�
       · have : x = a₂ := not_imp_comm.1 (h x) (hfx.symm ▸ by simp)
         simp [this]
         
-      · simp only [hfx]
+      · dsimp only
         rw [(eq_some_iff f).2 hfx]
         rfl
         ⟩
@@ -218,11 +218,11 @@ theorem mem_of_set_self_iff {s : Set α} [DecidablePred (· ∈ s)] {a : α} : a
 theorem mem_of_set_iff {s : Set α} [DecidablePred (· ∈ s)] {a b : α} : a ∈ ofSet s b ↔ a = b ∧ a ∈ s := by
   dsimp [of_set]
   split_ifs
-  · simp only [iff_self_and, Option.mem_def, eq_comm]
+  · simp only [iff_self_and, eq_comm]
     rintro rfl
     exact h
     
-  · simp only [false_iff_iff, not_and, Option.not_mem_none]
+  · simp only [false_iff_iff, not_and]
     rintro rfl
     exact h
     

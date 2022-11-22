@@ -159,7 +159,7 @@ instance [Unique α] : Unique αᵐᵒᵖ :=
 
 @[to_additive]
 instance [IsEmpty α] : IsEmpty αᵐᵒᵖ :=
-  function.isEmpty unop
+  Function.isEmpty unop
 
 instance [Zero α] : Zero αᵐᵒᵖ where zero := op 0
 

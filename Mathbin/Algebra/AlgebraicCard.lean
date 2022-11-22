@@ -27,7 +27,7 @@ namespace Algebraic
 
 theorem aleph_0_le_cardinal_mk_of_char_zero (R A : Type _) [CommRing R] [IsDomain R] [Ring A] [Algebra R A]
     [CharZero A] : ℵ₀ ≤ (#{ x : A // IsAlgebraic R x }) :=
-  @mk_le_of_injective (ULift ℕ) { x : A | IsAlgebraic R x } (fun n => ⟨_, isAlgebraicNat n.down⟩) fun m n hmn => by
+  @mk_le_of_injective (ULift ℕ) { x : A | IsAlgebraic R x } (fun n => ⟨_, is_algebraic_nat n.down⟩) fun m n hmn => by
     simpa using hmn
 #align algebraic.aleph_0_le_cardinal_mk_of_char_zero Algebraic.aleph_0_le_cardinal_mk_of_char_zero
 

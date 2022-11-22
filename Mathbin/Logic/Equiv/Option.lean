@@ -71,7 +71,7 @@ private def remove_none_aux (x : α) : β :=
   else
     Option.get <|
       show (e none).isSome by
-        rw [← Option.ne_none_iff_is_some]
+        rw [← Option.ne_none_iff_isSome]
         intro hn
         rw [Option.not_isSome_iff_eq_none, ← hn] at h
         simpa only using e.injective h
@@ -162,7 +162,7 @@ def optionSubtype [DecidableEq β] (x : β) : { e : Option α ≃ β // e none =
     { toFun := fun a => ⟨e a, ((EquivLike.injective _).ne_iff' e.property).2 (some_ne_none _)⟩,
       invFun := fun b =>
         get
-          (ne_none_iff_is_some.1
+          (ne_none_iff_isSome.1
             (((EquivLike.injective _).ne_iff' ((apply_eq_iff_eq_symm_apply _).1 e.property).symm).2 b.property)),
       left_inv := fun a => by
         rw [← some_inj, some_get, ← coe_def]

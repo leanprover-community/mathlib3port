@@ -312,7 +312,7 @@ theorem to_subalgebra_to_intermediate_field' (S : Subalgebra K L) (hS : IsField 
 
 @[simp]
 theorem to_intermediate_field'_to_subalgebra (S : IntermediateField K L) :
-    S.toSubalgebra.toIntermediateField' (Field.toIsField S) = S := by
+    S.toSubalgebra.toIntermediateField' (Field.to_is_field S) = S := by
   ext
   rfl
 #align to_intermediate_field'_to_subalgebra to_intermediate_field'_to_subalgebra
@@ -656,7 +656,7 @@ theorem to_subalgebra_eq_iff : F.toSubalgebra = E.toSubalgebra ↔ F = E := by
 #align intermediate_field.to_subalgebra_eq_iff IntermediateField.to_subalgebra_eq_iff
 
 theorem eq_of_le_of_finrank_le [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank K E ≤ finrank K F) : F = E :=
-  to_subalgebra_injective <| Subalgebra.to_submodule_injective <| eq_of_le_of_finrank_le h_le h_finrank
+  to_subalgebra_injective <| Subalgebra.toSubmodule.Injective <| eq_of_le_of_finrank_le h_le h_finrank
 #align intermediate_field.eq_of_le_of_finrank_le IntermediateField.eq_of_le_of_finrank_le
 
 theorem eq_of_le_of_finrank_eq [FiniteDimensional K L] (h_le : F ≤ E) (h_finrank : finrank K F = finrank K E) : F = E :=

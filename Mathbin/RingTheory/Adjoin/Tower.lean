@@ -69,15 +69,15 @@ section
 
 open Classical
 
-theorem Algebra.fgTrans' {R S A : Type _} [CommSemiring R] [CommSemiring S] [CommSemiring A] [Algebra R S] [Algebra S A]
-    [Algebra R A] [IsScalarTower R S A] (hRS : (⊤ : Subalgebra R S).Fg) (hSA : (⊤ : Subalgebra S A).Fg) :
+theorem Algebra.fg_trans' {R S A : Type _} [CommSemiring R] [CommSemiring S] [CommSemiring A] [Algebra R S]
+    [Algebra S A] [Algebra R A] [IsScalarTower R S A] (hRS : (⊤ : Subalgebra R S).Fg) (hSA : (⊤ : Subalgebra S A).Fg) :
     (⊤ : Subalgebra R A).Fg :=
   let ⟨s, hs⟩ := hRS
   let ⟨t, ht⟩ := hSA
   ⟨s.image (algebraMap S A) ∪ t, by
     rw [Finset.coe_union, Finset.coe_image, Algebra.adjoin_union_eq_adjoin_adjoin, Algebra.adjoin_algebra_map, hs,
       Algebra.map_top, IsScalarTower.adjoin_range_to_alg_hom, ht, Subalgebra.restrict_scalars_top]⟩
-#align algebra.fg_trans' Algebra.fgTrans'
+#align algebra.fg_trans' Algebra.fg_trans'
 
 end
 
@@ -134,7 +134,7 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
                 Algebra.subset_adjoin <| mem_image₂_of_mem (mem_union_right _ <| mul_mem_mul hyi hyj) hyk⟩
               (subset_span <| Set.mem_insert_of_mem _ hyk : yk ∈ _))
       
-  refine' ⟨Algebra.adjoin A (↑s : Set B), Subalgebra.fgAdjoinFinset _, insert 1 y, _⟩
+  refine' ⟨Algebra.adjoin A (↑s : Set B), Subalgebra.fg_adjoin_finset _, insert 1 y, _⟩
   refine' restrict_scalars_injective A _ _ _
   rw [restrict_scalars_top, eq_top_iff, ← Algebra.top_to_submodule, ← hx, Algebra.adjoin_eq_span, span_le]
   refine' fun r hr =>
@@ -155,15 +155,15 @@ A is noetherian, and C is algebra-finite over A, and C is module-finite over B,
 then B is algebra-finite over A.
 
 References: Atiyah--Macdonald Proposition 7.8; Stacks 00IS; Altman--Kleiman 16.17. -/
-theorem fgOfFgOfFg [IsNoetherianRing A] (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : Submodule B C).Fg)
+theorem fg_of_fg_of_fg [IsNoetherianRing A] (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : Submodule B C).Fg)
     (hBCi : Function.Injective (algebraMap B C)) : (⊤ : Subalgebra A B).Fg :=
   let ⟨B₀, hAB₀, hB₀C⟩ := exists_subalgebra_of_fg A B C hAC hBC
-  Algebra.fgTrans' (B₀.fg_top.2 hAB₀) <|
-    Subalgebra.fgOfSubmoduleFg <|
+  Algebra.fg_trans' (B₀.fg_top.2 hAB₀) <|
+    Subalgebra.fg_of_submodule_fg <|
       have : IsNoetherianRing B₀ := is_noetherian_ring_of_fg hAB₀
       have : IsNoetherian B₀ C := is_noetherian_of_fg_of_noetherian' hB₀C
       fg_of_injective (IsScalarTower.toAlgHom B₀ B C).toLinearMap hBCi
-#align fg_of_fg_of_fg fgOfFgOfFg
+#align fg_of_fg_of_fg fg_of_fg_of_fg
 
 end Ring
 

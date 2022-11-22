@@ -45,10 +45,10 @@ theorem discr_zeta_eq_discr_zeta_sub_one (hζ : IsPrimitiveRoot ζ n) :
     
   · refine' minpoly.gcd_domain_eq_field_fractions' _ (hζ.is_integral n.pos)
     
-  · exact isIntegralSub (hζ.is_integral n.pos) isIntegralOne
+  · exact is_integral_sub (hζ.is_integral n.pos) is_integral_one
     
   · refine' minpoly.gcd_domain_eq_field_fractions' _ _
-    exact isIntegralSub (hζ.is_integral n.pos) isIntegralOne
+    exact is_integral_sub (hζ.is_integral n.pos) is_integral_one
     
 #align is_primitive_root.discr_zeta_eq_discr_zeta_sub_one IsPrimitiveRoot.discr_zeta_eq_discr_zeta_sub_one
 

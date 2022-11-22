@@ -249,11 +249,11 @@ instance : EuclideanDomain R[X] :=
   { Polynomial.commRing, Polynomial.nontrivial with Quotient := (· / ·), quotient_zero := by simp [div_def],
     remainder := (· % ·), R := _, r_well_founded := degree_lt_wf,
     quotient_mul_add_remainder_eq := quotient_mul_add_remainder_eq_aux,
-    remainderLt := fun p q hq => remainder_lt_aux _ hq,
+    remainder_lt := fun p q hq => remainder_lt_aux _ hq,
     mul_left_not_lt := fun p q hq => not_lt_of_ge (degree_le_mul_left _ hq) }
 
 theorem mod_eq_self_iff (hq0 : q ≠ 0) : p % q = p ↔ degree p < degree q :=
-  ⟨fun h => h ▸ EuclideanDomain.modLt _ hq0, fun h => by
+  ⟨fun h => h ▸ EuclideanDomain.mod_lt _ hq0, fun h => by
     have : ¬degree (q * c (leadingCoeff q)⁻¹) ≤ degree p := not_le_of_gt <| by rwa [degree_mul_leading_coeff_inv q hq0]
     rw [mod_def, mod_by_monic, dif_pos (monic_mul_leading_coeff_inv hq0)]
     unfold div_mod_by_monic_aux
@@ -271,7 +271,7 @@ theorem div_eq_zero_iff (hq0 : q ≠ 0) : p / q = 0 ↔ degree p < degree q :=
 theorem degree_add_div (hq0 : q ≠ 0) (hpq : degree q ≤ degree p) : degree q + degree (p / q) = degree p := by
   have : degree (p % q) < degree (q * (p / q)) :=
     calc
-      degree (p % q) < degree q := EuclideanDomain.modLt _ hq0
+      degree (p % q) < degree q := EuclideanDomain.mod_lt _ hq0
       _ ≤ _ := degree_le_mul_left _ (mt (div_eq_zero_iff hq0).1 (not_lt_of_ge hpq))
       
   conv_rhs => rw [← EuclideanDomain.div_add_mod p q, degree_add_eq_left_of_degree_lt this, degree_mul]
@@ -489,15 +489,15 @@ theorem map_dvd_map' [Field k] (f : R →+* k) {x y : R[X]} : x.map f ∣ y.map 
 theorem degree_normalize : degree (normalize p) = degree p := by simp
 #align polynomial.degree_normalize Polynomial.degree_normalize
 
-theorem primeOfDegreeEqOne (hp1 : degree p = 1) : Prime p :=
+theorem prime_of_degree_eq_one (hp1 : degree p = 1) : Prime p :=
   have : Prime (normalize p) :=
-    Monic.primeOfDegreeEqOne (hp1 ▸ degree_normalize)
+    Monic.prime_of_degree_eq_one (hp1 ▸ degree_normalize)
       (monic_normalize fun hp0 => absurd hp1 (hp0.symm ▸ by simp <;> exact by decide))
   (normalize_associated _).Prime this
-#align polynomial.prime_of_degree_eq_one Polynomial.primeOfDegreeEqOne
+#align polynomial.prime_of_degree_eq_one Polynomial.prime_of_degree_eq_one
 
 theorem irreducible_of_degree_eq_one (hp1 : degree p = 1) : Irreducible p :=
-  (primeOfDegreeEqOne hp1).Irreducible
+  (prime_of_degree_eq_one hp1).Irreducible
 #align polynomial.irreducible_of_degree_eq_one Polynomial.irreducible_of_degree_eq_one
 
 theorem not_irreducible_C (x : R) : ¬Irreducible (c x) :=

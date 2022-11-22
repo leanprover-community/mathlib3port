@@ -3,9 +3,8 @@ Copyright (c) 2016 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
+import Mathbin.Algebra.Order.Monoid.Lemmas
 import Mathbin.Order.BoundedOrder
-import Mathbin.Algebra.GroupWithZero.Defs
-import Mathbin.Algebra.Order.ZeroLeOne
 
 /-!
 # Ordered monoids
@@ -96,16 +95,6 @@ class LinearOrderedAddCommMonoid (α : Type _) extends LinearOrder α, OrderedAd
 class LinearOrderedCommMonoid (α : Type _) extends LinearOrder α, OrderedCommMonoid α
 #align linear_ordered_comm_monoid LinearOrderedCommMonoid
 -/
-
-/-- A linearly ordered commutative monoid with a zero element. -/
-class LinearOrderedCommMonoidWithZero (α : Type _) extends LinearOrderedCommMonoid α, CommMonoidWithZero α where
-  zero_le_one : (0 : α) ≤ 1
-#align linear_ordered_comm_monoid_with_zero LinearOrderedCommMonoidWithZero
-
-instance (priority := 100) LinearOrderedCommMonoidWithZero.zeroLeOneClass [h : LinearOrderedCommMonoidWithZero α] :
-    ZeroLeOneClass α :=
-  { h with }
-#align linear_ordered_comm_monoid_with_zero.zero_le_one_class LinearOrderedCommMonoidWithZero.zeroLeOneClass
 
 /-- A linearly ordered commutative monoid with an additively absorbing `⊤` element.
   Instances should include number systems with an infinite element adjoined.` -/

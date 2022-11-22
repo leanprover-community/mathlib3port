@@ -323,7 +323,7 @@ theorem splitsInSplittingFieldOfComp (hq : q.natDegree ≠ 0) : p.Splits (algebr
         hr' ((mul_eq_zero.mp (nat_degree_comp.symm.trans (nat_degree_eq_of_degree_eq_some h))).resolve_right hq)
     rw [← aeval_def, aeval_comp] at hx
     have h_normal : Normal F (r.comp q).SplittingField := splitting_field.normal (r.comp q)
-    have qx_int := Normal.isIntegral h_normal (aeval x q)
+    have qx_int := Normal.is_integral h_normal (aeval x q)
     exact
       splits_of_splits_of_dvd _ (minpoly.ne_zero qx_int) (Normal.splits h_normal _)
         ((minpoly.irreducible qx_int).dvd_symm hr (minpoly.dvd F _ hx))
@@ -347,7 +347,8 @@ theorem splitsInSplittingFieldOfComp (hq : q.natDegree ≠ 0) : p.Splits (algebr
       
     have key := mul_splits_in_splitting_field_of_mul h₁ h₂ hp₁ hp₂
     rwa [← mul_comp] at key
-  exact WfDvdMonoid.inductionOnIrreducible p (splits_zero _) (fun _ => splits_of_is_unit _) fun _ _ _ h => key2 (key1 h)
+  exact
+    WfDvdMonoid.induction_on_irreducible p (splits_zero _) (fun _ => splits_of_is_unit _) fun _ _ _ h => key2 (key1 h)
 #align polynomial.gal.splits_in_splitting_field_of_comp Polynomial.Gal.splitsInSplittingFieldOfComp
 
 /-- `polynomial.gal.restrict` for the composition of polynomials. -/
@@ -375,7 +376,7 @@ theorem prime_degree_dvd_card [CharZero F] (p_irr : Irreducible p) (p_deg : p.na
   rw [gal.card_of_separable p_irr.separable]
   have hp : p.degree ≠ 0 := fun h => Nat.Prime.ne_zero p_deg (nat_degree_eq_zero_iff_degree_le_zero.mpr (le_of_eq h))
   let α : p.splitting_field := root_of_splits (algebraMap F p.splitting_field) (splitting_field.splits p) hp
-  have hα : IsIntegral F α := Algebra.isIntegralOfFinite _ _ α
+  have hα : IsIntegral F α := Algebra.is_integral_of_finite _ _ α
   use FiniteDimensional.finrank F⟮⟯ p.splitting_field
   suffices (minpoly F α).natDegree = p.nat_degree by
     rw [← FiniteDimensional.finrank_mul_finrank F F⟮⟯ p.splitting_field, IntermediateField.adjoin.finrank hα, this]

@@ -124,9 +124,9 @@ theorem finiteType : Algebra.FiniteType R (AdjoinRoot f) :=
   (Algebra.FiniteType.polynomial R).ofSurjective _ (Ideal.Quotient.mkₐ_surjective R _)
 #align adjoin_root.finite_type AdjoinRoot.finiteType
 
-theorem finitePresentation : Algebra.FinitePresentation R (AdjoinRoot f) :=
+theorem finite_presentation : Algebra.FinitePresentation R (AdjoinRoot f) :=
   (Algebra.FinitePresentation.polynomial R).Quotient (Submodule.fg_span_singleton f)
-#align adjoin_root.finite_presentation AdjoinRoot.finitePresentation
+#align adjoin_root.finite_presentation AdjoinRoot.finite_presentation
 
 /-- The adjoined root. -/
 def root : AdjoinRoot f :=
@@ -190,9 +190,9 @@ theorem eval₂_root (f : R[X]) : f.eval₂ (of f) (root f) = 0 := by rw [← al
 theorem is_root_root (f : R[X]) : IsRoot (f.map (of f)) (root f) := by rw [is_root, eval_map, eval₂_root]
 #align adjoin_root.is_root_root AdjoinRoot.is_root_root
 
-theorem isAlgebraicRoot (hf : f ≠ 0) : IsAlgebraic R (root f) :=
+theorem is_algebraic_root (hf : f ≠ 0) : IsAlgebraic R (root f) :=
   ⟨f, hf, eval₂_root f⟩
-#align adjoin_root.is_algebraic_root AdjoinRoot.isAlgebraicRoot
+#align adjoin_root.is_algebraic_root AdjoinRoot.is_algebraic_root
 
 variable [CommRing S]
 
@@ -332,9 +332,9 @@ section PowerBasis
 
 variable [CommRing R] {g : R[X]}
 
-theorem isIntegralRoot' (hg : g.Monic) : IsIntegral R (root g) :=
+theorem is_integral_root' (hg : g.Monic) : IsIntegral R (root g) :=
   ⟨g, hg, eval₂_root g⟩
-#align adjoin_root.is_integral_root' AdjoinRoot.isIntegralRoot'
+#align adjoin_root.is_integral_root' AdjoinRoot.is_integral_root'
 
 /-- `adjoin_root.mod_by_monic_hom` sends the equivalence class of `f` mod `g` to `f %ₘ g`.
 
@@ -425,9 +425,9 @@ def powerBasis' (hg : g.Monic) : PowerBasis R (AdjoinRoot g) where
 
 variable [Field K] {f : K[X]}
 
-theorem isIntegralRoot (hf : f ≠ 0) : IsIntegral K (root f) :=
-  is_algebraic_iff_is_integral.mp (isAlgebraicRoot hf)
-#align adjoin_root.is_integral_root AdjoinRoot.isIntegralRoot
+theorem is_integral_root (hf : f ≠ 0) : IsIntegral K (root f) :=
+  is_algebraic_iff_is_integral.mp (is_algebraic_root hf)
+#align adjoin_root.is_integral_root AdjoinRoot.is_integral_root
 
 theorem minpoly_root (hf : f ≠ 0) : minpoly K (root f) = f * c f.leadingCoeff⁻¹ := by
   have f'_monic : monic _ := monic_mul_leading_coeff_inv hf

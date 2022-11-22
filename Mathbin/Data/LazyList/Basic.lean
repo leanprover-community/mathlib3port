@@ -18,18 +18,18 @@ TODO: move the `lazy_list.lean` file from core to mathlib.
 
 universe u
 
-namespace Thunk'
+namespace Thunk
 
 /-- Creates a thunk with a (non-lazy) constant value. -/
-def mk {α} (x : α) : Thunk' α := fun _ => x
-#align thunk.mk Thunk'.mk
+def mk {α} (x : α) : Thunk α := fun _ => x
+#align thunk.mk Thunkₓ.mk
 
-instance {α : Type u} [DecidableEq α] : DecidableEq (Thunk' α)
+instance {α : Type u} [DecidableEq α] : DecidableEq (Thunk α)
   | a, b => by
     have : a = b ↔ a () = b () := ⟨by cc, by intro <;> ext x <;> cases x <;> assumption⟩
     rw [this] <;> infer_instance
 
-end Thunk'
+end Thunk
 
 namespace LazyList
 
@@ -70,7 +70,7 @@ instance {α : Type u} [DecidableEq α] : DecidableEq (LazyList α)
 /-- Traversal of lazy lists using an applicative effect. -/
 protected def traverse {m : Type u → Type u} [Applicative m] {α β : Type u} (f : α → m β) : LazyList α → m (LazyList β)
   | LazyList.nil => pure LazyList.nil
-  | LazyList.cons x xs => LazyList.cons <$> f x <*> Thunk'.mk <$> traverse (xs ())
+  | LazyList.cons x xs => LazyList.cons <$> f x <*> Thunk.mk <$> traverse (xs ())
 #align lazy_list.traverse LazyList.traverse
 
 instance : Traversable LazyList where
@@ -165,7 +165,7 @@ theorem append_assoc {α} (xs ys zs : LazyList α) : (xs.append ys).append zs = 
   induction xs <;> simp [append, *]
 #align lazy_list.append_assoc LazyList.append_assoc
 
-theorem append_bind {α β} (xs : LazyList α) (ys : Thunk' (LazyList α)) (f : α → LazyList β) :
+theorem append_bind {α β} (xs : LazyList α) (ys : Thunk (LazyList α)) (f : α → LazyList β) :
     (@LazyList.append _ xs ys).bind f = (xs.bind f).append ((ys ()).bind f) := by
   induction xs <;> simp [LazyList.bind, append, *, append_assoc, append, LazyList.bind]
 #align lazy_list.append_bind LazyList.append_bind
@@ -220,11 +220,11 @@ theorem mem_nil {α} (x : α) : x ∈ @LazyList.nil α ↔ False :=
 #align lazy_list.mem_nil LazyList.mem_nil
 
 @[simp]
-theorem mem_cons {α} (x y : α) (ys : Thunk' (LazyList α)) : x ∈ @LazyList.cons α y ys ↔ x = y ∨ x ∈ ys () :=
+theorem mem_cons {α} (x y : α) (ys : Thunk (LazyList α)) : x ∈ @LazyList.cons α y ys ↔ x = y ∨ x ∈ ys () :=
   Iff.rfl
 #align lazy_list.mem_cons LazyList.mem_cons
 
-theorem forall_mem_cons {α} {p : α → Prop} {a : α} {l : Thunk' (LazyList α)} :
+theorem forall_mem_cons {α} {p : α → Prop} {a : α} {l : Thunk (LazyList α)} :
     (∀ x ∈ @LazyList.cons _ a l, p x) ↔ p a ∧ ∀ x ∈ l (), p x := by
   simp only [Membership.Mem, LazyList.Mem, or_imp, forall_and, forall_eq]
 #align lazy_list.forall_mem_cons LazyList.forall_mem_cons

@@ -156,6 +156,15 @@ protected def copy (f : α →ₙ+* β) (f' : α → β) (h : f' = f) : α →�
   { f.toMulHom.copy f' h, f.toAddMonoidHom.copy f' h with }
 #align non_unital_ring_hom.copy NonUnitalRingHom.copy
 
+@[simp]
+theorem coe_copy (f : α →ₙ+* β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align non_unital_ring_hom.coe_copy NonUnitalRingHom.coe_copy
+
+theorem copy_eq (f : α →ₙ+* β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align non_unital_ring_hom.copy_eq NonUnitalRingHom.copy_eq
+
 end coe
 
 variable [rα : NonUnitalNonAssocSemiring α] [rβ : NonUnitalNonAssocSemiring β]
@@ -479,6 +488,15 @@ def copy (f : α →+* β) (f' : α → β) (h : f' = f) : α →+* β :=
   { f.toMonoidWithZeroHom.copy f' h, f.toAddMonoidHom.copy f' h with }
 #align ring_hom.copy RingHom.copy
 
+@[simp]
+theorem coe_copy (f : α →+* β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align ring_hom.coe_copy RingHom.coe_copy
+
+theorem copy_eq (f : α →+* β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align ring_hom.copy_eq RingHom.copy_eq
+
 end coe
 
 variable [rα : NonAssocSemiring α] [rβ : NonAssocSemiring β]
@@ -723,10 +741,10 @@ theorem cancel_left {g : β →+* γ} {f₁ f₂ : α →+* β} (hg : Injective 
 end RingHom
 
 /-- Pullback `is_domain` instance along an injective function. -/
-protected theorem Function.Injective.isDomain [Ring α] [IsDomain α] [Ring β] (f : β →+* α) (hf : Injective f) :
+protected theorem Function.Injective.is_domain [Ring α] [IsDomain α] [Ring β] (f : β →+* α) (hf : Injective f) :
     IsDomain β :=
   { pullback_nonzero f f.map_zero f.map_one, hf.NoZeroDivisors f f.map_zero f.map_mul with }
-#align function.injective.is_domain Function.Injective.isDomain
+#align function.injective.is_domain Function.Injective.is_domain
 
 namespace AddMonoidHom
 

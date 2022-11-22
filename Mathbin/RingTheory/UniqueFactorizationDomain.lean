@@ -41,13 +41,13 @@ class WfDvdMonoid (α : Type _) [CommMonoidWithZero α] : Prop where
 export WfDvdMonoid (well_founded_dvd_not_unit)
 
 -- see Note [lower instance priority]
-instance (priority := 100) IsNoetherianRing.wfDvdMonoid [CommRing α] [IsDomain α] [IsNoetherianRing α] :
+instance (priority := 100) IsNoetherianRing.wf_dvd_monoid [CommRing α] [IsDomain α] [IsNoetherianRing α] :
     WfDvdMonoid α :=
   ⟨by
     convert InvImage.wf (fun a => Ideal.span ({a} : Set α)) (well_founded_submodule_gt _ _)
     ext
     exact ideal.span_singleton_lt_span_singleton.symm⟩
-#align is_noetherian_ring.wf_dvd_monoid IsNoetherianRing.wfDvdMonoid
+#align is_noetherian_ring.wf_dvd_monoid IsNoetherianRing.wf_dvd_monoid
 
 namespace WfDvdMonoid
 
@@ -55,25 +55,25 @@ variable [CommMonoidWithZero α]
 
 open Associates Nat
 
-theorem ofWfDvdMonoidAssociates (h : WfDvdMonoid (Associates α)) : WfDvdMonoid α :=
+theorem of_wf_dvd_monoid_associates (h : WfDvdMonoid (Associates α)) : WfDvdMonoid α :=
   ⟨by
     haveI := h
     refine' (Surjective.well_founded_iff mk_surjective _).2 well_founded_dvd_not_unit
     intros
     rw [mk_dvd_not_unit_mk_iff]⟩
-#align wf_dvd_monoid.of_wf_dvd_monoid_associates WfDvdMonoid.ofWfDvdMonoidAssociates
+#align wf_dvd_monoid.of_wf_dvd_monoid_associates WfDvdMonoid.of_wf_dvd_monoid_associates
 
 variable [WfDvdMonoid α]
 
-instance wfDvdMonoidAssociates : WfDvdMonoid (Associates α) :=
+instance wf_dvd_monoid_associates : WfDvdMonoid (Associates α) :=
   ⟨by
     refine' (Surjective.well_founded_iff mk_surjective _).1 well_founded_dvd_not_unit
     intros
     rw [mk_dvd_not_unit_mk_iff]⟩
-#align wf_dvd_monoid.wf_dvd_monoid_associates WfDvdMonoid.wfDvdMonoidAssociates
+#align wf_dvd_monoid.wf_dvd_monoid_associates WfDvdMonoid.wf_dvd_monoid_associates
 
 theorem well_founded_associates : WellFounded ((· < ·) : Associates α → Associates α → Prop) :=
-  Subrelation.wf (fun x y => dvdNotUnitOfLt) well_founded_dvd_not_unit
+  Subrelation.wf (fun x y => dvd_not_unit_of_lt) well_founded_dvd_not_unit
 #align wf_dvd_monoid.well_founded_associates WfDvdMonoid.well_founded_associates
 
 attribute [local elab_as_elim] WellFounded.fix
@@ -88,7 +88,7 @@ theorem exists_irreducible_factor {a : α} (ha : ¬IsUnit a) (ha0 : a ≠ 0) : �
 #align wf_dvd_monoid.exists_irreducible_factor WfDvdMonoid.exists_irreducible_factor
 
 @[elab_as_elim]
-theorem inductionOnIrreducible {P : α → Prop} (a : α) (h0 : P 0) (hu : ∀ u : α, IsUnit u → P u)
+theorem induction_on_irreducible {P : α → Prop} (a : α) (h0 : P 0) (hu : ∀ u : α, IsUnit u → P u)
     (hi : ∀ a i : α, a ≠ 0 → Irreducible i → P a → P (i * a)) : P a :=
   haveI := Classical.dec
   well_founded_dvd_not_unit.fix
@@ -101,10 +101,10 @@ theorem inductionOnIrreducible {P : α → Prop} (a : α) (h0 : P 0) (hu : ∀ u
           let hb0 : b ≠ 0 := ne_zero_of_dvd_ne_zero ha0 ⟨i, mul_comm i b ▸ hb⟩
           hb.symm ▸ hi b i hb0 hii <| ih b ⟨hb0, i, hii.1, mul_comm i b ▸ hb⟩)
     a
-#align wf_dvd_monoid.induction_on_irreducible WfDvdMonoid.inductionOnIrreducible
+#align wf_dvd_monoid.induction_on_irreducible WfDvdMonoid.induction_on_irreducible
 
 theorem exists_factors (a : α) : a ≠ 0 → ∃ f : Multiset α, (∀ b ∈ f, Irreducible b) ∧ Associated f.Prod a :=
-  inductionOnIrreducible a (fun h => (h rfl).elim) (fun u hu _ => ⟨0, fun _ h => h.elim, hu.Unit, one_mul _⟩)
+  induction_on_irreducible a (fun h => (h rfl).elim) (fun u hu _ => ⟨0, fun _ h => h.elim, hu.Unit, one_mul _⟩)
     fun a i ha0 hi ih _ =>
     let ⟨s, hs⟩ := ih ha0
     ⟨i ::ₘ s, fun b H => (Multiset.mem_cons.1 H).elim (fun h => h.symm ▸ hi) (hs.1 b), by
@@ -131,18 +131,18 @@ theorem not_unit_iff_exists_factors_eq (a : α) (hn0 : a ≠ 0) :
 
 end WfDvdMonoid
 
-theorem WfDvdMonoid.ofWellFoundedAssociates [CancelCommMonoidWithZero α]
+theorem WfDvdMonoid.of_well_founded_associates [CancelCommMonoidWithZero α]
     (h : WellFounded ((· < ·) : Associates α → Associates α → Prop)) : WfDvdMonoid α :=
-  WfDvdMonoid.ofWfDvdMonoidAssociates
+  WfDvdMonoid.of_wf_dvd_monoid_associates
     ⟨by
       convert h
       ext
       exact Associates.dvd_not_unit_iff_lt⟩
-#align wf_dvd_monoid.of_well_founded_associates WfDvdMonoid.ofWellFoundedAssociates
+#align wf_dvd_monoid.of_well_founded_associates WfDvdMonoid.of_well_founded_associates
 
 theorem WfDvdMonoid.iff_well_founded_associates [CancelCommMonoidWithZero α] :
     WfDvdMonoid α ↔ WellFounded ((· < ·) : Associates α → Associates α → Prop) :=
-  ⟨by apply WfDvdMonoid.well_founded_associates, WfDvdMonoid.ofWellFoundedAssociates⟩
+  ⟨by apply WfDvdMonoid.well_founded_associates, WfDvdMonoid.of_well_founded_associates⟩
 #align wf_dvd_monoid.iff_well_founded_associates WfDvdMonoid.iff_well_founded_associates
 
 section Prio
@@ -175,14 +175,14 @@ class UniqueFactorizationMonoid (α : Type _) [CancelCommMonoidWithZero α] exte
 
 /-- Can't be an instance because it would cause a loop `ufm → wf_dvd_monoid → ufm → ...`. -/
 @[reducible]
-theorem ufmOfGcdOfWfDvdMonoid [CancelCommMonoidWithZero α] [WfDvdMonoid α] [GcdMonoid α] :
+theorem ufm_of_gcd_of_wf_dvd_monoid [CancelCommMonoidWithZero α] [WfDvdMonoid α] [GcdMonoid α] :
     UniqueFactorizationMonoid α :=
   { ‹WfDvdMonoid α› with irreducible_iff_prime := fun _ => GcdMonoid.irreducible_iff_prime }
-#align ufm_of_gcd_of_wf_dvd_monoid ufmOfGcdOfWfDvdMonoid
+#align ufm_of_gcd_of_wf_dvd_monoid ufm_of_gcd_of_wf_dvd_monoid
 
 instance Associates.ufm [CancelCommMonoidWithZero α] [UniqueFactorizationMonoid α] :
     UniqueFactorizationMonoid (Associates α) :=
-  { (WfDvdMonoid.wfDvdMonoidAssociates : WfDvdMonoid (Associates α)) with
+  { (WfDvdMonoid.wf_dvd_monoid_associates : WfDvdMonoid (Associates α)) with
     irreducible_iff_prime := by
       rw [← Associates.irreducible_iff_prime_iff]
       apply UniqueFactorizationMonoid.irreducible_iff_prime }
@@ -200,11 +200,11 @@ theorem exists_prime_factors (a : α) : a ≠ 0 → ∃ f : Multiset α, (∀ b 
 #align unique_factorization_monoid.exists_prime_factors UniqueFactorizationMonoid.exists_prime_factors
 
 @[elab_as_elim]
-theorem inductionOnPrime {P : α → Prop} (a : α) (h₁ : P 0) (h₂ : ∀ x : α, IsUnit x → P x)
+theorem induction_on_prime {P : α → Prop} (a : α) (h₁ : P 0) (h₂ : ∀ x : α, IsUnit x → P x)
     (h₃ : ∀ a p : α, a ≠ 0 → Prime p → P a → P (p * a)) : P a := by
   simp_rw [← UniqueFactorizationMonoid.irreducible_iff_prime] at h₃
-  exact WfDvdMonoid.inductionOnIrreducible a h₁ h₂ h₃
-#align unique_factorization_monoid.induction_on_prime UniqueFactorizationMonoid.inductionOnPrime
+  exact WfDvdMonoid.induction_on_irreducible a h₁ h₂ h₃
+#align unique_factorization_monoid.induction_on_prime UniqueFactorizationMonoid.induction_on_prime
 
 end UniqueFactorizationMonoid
 
@@ -275,11 +275,11 @@ variable (pf : ∀ a : α, a ≠ 0 → ∃ f : Multiset α, (∀ b ∈ f, Prime 
 
 include pf
 
-theorem WfDvdMonoid.ofExistsPrimeFactors : WfDvdMonoid α :=
+theorem WfDvdMonoid.of_exists_prime_factors : WfDvdMonoid α :=
   ⟨by classical
     refine'
       RelHomClass.well_founded (RelHom.mk _ _ : (DvdNotUnit : α → α → Prop) →r ((· < ·) : ℕ∞ → ℕ∞ → Prop))
-        (WithTop.well_founded_lt Nat.lt_wfRel.wf)
+        (WithTop.well_founded_lt Nat.lt_wfRel)
     · intro a
       by_cases h : a = 0
       · exact ⊤
@@ -317,7 +317,7 @@ theorem WfDvdMonoid.ofExistsPrimeFactors : WfDvdMonoid α :=
         apply (Classical.choose_spec (pf _ _)).2.symm
         
       ⟩
-#align wf_dvd_monoid.of_exists_prime_factors WfDvdMonoid.ofExistsPrimeFactors
+#align wf_dvd_monoid.of_exists_prime_factors WfDvdMonoid.of_exists_prime_factors
 
 theorem irreducible_iff_prime_of_exists_prime_factors {p : α} : Irreducible p ↔ Prime p := by
   by_cases hp0 : p = 0
@@ -330,23 +330,23 @@ theorem irreducible_iff_prime_of_exists_prime_factors {p : α} : Irreducible p �
   exact hf.1 q (Multiset.mem_singleton_self _)
 #align irreducible_iff_prime_of_exists_prime_factors irreducible_iff_prime_of_exists_prime_factors
 
-theorem UniqueFactorizationMonoid.ofExistsPrimeFactors : UniqueFactorizationMonoid α :=
-  { WfDvdMonoid.ofExistsPrimeFactors pf with
+theorem UniqueFactorizationMonoid.of_exists_prime_factors : UniqueFactorizationMonoid α :=
+  { WfDvdMonoid.of_exists_prime_factors pf with
     irreducible_iff_prime := fun _ => irreducible_iff_prime_of_exists_prime_factors pf }
-#align unique_factorization_monoid.of_exists_prime_factors UniqueFactorizationMonoid.ofExistsPrimeFactors
+#align unique_factorization_monoid.of_exists_prime_factors UniqueFactorizationMonoid.of_exists_prime_factors
 
 end ExistsPrimeFactors
 
 theorem UniqueFactorizationMonoid.iff_exists_prime_factors [CancelCommMonoidWithZero α] :
     UniqueFactorizationMonoid α ↔ ∀ a : α, a ≠ 0 → ∃ f : Multiset α, (∀ b ∈ f, Prime b) ∧ f.Prod ~ᵤ a :=
-  ⟨fun h => @UniqueFactorizationMonoid.exists_prime_factors _ _ h, UniqueFactorizationMonoid.ofExistsPrimeFactors⟩
+  ⟨fun h => @UniqueFactorizationMonoid.exists_prime_factors _ _ h, UniqueFactorizationMonoid.of_exists_prime_factors⟩
 #align unique_factorization_monoid.iff_exists_prime_factors UniqueFactorizationMonoid.iff_exists_prime_factors
 
 section
 
 variable {β : Type _} [CancelCommMonoidWithZero α] [CancelCommMonoidWithZero β]
 
-theorem MulEquiv.uniqueFactorizationMonoid (e : α ≃* β) (hα : UniqueFactorizationMonoid α) :
+theorem MulEquiv.unique_factorization_monoid (e : α ≃* β) (hα : UniqueFactorizationMonoid α) :
     UniqueFactorizationMonoid β := by
   rw [UniqueFactorizationMonoid.iff_exists_prime_factors] at hα⊢
   intro a ha
@@ -362,7 +362,7 @@ theorem MulEquiv.uniqueFactorizationMonoid (e : α ≃* β) (hα : UniqueFactori
       Units.map e.to_monoid_hom u, by
       erw [Multiset.prod_hom, ← e.map_mul, h]
       simp⟩
-#align mul_equiv.unique_factorization_monoid MulEquiv.uniqueFactorizationMonoid
+#align mul_equiv.unique_factorization_monoid MulEquiv.unique_factorization_monoid
 
 theorem MulEquiv.unique_factorization_monoid_iff (e : α ≃* β) :
     UniqueFactorizationMonoid α ↔ UniqueFactorizationMonoid β :=
@@ -409,18 +409,18 @@ theorem irreducible_iff_prime_of_exists_unique_irreducible_factors [CancelCommMo
 #align
   irreducible_iff_prime_of_exists_unique_irreducible_factors irreducible_iff_prime_of_exists_unique_irreducible_factors
 
-theorem UniqueFactorizationMonoid.ofExistsUniqueIrreducibleFactors [CancelCommMonoidWithZero α]
+theorem UniqueFactorizationMonoid.of_exists_unique_irreducible_factors [CancelCommMonoidWithZero α]
     (eif : ∀ a : α, a ≠ 0 → ∃ f : Multiset α, (∀ b ∈ f, Irreducible b) ∧ f.Prod ~ᵤ a)
     (uif :
       ∀ f g : Multiset α,
         (∀ x ∈ f, Irreducible x) → (∀ x ∈ g, Irreducible x) → f.Prod ~ᵤ g.Prod → Multiset.Rel Associated f g) :
     UniqueFactorizationMonoid α :=
-  UniqueFactorizationMonoid.ofExistsPrimeFactors
+  UniqueFactorizationMonoid.of_exists_prime_factors
     (by
       convert eif
       simp_rw [irreducible_iff_prime_of_exists_unique_irreducible_factors eif uif])
 #align
-  unique_factorization_monoid.of_exists_unique_irreducible_factors UniqueFactorizationMonoid.ofExistsUniqueIrreducibleFactors
+  unique_factorization_monoid.of_exists_unique_irreducible_factors UniqueFactorizationMonoid.of_exists_unique_irreducible_factors
 
 namespace UniqueFactorizationMonoid
 
@@ -448,14 +448,14 @@ theorem dvd_of_mem_factors {p a : α} (h : p ∈ factors a) : p ∣ a :=
   dvd_trans (Multiset.dvd_prod h) (Associated.dvd (factors_prod (ne_zero_of_mem_factors h)))
 #align unique_factorization_monoid.dvd_of_mem_factors UniqueFactorizationMonoid.dvd_of_mem_factors
 
-theorem primeOfFactor {a : α} (x : α) (hx : x ∈ factors a) : Prime x := by
+theorem prime_of_factor {a : α} (x : α) (hx : x ∈ factors a) : Prime x := by
   have ane0 := ne_zero_of_mem_factors hx
   rw [factors, dif_neg ane0] at hx
   exact (Classical.choose_spec (UniqueFactorizationMonoid.exists_prime_factors a ane0)).1 x hx
-#align unique_factorization_monoid.prime_of_factor UniqueFactorizationMonoid.primeOfFactor
+#align unique_factorization_monoid.prime_of_factor UniqueFactorizationMonoid.prime_of_factor
 
 theorem irreducible_of_factor {a : α} : ∀ x : α, x ∈ factors a → Irreducible x := fun x h =>
-  (primeOfFactor x h).Irreducible
+  (prime_of_factor x h).Irreducible
 #align unique_factorization_monoid.irreducible_of_factor UniqueFactorizationMonoid.irreducible_of_factor
 
 @[simp]
@@ -562,7 +562,7 @@ theorem normalized_factors_prod {a : α} (ane0 : a ≠ 0) : Associated (normaliz
   rw [Function.comp_apply, Associates.mk_normalize]
 #align unique_factorization_monoid.normalized_factors_prod UniqueFactorizationMonoid.normalized_factors_prod
 
-theorem primeOfNormalizedFactor {a : α} : ∀ x : α, x ∈ normalizedFactors a → Prime x := by
+theorem prime_of_normalized_factor {a : α} : ∀ x : α, x ∈ normalizedFactors a → Prime x := by
   rw [normalized_factors, factors]
   split_ifs with ane0
   · simp
@@ -571,10 +571,10 @@ theorem primeOfNormalizedFactor {a : α} : ∀ x : α, x ∈ normalizedFactors a
   rcases Multiset.mem_map.1 hx with ⟨y, ⟨hy, rfl⟩⟩
   rw [(normalize_associated _).prime_iff]
   exact (Classical.choose_spec (UniqueFactorizationMonoid.exists_prime_factors a ane0)).1 y hy
-#align unique_factorization_monoid.prime_of_normalized_factor UniqueFactorizationMonoid.primeOfNormalizedFactor
+#align unique_factorization_monoid.prime_of_normalized_factor UniqueFactorizationMonoid.prime_of_normalized_factor
 
 theorem irreducible_of_normalized_factor {a : α} : ∀ x : α, x ∈ normalizedFactors a → Irreducible x := fun x h =>
-  (primeOfNormalizedFactor x h).Irreducible
+  (prime_of_normalized_factor x h).Irreducible
 #align
   unique_factorization_monoid.irreducible_of_normalized_factor UniqueFactorizationMonoid.irreducible_of_normalized_factor
 
@@ -737,7 +737,7 @@ theorem normalized_factors_of_irreducible_pow {p : α} (hp : Irreducible p) (k :
   unique_factorization_monoid.normalized_factors_of_irreducible_pow UniqueFactorizationMonoid.normalized_factors_of_irreducible_pow
 
 theorem zero_not_mem_normalized_factors (x : α) : (0 : α) ∉ normalizedFactors x := fun h =>
-  Prime.ne_zero (primeOfNormalizedFactor _ h) rfl
+  Prime.ne_zero (prime_of_normalized_factor _ h) rfl
 #align
   unique_factorization_monoid.zero_not_mem_normalized_factors UniqueFactorizationMonoid.zero_not_mem_normalized_factors
 
@@ -794,7 +794,7 @@ theorem dvd_not_unit_iff_normalized_factors_lt_normalized_factors {x y : α} (hx
     
   · intro h
     exact
-      dvdNotUnitOfDvdOfNotDvd ((dvd_iff_normalized_factors_le_normalized_factors hx hy).mpr h.le)
+      dvd_not_unit_of_dvd_of_not_dvd ((dvd_iff_normalized_factors_le_normalized_factors hx hy).mpr h.le)
         (mt (dvd_iff_normalized_factors_le_normalized_factors hy hx).mp h.not_le)
     
 #align
@@ -855,7 +855,7 @@ variable {R : Type _} [CancelCommMonoidWithZero R] [UniqueFactorizationMonoid R]
 
 theorem no_factors_of_no_prime_factors {a b : R} (ha : a ≠ 0) (h : ∀ {d}, d ∣ a → d ∣ b → ¬Prime d) :
     ∀ {d}, d ∣ a → d ∣ b → IsUnit d := fun d =>
-  inductionOnPrime d
+  induction_on_prime d
     (by
       simp only [zero_dvd_iff]
       intros
@@ -1085,7 +1085,7 @@ theorem prime_pow_coprime_prod_of_coprime_insert [DecidableEq α] {s : Finset α
 and `P x ∧ P y` for coprime `x, y` implies `P (x * y)`,
 then `P` holds on a product of powers of distinct primes. -/
 @[elab_as_elim]
-theorem inductionOnPrimePower {P : α → Prop} (s : Finset α) (i : α → ℕ) (is_prime : ∀ p ∈ s, Prime p)
+theorem induction_on_prime_power {P : α → Prop} (s : Finset α) (i : α → ℕ) (is_prime : ∀ p ∈ s, Prime p)
     (is_coprime : ∀ (p q) (_ : p ∈ s) (_ : q ∈ s), p ∣ q → p = q) (h1 : ∀ {x}, IsUnit x → P x)
     (hpr : ∀ {p} (i : ℕ), Prime p → P (p ^ i))
     (hcp : ∀ {x y}, (∀ p, p ∣ x → p ∣ y → IsUnit p) → P x → P y → P (x * y)) : P (∏ p in s, p ^ i p) := by
@@ -1099,13 +1099,13 @@ theorem inductionOnPrimePower {P : α → Prop} (s : Finset α) (i : α → ℕ)
       (hpr (i p) (is_prime _ (Finset.mem_insert_self _ _)))
       (ih (fun q hq => is_prime _ (Finset.mem_insert_of_mem hq)) fun q hq q' hq' =>
         IsCoprime _ (Finset.mem_insert_of_mem hq) _ (Finset.mem_insert_of_mem hq'))
-#align unique_factorization_monoid.induction_on_prime_power UniqueFactorizationMonoid.inductionOnPrimePower
+#align unique_factorization_monoid.induction_on_prime_power UniqueFactorizationMonoid.induction_on_prime_power
 
 /-- If `P` holds for `0`, units and powers of primes,
 and `P x ∧ P y` for coprime `x, y` implies `P (x * y)`,
 then `P` holds on all `a : α`. -/
 @[elab_as_elim]
-theorem inductionOnCoprime {P : α → Prop} (a : α) (h0 : P 0) (h1 : ∀ {x}, IsUnit x → P x)
+theorem induction_on_coprime {P : α → Prop} (a : α) (h0 : P 0) (h1 : ∀ {x}, IsUnit x → P x)
     (hpr : ∀ {p} (i : ℕ), Prime p → P (p ^ i))
     (hcp : ∀ {x y}, (∀ p, p ∣ x → p ∣ y → IsUnit p) → P x → P y → P (x * y)) : P a := by
   letI := Classical.decEq α
@@ -1124,7 +1124,7 @@ theorem inductionOnCoprime {P : α → Prop} (a : α) (h0 : P 0) (h1 : ∀ {x}, 
     
   · apply normalized_factors_eq_of_dvd
     
-#align unique_factorization_monoid.induction_on_coprime UniqueFactorizationMonoid.inductionOnCoprime
+#align unique_factorization_monoid.induction_on_coprime UniqueFactorizationMonoid.induction_on_coprime
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (p q «expr ∈ » s) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (p q «expr ∈ » s) -/
@@ -1510,7 +1510,7 @@ theorem factors_eq_none_iff_zero {a : Associates α} : a.factors = Option.none �
 
 theorem factors_eq_some_iff_ne_zero {a : Associates α} :
     (∃ s : Multiset { p : Associates α // Irreducible p }, a.factors = some s) ↔ a ≠ 0 := by
-  rw [← Option.isSome_iff_exists, ← Option.ne_none_iff_is_some, Ne.def, Ne.def, factors_eq_none_iff_zero]
+  rw [← Option.isSome_iff_exists, ← Option.ne_none_iff_isSome, Ne.def, Ne.def, factors_eq_none_iff_zero]
 #align associates.factors_eq_some_iff_ne_zero Associates.factors_eq_some_iff_ne_zero
 
 theorem eq_of_factors_eq_factors {a b : Associates α} (h : a.factors = b.factors) : a = b := by

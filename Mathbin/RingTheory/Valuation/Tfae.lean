@@ -148,7 +148,7 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
   let M := Submodule.map (Algebra.ofId R K).toLinearMap (maximal_ideal R)
   have ha₃ : algebraMap R K a ≠ 0 := is_fraction_ring.to_map_eq_zero_iff.not.mpr ha₂
   by_cases hx : ∀ y ∈ M, x * y ∈ M
-  · have := isIntegralOfSmulMemSubmodule M _ _ x hx
+  · have := is_integral_of_smul_mem_submodule M _ _ x hx
     · obtain ⟨y, e⟩ := IsIntegrallyClosed.algebra_map_eq_of_integral this
       refine' (hb₂ (ideal.mem_span_singleton'.mpr ⟨y, _⟩)).elim
       apply IsFractionRing.injective R K
@@ -291,9 +291,9 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                      []
                      [(Term.typeSpec ":" (Term.app `UniqueFactorizationMonoid [`R]))]
                      ":="
-                     `ufmOfGcdOfWfDvdMonoid)))
+                     `ufm_of_gcd_of_wf_dvd_monoid)))
                   [])
-                 (group (Tactic.apply "apply" `DiscreteValuationRing.ofUfdOfUniqueIrreducible) [])
+                 (group (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible) [])
                  (group
                   («tactic___;_»
                    (cdotTk (patternIgnore (token.«·» "·")))
@@ -1005,9 +1005,9 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                     []
                     [(Term.typeSpec ":" (Term.app `UniqueFactorizationMonoid [`R]))]
                     ":="
-                    `ufmOfGcdOfWfDvdMonoid)))
+                    `ufm_of_gcd_of_wf_dvd_monoid)))
                  [])
-                (group (Tactic.apply "apply" `DiscreteValuationRing.ofUfdOfUniqueIrreducible) [])
+                (group (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible) [])
                 (group
                  («tactic___;_»
                   (cdotTk (patternIgnore (token.«·» "·")))
@@ -1694,9 +1694,9 @@ theorem maximal_ideal_is_principal_of_is_dedekind_domain [LocalRing R] [IsDomain
                 []
                 [(Term.typeSpec ":" (Term.app `UniqueFactorizationMonoid [`R]))]
                 ":="
-                `ufmOfGcdOfWfDvdMonoid)))
+                `ufm_of_gcd_of_wf_dvd_monoid)))
              [])
-            (group (Tactic.apply "apply" `DiscreteValuationRing.ofUfdOfUniqueIrreducible) [])
+            (group (Tactic.apply "apply" `DiscreteValuationRing.of_ufd_of_unique_irreducible) [])
             (group
              («tactic___;_»
               (cdotTk (patternIgnore (token.«·» "·")))
@@ -2686,8 +2686,8 @@ theorem
             ·
               intro
                 haveI := IsBezout.toGcdDomain R
-                haveI : UniqueFactorizationMonoid R := ufmOfGcdOfWfDvdMonoid
-                apply DiscreteValuationRing.ofUfdOfUniqueIrreducible
+                haveI : UniqueFactorizationMonoid R := ufm_of_gcd_of_wf_dvd_monoid
+                apply DiscreteValuationRing.of_ufd_of_unique_irreducible
                 ·
                   obtain ⟨ x , hx₁ , hx₂ ⟩ := Ring.exists_not_is_unit_of_not_is_field h
                     obtain ⟨ p , hp₁ , hp₂ ⟩ := WfDvdMonoid.exists_irreducible_factor hx₂ hx₁

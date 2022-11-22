@@ -269,6 +269,23 @@ protected def copy (f : SupHom α β) (f' : α → β) (h : f' = f) : SupHom α 
 #align Sup_hom.copy SupHom.copy
 -/
 
+/- warning: Sup_hom.coe_copy clashes with sup_hom.coe_copy -> SupHom.coe_copy
+Case conversion may be inaccurate. Consider using '#align Sup_hom.coe_copy SupHom.coe_copyₓ'. -/
+#print SupHom.coe_copy /-
+@[simp]
+theorem coe_copy (f : SupHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align Sup_hom.coe_copy SupHom.coe_copy
+-/
+
+/- warning: Sup_hom.copy_eq clashes with sup_hom.copy_eq -> SupHom.copy_eq
+Case conversion may be inaccurate. Consider using '#align Sup_hom.copy_eq SupHom.copy_eqₓ'. -/
+#print SupHom.copy_eq /-
+theorem copy_eq (f : SupHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align Sup_hom.copy_eq SupHom.copy_eq
+-/
+
 variable (α)
 
 /- warning: Sup_hom.id clashes with sup_hom.id -> SupHom.id
@@ -462,6 +479,23 @@ protected def copy (f : InfHom α β) (f' : α → β) (h : f' = f) : InfHom α 
 #align Inf_hom.copy InfHom.copy
 -/
 
+/- warning: Inf_hom.coe_copy clashes with inf_hom.coe_copy -> InfHom.coe_copy
+Case conversion may be inaccurate. Consider using '#align Inf_hom.coe_copy InfHom.coe_copyₓ'. -/
+#print InfHom.coe_copy /-
+@[simp]
+theorem coe_copy (f : InfHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align Inf_hom.coe_copy InfHom.coe_copy
+-/
+
+/- warning: Inf_hom.copy_eq clashes with inf_hom.copy_eq -> InfHom.copy_eq
+Case conversion may be inaccurate. Consider using '#align Inf_hom.copy_eq InfHom.copy_eqₓ'. -/
+#print InfHom.copy_eq /-
+theorem copy_eq (f : InfHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align Inf_hom.copy_eq InfHom.copy_eq
+-/
+
 variable (α)
 
 /- warning: Inf_hom.id clashes with inf_hom.id -> InfHom.id
@@ -648,6 +682,15 @@ protected def copy (f : FrameHom α β) (f' : α → β) (h : f' = f) : FrameHom
   { (f : SupHom α β).copy f' h with toInfTopHom := f.toInfTopHom.copy f' h }
 #align frame_hom.copy FrameHom.copy
 
+@[simp]
+theorem coe_copy (f : FrameHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align frame_hom.coe_copy FrameHom.coe_copy
+
+theorem copy_eq (f : FrameHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align frame_hom.copy_eq FrameHom.copy_eq
+
 variable (α)
 
 /-- `id` as a `frame_hom`. -/
@@ -756,6 +799,15 @@ definitional equalities. -/
 protected def copy (f : CompleteLatticeHom α β) (f' : α → β) (h : f' = f) : CompleteLatticeHom α β :=
   { f.toSupHom.copy f' h with toInfHom := f.toInfHom.copy f' h }
 #align complete_lattice_hom.copy CompleteLatticeHom.copy
+
+@[simp]
+theorem coe_copy (f : CompleteLatticeHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align complete_lattice_hom.coe_copy CompleteLatticeHom.coe_copy
+
+theorem copy_eq (f : CompleteLatticeHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align complete_lattice_hom.copy_eq CompleteLatticeHom.copy_eq
 
 variable (α)
 

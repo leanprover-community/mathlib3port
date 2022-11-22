@@ -47,7 +47,7 @@ theorem mul_to_submodule {R : Type _} {A : Type _} [CommSemiring R] [CommSemirin
     (S T : Subalgebra R A) : S.toSubmodule * T.toSubmodule = (S ⊔ T).toSubmodule := by
   refine' le_antisymm (mul_to_submodule_le _ _) _
   rintro x (hx : x ∈ Algebra.adjoin R (S ∪ T : Set A))
-  refine' Algebra.adjoinInduction hx (fun x hx => _) (fun r => _) (fun _ _ => Submodule.add_mem _) fun x y hx hy => _
+  refine' Algebra.adjoin_induction hx (fun x hx => _) (fun r => _) (fun _ _ => Submodule.add_mem _) fun x y hx hy => _
   · cases' hx with hxS hxT
     · rw [← mul_one x]
       exact Submodule.mul_mem_mul hxS (show (1 : A) ∈ T from one_mem T)

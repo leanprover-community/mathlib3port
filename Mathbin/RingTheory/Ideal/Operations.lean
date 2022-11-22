@@ -1484,7 +1484,7 @@ theorem restrict_scalars_mul {R S : Type _} [CommSemiring R] [CommSemiring S] [A
     (I * J).restrictScalars R = I.restrictScalars R * J.restrictScalars R :=
   le_antisymm
     (fun x hx =>
-      Submodule.mulInductionOn hx (fun x hx y hy => Submodule.mul_mem_mul hx hy) fun x y => Submodule.add_mem _)
+      Submodule.mul_induction_on hx (fun x hx y hy => Submodule.mul_mem_mul hx hy) fun x y => Submodule.add_mem _)
     (Submodule.mul_le.mpr fun x hx y hy => Ideal.mul_mem_mul hx hy)
 #align ideal.restrict_scalars_mul Ideal.restrict_scalars_mul
 

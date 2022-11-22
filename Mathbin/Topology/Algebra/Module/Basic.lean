@@ -516,6 +516,15 @@ protected def copy (f : M₁ →SL[σ₁₂] M₂) (f' : M₁ → M₂) (h : f' 
   cont := show Continuous f' from h.symm ▸ f.Continuous
 #align continuous_linear_map.copy ContinuousLinearMap.copy
 
+@[simp]
+theorem coe_copy (f : M₁ →SL[σ₁₂] M₂) (f' : M₁ → M₂) (h : f' = ⇑f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align continuous_linear_map.coe_copy ContinuousLinearMap.coe_copy
+
+theorem copy_eq (f : M₁ →SL[σ₁₂] M₂) (f' : M₁ → M₂) (h : f' = ⇑f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align continuous_linear_map.copy_eq ContinuousLinearMap.copy_eq
+
 -- make some straightforward lemmas available to `simp`.
 protected theorem map_zero (f : M₁ →SL[σ₁₂] M₂) : f (0 : M₁) = 0 :=
   map_zero f

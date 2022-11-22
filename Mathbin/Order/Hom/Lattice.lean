@@ -328,6 +328,15 @@ protected def copy (f : SupHom α β) (f' : α → β) (h : f' = f) : SupHom α 
   map_sup' := h.symm ▸ f.map_sup'
 #align sup_hom.copy SupHom.copy
 
+@[simp]
+theorem coe_copy (f : SupHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align sup_hom.coe_copy SupHom.coe_copy
+
+theorem copy_eq (f : SupHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align sup_hom.copy_eq SupHom.copy_eq
+
 variable (α)
 
 /-- `id` as a `sup_hom`. -/
@@ -503,6 +512,15 @@ protected def copy (f : InfHom α β) (f' : α → β) (h : f' = f) : InfHom α 
   toFun := f'
   map_inf' := h.symm ▸ f.map_inf'
 #align inf_hom.copy InfHom.copy
+
+@[simp]
+theorem coe_copy (f : InfHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align inf_hom.coe_copy InfHom.coe_copy
+
+theorem copy_eq (f : InfHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align inf_hom.copy_eq InfHom.copy_eq
 
 variable (α)
 
@@ -688,6 +706,15 @@ protected def copy (f : SupBotHom α β) (f' : α → β) (h : f' = f) : SupBotH
   { f.toBotHom.copy f' h with toSupHom := f.toSupHom.copy f' h }
 #align sup_bot_hom.copy SupBotHom.copy
 
+@[simp]
+theorem coe_copy (f : SupBotHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align sup_bot_hom.coe_copy SupBotHom.coe_copy
+
+theorem copy_eq (f : SupBotHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align sup_bot_hom.copy_eq SupBotHom.copy_eq
+
 variable (α)
 
 /-- `id` as a `sup_bot_hom`. -/
@@ -833,6 +860,15 @@ protected def copy (f : InfTopHom α β) (f' : α → β) (h : f' = f) : InfTopH
   { f.toTopHom.copy f' h with toInfHom := f.toInfHom.copy f' h }
 #align inf_top_hom.copy InfTopHom.copy
 
+@[simp]
+theorem coe_copy (f : InfTopHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align inf_top_hom.coe_copy InfTopHom.coe_copy
+
+theorem copy_eq (f : InfTopHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align inf_top_hom.copy_eq InfTopHom.copy_eq
+
 variable (α)
 
 /-- `id` as an `inf_top_hom`. -/
@@ -970,6 +1006,15 @@ equalities. -/
 protected def copy (f : LatticeHom α β) (f' : α → β) (h : f' = f) : LatticeHom α β :=
   { f.toSupHom.copy f' h, f.toInfHom.copy f' h with }
 #align lattice_hom.copy LatticeHom.copy
+
+@[simp]
+theorem coe_copy (f : LatticeHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align lattice_hom.coe_copy LatticeHom.coe_copy
+
+theorem copy_eq (f : LatticeHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align lattice_hom.copy_eq LatticeHom.copy_eq
 
 variable (α)
 
@@ -1141,6 +1186,15 @@ definitional equalities. -/
 protected def copy (f : BoundedLatticeHom α β) (f' : α → β) (h : f' = f) : BoundedLatticeHom α β :=
   { f.toLatticeHom.copy f' h, f.toBoundedOrderHom.copy f' h with }
 #align bounded_lattice_hom.copy BoundedLatticeHom.copy
+
+@[simp]
+theorem coe_copy (f : BoundedLatticeHom α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align bounded_lattice_hom.coe_copy BoundedLatticeHom.coe_copy
+
+theorem copy_eq (f : BoundedLatticeHom α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align bounded_lattice_hom.copy_eq BoundedLatticeHom.copy_eq
 
 variable (α)
 

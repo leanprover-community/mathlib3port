@@ -142,7 +142,7 @@ theorem iff_pid_with_one_nonzero_prime (R : Type u) [CommRing R] [IsDomain R] :
       
     
   · rintro ⟨RPID, Punique⟩
-    haveI : LocalRing R := LocalRing.ofUniqueNonzeroPrime Punique
+    haveI : LocalRing R := LocalRing.of_unique_nonzero_prime Punique
     refine' { not_a_field' := _ }
     rcases Punique with ⟨P, ⟨hP1, hP2⟩, hP3⟩
     have hPM : P ≤ maximal_ideal R := le_maximal_ideal hP2.1
@@ -208,10 +208,10 @@ variable [IsDomain R]
 /-- An integral domain in which there is an irreducible element `p`
 such that every nonzero element is associated to a power of `p` is a unique factorization domain.
 See `discrete_valuation_ring.of_has_unit_mul_pow_irreducible_factorization`. -/
-theorem toUniqueFactorizationMonoid : UniqueFactorizationMonoid R :=
+theorem to_unique_factorization_monoid : UniqueFactorizationMonoid R :=
   let p := Classical.choose hR
   let spec := Classical.choose_spec hR
-  UniqueFactorizationMonoid.ofExistsPrimeFactors fun x hx => by
+  UniqueFactorizationMonoid.of_exists_prime_factors fun x hx => by
     use Multiset.repeat p (Classical.choose (spec.2 hx))
     constructor
     · intro q hq
@@ -240,7 +240,7 @@ theorem toUniqueFactorizationMonoid : UniqueFactorizationMonoid R :=
       exact Classical.choose_spec (spec.2 hx)
       
 #align
-  discrete_valuation_ring.has_unit_mul_pow_irreducible_factorization.to_unique_factorization_monoid DiscreteValuationRing.HasUnitMulPowIrreducibleFactorization.toUniqueFactorizationMonoid
+  discrete_valuation_ring.has_unit_mul_pow_irreducible_factorization.to_unique_factorization_monoid DiscreteValuationRing.HasUnitMulPowIrreducibleFactorization.to_unique_factorization_monoid
 
 omit hR
 
@@ -266,7 +266,7 @@ theorem of_ufd_of_unique_irreducible [UniqueFactorizationMonoid R] (h₁ : ∃ p
 
 end HasUnitMulPowIrreducibleFactorization
 
-theorem auxPidOfUfdOfUniqueIrreducible (R : Type u) [CommRing R] [IsDomain R] [UniqueFactorizationMonoid R]
+theorem aux_pid_of_ufd_of_unique_irreducible (R : Type u) [CommRing R] [IsDomain R] [UniqueFactorizationMonoid R]
     (h₁ : ∃ p : R, Irreducible p) (h₂ : ∀ ⦃p q : R⦄, Irreducible p → Irreducible q → Associated p q) :
     IsPrincipalIdealRing R := by
   constructor
@@ -299,13 +299,14 @@ theorem auxPidOfUfdOfUniqueIrreducible (R : Type u) [CommRing R] [IsDomain R] [U
   · erw [Submodule.span_singleton_le_iff_mem]
     exact Nat.find_spec ex
     
-#align discrete_valuation_ring.aux_pid_of_ufd_of_unique_irreducible DiscreteValuationRing.auxPidOfUfdOfUniqueIrreducible
+#align
+  discrete_valuation_ring.aux_pid_of_ufd_of_unique_irreducible DiscreteValuationRing.aux_pid_of_ufd_of_unique_irreducible
 
 /-- A unique factorization domain with at least one irreducible element
 in which all irreducible elements are associated
 is a discrete valuation ring.
 -/
-theorem ofUfdOfUniqueIrreducible {R : Type u} [CommRing R] [IsDomain R] [UniqueFactorizationMonoid R]
+theorem of_ufd_of_unique_irreducible {R : Type u} [CommRing R] [IsDomain R] [UniqueFactorizationMonoid R]
     (h₁ : ∃ p : R, Irreducible p) (h₂ : ∀ ⦃p q : R⦄, Irreducible p → Irreducible q → Associated p q) :
     DiscreteValuationRing R := by
   rw [iff_pid_with_one_nonzero_prime]
@@ -326,20 +327,20 @@ theorem ofUfdOfUniqueIrreducible {R : Type u} [CommRing R] [IsDomain R] [UniqueF
     rwa [UniqueFactorizationMonoid.irreducible_iff_prime, ← Ideal.span_singleton_prime I0]
     infer_instance
     
-#align discrete_valuation_ring.of_ufd_of_unique_irreducible DiscreteValuationRing.ofUfdOfUniqueIrreducible
+#align discrete_valuation_ring.of_ufd_of_unique_irreducible DiscreteValuationRing.of_ufd_of_unique_irreducible
 
 /-- An integral domain in which there is an irreducible element `p`
 such that every nonzero element is associated to a power of `p`
 is a discrete valuation ring.
 -/
-theorem ofHasUnitMulPowIrreducibleFactorization {R : Type u} [CommRing R] [IsDomain R]
+theorem of_has_unit_mul_pow_irreducible_factorization {R : Type u} [CommRing R] [IsDomain R]
     (hR : HasUnitMulPowIrreducibleFactorization R) : DiscreteValuationRing R := by
   letI : UniqueFactorizationMonoid R := hR.to_unique_factorization_monoid
   apply of_ufd_of_unique_irreducible _ hR.unique_irreducible
   obtain ⟨p, hp, H⟩ := hR
   exact ⟨p, hp⟩
 #align
-  discrete_valuation_ring.of_has_unit_mul_pow_irreducible_factorization DiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization
+  discrete_valuation_ring.of_has_unit_mul_pow_irreducible_factorization DiscreteValuationRing.of_has_unit_mul_pow_irreducible_factorization
 
 section
 
@@ -349,7 +350,7 @@ variable {R}
 
 theorem associated_pow_irreducible {x : R} (hx : x ≠ 0) {ϖ : R} (hirr : Irreducible ϖ) :
     ∃ n : ℕ, Associated x (ϖ ^ n) := by
-  have : WfDvdMonoid R := IsNoetherianRing.wfDvdMonoid
+  have : WfDvdMonoid R := IsNoetherianRing.wf_dvd_monoid
   cases' WfDvdMonoid.exists_factors x hx with fx hfx
   use fx.card
   have H := hfx.2

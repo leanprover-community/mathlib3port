@@ -26,7 +26,6 @@ Formulas for the dimension are given for linear equivs, in `linear_equiv.finrank
 Most results are deduced from the corresponding results for the general dimension (as a cardinal),
 in `dimension.lean`. Not all results have been ported yet.
 
-Much of this file could be generalised away from fields or division rings.
 You should not assume that there has been any effort to state lemmas as generally as possible.
 -/
 
@@ -494,18 +493,26 @@ section SubalgebraDim
 
 open Module
 
-variable {F E : Type _} [Field F] [Field E] [Algebra F E]
-
-theorem Subalgebra.dim_eq_one_of_eq_bot {S : Subalgebra F E} (h : S = ⊥) : Module.rank F S = 1 := by
-  rw [← S.to_submodule_equiv.dim_eq, h,
-    (LinearEquiv.ofEq (⊥ : Subalgebra F E).toSubmodule _ Algebra.to_submodule_bot).dim_eq, dim_span_set]
-  exacts[mk_singleton _, linear_independent_singleton one_ne_zero]
-#align subalgebra.dim_eq_one_of_eq_bot Subalgebra.dim_eq_one_of_eq_bot
+variable {F E : Type _} [Field F] [Ring E] [Algebra F E]
 
 @[simp]
-theorem Subalgebra.dim_bot : Module.rank F (⊥ : Subalgebra F E) = 1 :=
-  Subalgebra.dim_eq_one_of_eq_bot rfl
+theorem Subalgebra.dim_bot [Nontrivial E] : Module.rank F (⊥ : Subalgebra F E) = 1 :=
+  ((Subalgebra.toSubmoduleEquiv (⊥ : Subalgebra F E)).symm.trans <|
+          LinearEquiv.ofEq _ _ Algebra.to_submodule_bot).dim_eq.trans <|
+    by
+    rw [dim_span_set]
+    exacts[mk_singleton _, linear_independent_singleton one_ne_zero]
 #align subalgebra.dim_bot Subalgebra.dim_bot
+
+@[simp]
+theorem Subalgebra.dim_to_submodule (S : Subalgebra F E) : Module.rank F S.toSubmodule = Module.rank F S :=
+  rfl
+#align subalgebra.dim_to_submodule Subalgebra.dim_to_submodule
+
+@[simp]
+theorem Subalgebra.finrank_to_submodule (S : Subalgebra F E) : finrank F S.toSubmodule = finrank F S :=
+  rfl
+#align subalgebra.finrank_to_submodule Subalgebra.finrank_to_submodule
 
 theorem subalgebra_top_dim_eq_submodule_top_dim :
     Module.rank F (⊤ : Subalgebra F E) = Module.rank F (⊤ : Submodule F E) := by
@@ -525,14 +532,9 @@ theorem Subalgebra.dim_top : Module.rank F (⊤ : Subalgebra F E) = Module.rank 
 #align subalgebra.dim_top Subalgebra.dim_top
 
 @[simp]
-theorem Subalgebra.finrank_bot : finrank F (⊥ : Subalgebra F E) = 1 :=
+theorem Subalgebra.finrank_bot [Nontrivial E] : finrank F (⊥ : Subalgebra F E) = 1 :=
   finrank_eq_of_dim_eq (by simp)
 #align subalgebra.finrank_bot Subalgebra.finrank_bot
-
-theorem Subalgebra.finrank_eq_one_of_eq_bot {S : Subalgebra F E} (h : S = ⊥) : finrank F S = 1 := by
-  rw [h]
-  exact Subalgebra.finrank_bot
-#align subalgebra.finrank_eq_one_of_eq_bot Subalgebra.finrank_eq_one_of_eq_bot
 
 end SubalgebraDim
 

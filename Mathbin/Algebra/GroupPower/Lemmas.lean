@@ -57,37 +57,47 @@ theorem inv_of_pow (m : M) [Invertible m] (n : ℕ) [Invertible (m ^ n)] : ⅟ (
   @invertible_unique M _ (m ^ n) (m ^ n) _ (invertiblePow m n) rfl
 #align inv_of_pow inv_of_pow
 
-theorem IsUnit.pow {m : M} (n : ℕ) : IsUnit m → IsUnit (m ^ n) := fun ⟨u, hu⟩ => ⟨u ^ n, by simp [*]⟩
+@[to_additive]
+theorem IsUnit.pow {m : M} (n : ℕ) : IsUnit m → IsUnit (m ^ n) := fun ⟨u, hu⟩ => ⟨u ^ n, hu ▸ u.coe_pow _⟩
 #align is_unit.pow IsUnit.pow
 
-@[simp]
-theorem is_unit_pow_succ_iff {m : M} {n : ℕ} : IsUnit (m ^ (n + 1)) ↔ IsUnit m := by
-  refine' ⟨_, fun h => h.pow _⟩
-  rw [pow_succ, ((Commute.refl _).pow_right _).is_unit_mul_iff]
-  exact And.left
-#align is_unit_pow_succ_iff is_unit_pow_succ_iff
+/-- If a natural power of `x` is a unit, then `x` is a unit. -/
+@[to_additive "If a natural multiple of `x` is an additive unit, then `x` is an additive unit."]
+def Units.ofPow (u : Mˣ) (x : M) {n : ℕ} (hn : n ≠ 0) (hu : x ^ n = u) : Mˣ :=
+  u.leftOfMul x (x ^ (n - 1)) (by rwa [← pow_succ, Nat.sub_add_cancel (Nat.succ_le_of_lt <| Nat.pos_of_ne_zero hn)])
+    (Commute.self_pow _ _)
+#align units.of_pow Units.ofPow
 
-theorem is_unit_pow_iff {m : M} : ∀ {n : ℕ} (h : n ≠ 0), IsUnit (m ^ n) ↔ IsUnit m
-  | 0, h => (h rfl).elim
-  | n + 1, _ => is_unit_pow_succ_iff
+@[simp, to_additive]
+theorem is_unit_pow_iff {a : M} {n : ℕ} (hn : n ≠ 0) : IsUnit (a ^ n) ↔ IsUnit a :=
+  ⟨fun ⟨u, hu⟩ => (u.ofPow a hn hu.symm).IsUnit, fun h => h.pow n⟩
 #align is_unit_pow_iff is_unit_pow_iff
 
-/-- If `x ^ n.succ = 1` then `x` has an inverse, `x^n`. -/
-def invertibleOfPowSuccEqOne (x : M) (n : ℕ) (hx : x ^ n.succ = 1) : Invertible x :=
-  ⟨x ^ n, (pow_succ' x n).symm.trans hx, (pow_succ x n).symm.trans hx⟩
-#align invertible_of_pow_succ_eq_one invertibleOfPowSuccEqOne
+@[to_additive]
+theorem is_unit_pow_succ_iff {m : M} {n : ℕ} : IsUnit (m ^ (n + 1)) ↔ IsUnit m :=
+  is_unit_pow_iff n.succ_ne_zero
+#align is_unit_pow_succ_iff is_unit_pow_succ_iff
+
+/-- If `x ^ n = 1`, `n ≠ 0`, then `x` is a unit. -/
+@[to_additive "If `n • x = 0`, `n ≠ 0`, then `x` is an additive unit.", simps]
+def Units.ofPowEqOne (x : M) (n : ℕ) (hx : x ^ n = 1) (hn : n ≠ 0) : Mˣ :=
+  Units.ofPow 1 x hn hx
+#align units.of_pow_eq_one Units.ofPowEqOne
+
+@[simp, to_additive]
+theorem Units.pow_of_pow_eq_one {x : M} {n : ℕ} (hx : x ^ n = 1) (hn : n ≠ 0) : Units.ofPowEqOne x n hx hn ^ n = 1 :=
+  Units.ext <| by rwa [Units.coe_pow, Units.coe_of_pow_eq_one, Units.coe_one]
+#align units.pow_of_pow_eq_one Units.pow_of_pow_eq_one
+
+@[to_additive]
+theorem is_unit_of_pow_eq_one {x : M} {n : ℕ} (hx : x ^ n = 1) (hn : n ≠ 0) : IsUnit x :=
+  (Units.ofPowEqOne x n hx hn).IsUnit
+#align is_unit_of_pow_eq_one is_unit_of_pow_eq_one
 
 /-- If `x ^ n = 1` then `x` has an inverse, `x^(n - 1)`. -/
-def invertibleOfPowEqOne (x : M) (n : ℕ) (hx : x ^ n = 1) (hn : n ≠ 0) : Invertible x := by
-  apply invertibleOfPowSuccEqOne x (n - 1)
-  convert hx
-  exact Nat.succ_pred_eq_of_pos (pos_iff_ne_zero.2 hn)
+def invertibleOfPowEqOne (x : M) (n : ℕ) (hx : x ^ n = 1) (hn : n ≠ 0) : Invertible x :=
+  (Units.ofPowEqOne x n hx hn).Invertible
 #align invertible_of_pow_eq_one invertibleOfPowEqOne
-
-theorem is_unit_of_pow_eq_one (x : M) (n : ℕ) (hx : x ^ n = 1) (hn : n ≠ 0) : IsUnit x :=
-  haveI := invertibleOfPowEqOne x n hx hn
-  is_unit_of_invertible x
-#align is_unit_of_pow_eq_one is_unit_of_pow_eq_one
 
 theorem smul_pow [MulAction M N] [IsScalarTower M N N] [SmulCommClass M N N] (k : M) (x : N) (p : ℕ) :
     (k • x) ^ p = k ^ p • x ^ p := by
@@ -422,9 +432,9 @@ theorem WithBot.coe_nsmul [AddMonoid A] (a : A) (n : ℕ) : ((n • a : A) : Wit
 
 /- warning: nsmul_eq_mul' -> nsmul_eq_mul' is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u₁}} [_inst_1 : NonAssocSemiring.{u₁} R] (a : R) (n : Nat), Eq.{succ u₁} R (HasSmul.smul.{0 u₁} Nat R (AddMonoid.hasSmulNat.{u₁} R (AddMonoidWithOne.toAddMonoid.{u₁} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u₁} R (NonAssocSemiring.toAddCommMonoidWithOne.{u₁} R _inst_1)))) n a) (HMul.hMul.{u₁ u₁ u₁} R R R (instHMul.{u₁} R (Distrib.toHasMul.{u₁} R (NonUnitalNonAssocSemiring.toDistrib.{u₁} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u₁} R _inst_1)))) a ((fun (a : Type) (b : Type.{u₁}) [self : HasLiftT.{1 succ u₁} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u₁} Nat R (CoeTCₓ.coe.{1 succ u₁} Nat R (Nat.castCoe.{u₁} R (AddMonoidWithOne.toHasNatCast.{u₁} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u₁} R (NonAssocSemiring.toAddCommMonoidWithOne.{u₁} R _inst_1)))))) n))
+  forall {R : Type.{u₁}} [_inst_1 : NonAssocSemiring.{u₁} R] (a : R) (n : Nat), Eq.{succ u₁} R (HasSmul.smul.{0 u₁} Nat R (AddMonoid.hasSmulNat.{u₁} R (AddMonoidWithOne.toAddMonoid.{u₁} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u₁} R (NonAssocSemiring.toAddCommMonoidWithOne.{u₁} R _inst_1)))) n a) (HMul.hMul.{u₁ u₁ u₁} R R R (instHMul.{u₁} R (Distrib.toHasMul.{u₁} R (NonUnitalNonAssocSemiring.toDistrib.{u₁} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u₁} R _inst_1)))) a ((fun (a : Type) (b : Type.{u₁}) [self : HasLiftT.{1 succ u₁} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u₁} Nat R (CoeTCₓ.coe.{1 succ u₁} Nat R (Nat.castCoe.{u₁} R (AddMonoidWithOne.toNatCast.{u₁} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u₁} R (NonAssocSemiring.toAddCommMonoidWithOne.{u₁} R _inst_1)))))) n))
 but is expected to have type
-  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.157 : Semiring.{u_1} R] (a : R) (n : Nat), Eq.{succ u_1} R (HasSmul.smul.{0 u_1} Nat R (AddMonoid.HasSmul.{u_1} R (AddMonoidWithOne.toAddMonoid.{u_1} R (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.157))))) n a) (HMul.hMul.{u_1 u_1 u_1} R R R (instHMul.{u_1} R (NonUnitalNonAssocSemiring.toMul.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.157)))) a (Nat.cast.{u_1} R (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.157))) n))
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.157 : Semiring.{u_1} R] (a : R) (n : Nat), Eq.{succ u_1} R (HasSmul.smul.{0 u_1} Nat R (AddMonoid.HasSmul.{u_1} R (AddMonoidWithOne.toAddMonoid.{u_1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.157))))) n a) (HMul.hMul.{u_1 u_1 u_1} R R R (instHMul.{u_1} R (NonUnitalNonAssocSemiring.toMul.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.157)))) a (Nat.cast.{u_1} R (Semiring.toNatCast.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.157) n))
 Case conversion may be inaccurate. Consider using '#align nsmul_eq_mul' nsmul_eq_mul'ₓ'. -/
 theorem nsmul_eq_mul' [NonAssocSemiring R] (a : R) (n : ℕ) : n • a = a * n := by
   induction' n with n ih <;> [rw [zero_nsmul, Nat.cast_zero, mul_zero],
@@ -433,9 +443,9 @@ theorem nsmul_eq_mul' [NonAssocSemiring R] (a : R) (n : ℕ) : n • a = a * n :
 
 /- warning: nsmul_eq_mul -> nsmul_eq_mul is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u₁}} [_inst_1 : NonAssocSemiring.{u₁} R] (n : Nat) (a : R), Eq.{succ u₁} R (HasSmul.smul.{0 u₁} Nat R (AddMonoid.hasSmulNat.{u₁} R (AddMonoidWithOne.toAddMonoid.{u₁} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u₁} R (NonAssocSemiring.toAddCommMonoidWithOne.{u₁} R _inst_1)))) n a) (HMul.hMul.{u₁ u₁ u₁} R R R (instHMul.{u₁} R (Distrib.toHasMul.{u₁} R (NonUnitalNonAssocSemiring.toDistrib.{u₁} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u₁} R _inst_1)))) ((fun (a : Type) (b : Type.{u₁}) [self : HasLiftT.{1 succ u₁} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u₁} Nat R (CoeTCₓ.coe.{1 succ u₁} Nat R (Nat.castCoe.{u₁} R (AddMonoidWithOne.toHasNatCast.{u₁} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u₁} R (NonAssocSemiring.toAddCommMonoidWithOne.{u₁} R _inst_1)))))) n) a)
+  forall {R : Type.{u₁}} [_inst_1 : NonAssocSemiring.{u₁} R] (n : Nat) (a : R), Eq.{succ u₁} R (HasSmul.smul.{0 u₁} Nat R (AddMonoid.hasSmulNat.{u₁} R (AddMonoidWithOne.toAddMonoid.{u₁} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u₁} R (NonAssocSemiring.toAddCommMonoidWithOne.{u₁} R _inst_1)))) n a) (HMul.hMul.{u₁ u₁ u₁} R R R (instHMul.{u₁} R (Distrib.toHasMul.{u₁} R (NonUnitalNonAssocSemiring.toDistrib.{u₁} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u₁} R _inst_1)))) ((fun (a : Type) (b : Type.{u₁}) [self : HasLiftT.{1 succ u₁} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u₁} Nat R (CoeTCₓ.coe.{1 succ u₁} Nat R (Nat.castCoe.{u₁} R (AddMonoidWithOne.toNatCast.{u₁} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u₁} R (NonAssocSemiring.toAddCommMonoidWithOne.{u₁} R _inst_1)))))) n) a)
 but is expected to have type
-  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.251 : Semiring.{u_1} R] (n : Nat) (a : R), Eq.{succ u_1} R (HasSmul.smul.{0 u_1} Nat R (AddMonoid.HasSmul.{u_1} R (AddMonoidWithOne.toAddMonoid.{u_1} R (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.251))))) n a) (HMul.hMul.{u_1 u_1 u_1} R R R (instHMul.{u_1} R (NonUnitalNonAssocSemiring.toMul.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.251)))) (Nat.cast.{u_1} R (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.251))) n) a)
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.251 : Semiring.{u_1} R] (n : Nat) (a : R), Eq.{succ u_1} R (HasSmul.smul.{0 u_1} Nat R (AddMonoid.HasSmul.{u_1} R (AddMonoidWithOne.toAddMonoid.{u_1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.251))))) n a) (HMul.hMul.{u_1 u_1 u_1} R R R (instHMul.{u_1} R (NonUnitalNonAssocSemiring.toMul.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.251)))) (Nat.cast.{u_1} R (Semiring.toNatCast.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.251) n) a)
 Case conversion may be inaccurate. Consider using '#align nsmul_eq_mul nsmul_eq_mulₓ'. -/
 @[simp]
 theorem nsmul_eq_mul [NonAssocSemiring R] (n : ℕ) (a : R) : n • a = n * a := by
@@ -460,9 +470,9 @@ instance NonUnitalNonAssocSemiring.nat_is_scalar_tower [NonUnitalNonAssocSemirin
 
 /- warning: nat.cast_pow -> Nat.cast_pow is a dubious translation:
 lean 3 declaration is
-  forall {R : Type.{u₁}} [_inst_1 : Semiring.{u₁} R] (n : Nat) (m : Nat), Eq.{succ u₁} R ((fun (a : Type) (b : Type.{u₁}) [self : HasLiftT.{1 succ u₁} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u₁} Nat R (CoeTCₓ.coe.{1 succ u₁} Nat R (Nat.castCoe.{u₁} R (AddMonoidWithOne.toHasNatCast.{u₁} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u₁} R (NonAssocSemiring.toAddCommMonoidWithOne.{u₁} R (Semiring.toNonAssocSemiring.{u₁} R _inst_1))))))) (HPow.hPow.{0 0 0} Nat Nat Nat (instHPow.{0 0} Nat Nat (Monoid.hasPow.{0} Nat Nat.monoid)) n m)) (HPow.hPow.{u₁ 0 u₁} R Nat R (instHPow.{u₁ 0} R Nat (Monoid.hasPow.{u₁} R (MonoidWithZero.toMonoid.{u₁} R (Semiring.toMonoidWithZero.{u₁} R _inst_1)))) ((fun (a : Type) (b : Type.{u₁}) [self : HasLiftT.{1 succ u₁} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u₁} Nat R (CoeTCₓ.coe.{1 succ u₁} Nat R (Nat.castCoe.{u₁} R (AddMonoidWithOne.toHasNatCast.{u₁} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u₁} R (NonAssocSemiring.toAddCommMonoidWithOne.{u₁} R (Semiring.toNonAssocSemiring.{u₁} R _inst_1))))))) n) m)
+  forall {R : Type.{u₁}} [_inst_1 : Semiring.{u₁} R] (n : Nat) (m : Nat), Eq.{succ u₁} R ((fun (a : Type) (b : Type.{u₁}) [self : HasLiftT.{1 succ u₁} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u₁} Nat R (CoeTCₓ.coe.{1 succ u₁} Nat R (Nat.castCoe.{u₁} R (AddMonoidWithOne.toNatCast.{u₁} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u₁} R (NonAssocSemiring.toAddCommMonoidWithOne.{u₁} R (Semiring.toNonAssocSemiring.{u₁} R _inst_1))))))) (HPow.hPow.{0 0 0} Nat Nat Nat (instHPow.{0 0} Nat Nat (Monoid.hasPow.{0} Nat Nat.monoid)) n m)) (HPow.hPow.{u₁ 0 u₁} R Nat R (instHPow.{u₁ 0} R Nat (Monoid.hasPow.{u₁} R (MonoidWithZero.toMonoid.{u₁} R (Semiring.toMonoidWithZero.{u₁} R _inst_1)))) ((fun (a : Type) (b : Type.{u₁}) [self : HasLiftT.{1 succ u₁} a b] => self.0) Nat R (HasLiftT.mk.{1 succ u₁} Nat R (CoeTCₓ.coe.{1 succ u₁} Nat R (Nat.castCoe.{u₁} R (AddMonoidWithOne.toNatCast.{u₁} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u₁} R (NonAssocSemiring.toAddCommMonoidWithOne.{u₁} R (Semiring.toNonAssocSemiring.{u₁} R _inst_1))))))) n) m)
 but is expected to have type
-  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Ring.Basic._hyg.367 : Semiring.{u_1} R] {m : Nat} {n : Nat}, Eq.{succ u_1} R (Nat.cast.{u_1} R (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.367))) (HPow.hPow.{0 0 0} Nat Nat Nat (instHPow.{0 0} Nat Nat instPowNat) m n)) (HPow.hPow.{u_1 0 u_1} R Nat R (instHPow.{u_1 0} R Nat (Monoid.Pow.{u_1} R (MonoidWithZero.toMonoid.{u_1} R (Semiring.toMonoidWithZero.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.367)))) (Nat.cast.{u_1} R (NonUnitalNonAssocSemiring.toAddMonoidWithOne.{u_1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} R (Semiring.toNonAssocSemiring.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.367))) m) n)
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.Ring.Basic._hyg.192 : Semiring.{u_1} R] {m : Nat} {n : Nat}, Eq.{succ u_1} R (Nat.cast.{u_1} R (Semiring.toNatCast.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.192) (HPow.hPow.{0 0 0} Nat Nat Nat (instHPow.{0 0} Nat Nat instPowNat) m n)) (HPow.hPow.{u_1 0 u_1} R Nat R (instHPow.{u_1 0} R Nat (Monoid.Pow.{u_1} R (MonoidWithZero.toMonoid.{u_1} R (Semiring.toMonoidWithZero.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.192)))) (Nat.cast.{u_1} R (Semiring.toNatCast.{u_1} R inst._@.Mathlib.Algebra.Ring.Basic._hyg.192) m) n)
 Case conversion may be inaccurate. Consider using '#align nat.cast_pow Nat.cast_powₓ'. -/
 @[norm_cast]
 theorem Nat.cast_pow [Semiring R] (n m : ℕ) : (↑(n ^ m) : R) = ↑n ^ m := by
@@ -540,7 +550,7 @@ theorem zsmul_int_one (n : ℤ) : n • 1 = n := by simp
 lean 3 declaration is
   forall {R : Type.{u₁}} [_inst_1 : Ring.{u₁} R] (n : Int) (m : Nat), Eq.{succ u₁} R ((fun (a : Type) (b : Type.{u₁}) [self : HasLiftT.{1 succ u₁} a b] => self.0) Int R (HasLiftT.mk.{1 succ u₁} Int R (CoeTCₓ.coe.{1 succ u₁} Int R (Int.castCoe.{u₁} R (AddGroupWithOne.toHasIntCast.{u₁} R (NonAssocRing.toAddGroupWithOne.{u₁} R (Ring.toNonAssocRing.{u₁} R _inst_1)))))) (HPow.hPow.{0 0 0} Int Nat Int (instHPow.{0 0} Int Nat (Monoid.hasPow.{0} Int Int.monoid)) n m)) (HPow.hPow.{u₁ 0 u₁} R Nat R (instHPow.{u₁ 0} R Nat (Monoid.hasPow.{u₁} R (Ring.toMonoid.{u₁} R _inst_1))) ((fun (a : Type) (b : Type.{u₁}) [self : HasLiftT.{1 succ u₁} a b] => self.0) Int R (HasLiftT.mk.{1 succ u₁} Int R (CoeTCₓ.coe.{1 succ u₁} Int R (Int.castCoe.{u₁} R (AddGroupWithOne.toHasIntCast.{u₁} R (NonAssocRing.toAddGroupWithOne.{u₁} R (Ring.toNonAssocRing.{u₁} R _inst_1)))))) n) m)
 but is expected to have type
-  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.10 : Ring.{u_1} R] (n : Int) (m : Nat), Eq.{succ u_1} R (Int.cast.{u_1} R (Ring.toAddGroupWithOne.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.10) (HPow.hPow.{0 0 0} Int Nat Int Int.instHPowIntNat n m)) (HPow.hPow.{u_1 0 u_1} R Nat R (instHPow.{u_1 0} R Nat (Monoid.Pow.{u_1} R (MonoidWithZero.toMonoid.{u_1} R (Semiring.toMonoidWithZero.{u_1} R (Ring.toSemiring.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.10))))) (Int.cast.{u_1} R (Ring.toAddGroupWithOne.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.10) n) m)
+  forall {R : Type.{u_1}} [inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.10 : Ring.{u_1} R] (n : Int) (m : Nat), Eq.{succ u_1} R (Int.cast.{u_1} R (Ring.toIntCast.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.10) (HPow.hPow.{0 0 0} Int Nat Int Int.instHPowIntNat n m)) (HPow.hPow.{u_1 0 u_1} R Nat R (instHPow.{u_1 0} R Nat (Monoid.Pow.{u_1} R (MonoidWithZero.toMonoid.{u_1} R (Semiring.toMonoidWithZero.{u_1} R (Ring.toSemiring.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.10))))) (Int.cast.{u_1} R (Ring.toIntCast.{u_1} R inst._@.Mathlib.Algebra.GroupPower.Lemmas._hyg.10) n) m)
 Case conversion may be inaccurate. Consider using '#align int.cast_pow Int.cast_powₓ'. -/
 @[norm_cast]
 theorem Int.cast_pow [Ring R] (n : ℤ) (m : ℕ) : (↑(n ^ m) : R) = ↑n ^ m := by

@@ -5,7 +5,6 @@ Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 -/
 import Mathbin.Algebra.Order.Ring.Canonical
 import Mathbin.Data.Nat.Basic
-import Mathbin.Data.Set.Basic
 
 /-!
 # The natural numbers as a linearly ordered commutative semiring
@@ -26,20 +25,6 @@ instance Nat.orderBot : OrderBot ℕ where
   bot := 0
   bot_le := Nat.zero_le
 #align nat.order_bot Nat.orderBot
-
-instance Nat.Subtype.orderBot (s : Set ℕ) [DecidablePred (· ∈ s)] [h : Nonempty s] : OrderBot s where
-  bot := ⟨Nat.find (nonempty_subtype.1 h), Nat.find_spec (nonempty_subtype.1 h)⟩
-  bot_le x := Nat.find_min' _ x.2
-#align nat.subtype.order_bot Nat.Subtype.orderBot
-
-instance Nat.Subtype.semilatticeSup (s : Set ℕ) : SemilatticeSup s :=
-  { Subtype.linearOrder s, LinearOrder.toLattice with }
-#align nat.subtype.semilattice_sup Nat.Subtype.semilatticeSup
-
-theorem Nat.Subtype.coe_bot {s : Set ℕ} [DecidablePred (· ∈ s)] [h : Nonempty s] :
-    ((⊥ : s) : ℕ) = Nat.find (nonempty_subtype.1 h) :=
-  rfl
-#align nat.subtype.coe_bot Nat.Subtype.coe_bot
 
 instance : LinearOrderedCommSemiring ℕ :=
   { Nat.commSemiring, Nat.linearOrder with lt := Nat.lt, add_le_add_left := @Nat.add_le_add_left,
@@ -402,10 +387,6 @@ theorem set_induction_bounded {b : ℕ} {S : Set ℕ} (hb : b ∈ S) (h_ind : �
 theorem set_induction {S : Set ℕ} (hb : 0 ∈ S) (h_ind : ∀ k : ℕ, k ∈ S → k + 1 ∈ S) (n : ℕ) : n ∈ S :=
   set_induction_bounded hb h_ind (zero_le n)
 #align nat.set_induction Nat.set_induction
-
-theorem set_eq_univ {S : Set ℕ} : S = Set.univ ↔ 0 ∈ S ∧ ∀ k : ℕ, k ∈ S → k + 1 ∈ S :=
-  ⟨by rintro rfl <;> simp, fun ⟨h0, hs⟩ => Set.eq_univ_of_forall (set_induction h0 hs)⟩
-#align nat.set_eq_univ Nat.set_eq_univ
 
 /-! ### `div` -/
 

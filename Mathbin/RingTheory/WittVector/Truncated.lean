@@ -183,10 +183,10 @@ instance : Zero (TruncatedWittVector p n R) :=
 instance : One (TruncatedWittVector p n R) :=
   ⟨truncateFun n 1⟩
 
-instance : HasNatCast (TruncatedWittVector p n R) :=
+instance : NatCast (TruncatedWittVector p n R) :=
   ⟨fun i => truncateFun n i⟩
 
-instance : HasIntCast (TruncatedWittVector p n R) :=
+instance : IntCast (TruncatedWittVector p n R) :=
   ⟨fun i => truncateFun n i⟩
 
 instance : Add (TruncatedWittVector p n R) :=

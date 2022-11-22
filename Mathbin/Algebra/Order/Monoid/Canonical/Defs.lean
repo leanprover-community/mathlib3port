@@ -258,11 +258,6 @@ theorem pos_of_gt {M : Type _} [CanonicallyOrderedAddMonoid M] {n m : M} (h : n 
   lt_of_le_of_lt (zero_le _) h
 #align pos_of_gt pos_of_gt
 
-instance (priority := 100) CanonicallyOrderedAddMonoid.zeroLeOneClass {M : Type _} [CanonicallyOrderedAddMonoid M]
-    [One M] : ZeroLeOneClass M :=
-  ⟨zero_le 1⟩
-#align canonically_ordered_add_monoid.zero_le_one_class CanonicallyOrderedAddMonoid.zeroLeOneClass
-
 namespace NeZero
 
 theorem pos {M} (a : M) [CanonicallyOrderedAddMonoid M] [NeZero a] : 0 < a :=

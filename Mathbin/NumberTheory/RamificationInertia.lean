@@ -141,7 +141,7 @@ variable [IsDomain S] [IsDedekindDomain S]
 
 theorem ramification_idx_eq_normalized_factors_count (hp0 : map f p ≠ ⊥) (hP : P.IsPrime) (hP0 : P ≠ ⊥) :
     ramificationIdx f p P = (normalizedFactors (map f p)).count P := by
-  have hPirr := (Ideal.primeOfIsPrime hP0 hP).Irreducible
+  have hPirr := (Ideal.prime_of_is_prime hP0 hP).Irreducible
   refine' ramification_idx_spec (Ideal.le_of_dvd _) (mt ideal.dvd_iff_le.mpr _) <;>
     rw [dvd_iff_normalized_factors_le_normalized_factors (pow_ne_zero _ hP0) hp0, normalized_factors_pow,
       normalized_factors_irreducible hPirr, normalize_eq, Multiset.nsmul_singleton, ← Multiset.le_count_iff_repeat_le]
@@ -162,7 +162,7 @@ theorem ramification_idx_ne_zero (hp0 : map f p ≠ ⊥) (hP : P.IsPrime) (le : 
     rintro rfl
     have := le_bot_iff.mp le
     contradiction
-  have hPirr := (Ideal.primeOfIsPrime hP0 hP).Irreducible
+  have hPirr := (Ideal.prime_of_is_prime hP0 hP).Irreducible
   rw [is_dedekind_domain.ramification_idx_eq_normalized_factors_count hp0 hP hP0]
   obtain ⟨P', hP', P'_eq⟩ := exists_mem_normalized_factors_of_dvd hp0 hPirr (ideal.dvd_iff_le.mpr le)
   rwa [Multiset.count_ne_zero, associated_iff_eq.mp P'_eq]
@@ -394,7 +394,7 @@ theorem FinrankQuotientMap.span_eq_top [IsDomain R] [IsDomain S] [Algebra K L] [
     haveI : NoZeroSmulDivisors R L := NoZeroSmulDivisors.of_algebra_map_injective hRL
     rw [← IsFractionRing.is_algebraic_iff' R S]
     intro x
-    exact IsIntegral.isAlgebraic _ (isIntegralOfNoetherian inferInstance _)
+    exact IsIntegral.is_algebraic _ (is_integral_of_noetherian inferInstance _)
     
 #align ideal.finrank_quotient_map.span_eq_top Ideal.FinrankQuotientMap.span_eq_top
 
@@ -708,11 +708,11 @@ open Classical
 variable [IsDomain S] [IsDedekindDomain S] [Algebra R S]
 
 theorem Factors.ne_bot (P : (factors (map (algebraMap R S) p)).toFinset) : (P : Ideal S) ≠ ⊥ :=
-  (primeOfFactor _ (Multiset.mem_to_finset.mp P.2)).NeZero
+  (prime_of_factor _ (Multiset.mem_to_finset.mp P.2)).NeZero
 #align ideal.factors.ne_bot Ideal.Factors.ne_bot
 
 instance Factors.is_prime (P : (factors (map (algebraMap R S) p)).toFinset) : IsPrime (P : Ideal S) :=
-  Ideal.is_prime_of_prime (primeOfFactor _ (Multiset.mem_to_finset.mp P.2))
+  Ideal.is_prime_of_prime (prime_of_factor _ (Multiset.mem_to_finset.mp P.2))
 #align ideal.factors.is_prime Ideal.Factors.is_prime
 
 theorem Factors.ramification_idx_ne_zero (P : (factors (map (algebraMap R S) p)).toFinset) :

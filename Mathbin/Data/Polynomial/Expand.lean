@@ -273,7 +273,7 @@ section IsDomain
 
 variable (R : Type u) [CommRing R] [IsDomain R]
 
-theorem isLocalRingHomExpand {p : ℕ} (hp : 0 < p) : IsLocalRingHom (↑(expand R p) : R[X] →+* R[X]) := by
+theorem is_local_ring_hom_expand {p : ℕ} (hp : 0 < p) : IsLocalRingHom (↑(expand R p) : R[X] →+* R[X]) := by
   refine' ⟨fun f hf1 => _⟩
   rw [← coe_fn_coe_base] at hf1
   have hf2 := eq_C_of_degree_eq_zero (degree_eq_zero_of_is_unit hf1)
@@ -281,12 +281,12 @@ theorem isLocalRingHomExpand {p : ℕ} (hp : 0 < p) : IsLocalRingHom (↑(expand
   rw [hf2, is_unit_C] at hf1
   rw [expand_eq_C hp] at hf2
   rwa [hf2, is_unit_C]
-#align polynomial.is_local_ring_hom_expand Polynomial.isLocalRingHomExpand
+#align polynomial.is_local_ring_hom_expand Polynomial.is_local_ring_hom_expand
 
 variable {R}
 
 theorem of_irreducible_expand {p : ℕ} (hp : p ≠ 0) {f : R[X]} (hf : Irreducible (expand R p f)) : Irreducible f :=
-  let _ := isLocalRingHomExpand R hp.bot_lt
+  let _ := is_local_ring_hom_expand R hp.bot_lt
   of_irreducible_map (↑(expand R p)) hf
 #align polynomial.of_irreducible_expand Polynomial.of_irreducible_expand
 

@@ -8,11 +8,11 @@ import Mathbin.Control.Traversable.Basic
 import Mathbin.Tactic.Basic
 
 /-!
-THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
-https://github.com/leanprover-community/mathlib4/pull/493
-Any changes to this file require a corresponding PR to mathlib4.
-
 # Option of a type
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> https://github.com/leanprover-community/mathlib4/pull/493
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file develops the basic theory of option types.
 
@@ -146,9 +146,9 @@ theorem eq_of_mem_of_mem {a : α} {o1 o2 : Option α} (h1 : a ∈ o1) (h2 : a �
 #align option.eq_of_mem_of_mem Option.eq_of_mem_of_mem
 -/
 
-#print Option.Mem.left_unique /-
-theorem Mem.left_unique : Relator.LeftUnique ((· ∈ ·) : α → Option α → Prop) := fun a o b => mem_unique
-#align option.mem.left_unique Option.Mem.left_unique
+#print Option.Mem.leftUnique /-
+theorem Mem.leftUnique : Relator.LeftUnique ((· ∈ ·) : α → Option α → Prop) := fun a o b => mem_unique
+#align option.mem.left_unique Option.Mem.leftUnique
 -/
 
 #print Option.some_injective /-
@@ -718,7 +718,7 @@ theorem map_pmap (g : β → γ) (f : ∀ a, p a → β) (x H) : Option.map g (p
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_2}} (p : α -> Prop) (f : α -> β) (x : Option.{u_1} α) (H : forall (a : α), (Membership.Mem.{u_1 u_1} α (Option.{u_1} α) (Option.hasMem.{u_1} α) a x) -> (p a)), Eq.{succ u_2} (Option.{u_2} β) (Option.pmap.{u_1 u_2} α β p (fun (a : α) (_x : p a) => f a) x H) (Option.map.{u_1 u_2} α β f x)
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_2}} (p : α -> Prop) (f : α -> β) (x : Option.{u_1} α) (H : forall (a : α), (Membership.mem.{u_1 u_1} α (Option.{u_1} α) (Option.instMembershipOption.{u_1} α) a x) -> (p a)), Eq.{succ u_2} (Option.{u_2} β) (Option.pmap.{u_1 u_2} α β p (fun (a : α) (x._@.Mathlib.Data.Option.Basic._hyg.1517 : p a) => f a) x H) (Option.map.{u_1 u_2} α β f x)
+  forall {α : Type.{u_1}} {β : Type.{u_2}} (p : α -> Prop) (f : α -> β) (x : Option.{u_1} α) (H : forall (a : α), (Membership.mem.{u_1 u_1} α (Option.{u_1} α) (Option.instMembershipOption.{u_1} α) a x) -> (p a)), Eq.{succ u_2} (Option.{u_2} β) (Option.pmap.{u_1 u_2} α β p (fun (a : α) (x._@.Mathlib.Data.Option.Basic._hyg.1548 : p a) => f a) x H) (Option.map.{u_1 u_2} α β f x)
 Case conversion may be inaccurate. Consider using '#align option.pmap_eq_map Option.pmap_eq_mapₓ'. -/
 @[simp]
 theorem pmap_eq_map (p : α → Prop) (f : α → β) (x H) : @pmap _ _ p (fun a _ => f a) x H = Option.map f x := by
@@ -841,7 +841,7 @@ end Pmap
 lean 3 declaration is
   forall {α : Type.{u_1}} {β : Type.{u_1}} {a : α} {f : α -> β}, Eq.{succ u_1} (Option.{u_1} β) (Seq.seq.{u_1 u_1} Option.{u_1} (Applicative.toHasSeq.{u_1 u_1} Option.{u_1} (Monad.toApplicative.{u_1 u_1} Option.{u_1} Option.monad.{u_1})) α β (Option.some.{u_1} (α -> β) f) (Option.some.{u_1} α a)) (Option.some.{u_1} β (f a))
 but is expected to have type
-  forall {α : Type.{u_1}} {β : Type.{u_1}} {a : α} {f : α -> β}, Eq.{succ u_1} (Option.{u_1} β) (Seq.seq.{u_1 u_1} Option.{u_1} (Applicative.toSeq.{u_1 u_1} Option.{u_1} (Alternative.toApplicative.{u_1 u_1} Option.{u_1} instAlternativeOption.{u_1})) α β (Option.some.{u_1} (α -> β) f) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2283 : Unit) => Option.some.{u_1} α a)) (Option.some.{u_1} β (f a))
+  forall {α : Type.{u_1}} {β : Type.{u_1}} {a : α} {f : α -> β}, Eq.{succ u_1} (Option.{u_1} β) (Seq.seq.{u_1 u_1} Option.{u_1} (Applicative.toSeq.{u_1 u_1} Option.{u_1} (Alternative.toApplicative.{u_1 u_1} Option.{u_1} instAlternativeOption.{u_1})) α β (Option.some.{u_1} (α -> β) f) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2322 : Unit) => Option.some.{u_1} α a)) (Option.some.{u_1} β (f a))
 Case conversion may be inaccurate. Consider using '#align option.seq_some Option.seq_someₓ'. -/
 @[simp]
 theorem seq_some {α β} {a : α} {f : α → β} : some f <*> some a = some (f a) :=
@@ -870,7 +870,7 @@ theorem some_orElse (a : α) (x : Option α) : (some a <|> x) = some a :=
 lean 3 declaration is
   forall {α : Type.{u_1}} (x : Option.{u_1} α), Eq.{succ u_1} (Option.{u_1} α) (Option.orelse.{u_1} α (Option.none.{u_1} α) x) x
 but is expected to have type
-  forall {α : Type.{u_1}} (x : Option.{u_1} α), Eq.{succ u_1} (Option.{u_1} α) (Option.orElse.{u_1} α (Option.none.{u_1} α) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2336 : Unit) => x)) x
+  forall {α : Type.{u_1}} (x : Option.{u_1} α), Eq.{succ u_1} (Option.{u_1} α) (Option.orElse.{u_1} α (Option.none.{u_1} α) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2379 : Unit) => x)) x
 Case conversion may be inaccurate. Consider using '#align option.none_orelse' Option.none_orElse'ₓ'. -/
 @[simp]
 theorem none_orElse' (x : Option α) : none.orelse x = x := by cases x <;> rfl
@@ -954,8 +954,10 @@ theorem not_isSome_iff_eq_none {o : Option α} : ¬o.isSome ↔ o = none := by c
 #align option.not_is_some_iff_eq_none Option.not_isSome_iff_eq_none
 -/
 
-theorem ne_none_iff_is_some {o : Option α} : o ≠ none ↔ o.isSome := by cases o <;> simp
-#align option.ne_none_iff_is_some Option.ne_none_iff_is_some
+#print Option.ne_none_iff_isSome /-
+theorem ne_none_iff_isSome {o : Option α} : o ≠ none ↔ o.isSome := by cases o <;> simp
+#align option.ne_none_iff_is_some Option.ne_none_iff_isSome
+-/
 
 #print Option.ne_none_iff_exists /-
 theorem ne_none_iff_exists {o : Option α} : o ≠ none ↔ ∃ x : α, some x = o := by cases o <;> simp
@@ -971,7 +973,7 @@ theorem ne_none_iff_exists' {o : Option α} : o ≠ none ↔ ∃ x : α, o = som
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
 #print Option.bex_ne_none /-
 theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _)(_ : x ≠ none), p x) ↔ ∃ x, p (some x) :=
-  ⟨fun ⟨x, hx, hp⟩ => ⟨get <| ne_none_iff_is_some.1 hx, by rwa [some_get]⟩, fun ⟨x, hx⟩ => ⟨some x, some_ne_none x, hx⟩⟩
+  ⟨fun ⟨x, hx, hp⟩ => ⟨get <| ne_none_iff_isSome.1 hx, by rwa [some_get]⟩, fun ⟨x, hx⟩ => ⟨some x, some_ne_none x, hx⟩⟩
 #align option.bex_ne_none Option.bex_ne_none
 -/
 
@@ -1015,7 +1017,7 @@ theorem guard_eq_some {p : α → Prop} [DecidablePred p] {a b : α} : guard p a
 lean 3 declaration is
   forall {p : Prop} [_inst_1 : Decidable p] (u : Unit), Iff (Eq.{1} (Option.{0} Unit) (guard.{0} Option.{0} Option.alternative.{0} p _inst_1) (Option.some.{0} Unit u)) p
 but is expected to have type
-  forall {p : Prop} [inst._@.Mathlib.Data.Option.Basic._hyg.2610 : Decidable p] (u : Unit), Iff (Eq.{1} (Option.{0} Unit) (guard.{0} Option.{0} instAlternativeOption.{0} p inst._@.Mathlib.Data.Option.Basic._hyg.2610) (Option.some.{0} Unit u)) p
+  forall {p : Prop} [inst._@.Mathlib.Data.Option.Basic._hyg.2655 : Decidable p] (u : Unit), Iff (Eq.{1} (Option.{0} Unit) (guard.{0} Option.{0} instAlternativeOption.{0} p inst._@.Mathlib.Data.Option.Basic._hyg.2655) (Option.some.{0} Unit u)) p
 Case conversion may be inaccurate. Consider using '#align option.guard_eq_some' Option.guard_eq_some'ₓ'. -/
 @[simp]
 theorem guard_eq_some' {p : Prop} [Decidable p] (u) : guard p = some u ↔ p := by

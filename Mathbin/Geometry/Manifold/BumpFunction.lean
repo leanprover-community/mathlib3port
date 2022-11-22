@@ -260,7 +260,7 @@ theorem support_update_r {r : ℝ} (hr : r ∈ ioo 0 f.r) : support (f.updateR r
 #align smooth_bump_function.support_update_r SmoothBumpFunction.support_update_r
 
 instance : Inhabited (SmoothBumpFunction I c) :=
-  Classical.inhabitedOfNonempty nhds_within_range_basis.Nonempty
+  Classical.inhabited_of_nonempty nhds_within_range_basis.Nonempty
 
 variable [T2Space M]
 

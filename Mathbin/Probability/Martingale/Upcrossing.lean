@@ -290,7 +290,7 @@ theorem exists_upper_crossing_time_eq (f : ℕ → Ω → ℝ) (N : ℕ) (ω : �
   by_contra h
   push_neg  at h
   have : StrictMono fun n => upper_crossing_time a b f N n ω :=
-    strict_mono_nat_of_lt_succ fun n => upper_crossing_time_lt_succ hab (h _)
+    strictMono_nat_of_lt_succ fun n => upper_crossing_time_lt_succ hab (h _)
   obtain ⟨_, ⟨k, rfl⟩, hk⟩ : ∃ (m : _)(hm : m ∈ Set.range fun n => upper_crossing_time a b f N n ω), N < m :=
     ⟨upper_crossing_time a b f N (N + 1) ω, ⟨N + 1, rfl⟩, lt_of_lt_of_le N.lt_succ_self (StrictMono.id_le this (N + 1))⟩
   exact not_le.2 hk upper_crossing_time_le

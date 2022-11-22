@@ -72,10 +72,10 @@ instance (priority := 100) NormedStarGroup.to_has_continuous_star : HasContinuou
 
 end NormedStarGroup
 
-instance RingHomIsometric.starRingEnd [NormedCommRing E] [StarRing E] [NormedStarGroup E] :
+instance RingHomIsometric.star_ring_end [NormedCommRing E] [StarRing E] [NormedStarGroup E] :
     RingHomIsometric (starRingEnd E) :=
   ⟨norm_star⟩
-#align ring_hom_isometric.star_ring_end RingHomIsometric.starRingEnd
+#align ring_hom_isometric.star_ring_end RingHomIsometric.star_ring_end
 
 /-- A C*-ring is a normed star ring that satifies the stronger condition `‖x⋆ * x‖ = ‖x‖^2`
 for every `x`. -/

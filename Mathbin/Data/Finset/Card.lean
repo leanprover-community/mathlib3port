@@ -2164,7 +2164,7 @@ theorem strong_downward_induction_on_eq {p : Finset α → Sort _} (s : Finset �
 
 theorem lt_wf {α} : WellFounded (@LT.lt (Finset α) _) :=
   have H : Subrelation (@LT.lt (Finset α) _) (InvImage (· < ·) card) := fun x y hxy => card_lt_card hxy
-  Subrelation.wf H <| InvImage.wf _ <| Nat.lt_wfRel.wf
+  Subrelation.wf H <| InvImage.wf _ <| Nat.lt_wfRel
 #align finset.lt_wf Finset.lt_wf
 
 end Finset

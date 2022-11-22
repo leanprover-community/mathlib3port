@@ -571,7 +571,7 @@ theorem _root_.is_primitive_root.is_root_cyclotomic (hpos : 0 < n) {μ : R} (h :
 private theorem is_root_cyclotomic_iff' {n : ℕ} {K : Type _} [Field K] {μ : K} [NeZero (n : K)] :
     IsRoot (cyclotomic n K) μ ↔ IsPrimitiveRoot μ n := by
   -- in this proof, `o` stands for `order_of μ`
-  have hnpos : 0 < n := (NeZero.of_ne_zero_coe K).out.bot_lt
+  have hnpos : 0 < n := (NeZero.of_neZero_natCast K).out.bot_lt
   refine' ⟨fun hμ => _, IsPrimitiveRoot.is_root_cyclotomic hnpos⟩
   have hμn : μ ^ n = 1 := by
     rw [is_root_of_unity_iff hnpos]
@@ -595,7 +595,7 @@ private theorem is_root_cyclotomic_iff' {n : ℕ} {K : Type _} [Field K] {μ : K
   obtain ⟨j, hj⟩ := hμ
   have := prod_cyclotomic_eq_X_pow_sub_one hnpos K
   rw [← Finset.prod_sdiff hni, Finset.prod_pair key.ne, hk, hj] at this
-  have hn := (X_pow_sub_one_separable_iff.mpr <| NeZero.nat_cast_ne n K).Squarefree
+  have hn := (X_pow_sub_one_separable_iff.mpr <| NeZero.natCast_ne n K).Squarefree
   rw [← this, Squarefree] at hn
   contrapose! hn
   refine' ⟨X - C μ, ⟨(∏ x in n.divisors \ {i, n}, cyclotomic x K) * k * j, by ring⟩, _⟩
@@ -615,14 +615,14 @@ theorem roots_cyclotomic_nodup [NeZero (n : R)] : (cyclotomic n R).roots.Nodup :
   rw [mem_roots <| cyclotomic_ne_zero n R, is_root_cyclotomic_iff] at hζ
   refine'
     Multiset.nodup_of_le
-      (roots.le_of_dvd (X_pow_sub_C_ne_zero (NeZero.pos_of_ne_zero_coe R) 1) <| cyclotomic.dvd_X_pow_sub_one n R)
+      (roots.le_of_dvd (X_pow_sub_C_ne_zero (NeZero.pos_of_neZero_natCast R) 1) <| cyclotomic.dvd_X_pow_sub_one n R)
       hζ.nth_roots_nodup
 #align polynomial.roots_cyclotomic_nodup Polynomial.roots_cyclotomic_nodup
 
 theorem cyclotomic.roots_to_finset_eq_primitive_roots [NeZero (n : R)] :
     (⟨(cyclotomic n R).roots, roots_cyclotomic_nodup⟩ : Finset _) = primitiveRoots n R := by
   ext
-  simp [cyclotomic_ne_zero n R, is_root_cyclotomic_iff, mem_primitive_roots, NeZero.pos_of_ne_zero_coe R]
+  simp [cyclotomic_ne_zero n R, is_root_cyclotomic_iff, mem_primitive_roots, NeZero.pos_of_neZero_natCast R]
 #align polynomial.cyclotomic.roots_to_finset_eq_primitive_roots Polynomial.cyclotomic.roots_to_finset_eq_primitive_roots
 
 theorem cyclotomic.roots_eq_primitive_roots_val [NeZero (n : R)] : (cyclotomic n R).roots = (primitiveRoots n R).val :=

@@ -46,7 +46,7 @@ def trailingDegree (p : R[X]) : ℕ∞ :=
 #align polynomial.trailing_degree Polynomial.trailingDegree
 
 theorem trailing_degree_lt_wf : WellFounded fun p q : R[X] => trailingDegree p < trailingDegree q :=
-  InvImage.wf trailingDegree (WithTop.well_founded_lt Nat.lt_wfRel.wf)
+  InvImage.wf trailingDegree (WithTop.well_founded_lt Nat.lt_wfRel)
 #align polynomial.trailing_degree_lt_wf Polynomial.trailing_degree_lt_wf
 
 /-- `nat_trailing_degree p` forces `trailing_degree p` to `ℕ`, by defining

@@ -1760,12 +1760,6 @@ theorem dvd_iff_mod_eq_zero {m n : Num} : m ∣ n ↔ n % m = 0 := by
   rw [← dvd_to_nat, Nat.dvd_iff_mod_eq_zero, ← to_nat_inj, mod_to_nat] <;> rfl
 #align num.dvd_iff_mod_eq_zero Num.dvd_iff_mod_eq_zero
 
-/- warning: num.decidable_dvd -> Num.decidableDvd is a dubious translation:
-lean 3 declaration is
-  DecidableRel.{1} Num (Dvd.Dvd.{0} Num (semigroupHasDvd.{0} Num (SemigroupWithZero.toSemigroup.{0} Num (NonUnitalSemiring.toSemigroupWithZero.{0} Num (NonUnitalCommSemiring.toNonUnitalSemiring.{0} Num (CommSemiring.toNonUnitalCommSemiring.{0} Num Num.commSemiring))))))
-but is expected to have type
-  PUnit.{1}
-Case conversion may be inaccurate. Consider using '#align num.decidable_dvd Num.decidableDvdₓ'. -/
 instance decidableDvd : DecidableRel ((· ∣ ·) : Num → Num → Prop)
   | a, b => decidable_of_iff' _ dvd_iff_mod_eq_zero
 #align num.decidable_dvd Num.decidableDvd

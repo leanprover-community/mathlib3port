@@ -709,7 +709,7 @@ theorem other_spec' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : ⟦(
   have h' := mem_iff.mp h
   dsimp [mem.other', Quot.rec, pair_other]
   cases h' <;> subst a
-  · simp only [if_true, eq_self_iff_true]
+  · simp only [eq_self_iff_true]
     rfl
     
   · split_ifs
@@ -740,7 +740,7 @@ theorem other_invol' [DecidableEq α] {a : α} {z : Sym2 α} (ha : a ∈ z) (hb 
   split_ifs
   assumption
   rfl
-  simp only [h, if_false, if_true, eq_self_iff_true]
+  simp only [h, if_false, eq_self_iff_true]
   exact ((mem_iff.mp ha).resolve_left h).symm
   rfl
 #align sym2.other_invol' Sym2.other_invol'
@@ -775,7 +775,7 @@ theorem filter_image_quotient_mk_not_is_diag [DecidableEq α] (s : Finset α) :
   ext z
   induction z using Quotient.induction_on
   rcases z with ⟨x, y⟩
-  simp only [mem_image, mem_off_diag, exists_prop, mem_filter, Prod.exists, mem_product]
+  simp only [mem_image, mem_off_diag, mem_filter, Prod.exists, mem_product]
   constructor
   · rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
     rw [← h, Sym2.mk_is_diag_iff] at hab

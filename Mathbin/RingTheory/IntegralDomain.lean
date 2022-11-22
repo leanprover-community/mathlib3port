@@ -81,10 +81,10 @@ def Fintype.fieldOfDomain (R) [CommRing R] [IsDomain R] [DecidableEq R] [Fintype
   { Fintype.groupWithZeroOfCancel R, ‹CommRing R› with }
 #align fintype.field_of_domain Fintype.fieldOfDomain
 
-theorem Finite.isFieldOfDomain (R) [CommRing R] [IsDomain R] [Finite R] : IsField R := by
+theorem Finite.is_field_of_domain (R) [CommRing R] [IsDomain R] [Finite R] : IsField R := by
   cases nonempty_fintype R
-  exact @Field.toIsField R (@Fintype.fieldOfDomain R _ _ (Classical.decEq R) _)
-#align finite.is_field_of_domain Finite.isFieldOfDomain
+  exact @Field.to_is_field R (@Fintype.fieldOfDomain R _ _ (Classical.decEq R) _)
+#align finite.is_field_of_domain Finite.is_field_of_domain
 
 end Ring
 

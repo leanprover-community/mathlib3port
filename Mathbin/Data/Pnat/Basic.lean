@@ -5,6 +5,7 @@ Authors: Mario Carneiro, Neil Strickland
 -/
 import Mathbin.Data.Pnat.Defs
 import Mathbin.Data.Nat.Order.Basic
+import Mathbin.Data.Set.Basic
 import Mathbin.Algebra.GroupWithZero.Divisibility
 import Mathbin.Algebra.Order.Positive.Ring
 

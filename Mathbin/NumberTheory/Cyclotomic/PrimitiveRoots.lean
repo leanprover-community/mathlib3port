@@ -128,7 +128,7 @@ theorem power_basis_gen_mem_adjoin_zeta_sub_one : (hζ.PowerBasis K).gen ∈ adj
 /-- The `power_basis` given by `η - 1`. -/
 @[simps]
 noncomputable def subOnePowerBasis : PowerBasis K L :=
-  (hζ.PowerBasis K).ofGenMemAdjoin (isIntegralSub (IsCyclotomicExtension.integral {n} K L ζ) isIntegralOne)
+  (hζ.PowerBasis K).ofGenMemAdjoin (is_integral_sub (IsCyclotomicExtension.integral {n} K L ζ) is_integral_one)
     (hζ.power_basis_gen_mem_adjoin_zeta_sub_one _)
 #align is_primitive_root.sub_one_power_basis IsPrimitiveRoot.subOnePowerBasis
 

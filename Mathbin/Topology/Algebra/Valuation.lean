@@ -31,7 +31,7 @@ namespace Valuation
 variable (v : Valuation R Γ₀)
 
 /-- The basis of open subgroups for the topology on a ring determined by a valuation. -/
-theorem subgroupsBasis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgroup γ : AddSubgroup R) :=
+theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgroup γ : AddSubgroup R) :=
   { inter := by
       rintro γ₀ γ₁
       use min γ₀ γ₁
@@ -79,7 +79,7 @@ theorem subgroupsBasis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgroup
         rw [Units.coe_mul, mul_comm] at vy_lt
         simpa using mul_inv_lt_of_lt_mul₀ vy_lt
          }
-#align valuation.subgroups_basis Valuation.subgroupsBasis
+#align valuation.subgroups_basis Valuation.subgroups_basis
 
 end Valuation
 
@@ -103,8 +103,8 @@ namespace Valued
 /-- Alternative `valued` constructor for use when there is no preferred `uniform_space`
 structure. -/
 def mk' (v : Valuation R Γ₀) : Valued R Γ₀ :=
-  { V, toUniformSpace := @TopologicalAddGroup.toUniformSpace R _ v.subgroupsBasis.topology _,
-    to_uniform_add_group := @topological_add_comm_group_is_uniform _ _ v.subgroupsBasis.topology _,
+  { V, toUniformSpace := @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _,
+    to_uniform_add_group := @topological_add_comm_group_is_uniform _ _ v.subgroups_basis.topology _,
     is_topological_valuation := by
       letI := @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _
       intro s
@@ -126,8 +126,8 @@ theorem has_basis_uniformity : (𝓤 R).HasBasis (fun _ => True) fun γ : Γ₀�
   exact (has_basis_nhds_zero R Γ₀).comap _
 #align valued.has_basis_uniformity Valued.has_basis_uniformity
 
-theorem to_uniform_space_eq : to_uniform_space = @TopologicalAddGroup.toUniformSpace R _ v.subgroupsBasis.topology _ :=
-  uniform_space_eq ((has_basis_uniformity R Γ₀).eq_of_same_basis <| v.subgroupsBasis.has_basis_nhds_zero.comap _)
+theorem to_uniform_space_eq : to_uniform_space = @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _ :=
+  uniform_space_eq ((has_basis_uniformity R Γ₀).eq_of_same_basis <| v.subgroups_basis.has_basis_nhds_zero.comap _)
 #align valued.to_uniform_space_eq Valued.to_uniform_space_eq
 
 variable {R Γ₀}
@@ -151,7 +151,7 @@ theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : { y : R | v y = v x } ∈ 
 #align valued.loc_const Valued.loc_const
 
 instance (priority := 100) : TopologicalRing R :=
-  (to_uniform_space_eq R Γ₀).symm ▸ v.subgroupsBasis.toRingFilterBasis.isTopologicalRing
+  (to_uniform_space_eq R Γ₀).symm ▸ v.subgroups_basis.toRingFilterBasis.is_topological_ring
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (x y «expr ∈ » M) -/
 theorem cauchy_iff {F : Filter R} :

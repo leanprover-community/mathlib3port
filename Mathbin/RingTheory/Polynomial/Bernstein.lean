@@ -72,17 +72,15 @@ theorem map (f : R →+* S) (n ν : ℕ) : (bernsteinPolynomial R n ν).map f = 
 end
 
 theorem flip (n ν : ℕ) (h : ν ≤ n) : (bernsteinPolynomial R n ν).comp (1 - X) = bernsteinPolynomial R n (n - ν) := by
-  dsimp [bernsteinPolynomial]
-  simp [h, tsub_tsub_assoc, mul_right_comm]
+  simp [bernsteinPolynomial, h, tsub_tsub_assoc, mul_right_comm]
 #align bernstein_polynomial.flip bernsteinPolynomial.flip
 
 theorem flip' (n ν : ℕ) (h : ν ≤ n) : bernsteinPolynomial R n ν = (bernsteinPolynomial R n (n - ν)).comp (1 - X) := by
-  rw [← flip _ _ _ h, Polynomial.comp_assoc]
-  simp
+  simp [← flip _ _ _ h, Polynomial.comp_assoc]
 #align bernstein_polynomial.flip' bernsteinPolynomial.flip'
 
 theorem eval_at_0 (n ν : ℕ) : (bernsteinPolynomial R n ν).eval 0 = if ν = 0 then 1 else 0 := by
-  dsimp [bernsteinPolynomial]
+  rw [bernsteinPolynomial]
   split_ifs
   · subst h
     simp
@@ -92,7 +90,7 @@ theorem eval_at_0 (n ν : ℕ) : (bernsteinPolynomial R n ν).eval 0 = if ν = 0
 #align bernstein_polynomial.eval_at_0 bernsteinPolynomial.eval_at_0
 
 theorem eval_at_1 (n ν : ℕ) : (bernsteinPolynomial R n ν).eval 1 = if ν = n then 1 else 0 := by
-  dsimp [bernsteinPolynomial]
+  rw [bernsteinPolynomial]
   split_ifs
   · subst h
     simp
@@ -109,13 +107,16 @@ theorem derivative_succ_aux (n ν : ℕ) :
     (bernsteinPolynomial R (n + 1) (ν + 1)).derivative =
       (n + 1) * (bernsteinPolynomial R n ν - bernsteinPolynomial R n (ν + 1)) :=
   by
-  dsimp [bernsteinPolynomial]
+  rw [bernsteinPolynomial]
   suffices
     ↑((n + 1).choose (ν + 1)) * ((↑ν + 1) * X ^ ν) * (1 - X) ^ (n - ν) -
         ↑((n + 1).choose (ν + 1)) * X ^ (ν + 1) * (↑(n - ν) * (1 - X) ^ (n - ν - 1)) =
       (↑n + 1) *
         (↑(n.choose ν) * X ^ ν * (1 - X) ^ (n - ν) - ↑(n.choose (ν + 1)) * X ^ (ν + 1) * (1 - X) ^ (n - (ν + 1)))
-    by simpa [Polynomial.derivative_pow, ← sub_eq_add_neg]
+    by
+    simpa only [Polynomial.derivative_pow, ← sub_eq_add_neg, Nat.succ_sub_succ_eq_sub, Polynomial.derivative_mul,
+      Polynomial.derivative_nat_cast, zero_mul, Nat.cast_add, algebraMap.coe_one, Polynomial.derivative_X, mul_one,
+      zero_add, Polynomial.derivative_sub, Polynomial.derivative_one, zero_sub, mul_neg]
   conv_rhs => rw [mul_sub]
   -- We'll prove the two terms match up separately.
   refine' congr (congr_arg Sub.sub _) _
@@ -126,8 +127,7 @@ theorem derivative_succ_aux (n ν : ℕ) :
     
   · rw [← tsub_add_eq_tsub_tsub, ← mul_assoc, ← mul_assoc]
     congr 1
-    rw [mul_comm]
-    rw [← mul_assoc, ← mul_assoc]
+    rw [mul_comm, ← mul_assoc, ← mul_assoc]
     congr 1
     norm_cast
     congr 1
@@ -153,8 +153,7 @@ theorem derivative_succ (n ν : ℕ) :
 #align bernstein_polynomial.derivative_succ bernsteinPolynomial.derivative_succ
 
 theorem derivative_zero (n : ℕ) : (bernsteinPolynomial R n 0).derivative = -n * bernsteinPolynomial R (n - 1) 0 := by
-  dsimp [bernsteinPolynomial]
-  simp [Polynomial.derivative_pow]
+  simp [bernsteinPolynomial, Polynomial.derivative_pow]
 #align bernstein_polynomial.derivative_zero bernsteinPolynomial.derivative_zero
 
 theorem iterate_derivative_at_0_eq_zero_of_lt (n : ℕ) {ν k : ℕ} :
@@ -363,7 +362,7 @@ theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPo
       rintro (_ | k)
       · simp
         
-      · dsimp [bernsteinPolynomial]
+      · rw [bernsteinPolynomial]
         simp only [← nat_cast_mul, Nat.succ_eq_add_one, Nat.add_succ_sub_one, add_zero, pow_succ]
         push_cast
         ring
@@ -411,7 +410,7 @@ theorem sum_mul_smul (n : ℕ) :
         
       · simp
         
-      · dsimp [bernsteinPolynomial]
+      · rw [bernsteinPolynomial]
         simp only [← nat_cast_mul, Nat.succ_eq_add_one, Nat.add_succ_sub_one, add_zero, pow_succ]
         push_cast
         ring

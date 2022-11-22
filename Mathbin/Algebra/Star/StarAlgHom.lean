@@ -141,6 +141,15 @@ protected def copy (f : A →⋆ₙₐ[R] B) (f' : A → B) (h : f' = f) : A →
 #align non_unital_star_alg_hom.copy NonUnitalStarAlgHom.copy
 
 @[simp]
+theorem coe_copy (f : A →⋆ₙₐ[R] B) (f' : A → B) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align non_unital_star_alg_hom.coe_copy NonUnitalStarAlgHom.coe_copy
+
+theorem copy_eq (f : A →⋆ₙₐ[R] B) (f' : A → B) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align non_unital_star_alg_hom.copy_eq NonUnitalStarAlgHom.copy_eq
+
+@[simp]
 theorem coe_mk (f : A → B) (h₁ h₂ h₃ h₄ h₅) : ((⟨f, h₁, h₂, h₃, h₄, h₅⟩ : A →⋆ₙₐ[R] B) : A → B) = f :=
   rfl
 #align non_unital_star_alg_hom.coe_mk NonUnitalStarAlgHom.coe_mk
@@ -349,6 +358,15 @@ protected def copy (f : A →⋆ₐ[R] B) (f' : A → B) (h : f' = f) : A →⋆
   commutes' := h.symm ▸ AlgHomClass.commutes f
   map_star' := h.symm ▸ map_star f
 #align star_alg_hom.copy StarAlgHom.copy
+
+@[simp]
+theorem coe_copy (f : A →⋆ₐ[R] B) (f' : A → B) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align star_alg_hom.coe_copy StarAlgHom.coe_copy
+
+theorem copy_eq (f : A →⋆ₐ[R] B) (f' : A → B) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align star_alg_hom.copy_eq StarAlgHom.copy_eq
 
 @[simp]
 theorem coe_mk (f : A → B) (h₁ h₂ h₃ h₄ h₅ h₆) : ((⟨f, h₁, h₂, h₃, h₄, h₅, h₆⟩ : A →⋆ₐ[R] B) : A → B) = f :=

@@ -267,12 +267,12 @@ theorem Perm.pmap {p : α → Prop} (f : ∀ a, p a → β) {l₁ l₂ : List α
     
 #align list.perm.pmap List.Perm.pmap
 
-theorem Perm.filter (p : α → Prop) [DecidablePred p] {l₁ l₂ : List α} (s : l₁ ~ l₂) : filter' p l₁ ~ filter' p l₂ := by
+theorem Perm.filter (p : α → Prop) [DecidablePred p] {l₁ l₂ : List α} (s : l₁ ~ l₂) : filter p l₁ ~ filter p l₂ := by
   rw [← filter_map_eq_filter] <;> apply s.filter_map _
 #align list.perm.filter List.Perm.filter
 
-theorem filter_append_perm (p : α → Prop) [DecidablePred p] (l : List α) :
-    filter' p l ++ filter' (fun x => ¬p x) l ~ l := by
+theorem filter_append_perm (p : α → Prop) [DecidablePred p] (l : List α) : filter p l ++ filter (fun x => ¬p x) l ~ l :=
+  by
   induction' l with x l ih
   · rfl
     
@@ -463,7 +463,7 @@ theorem Subperm.subset {l₁ l₂ : List α} : l₁ <+~ l₂ → l₁ ⊆ l₂
   | ⟨l, p, s⟩ => Subset.trans p.symm.Subset s.Subset
 #align list.subperm.subset List.Subperm.subset
 
-theorem Subperm.filter (p : α → Prop) [DecidablePred p] ⦃l l' : List α⦄ (h : l <+~ l') : filter' p l <+~ filter' p l' :=
+theorem Subperm.filter (p : α → Prop) [DecidablePred p] ⦃l l' : List α⦄ (h : l <+~ l') : filter p l <+~ filter p l' :=
   by
   obtain ⟨xs, hp, h⟩ := h
   exact ⟨_, hp.filter p, h.filter p⟩
@@ -567,13 +567,13 @@ end
 section CommMonoid
 
 /-- If elements of a list commute with each other, then their product does not
-depend on the order of elements-/
-@[to_additive]
-theorem Perm.prod_eq' [Monoid α] {l₁ l₂ : List α} (h : l₁ ~ l₂) (hc : l₁.Pairwise fun x y => x * y = y * x) :
-    l₁.Prod = l₂.Prod :=
+depend on the order of elements. -/
+@[to_additive
+      "If elements of a list additively commute with each other, then their sum does not\ndepend on the order of elements."]
+theorem Perm.prod_eq' [Monoid α] {l₁ l₂ : List α} (h : l₁ ~ l₂) (hc : l₁.Pairwise Commute) : l₁.Prod = l₂.Prod :=
   h.foldl_eq'
     ((Pairwise.forall_of_forall (fun x y h z => (h z).symm) fun x hx z => rfl) <|
-      hc.imp fun x y h z => by simp only [mul_assoc, h])
+      hc.imp fun x y h z => by simp only [mul_assoc, h.eq])
     _
 #align list.perm.prod_eq' List.Perm.prod_eq'
 
@@ -1121,23 +1121,23 @@ theorem Perm.nodup_iff {l₁ l₂ : List α} : l₁ ~ l₂ → (Nodup l₁ ↔ N
 #align list.perm.nodup_iff List.Perm.nodup_iff
 -/
 
-theorem Perm.bind_right {l₁ l₂ : List α} (f : α → List β) (p : l₁ ~ l₂) : l₁.bind f ~ l₂.bind f := by
-  induction' p with a l₁ l₂ p IH a b l l₁ l₂ l₃ p₁ p₂ IH₁ IH₂
-  · simp
-    
-  · simp
-    exact IH.append_left _
-    
-  · simp
-    rw [← append_assoc, ← append_assoc]
-    exact perm_append_comm.append_right _
-    
-  · exact IH₁.trans IH₂
-    
+theorem Perm.join {l₁ l₂ : List (List α)} (h : l₁ ~ l₂) : l₁.join ~ l₂.join :=
+  Perm.rec_on h (Perm.refl _) (fun x xs₁ xs₂ hxs ih => ih.append_left x)
+    (fun x₁ x₂ xs => by simpa only [join, append_assoc] using perm_append_comm.append_right _)
+    fun xs₁ xs₂ xs₃ h₁₂ h₂₃ => Perm.trans
+#align list.perm.join List.Perm.join
+
+theorem Perm.bind_right {l₁ l₂ : List α} (f : α → List β) (p : l₁ ~ l₂) : l₁.bind f ~ l₂.bind f :=
+  (p.map _).join
 #align list.perm.bind_right List.Perm.bind_right
 
-theorem Perm.bind_left (l : List α) {f g : α → List β} (h : ∀ a, f a ~ g a) : l.bind f ~ l.bind g := by
-  induction' l with a l IH <;> simp <;> exact (h a).append IH
+theorem Perm.join_congr : ∀ {l₁ l₂ : List (List α)} (h : List.Forall₂ (· ~ ·) l₁ l₂), l₁.join ~ l₂.join
+  | _, _, forall₂.nil => Perm.refl _
+  | a :: as, b :: bs, forall₂.cons h₁ h₂ => h₁.append (perm.join_congr h₂)
+#align list.perm.join_congr List.Perm.join_congr
+
+theorem Perm.bind_left (l : List α) {f g : α → List β} (h : ∀ a ∈ l, f a ~ g a) : l.bind f ~ l.bind g :=
+  perm.join_congr <| by rwa [List.forall₂_map_right_iff, List.forall₂_map_left_iff, List.forall₂_same]
 #align list.perm.bind_left List.Perm.bind_left
 
 theorem bind_append_perm (l : List α) (f g : α → List β) : l.bind f ++ l.bind g ~ l.bind fun x => f x ++ g x := by
@@ -1157,7 +1157,7 @@ theorem Perm.product_right {l₁ l₂ : List α} (t₁ : List β) (p : l₁ ~ l�
 #align list.perm.product_right List.Perm.product_right
 
 theorem Perm.product_left (l : List α) {t₁ t₂ : List β} (p : t₁ ~ t₂) : product l t₁ ~ product l t₂ :=
-  (Perm.bind_left _) fun a => p.map _
+  (Perm.bind_left _) fun a ha => p.map _
 #align list.perm.product_left List.Perm.product_left
 
 @[congr]
@@ -1493,6 +1493,7 @@ theorem Perm.permutations' {s t : List α} (p : s ~ t) : permutations' s ~ permu
   · simp only [permutations']
     rw [bind_assoc, bind_assoc]
     apply perm.bind_left
+    intro l' hl'
     apply perm_permutations'_aux_comm
     
   · exact IH₁.trans IH₂

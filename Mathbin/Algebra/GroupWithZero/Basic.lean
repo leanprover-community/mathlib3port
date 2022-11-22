@@ -86,7 +86,7 @@ theorem eq_zero_of_mul_self_eq_zero (h : a * a = 0) : a = 0 :=
 lean 3 declaration is
   forall {M₀ : Type.{u_2}} [_inst_1 : Mul.{u_2} M₀] [_inst_2 : Zero.{u_2} M₀] [_inst_3 : NoZeroDivisors.{u_2} M₀ _inst_1 _inst_2] {a : M₀} {b : M₀}, (Ne.{succ u_2} M₀ a (OfNat.ofNat.{u_2} M₀ 0 (OfNat.mk.{u_2} M₀ 0 (Zero.zero.{u_2} M₀ _inst_2)))) -> (Ne.{succ u_2} M₀ b (OfNat.ofNat.{u_2} M₀ 0 (OfNat.mk.{u_2} M₀ 0 (Zero.zero.{u_2} M₀ _inst_2)))) -> (Ne.{succ u_2} M₀ (HMul.hMul.{u_2 u_2 u_2} M₀ M₀ M₀ (instHMul.{u_2} M₀ _inst_1) a b) (OfNat.ofNat.{u_2} M₀ 0 (OfNat.mk.{u_2} M₀ 0 (Zero.zero.{u_2} M₀ _inst_2))))
 but is expected to have type
-  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.625 : OrderedSemiring.{u_1} α] [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.628 : NoZeroDivisors.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.625))] {a : α} {b : α}, (Ne.{succ u_1} α a (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.625)))))) -> (Ne.{succ u_1} α b (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.625)))))) -> (Ne.{succ u_1} α (HMul.hMul.{u_1 u_1 u_1} α α α (instHMul.{u_1} α (NonUnitalNonAssocSemiring.toMul.{u_1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u_1} α (Semiring.toNonAssocSemiring.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.625))))) a b) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α (MonoidWithZero.toZero.{u_1} α (Semiring.toMonoidWithZero.{u_1} α (OrderedSemiring.toSemiring.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.625))))))
+  forall {α : Type.{u_1}} [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.329 : Zero.{u_1} α] [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.332 : Mul.{u_1} α] [inst._@.Mathlib.Tactic.Positivity.Basic._hyg.335 : NoZeroDivisors.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.332 inst._@.Mathlib.Tactic.Positivity.Basic._hyg.329] {a : α} {b : α}, (Ne.{succ u_1} α a (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.329))) -> (Ne.{succ u_1} α b (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.329))) -> (Ne.{succ u_1} α (HMul.hMul.{u_1 u_1 u_1} α α α (instHMul.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.332) a b) (OfNat.ofNat.{u_1} α 0 (Zero.toOfNat0.{u_1} α inst._@.Mathlib.Tactic.Positivity.Basic._hyg.329)))
 Case conversion may be inaccurate. Consider using '#align mul_ne_zero mul_ne_zeroₓ'. -/
 @[field_simps]
 theorem mul_ne_zero (ha : a ≠ 0) (hb : b ≠ 0) : a * b ≠ 0 :=
@@ -160,7 +160,7 @@ section CancelMonoidWithZero
 variable [CancelMonoidWithZero M₀] {a b c : M₀}
 
 -- see Note [lower instance priority]
-instance (priority := 10) CancelMonoidWithZero.toNoZeroDivisors : NoZeroDivisors M₀ :=
+instance (priority := 10) CancelMonoidWithZero.to_no_zero_divisors : NoZeroDivisors M₀ :=
   ⟨fun a b ab0 => by
     by_cases a = 0
     · left
@@ -169,7 +169,7 @@ instance (priority := 10) CancelMonoidWithZero.toNoZeroDivisors : NoZeroDivisors
     right
     apply CancelMonoidWithZero.mul_left_cancel_of_ne_zero h
     rw [ab0, mul_zero]⟩
-#align cancel_monoid_with_zero.to_no_zero_divisors CancelMonoidWithZero.toNoZeroDivisors
+#align cancel_monoid_with_zero.to_no_zero_divisors CancelMonoidWithZero.to_no_zero_divisors
 
 theorem mul_left_inj' (hc : c ≠ 0) : a * c = b * c ↔ a = b :=
   (mul_left_injective₀ hc).eq_iff

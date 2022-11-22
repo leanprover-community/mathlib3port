@@ -89,6 +89,15 @@ protected def copy (f : α →CO β) (f' : α → β) (h : f' = f) : α →CO β
   ⟨f.toContinuousMap.copy f' <| h, h.symm.subst f.map_open'⟩
 #align continuous_open_map.copy ContinuousOpenMap.copy
 
+@[simp]
+theorem coe_copy (f : α →CO β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
+  rfl
+#align continuous_open_map.coe_copy ContinuousOpenMap.coe_copy
+
+theorem copy_eq (f : α →CO β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
+  FunLike.ext' h
+#align continuous_open_map.copy_eq ContinuousOpenMap.copy_eq
+
 variable (α)
 
 /-- `id` as a `continuous_open_map`. -/

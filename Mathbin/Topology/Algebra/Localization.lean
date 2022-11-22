@@ -34,5 +34,5 @@ instance : TopologicalSpace (Localization M) :=
   Localization.ringTopology.toTopologicalSpace
 
 instance : TopologicalRing (Localization M) :=
-  Localization.ringTopology.toTopologicalRing
+  Localization.ringTopology.to_topological_ring
 

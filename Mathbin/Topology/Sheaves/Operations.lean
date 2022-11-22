@@ -108,7 +108,7 @@ instance (F : X.Sheaf CommRingCat.{w}) : Mono F.Presheaf.toTotalQuotientPresheaf
   apply concrete_category.mono_of_injective
   apply IsLocalization.injective _
   pick_goal 3
-  · exact Localization.isLocalization
+  · exact Localization.is_localization
     
   intro s hs t e
   apply section_ext F (unop U)

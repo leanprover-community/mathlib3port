@@ -266,6 +266,11 @@ theorem nat_card_dvd_of_injective {G H : Type _} [Group G] [Group H] (f : G →*
 #align subgroup.nat_card_dvd_of_injective Subgroup.nat_card_dvd_of_injective
 
 @[to_additive]
+theorem nat_card_dvd_of_le (hHK : H ≤ K) : Nat.card H ∣ Nat.card K :=
+  nat_card_dvd_of_injective (inclusion hHK) (inclusion_injective hHK)
+#align subgroup.nat_card_dvd_of_le Subgroup.nat_card_dvd_of_le
+
+@[to_additive]
 theorem nat_card_dvd_of_surjective {G H : Type _} [Group G] [Group H] (f : G →* H) (hf : Function.Surjective f) :
     Nat.card H ∣ Nat.card G := by
   rw [← Nat.card_congr (QuotientGroup.quotientKerEquivOfSurjective f hf).toEquiv]

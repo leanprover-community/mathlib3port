@@ -225,8 +225,8 @@ attribute [simps] functor_category_equivalence
 instance [HasFiniteProducts V] :
     HasFiniteProducts
       (ActionCat V
-        G) where out J _ :=
-    adjunction.has_limits_of_shape_of_equivalence (ActionCat.functorCategoryEquivalence _ _).Functor
+        G) where out n :=
+    Adjunction.has_limits_of_shape_of_equivalence (ActionCat.functorCategoryEquivalence _ _).Functor
 
 instance [HasFiniteLimits V] :
     HasFiniteLimits

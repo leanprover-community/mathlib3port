@@ -494,7 +494,7 @@ theorem pow_gcd_eq_one {M : Type _} [Monoid M] (x : M) {m n : ℕ} (hm : x ^ m =
   cases m
   · simp only [hn, Nat.gcd_zero_left]
     
-  lift x to Mˣ using is_unit_of_pow_eq_one _ _ hm m.succ_ne_zero
+  lift x to Mˣ using is_unit_of_pow_eq_one hm m.succ_ne_zero
   simp only [← Units.coe_pow] at *
   rw [← Units.coe_one, ← zpow_coe_nat, ← Units.ext_iff] at *
   simp only [Nat.gcd_eq_gcd_ab, zpow_add, zpow_mul, hm, hn, one_zpow, one_mul]

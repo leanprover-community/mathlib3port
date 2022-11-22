@@ -247,7 +247,7 @@ variable [Preorder α] {f : α → α} {x : α}
 /-- If `f` is a strictly monotone map and `x < f x` at some point `x`, then the iterates `f^[n] x`
 form a strictly monotone sequence. -/
 theorem strict_mono_iterate_of_lt_map (hf : StrictMono f) (hx : x < f x) : StrictMono fun n => (f^[n]) x :=
-  strict_mono_nat_of_lt_succ fun n => by
+  strictMono_nat_of_lt_succ fun n => by
     rw [iterate_succ_apply]
     exact hf.iterate n hx
 #align strict_mono.strict_mono_iterate_of_lt_map StrictMono.strict_mono_iterate_of_lt_map

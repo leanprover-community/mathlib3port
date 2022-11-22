@@ -143,7 +143,8 @@ theorem form_perm_apply_last (x : α) (xs : List α) : formPerm (x :: xs) ((x ::
 
 @[simp]
 theorem form_perm_apply_nth_le_length (x : α) (xs : List α) :
-    formPerm (x :: xs) ((x :: xs).nthLe xs.length (by simp)) = x := by rw [nth_le_cons_length, form_perm_apply_last]
+    formPerm (x :: xs) ((x :: xs).nthLe xs.length (by simp)) = x := by
+  rw [nth_le_cons_length, form_perm_apply_last] <;> rfl
 #align list.form_perm_apply_nth_le_length List.form_perm_apply_nth_le_length
 
 theorem form_perm_apply_head (x y : α) (xs : List α) (h : Nodup (x :: y :: xs)) : formPerm (x :: y :: xs) x = y := by

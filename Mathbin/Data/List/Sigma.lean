@@ -195,7 +195,7 @@ variable [DecidableEq α]
 lean 3 declaration is
   forall {α : Type.{u}} {β : α -> Type.{v}} [_inst_1 : DecidableEq.{succ u} α] (a : α), (List.{(max u v)} (Sigma.{u v} α β)) -> (Option.{v} (β a))
 but is expected to have type
-  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Init.Data.List.Basic._hyg.3653 : BEq.{u} α], α -> (List.{(max v u)} (Prod.{u v} α β)) -> (Option.{v} β)
+  forall {α : Type.{u}} {β : Type.{v}} [inst._@.Init.Data.List.Basic._hyg.3596 : BEq.{u} α], α -> (List.{(max v u)} (Prod.{u v} α β)) -> (Option.{v} β)
 Case conversion may be inaccurate. Consider using '#align list.lookup List.lookupₓ'. -/
 /-- `lookup a l` is the first value in `l` corresponding to the key `a`,
   or `none` if no such element exists. -/

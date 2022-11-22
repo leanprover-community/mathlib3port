@@ -1239,7 +1239,7 @@ structure PropertyIsLocalAtTarget (P : MorphismProperty SchemeCat) : Prop where
       (∀ i : 𝒰.J, P (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i)) → P f
 #align algebraic_geometry.property_is_local_at_target AlgebraicGeometry.PropertyIsLocalAtTarget
 
-theorem AffineTargetMorphismProperty.IsLocal.targetAffineLocallyIsLocal {P : AffineTargetMorphismProperty}
+theorem AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local {P : AffineTargetMorphismProperty}
     (hP : P.IsLocal) : PropertyIsLocalAtTarget (targetAffineLocally P) := by
   constructor
   · exact target_affine_locally_respects_iso hP.1
@@ -1276,7 +1276,7 @@ theorem AffineTargetMorphismProperty.IsLocal.targetAffineLocallyIsLocal {P : Aff
       
     
 #align
-  algebraic_geometry.affine_target_morphism_property.is_local.target_affine_locally_is_local AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.targetAffineLocallyIsLocal
+  algebraic_geometry.affine_target_morphism_property.is_local.target_affine_locally_is_local AlgebraicGeometry.AffineTargetMorphismProperty.IsLocal.target_affine_locally_is_local
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
@@ -2768,7 +2768,7 @@ theorem diagonal_target_affine_locally_eq_target_affine_locally (P : AffineTarge
 #align
   algebraic_geometry.diagonal_target_affine_locally_eq_target_affine_locally AlgebraicGeometry.diagonal_target_affine_locally_eq_target_affine_locally
 
-theorem universallyIsLocalAtTarget (P : MorphismProperty SchemeCat)
+theorem universally_is_local_at_target (P : MorphismProperty SchemeCat)
     (hP :
       ∀ {X Y : SchemeCat.{u}} (f : X ⟶ Y) (𝒰 : SchemeCat.OpenCover.{u} Y),
         (∀ i : 𝒰.J, P (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i)) → P f) :
@@ -2787,21 +2787,21 @@ theorem universallyIsLocalAtTarget (P : MorphismProperty SchemeCat)
   refine' (is_pullback.of_right _ (pullback.lift_snd _ _ _) (is_pullback.of_has_pullback _ _)).flip
   rw [pullback.lift_fst, ← pullback.condition]
   exact (is_pullback.of_has_pullback _ _).paste_horiz H.flip
-#align algebraic_geometry.universally_is_local_at_target AlgebraicGeometry.universallyIsLocalAtTarget
+#align algebraic_geometry.universally_is_local_at_target AlgebraicGeometry.universally_is_local_at_target
 
-theorem universallyIsLocalAtTargetOfMorphismRestrict (P : MorphismProperty SchemeCat) (hP₁ : P.RespectsIso)
+theorem universally_is_local_at_target_of_morphism_restrict (P : MorphismProperty SchemeCat) (hP₁ : P.RespectsIso)
     (hP₂ :
       ∀ {X Y : SchemeCat.{u}} (f : X ⟶ Y) {ι : Type u} (U : ι → Opens Y.carrier) (hU : supr U = ⊤),
         (∀ i, P (f ∣_ U i)) → P f) :
     PropertyIsLocalAtTarget P.universally :=
-  universallyIsLocalAtTarget P
+  universally_is_local_at_target P
     (by
       intro X Y f 𝒰 h𝒰
       apply hP₂ f (fun i : 𝒰.J => (𝒰.map i).opensRange) 𝒰.supr_opens_range
       simp_rw [hP₁.arrow_mk_iso_iff (morphism_restrict_opens_range f _)]
       exact h𝒰)
 #align
-  algebraic_geometry.universally_is_local_at_target_of_morphism_restrict AlgebraicGeometry.universallyIsLocalAtTargetOfMorphismRestrict
+  algebraic_geometry.universally_is_local_at_target_of_morphism_restrict AlgebraicGeometry.universally_is_local_at_target_of_morphism_restrict
 
 /-- `topologically P` holds for a morphism if the underlying topological map satisfies `P`. -/
 def MorphismProperty.topologically (P : ∀ {α β : Type u} [TopologicalSpace α] [TopologicalSpace β] (f : α → β), Prop) :

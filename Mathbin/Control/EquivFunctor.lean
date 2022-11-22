@@ -19,6 +19,7 @@ universe u₀ u₁ u₂ v₀ v₁ v₂
 
 open Function
 
+#print EquivFunctor /-
 /-- An `equiv_functor` is only functorial with respect to equivalences.
 
 To construct an `equiv_functor`, it suffices to supply just the function `f α → f β` from
@@ -30,6 +31,7 @@ class EquivFunctor (f : Type u₀ → Type u₁) where
   map_refl' : ∀ α, map (Equiv.refl α) = @id (f α) := by obviously
   map_trans' : ∀ {α β γ} (k : α ≃ β) (h : β ≃ γ), map (k.trans h) = map h ∘ map k := by obviously
 #align equiv_functor EquivFunctor
+-/
 
 restate_axiom EquivFunctor.map_refl'
 
@@ -43,6 +45,7 @@ section
 
 variable (f : Type u₀ → Type u₁) [EquivFunctor f] {α β : Type u₀} (e : α ≃ β)
 
+#print EquivFunctor.mapEquiv /-
 /-- An `equiv_functor` in fact takes every equiv to an equiv. -/
 def mapEquiv : f α ≃ f β where
   toFun := EquivFunctor.map e
@@ -54,38 +57,55 @@ def mapEquiv : f α ≃ f β where
     convert (congr_fun (EquivFunctor.map_trans e.symm e) y).symm
     simp
 #align equiv_functor.map_equiv EquivFunctor.mapEquiv
+-/
 
+#print EquivFunctor.mapEquiv_apply /-
 @[simp]
-theorem map_equiv_apply (x : f α) : mapEquiv f e x = EquivFunctor.map e x :=
+theorem mapEquiv_apply (x : f α) : mapEquiv f e x = EquivFunctor.map e x :=
   rfl
-#align equiv_functor.map_equiv_apply EquivFunctor.map_equiv_apply
+#align equiv_functor.map_equiv_apply EquivFunctor.mapEquiv_apply
+-/
 
-theorem map_equiv_symm_apply (y : f β) : (mapEquiv f e).symm y = EquivFunctor.map e.symm y :=
+#print EquivFunctor.mapEquiv_symm_apply /-
+theorem mapEquiv_symm_apply (y : f β) : (mapEquiv f e).symm y = EquivFunctor.map e.symm y :=
   rfl
-#align equiv_functor.map_equiv_symm_apply EquivFunctor.map_equiv_symm_apply
+#align equiv_functor.map_equiv_symm_apply EquivFunctor.mapEquiv_symm_apply
+-/
 
+#print EquivFunctor.mapEquiv_refl /-
 @[simp]
-theorem map_equiv_refl (α) : mapEquiv f (Equiv.refl α) = Equiv.refl (f α) := by simpa [EquivFunctor.mapEquiv]
-#align equiv_functor.map_equiv_refl EquivFunctor.map_equiv_refl
+theorem mapEquiv_refl (α) : mapEquiv f (Equiv.refl α) = Equiv.refl (f α) := by simpa [EquivFunctor.mapEquiv]
+#align equiv_functor.map_equiv_refl EquivFunctor.mapEquiv_refl
+-/
 
+#print EquivFunctor.mapEquiv_symm /-
 @[simp]
-theorem map_equiv_symm : (mapEquiv f e).symm = mapEquiv f e.symm :=
-  Equiv.ext <| map_equiv_symm_apply f e
-#align equiv_functor.map_equiv_symm EquivFunctor.map_equiv_symm
+theorem mapEquiv_symm : (mapEquiv f e).symm = mapEquiv f e.symm :=
+  Equiv.ext <| mapEquiv_symm_apply f e
+#align equiv_functor.map_equiv_symm EquivFunctor.mapEquiv_symm
+-/
 
+#print EquivFunctor.mapEquiv_trans /-
 /-- The composition of `map_equiv`s is carried over the `equiv_functor`.
 For plain `functor`s, this lemma is named `map_map` when applied
 or `map_comp_map` when not applied.
 -/
 @[simp]
-theorem map_equiv_trans {γ : Type u₀} (ab : α ≃ β) (bc : β ≃ γ) :
+theorem mapEquiv_trans {γ : Type u₀} (ab : α ≃ β) (bc : β ≃ γ) :
     (mapEquiv f ab).trans (mapEquiv f bc) = mapEquiv f (ab.trans bc) :=
   Equiv.ext fun x => by simp [map_equiv, map_trans']
-#align equiv_functor.map_equiv_trans EquivFunctor.map_equiv_trans
+#align equiv_functor.map_equiv_trans EquivFunctor.mapEquiv_trans
+-/
 
 end
 
-instance (priority := 100) ofIsLawfulFunctor (f : Type u₀ → Type u₁) [Functor f] [IsLawfulFunctor f] :
+/- warning: equiv_functor.of_is_lawful_functor -> EquivFunctor.ofLawfulFunctor is a dubious translation:
+lean 3 declaration is
+  forall (f : Type.{u₀} -> Type.{u₁}) [_inst_1 : Functor.{u₀ u₁} f] [_inst_2 : IsLawfulFunctor.{u₀ u₁} f _inst_1], EquivFunctor.{u₀ u₁} f
+but is expected to have type
+  forall (f : Type.{u₀} -> Type.{u₁}) [inst._@.Mathlib.Control.EquivFunctor._hyg.418 : Functor.{u₀ u₁} f] [inst._@.Mathlib.Control.EquivFunctor._hyg.421 : LawfulFunctor.{u₀ u₁} f inst._@.Mathlib.Control.EquivFunctor._hyg.418], EquivFunctor.{u₀ u₁} f
+Case conversion may be inaccurate. Consider using '#align equiv_functor.of_is_lawful_functor EquivFunctor.ofLawfulFunctorₓ'. -/
+instance (priority := 100) ofLawfulFunctor (f : Type u₀ → Type u₁) [Functor f] [IsLawfulFunctor f] :
     EquivFunctor f where
   map α β e := Functor.map e
   map_refl' α := by
@@ -94,12 +114,14 @@ instance (priority := 100) ofIsLawfulFunctor (f : Type u₀ → Type u₁) [Func
   map_trans' α β γ k h := by
     ext x
     apply IsLawfulFunctor.comp_map k h x
-#align equiv_functor.of_is_lawful_functor EquivFunctor.ofIsLawfulFunctor
+#align equiv_functor.of_is_lawful_functor EquivFunctor.ofLawfulFunctor
 
+#print EquivFunctor.mapEquiv.injective /-
 theorem mapEquiv.injective (f : Type u₀ → Type u₁) [Applicative f] [LawfulApplicative f] {α β : Type u₀}
     (h : ∀ γ, Function.Injective (pure : γ → f γ)) : Function.Injective (@EquivFunctor.mapEquiv f _ α β) :=
   fun e₁ e₂ H => Equiv.ext fun x => h β (by simpa [EquivFunctor.map] using Equiv.congr_fun H (pure x))
 #align equiv_functor.map_equiv.injective EquivFunctor.mapEquiv.injective
+-/
 
 end EquivFunctor
 

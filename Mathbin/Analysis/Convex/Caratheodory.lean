@@ -115,7 +115,7 @@ include hx
 /-- Given a point `x` in the convex hull of a set `s`, this is a finite subset of `s` of minimum
 cardinality, whose convex hull contains `x`. -/
 noncomputable def minCardFinsetOfMemConvexHull : Finset E :=
-  Function.argminOn Finset.card Nat.lt_wfRel.wf { t | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) }
+  Function.argminOn Finset.card Nat.lt_wfRel { t | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) }
     (by simpa only [convex_hull_eq_union_convex_hull_finite_subsets s, exists_prop, mem_Union] using hx)
 #align caratheodory.min_card_finset_of_mem_convex_hull Caratheodory.minCardFinsetOfMemConvexHull
 

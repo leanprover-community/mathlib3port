@@ -684,7 +684,18 @@ theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [
       [(Command.docComment
         "/--"
         "**Lagrange's Theorem**: The order of a subgroup divides the order of its ambient group. -/")]
-      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] [] []))] "]")]
+      [(Term.attributes
+        "@["
+        [(Term.attrInstance
+          (Term.attrKind [])
+          (to_additive
+           "to_additive"
+           []
+           []
+           []
+           [(str
+             "\"**Lagrange's Theorem**: The order of an additive subgroup divides the order of its\\nambient group.\"")]))]
+        "]")]
       []
       []
       []
@@ -811,7 +822,10 @@ theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.inductive'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.classInductive'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-/-- **Lagrange's Theorem**: The order of a subgroup divides the order of its ambient group. -/ @[ to_additive ]
+/-- **Lagrange's Theorem**: The order of a subgroup divides the order of its ambient group. -/
+    @[
+      to_additive "**Lagrange's Theorem**: The order of an additive subgroup divides the order of its\nambient group."
+      ]
   theorem
     card_subgroup_dvd_card
     [ Fintype α ] ( s : Subgroup α ) [ Fintype s ] : Fintype.card s ∣ Fintype.card α
