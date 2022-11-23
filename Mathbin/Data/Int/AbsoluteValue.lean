@@ -4,10 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
 import Mathbin.Algebra.Module.Basic
-import Mathbin.GroupTheory.GroupAction.Units
+import Mathbin.Algebra.Order.AbsoluteValue
 import Mathbin.Data.Int.Cast.Lemmas
 import Mathbin.Data.Int.Units
-import Mathbin.Algebra.Order.AbsoluteValue
+import Mathbin.GroupTheory.GroupAction.Units
 
 /-!
 # Absolute values and the integers
@@ -17,6 +17,7 @@ This file contains some results on absolute values applied to integers.
 ## Main results
 
  * `absolute_value.map_units_int`: an absolute value sends all units of `ℤ` to `1`
+ * `int.nat_abs_hom`: `int.nat_abs` bundled as a `monoid_with_zero_hom`
 -/
 
 
@@ -36,4 +37,13 @@ theorem AbsoluteValue.map_units_int_cast [Nontrivial R] (abv : AbsoluteValue R S
 theorem AbsoluteValue.map_units_int_smul (abv : AbsoluteValue R S) (x : ℤˣ) (y : R) : abv (x • y) = abv y := by
   rcases Int.units_eq_one_or x with (rfl | rfl) <;> simp
 #align absolute_value.map_units_int_smul AbsoluteValue.map_units_int_smul
+
+/-- `int.nat_abs` as a bundled monoid with zero hom. -/
+@[simps]
+def Int.natAbsHom : ℤ →*₀ ℕ where
+  toFun := Int.natAbs
+  map_mul' := Int.natAbs_mul
+  map_one' := Int.natAbs_one
+  map_zero' := Int.natAbs_zero
+#align int.nat_abs_hom Int.natAbsHom
 

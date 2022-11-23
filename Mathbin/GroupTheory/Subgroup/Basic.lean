@@ -3094,6 +3094,11 @@ theorem zpow_mem_zpowers (g : G) (k : ℤ) : g ^ k ∈ zpowers g :=
 #align subgroup.zpow_mem_zpowers Subgroup.zpow_mem_zpowers
 
 @[simp]
+theorem npow_mem_zpowers (g : G) (k : ℕ) : g ^ k ∈ zpowers g :=
+  zpow_coe_nat g k ▸ zpow_mem_zpowers g k
+#align subgroup.npow_mem_zpowers Subgroup.npow_mem_zpowers
+
+@[simp]
 theorem forall_zpowers {x : G} {p : zpowers x → Prop} : (∀ g, p g) ↔ ∀ m : ℤ, p ⟨x ^ m, m, rfl⟩ :=
   Set.forall_subtype_range_iff
 #align subgroup.forall_zpowers Subgroup.forall_zpowers
@@ -3141,6 +3146,8 @@ attribute [to_additive AddSubgroup.zmultiples_subset] Subgroup.zpowers_subset
 attribute [to_additive AddSubgroup.mem_zmultiples_iff] Subgroup.mem_zpowers_iff
 
 attribute [to_additive AddSubgroup.zsmul_mem_zmultiples] Subgroup.zpow_mem_zpowers
+
+attribute [to_additive AddSubgroup.nsmul_mem_zmultiples] Subgroup.npow_mem_zpowers
 
 attribute [to_additive AddSubgroup.forall_zmultiples] Subgroup.forall_zpowers
 

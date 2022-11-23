@@ -1500,6 +1500,11 @@ theorem ContDiff.differentiable (h : ContDiff 𝕜 n f) (hn : 1 ≤ n) : Differe
   differentiable_on_univ.1 <| (cont_diff_on_univ.2 h).DifferentiableOn hn
 #align cont_diff.differentiable ContDiff.differentiable
 
+theorem cont_diff_iff_forall_nat_le : ContDiff 𝕜 n f ↔ ∀ m : ℕ, ↑m ≤ n → ContDiff 𝕜 m f := by
+  simp_rw [← cont_diff_on_univ]
+  exact cont_diff_on_iff_forall_nat_le
+#align cont_diff_iff_forall_nat_le cont_diff_iff_forall_nat_le
+
 /-! ### Iterated derivative -/
 
 
@@ -1548,6 +1553,30 @@ theorem iterated_fderiv_succ_eq_comp_left {n : ℕ} :
       continuousMultilinearCurryLeftEquiv 𝕜 (fun i : Fin (n + 1) => E) F ∘ fderiv 𝕜 (iteratedFderiv 𝕜 n f) :=
   rfl
 #align iterated_fderiv_succ_eq_comp_left iterated_fderiv_succ_eq_comp_left
+
+/-- Writing explicitly the derivative of the `n`-th derivative as the composition of a currying
+linear equiv, and the `n + 1`-th derivative. -/
+theorem fderiv_iterated_fderiv {n : ℕ} :
+    fderiv 𝕜 (iteratedFderiv 𝕜 n f) =
+      (continuousMultilinearCurryLeftEquiv 𝕜 (fun i : Fin (n + 1) => E) F).symm ∘ iteratedFderiv 𝕜 (n + 1) f :=
+  by
+  rw [iterated_fderiv_succ_eq_comp_left]
+  ext1 x
+  simp only [Function.comp_apply, LinearIsometryEquiv.symm_apply_apply]
+#align fderiv_iterated_fderiv fderiv_iterated_fderiv
+
+theorem HasCompactSupport.iterated_fderiv (hf : HasCompactSupport f) (n : ℕ) :
+    HasCompactSupport (iteratedFderiv 𝕜 n f) := by
+  induction' n with n IH
+  · rw [iterated_fderiv_zero_eq_comp]
+    apply hf.comp_left
+    exact LinearIsometryEquiv.map_zero _
+    
+  · rw [iterated_fderiv_succ_eq_comp_left]
+    apply (IH.fderiv 𝕜).compLeft
+    exact LinearIsometryEquiv.map_zero _
+    
+#align has_compact_support.iterated_fderiv HasCompactSupport.iterated_fderiv
 
 theorem norm_fderiv_iterated_fderiv {n : ℕ} : ‖fderiv 𝕜 (iteratedFderiv 𝕜 n f) x‖ = ‖iteratedFderiv 𝕜 (n + 1) f x‖ := by
   rw [iterated_fderiv_succ_eq_comp_left, LinearIsometryEquiv.norm_map]

@@ -567,6 +567,16 @@ theorem Basis.det_comp (e : Basis ι A M) (f : M →ₗ[A] M) (v : ι → M) : e
     e.to_matrix_eq_to_matrix_constr v, ← to_matrix_comp, e.constr_comp]
 #align basis.det_comp Basis.det_comp
 
+@[simp]
+theorem Basis.det_comp_basis [Module A M'] (b : Basis ι A M) (b' : Basis ι A M') (f : M →ₗ[A] M') :
+    b'.det (f ∘ b) = LinearMap.det (f ∘ₗ (b'.Equiv b (Equiv.refl ι) : M' →ₗ[A] M)) := by
+  rw [Basis.det_apply, ← LinearMap.det_to_matrix b', LinearMap.to_matrix_comp _ b, Matrix.det_mul,
+    LinearMap.to_matrix_basis_equiv, Matrix.det_one, mul_one]
+  congr 1
+  ext (i j)
+  rw [Basis.to_matrix_apply, LinearMap.to_matrix_apply]
+#align basis.det_comp_basis Basis.det_comp_basis
+
 theorem Basis.det_reindex {ι' : Type _} [Fintype ι'] [DecidableEq ι'] (b : Basis ι R M) (v : ι' → M) (e : ι ≃ ι') :
     (b.reindex e).det v = b.det (v ∘ e) := by
   rw [Basis.det_apply, Basis.to_matrix_reindex', det_reindex_alg_equiv, Basis.det_apply]

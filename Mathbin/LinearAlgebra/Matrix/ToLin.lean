@@ -551,6 +551,13 @@ theorem LinearMap.to_matrix_mul_vec_repr (f : M₁ →ₗ[R] M₂) (x : M₁) :
   exact v₁.equiv_fun.symm_apply_apply x
 #align linear_map.to_matrix_mul_vec_repr LinearMap.to_matrix_mul_vec_repr
 
+@[simp]
+theorem LinearMap.to_matrix_basis_equiv [Fintype l] [DecidableEq l] (b : Basis l R M₁) (b' : Basis l R M₂) :
+    LinearMap.toMatrix b' b (b'.Equiv b (Equiv.refl l) : M₂ →ₗ[R] M₁) = 1 := by
+  ext (i j)
+  simp [LinearMap.to_matrix_apply, Matrix.one_apply, Finsupp.single_apply, eq_comm]
+#align linear_map.to_matrix_basis_equiv LinearMap.to_matrix_basis_equiv
+
 theorem Matrix.to_lin_mul [Fintype l] [DecidableEq m] (A : Matrix l m R) (B : Matrix m n R) :
     Matrix.toLin v₁ v₃ (A ⬝ B) = (Matrix.toLin v₂ v₃ A).comp (Matrix.toLin v₁ v₂ B) := by
   apply (LinearMap.toMatrix v₁ v₃).Injective

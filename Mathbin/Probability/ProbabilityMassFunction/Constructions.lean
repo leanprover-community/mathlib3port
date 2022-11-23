@@ -13,10 +13,10 @@ This file gives a number of different `pmf` constructions for common probability
 `map` and `seq` allow pushing a `pmf α` along a function `f : α → β` (or distribution of
 functions `f : pmf (α → β)`) to get a `pmf β`
 
-`of_finset` and `of_fintype` simplify the construction of a `pmf α` from a function `f : α → ℝ≥0`,
+`of_finset` and `of_fintype` simplify the construction of a `pmf α` from a function `f : α → ℝ≥0∞`,
 by allowing the "sum equals 1" constraint to be in terms of `finset.sum` instead of `tsum`.
 
-`normalize` constructs a `pmf α` by normalizing a function `f : α → ℝ≥0` by its sum,
+`normalize` constructs a `pmf α` by normalizing a function `f : α → ℝ≥0∞` by its sum,
 and `filter` uses this to filter the support of a `pmf` and re-normalize the new distribution.
 
 `bernoulli` represents the bernoulli distribution on `bool`
@@ -107,7 +107,7 @@ theorem monad_seq_eq_seq {α β : Type _} (q : Pmf (α → β)) (p : Pmf α) : q
 @[simp]
 theorem seq_apply : (seq q p) b = ∑' (f : α → β) (a : α), if b = f a then q f * p a else 0 := by
   simp only [seq, mul_boole, bind_apply, pure_apply]
-  refine' tsum_congr fun f => (Nnreal.tsum_mul_left (q f) _).symm.trans (tsum_congr fun a => _)
+  refine' tsum_congr fun f => Ennreal.tsum_mul_left.symm.trans (tsum_congr fun a => _)
   simpa only [mul_zero] using mul_ite (b = f a) (q f) (p a) 0
 #align pmf.seq_apply Pmf.seq_apply
 
@@ -135,14 +135,14 @@ instance : LawfulMonad Pmf where
 section OfFinset
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a «expr ∉ » s) -/
-/-- Given a finset `s` and a function `f : α → ℝ≥0` with sum `1` on `s`,
+/-- Given a finset `s` and a function `f : α → ℝ≥0∞` with sum `1` on `s`,
   such that `f a = 0` for `a ∉ s`, we get a `pmf` -/
-def ofFinset (f : α → ℝ≥0) (s : Finset α) (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0) : Pmf α :=
+def ofFinset (f : α → ℝ≥0∞) (s : Finset α) (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0) : Pmf α :=
   ⟨f, h ▸ has_sum_sum_of_ne_finset_zero h'⟩
 #align pmf.of_finset Pmf.ofFinset
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (a «expr ∉ » s) -/
-variable {f : α → ℝ≥0} {s : Finset α} (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0)
+variable {f : α → ℝ≥0∞} {s : Finset α} (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0)
 
 @[simp]
 theorem of_finset_apply (a : α) : ofFinset f s h h' a = f a :=
@@ -166,13 +166,13 @@ section Measure
 variable (t : Set α)
 
 @[simp]
-theorem to_outer_measure_of_finset_apply : (ofFinset f s h h').toOuterMeasure t = ↑(∑' x, t.indicator f x) :=
-  to_outer_measure_apply' (ofFinset f s h h') t
+theorem to_outer_measure_of_finset_apply : (ofFinset f s h h').toOuterMeasure t = ∑' x, t.indicator f x :=
+  to_outer_measure_apply (ofFinset f s h h') t
 #align pmf.to_outer_measure_of_finset_apply Pmf.to_outer_measure_of_finset_apply
 
 @[simp]
 theorem to_measure_of_finset_apply [MeasurableSpace α] (ht : MeasurableSet t) :
-    (ofFinset f s h h').toMeasure t = ↑(∑' x, t.indicator f x) :=
+    (ofFinset f s h h').toMeasure t = ∑' x, t.indicator f x :=
   (to_measure_apply_eq_to_outer_measure_apply _ t ht).trans (to_outer_measure_of_finset_apply h h' t)
 #align pmf.to_measure_of_finset_apply Pmf.to_measure_of_finset_apply
 
@@ -182,12 +182,12 @@ end OfFinset
 
 section OfFintype
 
-/-- Given a finite type `α` and a function `f : α → ℝ≥0` with sum 1, we get a `pmf`. -/
-def ofFintype [Fintype α] (f : α → ℝ≥0) (h : (∑ a, f a) = 1) : Pmf α :=
+/-- Given a finite type `α` and a function `f : α → ℝ≥0∞` with sum 1, we get a `pmf`. -/
+def ofFintype [Fintype α] (f : α → ℝ≥0∞) (h : (∑ a, f a) = 1) : Pmf α :=
   ofFinset f Finset.univ h fun a ha => absurd (Finset.mem_univ a) ha
 #align pmf.of_fintype Pmf.ofFintype
 
-variable [Fintype α] {f : α → ℝ≥0} (h : (∑ a, f a) = 1)
+variable [Fintype α] {f : α → ℝ≥0∞} (h : (∑ a, f a) = 1)
 
 @[simp]
 theorem of_fintype_apply (a : α) : ofFintype f h a = f a :=
@@ -208,13 +208,13 @@ section Measure
 variable (s : Set α)
 
 @[simp]
-theorem to_outer_measure_of_fintype_apply : (ofFintype f h).toOuterMeasure s = ↑(∑' x, s.indicator f x) :=
-  to_outer_measure_apply' (ofFintype f h) s
+theorem to_outer_measure_of_fintype_apply : (ofFintype f h).toOuterMeasure s = ∑' x, s.indicator f x :=
+  to_outer_measure_apply (ofFintype f h) s
 #align pmf.to_outer_measure_of_fintype_apply Pmf.to_outer_measure_of_fintype_apply
 
 @[simp]
 theorem to_measure_of_fintype_apply [MeasurableSpace α] (hs : MeasurableSet s) :
-    (ofFintype f h).toMeasure s = ↑(∑' x, s.indicator f x) :=
+    (ofFintype f h).toMeasure s = ∑' x, s.indicator f x :=
   (to_measure_apply_eq_to_outer_measure_apply _ s hs).trans (to_outer_measure_of_fintype_apply h s)
 #align pmf.to_measure_of_fintype_apply Pmf.to_measure_of_fintype_apply
 
@@ -224,26 +224,25 @@ end OfFintype
 
 section normalize
 
-/-- Given a `f` with non-zero sum, we get a `pmf` by normalizing `f` by it's `tsum` -/
-def normalize (f : α → ℝ≥0) (hf0 : tsum f ≠ 0) : Pmf α :=
+/-- Given a `f` with non-zero and non-infinite sum, get a `pmf` by normalizing `f` by its `tsum` -/
+def normalize (f : α → ℝ≥0∞) (hf0 : tsum f ≠ 0) (hf : tsum f ≠ ∞) : Pmf α :=
   ⟨fun a => f a * (∑' x, f x)⁻¹,
-    mul_inv_cancel hf0 ▸
-      HasSum.mul_right (∑' x, f x)⁻¹ (not_not.mp (mt tsum_eq_zero_of_not_summable hf0 : ¬¬Summable f)).HasSum⟩
+    Ennreal.summable.has_sum_iff.2 (Ennreal.tsum_mul_right.trans (Ennreal.mul_inv_cancel hf0 hf))⟩
 #align pmf.normalize Pmf.normalize
 
-variable {f : α → ℝ≥0} (hf0 : tsum f ≠ 0)
+variable {f : α → ℝ≥0∞} (hf0 : tsum f ≠ 0) (hf : tsum f ≠ ∞)
 
 @[simp]
-theorem normalize_apply (a : α) : (normalize f hf0) a = f a * (∑' x, f x)⁻¹ :=
+theorem normalize_apply (a : α) : (normalize f hf0 hf) a = f a * (∑' x, f x)⁻¹ :=
   rfl
 #align pmf.normalize_apply Pmf.normalize_apply
 
 @[simp]
-theorem support_normalize : (normalize f hf0).support = Function.support f :=
-  Set.ext (by simp [mem_support_iff, hf0])
+theorem support_normalize : (normalize f hf0 hf).support = Function.support f :=
+  Set.ext fun a => by simp [hf, mem_support_iff]
 #align pmf.support_normalize Pmf.support_normalize
 
-theorem mem_support_normalize_iff (a : α) : a ∈ (normalize f hf0).support ↔ f a ≠ 0 := by simp
+theorem mem_support_normalize_iff (a : α) : a ∈ (normalize f hf0 hf).support ↔ f a ≠ 0 := by simp
 #align pmf.mem_support_normalize_iff Pmf.mem_support_normalize_iff
 
 end normalize
@@ -252,7 +251,7 @@ section Filter
 
 /-- Create new `pmf` by filtering on a set with non-zero measure and normalizing -/
 def filter (p : Pmf α) (s : Set α) (h : ∃ a ∈ s, a ∈ p.support) : Pmf α :=
-  Pmf.normalize (s.indicator p) <| Nnreal.tsum_indicator_ne_zero p.2.Summable h
+  Pmf.normalize (s.indicator p) (by simpa using h) (p.tsum_coe_indicator_ne_top s)
 #align pmf.filter Pmf.filter
 
 variable {p : Pmf α} {s : Set α} (h : ∃ a ∈ s, a ∈ p.support)
@@ -267,7 +266,7 @@ theorem filter_apply_eq_zero_of_not_mem {a : α} (ha : a ∉ s) : (p.filter s h)
 #align pmf.filter_apply_eq_zero_of_not_mem Pmf.filter_apply_eq_zero_of_not_mem
 
 theorem mem_support_filter_iff {a : α} : a ∈ (p.filter s h).support ↔ a ∈ s ∧ a ∈ p.support :=
-  (mem_support_normalize_iff _ _).trans Set.indicator_apply_ne_zero
+  (mem_support_normalize_iff _ _ _).trans Set.indicator_apply_ne_zero
 #align pmf.mem_support_filter_iff Pmf.mem_support_filter_iff
 
 @[simp]
@@ -288,11 +287,11 @@ end Filter
 section Bernoulli
 
 /-- A `pmf` which assigns probability `p` to `tt` and `1 - p` to `ff`. -/
-def bernoulli (p : ℝ≥0) (h : p ≤ 1) : Pmf Bool :=
-  ofFintype (fun b => cond b p (1 - p)) (Nnreal.eq <| by simp [h])
+def bernoulli (p : ℝ≥0∞) (h : p ≤ 1) : Pmf Bool :=
+  ofFintype (fun b => cond b p (1 - p)) (by simp [h])
 #align pmf.bernoulli Pmf.bernoulli
 
-variable {p : ℝ≥0} (h : p ≤ 1) (b : Bool)
+variable {p : ℝ≥0∞} (h : p ≤ 1) (b : Bool)
 
 @[simp]
 theorem bernoulli_apply : bernoulli p h b = cond b p (1 - p) :=

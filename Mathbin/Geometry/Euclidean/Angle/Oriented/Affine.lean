@@ -74,6 +74,125 @@ theorem oangle_self_left_right (p₁ p₂ : P) : ∡ p₁ p₂ p₁ = 0 :=
   o.oangle_self _
 #align euclidean_geometry.oangle_self_left_right EuclideanGeometry.oangle_self_left_right
 
+/-- If the angle between three points is nonzero, the first two points are not equal. -/
+theorem left_ne_of_oangle_ne_zero {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ ≠ 0) : p₁ ≠ p₂ := by
+  rw [← @vsub_ne_zero V]
+  exact o.left_ne_zero_of_oangle_ne_zero h
+#align euclidean_geometry.left_ne_of_oangle_ne_zero EuclideanGeometry.left_ne_of_oangle_ne_zero
+
+/-- If the angle between three points is nonzero, the last two points are not equal. -/
+theorem right_ne_of_oangle_ne_zero {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ ≠ 0) : p₃ ≠ p₂ := by
+  rw [← @vsub_ne_zero V]
+  exact o.right_ne_zero_of_oangle_ne_zero h
+#align euclidean_geometry.right_ne_of_oangle_ne_zero EuclideanGeometry.right_ne_of_oangle_ne_zero
+
+/-- If the angle between three points is nonzero, the first and third points are not equal. -/
+theorem left_ne_right_of_oangle_ne_zero {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ ≠ 0) : p₁ ≠ p₃ := by
+  rw [← (vsub_left_injective p₂).ne_iff]
+  exact o.ne_of_oangle_ne_zero h
+#align euclidean_geometry.left_ne_right_of_oangle_ne_zero EuclideanGeometry.left_ne_right_of_oangle_ne_zero
+
+/-- If the angle between three points is `π`, the first two points are not equal. -/
+theorem left_ne_of_oangle_eq_pi {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = π) : p₁ ≠ p₂ :=
+  left_ne_of_oangle_ne_zero (h.symm ▸ Real.Angle.pi_ne_zero : ∡ p₁ p₂ p₃ ≠ 0)
+#align euclidean_geometry.left_ne_of_oangle_eq_pi EuclideanGeometry.left_ne_of_oangle_eq_pi
+
+/-- If the angle between three points is `π`, the last two points are not equal. -/
+theorem right_ne_of_oangle_eq_pi {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = π) : p₃ ≠ p₂ :=
+  right_ne_of_oangle_ne_zero (h.symm ▸ Real.Angle.pi_ne_zero : ∡ p₁ p₂ p₃ ≠ 0)
+#align euclidean_geometry.right_ne_of_oangle_eq_pi EuclideanGeometry.right_ne_of_oangle_eq_pi
+
+/-- If the angle between three points is `π`, the first and third points are not equal. -/
+theorem left_ne_right_of_oangle_eq_pi {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = π) : p₁ ≠ p₃ :=
+  left_ne_right_of_oangle_ne_zero (h.symm ▸ Real.Angle.pi_ne_zero : ∡ p₁ p₂ p₃ ≠ 0)
+#align euclidean_geometry.left_ne_right_of_oangle_eq_pi EuclideanGeometry.left_ne_right_of_oangle_eq_pi
+
+/-- If the angle between three points is `π / 2`, the first two points are not equal. -/
+theorem left_ne_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = (π / 2 : ℝ)) : p₁ ≠ p₂ :=
+  left_ne_of_oangle_ne_zero (h.symm ▸ Real.Angle.pi_div_two_ne_zero : ∡ p₁ p₂ p₃ ≠ 0)
+#align euclidean_geometry.left_ne_of_oangle_eq_pi_div_two EuclideanGeometry.left_ne_of_oangle_eq_pi_div_two
+
+/-- If the angle between three points is `π / 2`, the last two points are not equal. -/
+theorem right_ne_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = (π / 2 : ℝ)) : p₃ ≠ p₂ :=
+  right_ne_of_oangle_ne_zero (h.symm ▸ Real.Angle.pi_div_two_ne_zero : ∡ p₁ p₂ p₃ ≠ 0)
+#align euclidean_geometry.right_ne_of_oangle_eq_pi_div_two EuclideanGeometry.right_ne_of_oangle_eq_pi_div_two
+
+/-- If the angle between three points is `π / 2`, the first and third points are not equal. -/
+theorem left_ne_right_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = (π / 2 : ℝ)) : p₁ ≠ p₃ :=
+  left_ne_right_of_oangle_ne_zero (h.symm ▸ Real.Angle.pi_div_two_ne_zero : ∡ p₁ p₂ p₃ ≠ 0)
+#align euclidean_geometry.left_ne_right_of_oangle_eq_pi_div_two EuclideanGeometry.left_ne_right_of_oangle_eq_pi_div_two
+
+/-- If the angle between three points is `-π / 2`, the first two points are not equal. -/
+theorem left_ne_of_oangle_eq_neg_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = (-π / 2 : ℝ)) : p₁ ≠ p₂ :=
+  left_ne_of_oangle_ne_zero (h.symm ▸ Real.Angle.neg_pi_div_two_ne_zero : ∡ p₁ p₂ p₃ ≠ 0)
+#align euclidean_geometry.left_ne_of_oangle_eq_neg_pi_div_two EuclideanGeometry.left_ne_of_oangle_eq_neg_pi_div_two
+
+/-- If the angle between three points is `-π / 2`, the last two points are not equal. -/
+theorem right_ne_of_oangle_eq_neg_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = (-π / 2 : ℝ)) : p₃ ≠ p₂ :=
+  right_ne_of_oangle_ne_zero (h.symm ▸ Real.Angle.neg_pi_div_two_ne_zero : ∡ p₁ p₂ p₃ ≠ 0)
+#align euclidean_geometry.right_ne_of_oangle_eq_neg_pi_div_two EuclideanGeometry.right_ne_of_oangle_eq_neg_pi_div_two
+
+/-- If the angle between three points is `-π / 2`, the first and third points are not equal. -/
+theorem left_ne_right_of_oangle_eq_neg_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = (-π / 2 : ℝ)) : p₁ ≠ p₃ :=
+  left_ne_right_of_oangle_ne_zero (h.symm ▸ Real.Angle.neg_pi_div_two_ne_zero : ∡ p₁ p₂ p₃ ≠ 0)
+#align
+  euclidean_geometry.left_ne_right_of_oangle_eq_neg_pi_div_two EuclideanGeometry.left_ne_right_of_oangle_eq_neg_pi_div_two
+
+/-- If the sign of the angle between three points is nonzero, the first two points are not
+equal. -/
+theorem left_ne_of_oangle_sign_ne_zero {p₁ p₂ p₃ : P} (h : (∡ p₁ p₂ p₃).sign ≠ 0) : p₁ ≠ p₂ :=
+  left_ne_of_oangle_ne_zero (Real.Angle.sign_ne_zero_iff.1 h).1
+#align euclidean_geometry.left_ne_of_oangle_sign_ne_zero EuclideanGeometry.left_ne_of_oangle_sign_ne_zero
+
+/-- If the sign of the angle between three points is nonzero, the last two points are not
+equal. -/
+theorem right_ne_of_oangle_sign_ne_zero {p₁ p₂ p₃ : P} (h : (∡ p₁ p₂ p₃).sign ≠ 0) : p₃ ≠ p₂ :=
+  right_ne_of_oangle_ne_zero (Real.Angle.sign_ne_zero_iff.1 h).1
+#align euclidean_geometry.right_ne_of_oangle_sign_ne_zero EuclideanGeometry.right_ne_of_oangle_sign_ne_zero
+
+/-- If the sign of the angle between three points is nonzero, the first and third points are not
+equal. -/
+theorem left_ne_right_of_oangle_sign_ne_zero {p₁ p₂ p₃ : P} (h : (∡ p₁ p₂ p₃).sign ≠ 0) : p₁ ≠ p₃ :=
+  left_ne_right_of_oangle_ne_zero (Real.Angle.sign_ne_zero_iff.1 h).1
+#align euclidean_geometry.left_ne_right_of_oangle_sign_ne_zero EuclideanGeometry.left_ne_right_of_oangle_sign_ne_zero
+
+/-- If the sign of the angle between three points is positive, the first two points are not
+equal. -/
+theorem left_ne_of_oangle_sign_eq_one {p₁ p₂ p₃ : P} (h : (∡ p₁ p₂ p₃).sign = 1) : p₁ ≠ p₂ :=
+  left_ne_of_oangle_sign_ne_zero (h.symm ▸ by decide : (∡ p₁ p₂ p₃).sign ≠ 0)
+#align euclidean_geometry.left_ne_of_oangle_sign_eq_one EuclideanGeometry.left_ne_of_oangle_sign_eq_one
+
+/-- If the sign of the angle between three points is positive, the last two points are not
+equal. -/
+theorem right_ne_of_oangle_sign_eq_one {p₁ p₂ p₃ : P} (h : (∡ p₁ p₂ p₃).sign = 1) : p₃ ≠ p₂ :=
+  right_ne_of_oangle_sign_ne_zero (h.symm ▸ by decide : (∡ p₁ p₂ p₃).sign ≠ 0)
+#align euclidean_geometry.right_ne_of_oangle_sign_eq_one EuclideanGeometry.right_ne_of_oangle_sign_eq_one
+
+/-- If the sign of the angle between three points is positive, the first and third points are not
+equal. -/
+theorem left_ne_right_of_oangle_sign_eq_one {p₁ p₂ p₃ : P} (h : (∡ p₁ p₂ p₃).sign = 1) : p₁ ≠ p₃ :=
+  left_ne_right_of_oangle_sign_ne_zero (h.symm ▸ by decide : (∡ p₁ p₂ p₃).sign ≠ 0)
+#align euclidean_geometry.left_ne_right_of_oangle_sign_eq_one EuclideanGeometry.left_ne_right_of_oangle_sign_eq_one
+
+/-- If the sign of the angle between three points is negative, the first two points are not
+equal. -/
+theorem left_ne_of_oangle_sign_eq_neg_one {p₁ p₂ p₃ : P} (h : (∡ p₁ p₂ p₃).sign = -1) : p₁ ≠ p₂ :=
+  left_ne_of_oangle_sign_ne_zero (h.symm ▸ by decide : (∡ p₁ p₂ p₃).sign ≠ 0)
+#align euclidean_geometry.left_ne_of_oangle_sign_eq_neg_one EuclideanGeometry.left_ne_of_oangle_sign_eq_neg_one
+
+/-- If the sign of the angle between three points is negative, the last two points are not equal.
+-/
+theorem right_ne_of_oangle_sign_eq_neg_one {p₁ p₂ p₃ : P} (h : (∡ p₁ p₂ p₃).sign = -1) : p₃ ≠ p₂ :=
+  right_ne_of_oangle_sign_ne_zero (h.symm ▸ by decide : (∡ p₁ p₂ p₃).sign ≠ 0)
+#align euclidean_geometry.right_ne_of_oangle_sign_eq_neg_one EuclideanGeometry.right_ne_of_oangle_sign_eq_neg_one
+
+/-- If the sign of the angle between three points is negative, the first and third points are not
+equal. -/
+theorem left_ne_right_of_oangle_sign_eq_neg_one {p₁ p₂ p₃ : P} (h : (∡ p₁ p₂ p₃).sign = -1) : p₁ ≠ p₃ :=
+  left_ne_right_of_oangle_sign_ne_zero (h.symm ▸ by decide : (∡ p₁ p₂ p₃).sign ≠ 0)
+#align
+  euclidean_geometry.left_ne_right_of_oangle_sign_eq_neg_one EuclideanGeometry.left_ne_right_of_oangle_sign_eq_neg_one
+
 /-- Reversing the order of the points passed to `oangle` negates the angle. -/
 theorem oangle_rev (p₁ p₂ p₃ : P) : ∡ p₃ p₂ p₁ = -∡ p₁ p₂ p₃ :=
   o.oangle_rev _ _
@@ -246,6 +365,40 @@ theorem oangle_eq_zero_iff_angle_eq_zero {p p₁ p₂ : P} (hp₁ : p₁ ≠ p) 
 theorem oangle_eq_pi_iff_angle_eq_pi {p₁ p₂ p₃ : P} : ∡ p₁ p₂ p₃ = π ↔ ∠ p₁ p₂ p₃ = π :=
   o.oangle_eq_pi_iff_angle_eq_pi
 #align euclidean_geometry.oangle_eq_pi_iff_angle_eq_pi EuclideanGeometry.oangle_eq_pi_iff_angle_eq_pi
+
+/-- If the oriented angle between three points is `π / 2`, so is the unoriented angle. -/
+theorem angle_eq_pi_div_two_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = ↑(π / 2)) : ∠ p₁ p₂ p₃ = π / 2 :=
+  by
+  rw [angle, ← InnerProductGeometry.inner_eq_zero_iff_angle_eq_pi_div_two]
+  exact o.inner_eq_zero_of_oangle_eq_pi_div_two h
+#align
+  euclidean_geometry.angle_eq_pi_div_two_of_oangle_eq_pi_div_two EuclideanGeometry.angle_eq_pi_div_two_of_oangle_eq_pi_div_two
+
+/-- If the oriented angle between three points is `π / 2`, so is the unoriented angle
+(reversed). -/
+theorem angle_rev_eq_pi_div_two_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = ↑(π / 2)) :
+    ∠ p₃ p₂ p₁ = π / 2 := by
+  rw [angle_comm]
+  exact angle_eq_pi_div_two_of_oangle_eq_pi_div_two h
+#align
+  euclidean_geometry.angle_rev_eq_pi_div_two_of_oangle_eq_pi_div_two EuclideanGeometry.angle_rev_eq_pi_div_two_of_oangle_eq_pi_div_two
+
+/-- If the oriented angle between three points is `-π / 2`, the unoriented angle is `π / 2`. -/
+theorem angle_eq_pi_div_two_of_oangle_eq_neg_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = ↑(-π / 2)) :
+    ∠ p₁ p₂ p₃ = π / 2 := by
+  rw [angle, ← InnerProductGeometry.inner_eq_zero_iff_angle_eq_pi_div_two]
+  exact o.inner_eq_zero_of_oangle_eq_neg_pi_div_two h
+#align
+  euclidean_geometry.angle_eq_pi_div_two_of_oangle_eq_neg_pi_div_two EuclideanGeometry.angle_eq_pi_div_two_of_oangle_eq_neg_pi_div_two
+
+/-- If the oriented angle between three points is `-π / 2`, the unoriented angle (reversed) is
+`π / 2`. -/
+theorem angle_rev_eq_pi_div_two_of_oangle_eq_neg_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = ↑(-π / 2)) :
+    ∠ p₃ p₂ p₁ = π / 2 := by
+  rw [angle_comm]
+  exact angle_eq_pi_div_two_of_oangle_eq_neg_pi_div_two h
+#align
+  euclidean_geometry.angle_rev_eq_pi_div_two_of_oangle_eq_neg_pi_div_two EuclideanGeometry.angle_rev_eq_pi_div_two_of_oangle_eq_neg_pi_div_two
 
 /-- Swapping the first and second points in an oriented angle negates the sign of that angle. -/
 theorem oangle_swap₁₂_sign (p₁ p₂ p₃ : P) : -(∡ p₁ p₂ p₃).sign = (∡ p₂ p₁ p₃).sign := by

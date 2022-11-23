@@ -264,7 +264,9 @@ theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinea
     [FiberBundle F E] (a b : B) : ∃ e : Trivialization F (π E), icc a b ⊆ e.baseSet := by classical
   obtain ⟨ea, hea⟩ : ∃ ea : Trivialization F (π E), a ∈ ea.baseSet :=
     ⟨trivialization_at F E a, mem_base_set_trivialization_at F E a⟩
-  cases' le_or_lt a b with hab hab <;> [skip, exact ⟨ea, by simp [*]⟩]
+  -- If `a < b`, then `[a, b] = ∅`, and the statement is trivial
+    cases' le_or_lt a b with hab hab <;>
+    [skip, exact ⟨ea, by simp [*]⟩]
   /- Let `s` be the set of points `x ∈ [a, b]` such that `E` is trivializable over `[a, x]`.
     We need to show that `b ∈ s`. Let `c = Sup s`. We will show that `c ∈ s` and `c = b`. -/
   set s : Set B := { x ∈ Icc a b | ∃ e : Trivialization F (π E), Icc a x ⊆ e.baseSet }
@@ -352,7 +354,7 @@ structure FiberBundleCore (ι : Type _) (B : Type _) [TopologicalSpace B] (F : T
   mem_base_set_at : ∀ x, x ∈ base_set (index_at x)
   coordChange : ι → ι → B → F → F
   coord_change_self : ∀ i, ∀ x ∈ base_set i, ∀ v, coord_change i i x v = v
-  coord_change_continuous :
+  continuous_on_coord_change :
     ∀ i j, ContinuousOn (fun p : B × F => coord_change i j p.1 p.2) ((base_set i ∩ base_set j) ×ˢ univ)
   coord_change_comp :
     ∀ i j k,
@@ -436,9 +438,9 @@ def trivChange (i j : ι) : LocalHomeomorph (B × F) (B × F) where
       
   open_source := (IsOpen.inter (Z.is_open_base_set i) (Z.is_open_base_set j)).Prod is_open_univ
   open_target := (IsOpen.inter (Z.is_open_base_set i) (Z.is_open_base_set j)).Prod is_open_univ
-  continuous_to_fun := ContinuousOn.prod continuous_fst.ContinuousOn (Z.coord_change_continuous i j)
+  continuous_to_fun := ContinuousOn.prod continuous_fst.ContinuousOn (Z.continuous_on_coord_change i j)
   continuous_inv_fun := by
-    simpa [inter_comm] using ContinuousOn.prod continuous_fst.continuous_on (Z.coord_change_continuous j i)
+    simpa [inter_comm] using ContinuousOn.prod continuous_fst.continuous_on (Z.continuous_on_coord_change j i)
 #align fiber_bundle_core.triv_change FiberBundleCore.trivChange
 
 @[simp, mfld_simps]
@@ -517,15 +519,13 @@ theorem local_triv_as_local_equiv_trans (i j : ι) :
     
 #align fiber_bundle_core.local_triv_as_local_equiv_trans FiberBundleCore.local_triv_as_local_equiv_trans
 
-variable (ι)
-
 /-- Topological structure on the total space of a fiber bundle created from core, designed so
 that all the local trivialization are continuous. -/
 instance toTopologicalSpace : TopologicalSpace (Bundle.TotalSpace Z.Fiber) :=
   TopologicalSpace.generateFrom <| ⋃ (i : ι) (s : Set (B × F)) (s_open : IsOpen s), {(Z i).source ∩ Z i ⁻¹' s}
 #align fiber_bundle_core.to_topological_space FiberBundleCore.toTopologicalSpace
 
-variable {ι} (b : B) (a : F)
+variable (b : B) (a : F)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem open_source' (i : ι) : IsOpen (Z.localTrivAsLocalEquiv i).source := by
@@ -711,8 +711,8 @@ theorem continuous_total_space_mk (b : B) : Continuous (totalSpaceMk b : Z.Fiber
     rw [preimage_inter, preimage_comp]
     by_cases b ∈ Z.base_set i
     · have hc : Continuous fun x : Z.fiber b => (Z.coord_change (Z.index_at b) i b) x :=
-        (Z.coord_change_continuous (Z.index_at b) i).comp_continuous (continuous_const.prod_mk continuous_id) fun x =>
-          ⟨⟨Z.mem_base_set_at b, h⟩, mem_univ x⟩
+        (Z.continuous_on_coord_change (Z.index_at b) i).comp_continuous (continuous_const.prod_mk continuous_id)
+          fun x => ⟨⟨Z.mem_base_set_at b, h⟩, mem_univ x⟩
       exact (((Z.local_triv i).open_target.inter ht).Preimage (Continuous.Prod.mk b)).Preimage hc
       
     · rw [(Z.local_triv i).target_eq, ← base_set_at, mk_preimage_prod_right_eq_empty h, preimage_empty, empty_inter]

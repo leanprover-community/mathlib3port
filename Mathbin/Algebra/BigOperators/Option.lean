@@ -31,7 +31,10 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 [PrettyPrinter.parenthesize.input] (Command.declaration
      (Command.declModifiers
       []
-      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] [] []))] "]")]
+      [(Term.attributes
+        "@["
+        [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] (to_additiveRest [] [])))]
+        "]")]
       []
       []
       []

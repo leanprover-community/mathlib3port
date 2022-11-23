@@ -134,7 +134,9 @@ theorem prod_le_one' (h : ∀ i ∈ s, f i ≤ 1) : (∏ i in s, f i) ≤ 1 :=
       []
       [(Term.attributes
         "@["
-        [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] [`sum_le_sum_of_subset_of_nonneg] []))]
+        [(Term.attrInstance
+          (Term.attrKind [])
+          (to_additive "to_additive" [] [] (to_additiveRest [`sum_le_sum_of_subset_of_nonneg] [])))]
         "]")]
       []
       []
@@ -1151,7 +1153,9 @@ theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun
       []
       [(Term.attributes
         "@["
-        [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] [`sum_le_sum_of_ne_zero] []))]
+        [(Term.attrInstance
+          (Term.attrKind [])
+          (to_additive "to_additive" [] [] (to_additiveRest [`sum_le_sum_of_ne_zero] [])))]
         "]")]
       []
       []
@@ -2381,7 +2385,9 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀ i ∈ s, f i < g 
       []
       [(Term.attributes
         "@["
-        [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] [`sum_lt_sum_of_subset] []))]
+        [(Term.attrInstance
+          (Term.attrKind [])
+          (to_additive "to_additive" [] [] (to_additiveRest [`sum_lt_sum_of_subset] [])))]
         "]")]
       []
       []

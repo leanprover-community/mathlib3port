@@ -489,7 +489,7 @@ structure VectorBundleCore (ι : Type _) where
   mem_base_set_at : ∀ x, x ∈ base_set (index_at x)
   coordChange : ι → ι → B → F →L[R] F
   coord_change_self : ∀ i, ∀ x ∈ base_set i, ∀ v, coord_change i i x v = v
-  coord_change_continuous : ∀ i j, ContinuousOn (coord_change i j) (base_set i ∩ base_set j)
+  continuous_on_coord_change : ∀ i j, ContinuousOn (coord_change i j) (base_set i ∩ base_set j)
   coord_change_comp :
     ∀ i j k,
       ∀ x ∈ base_set i ∩ base_set j ∩ base_set k,
@@ -506,7 +506,7 @@ def trivialVectorBundleCore (ι : Type _) [Inhabited ι] : VectorBundleCore R B 
   coordChange i j x := ContinuousLinearMap.id R F
   coord_change_self i x hx v := rfl
   coord_change_comp i j k x hx v := rfl
-  coord_change_continuous i j := continuous_on_const
+  continuous_on_coord_change i j := continuous_on_const
 #align trivial_vector_bundle_core trivialVectorBundleCore
 
 instance (ι : Type _) [Inhabited ι] : Inhabited (VectorBundleCore R B F ι) :=
@@ -517,11 +517,12 @@ namespace VectorBundleCore
 variable {R B F} {ι : Type _} (Z : VectorBundleCore R B F ι)
 
 /-- Natural identification to a `fiber_bundle_core`. -/
+@[simps (config := mfldCfg)]
 def toFiberBundleCore : FiberBundleCore ι B F :=
   { Z with coordChange := fun i j b => Z.coordChange i j b,
-    coord_change_continuous := fun i j =>
+    continuous_on_coord_change := fun i j =>
       isBoundedBilinearMapApply.Continuous.comp_continuous_on
-        ((Z.coord_change_continuous i j).prod_map continuous_on_id) }
+        ((Z.continuous_on_coord_change i j).prod_map continuous_on_id) }
 #align vector_bundle_core.to_fiber_bundle_core VectorBundleCore.toFiberBundleCore
 
 instance toFiberBundleCoreCoe : Coe (VectorBundleCore R B F ι) (FiberBundleCore ι B F) :=
@@ -597,15 +598,13 @@ theorem mem_triv_change_source (i j : ι) (p : B × F) :
   FiberBundleCore.mem_triv_change_source (↑Z) i j p
 #align vector_bundle_core.mem_triv_change_source VectorBundleCore.mem_triv_change_source
 
-variable (ι)
-
 /-- Topological structure on the total space of a vector bundle created from core, designed so
 that all the local trivialization are continuous. -/
 instance toTopologicalSpace : TopologicalSpace Z.TotalSpace :=
-  FiberBundleCore.toTopologicalSpace ι ↑Z
+  Z.toFiberBundleCore.toTopologicalSpace
 #align vector_bundle_core.to_topological_space VectorBundleCore.toTopologicalSpace
 
-variable {ι} (b : B) (a : F)
+variable (b : B) (a : F)
 
 @[simp, mfld_simps]
 theorem coe_coord_change (i j : ι) : Z.toFiberBundleCore.coordChange i j b = Z.coordChange i j b :=
@@ -710,7 +709,7 @@ instance vectorBundle : VectorBundle R F Z.Fiber where
     apply local_triv.is_linear
   continuous_on_coord_change' := by
     rintro _ _ ⟨i, rfl⟩ ⟨i', rfl⟩
-    refine' (Z.coord_change_continuous i i').congr fun b hb => _
+    refine' (Z.continuous_on_coord_change i i').congr fun b hb => _
     ext v
     exact Z.local_triv_coord_change_eq i i' hb v
 #align vector_bundle_core.vector_bundle VectorBundleCore.vectorBundle

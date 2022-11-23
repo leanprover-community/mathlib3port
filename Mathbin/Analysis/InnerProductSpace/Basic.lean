@@ -3680,14 +3680,14 @@ theorem
                 "by"
                 (Tactic.tacticSeq
                  (Tactic.tacticSeq1Indented
-                  [(Mathlib.Tactic.congrWith
+                  [(Std.Tactic.congrWith
                     "congr"
                     []
                     "with"
                     [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `i))]
                     [])
                    []
-                   (Mathlib.Tactic.congrWith
+                   (Std.Tactic.congrWith
                     "congr"
                     []
                     "with"
@@ -3815,14 +3815,14 @@ theorem
                "by"
                (Tactic.tacticSeq
                 (Tactic.tacticSeq1Indented
-                 [(Mathlib.Tactic.congrWith
+                 [(Std.Tactic.congrWith
                    "congr"
                    []
                    "with"
                    [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `i))]
                    [])
                   []
-                  (Mathlib.Tactic.congrWith
+                  (Std.Tactic.congrWith
                    "congr"
                    []
                    "with"
@@ -3942,14 +3942,14 @@ theorem
            "by"
            (Tactic.tacticSeq
             (Tactic.tacticSeq1Indented
-             [(Mathlib.Tactic.congrWith
+             [(Std.Tactic.congrWith
                "congr"
                []
                "with"
                [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `i))]
                [])
               []
-              (Mathlib.Tactic.congrWith
+              (Std.Tactic.congrWith
                "congr"
                []
                "with"
@@ -4059,14 +4059,14 @@ theorem
           "by"
           (Tactic.tacticSeq
            (Tactic.tacticSeq1Indented
-            [(Mathlib.Tactic.congrWith
+            [(Std.Tactic.congrWith
               "congr"
               []
               "with"
               [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `i))]
               [])
              []
-             (Mathlib.Tactic.congrWith
+             (Std.Tactic.congrWith
               "congr"
               []
               "with"
@@ -4164,14 +4164,14 @@ theorem
        "by"
        (Tactic.tacticSeq
         (Tactic.tacticSeq1Indented
-         [(Mathlib.Tactic.congrWith
+         [(Std.Tactic.congrWith
            "congr"
            []
            "with"
            [(Std.Tactic.RCases.rintroPat.one (Std.Tactic.RCases.rcasesPat.one `i))]
            [])
           []
-          (Mathlib.Tactic.congrWith
+          (Std.Tactic.congrWith
            "congr"
            []
            "with"
@@ -4187,7 +4187,7 @@ theorem
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Mathlib.Tactic.congrWith
+      (Std.Tactic.congrWith
        "congr"
        []
        "with"
@@ -4195,7 +4195,7 @@ theorem
        [])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-      (Mathlib.Tactic.congrWith
+      (Std.Tactic.congrWith
        "congr"
        []
        "with"

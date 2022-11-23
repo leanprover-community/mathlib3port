@@ -120,9 +120,10 @@ theorem pow_left_surj_of_rootable_by [RootableBy A α] {n : α} (hn : n ≠ 0) :
            "to_additive"
            []
            []
-           [`divisibleByOfSmulRightSurj]
-           [(str
-             "\"An `add_monoid A` is `α`-divisible iff `n • _` is a surjective function, i.e. the constructive\\nversion implies the textbook approach.\"")]))]
+           (to_additiveRest
+            [`divisibleByOfSmulRightSurj]
+            [(str
+              "\"An `add_monoid A` is `α`-divisible iff `n • _` is a surjective function, i.e. the constructive\\nversion implies the textbook approach.\"")])))]
         "]")]
       []
       [(Command.noncomputable "noncomputable")]
@@ -313,7 +314,7 @@ theorem pow_left_surj_of_rootable_by [RootableBy A α] {n : α} (hn : n ≠ 0) :
     @[
       to_additive
         divisibleByOfSmulRightSurj
-        "An `add_monoid A` is `α`-divisible iff `n • _` is a surjective function, i.e. the constructive\nversion implies the textbook approach."
+          "An `add_monoid A` is `α`-divisible iff `n • _` is a surjective function, i.e. the constructive\nversion implies the textbook approach."
       ]
     noncomputable
   def

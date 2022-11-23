@@ -692,9 +692,10 @@ theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [
            "to_additive"
            []
            []
-           []
-           [(str
-             "\"**Lagrange's Theorem**: The order of an additive subgroup divides the order of its\\nambient group.\"")]))]
+           (to_additiveRest
+            []
+            [(str
+              "\"**Lagrange's Theorem**: The order of an additive subgroup divides the order of its\\nambient group.\"")])))]
         "]")]
       []
       []
@@ -845,7 +846,10 @@ variable {H : Type _} [Group H]
 [PrettyPrinter.parenthesize.input] (Command.declaration
      (Command.declModifiers
       []
-      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] [] []))] "]")]
+      [(Term.attributes
+        "@["
+        [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] (to_additiveRest [] [])))]
+        "]")]
       []
       []
       []

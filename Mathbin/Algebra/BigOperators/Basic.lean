@@ -429,9 +429,10 @@ theorem prod_bUnion [DecidableEq α] {s : Finset γ} {t : γ → Finset α} (hs 
            "to_additive"
            []
            []
-           []
-           [(str
-             "\"Sum over a sigma type equals the sum of fiberwise sums. For rewriting\\nin the reverse direction, use `finset.sum_sigma'`\"")]))]
+           (to_additiveRest
+            []
+            [(str
+              "\"Sum over a sigma type equals the sum of fiberwise sums. For rewriting\\nin the reverse direction, use `finset.sum_sigma'`\"")])))]
         "]")]
       []
       []
@@ -2386,7 +2387,10 @@ theorem sum_pi_single {ι : Type _} {M : ι → Type _} [DecidableEq ι] [∀ i,
 [PrettyPrinter.parenthesize.input] (Command.declaration
      (Command.declModifiers
       []
-      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] [] []))] "]")]
+      [(Term.attributes
+        "@["
+        [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] (to_additiveRest [] [])))]
+        "]")]
       []
       []
       []

@@ -123,6 +123,13 @@ theorem norm_eq {x : ℝ} : ‖(x : AddCircle p)‖ = |x - round (p⁻¹ * x) * 
     
 #align add_circle.norm_eq AddCircle.norm_eq
 
+theorem norm_eq' (hp : 0 < p) {x : ℝ} : ‖(x : AddCircle p)‖ = p * |p⁻¹ * x - round (p⁻¹ * x)| := by
+  conv_rhs =>
+  congr
+  rw [← abs_eq_self.mpr hp.le]
+  rw [← abs_mul, mul_sub, mul_inv_cancel_left₀ hp.ne.symm, norm_eq, mul_comm p]
+#align add_circle.norm_eq' AddCircle.norm_eq'
+
 theorem norm_le_half_period {x : AddCircle p} (hp : p ≠ 0) : ‖x‖ ≤ |p| / 2 := by
   obtain ⟨x⟩ := x
   change ‖(x : AddCircle p)‖ ≤ |p| / 2
@@ -246,6 +253,42 @@ theorem coe_real_preimage_closed_ball_inter_eq {x ε : ℝ} (s : Set ℝ) (hs : 
       
     
 #align add_circle.coe_real_preimage_closed_ball_inter_eq AddCircle.coe_real_preimage_closed_ball_inter_eq
+
+section FiniteOrderPoints
+
+variable {p} [hp : Fact (0 < p)]
+
+include hp
+
+theorem norm_div_nat_cast {m n : ℕ} : ‖(↑(↑m / ↑n * p) : AddCircle p)‖ = p * (↑(min (m % n) (n - m % n)) / n) := by
+  have : p⁻¹ * (↑m / ↑n * p) = ↑m / ↑n := by rw [mul_comm _ p, inv_mul_cancel_left₀ hp.out.ne.symm]
+  rw [norm_eq' p hp.out, this, abs_sub_round_div_nat_cast_eq]
+#align add_circle.norm_div_nat_cast AddCircle.norm_div_nat_cast
+
+theorem exists_norm_eq_of_fin_add_order {u : AddCircle p} (hu : IsOfFinAddOrder u) :
+    ∃ k : ℕ, ‖u‖ = p * (k / addOrderOf u) := by
+  let n := addOrderOf u
+  change ∃ k : ℕ, ‖u‖ = p * (k / n)
+  obtain ⟨m, -, -, hm⟩ := exists_gcd_eq_one_of_is_of_fin_add_order hu
+  refine' ⟨min (m % n) (n - m % n), _⟩
+  rw [← hm, norm_div_nat_cast]
+#align add_circle.exists_norm_eq_of_fin_add_order AddCircle.exists_norm_eq_of_fin_add_order
+
+theorem le_add_order_smul_norm_of_is_of_fin_add_order {u : AddCircle p} (hu : IsOfFinAddOrder u) (hu' : u ≠ 0) :
+    p ≤ addOrderOf u • ‖u‖ := by
+  obtain ⟨n, hn⟩ := exists_norm_eq_of_fin_add_order hu
+  replace hu : (addOrderOf u : ℝ) ≠ 0
+  · norm_cast
+    exact (add_order_of_pos_iff.mpr hu).Ne.symm
+    
+  conv_lhs => rw [← mul_one p]
+  rw [hn, nsmul_eq_mul, ← mul_assoc, mul_comm _ p, mul_assoc, mul_div_cancel' _ hu, mul_le_mul_left hp.out,
+    Nat.one_le_cast, Nat.one_le_iff_ne_zero]
+  contrapose! hu'
+  simpa only [hu', algebraMap.coe_zero, zero_div, mul_zero, norm_eq_zero] using hn
+#align add_circle.le_add_order_smul_norm_of_is_of_fin_add_order AddCircle.le_add_order_smul_norm_of_is_of_fin_add_order
+
+end FiniteOrderPoints
 
 end AddCircle
 

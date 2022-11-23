@@ -199,6 +199,14 @@ theorem neg_apply (f : E →ₗ.[R] F) (x) : (-f) x = -f x :=
 instance : LE (E →ₗ.[R] F) :=
   ⟨fun f g => f.domain ≤ g.domain ∧ ∀ ⦃x : f.domain⦄ ⦃y : g.domain⦄ (h : (x : E) = y), f x = g y⟩
 
+theorem apply_comp_of_le {T S : E →ₗ.[R] F} (h : T ≤ S) (x : T.domain) : T x = S (Submodule.ofLe h.1 x) :=
+  h.2 rfl
+#align linear_pmap.apply_comp_of_le LinearPmap.apply_comp_of_le
+
+theorem exists_of_le {T S : E →ₗ.[R] F} (h : T ≤ S) (x : T.domain) : ∃ y : S.domain, (x : E) = y ∧ T x = S y :=
+  ⟨⟨x.1, h.1 x.2⟩, ⟨rfl, h.2 rfl⟩⟩
+#align linear_pmap.exists_of_le LinearPmap.exists_of_le
+
 theorem eq_of_le_of_domain_eq {f g : E →ₗ.[R] F} (hle : f ≤ g) (heq : f.domain = g.domain) : f = g :=
   ext HEq hle.2
 #align linear_pmap.eq_of_le_of_domain_eq LinearPmap.eq_of_le_of_domain_eq

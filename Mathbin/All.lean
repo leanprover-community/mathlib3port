@@ -506,6 +506,7 @@ import Mathbin.Analysis.Calculus.MeanValue
 import Mathbin.Analysis.Calculus.Monotone
 import Mathbin.Analysis.Calculus.ParametricIntegral
 import Mathbin.Analysis.Calculus.ParametricIntervalIntegral
+import Mathbin.Analysis.Calculus.Series
 import Mathbin.Analysis.Calculus.SpecificFunctions
 import Mathbin.Analysis.Calculus.TangentCone
 import Mathbin.Analysis.Calculus.Taylor
@@ -1287,6 +1288,7 @@ import Mathbin.Data.FunLike.Fintype
 import Mathbin.Data.HashMap
 import Mathbin.Data.Holor
 import Mathbin.Data.Int.AbsoluteValue
+import Mathbin.Data.Int.Associated
 import Mathbin.Data.Int.Basic
 import Mathbin.Data.Int.Bitwise
 import Mathbin.Data.Int.Cast.Basic
@@ -1873,6 +1875,7 @@ import Mathbin.LinearAlgebra.Finsupp
 import Mathbin.LinearAlgebra.FinsuppVectorSpace
 import Mathbin.LinearAlgebra.FreeAlgebra
 import Mathbin.LinearAlgebra.FreeModule.Basic
+import Mathbin.LinearAlgebra.FreeModule.Determinant
 import Mathbin.LinearAlgebra.FreeModule.Finite.Basic
 import Mathbin.LinearAlgebra.FreeModule.Finite.Matrix
 import Mathbin.LinearAlgebra.FreeModule.Finite.Rank

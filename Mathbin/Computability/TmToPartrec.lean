@@ -553,7 +553,7 @@ def Cfg.then : Cfg → Cont → Cfg
   | cfg.ret k v, k' => Cfg.ret (k.then k') v
 #align turing.to_partrec.cfg.then Turing.ToPartrec.Cfg.then
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:336:16: warning: unsupported simp config option: constructor_eq -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:337:16: warning: unsupported simp config option: constructor_eq -/
 /-- The `step_normal` function respects the `then k'` homomorphism. Note that this is an exact
 equality, not a simulation; the original and embedded machines move in lock-step until the
 embedded machine reaches the halt state. -/

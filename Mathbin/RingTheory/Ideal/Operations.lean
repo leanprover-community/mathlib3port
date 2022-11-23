@@ -1005,9 +1005,9 @@ theorem subset_union {R : Type u} [Ring R] {I J K : Ideal R} : (I : Set R) ⊆ J
       Set.Subset.trans h <| Set.subset_union_right J K⟩
 #align ideal.subset_union Ideal.subset_union
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:563:6: unsupported: specialize @hyp -/
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:563:6: unsupported: specialize @hyp -/
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:563:6: unsupported: specialize @hyp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:564:6: unsupported: specialize @hyp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:564:6: unsupported: specialize @hyp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:564:6: unsupported: specialize @hyp -/
 theorem subset_union_prime' {R : Type u} [CommRing R] {s : Finset ι} {f : ι → Ideal R} {a b : ι}
     (hp : ∀ i ∈ s, IsPrime (f i)) {I : Ideal R} :
     ((I : Set R) ⊆ f a ∪ f b ∪ ⋃ i ∈ (↑s : Set ι), f i) ↔ I ≤ f a ∨ I ≤ f b ∨ ∃ i ∈ s, I ≤ f i := by
@@ -1883,6 +1883,37 @@ theorem range_finsupp_total : (finsuppTotal ι M I v).range = I • Submodule.sp
 #align ideal.range_finsupp_total Ideal.range_finsupp_total
 
 end Total
+
+section Basis
+
+variable {ι R S : Type _} [CommSemiring R] [CommRing S] [IsDomain S] [Algebra R S]
+
+/-- A basis on `S` gives a basis on `ideal.span {x}`, by multiplying everything by `x`. -/
+noncomputable def basisSpanSingleton (b : Basis ι R S) {x : S} (hx : x ≠ 0) : Basis ι R (span ({x} : Set S)) :=
+  b.map <|
+    LinearEquiv.ofInjective (Algebra.lmul R S x) (LinearMap.mul_injective hx) ≪≫ₗ
+        LinearEquiv.ofEq _ _
+          (by
+            ext
+            simp [mem_span_singleton', mul_comm]) ≪≫ₗ
+      (Submodule.restrictScalarsEquiv R S S (Ideal.span ({x} : Set S))).restrictScalars R
+#align ideal.basis_span_singleton Ideal.basisSpanSingleton
+
+@[simp]
+theorem basis_span_singleton_apply (b : Basis ι R S) {x : S} (hx : x ≠ 0) (i : ι) :
+    (basisSpanSingleton b hx i : S) = x * b i := by
+  simp only [basis_span_singleton, Basis.map_apply, LinearEquiv.trans_apply, Submodule.restrict_scalars_equiv_apply,
+    LinearEquiv.of_injective_apply, LinearEquiv.coe_of_eq_apply, LinearEquiv.restrict_scalars_apply,
+    Algebra.coe_lmul_eq_mul, LinearMap.mul_apply']
+#align ideal.basis_span_singleton_apply Ideal.basis_span_singleton_apply
+
+@[simp]
+theorem constr_basis_span_singleton {N : Type _} [Semiring N] [Module N S] [SmulCommClass R N S] (b : Basis ι R S)
+    {x : S} (hx : x ≠ 0) : b.constr N (coe ∘ basisSpanSingleton b hx) = Algebra.lmul R S x :=
+  b.ext fun i => by erw [Basis.constr_basis, Function.comp_apply, basis_span_singleton_apply, LinearMap.mul_apply']
+#align ideal.constr_basis_span_singleton Ideal.constr_basis_span_singleton
+
+end Basis
 
 end Ideal
 

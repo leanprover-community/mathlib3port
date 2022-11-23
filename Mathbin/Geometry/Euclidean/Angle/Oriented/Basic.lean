@@ -90,6 +90,114 @@ theorem oangle_self (x : V) : o.oangle x x = 0 := by
   positivity
 #align orientation.oangle_self Orientation.oangle_self
 
+/-- If the angle between two vectors is nonzero, the first vector is nonzero. -/
+theorem left_ne_zero_of_oangle_ne_zero {x y : V} (h : o.oangle x y ≠ 0) : x ≠ 0 := by
+  rintro rfl
+  simpa using h
+#align orientation.left_ne_zero_of_oangle_ne_zero Orientation.left_ne_zero_of_oangle_ne_zero
+
+/-- If the angle between two vectors is nonzero, the second vector is nonzero. -/
+theorem right_ne_zero_of_oangle_ne_zero {x y : V} (h : o.oangle x y ≠ 0) : y ≠ 0 := by
+  rintro rfl
+  simpa using h
+#align orientation.right_ne_zero_of_oangle_ne_zero Orientation.right_ne_zero_of_oangle_ne_zero
+
+/-- If the angle between two vectors is nonzero, the vectors are not equal. -/
+theorem ne_of_oangle_ne_zero {x y : V} (h : o.oangle x y ≠ 0) : x ≠ y := by
+  rintro rfl
+  simpa using h
+#align orientation.ne_of_oangle_ne_zero Orientation.ne_of_oangle_ne_zero
+
+/-- If the angle between two vectors is `π`, the first vector is nonzero. -/
+theorem left_ne_zero_of_oangle_eq_pi {x y : V} (h : o.oangle x y = π) : x ≠ 0 :=
+  o.left_ne_zero_of_oangle_ne_zero (h.symm ▸ Real.Angle.pi_ne_zero : o.oangle x y ≠ 0)
+#align orientation.left_ne_zero_of_oangle_eq_pi Orientation.left_ne_zero_of_oangle_eq_pi
+
+/-- If the angle between two vectors is `π`, the second vector is nonzero. -/
+theorem right_ne_zero_of_oangle_eq_pi {x y : V} (h : o.oangle x y = π) : y ≠ 0 :=
+  o.right_ne_zero_of_oangle_ne_zero (h.symm ▸ Real.Angle.pi_ne_zero : o.oangle x y ≠ 0)
+#align orientation.right_ne_zero_of_oangle_eq_pi Orientation.right_ne_zero_of_oangle_eq_pi
+
+/-- If the angle between two vectors is `π`, the vectors are not equal. -/
+theorem ne_of_oangle_eq_pi {x y : V} (h : o.oangle x y = π) : x ≠ y :=
+  o.ne_of_oangle_ne_zero (h.symm ▸ Real.Angle.pi_ne_zero : o.oangle x y ≠ 0)
+#align orientation.ne_of_oangle_eq_pi Orientation.ne_of_oangle_eq_pi
+
+/-- If the angle between two vectors is `π / 2`, the first vector is nonzero. -/
+theorem left_ne_zero_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = (π / 2 : ℝ)) : x ≠ 0 :=
+  o.left_ne_zero_of_oangle_ne_zero (h.symm ▸ Real.Angle.pi_div_two_ne_zero : o.oangle x y ≠ 0)
+#align orientation.left_ne_zero_of_oangle_eq_pi_div_two Orientation.left_ne_zero_of_oangle_eq_pi_div_two
+
+/-- If the angle between two vectors is `π / 2`, the second vector is nonzero. -/
+theorem right_ne_zero_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = (π / 2 : ℝ)) : y ≠ 0 :=
+  o.right_ne_zero_of_oangle_ne_zero (h.symm ▸ Real.Angle.pi_div_two_ne_zero : o.oangle x y ≠ 0)
+#align orientation.right_ne_zero_of_oangle_eq_pi_div_two Orientation.right_ne_zero_of_oangle_eq_pi_div_two
+
+/-- If the angle between two vectors is `π / 2`, the vectors are not equal. -/
+theorem ne_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = (π / 2 : ℝ)) : x ≠ y :=
+  o.ne_of_oangle_ne_zero (h.symm ▸ Real.Angle.pi_div_two_ne_zero : o.oangle x y ≠ 0)
+#align orientation.ne_of_oangle_eq_pi_div_two Orientation.ne_of_oangle_eq_pi_div_two
+
+/-- If the angle between two vectors is `-π / 2`, the first vector is nonzero. -/
+theorem left_ne_zero_of_oangle_eq_neg_pi_div_two {x y : V} (h : o.oangle x y = (-π / 2 : ℝ)) : x ≠ 0 :=
+  o.left_ne_zero_of_oangle_ne_zero (h.symm ▸ Real.Angle.neg_pi_div_two_ne_zero : o.oangle x y ≠ 0)
+#align orientation.left_ne_zero_of_oangle_eq_neg_pi_div_two Orientation.left_ne_zero_of_oangle_eq_neg_pi_div_two
+
+/-- If the angle between two vectors is `-π / 2`, the second vector is nonzero. -/
+theorem right_ne_zero_of_oangle_eq_neg_pi_div_two {x y : V} (h : o.oangle x y = (-π / 2 : ℝ)) : y ≠ 0 :=
+  o.right_ne_zero_of_oangle_ne_zero (h.symm ▸ Real.Angle.neg_pi_div_two_ne_zero : o.oangle x y ≠ 0)
+#align orientation.right_ne_zero_of_oangle_eq_neg_pi_div_two Orientation.right_ne_zero_of_oangle_eq_neg_pi_div_two
+
+/-- If the angle between two vectors is `-π / 2`, the vectors are not equal. -/
+theorem ne_of_oangle_eq_neg_pi_div_two {x y : V} (h : o.oangle x y = (-π / 2 : ℝ)) : x ≠ y :=
+  o.ne_of_oangle_ne_zero (h.symm ▸ Real.Angle.neg_pi_div_two_ne_zero : o.oangle x y ≠ 0)
+#align orientation.ne_of_oangle_eq_neg_pi_div_two Orientation.ne_of_oangle_eq_neg_pi_div_two
+
+/-- If the sign of the angle between two vectors is nonzero, the first vector is nonzero. -/
+theorem left_ne_zero_of_oangle_sign_ne_zero {x y : V} (h : (o.oangle x y).sign ≠ 0) : x ≠ 0 :=
+  o.left_ne_zero_of_oangle_ne_zero (Real.Angle.sign_ne_zero_iff.1 h).1
+#align orientation.left_ne_zero_of_oangle_sign_ne_zero Orientation.left_ne_zero_of_oangle_sign_ne_zero
+
+/-- If the sign of the angle between two vectors is nonzero, the second vector is nonzero. -/
+theorem right_ne_zero_of_oangle_sign_ne_zero {x y : V} (h : (o.oangle x y).sign ≠ 0) : y ≠ 0 :=
+  o.right_ne_zero_of_oangle_ne_zero (Real.Angle.sign_ne_zero_iff.1 h).1
+#align orientation.right_ne_zero_of_oangle_sign_ne_zero Orientation.right_ne_zero_of_oangle_sign_ne_zero
+
+/-- If the sign of the angle between two vectors is nonzero, the vectors are not equal. -/
+theorem ne_of_oangle_sign_ne_zero {x y : V} (h : (o.oangle x y).sign ≠ 0) : x ≠ y :=
+  o.ne_of_oangle_ne_zero (Real.Angle.sign_ne_zero_iff.1 h).1
+#align orientation.ne_of_oangle_sign_ne_zero Orientation.ne_of_oangle_sign_ne_zero
+
+/-- If the sign of the angle between two vectors is positive, the first vector is nonzero. -/
+theorem left_ne_zero_of_oangle_sign_eq_one {x y : V} (h : (o.oangle x y).sign = 1) : x ≠ 0 :=
+  o.left_ne_zero_of_oangle_sign_ne_zero (h.symm ▸ by decide : (o.oangle x y).sign ≠ 0)
+#align orientation.left_ne_zero_of_oangle_sign_eq_one Orientation.left_ne_zero_of_oangle_sign_eq_one
+
+/-- If the sign of the angle between two vectors is positive, the second vector is nonzero. -/
+theorem right_ne_zero_of_oangle_sign_eq_one {x y : V} (h : (o.oangle x y).sign = 1) : y ≠ 0 :=
+  o.right_ne_zero_of_oangle_sign_ne_zero (h.symm ▸ by decide : (o.oangle x y).sign ≠ 0)
+#align orientation.right_ne_zero_of_oangle_sign_eq_one Orientation.right_ne_zero_of_oangle_sign_eq_one
+
+/-- If the sign of the angle between two vectors is positive, the vectors are not equal. -/
+theorem ne_of_oangle_sign_eq_one {x y : V} (h : (o.oangle x y).sign = 1) : x ≠ y :=
+  o.ne_of_oangle_sign_ne_zero (h.symm ▸ by decide : (o.oangle x y).sign ≠ 0)
+#align orientation.ne_of_oangle_sign_eq_one Orientation.ne_of_oangle_sign_eq_one
+
+/-- If the sign of the angle between two vectors is negative, the first vector is nonzero. -/
+theorem left_ne_zero_of_oangle_sign_eq_neg_one {x y : V} (h : (o.oangle x y).sign = -1) : x ≠ 0 :=
+  o.left_ne_zero_of_oangle_sign_ne_zero (h.symm ▸ by decide : (o.oangle x y).sign ≠ 0)
+#align orientation.left_ne_zero_of_oangle_sign_eq_neg_one Orientation.left_ne_zero_of_oangle_sign_eq_neg_one
+
+/-- If the sign of the angle between two vectors is negative, the second vector is nonzero. -/
+theorem right_ne_zero_of_oangle_sign_eq_neg_one {x y : V} (h : (o.oangle x y).sign = -1) : y ≠ 0 :=
+  o.right_ne_zero_of_oangle_sign_ne_zero (h.symm ▸ by decide : (o.oangle x y).sign ≠ 0)
+#align orientation.right_ne_zero_of_oangle_sign_eq_neg_one Orientation.right_ne_zero_of_oangle_sign_eq_neg_one
+
+/-- If the sign of the angle between two vectors is negative, the vectors are not equal. -/
+theorem ne_of_oangle_sign_eq_neg_one {x y : V} (h : (o.oangle x y).sign = -1) : x ≠ y :=
+  o.ne_of_oangle_sign_ne_zero (h.symm ▸ by decide : (o.oangle x y).sign ≠ 0)
+#align orientation.ne_of_oangle_sign_eq_neg_one Orientation.ne_of_oangle_sign_eq_neg_one
+
 /-- Swapping the two vectors passed to `oangle` negates the angle. -/
 theorem oangle_rev (x y : V) : o.oangle y x = -o.oangle x y := by
   simp only [oangle, o.kahler_swap y x, Complex.arg_conj_coe_angle]
@@ -601,6 +709,10 @@ theorem rotation_pi : o.rotation π = LinearIsometryEquiv.neg ℝ := by
   simp [rotation]
 #align orientation.rotation_pi Orientation.rotation_pi
 
+/-- Rotation by π is negation. -/
+theorem rotation_pi_apply (x : V) : o.rotation π x = -x := by simp
+#align orientation.rotation_pi_apply Orientation.rotation_pi_apply
+
 /-- Rotation by π / 2 is the "right-angle-rotation" map `J`. -/
 theorem rotation_pi_div_two : o.rotation (π / 2 : ℝ) = J := by
   ext x
@@ -632,6 +744,22 @@ theorem kahler_rotation_left (x y : V) (θ : Real.Angle) :
     IsROrC.conj_of_real, conj_I]
   ring
 #align orientation.kahler_rotation_left Orientation.kahler_rotation_left
+
+/-- Negating a rotation is equivalent to rotation by π plus the angle. -/
+theorem neg_rotation (θ : Real.Angle) (x : V) : -o.rotation θ x = o.rotation (π + θ) x := by
+  rw [← o.rotation_pi_apply, rotation_rotation]
+#align orientation.neg_rotation Orientation.neg_rotation
+
+/-- Negating a rotation by -π / 2 is equivalent to rotation by π / 2. -/
+@[simp]
+theorem neg_rotation_neg_pi_div_two (x : V) : -o.rotation (-π / 2 : ℝ) x = o.rotation (π / 2 : ℝ) x := by
+  rw [neg_rotation, ← Real.Angle.coe_add, neg_div, ← sub_eq_add_neg, sub_half]
+#align orientation.neg_rotation_neg_pi_div_two Orientation.neg_rotation_neg_pi_div_two
+
+/-- Negating a rotation by π / 2 is equivalent to rotation by -π / 2. -/
+theorem neg_rotation_pi_div_two (x : V) : -o.rotation (π / 2 : ℝ) x = o.rotation (-π / 2 : ℝ) x :=
+  neg_eq_iff_neg_eq.1 <| o.neg_rotation_neg_pi_div_two _
+#align orientation.neg_rotation_pi_div_two Orientation.neg_rotation_pi_div_two
 
 /-- Rotating the first of two vectors by `θ` scales their Kahler form by `cos (-θ) + sin (-θ) * I`.
 -/

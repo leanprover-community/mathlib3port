@@ -976,6 +976,61 @@ theorem sub_floor_div_mul_lt (a : k) (hb : 0 < b) : a - ⌊a / b⌋ * b < b :=
     exact lt_floor_add_one _
 #align int.sub_floor_div_mul_lt Int.sub_floor_div_mul_lt
 
+theorem fract_div_nat_cast_eq_div_nat_cast_mod {m n : ℕ} : fract ((m : k) / n) = ↑(m % n) / n := by
+  rcases n.eq_zero_or_pos with (rfl | hn)
+  · simp
+    
+  have hn' : 0 < (n : k) := by
+    norm_cast
+    assumption
+  refine' fract_eq_iff.mpr ⟨by positivity, _, m / n, _⟩
+  · simpa only [div_lt_one hn', Nat.cast_lt] using m.mod_lt hn
+    
+  · rw [sub_eq_iff_eq_add', ← mul_right_inj' hn'.ne.symm, mul_div_cancel' _ hn'.ne.symm, mul_add,
+      mul_div_cancel' _ hn'.ne.symm]
+    norm_cast
+    rw [← Nat.cast_add, Nat.mod_add_div m n]
+    
+#align int.fract_div_nat_cast_eq_div_nat_cast_mod Int.fract_div_nat_cast_eq_div_nat_cast_mod
+
+-- TODO Generalise this to allow `n : ℤ` using `int.fmod` instead of `int.mod`.
+theorem fract_div_int_cast_eq_div_int_cast_mod {m : ℤ} {n : ℕ} : fract ((m : k) / n) = ↑(m % n) / n := by
+  rcases n.eq_zero_or_pos with (rfl | hn)
+  · simp
+    
+  replace hn : 0 < (n : k)
+  · norm_cast
+    assumption
+    
+  have : ∀ {l : ℤ} (hl : 0 ≤ l), fract ((l : k) / n) = ↑(l % n) / n := by
+    intros
+    obtain ⟨l₀, rfl | rfl⟩ := l.eq_coe_or_neg
+    · rw [cast_coe_nat, ← coe_nat_mod, cast_coe_nat, fract_div_nat_cast_eq_div_nat_cast_mod]
+      
+    · rw [Right.nonneg_neg_iff, coe_nat_nonpos_iff] at hl
+      simp [hl, zero_mod]
+      
+  obtain ⟨m₀, rfl | rfl⟩ := m.eq_coe_or_neg
+  · exact this (of_nat_nonneg m₀)
+    
+  let q := ⌈↑m₀ / (n : k)⌉
+  let m₁ := q * ↑n - (↑m₀ : ℤ)
+  have hm₁ : 0 ≤ m₁ := by simpa [← @cast_le k, ← div_le_iff hn] using floor_ring.gc_ceil_coe.le_u_l _
+  calc
+    fract (↑(-↑m₀) / ↑n) = fract (-(m₀ : k) / n) := by rw [coe_neg, cast_coe_nat]
+    _ = fract ((m₁ : k) / n) := _
+    _ = ↑(m₁ % (n : ℤ)) / ↑n := this hm₁
+    _ = ↑(-(↑m₀ : ℤ) % ↑n) / ↑n := _
+    
+  · rw [← fract_int_add q, ← mul_div_cancel (q : k) (ne_of_gt hn), ← add_div, ← sub_eq_add_neg, coe_sub, coe_mul,
+      cast_coe_nat, cast_coe_nat]
+    
+  · congr 2
+    change (q * ↑n - (↑m₀ : ℤ)) % ↑n = _
+    rw [sub_eq_add_neg, add_comm (q * ↑n), add_mul_mod_self]
+    
+#align int.fract_div_int_cast_eq_div_int_cast_mod Int.fract_div_int_cast_eq_div_int_cast_mod
+
 end LinearOrderedField
 
 /-! #### Ceil -/
@@ -1330,6 +1385,18 @@ theorem abs_sub_round (x : α) : |x - round x| ≤ 1 / 2 := by
   have := lt_floor_add_one (x + 1 / 2)
   constructor <;> linarith
 #align abs_sub_round abs_sub_round
+
+theorem abs_sub_round_div_nat_cast_eq {m n : ℕ} :
+    |(m : α) / n - round ((m : α) / n)| = ↑(min (m % n) (n - m % n)) / n := by
+  rcases n.eq_zero_or_pos with (rfl | hn)
+  · simp
+    
+  have hn' : 0 < (n : α) := by
+    norm_cast
+    assumption
+  rw [abs_sub_round_eq_min, Nat.cast_min, ← min_div_div_right hn'.le, fract_div_nat_cast_eq_div_nat_cast_mod,
+    Nat.cast_sub (m.mod_lt hn).le, sub_div, div_self hn'.ne.symm]
+#align abs_sub_round_div_nat_cast_eq abs_sub_round_div_nat_cast_eq
 
 end LinearOrderedField
 

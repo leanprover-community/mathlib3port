@@ -190,7 +190,7 @@ theorem bitwise_xor : bitwise xor = lxor := by
     bitwise_tac
 #align int.bitwise_xor Int.bitwise_xor
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:502:27: warning: unsupported: unfold config -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:503:27: warning: unsupported: unfold config -/
 @[simp]
 theorem bitwise_bit (f : Bool → Bool → Bool) (a m b n) : bitwise f (bit a m) (bit b n) = bit (f a b) (bitwise f m n) :=
   by

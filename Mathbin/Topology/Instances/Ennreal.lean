@@ -1300,6 +1300,26 @@ theorem tsum_le_of_sum_range_le {f : ℕ → ℝ≥0∞} {c : ℝ≥0∞} (h : �
   tsum_le_of_sum_range_le Ennreal.summable h
 #align ennreal.tsum_le_of_sum_range_le Ennreal.tsum_le_of_sum_range_le
 
+theorem has_sum_lt {f g : α → ℝ≥0∞} {sf sg : ℝ≥0∞} {i : α} (h : ∀ a : α, f a ≤ g a) (hi : f i < g i) (hsf : sf ≠ ⊤)
+    (hf : HasSum f sf) (hg : HasSum g sg) : sf < sg := by
+  by_cases hsg : sg = ⊤
+  · exact hsg.symm ▸ lt_of_le_of_ne le_top hsf
+    
+  · have hg' : ∀ x, g x ≠ ⊤ := Ennreal.ne_top_of_tsum_ne_top (hg.tsum_eq.symm ▸ hsg)
+    lift f to α → ℝ≥0 using fun x => ne_of_lt (lt_of_le_of_lt (h x) <| lt_of_le_of_ne le_top (hg' x))
+    lift g to α → ℝ≥0 using hg'
+    lift sf to ℝ≥0 using hsf
+    lift sg to ℝ≥0 using hsg
+    simp only [coe_le_coe, coe_lt_coe] at h hi⊢
+    exact Nnreal.has_sum_lt h hi (Ennreal.has_sum_coe.1 hf) (Ennreal.has_sum_coe.1 hg)
+    
+#align ennreal.has_sum_lt Ennreal.has_sum_lt
+
+theorem tsum_lt_tsum {f g : α → ℝ≥0∞} {i : α} (hfi : tsum f ≠ ⊤) (h : ∀ a : α, f a ≤ g a) (hi : f i < g i) :
+    (∑' x, f x) < ∑' x, g x :=
+  has_sum_lt h hi hfi Ennreal.summable.HasSum Ennreal.summable.HasSum
+#align ennreal.tsum_lt_tsum Ennreal.tsum_lt_tsum
+
 end Ennreal
 
 theorem tsum_comp_le_tsum_of_inj {β : Type _} {f : α → ℝ} (hf : Summable f) (hn : ∀ a, 0 ≤ f a) {i : β → α}
@@ -1317,6 +1337,12 @@ theorem summable_of_nonneg_of_le {f g : β → ℝ} (hg : ∀ b, 0 ≤ g b) (hgf
   rw [Nnreal.summable_coe] at hf⊢
   exact Nnreal.summable_of_le (fun b => Nnreal.coe_le_coe.1 (hgf b)) hf
 #align summable_of_nonneg_of_le summable_of_nonneg_of_le
+
+theorem Summable.to_nnreal {f : α → ℝ} (hf : Summable f) : Summable fun n => (f n).toNnreal := by
+  apply Nnreal.summable_coe.1
+  refine' summable_of_nonneg_of_le (fun n => Nnreal.coe_nonneg _) (fun n => _) hf.abs
+  simp only [le_abs_self, Real.coe_to_nnreal', max_le_iff, abs_nonneg, and_self_iff]
+#align summable.to_nnreal Summable.to_nnreal
 
 /-- A series of non-negative real numbers converges to `r` in the sense of `has_sum` if and only if
 the sequence of partial sum converges to `r`. -/

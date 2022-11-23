@@ -202,7 +202,7 @@ def toVectorBundleCore : VectorBundleCore 𝕜 M F (atlas H M) where
       
     · simp only [hx1, hx2, hx3, mfld_simps]
       
-  coord_change_continuous i j := by
+  continuous_on_coord_change i j := by
     refine' ((Z.coord_change_continuous i j).comp' i.1.ContinuousOn).mono _
     rintro p ⟨hp₁, hp₂⟩
     refine' ⟨hp₁, i.1.MapsTo hp₁, _⟩
@@ -586,7 +586,7 @@ end
 variable (M)
 
 instance : TopologicalSpace TM :=
-  (tangentBundleCore I M).toVectorBundleCore.toTopologicalSpace (atlas H M)
+  (tangentBundleCore I M).toVectorBundleCore.toTopologicalSpace
 
 instance : ChartedSpace (ModelProd H E) TM :=
   (tangentBundleCore I M).toChartedSpace

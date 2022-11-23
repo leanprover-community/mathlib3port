@@ -1083,7 +1083,10 @@ theorem reduce.red : Red L (reduce L) := by
 [PrettyPrinter.parenthesize.input] (Command.declaration
      (Command.declModifiers
       []
-      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] [] []))] "]")]
+      [(Term.attributes
+        "@["
+        [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] (to_additiveRest [] [])))]
+        "]")]
       []
       []
       []

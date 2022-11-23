@@ -919,7 +919,10 @@ theorem finprod_cond_nonneg {R : Type _} [OrderedCommSemiring R] {p : α → Pro
 [PrettyPrinter.parenthesize.input] (Command.declaration
      (Command.declModifiers
       []
-      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] [] []))] "]")]
+      [(Term.attributes
+        "@["
+        [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] (to_additiveRest [] [])))]
+        "]")]
       []
       []
       []

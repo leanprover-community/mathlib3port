@@ -1229,7 +1229,7 @@ canonical, but in this case (the tangent space of a vector space) it is canonica
  -/
 
 
-variable {z : M} {F' : Type _} [NormedCommRing F'] [NormedAlgebra 𝕜 F'] {f g : M → E'} {p q : M → F'}
+variable {z : M} {F' : Type _} [NormedCommRing F'] [NormedAlgebra 𝕜 F'] {f g : M → E'} {p q : M → F'} {I}
   {f' g' : TangentSpace I z →L[𝕜] E'} {p' q' : TangentSpace I z →L[𝕜] F'}
 
 theorem HasMfderivAt.add (hf : HasMfderivAt I 𝓘(𝕜, E') f z f') (hg : HasMfderivAt I 𝓘(𝕜, E') g z g') :
@@ -1239,11 +1239,11 @@ theorem HasMfderivAt.add (hf : HasMfderivAt I 𝓘(𝕜, E') f z f') (hg : HasMf
 
 theorem MdifferentiableAt.add (hf : MdifferentiableAt I 𝓘(𝕜, E') f z) (hg : MdifferentiableAt I 𝓘(𝕜, E') g z) :
     MdifferentiableAt I 𝓘(𝕜, E') (f + g) z :=
-  (hf.HasMfderivAt.add I hg.HasMfderivAt).MdifferentiableAt
+  (hf.HasMfderivAt.add hg.HasMfderivAt).MdifferentiableAt
 #align mdifferentiable_at.add MdifferentiableAt.add
 
 theorem Mdifferentiable.add (hf : Mdifferentiable I 𝓘(𝕜, E') f) (hg : Mdifferentiable I 𝓘(𝕜, E') g) :
-    Mdifferentiable I 𝓘(𝕜, E') (f + g) := fun x => (hf x).add I (hg x)
+    Mdifferentiable I 𝓘(𝕜, E') (f + g) := fun x => (hf x).add (hg x)
 #align mdifferentiable.add Mdifferentiable.add
 
 theorem HasMfderivAt.mul (hp : HasMfderivAt I 𝓘(𝕜, F') p z p') (hq : HasMfderivAt I 𝓘(𝕜, F') q z q') :
@@ -1253,11 +1253,11 @@ theorem HasMfderivAt.mul (hp : HasMfderivAt I 𝓘(𝕜, F') p z p') (hq : HasMf
 
 theorem MdifferentiableAt.mul (hp : MdifferentiableAt I 𝓘(𝕜, F') p z) (hq : MdifferentiableAt I 𝓘(𝕜, F') q z) :
     MdifferentiableAt I 𝓘(𝕜, F') (p * q) z :=
-  (hp.HasMfderivAt.mul I hq.HasMfderivAt).MdifferentiableAt
+  (hp.HasMfderivAt.mul hq.HasMfderivAt).MdifferentiableAt
 #align mdifferentiable_at.mul MdifferentiableAt.mul
 
 theorem Mdifferentiable.mul {f g : M → F'} (hf : Mdifferentiable I 𝓘(𝕜, F') f) (hg : Mdifferentiable I 𝓘(𝕜, F') g) :
-    Mdifferentiable I 𝓘(𝕜, F') (f * g) := fun x => (hf x).mul I (hg x)
+    Mdifferentiable I 𝓘(𝕜, F') (f * g) := fun x => (hf x).mul (hg x)
 #align mdifferentiable.mul Mdifferentiable.mul
 
 theorem HasMfderivAt.constSmul (hf : HasMfderivAt I 𝓘(𝕜, E') f z f') (s : 𝕜) :
@@ -1267,11 +1267,11 @@ theorem HasMfderivAt.constSmul (hf : HasMfderivAt I 𝓘(𝕜, E') f z f') (s : 
 
 theorem MdifferentiableAt.constSmul (hf : MdifferentiableAt I 𝓘(𝕜, E') f z) (s : 𝕜) :
     MdifferentiableAt I 𝓘(𝕜, E') (s • f) z :=
-  (hf.HasMfderivAt.const_smul I s).MdifferentiableAt
+  (hf.HasMfderivAt.const_smul s).MdifferentiableAt
 #align mdifferentiable_at.const_smul MdifferentiableAt.constSmul
 
 theorem Mdifferentiable.constSmul {f : M → E'} (s : 𝕜) (hf : Mdifferentiable I 𝓘(𝕜, E') f) :
-    Mdifferentiable I 𝓘(𝕜, E') (s • f) := fun x => (hf x).const_smul I s
+    Mdifferentiable I 𝓘(𝕜, E') (s • f) := fun x => (hf x).const_smul s
 #align mdifferentiable.const_smul Mdifferentiable.constSmul
 
 theorem HasMfderivAt.neg (hf : HasMfderivAt I 𝓘(𝕜, E') f z f') : HasMfderivAt I 𝓘(𝕜, E') (-f) z (-f') :=
@@ -1279,11 +1279,11 @@ theorem HasMfderivAt.neg (hf : HasMfderivAt I 𝓘(𝕜, E') f z f') : HasMfderi
 #align has_mfderiv_at.neg HasMfderivAt.neg
 
 theorem MdifferentiableAt.neg (hf : MdifferentiableAt I 𝓘(𝕜, E') f z) : MdifferentiableAt I 𝓘(𝕜, E') (-f) z :=
-  (hf.HasMfderivAt.neg I).MdifferentiableAt
+  hf.HasMfderivAt.neg.MdifferentiableAt
 #align mdifferentiable_at.neg MdifferentiableAt.neg
 
 theorem Mdifferentiable.neg {f : M → E'} (hf : Mdifferentiable I 𝓘(𝕜, E') f) : Mdifferentiable I 𝓘(𝕜, E') (-f) :=
-  fun x => (hf x).neg I
+  fun x => (hf x).neg
 #align mdifferentiable.neg Mdifferentiable.neg
 
 theorem HasMfderivAt.sub (hf : HasMfderivAt I 𝓘(𝕜, E') f z f') (hg : HasMfderivAt I 𝓘(𝕜, E') g z g') :
@@ -1293,11 +1293,11 @@ theorem HasMfderivAt.sub (hf : HasMfderivAt I 𝓘(𝕜, E') f z f') (hg : HasMf
 
 theorem MdifferentiableAt.sub (hf : MdifferentiableAt I 𝓘(𝕜, E') f z) (hg : MdifferentiableAt I 𝓘(𝕜, E') g z) :
     MdifferentiableAt I 𝓘(𝕜, E') (f - g) z :=
-  (hf.HasMfderivAt.sub I hg.HasMfderivAt).MdifferentiableAt
+  (hf.HasMfderivAt.sub hg.HasMfderivAt).MdifferentiableAt
 #align mdifferentiable_at.sub MdifferentiableAt.sub
 
 theorem Mdifferentiable.sub {f : M → E'} (hf : Mdifferentiable I 𝓘(𝕜, E') f) (hg : Mdifferentiable I 𝓘(𝕜, E') g) :
-    Mdifferentiable I 𝓘(𝕜, E') (f - g) := fun x => (hf x).sub I (hg x)
+    Mdifferentiable I 𝓘(𝕜, E') (f - g) := fun x => (hf x).sub (hg x)
 #align mdifferentiable.sub Mdifferentiable.sub
 
 end Arithmetic

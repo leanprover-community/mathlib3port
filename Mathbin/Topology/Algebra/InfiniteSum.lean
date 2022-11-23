@@ -1552,6 +1552,18 @@ theorem HasSum.sum_nat_of_sum_int [T2Space α] {f : ℤ → α} (hf : HasSum f a
   abel
 #align has_sum.sum_nat_of_sum_int HasSum.sum_nat_of_sum_int
 
+theorem tsum_subtype_add_tsum_subtype_compl [T2Space α] {f : β → α} (hf : Summable f) (s : Set β) :
+    ((∑' x : s, f x) + ∑' x : sᶜ, f x) = ∑' x, f x :=
+  ((hf.Subtype s).HasSum.add_compl (hf.Subtype { x | x ∉ s }).HasSum).unique hf.HasSum
+#align tsum_subtype_add_tsum_subtype_compl tsum_subtype_add_tsum_subtype_compl
+
+theorem sum_add_tsum_subtype_compl [T2Space α] {f : β → α} (hf : Summable f) (s : Finset β) :
+    ((∑ x in s, f x) + ∑' x : { x // x ∉ s }, f x) = ∑' x, f x := by
+  rw [← tsum_subtype_add_tsum_subtype_compl hf s]
+  simp only [Finset.tsum_subtype', add_right_inj]
+  rfl
+#align sum_add_tsum_subtype_compl sum_add_tsum_subtype_compl
+
 end UniformGroup
 
 section TopologicalGroup

@@ -79,7 +79,10 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
       [(Command.docComment
         "/--"
         "Equivalent definitions of a measure invariant under a multiplicative action of a group.\n\n- 0: `smul_invariant_measure G α μ`;\n\n- 1: for every `c : G` and a measurable set `s`, the measure of the preimage of `s` under scalar\n     multiplication by `c` is equal to the measure of `s`;\n\n- 2: for every `c : G` and a measurable set `s`, the measure of the image `c • s` of `s` under\n     scalar multiplication by `c` is equal to the measure of `s`;\n\n- 3, 4: properties 2, 3 for any set, including non-measurable ones;\n\n- 5: for any `c : G`, scalar multiplication by `c` maps `μ` to `μ`;\n\n- 6: for any `c : G`, scalar multiplication by `c` is a measure preserving map. -/")]
-      [(Term.attributes "@[" [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] [] []))] "]")]
+      [(Term.attributes
+        "@["
+        [(Term.attrInstance (Term.attrKind []) (to_additive "to_additive" [] [] (to_additiveRest [] [])))]
+        "]")]
       []
       []
       []
