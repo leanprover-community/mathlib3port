@@ -6,7 +6,7 @@ Authors: Robert Y. Lewis, Keeley Hoek
 import Mathbin.Algebra.NeZero
 import Mathbin.Algebra.Order.WithZero
 import Mathbin.Order.RelIso.Basic
-import Mathbin.Data.Nat.Order.Lemmas
+import Mathbin.Data.Nat.Order.Basic
 import Mathbin.Order.Hom.Set
 
 /-!

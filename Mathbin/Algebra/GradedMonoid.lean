@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
 import Mathbin.Algebra.Group.InjSurj
-import Mathbin.Data.List.BigOperators
+import Mathbin.Data.List.BigOperators.Basic
 import Mathbin.Data.List.Range
 import Mathbin.GroupTheory.GroupAction.Defs
 import Mathbin.GroupTheory.Submonoid.Basic

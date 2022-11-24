@@ -44,14 +44,6 @@ theorem set_eq_univ {S : Set ℕ} : S = Set.univ ↔ 0 ∈ S ∧ ∀ k : ℕ, k 
   ⟨by rintro rfl <;> simp, fun ⟨h0, hs⟩ => Set.eq_univ_of_forall (set_induction h0 hs)⟩
 #align nat.set_eq_univ Nat.set_eq_univ
 
-/-! ### `succ` -/
-
-
-@[simp]
-theorem lt_one_iff {n : ℕ} : n < 1 ↔ n = 0 :=
-  lt_succ_iff.trans nonpos_iff_eq_zero
-#align nat.lt_one_iff Nat.lt_one_iff
-
 /-! ### `div` -/
 
 

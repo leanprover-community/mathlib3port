@@ -29,20 +29,6 @@ section IsDomain
 
 variable [CommRing R] [IsDomain R]
 
-theorem roots_C_mul (p : R[X]) {a : R} (hzero : a ≠ 0) : (c a * p).roots = p.roots := by
-  by_cases hpzero : p = 0
-  · simp only [hpzero, mul_zero]
-    
-  rw [Multiset.ext]
-  intro b
-  have prodzero : C a * p ≠ 0 := by
-    simp only [hpzero, or_false_iff, Ne.def, mul_eq_zero, C_eq_zero, hzero, not_false_iff]
-  rw [count_roots, count_roots, root_multiplicity_mul prodzero]
-  have mulzero : root_multiplicity b (C a) = 0 := by
-    simp only [hzero, root_multiplicity_eq_zero, eval_C, is_root.def, not_false_iff]
-  simp only [mulzero, zero_add]
-#align polynomial.roots_C_mul Polynomial.roots_C_mul
-
 theorem derivative_root_multiplicity_of_root [CharZero R] {p : R[X]} {t : R} (hpt : p.IsRoot t) :
     p.derivative.rootMultiplicity t = p.rootMultiplicity t - 1 := by
   rcases eq_or_ne p 0 with (rfl | hp)
@@ -377,29 +363,22 @@ theorem is_coprime_map [Field k] (f : R →+* k) : IsCoprime (p.map f) (q.map f)
 
 theorem mem_roots_map [CommRing k] [IsDomain k] {f : R →+* k} {x : k} (hp : p ≠ 0) :
     x ∈ (p.map f).roots ↔ p.eval₂ f x = 0 := by
-  rw [mem_roots (show p.map f ≠ 0 from map_ne_zero hp)]
-  dsimp only [is_root]
-  rw [Polynomial.eval_map]
+  rw [mem_roots (map_ne_zero hp), is_root, Polynomial.eval_map] <;> infer_instance
 #align polynomial.mem_roots_map Polynomial.mem_roots_map
 
 theorem mem_root_set [CommRing k] [IsDomain k] [Algebra R k] {x : k} (hp : p ≠ 0) : x ∈ p.rootSet k ↔ aeval x p = 0 :=
   Iff.trans Multiset.mem_to_finset (mem_roots_map hp)
 #align polynomial.mem_root_set Polynomial.mem_root_set
 
-theorem root_set_C_mul_X_pow [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) {a : R} (ha : a ≠ 0) :
-    (c a * X ^ n).rootSet S = {0} := by
-  ext x
-  rw [Set.mem_singleton_iff, mem_root_set, aeval_mul, aeval_C, aeval_X_pow, mul_eq_zero]
-  · simp_rw [_root_.map_eq_zero, pow_eq_zero_iff (Nat.pos_of_ne_zero hn), or_iff_right_iff_imp]
-    exact fun ha' => (ha ha').elim
-    
-  · exact mul_ne_zero (mt C_eq_zero.mp ha) (pow_ne_zero n X_ne_zero)
-    
-#align polynomial.root_set_C_mul_X_pow Polynomial.root_set_C_mul_X_pow
-
 theorem root_set_monomial [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) {a : R} (ha : a ≠ 0) :
-    (monomial n a).rootSet S = {0} := by rw [← C_mul_X_pow_eq_monomial, root_set_C_mul_X_pow hn ha]
+    (monomial n a).rootSet S = {0} := by
+  rw [root_set, map_monomial, roots_monomial ((_root_.map_ne_zero (algebraMap R S)).2 ha),
+    Multiset.to_finset_nsmul _ _ hn, Multiset.to_finset_singleton, Finset.coe_singleton]
 #align polynomial.root_set_monomial Polynomial.root_set_monomial
+
+theorem root_set_C_mul_X_pow [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) {a : R} (ha : a ≠ 0) :
+    (c a * X ^ n).rootSet S = {0} := by rw [← monomial_eq_C_mul_X, root_set_monomial hn ha]
+#align polynomial.root_set_C_mul_X_pow Polynomial.root_set_C_mul_X_pow
 
 theorem root_set_X_pow [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) : (X ^ n : R[X]).rootSet S = {0} :=
   by

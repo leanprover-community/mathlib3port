@@ -5,6 +5,7 @@ Authors: Mario Carneiro
 -/
 import Mathbin.Data.Fintype.Lattice
 import Mathbin.Data.List.MinMax
+import Mathbin.Data.Nat.Order.Lemmas
 import Mathbin.Logic.Encodable.Basic
 
 /-!

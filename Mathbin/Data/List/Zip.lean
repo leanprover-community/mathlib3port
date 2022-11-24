@@ -3,7 +3,7 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau
 -/
-import Mathbin.Data.List.BigOperators
+import Mathbin.Data.List.BigOperators.Basic
 import Mathbin.Algebra.Order.Monoid.MinMax
 
 /-!
@@ -491,8 +491,8 @@ variable [CommMonoid α]
 @[to_additive]
 theorem prod_mul_prod_eq_prod_zip_with_mul_prod_drop :
     ∀ L L' : List α, L.Prod * L'.Prod = (zipWith (· * ·) L L').Prod * (L.drop L'.length).Prod * (L'.drop L.length).Prod
-  | [], ys => by simp [@zero_le' ℕ]
-  | xs, [] => by simp [@zero_le' ℕ]
+  | [], ys => by simp [Nat.zero_le]
+  | xs, [] => by simp [Nat.zero_le]
   | x :: xs, y :: ys => by
     simp only [drop, length, zip_with_cons_cons, prod_cons]
     rw [mul_assoc x, mul_comm xs.prod, mul_assoc y, mul_comm ys.prod,

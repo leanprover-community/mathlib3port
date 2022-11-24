@@ -500,13 +500,12 @@ theorem mem_roots_sub_C {p : R[X]} {a x : R} (hp0 : 0 < degree p) : x ∈ (p - c
 @[simp]
 theorem roots_X_sub_C (r : R) : roots (X - c r) = {r} := by
   ext s
-  rw [count_roots, root_multiplicity_X_sub_C]
-  split_ifs with h
-  · rw [h, count_singleton_self]
-    
-  · rw [← cons_zero, count_cons_of_ne h, count_zero]
-    
+  rw [count_roots, root_multiplicity_X_sub_C, count_singleton]
 #align polynomial.roots_X_sub_C Polynomial.roots_X_sub_C
+
+@[simp]
+theorem roots_X : roots (x : R[X]) = {0} := by rw [← roots_X_sub_C, C_0, sub_zero]
+#align polynomial.roots_X Polynomial.roots_X
 
 @[simp]
 theorem roots_C (x : R) : (c x).roots = 0 :=
@@ -519,8 +518,14 @@ theorem roots_one : (1 : R[X]).roots = ∅ :=
   roots_C 1
 #align polynomial.roots_one Polynomial.roots_one
 
-theorem roots_smul_nonzero (p : R[X]) {r : R} (hr : r ≠ 0) : (r • p).roots = p.roots := by
-  by_cases hp : p = 0 <;> simp [smul_eq_C_mul, roots_mul, hr, hp]
+@[simp]
+theorem roots_C_mul (p : R[X]) (ha : a ≠ 0) : (c a * p).roots = p.roots := by
+  by_cases hp : p = 0 <;>
+    simp only [roots_mul, *, Ne.def, mul_eq_zero, C_eq_zero, or_self_iff, not_false_iff, roots_C, zero_add, mul_zero]
+#align polynomial.roots_C_mul Polynomial.roots_C_mul
+
+@[simp]
+theorem roots_smul_nonzero (p : R[X]) (ha : a ≠ 0) : (a • p).roots = p.roots := by rw [smul_eq_C_mul, roots_C_mul _ ha]
 #align polynomial.roots_smul_nonzero Polynomial.roots_smul_nonzero
 
 theorem roots_list_prod (L : List R[X]) : (0 : R[X]) ∉ L → L.Prod.roots = (L : Multiset R[X]).bind roots :=
@@ -540,6 +545,30 @@ theorem roots_prod {ι : Type _} (f : ι → R[X]) (s : Finset ι) :
   rcases s with ⟨m, hm⟩
   simpa [Multiset.prod_eq_zero_iff, bind_map] using roots_multiset_prod (m.map f)
 #align polynomial.roots_prod Polynomial.roots_prod
+
+@[simp]
+theorem roots_pow (p : R[X]) (n : ℕ) : (p ^ n).roots = n • p.roots := by
+  induction' n with n ihn
+  · rw [pow_zero, roots_one, zero_smul, empty_eq_zero]
+    
+  · rcases eq_or_ne p 0 with (rfl | hp)
+    · rw [zero_pow n.succ_pos, roots_zero, smul_zero]
+      
+    · rw [pow_succ', roots_mul (mul_ne_zero (pow_ne_zero _ hp) hp), ihn, Nat.succ_eq_add_one, add_smul, one_smul]
+      
+    
+#align polynomial.roots_pow Polynomial.roots_pow
+
+theorem roots_X_pow (n : ℕ) : (X ^ n : R[X]).roots = n • {0} := by rw [roots_pow, roots_X]
+#align polynomial.roots_X_pow Polynomial.roots_X_pow
+
+theorem roots_C_mul_X_pow (ha : a ≠ 0) (n : ℕ) : (c a * X ^ n).roots = n • {0} := by rw [roots_C_mul _ ha, roots_X_pow]
+#align polynomial.roots_C_mul_X_pow Polynomial.roots_C_mul_X_pow
+
+@[simp]
+theorem roots_monomial (ha : a ≠ 0) (n : ℕ) : (monomial n a).roots = n • {0} := by
+  rw [monomial_eq_C_mul_X, roots_C_mul_X_pow ha]
+#align polynomial.roots_monomial Polynomial.roots_monomial
 
 theorem roots_prod_X_sub_C (s : Finset R) : (s.Prod fun a => X - c a).roots = s.val :=
   (roots_prod (fun a => X - c a) s (prod_ne_zero_iff.mpr fun a _ => X_sub_C_ne_zero a)).trans
@@ -983,14 +1012,14 @@ theorem root_set_def (p : T[X]) (S) [CommRing S] [IsDomain S] [Algebra T S] :
 #align polynomial.root_set_def Polynomial.root_set_def
 
 @[simp]
-theorem root_set_zero (S) [CommRing S] [IsDomain S] [Algebra T S] : (0 : T[X]).rootSet S = ∅ := by
-  rw [root_set_def, Polynomial.map_zero, roots_zero, to_finset_zero, Finset.coe_empty]
-#align polynomial.root_set_zero Polynomial.root_set_zero
-
-@[simp]
 theorem root_set_C [CommRing S] [IsDomain S] [Algebra T S] (a : T) : (c a).rootSet S = ∅ := by
   rw [root_set_def, map_C, roots_C, Multiset.to_finset_zero, Finset.coe_empty]
 #align polynomial.root_set_C Polynomial.root_set_C
+
+@[simp]
+theorem root_set_zero (S) [CommRing S] [IsDomain S] [Algebra T S] : (0 : T[X]).rootSet S = ∅ := by
+  rw [← C_0, root_set_C]
+#align polynomial.root_set_zero Polynomial.root_set_zero
 
 instance rootSetFintype (p : T[X]) (S : Type _) [CommRing S] [IsDomain S] [Algebra T S] : Fintype (p.rootSet S) :=
   FinsetCoe.fintype _

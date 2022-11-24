@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Anne Baanen
 -/
 import Mathbin.Algebra.Associated
-import Mathbin.Data.List.BigOperators
+import Mathbin.Data.List.BigOperators.Basic
 import Mathbin.Data.List.Perm
 
 /-!

@@ -39,7 +39,7 @@ open Nat
 
 namespace Nat
 
-/-- `prime p` means that `p` is a prime number, that is, a natural number
+/-- `nat.prime p` means that `p` is a prime number, that is, a natural number
   at least 2 whose only divisors are `p` and `1`. -/
 @[pp_nodot]
 def Prime (p : ℕ) :=

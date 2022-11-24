@@ -1321,7 +1321,8 @@ import Mathbin.Data.LazyList
 import Mathbin.Data.LazyList.Basic
 import Mathbin.Data.List.Alist
 import Mathbin.Data.List.Basic
-import Mathbin.Data.List.BigOperators
+import Mathbin.Data.List.BigOperators.Basic
+import Mathbin.Data.List.BigOperators.Lemmas
 import Mathbin.Data.List.Chain
 import Mathbin.Data.List.Count
 import Mathbin.Data.List.Cycle
