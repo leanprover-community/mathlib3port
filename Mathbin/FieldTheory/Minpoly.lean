@@ -102,7 +102,7 @@ theorem map_ne_one [Nontrivial B] {R : Type _} [Semiring R] [Nontrivial R] (f : 
 theorem not_is_unit [Nontrivial B] : ¬IsUnit (minpoly A x) := by
   haveI : Nontrivial A := (algebraMap A B).domain_nontrivial
   by_cases hx : IsIntegral A x
-  · exact mt (eq_one_of_is_unit_of_monic (monic hx)) (ne_one A x)
+  · exact mt (monic hx).eq_one_of_is_unit (ne_one A x)
     
   · rw [eq_zero hx]
     exact not_is_unit_zero

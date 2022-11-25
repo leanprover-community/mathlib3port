@@ -59,8 +59,7 @@ variable (r)
 
 theorem Lex.well_founded_of_finite [IsStrictTotalOrder α r] [Finite α] [Zero N] (hs : WellFounded s) :
     WellFounded (Finsupp.Lex r s) :=
-  have := Fintype.ofFinite α
-  InvImage.wf (@equiv_fun_on_fintype α N _ _) ((Pi.Lex.well_founded r) fun a => hs)
+  InvImage.wf (@equivFunOnFinite α N _ _) ((Pi.Lex.well_founded r) fun a => hs)
 #align finsupp.lex.well_founded_of_finite Finsupp.Lex.well_founded_of_finite
 
 theorem Lex.well_founded_lt_of_finite [LinearOrder α] [Finite α] [Zero N] [LT N] [hwf : WellFoundedLt N] :
@@ -78,8 +77,7 @@ instance well_founded_lt' [CanonicallyOrderedAddMonoid N] [WellFoundedLt N] : We
 #align finsupp.well_founded_lt' Finsupp.well_founded_lt'
 
 instance well_founded_lt_of_finite [Finite α] [Zero N] [Preorder N] [WellFoundedLt N] : WellFoundedLt (α →₀ N) :=
-  have := Fintype.ofFinite α
-  ⟨InvImage.wf equiv_fun_on_fintype function.well_founded_lt.wf⟩
+  ⟨InvImage.wf equivFunOnFinite Function.well_founded_lt.wf⟩
 #align finsupp.well_founded_lt_of_finite Finsupp.well_founded_lt_of_finite
 
 end Finsupp

@@ -217,6 +217,14 @@ theorem nat_degree_pow_X_add_C [Nontrivial R] (n : ℕ) (r : R) : ((X + c r) ^ n
   rw [(monic_X_add_C r).nat_degree_pow, nat_degree_X_add_C, mul_one]
 #align polynomial.nat_degree_pow_X_add_C Polynomial.nat_degree_pow_X_add_C
 
+theorem Monic.eq_one_of_is_unit (hm : Monic p) (hpu : IsUnit p) : p = 1 := by
+  nontriviality R
+  obtain ⟨q, h⟩ := hpu.exists_right_inv
+  have := hm.nat_degree_mul' (right_ne_zero_of_mul_eq_one h)
+  rw [h, nat_degree_one, eq_comm, add_eq_zero_iff] at this
+  exact hm.nat_degree_eq_zero_iff_eq_one.mp this.1
+#align polynomial.monic.eq_one_of_is_unit Polynomial.Monic.eq_one_of_is_unit
+
 end Semiring
 
 section CommSemiring
@@ -237,38 +245,6 @@ theorem monic_multiset_prod_of_monic (t : Multiset ι) (f : ι → R[X]) (ht : �
 theorem monic_prod_of_monic (s : Finset ι) (f : ι → R[X]) (hs : ∀ i ∈ s, Monic (f i)) : Monic (∏ i in s, f i) :=
   monic_multiset_prod_of_monic s.1 f hs
 #align polynomial.monic_prod_of_monic Polynomial.monic_prod_of_monic
-
-theorem is_unit_C {x : R} : IsUnit (c x) ↔ IsUnit x := by
-  rw [is_unit_iff_dvd_one, is_unit_iff_dvd_one]
-  constructor
-  · rintro ⟨g, hg⟩
-    replace hg := congr_arg (eval 0) hg
-    rw [eval_one, eval_mul, eval_C] at hg
-    exact ⟨g.eval 0, hg⟩
-    
-  · rintro ⟨y, hy⟩
-    exact ⟨C y, by rw [← C_mul, ← hy, C_1]⟩
-    
-#align polynomial.is_unit_C Polynomial.is_unit_C
-
-theorem eq_one_of_is_unit_of_monic (hm : Monic p) (hpu : IsUnit p) : p = 1 := by
-  have : degree p ≤ 0 :=
-    calc
-      degree p ≤ degree (1 : R[X]) :=
-        let ⟨u, hu⟩ := is_unit_iff_dvd_one.1 hpu
-        if hu0 : u = 0 then by
-          rw [hu0, mul_zero] at hu
-          rw [← mul_one p, hu, mul_zero]
-          simp
-        else by
-          have : p.leadingCoeff * u.leadingCoeff ≠ 0 := by
-            rw [hm.leading_coeff, one_mul, Ne.def, leading_coeff_eq_zero] <;> exact hu0
-          rw [hu, degree_mul' this] <;> exact le_add_of_nonneg_right (degree_nonneg_iff_ne_zero.2 hu0)
-      _ ≤ 0 := degree_one_le
-      
-  rw [eq_C_of_degree_le_zero this, ← nat_degree_eq_zero_iff_degree_le_zero.2 this, ← leading_coeff, hm.leading_coeff,
-    C_1]
-#align polynomial.eq_one_of_is_unit_of_monic Polynomial.eq_one_of_is_unit_of_monic
 
 theorem Monic.next_coeff_multiset_prod (t : Multiset ι) (f : ι → R[X]) (h : ∀ i ∈ t, Monic (f i)) :
     nextCoeff (t.map f).Prod = (t.map fun i => nextCoeff (f i)).Sum := by
@@ -386,8 +362,7 @@ theorem not_is_unit_X_pow_sub_one (R : Type _) [CommRing R] [Nontrivial R] (n : 
   · simpa using h
     
   apply hn
-  rwa [← @nat_degree_X_pow_sub_C _ _ _ n (1 : R), eq_one_of_is_unit_of_monic (monic_X_pow_sub_C (1 : R) hn),
-    nat_degree_one]
+  rw [← @nat_degree_one R, ← (monic_X_pow_sub_C _ hn).eq_one_of_is_unit h, nat_degree_X_pow_sub_C]
 #align polynomial.not_is_unit_X_pow_sub_one Polynomial.not_is_unit_X_pow_sub_one
 
 theorem Monic.sub_of_left {p q : R[X]} (hp : Monic p) (hpq : degree q < degree p) : Monic (p - q) := by

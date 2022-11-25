@@ -157,6 +157,23 @@ theorem mem_iff_inf_edist_zero_of_closed (h : IsClosed s) : x ∈ s ↔ infEdist
   exact h.closure_eq
 #align emetric.mem_iff_inf_edist_zero_of_closed Emetric.mem_iff_inf_edist_zero_of_closed
 
+/-- The infimum edistance of a point to a set is positive if and only if the point is not in the
+closure of the set. -/
+theorem inf_edist_pos_iff_not_mem_closure {x : α} {E : Set α} : 0 < infEdist x E ↔ x ∉ closure E := by
+  rw [mem_closure_iff_inf_edist_zero, pos_iff_ne_zero]
+#align emetric.inf_edist_pos_iff_not_mem_closure Emetric.inf_edist_pos_iff_not_mem_closure
+
+theorem inf_edist_closure_pos_iff_not_mem_closure {x : α} {E : Set α} : 0 < infEdist x (closure E) ↔ x ∉ closure E := by
+  rw [inf_edist_closure, inf_edist_pos_iff_not_mem_closure]
+#align emetric.inf_edist_closure_pos_iff_not_mem_closure Emetric.inf_edist_closure_pos_iff_not_mem_closure
+
+theorem exists_real_pos_lt_inf_edist_of_not_mem_closure {x : α} {E : Set α} (h : x ∉ closure E) :
+    ∃ ε : ℝ, 0 < ε ∧ Ennreal.ofReal ε < infEdist x E := by
+  rw [← inf_edist_pos_iff_not_mem_closure, Ennreal.lt_iff_exists_real_btwn] at h
+  rcases h with ⟨ε, ⟨_, ⟨ε_pos, ε_lt⟩⟩⟩
+  exact ⟨ε, ⟨ennreal.of_real_pos.mp ε_pos, ε_lt⟩⟩
+#align emetric.exists_real_pos_lt_inf_edist_of_not_mem_closure Emetric.exists_real_pos_lt_inf_edist_of_not_mem_closure
+
 theorem disjoint_closed_ball_of_lt_inf_edist {r : ℝ≥0∞} (h : r < infEdist x s) : Disjoint (closedBall x r) s := by
   rw [disjoint_left]
   intro y hy h'y
@@ -1006,6 +1023,24 @@ theorem Bounded.thickening {δ : ℝ} {E : Set X} (h : Bounded E) : Bounded (thi
     
 #align metric.bounded.thickening Metric.Bounded.thickening
 
+/-- The frontier of the (open) thickening of a set is contained in an `inf_edist` level set. -/
+theorem frontier_thickening_subset (E : Set α) {δ : ℝ} :
+    frontier (thickening δ E) ⊆ { x : α | infEdist x E = Ennreal.ofReal δ } :=
+  frontier_lt_subset_eq continuous_inf_edist continuous_const
+#align metric.frontier_thickening_subset Metric.frontier_thickening_subset
+
+theorem frontier_thickening_disjoint (A : Set X) : Pairwise (Disjoint on fun r : ℝ => frontier (thickening r A)) := by
+  refine' (pairwise_disjoint_on _).2 fun r₁ r₂ hr => _
+  cases' le_total r₁ 0 with h₁ h₁
+  · simp [thickening_of_nonpos h₁]
+    
+  refine'
+    ((disjoint_singleton.2 fun h => hr.ne _).Preimage _).mono (frontier_thickening_subset _)
+      (frontier_thickening_subset _)
+  apply_fun Ennreal.toReal  at h
+  rwa [Ennreal.to_real_of_real h₁, Ennreal.to_real_of_real (h₁.trans hr.le)] at h
+#align metric.frontier_thickening_disjoint Metric.frontier_thickening_disjoint
+
 end Thickening
 
 --section
@@ -1380,24 +1415,10 @@ theorem closure_eq_Inter_thickening (E : Set α) : closure E = ⋂ (δ : ℝ) (h
   exact cthickening_eq_Inter_thickening rfl.ge E
 #align metric.closure_eq_Inter_thickening Metric.closure_eq_Inter_thickening
 
-/-- The frontier of the (open) thickening of a set is contained in an `inf_edist` level set. -/
-theorem frontier_thickening_subset (E : Set α) {δ : ℝ} (δ_pos : 0 < δ) :
-    frontier (thickening δ E) ⊆ { x : α | infEdist x E = Ennreal.ofReal δ } := by
-  have singleton_preim :
-    { x : α | inf_edist x E = Ennreal.ofReal δ } = (fun x => inf_edist x E) ⁻¹' {Ennreal.ofReal δ} := by
-    simp only [preimage, mem_singleton_iff]
-  rw [thickening_eq_preimage_inf_edist, singleton_preim, ← frontier_Iio' ⟨(0 : ℝ≥0∞), ennreal.of_real_pos.mpr δ_pos⟩]
-  exact continuous_inf_edist.frontier_preimage_subset (Iio (Ennreal.ofReal δ))
-#align metric.frontier_thickening_subset Metric.frontier_thickening_subset
-
 /-- The frontier of the closed thickening of a set is contained in an `inf_edist` level set. -/
 theorem frontier_cthickening_subset (E : Set α) {δ : ℝ} :
-    frontier (cthickening δ E) ⊆ { x : α | infEdist x E = Ennreal.ofReal δ } := by
-  have singleton_preim :
-    { x : α | inf_edist x E = Ennreal.ofReal δ } = (fun x => inf_edist x E) ⁻¹' {Ennreal.ofReal δ} := by
-    simp only [preimage, mem_singleton_iff]
-  rw [cthickening_eq_preimage_inf_edist, singleton_preim, ← frontier_Iic' ⟨∞, Ennreal.of_real_lt_top⟩]
-  exact continuous_inf_edist.frontier_preimage_subset (Iic (Ennreal.ofReal δ))
+    frontier (cthickening δ E) ⊆ { x : α | infEdist x E = Ennreal.ofReal δ } :=
+  frontier_le_subset_eq continuous_inf_edist continuous_const
 #align metric.frontier_cthickening_subset Metric.frontier_cthickening_subset
 
 /-- The closed ball of radius `δ` centered at a point of `E` is included in the closed
@@ -1416,7 +1437,7 @@ theorem _root_.is_compact.cthickening_eq_bUnion_closed_ball {α : Type _} [Pseud
   · simp only [cthickening_empty, Union_false, Union_empty]
     
   refine' subset.antisymm (fun x hx => _) (Union₂_subset fun x hx => closed_ball_subset_cthickening hx _)
-  obtain ⟨y, yE, hy⟩ : ∃ y ∈ E, Emetric.infEdist x E = edist x y := hE.exists_inf_edist_eq_edist hne _
+  obtain ⟨y, yE, hy⟩ : ∃ y ∈ E, inf_edist x E = edist x y := hE.exists_inf_edist_eq_edist hne _
   have D1 : edist x y ≤ Ennreal.ofReal δ := (le_of_eq hy.symm).trans hx
   have D2 : dist x y ≤ δ := by
     rw [edist_dist] at D1
@@ -1491,6 +1512,11 @@ theorem cthickening_cthickening_subset (hε : 0 ≤ ε) (hδ : 0 ≤ δ) (s : Se
   simp_rw [mem_cthickening_iff, Ennreal.of_real_add hε hδ]
   exact fun hx => inf_edist_le_inf_edist_cthickening_add.trans (add_le_add_right hx _)
 #align metric.cthickening_cthickening_subset Metric.cthickening_cthickening_subset
+
+theorem frontier_cthickening_disjoint (A : Set α) : Pairwise (Disjoint on fun r : ℝ≥0 => frontier (cthickening r A)) :=
+  fun r₁ r₂ hr =>
+  ((disjoint_singleton.2 <| by simpa).Preimage _).mono (frontier_cthickening_subset _) (frontier_cthickening_subset _)
+#align metric.frontier_cthickening_disjoint Metric.frontier_cthickening_disjoint
 
 end Cthickening
 

@@ -5,6 +5,7 @@ Authors: Anatole Dedecker, Bhavik Mehta
 -/
 import Mathbin.MeasureTheory.Integral.IntervalIntegral
 import Mathbin.Order.Filter.AtTopBot
+import Mathbin.MeasureTheory.Function.Jacobian
 
 /-!
 # Links between an integral and its "improper" version
@@ -636,6 +637,103 @@ theorem interval_integral_tendsto_integral_Ioi (a : ℝ) (hfi : IntegrableOn f (
 #align measure_theory.interval_integral_tendsto_integral_Ioi MeasureTheory.interval_integral_tendsto_integral_Ioi
 
 end IntegralOfIntervalIntegral
+
+section IoiChangeVariables
+
+open Real
+
+open Interval
+
+variable {E : Type _} {μ : Measure ℝ} {f : ℝ → E} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+
+/-- Change-of-variables formula for `Ioi` integrals of vector-valued functions, proved by taking
+limits from the result for finite intervals. -/
+theorem integral_comp_smul_deriv_Ioi {f f' : ℝ → ℝ} {g : ℝ → E} {a : ℝ} (hf : ContinuousOn f <| ici a)
+    (hft : Tendsto f atTop atTop) (hff' : ∀ x ∈ ioi a, HasDerivWithinAt f (f' x) (ioi x) x)
+    (hg_cont : ContinuousOn g <| f '' ioi a) (hg1 : IntegrableOn g <| f '' ici a)
+    (hg2 : IntegrableOn (fun x => f' x • (g ∘ f) x) (ici a)) :
+    (∫ x in ioi a, f' x • (g ∘ f) x) = ∫ u in ioi (f a), g u := by
+  have eq : ∀ b : ℝ, a < b → (∫ x in a..b, f' x • (g ∘ f) x) = ∫ u in f a..f b, g u := by
+    intro b hb
+    have i1 : Ioo (min a b) (max a b) ⊆ Ioi a := by
+      rw [min_eq_left hb.le]
+      exact Ioo_subset_Ioi_self
+    have i2 : [a, b] ⊆ Ici a := by
+      rw [interval_of_le hb.le]
+      exact Icc_subset_Ici_self
+    refine'
+      intervalIntegral.integral_comp_smul_deriv''' (hf.mono i2) (fun x hx => hff' x <| mem_of_mem_of_subset hx i1)
+        (hg_cont.mono <| image_subset _ _) (hg1.mono_set <| image_subset _ _) (hg2.mono_set i2)
+    · rw [min_eq_left hb.le]
+      exact Ioo_subset_Ioi_self
+      
+    · rw [interval_of_le hb.le]
+      exact Icc_subset_Ici_self
+      
+  rw [integrable_on_Ici_iff_integrable_on_Ioi] at hg2
+  have t2 := interval_integral_tendsto_integral_Ioi _ hg2 tendsto_id
+  have : Ioi (f a) ⊆ f '' Ici a :=
+    Ioi_subset_Ici_self.trans <|
+      IsPreconnected.intermediate_value_Ici is_preconnected_Ici left_mem_Ici (le_principal_iff.mpr <| Ici_mem_at_top _)
+        hf hft
+  have t1 := (interval_integral_tendsto_integral_Ioi _ (hg1.mono_set this) tendsto_id).comp hft
+  exact tendsto_nhds_unique (tendsto.congr' (eventually_eq_of_mem (Ioi_mem_at_top a) Eq) t2) t1
+#align measure_theory.integral_comp_smul_deriv_Ioi MeasureTheory.integral_comp_smul_deriv_Ioi
+
+/-- Change-of-variables formula for `Ioi` integrals of scalar-valued functions -/
+theorem integral_comp_mul_deriv_Ioi {f f' : ℝ → ℝ} {g : ℝ → ℝ} {a : ℝ} (hf : ContinuousOn f <| ici a)
+    (hft : Tendsto f atTop atTop) (hff' : ∀ x ∈ ioi a, HasDerivWithinAt f (f' x) (ioi x) x)
+    (hg_cont : ContinuousOn g <| f '' ioi a) (hg1 : IntegrableOn g <| f '' ici a)
+    (hg2 : IntegrableOn (fun x => (g ∘ f) x * f' x) (ici a)) :
+    (∫ x in ioi a, (g ∘ f) x * f' x) = ∫ u in ioi (f a), g u := by
+  have hg2' : integrable_on (fun x => f' x • (g ∘ f) x) (Ici a) := by simpa [mul_comm] using hg2
+  simpa [mul_comm] using integral_comp_smul_deriv_Ioi hf hft hff' hg_cont hg1 hg2'
+#align measure_theory.integral_comp_mul_deriv_Ioi MeasureTheory.integral_comp_mul_deriv_Ioi
+
+/-- Substitution `y = x ^ p` in integrals over `Ioi 0` -/
+theorem integral_comp_rpow_Ioi (g : ℝ → E) {p : ℝ} (hp : p ≠ 0) :
+    (∫ x in ioi 0, (|p| * x ^ (p - 1)) • g (x ^ p)) = ∫ y in ioi 0, g y := by
+  let S := Ioi (0 : ℝ)
+  have a1 : ∀ x : ℝ, x ∈ S → HasDerivWithinAt (fun t : ℝ => t ^ p) (p * x ^ (p - 1)) S x := fun x hx =>
+    (has_deriv_at_rpow_const (Or.inl (mem_Ioi.mp hx).ne')).HasDerivWithinAt
+  have a2 : inj_on (fun x : ℝ => x ^ p) S := by
+    rcases lt_or_gt_of_ne hp with ⟨⟩
+    · apply StrictAntiOn.inj_on
+      intro x hx y hy hxy
+      rw [← inv_lt_inv (rpow_pos_of_pos hx p) (rpow_pos_of_pos hy p), ← rpow_neg (le_of_lt hx), ←
+        rpow_neg (le_of_lt hy)]
+      exact rpow_lt_rpow (le_of_lt hx) hxy (neg_pos.mpr h)
+      
+    exact StrictMonoOn.inj_on fun x hx y hy hxy => rpow_lt_rpow (mem_Ioi.mp hx).le hxy h
+  have a3 : (fun t : ℝ => t ^ p) '' S = S := by
+    ext1
+    rw [mem_image]
+    constructor
+    · rintro ⟨y, hy, rfl⟩
+      exact rpow_pos_of_pos hy p
+      
+    · intro hx
+      refine' ⟨x ^ (1 / p), rpow_pos_of_pos hx _, _⟩
+      rw [← rpow_mul (le_of_lt hx), one_div_mul_cancel hp, rpow_one]
+      
+  have := integral_image_eq_integral_abs_deriv_smul measurableSetIoi a1 a2 g
+  rw [a3] at this
+  rw [this]
+  refine' set_integral_congr measurableSetIoi _
+  intro x hx
+  dsimp only
+  rw [abs_mul, abs_of_nonneg (rpow_nonneg_of_nonneg (le_of_lt hx) _)]
+#align measure_theory.integral_comp_rpow_Ioi MeasureTheory.integral_comp_rpow_Ioi
+
+theorem integral_comp_rpow_Ioi_of_pos {g : ℝ → E} {p : ℝ} (hp : 0 < p) :
+    (∫ x in ioi 0, (p * x ^ (p - 1)) • g (x ^ p)) = ∫ y in ioi 0, g y := by
+  convert integral_comp_rpow_Ioi g hp.ne'
+  funext
+  congr
+  rw [abs_of_nonneg hp.le]
+#align measure_theory.integral_comp_rpow_Ioi_of_pos MeasureTheory.integral_comp_rpow_Ioi_of_pos
+
+end IoiChangeVariables
 
 end MeasureTheory
 

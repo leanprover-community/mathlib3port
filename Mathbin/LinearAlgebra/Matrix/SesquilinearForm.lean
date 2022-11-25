@@ -367,9 +367,8 @@ theorem LinearMap.to_matrix₂_apply (B : M₁ →ₗ[R] M₂ →ₗ[R] R) (i : 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem Matrix.to_linear_map₂_apply (M : Matrix n m R) (x : M₁) (y : M₂) :
-    Matrix.toLinearMap₂ b₁ b₂ M x y = ∑ (i) (j), b₁.repr x i * M i j * b₂.repr y j := by
-  rw [Matrix.toLinearMap₂, LinearMap.toMatrix₂, LinearEquiv.symm_trans_apply, ← Matrix.toLinearMap₂']
-  simp [Matrix.to_linear_map₂'_apply]
+    Matrix.toLinearMap₂ b₁ b₂ M x y = ∑ (i) (j), b₁.repr x i * M i j * b₂.repr y j :=
+  rfl
 #align matrix.to_linear_map₂_apply Matrix.to_linear_map₂_apply
 
 -- Not a `simp` lemma since `linear_map.to_matrix₂` needs an extra argument

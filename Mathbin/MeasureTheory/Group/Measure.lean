@@ -566,9 +566,9 @@ variable [CommGroup G]
 
 /-- In an abelian group every left invariant measure is also right-invariant.
   We don't declare the converse as an instance, since that would loop type-class inference, and
-  we use `is_mul_left_invariant` as default hypotheses in abelian groups. -/
-@[to_additive
-      "In an abelian additive group every left invariant measure is also\nright-invariant. We don't declare the converse as an instance, since that would loop type-class\ninference, and we use `is_add_left_invariant` as default hypotheses in abelian groups."]
+  we use `is_mul_left_invariant` as the default hypothesis in abelian groups. -/
+@[to_additive IsAddLeftInvariant.isAddRightInvariant
+      "In an abelian additive\ngroup every left invariant measure is also right-invariant. We don't declare the converse as an\ninstance, since that would loop type-class inference, and we use `is_add_left_invariant` as the\ndefault hypothesis in abelian groups."]
 instance (priority := 100) IsMulLeftInvariant.isMulRightInvariant {μ : Measure G} [IsMulLeftInvariant μ] :
     IsMulRightInvariant μ :=
   ⟨fun g => by simp_rw [mul_comm, map_mul_left_eq_self]⟩

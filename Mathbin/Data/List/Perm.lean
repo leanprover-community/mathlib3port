@@ -8,6 +8,7 @@ import Mathbin.Data.List.Lattice
 import Mathbin.Data.List.Permutation
 import Mathbin.Data.List.Zip
 import Mathbin.Data.List.Range
+import Mathbin.Data.Nat.Factorial.Basic
 import Mathbin.Logic.Relation
 
 /-!
@@ -1164,79 +1165,6 @@ theorem Perm.product_left (l : List α) {t₁ t₂ : List β} (p : t₁ ~ t₂) 
 theorem Perm.product {l₁ l₂ : List α} {t₁ t₂ : List β} (p₁ : l₁ ~ l₂) (p₂ : t₁ ~ t₂) : product l₁ t₁ ~ product l₂ t₂ :=
   (p₁.product_right t₁).trans (p₂.product_left l₂)
 #align list.perm.product List.Perm.product
-
-theorem sublists_cons_perm_append (a : α) (l : List α) : sublists (a :: l) ~ sublists l ++ map (cons a) (sublists l) :=
-  by
-  simp only [sublists, sublists_aux_cons_cons, cons_append, perm_cons]
-  refine' (perm.cons _ _).trans perm_middle.symm
-  induction' sublists_aux l cons with b l IH <;> simp
-  exact (IH.cons _).trans perm_middle.symm
-#align list.sublists_cons_perm_append List.sublists_cons_perm_append
-
-theorem sublists_perm_sublists' : ∀ l : List α, sublists l ~ sublists' l
-  | [] => Perm.refl _
-  | a :: l => by
-    let IH := sublists_perm_sublists' l
-    rw [sublists'_cons] <;> exact (sublists_cons_perm_append _ _).trans (IH.append (IH.map _))
-#align list.sublists_perm_sublists' List.sublists_perm_sublists'
-
-theorem revzip_sublists (l : List α) : ∀ l₁ l₂, (l₁, l₂) ∈ revzip l.sublists → l₁ ++ l₂ ~ l := by
-  rw [revzip]
-  apply List.reverseRecOn l
-  · intro l₁ l₂ h
-    simp at h
-    simp [h]
-    
-  · intro l a IH l₁ l₂ h
-    rw [sublists_concat, reverse_append, zip_append, ← map_reverse, zip_map_right, zip_map_left] at h <;> [skip,
-      · simp
-        ]
-    simp only [Prod.mk.inj_iff, mem_map, mem_append, Prod.map_mk, Prod.exists] at h
-    rcases h with (⟨l₁, l₂', h, rfl, rfl⟩ | ⟨l₁', l₂, h, rfl, rfl⟩)
-    · rw [← append_assoc]
-      exact (IH _ _ h).append_right _
-      
-    · rw [append_assoc]
-      apply (perm_append_comm.append_left _).trans
-      rw [← append_assoc]
-      exact (IH _ _ h).append_right _
-      
-    
-#align list.revzip_sublists List.revzip_sublists
-
-theorem revzip_sublists' (l : List α) : ∀ l₁ l₂, (l₁, l₂) ∈ revzip l.sublists' → l₁ ++ l₂ ~ l := by
-  rw [revzip]
-  induction' l with a l IH <;> intro l₁ l₂ h
-  · simp at h
-    simp [h]
-    
-  · rw [sublists'_cons, reverse_append, zip_append, ← map_reverse, zip_map_right, zip_map_left] at h <;> [simp at h,
-      simp]
-    rcases h with (⟨l₁, l₂', h, rfl, rfl⟩ | ⟨l₁', h, rfl⟩)
-    · exact perm_middle.trans ((IH _ _ h).cons _)
-      
-    · exact (IH _ _ h).cons _
-      
-    
-#align list.revzip_sublists' List.revzip_sublists'
-
-theorem range_bind_sublists_len_perm {α : Type _} (l : List α) :
-    ((List.range (l.length + 1)).bind fun n => sublistsLen n l) ~ sublists' l := by
-  induction' l with h tl
-  · simp [range_succ]
-    
-  · simp_rw [range_succ_eq_map, length, cons_bind, map_bind, sublists_len_succ_cons, sublists'_cons,
-      List.sublists_len_zero, List.singleton_append]
-    refine' ((bind_append_perm (range (tl.length + 1)) _ _).symm.cons _).trans _
-    simp_rw [← List.bind_map, ← cons_append]
-    rw [← List.singleton_append, ← List.sublists_len_zero tl]
-    refine' perm.append _ (l_ih.map _)
-    rw [List.range_succ, append_bind, bind_singleton, sublists_len_of_length_lt (Nat.lt_succ_self _), append_nil, ←
-      List.map_bind (fun n => sublists_len n tl) Nat.succ, ← cons_bind 0 _ fun n => sublists_len n tl, ←
-      range_succ_eq_map]
-    exact l_ih
-    
-#align list.range_bind_sublists_len_perm List.range_bind_sublists_len_perm
 
 theorem perm_lookmap (f : α → Option α) {l₁ l₂ : List α}
     (H : Pairwise (fun a b => ∀ c ∈ f a, ∀ d ∈ f b, a = b ∧ c = d) l₁) (p : l₁ ~ l₂) : lookmap f l₁ ~ lookmap f l₂ := by

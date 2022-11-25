@@ -939,6 +939,10 @@ theorem and_iff_right_of_imp {a b : Prop} (h : b → a) : a ∧ b ↔ b :=
   Iff.intro And.right fun hb => ⟨h hb, hb⟩
 #align and_iff_right_of_imp and_iff_right_of_imp
 
+theorem ne_and_eq_iff_right {α : Sort _} {a b c : α} (h : b ≠ c) : a ≠ b ∧ a = c ↔ a = c :=
+  and_iff_right_of_imp fun h2 => h2.symm ▸ h.symm
+#align ne_and_eq_iff_right ne_and_eq_iff_right
+
 #print and_iff_left_iff_imp /-
 @[simp]
 theorem and_iff_left_iff_imp {a b : Prop} : (a ∧ b ↔ a) ↔ a → b :=

@@ -5,7 +5,6 @@ Authors: Mario Carneiro
 -/
 import Mathbin.Data.List.Count
 import Mathbin.Data.List.Lex
-import Mathbin.Data.List.Sublists
 import Mathbin.Logic.Pairwise
 import Mathbin.Logic.Relation
 
@@ -389,24 +388,6 @@ theorem pairwise_iff_nth_le {R} :
       exact H _ _ (succ_lt_succ h) (succ_pos _)
       
 #align list.pairwise_iff_nth_le List.pairwise_iff_nth_le
-
-theorem Pairwise.sublists' {R} : ∀ {l : List α}, Pairwise R l → Pairwise (Lex (swap R)) (sublists' l)
-  | _, pairwise.nil => pairwise_singleton _ _
-  | _, @pairwise.cons _ _ a l H₁ H₂ => by
-    simp only [sublists'_cons, pairwise_append, pairwise_map, mem_sublists', mem_map, exists_imp, and_imp]
-    refine' ⟨H₂.sublists', H₂.sublists'.imp fun l₁ l₂ => lex.cons, _⟩
-    rintro l₁ sl₁ x l₂ sl₂ rfl
-    cases' l₁ with b l₁
-    · constructor
-      
-    exact lex.rel (H₁ _ <| sl₁.subset <| mem_cons_self _ _)
-#align list.pairwise.sublists' List.Pairwise.sublists'
-
-theorem pairwise_sublists {R} {l : List α} (H : Pairwise R l) :
-    Pairwise (fun l₁ l₂ => Lex R (reverse l₁) (reverse l₂)) (sublists l) := by
-  have := (pairwise_reverse.2 H).sublists'
-  rwa [sublists'_reverse, pairwise_map] at this
-#align list.pairwise_sublists List.pairwise_sublists
 
 theorem pairwise_repeat {α : Type _} {r : α → α → Prop} {x : α} (hx : r x x) : ∀ n : ℕ, Pairwise r (repeat x n)
   | 0 => by simp

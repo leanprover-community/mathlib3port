@@ -111,7 +111,7 @@ theorem Directed.extend_bot [Preorder α] [OrderBot α] {e : ι → β} {f : ι 
     
   rcases hf i j with ⟨k, hi, hj⟩
   use e k
-  simp only [Function.extend_apply he, *, true_and_iff]
+  simp only [he.extend_apply, *, true_and_iff]
 #align directed.extend_bot Directed.extend_bot
 
 /-- An antitone function on an inf-semilattice is directed. -/

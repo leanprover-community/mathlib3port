@@ -8,7 +8,7 @@ import Mathbin.Data.Finsupp.Defs
 import Mathbin.Data.Nat.PartEnat
 import Mathbin.Data.Set.Countable
 import Mathbin.Logic.Small.Basic
-import Mathbin.Order.ConditionallyCompleteLattice
+import Mathbin.Order.ConditionallyCompleteLattice.Basic
 import Mathbin.Order.SuccPred.Basic
 import Mathbin.SetTheory.Cardinal.SchroederBernstein
 import Mathbin.Tactic.Positivity
@@ -1144,7 +1144,7 @@ theorem mk_finset_of_fintype [Fintype α] : (#Finset α) = 2 ^ℕ Fintype.card �
 
 @[simp]
 theorem mk_finsupp_lift_of_fintype (α : Type u) (β : Type v) [Fintype α] [Zero β] :
-    (#α →₀ β) = lift.{u} (#β) ^ℕ Fintype.card α := by simpa using (@Finsupp.equivFunOnFintype α β _ _).cardinal_eq
+    (#α →₀ β) = lift.{u} (#β) ^ℕ Fintype.card α := by simpa using (@Finsupp.equivFunOnFinite α β _ _).cardinal_eq
 #align cardinal.mk_finsupp_lift_of_fintype Cardinal.mk_finsupp_lift_of_fintype
 
 theorem mk_finsupp_of_fintype (α β : Type u) [Fintype α] [Zero β] : (#α →₀ β) = (#β) ^ℕ Fintype.card α := by simp

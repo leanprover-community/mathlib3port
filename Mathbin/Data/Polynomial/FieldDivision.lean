@@ -156,27 +156,6 @@ theorem is_unit_iff_degree_eq_zero : IsUnit p ↔ degree p = 0 :=
         rw [← C_mul, _root_.mul_inv_cancel hc, C_1]⟩⟩
 #align polynomial.is_unit_iff_degree_eq_zero Polynomial.is_unit_iff_degree_eq_zero
 
-theorem irreducible_of_monic {p : R[X]} (hp1 : p.Monic) (hp2 : p ≠ 1) :
-    Irreducible p ↔ ∀ f g : R[X], f.Monic → g.Monic → f * g = p → f = 1 ∨ g = 1 :=
-  ⟨fun hp3 f g hf hg hfg =>
-    Or.cases_on (hp3.is_unit_or_is_unit hfg.symm) (fun huf : IsUnit f => Or.inl <| eq_one_of_is_unit_of_monic hf huf)
-      fun hug : IsUnit g => Or.inr <| eq_one_of_is_unit_of_monic hg hug,
-    fun hp3 =>
-    ⟨mt (eq_one_of_is_unit_of_monic hp1) hp2, fun f g hp =>
-      have hf : f ≠ 0 := fun hf => by
-        rw [hp, hf, zero_mul] at hp1
-        exact not_monic_zero hp1
-      have hg : g ≠ 0 := fun hg => by
-        rw [hp, hg, mul_zero] at hp1
-        exact not_monic_zero hp1
-      (Or.imp (fun hf => is_unit_of_mul_eq_one _ _ hf) fun hg => is_unit_of_mul_eq_one _ _ hg) <|
-        hp3 (f * c f.leadingCoeff⁻¹) (g * c g.leadingCoeff⁻¹) (monic_mul_leading_coeff_inv hf)
-            (monic_mul_leading_coeff_inv hg) <|
-          by
-          rw [mul_assoc, mul_left_comm _ g, ← mul_assoc, ← C_mul, ← mul_inv, ← leading_coeff_mul, ← hp, monic.def.1 hp1,
-            inv_one, C_1, mul_one]⟩⟩
-#align polynomial.irreducible_of_monic Polynomial.irreducible_of_monic
-
 /-- Division of polynomials. See `polynomial.div_by_monic` for more details.-/
 def div (p q : R[X]) :=
   c (leadingCoeff q)⁻¹ * (p /ₘ (q * c (leadingCoeff q)⁻¹))

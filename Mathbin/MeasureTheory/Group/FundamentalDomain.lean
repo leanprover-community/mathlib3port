@@ -77,6 +77,33 @@ theorem mk' (h_meas : NullMeasurableSet s μ) (h_exists : ∀ x : α, ∃! g : G
             exact hne ((h_exists x).unique hgx hx)) }
 #align measure_theory.is_fundamental_domain.mk' MeasureTheory.IsFundamentalDomain.mk'
 
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
+/-- If a measurable space has a finite measure `μ` and a countable group `G` acts
+quasi-measure-preservingly, then to show that a set `s` is a fundamental domain, it is sufficient
+to check that its translates `g • s` are (almost) disjoint and that the sum `∑' g, μ (g • s)` is
+sufficiently large. -/
+@[to_additive MeasureTheory.IsAddFundamentalDomain.mkOfMeasureUnivLe
+      "\nIf a measurable space has a finite measure `μ` and a countable additive group `G` acts\nquasi-measure-preservingly, then to show that a set `s` is a fundamental domain, it is sufficient\nto check that its translates `g +ᵥ s` are (almost) disjoint and that the sum `∑' g, μ (g +ᵥ s)` is\nsufficiently large."]
+theorem mkOfMeasureUnivLe [IsFiniteMeasure μ] [Countable G] (h_meas : NullMeasurableSet s μ)
+    (h_ae_disjoint : ∀ (g) (_ : g ≠ (1 : G)), AeDisjoint μ (g • s) s)
+    (h_qmp : ∀ g : G, QuasiMeasurePreserving ((· • ·) g : α → α) μ μ)
+    (h_measure_univ_le : μ (univ : Set α) ≤ ∑' g : G, μ (g • s)) : IsFundamentalDomain G s μ :=
+  { NullMeasurableSet := h_meas, AeDisjoint := h_ae_disjoint,
+    ae_covers := by
+      replace ae_disjoint : Pairwise (ae_disjoint μ on fun g : G => g • s) :=
+        pairwise_ae_disjoint_of_ae_disjoint_forall_ne_one h_ae_disjoint h_qmp
+      replace h_meas : ∀ g : G, null_measurable_set (g • s) μ := fun g => by
+        rw [← inv_inv g, ← preimage_smul]
+        exact h_meas.preimage (h_qmp g⁻¹)
+      have h_meas' : null_measurable_set { a | ∃ g : G, g • a ∈ s } μ := by
+        rw [← Union_smul_eq_set_of_exists]
+        exact null_measurable_set.Union h_meas
+      rw [ae_iff_measure_eq h_meas', ← Union_smul_eq_set_of_exists]
+      refine' le_antisymm (measure_mono <| subset_univ _) _
+      rw [measure_Union₀ ae_disjoint h_meas]
+      exact h_measure_univ_le }
+#align measure_theory.is_fundamental_domain.mk_of_measure_univ_le MeasureTheory.IsFundamentalDomain.mkOfMeasureUnivLe
+
 @[to_additive]
 theorem Union_smul_ae_eq (h : IsFundamentalDomain G s μ) : (⋃ g : G, g • s) =ᵐ[μ] univ :=
   eventually_eq_univ.2 <| h.ae_covers.mono fun x ⟨g, hg⟩ => mem_Union.2 ⟨g⁻¹, _, hg, inv_smul_smul _ _⟩
@@ -103,12 +130,9 @@ theorem restrict_restrict (h : IsFundamentalDomain G s μ) (g : G) (t : Set α) 
 
 @[to_additive]
 theorem pairwise_ae_disjoint (h : IsFundamentalDomain G s μ) :
-    Pairwise fun g₁ g₂ : G => AeDisjoint μ (g₁ • s) (g₂ • s) := fun g₁ g₂ hne =>
-  calc
-    μ (g₁ • s ∩ g₂ • s) = μ (g₂ • ((g₂⁻¹ * g₁) • s ∩ s)) := by rw [smul_set_inter, smul_smul, mul_inv_cancel_left]
-    _ = μ ((g₂⁻¹ * g₁) • s ∩ s) := measure_smul_set _ _ _
-    _ = 0 := h.AeDisjoint _ <| mt inv_mul_eq_one.1 hne.symm
-    
+    Pairwise fun g₁ g₂ : G => AeDisjoint μ (g₁ • s) (g₂ • s) :=
+  pairwise_ae_disjoint_of_ae_disjoint_forall_ne_one h.AeDisjoint fun g =>
+    measure_preserving.quasi_measure_preserving <| by simp
 #align measure_theory.is_fundamental_domain.pairwise_ae_disjoint MeasureTheory.IsFundamentalDomain.pairwise_ae_disjoint
 
 @[to_additive]
@@ -233,6 +257,19 @@ theorem measure_zero_of_invariant (h : IsFundamentalDomain G s μ) (t : Set α) 
     (hts : μ (t ∩ s) = 0) : μ t = 0 := by simp [measure_eq_tsum h, ht, hts]
 #align
   measure_theory.is_fundamental_domain.measure_zero_of_invariant MeasureTheory.IsFundamentalDomain.measure_zero_of_invariant
+
+/-- Given a measure space with an action of a finite group `G`, the measure of any `G`-invariant set
+is determined by the measure of its intersection with a fundamental domain for the action of `G`. -/
+@[to_additive measure_eq_card_smul_of_vadd_ae_eq_self
+      "Given a measure space with an action of a\nfinite additive group `G`, the measure of any `G`-invariant set is determined by the measure of its\nintersection with a fundamental domain for the action of `G`."]
+theorem measure_eq_card_smul_of_smul_ae_eq_self [Finite G] (h : IsFundamentalDomain G s μ) (t : Set α)
+    (ht : ∀ g : G, (g • t : Set α) =ᵐ[μ] t) : μ t = Nat.card G • μ (t ∩ s) := by
+  haveI : Fintype G := Fintype.ofFinite G
+  rw [h.measure_eq_tsum]
+  replace ht : ∀ g : G, (g • t ∩ s : Set α) =ᵐ[μ] (t ∩ s : Set α) := fun g => ae_eq_set_inter (ht g) (ae_eq_refl s)
+  simp_rw [measure_congr (ht _), tsum_fintype, Finset.sum_const, Nat.card_eq_fintype_card, Finset.card_univ]
+#align
+  measure_theory.is_fundamental_domain.measure_eq_card_smul_of_smul_ae_eq_self MeasureTheory.IsFundamentalDomain.measure_eq_card_smul_of_smul_ae_eq_self
 
 @[to_additive]
 protected theorem set_lintegral_eq (hs : IsFundamentalDomain G s μ) (ht : IsFundamentalDomain G t μ) (f : α → ℝ≥0∞)

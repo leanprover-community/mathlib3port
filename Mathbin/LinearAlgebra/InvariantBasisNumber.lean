@@ -111,8 +111,8 @@ theorem card_le_of_injective [StrongRankCondition R] {α β : Type _} [Fintype �
 
 theorem card_le_of_injective' [StrongRankCondition R] {α β : Type _} [Fintype α] [Fintype β] (f : (α →₀ R) →ₗ[R] β →₀ R)
     (i : Injective f) : Fintype.card α ≤ Fintype.card β := by
-  let P := Finsupp.linearEquivFunOnFintype R R β
-  let Q := (Finsupp.linearEquivFunOnFintype R R α).symm
+  let P := Finsupp.linearEquivFunOnFinite R R β
+  let Q := (Finsupp.linearEquivFunOnFinite R R α).symm
   exact card_le_of_injective R ((P.to_linear_map.comp f).comp Q.to_linear_map) ((P.injective.comp i).comp Q.injective)
 #align card_le_of_injective' card_le_of_injective'
 
@@ -137,8 +137,8 @@ theorem card_le_of_surjective [RankCondition R] {α β : Type _} [Fintype α] [F
 
 theorem card_le_of_surjective' [RankCondition R] {α β : Type _} [Fintype α] [Fintype β] (f : (α →₀ R) →ₗ[R] β →₀ R)
     (i : Surjective f) : Fintype.card β ≤ Fintype.card α := by
-  let P := Finsupp.linearEquivFunOnFintype R R β
-  let Q := (Finsupp.linearEquivFunOnFintype R R α).symm
+  let P := Finsupp.linearEquivFunOnFinite R R β
+  let Q := (Finsupp.linearEquivFunOnFinite R R α).symm
   exact
     card_le_of_surjective R ((P.to_linear_map.comp f).comp Q.to_linear_map) ((P.surjective.comp i).comp Q.surjective)
 #align card_le_of_surjective' card_le_of_surjective'

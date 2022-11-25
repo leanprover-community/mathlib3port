@@ -977,7 +977,7 @@ theorem Fintype.total_apply_single (i : α) (r : R) : Fintype.total R S v (Pi.si
 variable (S)
 
 theorem Finsupp.total_eq_fintype_total_apply (x : α → R) :
-    Finsupp.total α M R v ((Finsupp.linearEquivFunOnFintype R R α).symm x) = Fintype.total R S v x := by
+    Finsupp.total α M R v ((Finsupp.linearEquivFunOnFinite R R α).symm x) = Fintype.total R S v x := by
   apply Finset.sum_subset
   · exact Finset.subset_univ _
     
@@ -988,7 +988,7 @@ theorem Finsupp.total_eq_fintype_total_apply (x : α → R) :
 #align finsupp.total_eq_fintype_total_apply Finsupp.total_eq_fintype_total_apply
 
 theorem Finsupp.total_eq_fintype_total :
-    (Finsupp.total α M R v).comp (Finsupp.linearEquivFunOnFintype R R α).symm.toLinearMap = Fintype.total R S v :=
+    (Finsupp.total α M R v).comp (Finsupp.linearEquivFunOnFinite R R α).symm.toLinearMap = Fintype.total R S v :=
   LinearMap.ext <| Finsupp.total_eq_fintype_total_apply R S v
 #align finsupp.total_eq_fintype_total Finsupp.total_eq_fintype_total
 
@@ -1007,8 +1007,8 @@ variable {v} {x : M}
 /-- An element `x` lies in the span of `v` iff it can be written as sum `∑ cᵢ • vᵢ = x`.
 -/
 theorem mem_span_range_iff_exists_fun : x ∈ span R (range v) ↔ ∃ c : α → R, (∑ i, c i • v i) = x := by
-  simp only [Finsupp.mem_span_range_iff_exists_finsupp, finsupp.equiv_fun_on_fintype.surjective.exists,
-    Finsupp.equiv_fun_on_fintype_apply]
+  simp only [Finsupp.mem_span_range_iff_exists_finsupp, finsupp.equiv_fun_on_finite.surjective.exists,
+    Finsupp.equiv_fun_on_finite_apply]
   exact exists_congr fun c => Eq.congr_left <| (Finsupp.sum_fintype _ _) fun i => zero_smul _ _
 #align mem_span_range_iff_exists_fun mem_span_range_iff_exists_fun
 
@@ -1140,14 +1140,14 @@ theorem splitting_of_finsupp_surjective_injective (f : M →ₗ[R] α →₀ R) 
 -- See also `linear_map.splitting_of_finsupp_surjective`
 /-- A surjective linear map to functions on a finite type has a splitting. -/
 def splittingOfFunOnFintypeSurjective [Fintype α] (f : M →ₗ[R] α → R) (s : Surjective f) : (α → R) →ₗ[R] M :=
-  (Finsupp.lift _ _ _ fun x : α => (s (Finsupp.single x 1)).some).comp (linearEquivFunOnFintype R R α).symm.toLinearMap
+  (Finsupp.lift _ _ _ fun x : α => (s (Finsupp.single x 1)).some).comp (linearEquivFunOnFinite R R α).symm.toLinearMap
 #align linear_map.splitting_of_fun_on_fintype_surjective LinearMap.splittingOfFunOnFintypeSurjective
 
 theorem splitting_of_fun_on_fintype_surjective_splits [Fintype α] (f : M →ₗ[R] α → R) (s : Surjective f) :
     f.comp (splittingOfFunOnFintypeSurjective f s) = LinearMap.id := by
   ext (x y)
   dsimp [splitting_of_fun_on_fintype_surjective]
-  rw [linear_equiv_fun_on_fintype_symm_single, Finsupp.sum_single_index, one_smul, (s (Finsupp.single x 1)).some_spec,
+  rw [linear_equiv_fun_on_finite_symm_single, Finsupp.sum_single_index, one_smul, (s (Finsupp.single x 1)).some_spec,
     Finsupp.single_eq_pi_single]
   rw [zero_smul]
 #align linear_map.splitting_of_fun_on_fintype_surjective_splits LinearMap.splitting_of_fun_on_fintype_surjective_splits

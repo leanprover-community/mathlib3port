@@ -145,9 +145,8 @@ theorem measure_union_add_inter' (hs : MeasurableSet s) (t : Set α) : μ (s ∪
   rw [union_comm, inter_comm, measure_union_add_inter t hs, add_comm]
 #align measure_theory.measure_union_add_inter' MeasureTheory.measure_union_add_inter'
 
-theorem measure_add_measure_compl (h : MeasurableSet s) : μ s + μ (sᶜ) = μ univ := by
-  rw [← measure_union' _ h, union_compl_self]
-  exact disjoint_compl_right
+theorem measure_add_measure_compl (h : MeasurableSet s) : μ s + μ (sᶜ) = μ univ :=
+  measure_add_measure_compl₀ h.NullMeasurableSet
 #align measure_theory.measure_add_measure_compl MeasureTheory.measure_add_measure_compl
 
 theorem measure_bUnion₀ {s : Set β} {f : β → Set α} (hs : s.Countable) (hd : s.Pairwise (AeDisjoint μ on f))
@@ -407,7 +406,7 @@ theorem measure_Union_eq_supr [Countable ι] {s : ι → Set α} (hd : Directed 
   generalize ht : Function.extend Encodable.encode s ⊥ = t
   replace hd : Directed (· ⊆ ·) t := ht ▸ hd.extend_bot Encodable.encode_injective
   suffices μ (⋃ n, t n) = ⨆ n, μ (t n) by
-    simp only [← ht, apply_extend Encodable.encode_injective μ, ← supr_eq_Union,
+    simp only [← ht, encodable.encode_injective.apply_extend μ, ← supr_eq_Union,
       supr_extend_bot Encodable.encode_injective, (· ∘ ·), Pi.bot_apply, bot_eq_empty, measure_empty] at this
     exact this.trans (supr_extend_bot Encodable.encode_injective _)
   clear! ι
@@ -2338,6 +2337,32 @@ theorem exists_preimage_eq_of_preimage_ae {f : α → α} (h : QuasiMeasurePrese
 
 end QuasiMeasurePreserving
 
+section Pointwise
+
+open Pointwise
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:611:2: warning: expanding binder collection (g «expr ≠ » (1 : G)) -/
+@[to_additive]
+theorem pairwise_ae_disjoint_of_ae_disjoint_forall_ne_one {G α : Type _} [Group G] [MulAction G α] [MeasurableSpace α]
+    {μ : Measure α} {s : Set α} (h_ae_disjoint : ∀ (g) (_ : g ≠ (1 : G)), AeDisjoint μ (g • s) s)
+    (h_qmp : ∀ g : G, QuasiMeasurePreserving ((· • ·) g : α → α) μ μ) : Pairwise (AeDisjoint μ on fun g : G => g • s) :=
+  by
+  intro g₁ g₂ hg
+  let g := g₂⁻¹ * g₁
+  replace hg : g ≠ 1
+  · rw [Ne.def, inv_mul_eq_one]
+    exact hg.symm
+    
+  have : (· • ·) g₂⁻¹ ⁻¹' (g • s ∩ s) = g₁ • s ∩ g₂ • s := by
+    rw [preimage_eq_iff_eq_image (MulAction.bijective g₂⁻¹), image_smul, smul_set_inter, smul_smul, smul_smul,
+      inv_mul_self, one_smul]
+  change μ (g₁ • s ∩ g₂ • s) = 0
+  exact this ▸ (h_qmp g₂⁻¹).preimage_null (h_ae_disjoint g hg)
+#align
+  measure_theory.measure.pairwise_ae_disjoint_of_ae_disjoint_forall_ne_one MeasureTheory.Measure.pairwise_ae_disjoint_of_ae_disjoint_forall_ne_one
+
+end Pointwise
+
 /-! ### The `cofinite` filter -/
 
 
@@ -2861,6 +2886,25 @@ theorem summable_measure_to_real [hμ : IsFiniteMeasure μ] {f : ℕ → Set α}
   rw [← MeasureTheory.measure_Union hf₂ hf₁]
   exact ne_of_lt (measure_lt_top _ _)
 #align measure_theory.summable_measure_to_real MeasureTheory.summable_measure_to_real
+
+theorem ae_eq_univ_iff_measure_eq [IsFiniteMeasure μ] (hs : NullMeasurableSet s μ) : s =ᵐ[μ] univ ↔ μ s = μ univ := by
+  refine' ⟨measure_congr, fun h => _⟩
+  obtain ⟨t, -, ht₁, ht₂⟩ := hs.exists_measurable_subset_ae_eq
+  exact
+    ht₂.symm.trans
+      (ae_eq_of_subset_of_measure_ge (subset_univ t) (Eq.le ((measure_congr ht₂).trans h).symm) ht₁
+        (measure_ne_top μ univ))
+#align measure_theory.ae_eq_univ_iff_measure_eq MeasureTheory.ae_eq_univ_iff_measure_eq
+
+theorem ae_iff_measure_eq [IsFiniteMeasure μ] {p : α → Prop} (hp : NullMeasurableSet { a | p a } μ) :
+    (∀ᵐ a ∂μ, p a) ↔ μ { a | p a } = μ univ := by
+  rw [← ae_eq_univ_iff_measure_eq hp, eventually_eq_univ, eventually_iff]
+#align measure_theory.ae_iff_measure_eq MeasureTheory.ae_iff_measure_eq
+
+theorem ae_mem_iff_measure_eq [IsFiniteMeasure μ] {s : Set α} (hs : NullMeasurableSet s μ) :
+    (∀ᵐ a ∂μ, a ∈ s) ↔ μ s = μ univ :=
+  ae_iff_measure_eq hs
+#align measure_theory.ae_mem_iff_measure_eq MeasureTheory.ae_mem_iff_measure_eq
 
 instance [Finite α] [MeasurableSpace α] : IsFiniteMeasure (Measure.count : Measure α) :=
   ⟨by

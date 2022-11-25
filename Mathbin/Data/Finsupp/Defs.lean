@@ -225,35 +225,26 @@ theorem support_subset_iff {s : Set α} {f : α →₀ M} : ↑f.support ⊆ s �
   simp only [Set.subset_def, mem_coe, mem_support_iff] <;> exact forall_congr' fun a => not_imp_comm
 #align finsupp.support_subset_iff Finsupp.support_subset_iff
 
-/-- Given `fintype α`, `equiv_fun_on_fintype` is the `equiv` between `α →₀ β` and `α → β`.
+/-- Given `finite α`, `equiv_fun_on_finite` is the `equiv` between `α →₀ β` and `α → β`.
   (All functions on a finite type are finitely supported.) -/
 @[simps]
-def equivFunOnFintype [Fintype α] : (α →₀ M) ≃ (α → M) :=
-  ⟨fun f a => f a, fun f =>
-    mk (Finset.univ.filter fun a => f a ≠ 0) f
-      (by
-        simp only [true_and_iff, Finset.mem_univ, iff_self_iff, Finset.mem_filter, Finset.filter_congr_decidable,
-          forall_true_iff]),
-    by
-    intro f
-    ext a
-    rfl, by
-    intro f
-    ext a
-    rfl⟩
-#align finsupp.equiv_fun_on_fintype Finsupp.equivFunOnFintype
+def equivFunOnFinite [Finite α] : (α →₀ M) ≃ (α → M) where
+  toFun := coeFn
+  invFun f := mk (Function.support f).to_finite.toFinset f fun a => Set.Finite.mem_to_finset _
+  left_inv f := ext fun x => rfl
+  right_inv f := rfl
+#align finsupp.equiv_fun_on_finite Finsupp.equivFunOnFinite
 
 @[simp]
-theorem equiv_fun_on_fintype_symm_coe {α} [Fintype α] (f : α →₀ M) : equivFunOnFintype.symm f = f := by
-  ext
-  simp [equiv_fun_on_fintype]
-#align finsupp.equiv_fun_on_fintype_symm_coe Finsupp.equiv_fun_on_fintype_symm_coe
+theorem equiv_fun_on_finite_symm_coe {α} [Finite α] (f : α →₀ M) : equivFunOnFinite.symm f = f :=
+  equivFunOnFinite.symm_apply_apply f
+#align finsupp.equiv_fun_on_finite_symm_coe Finsupp.equiv_fun_on_finite_symm_coe
 
 /-- If `α` has a unique term, the type of finitely supported functions `α →₀ β` is equivalent to `β`.
 -/
 @[simps]
 noncomputable def _root_.equiv.finsupp_unique {ι : Type _} [Unique ι] : (ι →₀ M) ≃ M :=
-  Finsupp.equivFunOnFintype.trans (Equiv.funUnique ι M)
+  Finsupp.equivFunOnFinite.trans (Equiv.funUnique ι M)
 #align finsupp._root_.equiv.finsupp_unique finsupp._root_.equiv.finsupp_unique
 
 end Basic
@@ -477,18 +468,17 @@ theorem card_support_le_one' [Nonempty α] {f : α →₀ M} : card f.support �
 #align finsupp.card_support_le_one' Finsupp.card_support_le_one'
 
 @[simp]
-theorem equiv_fun_on_fintype_single [DecidableEq α] [Fintype α] (x : α) (m : M) :
-    (@Finsupp.equivFunOnFintype α M _ _) (Finsupp.single x m) = Pi.single x m := by
+theorem equiv_fun_on_finite_single [DecidableEq α] [Finite α] (x : α) (m : M) :
+    Finsupp.equivFunOnFinite (Finsupp.single x m) = Pi.single x m := by
   ext
-  simp [Finsupp.single_eq_pi_single, Finsupp.equivFunOnFintype]
-#align finsupp.equiv_fun_on_fintype_single Finsupp.equiv_fun_on_fintype_single
+  simp [Finsupp.single_eq_pi_single]
+#align finsupp.equiv_fun_on_finite_single Finsupp.equiv_fun_on_finite_single
 
 @[simp]
-theorem equiv_fun_on_fintype_symm_single [DecidableEq α] [Fintype α] (x : α) (m : M) :
-    (@Finsupp.equivFunOnFintype α M _ _).symm (Pi.single x m) = Finsupp.single x m := by
-  ext
-  simp [Finsupp.single_eq_pi_single, Finsupp.equivFunOnFintype]
-#align finsupp.equiv_fun_on_fintype_symm_single Finsupp.equiv_fun_on_fintype_symm_single
+theorem equiv_fun_on_finite_symm_single [DecidableEq α] [Finite α] (x : α) (m : M) :
+    Finsupp.equivFunOnFinite.symm (Pi.single x m) = Finsupp.single x m := by
+  rw [← equiv_fun_on_finite_single, Equiv.symm_apply_apply]
+#align finsupp.equiv_fun_on_finite_symm_single Finsupp.equiv_fun_on_finite_symm_single
 
 end Single
 

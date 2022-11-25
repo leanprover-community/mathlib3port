@@ -2337,6 +2337,10 @@ theorem of_real_pow {p : ℝ} (hp : 0 ≤ p) (n : ℕ) : Ennreal.ofReal (p ^ n) 
   rw [of_real_eq_coe_nnreal hp, ← coe_pow, ← of_real_coe_nnreal, Nnreal.coe_pow, Nnreal.coe_mk]
 #align ennreal.of_real_pow Ennreal.of_real_pow
 
+theorem of_real_nsmul {x : ℝ} {n : ℕ} : Ennreal.ofReal (n • x) = n • Ennreal.ofReal x := by
+  simp only [nsmul_eq_mul, ← of_real_coe_nat n, ← of_real_mul n.cast_nonneg]
+#align ennreal.of_real_nsmul Ennreal.of_real_nsmul
+
 theorem of_real_inv_of_pos {x : ℝ} (hx : 0 < x) : (Ennreal.ofReal x)⁻¹ = Ennreal.ofReal x⁻¹ := by
   rw [Ennreal.ofReal, Ennreal.ofReal, ← @Ennreal.coe_inv (Real.toNnreal x) (by simp [hx]), coe_eq_coe,
     real.to_nnreal_inv.symm]

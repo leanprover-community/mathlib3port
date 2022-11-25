@@ -70,6 +70,27 @@ instance smulNnreal [SmulInvariantMeasure M α μ] (c : ℝ≥0) : SmulInvariant
 
 end SmulInvariantMeasure
 
+section HasMeasurableSmul
+
+variable {m : MeasurableSpace α} [MeasurableSpace M] [HasSmul M α] [HasMeasurableSmul M α] (c : M) (μ : Measure α)
+  [SmulInvariantMeasure M α μ]
+
+@[simp, to_additive]
+theorem measurePreservingSmul : MeasurePreserving ((· • ·) c) μ μ :=
+  { Measurable := measurableConstSmul c,
+    map_eq := by
+      ext1 s hs
+      rw [map_apply (measurable_const_smul c) hs]
+      exact smul_invariant_measure.measure_preimage_smul μ c hs }
+#align measure_theory.measure_preserving_smul MeasureTheory.measurePreservingSmul
+
+@[simp, to_additive]
+theorem map_smul : map ((· • ·) c) μ = μ :=
+  (measurePreservingSmul c μ).map_eq
+#align measure_theory.map_smul MeasureTheory.map_smul
+
+end HasMeasurableSmul
+
 variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpace G] [HasMeasurableSmul G α] (c : G)
   (μ : Measure α)
 
@@ -197,38 +218,12 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
               (Term.fun "fun" (Term.basicFun [`h] [] "=>" (Term.anonymousCtor "⟨" [`h] "⟩")))]
              "⟩"))
            []
-           (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "6"))
+           (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "6"))
            []
-           (Tactic.exact
-            "exact"
-            (Term.fun
-             "fun"
-             (Term.basicFun
-              [`H `c]
-              []
-              "=>"
-              (Term.app
-               `ext
-               [(Term.fun
-                 "fun"
-                 (Term.basicFun
-                  [`s `hs]
-                  []
-                  "=>"
-                  (Term.byTactic
-                   "by"
-                   (Tactic.tacticSeq
-                    (Tactic.tacticSeq1Indented
-                     [(Tactic.rwSeq
-                       "rw"
-                       []
-                       (Tactic.rwRuleSeq
-                        "["
-                        [(Tactic.rwRule [] (Term.app `map_apply [(Term.app `measurable_const_smul [`c]) `hs]))
-                         ","
-                         (Tactic.rwRule [] (Term.app `H [(Term.hole "_") (Term.hole "_") `hs]))]
-                        "]")
-                       [])])))))]))))
+           («tactic___;_»
+            (cdotTk (patternIgnore (token.«·» "·")))
+            [(group (Tactic.intro "intro" [`h `c]) [])
+             (group (Tactic.exact "exact" (Term.proj (Term.app `measure_preserving_smul [`c `μ]) "." `map_eq)) [])])
            []
            (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "7"))
            []
@@ -312,38 +307,12 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
              (Term.fun "fun" (Term.basicFun [`h] [] "=>" (Term.anonymousCtor "⟨" [`h] "⟩")))]
             "⟩"))
           []
-          (Tactic.tfaeHave "tfae_have" [] (num "2") "→" (num "6"))
+          (Tactic.tfaeHave "tfae_have" [] (num "1") "→" (num "6"))
           []
-          (Tactic.exact
-           "exact"
-           (Term.fun
-            "fun"
-            (Term.basicFun
-             [`H `c]
-             []
-             "=>"
-             (Term.app
-              `ext
-              [(Term.fun
-                "fun"
-                (Term.basicFun
-                 [`s `hs]
-                 []
-                 "=>"
-                 (Term.byTactic
-                  "by"
-                  (Tactic.tacticSeq
-                   (Tactic.tacticSeq1Indented
-                    [(Tactic.rwSeq
-                      "rw"
-                      []
-                      (Tactic.rwRuleSeq
-                       "["
-                       [(Tactic.rwRule [] (Term.app `map_apply [(Term.app `measurable_const_smul [`c]) `hs]))
-                        ","
-                        (Tactic.rwRule [] (Term.app `H [(Term.hole "_") (Term.hole "_") `hs]))]
-                       "]")
-                      [])])))))]))))
+          («tactic___;_»
+           (cdotTk (patternIgnore (token.«·» "·")))
+           [(group (Tactic.intro "intro" [`h `c]) [])
+            (group (Tactic.exact "exact" (Term.proj (Term.app `measure_preserving_smul [`c `μ]) "." `map_eq)) [])])
           []
           (Tactic.tfaeHave "tfae_have" [] (num "6") "→" (num "7"))
           []
@@ -519,8 +488,8 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
       by
         tfae_have 1 ↔ 2
           exact ⟨ fun h => h . 1 , fun h => ⟨ h ⟩ ⟩
-          tfae_have 2 → 6
-          exact fun H c => ext fun s hs => by rw [ map_apply measurable_const_smul c hs , H _ _ hs ]
+          tfae_have 1 → 6
+          · intro h c exact measure_preserving_smul c μ . map_eq
           tfae_have 6 → 7
           exact fun H c => ⟨ measurable_const_smul c , H c ⟩
           tfae_have 7 → 4
@@ -552,16 +521,6 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
 add_decl_doc vadd_invariant_measure_tfae
 
 variable {G} [SmulInvariantMeasure G α μ]
-
-@[to_additive]
-theorem measurePreservingSmul : MeasurePreserving ((· • ·) c) μ μ :=
-  ((smul_invariant_measure_tfae G μ).out 0 6).mp ‹_› c
-#align measure_theory.measure_preserving_smul MeasureTheory.measurePreservingSmul
-
-@[simp, to_additive]
-theorem map_smul : map ((· • ·) c) μ = μ :=
-  (measurePreservingSmul c μ).map_eq
-#align measure_theory.map_smul MeasureTheory.map_smul
 
 @[simp, to_additive]
 theorem measure_preimage_smul (s : Set α) : μ ((· • ·) c ⁻¹' s) = μ s :=

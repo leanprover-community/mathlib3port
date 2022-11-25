@@ -1274,6 +1274,105 @@ theorem inner_rev_eq_zero_of_oangle_eq_neg_pi_div_two {x y : V} (h : o.oangle x 
 #align
   orientation.inner_rev_eq_zero_of_oangle_eq_neg_pi_div_two Orientation.inner_rev_eq_zero_of_oangle_eq_neg_pi_div_two
 
+/-- The inner product between a `π / 2` rotation of a vector and that vector is zero. -/
+@[simp]
+theorem inner_rotation_pi_div_two_left (x : V) : ⟪o.rotation (π / 2 : ℝ) x, x⟫ = 0 := by
+  rw [rotation_pi_div_two, inner_right_angle_rotation_self]
+#align orientation.inner_rotation_pi_div_two_left Orientation.inner_rotation_pi_div_two_left
+
+/-- The inner product between a vector and a `π / 2` rotation of that vector is zero. -/
+@[simp]
+theorem inner_rotation_pi_div_two_right (x : V) : ⟪x, o.rotation (π / 2 : ℝ) x⟫ = 0 := by
+  rw [real_inner_comm, inner_rotation_pi_div_two_left]
+#align orientation.inner_rotation_pi_div_two_right Orientation.inner_rotation_pi_div_two_right
+
+/-- The inner product between a multiple of a `π / 2` rotation of a vector and that vector is
+zero. -/
+@[simp]
+theorem inner_smul_rotation_pi_div_two_left (x : V) (r : ℝ) : ⟪r • o.rotation (π / 2 : ℝ) x, x⟫ = 0 := by
+  rw [inner_smul_left, inner_rotation_pi_div_two_left, mul_zero]
+#align orientation.inner_smul_rotation_pi_div_two_left Orientation.inner_smul_rotation_pi_div_two_left
+
+/-- The inner product between a vector and a multiple of a `π / 2` rotation of that vector is
+zero. -/
+@[simp]
+theorem inner_smul_rotation_pi_div_two_right (x : V) (r : ℝ) : ⟪x, r • o.rotation (π / 2 : ℝ) x⟫ = 0 := by
+  rw [real_inner_comm, inner_smul_rotation_pi_div_two_left]
+#align orientation.inner_smul_rotation_pi_div_two_right Orientation.inner_smul_rotation_pi_div_two_right
+
+/-- The inner product between a `π / 2` rotation of a vector and a multiple of that vector is
+zero. -/
+@[simp]
+theorem inner_rotation_pi_div_two_left_smul (x : V) (r : ℝ) : ⟪o.rotation (π / 2 : ℝ) x, r • x⟫ = 0 := by
+  rw [inner_smul_right, inner_rotation_pi_div_two_left, mul_zero]
+#align orientation.inner_rotation_pi_div_two_left_smul Orientation.inner_rotation_pi_div_two_left_smul
+
+/-- The inner product between a multiple of a vector and a `π / 2` rotation of that vector is
+zero. -/
+@[simp]
+theorem inner_rotation_pi_div_two_right_smul (x : V) (r : ℝ) : ⟪r • x, o.rotation (π / 2 : ℝ) x⟫ = 0 := by
+  rw [real_inner_comm, inner_rotation_pi_div_two_left_smul]
+#align orientation.inner_rotation_pi_div_two_right_smul Orientation.inner_rotation_pi_div_two_right_smul
+
+/-- The inner product between a multiple of a `π / 2` rotation of a vector and a multiple of
+that vector is zero. -/
+@[simp]
+theorem inner_smul_rotation_pi_div_two_smul_left (x : V) (r₁ r₂ : ℝ) : ⟪r₁ • o.rotation (π / 2 : ℝ) x, r₂ • x⟫ = 0 := by
+  rw [inner_smul_right, inner_smul_rotation_pi_div_two_left, mul_zero]
+#align orientation.inner_smul_rotation_pi_div_two_smul_left Orientation.inner_smul_rotation_pi_div_two_smul_left
+
+/-- The inner product between a multiple of a vector and a multiple of a `π / 2` rotation of
+that vector is zero. -/
+@[simp]
+theorem inner_smul_rotation_pi_div_two_smul_right (x : V) (r₁ r₂ : ℝ) : ⟪r₂ • x, r₁ • o.rotation (π / 2 : ℝ) x⟫ = 0 :=
+  by rw [real_inner_comm, inner_smul_rotation_pi_div_two_smul_left]
+#align orientation.inner_smul_rotation_pi_div_two_smul_right Orientation.inner_smul_rotation_pi_div_two_smul_right
+
+/-- The inner product between two vectors is zero if and only if the first vector is zero or
+the second is a multiple of a `π / 2` rotation of that vector. -/
+theorem inner_eq_zero_iff_eq_zero_or_eq_smul_rotation_pi_div_two {x y : V} :
+    ⟪x, y⟫ = 0 ↔ x = 0 ∨ ∃ r : ℝ, r • o.rotation (π / 2 : ℝ) x = y := by
+  rw [← o.eq_zero_or_oangle_eq_iff_inner_eq_zero]
+  refine' ⟨fun h => _, fun h => _⟩
+  · rcases h with (rfl | rfl | h | h)
+    · exact Or.inl rfl
+      
+    · exact Or.inr ⟨0, zero_smul _ _⟩
+      
+    · obtain ⟨r, hr, rfl⟩ :=
+        (o.oangle_eq_iff_eq_pos_smul_rotation_of_ne_zero (o.left_ne_zero_of_oangle_eq_pi_div_two h)
+              (o.right_ne_zero_of_oangle_eq_pi_div_two h) _).1
+          h
+      exact Or.inr ⟨r, rfl⟩
+      
+    · obtain ⟨r, hr, rfl⟩ :=
+        (o.oangle_eq_iff_eq_pos_smul_rotation_of_ne_zero (o.left_ne_zero_of_oangle_eq_neg_pi_div_two h)
+              (o.right_ne_zero_of_oangle_eq_neg_pi_div_two h) _).1
+          h
+      refine' Or.inr ⟨-r, _⟩
+      rw [neg_smul, ← smul_neg, o.neg_rotation_pi_div_two]
+      
+    
+  · rcases h with (rfl | ⟨r, rfl⟩)
+    · exact Or.inl rfl
+      
+    · by_cases hx : x = 0
+      · exact Or.inl hx
+        
+      rcases lt_trichotomy r 0 with (hr | rfl | hr)
+      · refine' Or.inr (Or.inr (Or.inr _))
+        rw [o.oangle_smul_right_of_neg _ _ hr, o.neg_rotation_pi_div_two, o.oangle_rotation_self_right hx]
+        
+      · exact Or.inr (Or.inl (zero_smul _ _))
+        
+      · refine' Or.inr (Or.inr (Or.inl _))
+        rw [o.oangle_smul_right_of_pos _ _ hr, o.oangle_rotation_self_right hx]
+        
+      
+    
+#align
+  orientation.inner_eq_zero_iff_eq_zero_or_eq_smul_rotation_pi_div_two Orientation.inner_eq_zero_iff_eq_zero_or_eq_smul_rotation_pi_div_two
+
 /-- Negating the first vector passed to `oangle` negates the sign of the angle. -/
 @[simp]
 theorem oangle_sign_neg_left (x y : V) : (o.oangle (-x) y).sign = -(o.oangle x y).sign := by

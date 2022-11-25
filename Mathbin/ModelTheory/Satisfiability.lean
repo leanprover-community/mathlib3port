@@ -147,8 +147,8 @@ theorem is_satisfiable_union_distinct_constants_theory_of_card_le (T : L.TheoryC
     rw [← Subtype.coe_mk a as, ← Subtype.coe_mk b bs, ← Subtype.ext_iff]
     exact
       h.some.injective
-        ((Function.extend_apply Subtype.coe_injective h.some default ⟨a, as⟩).symm.trans
-          (ab.trans (Function.extend_apply Subtype.coe_injective h.some default ⟨b, bs⟩)))
+        ((subtype.coe_injective.extend_apply h.some default ⟨a, as⟩).symm.trans
+          (ab.trans (subtype.coe_injective.extend_apply h.some default ⟨b, bs⟩)))
   exact model.is_satisfiable M
 #align
   first_order.language.Theory.is_satisfiable_union_distinct_constants_theory_of_card_le FirstOrder.Language.TheoryCat.is_satisfiable_union_distinct_constants_theory_of_card_le

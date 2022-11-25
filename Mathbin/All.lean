@@ -566,7 +566,7 @@ import Mathbin.Analysis.Convex.StrictConvexSpace
 import Mathbin.Analysis.Convex.Topology
 import Mathbin.Analysis.Convex.Uniform
 import Mathbin.Analysis.Convolution
-import Mathbin.Analysis.Fourier
+import Mathbin.Analysis.Fourier.AddCircle
 import Mathbin.Analysis.Hofer
 import Mathbin.Analysis.InnerProductSpace.Adjoint
 import Mathbin.Analysis.InnerProductSpace.Basic
@@ -2222,7 +2222,9 @@ import Mathbin.Order.CompleteBooleanAlgebra
 import Mathbin.Order.CompleteLattice
 import Mathbin.Order.CompleteLatticeIntervals
 import Mathbin.Order.Concept
-import Mathbin.Order.ConditionallyCompleteLattice
+import Mathbin.Order.ConditionallyCompleteLattice.Basic
+import Mathbin.Order.ConditionallyCompleteLattice.Finset
+import Mathbin.Order.ConditionallyCompleteLattice.Group
 import Mathbin.Order.Copy
 import Mathbin.Order.CountableDenseLinearOrder
 import Mathbin.Order.Cover

@@ -8,7 +8,7 @@ import Mathbin.Algebra.Bounds
 import Mathbin.Algebra.Order.Archimedean
 import Mathbin.Algebra.Star.Basic
 import Mathbin.Data.Real.CauSeqCompletion
-import Mathbin.Order.ConditionallyCompleteLattice
+import Mathbin.Order.ConditionallyCompleteLattice.Basic
 
 /-!
 # Real numbers from Cauchy sequences

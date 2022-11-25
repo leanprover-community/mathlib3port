@@ -431,7 +431,7 @@ def extend (f : α ↪ δ) (g : α →ᵇ β) (h : δ →ᵇ β) : δ →ᵇ β 
 
 @[simp]
 theorem extend_apply (f : α ↪ δ) (g : α →ᵇ β) (h : δ →ᵇ β) (x : α) : extend f g h (f x) = g x :=
-  extend_apply f.Injective _ _ _
+  f.Injective.extend_apply _ _ _
 #align bounded_continuous_function.extend_apply BoundedContinuousFunction.extend_apply
 
 @[simp]

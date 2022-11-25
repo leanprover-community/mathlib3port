@@ -3,8 +3,8 @@ Copyright (c) 2019 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.List.Basic
 import Mathbin.Data.Nat.Choose.Basic
+import Mathbin.Data.List.Perm
 
 /-! # sublists
 
@@ -362,6 +362,120 @@ theorem sublists_len_length : ∀ l : List α, sublistsLen l.length l = [l]
     rw [length, sublists_len_succ_cons, sublists_len_length, map_singleton, sublists_len_of_length_lt (lt_succ_self _),
       nil_append]
 #align list.sublists_len_length List.sublists_len_length
+
+open Function
+
+theorem Pairwise.sublists' {R} : ∀ {l : List α}, Pairwise R l → Pairwise (Lex (swap R)) (sublists' l)
+  | _, pairwise.nil => pairwise_singleton _ _
+  | _, @pairwise.cons _ _ a l H₁ H₂ => by
+    simp only [sublists'_cons, pairwise_append, pairwise_map, mem_sublists', mem_map, exists_imp, and_imp]
+    refine' ⟨H₂.sublists', H₂.sublists'.imp fun l₁ l₂ => lex.cons, _⟩
+    rintro l₁ sl₁ x l₂ sl₂ rfl
+    cases' l₁ with b l₁
+    · constructor
+      
+    exact lex.rel (H₁ _ <| sl₁.subset <| mem_cons_self _ _)
+#align list.pairwise.sublists' List.Pairwise.sublists'
+
+theorem pairwise_sublists {R} {l : List α} (H : Pairwise R l) :
+    Pairwise (fun l₁ l₂ => Lex R (reverse l₁) (reverse l₂)) (sublists l) := by
+  have := (pairwise_reverse.2 H).sublists'
+  rwa [sublists'_reverse, pairwise_map] at this
+#align list.pairwise_sublists List.pairwise_sublists
+
+@[simp]
+theorem nodup_sublists {l : List α} : Nodup (sublists l) ↔ Nodup l :=
+  ⟨fun h => (h.Sublist (map_ret_sublist_sublists _)).of_map _, fun h =>
+    (pairwise_sublists h).imp fun _ _ h => mt reverse_inj.2 h.to_ne⟩
+#align list.nodup_sublists List.nodup_sublists
+
+@[simp]
+theorem nodup_sublists' {l : List α} : Nodup (sublists' l) ↔ Nodup l := by
+  rw [sublists'_eq_sublists, nodup_map_iff reverse_injective, nodup_sublists, nodup_reverse]
+#align list.nodup_sublists' List.nodup_sublists'
+
+alias nodup_sublists ↔ nodup.of_sublists nodup.sublists
+
+alias nodup_sublists' ↔ nodup.of_sublists' nodup.sublists'
+
+attribute [protected] nodup.sublists nodup.sublists'
+
+theorem nodup_sublists_len (n : ℕ) {l : List α} (h : Nodup l) : (sublistsLen n l).Nodup :=
+  h.sublists'.Sublist <| sublists_len_sublist_sublists' _ _
+#align list.nodup_sublists_len List.nodup_sublists_len
+
+theorem sublists_cons_perm_append (a : α) (l : List α) : sublists (a :: l) ~ sublists l ++ map (cons a) (sublists l) :=
+  by
+  simp only [sublists, sublists_aux_cons_cons, cons_append, perm_cons]
+  refine' (perm.cons _ _).trans perm_middle.symm
+  induction' sublists_aux l cons with b l IH <;> simp
+  exact (IH.cons _).trans perm_middle.symm
+#align list.sublists_cons_perm_append List.sublists_cons_perm_append
+
+theorem sublists_perm_sublists' : ∀ l : List α, sublists l ~ sublists' l
+  | [] => Perm.refl _
+  | a :: l => by
+    let IH := sublists_perm_sublists' l
+    rw [sublists'_cons] <;> exact (sublists_cons_perm_append _ _).trans (IH.append (IH.map _))
+#align list.sublists_perm_sublists' List.sublists_perm_sublists'
+
+theorem revzip_sublists (l : List α) : ∀ l₁ l₂, (l₁, l₂) ∈ revzip l.sublists → l₁ ++ l₂ ~ l := by
+  rw [revzip]
+  apply List.reverseRecOn l
+  · intro l₁ l₂ h
+    simp at h
+    simp [h]
+    
+  · intro l a IH l₁ l₂ h
+    rw [sublists_concat, reverse_append, zip_append, ← map_reverse, zip_map_right, zip_map_left] at h <;> [skip,
+      · simp
+        ]
+    simp only [Prod.mk.inj_iff, mem_map, mem_append, Prod.map_mk, Prod.exists] at h
+    rcases h with (⟨l₁, l₂', h, rfl, rfl⟩ | ⟨l₁', l₂, h, rfl, rfl⟩)
+    · rw [← append_assoc]
+      exact (IH _ _ h).append_right _
+      
+    · rw [append_assoc]
+      apply (perm_append_comm.append_left _).trans
+      rw [← append_assoc]
+      exact (IH _ _ h).append_right _
+      
+    
+#align list.revzip_sublists List.revzip_sublists
+
+theorem revzip_sublists' (l : List α) : ∀ l₁ l₂, (l₁, l₂) ∈ revzip l.sublists' → l₁ ++ l₂ ~ l := by
+  rw [revzip]
+  induction' l with a l IH <;> intro l₁ l₂ h
+  · simp at h
+    simp [h]
+    
+  · rw [sublists'_cons, reverse_append, zip_append, ← map_reverse, zip_map_right, zip_map_left] at h <;> [simp at h,
+      simp]
+    rcases h with (⟨l₁, l₂', h, rfl, rfl⟩ | ⟨l₁', h, rfl⟩)
+    · exact perm_middle.trans ((IH _ _ h).cons _)
+      
+    · exact (IH _ _ h).cons _
+      
+    
+#align list.revzip_sublists' List.revzip_sublists'
+
+theorem range_bind_sublists_len_perm {α : Type _} (l : List α) :
+    ((List.range (l.length + 1)).bind fun n => sublistsLen n l) ~ sublists' l := by
+  induction' l with h tl
+  · simp [range_succ]
+    
+  · simp_rw [range_succ_eq_map, length, cons_bind, map_bind, sublists_len_succ_cons, sublists'_cons,
+      List.sublists_len_zero, List.singleton_append]
+    refine' ((bind_append_perm (range (tl.length + 1)) _ _).symm.cons _).trans _
+    simp_rw [← List.bind_map, ← cons_append]
+    rw [← List.singleton_append, ← List.sublists_len_zero tl]
+    refine' perm.append _ (l_ih.map _)
+    rw [List.range_succ, append_bind, bind_singleton, sublists_len_of_length_lt (Nat.lt_succ_self _), append_nil, ←
+      List.map_bind (fun n => sublists_len n tl) Nat.succ, ← cons_bind 0 _ fun n => sublists_len n tl, ←
+      range_succ_eq_map]
+    exact l_ih
+    
+#align list.range_bind_sublists_len_perm List.range_bind_sublists_len_perm
 
 end List
 

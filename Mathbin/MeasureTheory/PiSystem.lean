@@ -330,7 +330,7 @@ theorem mem_generate_pi_system_Union_elim' {α β} {g : β → Set (Set α)} {s 
         intro h1 b h_b h_b_in_T
         have h2 := h1 b h_b h_b_in_T
         revert h2
-        rw [Function.extend_apply Subtype.val_injective]
+        rw [subtype.val_injective.extend_apply]
         apply id
         
     
@@ -338,7 +338,7 @@ theorem mem_generate_pi_system_Union_elim' {α β} {g : β → Set (Set α)} {s 
     simp_rw [Finset.mem_image, exists_prop, Subtype.exists, exists_and_right, exists_eq_right] at h_b
     cases h_b
     have h_b_alt : b = (Subtype.mk b h_b_w).val := rfl
-    rw [h_b_alt, Function.extend_apply Subtype.val_injective]
+    rw [h_b_alt, subtype.val_injective.extend_apply]
     apply h_t'
     apply h_b_h
     

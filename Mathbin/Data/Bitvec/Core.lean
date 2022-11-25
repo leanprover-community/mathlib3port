@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joe Hendrix, Sebastian Ullrich
 -/
 import Mathbin.Data.Vector.Basic
-import Mathbin.Data.Nat.Basic
+import Mathbin.Data.Nat.Pow
 
 /-!
 # Basic operations on bitvectors

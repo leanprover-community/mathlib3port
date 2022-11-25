@@ -517,8 +517,8 @@ theorem mk_eq_mk_of_basis (v : Basis ι R M) (v' : Basis ι' R M) : Cardinal.lif
     -- Now we can use invariant basis number to show they have the same cardinality.
     apply card_eq_of_lequiv R
     exact
-      (Finsupp.linearEquivFunOnFintype R R ι).symm.trans v.repr.symm ≪≫ₗ v'.repr ≪≫ₗ
-        Finsupp.linearEquivFunOnFintype R R ι'
+      (Finsupp.linearEquivFunOnFinite R R ι).symm.trans v.repr.symm ≪≫ₗ v'.repr ≪≫ₗ
+        Finsupp.linearEquivFunOnFinite R R ι'
     
   · -- `v` is an infinite basis,
     -- so by `infinite_basis_le_maximal_linear_independent`, `v'` is at least as big,

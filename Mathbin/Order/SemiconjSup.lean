@@ -5,9 +5,10 @@ Authors: Yury G. Kudryashov
 -/
 import Mathbin.Logic.Function.Conjugate
 import Mathbin.Order.Bounds.OrderIso
-import Mathbin.Order.ConditionallyCompleteLattice
+import Mathbin.Order.ConditionallyCompleteLattice.Basic
 import Mathbin.Order.RelIso.Group
 import Mathbin.Order.OrdContinuous
+import Mathbin.Algebra.Hom.Equiv.Units.Basic
 
 /-!
 # Semiconjugate by `Sup`
@@ -125,3 +126,5 @@ theorem cSup_div_semiconj [ConditionallyCompleteLattice α] [Group G] (f₁ f₂
 
 end Function
 
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+-- Guard against import creep

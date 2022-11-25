@@ -25,12 +25,12 @@ Dickson, order, partial well order
 
 
 /-- A version of **Dickson's lemma** any subset of functions `σ →₀ α` is partially well
-ordered, when `σ` is a `fintype` and `α` is a linear well order.
-This version uses finsupps on a fintype as it is intended for use with `mv_power_series`.
+ordered, when `σ` is `finite` and `α` is a linear well order.
+This version uses finsupps on a finite type as it is intended for use with `mv_power_series`.
 -/
-theorem Finsupp.is_pwo {α σ : Type _} [Zero α] [LinearOrder α] [IsWellOrder α (· < ·)] [Fintype σ] (S : Set (σ →₀ α)) :
-    S.IsPwo := by
-  rw [← finsupp.equiv_fun_on_fintype.symm.image_preimage S]
-  refine' Set.PartiallyWellOrderedOn.image_of_monotone_on (Pi.is_pwo _) fun a b ha hb => id
+theorem Finsupp.is_pwo {α σ : Type _} [Zero α] [LinearOrder α] [IsWellOrder α (· < ·)] [Finite σ] (S : Set (σ →₀ α)) :
+    S.IsPwo :=
+  Finsupp.equivFunOnFinite.symm_image_image S ▸
+    Set.PartiallyWellOrderedOn.image_of_monotone_on (Pi.is_pwo _) fun a b ha hb => id
 #align finsupp.is_pwo Finsupp.is_pwo
 

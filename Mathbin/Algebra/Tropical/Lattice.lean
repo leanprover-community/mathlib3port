@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
 import Mathbin.Algebra.Tropical.Basic
-import Mathbin.Order.ConditionallyCompleteLattice
+import Mathbin.Order.ConditionallyCompleteLattice.Basic
 
 /-!
 

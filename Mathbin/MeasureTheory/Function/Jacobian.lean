@@ -1253,6 +1253,26 @@ theorem integral_image_eq_integral_abs_det_fderiv_smul [CompleteSpace F] (hs : M
 #align
   measure_theory.integral_image_eq_integral_abs_det_fderiv_smul MeasureTheory.integral_image_eq_integral_abs_det_fderiv_smul
 
+/-- Change of variable formula for differentiable functions (one-variable version): if a function
+`f` is injective and differentiable on a measurable set `s ⊆ ℝ`, then the Bochner integral of a
+function `g : ℝ → F` on `f '' s` coincides with the integral of `|(f' x).det| • g ∘ f` on `s`. -/
+theorem integral_image_eq_integral_abs_deriv_smul {s : Set ℝ} {f : ℝ → ℝ} {f' : ℝ → ℝ} [CompleteSpace F]
+    (hs : MeasurableSet s) (hf' : ∀ x ∈ s, HasDerivWithinAt f (f' x) s x) (hf : InjOn f s) (g : ℝ → F) :
+    (∫ x in f '' s, g x) = ∫ x in s, |f' x| • g (f x) := by
+  convert integral_image_eq_integral_abs_det_fderiv_smul volume hs (fun x hx => (hf' x hx).HasFderivWithinAt) hf g
+  ext1 x
+  rw [(by
+      ext
+      simp : (1 : ℝ →L[ℝ] ℝ).smul_right (f' x) = f' x • (1 : ℝ →L[ℝ] ℝ))]
+  rw [ContinuousLinearMap.det, ContinuousLinearMap.coe_smul]
+  have : ((1 : ℝ →L[ℝ] ℝ) : ℝ →ₗ[ℝ] ℝ) = (1 : ℝ →ₗ[ℝ] ℝ) := by rfl
+  rw [this, LinearMap.det_smul, FiniteDimensional.finrank_self]
+  suffices (1 : ℝ →ₗ[ℝ] ℝ).det = 1 by
+    rw [this]
+    simp
+  exact LinearMap.det_id
+#align measure_theory.integral_image_eq_integral_abs_deriv_smul MeasureTheory.integral_image_eq_integral_abs_deriv_smul
+
 theorem integral_target_eq_integral_abs_det_fderiv_smul [CompleteSpace F] {f : LocalHomeomorph E E}
     (hf' : ∀ x ∈ f.source, HasFderivAt f (f' x) x) (g : E → F) :
     (∫ x in f.target, g x ∂μ) = ∫ x in f.source, |(f' x).det| • g (f x) ∂μ := by

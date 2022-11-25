@@ -232,7 +232,7 @@ theorem ker_transfer_sylow_is_complement' : IsComplement' (transferSylow P hP).k
   rw [Function.Bijective, ← range_top_iff_surjective, restrict_range] at hf
   have := range_top_iff_surjective.mp (top_le_iff.mp (hf.2.ge.trans (map_le_range _ P)))
   rw [← (comap_injective this).eq_iff, comap_top, comap_map_eq, sup_comm, SetLike.ext'_iff, normal_mul, ←
-    ker_eq_bot_iff, ← (map_injective (P : Subgroup G).subtype_injective).eq_iff, restrict_ker, subgroup_of_map_subtype,
+    ker_eq_bot_iff, ← (map_injective (P : Subgroup G).subtype_injective).eq_iff, ker_restrict, subgroup_of_map_subtype,
     Subgroup.map_bot, coe_top] at hf
   exact is_complement'_of_disjoint_and_mul_eq_univ (disjoint_iff.2 hf.1) hf.2
 #align monoid_hom.ker_transfer_sylow_is_complement' MonoidHom.ker_transfer_sylow_is_complement'

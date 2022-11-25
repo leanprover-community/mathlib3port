@@ -17,7 +17,7 @@ Some lemmas on the combination of `finsupp`, `fintype` and `infinite`.
 
 noncomputable instance Finsupp.fintype {ι π : Sort _} [DecidableEq ι] [Zero π] [Fintype ι] [Fintype π] :
     Fintype (ι →₀ π) :=
-  Fintype.ofEquiv _ Finsupp.equivFunOnFintype.symm
+  Fintype.ofEquiv _ Finsupp.equivFunOnFinite.symm
 #align finsupp.fintype Finsupp.fintype
 
 instance Finsupp.infinite_of_left {ι π : Sort _} [Nontrivial π] [Zero π] [Infinite ι] : Infinite (ι →₀ π) :=

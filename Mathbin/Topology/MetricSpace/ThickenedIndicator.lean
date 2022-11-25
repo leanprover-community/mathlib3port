@@ -135,22 +135,14 @@ theorem thickened_indicator_aux_tendsto_indicator_closure {δseq : ℕ → ℝ} 
     
   · rw [show (closure E).indicator (fun _ => (1 : ℝ≥0∞)) x = 0 by
         simp only [x_mem_closure, indicator_of_not_mem, not_false_iff]]
-    rw [mem_closure_iff_inf_edist_zero] at x_mem_closure
-    obtain ⟨ε, ⟨ε_pos, ε_le⟩⟩ : ∃ ε : ℝ, 0 < ε ∧ Ennreal.ofReal ε ≤ inf_edist x E := by
-      by_cases dist_infty : inf_edist x E = ∞
-      · rw [dist_infty]
-        use 1, zero_lt_one, le_top
-        
-      · use (inf_edist x E).toReal
-        exact ⟨(to_real_lt_to_real zero_ne_top dist_infty).mpr (pos_iff_ne_zero.mpr x_mem_closure), of_real_to_real_le⟩
-        
+    rcases exists_real_pos_lt_inf_edist_of_not_mem_closure x_mem_closure with ⟨ε, ⟨ε_pos, ε_lt⟩⟩
     rw [Metric.tendsto_nhds] at δseq_lim
     specialize δseq_lim ε ε_pos
     simp only [dist_zero_right, Real.norm_eq_abs, eventually_at_top, ge_iff_le] at δseq_lim
     rcases δseq_lim with ⟨N, hN⟩
     apply @tendsto_at_top_of_eventually_const _ _ _ _ _ _ _ N
     intro n n_large
-    have key : x ∉ thickening ε E := by rwa [thickening, mem_set_of_eq, not_lt]
+    have key : x ∉ thickening ε E := by simpa only [thickening, mem_set_of_eq, not_lt] using ε_lt.le
     refine' le_antisymm _ bot_le
     apply (thickened_indicator_aux_mono (lt_of_abs_lt (hN n n_large)).le E x).trans
     exact (thickened_indicator_aux_zero ε_pos E key).le

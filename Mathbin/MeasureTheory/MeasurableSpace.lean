@@ -1053,7 +1053,7 @@ theorem measurableExtend (hf : MeasurableEmbedding f) {g : α → γ} {g' : β �
 theorem exists_measurable_extend (hf : MeasurableEmbedding f) {g : α → γ} (hg : Measurable g) (hne : β → Nonempty γ) :
     ∃ g' : β → γ, Measurable g' ∧ g' ∘ f = g :=
   ⟨extend f g fun x => Classical.choice (hne x), hf.measurableExtend hg (measurableConst' fun _ _ => rfl),
-    funext fun x => extend_apply hf.Injective _ _ _⟩
+    funext fun x => hf.Injective.extend_apply _ _ _⟩
 #align measurable_embedding.exists_measurable_extend MeasurableEmbedding.exists_measurable_extend
 
 theorem measurable_comp_iff (hg : MeasurableEmbedding g) : Measurable (g ∘ f) ↔ Measurable f := by

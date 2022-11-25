@@ -6,7 +6,7 @@ Authors: Yakov Pechersky
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Data.List.MinMax
 import Mathbin.Algebra.Tropical.Basic
-import Mathbin.Order.ConditionallyCompleteLattice
+import Mathbin.Order.ConditionallyCompleteLattice.Finset
 
 /-!
 

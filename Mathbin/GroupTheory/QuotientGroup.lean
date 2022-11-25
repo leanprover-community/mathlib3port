@@ -328,14 +328,14 @@ theorem ker_lift_injective : Injective (kerLift φ) := fun a b =>
 /-- The induced map from the quotient by the kernel to the range. -/
 @[to_additive QuotientAddGroup.rangeKerLift "The induced map from the quotient by the kernel to\nthe range."]
 def rangeKerLift : G ⧸ ker φ →* φ.range :=
-  (lift _ φ.range_restrict) fun g hg => (mem_ker _).mp <| by rwa [range_restrict_ker]
+  (lift _ φ.range_restrict) fun g hg => (mem_ker _).mp <| by rwa [ker_range_restrict]
 #align quotient_group.range_ker_lift QuotientGroup.rangeKerLift
 
 @[to_additive QuotientAddGroup.range_ker_lift_injective]
 theorem range_ker_lift_injective : Injective (rangeKerLift φ) := fun a b =>
   (Quotient.inductionOn₂' a b) fun a b (h : φ.range_restrict a = φ.range_restrict b) =>
     Quotient.sound' <| by
-      rw [left_rel_apply, ← range_restrict_ker, mem_ker, φ.range_restrict.map_mul, ← h, φ.range_restrict.map_inv,
+      rw [left_rel_apply, ← ker_range_restrict, mem_ker, φ.range_restrict.map_mul, ← h, φ.range_restrict.map_inv,
         inv_mul_self]
 #align quotient_group.range_ker_lift_injective QuotientGroup.range_ker_lift_injective
 

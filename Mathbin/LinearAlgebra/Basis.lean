@@ -844,7 +844,7 @@ variable [Fintype ι] (b : Basis ι R M)
 -/
 def Basis.equivFun : M ≃ₗ[R] ι → R :=
   LinearEquiv.trans b.repr
-    ({ Finsupp.equivFunOnFintype with toFun := coeFn, map_add' := Finsupp.coe_add, map_smul' := Finsupp.coe_smul } :
+    ({ Finsupp.equivFunOnFinite with toFun := coeFn, map_add' := Finsupp.coe_add, map_smul' := Finsupp.coe_smul } :
       (ι →₀ R) ≃ₗ[R] ι → R)
 #align basis.equiv_fun Basis.equivFun
 
@@ -907,7 +907,7 @@ theorem Basis.repr_sum_self (c : ι → R) : ⇑(b.repr (∑ i, c i • b i)) = 
 /-- Define a basis by mapping each vector `x : M` to its coordinates `e x : ι → R`,
 as long as `ι` is finite. -/
 def Basis.ofEquivFun (e : M ≃ₗ[R] ι → R) : Basis ι R M :=
-  Basis.of_repr <| e.trans <| LinearEquiv.symm <| Finsupp.linearEquivFunOnFintype R R ι
+  Basis.of_repr <| e.trans <| LinearEquiv.symm <| Finsupp.linearEquivFunOnFinite R R ι
 #align basis.of_equiv_fun Basis.ofEquivFun
 
 @[simp]
@@ -944,11 +944,11 @@ theorem Basis.constr_apply_fintype (f : ι → M') (x : M) : (b.constr S f : M �
 theorem Basis.mem_submodule_iff' {P : Submodule R M} (b : Basis ι R P) {x : M} :
     x ∈ P ↔ ∃ c : ι → R, x = ∑ i, c i • b i :=
   b.mem_submodule_iff.trans <|
-    Finsupp.equivFunOnFintype.exists_congr_left.trans <| exists_congr fun c => by simp [Finsupp.sum_fintype]
+    Finsupp.equivFunOnFinite.exists_congr_left.trans <| exists_congr fun c => by simp [Finsupp.sum_fintype]
 #align basis.mem_submodule_iff' Basis.mem_submodule_iff'
 
 theorem Basis.coord_equiv_fun_symm (i : ι) (f : ι → R) : b.Coord i (b.equivFun.symm f) = f i :=
-  b.coord_repr_symm i (Finsupp.equivFunOnFintype.symm f)
+  b.coord_repr_symm i (Finsupp.equivFunOnFinite.symm f)
 #align basis.coord_equiv_fun_symm Basis.coord_equiv_fun_symm
 
 end Fintype

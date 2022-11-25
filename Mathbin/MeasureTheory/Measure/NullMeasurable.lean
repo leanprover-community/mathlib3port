@@ -338,6 +338,10 @@ theorem measure_union₀' (hs : NullMeasurableSet s μ) (hd : AeDisjoint μ s t)
   rw [union_comm, measure_union₀ hs hd.symm, add_comm]
 #align measure_theory.measure_union₀' MeasureTheory.measure_union₀'
 
+theorem measure_add_measure_compl₀ {s : Set α} (hs : NullMeasurableSet s μ) : μ s + μ (sᶜ) = μ univ := by
+  rw [← measure_union₀' hs ae_disjoint_compl_right, union_compl_self]
+#align measure_theory.measure_add_measure_compl₀ MeasureTheory.measure_add_measure_compl₀
+
 section MeasurableSingletonClass
 
 variable [MeasurableSingletonClass (NullMeasurableSpace α μ)]

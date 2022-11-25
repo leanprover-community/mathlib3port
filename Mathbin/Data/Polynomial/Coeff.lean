@@ -114,6 +114,17 @@ theorem coeff_mul (p q : R[X]) (n : ℕ) : coeff (p * q) n = ∑ x in Nat.antidi
 theorem mul_coeff_zero (p q : R[X]) : coeff (p * q) 0 = coeff p 0 * coeff q 0 := by simp [coeff_mul]
 #align polynomial.mul_coeff_zero Polynomial.mul_coeff_zero
 
+-- TODO: golf using `constant_coeff` once #17664 is merged
+theorem is_unit_C {x : R} : IsUnit (c x) ↔ IsUnit x :=
+  ⟨by
+    rintro ⟨⟨q, p, hqp, hpq⟩, rfl : q = C x⟩
+    exact
+      ⟨⟨(C x).coeff 0, p.coeff 0, by rw [← mul_coeff_zero, hqp, coeff_one_zero], by
+          rw [← mul_coeff_zero, hpq, coeff_one_zero]⟩,
+        coeff_C_zero⟩,
+    IsUnit.map c⟩
+#align polynomial.is_unit_C Polynomial.is_unit_C
+
 theorem coeff_mul_X_zero (p : R[X]) : coeff (p * X) 0 = 0 := by simp
 #align polynomial.coeff_mul_X_zero Polynomial.coeff_mul_X_zero
 

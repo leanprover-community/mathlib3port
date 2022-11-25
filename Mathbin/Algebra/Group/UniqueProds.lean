@@ -34,7 +34,7 @@ example : unique_prods ℕ+ := by apply_instance
 let `a0 b0 : G` be two elements.  `unique_mul A B a0 b0` asserts `a0 * b0` can be written in at
 most one way as a product of an element of `A` and an element of `B`. -/
 @[to_additive
-      "Let `G` be a Type with addition, let `A B : finset G` be finite subsets and\nlet `a0 b0 : G` be two elements.  `unique_add A B a0 b0` asserts `a0 * b0` can be written in at\nmost one way as a sum of an element from `A` and an element from `B`."]
+      "Let `G` be a Type with addition, let `A B : finset G` be finite subsets and\nlet `a0 b0 : G` be two elements.  `unique_add A B a0 b0` asserts `a0 + b0` can be written in at\nmost one way as a sum of an element from `A` and an element from `B`."]
 def UniqueMul {G} [Mul G] (A B : Finset G) (a0 b0 : G) : Prop :=
   ∀ ⦃a b⦄, a ∈ A → b ∈ B → a * b = a0 * b0 → a = a0 ∧ b = b0
 #align unique_mul UniqueMul

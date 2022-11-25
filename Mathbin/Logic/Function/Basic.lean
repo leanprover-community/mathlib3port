@@ -1171,11 +1171,19 @@ along a function `f : α → β` to a function `β → γ`,
 by using the values of `g` on the range of `f`
 and the values of an auxiliary function `e' : β → γ` elsewhere.
 
-Mostly useful when `f` is injective. -/
+Mostly useful when `f` is injective, more generally when `g.factors_through f`. -/
 def extend (f : α → β) (g : α → γ) (e' : β → γ) : β → γ := fun b =>
   if h : ∃ a, f a = b then g (Classical.choose h) else e' b
 #align function.extend Function.extend
 -/
+
+/-- g factors through f : `f a = f b → g a = g b` -/
+def FactorsThrough (g : α → γ) (f : α → β) : Prop :=
+  ∀ ⦃a b⦄, f a = f b → g a = g b
+#align function.factors_through Function.FactorsThrough
+
+theorem Injective.factors_through (hf : Injective f) (g : α → γ) : g.FactorsThrough f := fun a b h => congr_arg g (hf h)
+#align function.injective.factors_through Function.Injective.factors_through
 
 /- warning: function.extend_def -> Function.extend_def is a dubious translation:
 lean 3 declaration is
@@ -1189,17 +1197,16 @@ theorem extend_def (f : α → β) (g : α → γ) (e' : β → γ) (b : β) [De
   congr
 #align function.extend_def Function.extend_def
 
-/- warning: function.extend_apply -> Function.extend_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} {f : α -> β}, (Function.Injective.{u_1 u_2} α β f) -> (forall (g : α -> γ) (e' : β -> γ) (a : α), Eq.{u_3} γ (Function.extend.{u_1 u_2 u_3} α β γ f g e' (f a)) (g a))
-but is expected to have type
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} {f : α -> β}, (Function.Injective.{u_1 u_2} α β f) -> (forall (g : α -> γ) (e' : β -> γ) (a : α), Eq.{u_3} γ (Function.extend.{u_1 u_2 u_3} α β γ f g e' (f a)) (g a))
-Case conversion may be inaccurate. Consider using '#align function.extend_apply Function.extend_applyₓ'. -/
-@[simp]
-theorem extend_apply (hf : Injective f) (g : α → γ) (e' : β → γ) (a : α) : extend f g e' (f a) = g a := by
+theorem FactorsThrough.extend_apply {g : α → γ} (hf : g.FactorsThrough f) (e' : β → γ) (a : α) :
+    extend f g e' (f a) = g a := by
   simp only [extend_def, dif_pos, exists_apply_eq_apply]
-  exact congr_arg g (hf <| Classical.choose_spec (exists_apply_eq_apply f a))
-#align function.extend_apply Function.extend_apply
+  exact hf (Classical.choose_spec (exists_apply_eq_apply f a))
+#align function.factors_through.extend_apply Function.FactorsThrough.extend_apply
+
+@[simp]
+theorem Injective.extend_apply (hf : f.Injective) (g : α → γ) (e' : β → γ) (a : α) : extend f g e' (f a) = g a :=
+  (hf.FactorsThrough g).extend_apply e' a
+#align function.injective.extend_apply Function.Injective.extend_apply
 
 /- warning: function.extend_apply' -> Function.extend_apply' is a dubious translation:
 lean 3 declaration is
@@ -1212,22 +1219,33 @@ theorem extend_apply' (g : α → γ) (e' : β → γ) (b : β) (hb : ¬∃ a, f
   simp [Function.extend_def, hb]
 #align function.extend_apply' Function.extend_apply'
 
-/- warning: function.apply_extend -> Function.apply_extend is a dubious translation:
-lean 3 declaration is
-  forall {α : Sort.{u_1}} {β : Sort.{u_2}} {γ : Sort.{u_3}} {f : α -> β} {δ : Sort.{u_4}}, (Function.Injective.{u_1 u_2} α β f) -> (forall (F : γ -> δ) (g : α -> γ) (e' : β -> γ) (b : β), Eq.{u_4} δ (F (Function.extend.{u_1 u_2 u_3} α β γ f g e' b)) (Function.extend.{u_1 u_2 u_4} α β δ f (Function.comp.{u_1 u_3 u_4} α γ δ F g) (Function.comp.{u_2 u_3 u_4} β γ δ F e') b))
-but is expected to have type
-  forall {α : Sort.{u_2}} {β : Sort.{u_3}} {γ : Sort.{u_4}} {f : α -> β} {δ : Sort.{u_1}}, (Function.Injective.{u_2 u_3} α β f) -> (forall (F : γ -> δ) (g : α -> γ) (e' : β -> γ) (b : β), Eq.{u_1} δ (F (Function.extend.{u_2 u_3 u_4} α β γ f g e' b)) (Function.extend.{u_2 u_3 u_1} α β δ f (Function.comp.{u_2 u_4 u_1} α γ δ F g) (Function.comp.{u_3 u_4 u_1} β γ δ F e') b))
-Case conversion may be inaccurate. Consider using '#align function.apply_extend Function.apply_extendₓ'. -/
-theorem apply_extend {δ} (hf : Injective f) (F : γ → δ) (g : α → γ) (e' : β → γ) (b : β) :
+theorem factors_through_iff (g : α → γ) [Nonempty γ] : g.FactorsThrough f ↔ ∃ e : β → γ, g = e ∘ f :=
+  ⟨fun hf => ⟨extend f g (const β (Classical.arbitrary γ)), funext fun x => by simp only [comp_app, hf.extend_apply]⟩,
+    fun h a b hf => by rw [Classical.choose_spec h, comp_apply, hf]⟩
+#align function.factors_through_iff Function.factors_through_iff
+
+theorem FactorsThrough.apply_extend {δ} {g : α → γ} (hf : FactorsThrough g f) (F : γ → δ) (e' : β → γ) (b : β) :
     F (extend f g e' b) = extend f (F ∘ g) (F ∘ e') b := by
   by_cases hb : ∃ a, f a = b
   · cases' hb with a ha
     subst b
-    rw [extend_apply hf, extend_apply hf]
+    rw [factors_through.extend_apply, factors_through.extend_apply]
+    · intro a b h
+      simp only [comp_apply]
+      apply congr_arg
+      exact hf h
+      
+    · exact hf
+      
     
   · rw [extend_apply' _ _ _ hb, extend_apply' _ _ _ hb]
     
-#align function.apply_extend Function.apply_extend
+#align function.factors_through.apply_extend Function.FactorsThrough.apply_extend
+
+theorem Injective.apply_extend {δ} (hf : Injective f) (F : γ → δ) (g : α → γ) (e' : β → γ) (b : β) :
+    F (extend f g e' b) = extend f (F ∘ g) (F ∘ e') b :=
+  (hf.FactorsThrough g).apply_extend F e' b
+#align function.injective.apply_extend Function.Injective.apply_extend
 
 /- warning: function.extend_injective -> Function.extend_injective is a dubious translation:
 lean 3 declaration is
@@ -1239,9 +1257,13 @@ theorem extend_injective (hf : Injective f) (e' : β → γ) : Injective fun g =
   intro g₁ g₂ hg
   refine' funext fun x => _
   have H := congr_fun hg (f x)
-  simp only [hf, extend_apply] at H
+  simp only [hf.extend_apply] at H
   exact H
 #align function.extend_injective Function.extend_injective
+
+theorem FactorsThrough.extend_comp {g : α → γ} (e' : β → γ) (hf : FactorsThrough g f) : extend f g e' ∘ f = g :=
+  funext fun a => by simp only [comp_app, hf.extend_apply e']
+#align function.factors_through.extend_comp Function.FactorsThrough.extend_comp
 
 /- warning: function.extend_comp -> Function.extend_comp is a dubious translation:
 lean 3 declaration is
@@ -1251,7 +1273,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.extend_comp Function.extend_compₓ'. -/
 @[simp]
 theorem extend_comp (hf : Injective f) (g : α → γ) (e' : β → γ) : extend f g e' ∘ f = g :=
-  funext fun a => extend_apply hf g e' a
+  (hf.FactorsThrough g).extend_comp e'
 #align function.extend_comp Function.extend_comp
 
 /- warning: function.injective.surjective_comp_right' -> Function.Injective.surjective_comp_right' is a dubious translation:

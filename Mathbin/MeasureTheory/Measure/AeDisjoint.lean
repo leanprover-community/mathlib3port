@@ -82,9 +82,13 @@ theorem monoAe (h : AeDisjoint μ s t) (hu : u ≤ᵐ[μ] s) (hv : v ≤ᵐ[μ] 
   measure_mono_null_ae (hu.inter hv) h
 #align measure_theory.ae_disjoint.mono_ae MeasureTheory.AeDisjoint.monoAe
 
-theorem mono (h : AeDisjoint μ s t) (hu : u ⊆ s) (hv : v ⊆ t) : AeDisjoint μ u v :=
+protected theorem mono (h : AeDisjoint μ s t) (hu : u ⊆ s) (hv : v ⊆ t) : AeDisjoint μ u v :=
   h.monoAe hu.EventuallyLe hv.EventuallyLe
 #align measure_theory.ae_disjoint.mono MeasureTheory.AeDisjoint.mono
+
+protected theorem congr (h : AeDisjoint μ s t) (hu : u =ᵐ[μ] s) (hv : v =ᵐ[μ] t) : AeDisjoint μ u v :=
+  h.monoAe (Filter.EventuallyEq.le hu) (Filter.EventuallyEq.le hv)
+#align measure_theory.ae_disjoint.congr MeasureTheory.AeDisjoint.congr
 
 @[simp]
 theorem Union_left_iff [Countable ι] {s : ι → Set α} : AeDisjoint μ (⋃ i, s i) t ↔ ∀ i, AeDisjoint μ (s i) t := by

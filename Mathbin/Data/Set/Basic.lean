@@ -3355,15 +3355,35 @@ theorem range_quot_mk (r : α → α → Prop) : range (Quot.mk r) = univ :=
   (surjective_quot_mk r).range_eq
 #align set.range_quot_mk Set.range_quot_mk
 
-instance canLift (c) (p) [CanLift α β c p] :
-    CanLift (Set α) (Set β) ((· '' ·) c) fun s =>
-      ∀ x ∈ s, p x where prf s hs := subset_range_iff_exists_image_eq.mp fun x hx => CanLift.prf _ (hs x hx)
-#align set.can_lift Set.canLift
+@[simp]
+theorem range_quot_lift {r : ι → ι → Prop} (hf : ∀ x y, r x y → f x = f y) : range (Quot.lift f hf) = range f :=
+  ext fun y => (surjective_quot_mk _).exists
+#align set.range_quot_lift Set.range_quot_lift
 
 @[simp]
 theorem range_quotient_mk [Setoid α] : (range fun x : α => ⟦x⟧) = univ :=
   range_quot_mk _
 #align set.range_quotient_mk Set.range_quotient_mk
+
+@[simp]
+theorem range_quotient_lift [s : Setoid ι] (hf) : range (Quotient.lift f hf : Quotient s → α) = range f :=
+  range_quot_lift _
+#align set.range_quotient_lift Set.range_quotient_lift
+
+@[simp]
+theorem range_quotient_mk' {s : Setoid α} : range (Quotient.mk' : α → Quotient s) = univ :=
+  range_quot_mk _
+#align set.range_quotient_mk' Set.range_quotient_mk'
+
+@[simp]
+theorem range_quotient_lift_on' {s : Setoid ι} (hf) : (range fun x : Quotient s => Quotient.liftOn' x f hf) = range f :=
+  range_quot_lift _
+#align set.range_quotient_lift_on' Set.range_quotient_lift_on'
+
+instance canLift (c) (p) [CanLift α β c p] :
+    CanLift (Set α) (Set β) ((· '' ·) c) fun s =>
+      ∀ x ∈ s, p x where prf s hs := subset_range_iff_exists_image_eq.mp fun x hx => CanLift.prf _ (hs x hx)
+#align set.can_lift Set.canLift
 
 theorem range_const_subset {c : α} : (range fun x : ι => c) ⊆ {c} :=
   range_subset_iff.2 fun x => rfl

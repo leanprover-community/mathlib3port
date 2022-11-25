@@ -848,7 +848,7 @@ theorem _root_.measurable_embedding.strongly_measurable_extend {f : α → β} {
   intro x
   by_cases hx : ∃ y, g y = x
   · rcases hx with ⟨y, rfl⟩
-    simpa only [simple_func.extend_apply, hg.injective, extend_apply] using hf.tendsto_approx y
+    simpa only [simple_func.extend_apply, hg.injective, injective.extend_apply] using hf.tendsto_approx y
     
   · simpa only [hx, simple_func.extend_apply', not_false_iff, extend_apply'] using hg'.tendsto_approx x
     
@@ -860,7 +860,7 @@ theorem _root_.measurable_embedding.exists_strongly_measurable_extend {f : α �
     (hne : γ → Nonempty β) : ∃ f' : γ → β, StronglyMeasurable f' ∧ f' ∘ g = f :=
   ⟨Function.extend g f fun x => Classical.choice (hne x),
     hg.stronglyMeasurableExtend hf (strongly_measurable_const' fun _ _ => rfl),
-    funext fun x => extend_apply hg.Injective _ _ _⟩
+    funext fun x => hg.Injective.extend_apply _ _ _⟩
 #align
   measure_theory.strongly_measurable._root_.measurable_embedding.exists_strongly_measurable_extend measure_theory.strongly_measurable._root_.measurable_embedding.exists_strongly_measurable_extend
 

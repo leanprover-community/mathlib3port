@@ -177,6 +177,27 @@ theorem nat_degree_sub_eq_of_prod_eq {p₁ p₂ q₁ q₂ : R[X]} (hp₁ : p₁ 
   rw [← nat_degree_mul hp₁ hq₂, ← nat_degree_mul hp₂ hq₁, h_eq]
 #align polynomial.nat_degree_sub_eq_of_prod_eq Polynomial.nat_degree_sub_eq_of_prod_eq
 
+theorem nat_degree_eq_zero_of_is_unit (h : IsUnit p) : natDegree p = 0 := by
+  nontriviality R
+  obtain ⟨q, hq⟩ := h.exists_right_inv
+  have := nat_degree_mul (left_ne_zero_of_mul_eq_one hq) (right_ne_zero_of_mul_eq_one hq)
+  rw [hq, nat_degree_one, eq_comm, add_eq_zero_iff] at this
+  exact this.1
+#align polynomial.nat_degree_eq_zero_of_is_unit Polynomial.nat_degree_eq_zero_of_is_unit
+
+theorem degree_eq_zero_of_is_unit [Nontrivial R] (h : IsUnit p) : degree p = 0 :=
+  le_antisymm (nat_degree_eq_zero_iff_degree_le_zero.mp (nat_degree_eq_zero_of_is_unit h))
+    (zero_le_degree_iff.mpr h.NeZero)
+#align polynomial.degree_eq_zero_of_is_unit Polynomial.degree_eq_zero_of_is_unit
+
+theorem is_unit_iff : IsUnit p ↔ ∃ r : R, IsUnit r ∧ c r = p :=
+  ⟨fun hp =>
+    ⟨p.coeff 0,
+      let h := eq_C_of_nat_degree_eq_zero (nat_degree_eq_zero_of_is_unit hp)
+      ⟨is_unit_C.1 (h ▸ hp), h.symm⟩⟩,
+    fun ⟨r, hr, hrp⟩ => hrp ▸ is_unit_C.2 hr⟩
+#align polynomial.is_unit_iff Polynomial.is_unit_iff
+
 variable [CharZero R]
 
 @[simp]
@@ -215,6 +236,22 @@ end NoZeroDivisors
 section NoZeroDivisors
 
 variable [CommSemiring R] [NoZeroDivisors R] {p q : R[X]}
+
+theorem irreducible_of_monic (hp : p.Monic) (hp1 : p ≠ 1) :
+    Irreducible p ↔ ∀ f g : R[X], f.Monic → g.Monic → f * g = p → f = 1 ∨ g = 1 := by
+  refine'
+    ⟨fun h f g hf hg hp => (h.2 f g hp.symm).elim (Or.inl ∘ hf.eq_one_of_is_unit) (Or.inr ∘ hg.eq_one_of_is_unit),
+      fun h =>
+      ⟨hp1 ∘ hp.eq_one_of_is_unit, fun f g hfg =>
+        (h (g * C f.leadingCoeff) (f * C g.leadingCoeff) _ _ _).elim (Or.inr ∘ is_unit_of_mul_eq_one g _)
+          (Or.inl ∘ is_unit_of_mul_eq_one f _)⟩⟩
+  · rwa [monic, leading_coeff_mul, leading_coeff_C, ← leading_coeff_mul, mul_comm, ← hfg, ← monic]
+    
+  · rwa [monic, leading_coeff_mul, leading_coeff_C, ← leading_coeff_mul, ← hfg, ← monic]
+    
+  · rw [mul_mul_mul_comm, ← C_mul, ← leading_coeff_mul, ← hfg, hp.leading_coeff, C_1, mul_one, mul_comm, ← hfg]
+    
+#align polynomial.irreducible_of_monic Polynomial.irreducible_of_monic
 
 theorem root_mul : IsRoot (p * q) a ↔ IsRoot p a ∨ IsRoot q a := by simp_rw [is_root, eval_mul, mul_eq_zero]
 #align polynomial.root_mul Polynomial.root_mul
@@ -275,16 +312,6 @@ variable [IsDomain R] {p q : R[X]}
 section Roots
 
 open Multiset
-
-theorem degree_eq_zero_of_is_unit (h : IsUnit p) : degree p = 0 := by
-  let ⟨q, hq⟩ := is_unit_iff_dvd_one.1 h
-  have hp0 : p ≠ 0 := fun hp0 => by simpa [hp0] using hq
-  have hq0 : q ≠ 0 := fun hp0 => by simpa [hp0] using hq
-  have : natDegree (1 : R[X]) = natDegree (p * q) := congr_arg _ hq
-  rw [nat_degree_one, nat_degree_mul hp0 hq0, eq_comm, _root_.add_eq_zero_iff, ← WithBot.coe_eq_coe, ←
-      degree_eq_nat_degree hp0] at this <;>
-    exact this.1
-#align polynomial.degree_eq_zero_of_is_unit Polynomial.degree_eq_zero_of_is_unit
 
 @[simp]
 theorem degree_coe_units (u : R[X]ˣ) : degree (u : R[X]) = 0 :=
@@ -1083,13 +1110,6 @@ theorem aeval_eq_zero_of_mem_root_set {p : T[X]} [CommRing S] [IsDomain S] [Alge
 #align polynomial.aeval_eq_zero_of_mem_root_set Polynomial.aeval_eq_zero_of_mem_root_set
 
 end Roots
-
-theorem is_unit_iff {f : R[X]} : IsUnit f ↔ ∃ r : R, IsUnit r ∧ c r = f :=
-  ⟨fun hf =>
-    ⟨f.coeff 0, is_unit_C.1 <| eq_C_of_degree_eq_zero (degree_eq_zero_of_is_unit hf) ▸ hf,
-      (eq_C_of_degree_eq_zero (degree_eq_zero_of_is_unit hf)).symm⟩,
-    fun ⟨r, hr, hrf⟩ => hrf ▸ is_unit_C.2 hr⟩
-#align polynomial.is_unit_iff Polynomial.is_unit_iff
 
 theorem coeff_coe_units_zero_ne_zero (u : R[X]ˣ) : coeff (u : R[X]) 0 ≠ 0 := by
   conv in 0 => rw [← nat_degree_coe_units u]

@@ -2557,8 +2557,12 @@ theorem coe_ker (f : G →* M) : (f.ker : Set G) = (f : G → M) ⁻¹' {1} :=
 #align monoid_hom.coe_ker MonoidHom.coe_ker
 
 @[to_additive]
-theorem eq_iff (f : G →* N) {x y : G} : f x = f y ↔ y⁻¹ * x ∈ f.ker := by
-  rw [f.mem_ker, f.map_mul, f.map_inv, inv_mul_eq_one, eq_comm]
+theorem eq_iff (f : G →* M) {x y : G} : f x = f y ↔ y⁻¹ * x ∈ f.ker := by
+  constructor <;> intro h
+  · rw [mem_ker, map_mul, h, ← map_mul, inv_mul_self, map_one]
+    
+  · rw [← one_mul x, ← mul_inv_self y, mul_assoc, map_mul, f.mem_ker.1 h, mul_one]
+    
 #align monoid_hom.eq_iff MonoidHom.eq_iff
 
 @[to_additive]
@@ -2577,31 +2581,30 @@ theorem comap_bot (f : G →* N) : (⊥ : Subgroup N).comap f = f.ker :=
 #align monoid_hom.comap_bot MonoidHom.comap_bot
 
 @[simp, to_additive]
-theorem restrict_ker (f : G →* N) : (f.restrict K).ker = f.ker.subgroupOf K :=
+theorem ker_restrict (f : G →* N) : (f.restrict K).ker = f.ker.subgroupOf K :=
   rfl
-#align monoid_hom.restrict_ker MonoidHom.restrict_ker
-
-@[to_additive]
-theorem range_restrict_ker (f : G →* N) : ker (rangeRestrict f) = ker f := by
-  ext
-  change (⟨f x, _⟩ : range f) = ⟨1, _⟩ ↔ f x = 1
-  simp only
-#align monoid_hom.range_restrict_ker MonoidHom.range_restrict_ker
+#align monoid_hom.ker_restrict MonoidHom.ker_restrict
 
 @[simp, to_additive]
-theorem ker_one : (1 : G →* M).ker = ⊤ := by
-  ext
-  simp [mem_ker]
+theorem ker_cod_restrict {S} [SetLike S N] [SubmonoidClass S N] (f : G →* N) (s : S) (h : ∀ x, f x ∈ s) :
+    (f.codRestrict s h).ker = f.ker :=
+  SetLike.ext fun x => Subtype.ext_iff
+#align monoid_hom.ker_cod_restrict MonoidHom.ker_cod_restrict
+
+@[simp, to_additive]
+theorem ker_range_restrict (f : G →* N) : ker (rangeRestrict f) = ker f :=
+  ker_cod_restrict _ _ _
+#align monoid_hom.ker_range_restrict MonoidHom.ker_range_restrict
+
+@[simp, to_additive]
+theorem ker_one : (1 : G →* M).ker = ⊤ :=
+  SetLike.ext fun x => eq_self_iff_true _
 #align monoid_hom.ker_one MonoidHom.ker_one
 
 @[to_additive]
-theorem ker_eq_bot_iff (f : G →* N) : f.ker = ⊥ ↔ Function.Injective f := by
-  constructor
-  · intro h x y hxy
-    rwa [← mul_inv_eq_one, ← map_inv, ← map_mul, ← mem_ker, h, mem_bot, mul_inv_eq_one] at hxy
-    
-  · exact fun h => le_bot_iff.mp fun x hx => h (hx.trans f.map_one.symm)
-    
+theorem ker_eq_bot_iff (f : G →* M) : f.ker = ⊥ ↔ Function.Injective f :=
+  ⟨fun h x y hxy => by rwa [eq_iff, h, mem_bot, inv_mul_eq_one, eq_comm] at hxy, fun h =>
+    bot_unique fun x hx => h (hx.trans f.map_one.symm)⟩
 #align monoid_hom.ker_eq_bot_iff MonoidHom.ker_eq_bot_iff
 
 @[simp, to_additive]
@@ -2625,6 +2628,11 @@ theorem ker_prod_map {G' : Type _} {N' : Type _} [Group G'] [Group N'] (f : G �
     (prodMap f g).ker = f.ker.Prod g.ker := by
   rw [← comap_bot, ← comap_bot, ← comap_bot, ← prod_map_comap_prod, bot_prod_bot]
 #align monoid_hom.ker_prod_map MonoidHom.ker_prod_map
+
+@[to_additive]
+instance (priority := 100) normal_ker (f : G →* M) : f.ker.Normal :=
+  ⟨fun x hx y => by rw [mem_ker, map_mul, map_mul, f.mem_ker.1 hx, mul_one, map_mul_eq_one f (mul_inv_self y)]⟩
+#align monoid_hom.normal_ker MonoidHom.normal_ker
 
 end Ker
 
@@ -2692,15 +2700,8 @@ namespace Subgroup
 variable {N : Type _} [Group N] (H : Subgroup G)
 
 @[to_additive]
-theorem map_eq_bot_iff {f : G →* N} : H.map f = ⊥ ↔ H ≤ f.ker := by
-  rw [eq_bot_iff]
-  constructor
-  · exact fun h x hx => h ⟨x, hx, rfl⟩
-    
-  · intro h x hx
-    obtain ⟨y, hy, rfl⟩ := hx
-    exact h hy
-    
+theorem map_eq_bot_iff {f : G →* N} : H.map f = ⊥ ↔ H ≤ f.ker :=
+  (gc_map_comap f).l_eq_bot
 #align subgroup.map_eq_bot_iff Subgroup.map_eq_bot_iff
 
 @[to_additive]
@@ -2743,10 +2744,7 @@ theorem le_comap_map (H : Subgroup G) : H ≤ comap f (map f H) :=
 
 @[to_additive]
 theorem map_comap_eq (H : Subgroup N) : map f (comap f H) = f.range ⊓ H :=
-  SetLike.ext'
-    (by
-      convert Set.image_preimage_eq_inter_range
-      simp [Set.inter_comm])
+  SetLike.ext' <| by rw [coe_map, coe_comap, Set.image_preimage_eq_inter_range, coe_inf, coe_range, Set.inter_comm]
 #align subgroup.map_comap_eq Subgroup.map_comap_eq
 
 @[to_additive]
@@ -3044,12 +3042,6 @@ instance (priority := 100) Subgroup.normal_comap {H : Subgroup N} [nH : H.Normal
 #align subgroup.normal_comap Subgroup.normal_comap
 
 @[to_additive]
-instance (priority := 100) MonoidHom.normal_ker (f : G →* N) : f.ker.Normal := by
-  rw [← f.comap_bot]
-  infer_instance
-#align monoid_hom.normal_ker MonoidHom.normal_ker
-
-@[to_additive]
 instance (priority := 100) Subgroup.normal_inf (H N : Subgroup G) [hN : N.Normal] : ((H ⊓ N).comap H.Subtype).Normal :=
   ⟨fun x hx g => by
     simp only [Subgroup.mem_inf, coeSubtype, Subgroup.mem_comap] at hx
@@ -3333,9 +3325,7 @@ instance : IsModularLattice (Subgroup C) :=
     rw [mem_inf, mem_sup] at ha
     rcases ha with ⟨⟨b, hb, c, hc, rfl⟩, haz⟩
     rw [mem_sup]
-    refine' ⟨b, hb, c, mem_inf.2 ⟨hc, _⟩, rfl⟩
-    rw [← inv_mul_cancel_left b c]
-    apply z.mul_mem (z.inv_mem (xz hb)) haz⟩
+    exact ⟨b, hb, c, mem_inf.2 ⟨hc, (mul_mem_cancel_left (xz hb)).1 haz⟩, rfl⟩⟩
 
 end Subgroup
 

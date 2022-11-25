@@ -1973,6 +1973,16 @@ theorem op_smul_inter_ne_empty_iff {s t : Set α} {x : αᵐᵒᵖ} :
     
 #align set.op_smul_inter_ne_empty_iff Set.op_smul_inter_ne_empty_iff
 
+@[simp, to_additive]
+theorem Union_inv_smul : (⋃ g : α, g⁻¹ • s) = ⋃ g : α, g • s :=
+  (Function.Surjective.supr_congr _ inv_surjective) fun g => rfl
+#align set.Union_inv_smul Set.Union_inv_smul
+
+@[to_additive]
+theorem Union_smul_eq_set_of_exists {s : Set β} : (⋃ g : α, g • s) = { a | ∃ g : α, g • a ∈ s } := by
+  simp_rw [← Union_set_of, ← Union_inv_smul, ← preimage_smul, preimage]
+#align set.Union_smul_eq_set_of_exists Set.Union_smul_eq_set_of_exists
+
 end Group
 
 section GroupWithZero

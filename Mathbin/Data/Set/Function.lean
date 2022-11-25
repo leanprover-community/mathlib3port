@@ -135,7 +135,7 @@ theorem range_extend {f : α → β} (hf : Injective f) (g : α → γ) (g' : β
     range (extend f g g') = range g ∪ g' '' range fᶜ := by
   refine' (range_extend_subset _ _ _).antisymm _
   rintro z (⟨x, rfl⟩ | ⟨y, hy, rfl⟩)
-  exacts[⟨f x, extend_apply hf _ _ _⟩, ⟨y, extend_apply' _ _ _ hy⟩]
+  exacts[⟨f x, hf.extend_apply _ _ _⟩, ⟨y, extend_apply' _ _ _ hy⟩]
 #align set.range_extend Set.range_extend
 
 /-- Restrict codomain of a function `f` to a set `s`. Same as `subtype.coind` but this version

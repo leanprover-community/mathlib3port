@@ -22,6 +22,8 @@ quotient
 
 variable {α : Sort _} {β : Sort _}
 
+open Function
+
 namespace Setoid
 
 #print Setoid.ext /-
@@ -98,7 +100,7 @@ Case conversion may be inaccurate. Consider using '#align quot.lift_mk Quot.lift
 #print Quot.lift_mk /-
 /-- **Alias** of `quot.lift_beta`. -/
 theorem lift_mk (f : α → γ) (h : ∀ a₁ a₂, r a₁ a₂ → f a₁ = f a₂) (a : α) : Quot.lift f h (Quot.mk r a) = f a :=
-  Quot.lift_mk f h a
+  rfl
 #align quot.lift_mk Quot.lift_mk
 -/
 
@@ -108,6 +110,13 @@ theorem liftOn_mk (a : α) (f : α → γ) (h : ∀ a₁ a₂, r a₁ a₂ → f
   rfl
 #align quot.lift_on_mk Quot.liftOn_mk
 -/
+
+@[simp]
+theorem surjective_lift {f : α → γ} (h : ∀ a₁ a₂, r a₁ a₂ → f a₁ = f a₂) : Surjective (lift f h) ↔ Surjective f :=
+  ⟨fun hf => hf.comp Quot.exists_rep, fun hf y =>
+    let ⟨x, hx⟩ := hf y
+    ⟨Quot.mk _ x, hx⟩⟩
+#align quot.surjective_lift Quot.surjective_lift
 
 #print Quot.lift₂ /-
 /-- Descends a function `f : α → β → γ` to quotients of `α` and `β`. -/
@@ -394,14 +403,14 @@ theorem Quotient.lift_on₂_mk {α : Sort _} {β : Sort _} [Setoid α] (f : α �
 
 #print surjective_quot_mk /-
 /-- `quot.mk r` is a surjective function. -/
-theorem surjective_quot_mk (r : α → α → Prop) : Function.Surjective (Quot.mk r) :=
+theorem surjective_quot_mk (r : α → α → Prop) : Surjective (Quot.mk r) :=
   Quot.exists_rep
 #align surjective_quot_mk surjective_quot_mk
 -/
 
 #print surjective_quotient_mk /-
 /-- `quotient.mk` is a surjective function. -/
-theorem surjective_quotient_mk (α : Sort _) [s : Setoid α] : Function.Surjective (Quotient.mk'' : α → Quotient s) :=
+theorem surjective_quotient_mk (α : Sort _) [s : Setoid α] : Surjective (Quotient.mk'' : α → Quotient s) :=
   Quot.exists_rep
 #align surjective_quotient_mk surjective_quotient_mk
 -/
@@ -472,7 +481,7 @@ theorem Quotient.out_equiv_out {s : Setoid α} {x y : Quotient s} : x.out ≈ y.
 -/
 
 #print Quotient.out_injective /-
-theorem Quotient.out_injective {s : Setoid α} : Function.Injective (@Quotient.out α s) := fun a b h =>
+theorem Quotient.out_injective {s : Setoid α} : Injective (@Quotient.out α s) := fun a b h =>
   Quotient.out_equiv_out.1 <| h ▸ Setoid.refl _
 #align quotient.out_injective Quotient.out_injective
 -/
@@ -723,7 +732,7 @@ protected def mk' (a : α) : Quotient s₁ :=
 
 #print Quotient.surjective_Quotient_mk'' /-
 /-- `quotient.mk'` is a surjective function. -/
-theorem surjective_Quotient_mk'' : Function.Surjective (Quotient.mk' : α → Quotient s₁) :=
+theorem surjective_Quotient_mk'' : Surjective (Quotient.mk' : α → Quotient s₁) :=
   Quot.exists_rep
 #align quotient.surjective_quotient_mk' Quotient.surjective_Quotient_mk''
 -/
@@ -741,6 +750,12 @@ protected def liftOn' (q : Quotient s₁) (f : α → φ) (h : ∀ a b, @Setoid.
 protected theorem lift_on'_mk' (f : α → φ) (h) (x : α) : Quotient.liftOn' (@Quotient.mk' _ s₁ x) f h = f x :=
   rfl
 #align quotient.lift_on'_mk' Quotient.lift_on'_mk'
+
+@[simp]
+theorem surjective_lift_on' {f : α → φ} (h : ∀ a b, @Setoid.r α s₁ a b → f a = f b) :
+    (Surjective fun x => Quotient.liftOn' x f h) ↔ Surjective f :=
+  Quot.surjective_lift _
+#align quotient.surjective_lift_on' Quotient.surjective_lift_on'
 
 #print Quotient.liftOn₂' /-
 /-- A version of `quotient.lift_on₂` taking `{s₁ : setoid α} {s₂ : setoid β}` as implicit arguments

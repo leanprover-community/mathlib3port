@@ -92,45 +92,38 @@ theorem sum_smul_index_linear_map' {α : Type _} {R : Type _} {M : Type _} {M₂
     
 #align finsupp.sum_smul_index_linear_map' Finsupp.sum_smul_index_linear_map'
 
-variable (α : Type _) [Fintype α]
+variable (α : Type _) [Finite α]
 
 variable (R M) [AddCommMonoid M] [Semiring R] [Module R M]
 
-/-- Given `fintype α`, `linear_equiv_fun_on_fintype R` is the natural `R`-linear equivalence between
+/-- Given `finite α`, `linear_equiv_fun_on_finite R` is the natural `R`-linear equivalence between
 `α →₀ β` and `α → β`. -/
 @[simps apply]
-noncomputable def linearEquivFunOnFintype : (α →₀ M) ≃ₗ[R] α → M :=
-  { equivFunOnFintype with toFun := coeFn,
-    map_add' := fun f g => by
-      ext
-      rfl,
-    map_smul' := fun c f => by
-      ext
-      rfl }
-#align finsupp.linear_equiv_fun_on_fintype Finsupp.linearEquivFunOnFintype
+noncomputable def linearEquivFunOnFinite : (α →₀ M) ≃ₗ[R] α → M :=
+  { equivFunOnFinite with toFun := coeFn, map_add' := fun f g => rfl, map_smul' := fun c f => rfl }
+#align finsupp.linear_equiv_fun_on_finite Finsupp.linearEquivFunOnFinite
 
 @[simp]
-theorem linear_equiv_fun_on_fintype_single [DecidableEq α] (x : α) (m : M) :
-    (linearEquivFunOnFintype R M α) (single x m) = Pi.single x m :=
-  equiv_fun_on_fintype_single x m
-#align finsupp.linear_equiv_fun_on_fintype_single Finsupp.linear_equiv_fun_on_fintype_single
+theorem linear_equiv_fun_on_finite_single [DecidableEq α] (x : α) (m : M) :
+    (linearEquivFunOnFinite R M α) (single x m) = Pi.single x m :=
+  equiv_fun_on_finite_single x m
+#align finsupp.linear_equiv_fun_on_finite_single Finsupp.linear_equiv_fun_on_finite_single
 
 @[simp]
-theorem linear_equiv_fun_on_fintype_symm_single [DecidableEq α] (x : α) (m : M) :
-    (linearEquivFunOnFintype R M α).symm (Pi.single x m) = single x m :=
-  equiv_fun_on_fintype_symm_single x m
-#align finsupp.linear_equiv_fun_on_fintype_symm_single Finsupp.linear_equiv_fun_on_fintype_symm_single
+theorem linear_equiv_fun_on_finite_symm_single [DecidableEq α] (x : α) (m : M) :
+    (linearEquivFunOnFinite R M α).symm (Pi.single x m) = single x m :=
+  equiv_fun_on_finite_symm_single x m
+#align finsupp.linear_equiv_fun_on_finite_symm_single Finsupp.linear_equiv_fun_on_finite_symm_single
 
 @[simp]
-theorem linear_equiv_fun_on_fintype_symm_coe (f : α →₀ M) : (linearEquivFunOnFintype R M α).symm f = f := by
-  ext
-  simp [linear_equiv_fun_on_fintype]
-#align finsupp.linear_equiv_fun_on_fintype_symm_coe Finsupp.linear_equiv_fun_on_fintype_symm_coe
+theorem linear_equiv_fun_on_finite_symm_coe (f : α →₀ M) : (linearEquivFunOnFinite R M α).symm f = f :=
+  (linearEquivFunOnFinite R M α).symm_apply_apply f
+#align finsupp.linear_equiv_fun_on_finite_symm_coe Finsupp.linear_equiv_fun_on_finite_symm_coe
 
 /-- If `α` has a unique term, then the type of finitely supported functions `α →₀ M` is
 `R`-linearly equivalent to `M`. -/
 noncomputable def LinearEquiv.finsuppUnique (α : Type _) [Unique α] : (α →₀ M) ≃ₗ[R] M :=
-  { Finsupp.equivFunOnFintype.trans (Equiv.funUnique α M) with map_add' := fun x y => rfl, map_smul' := fun r x => rfl }
+  { Finsupp.equivFunOnFinite.trans (Equiv.funUnique α M) with map_add' := fun x y => rfl, map_smul' := fun r x => rfl }
 #align finsupp.linear_equiv.finsupp_unique Finsupp.LinearEquiv.finsuppUnique
 
 variable {R M α}

@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
 import Mathbin.Order.Bounds.Basic
+import Mathbin.Order.WellFounded
 import Mathbin.Data.Set.Intervals.Basic
-import Mathbin.Data.Set.Finite
 import Mathbin.Data.Set.Lattice
 
 /-!
@@ -791,14 +791,6 @@ theorem csupr_mem_Inter_Icc_of_antitone_Icc [SemilatticeSup β] {f g : β → α
     (fun m n hmn => ((Icc_subset_Icc_iff (h' n)).1 (h hmn)).2) h'
 #align csupr_mem_Inter_Icc_of_antitone_Icc csupr_mem_Inter_Icc_of_antitone_Icc
 
-theorem Finset.Nonempty.sup'_eq_cSup_image {s : Finset β} (hs : s.Nonempty) (f : β → α) : s.sup' hs f = sup (f '' s) :=
-  eq_of_forall_ge_iff fun a => by simp [cSup_le_iff (s.finite_to_set.image f).BddAbove (hs.to_set.image f)]
-#align finset.nonempty.sup'_eq_cSup_image Finset.Nonempty.sup'_eq_cSup_image
-
-theorem Finset.Nonempty.sup'_id_eq_cSup {s : Finset α} (hs : s.Nonempty) : s.sup' hs id = sup s := by
-  rw [hs.sup'_eq_cSup_image, image_id]
-#align finset.nonempty.sup'_id_eq_cSup Finset.Nonempty.sup'_id_eq_cSup
-
 /-- Introduction rule to prove that b is the supremum of s: it suffices to check that
 1) b is an upper bound
 2) every other upper bound b' satisfies b ≤ b'.-/
@@ -823,40 +815,6 @@ instance Pi.conditionallyCompleteLattice {ι : Type _} {α : ∀ i : ι, Type _}
 section ConditionallyCompleteLinearOrder
 
 variable [ConditionallyCompleteLinearOrder α] {s t : Set α} {a b : α}
-
-theorem Finset.Nonempty.cSup_eq_max' {s : Finset α} (h : s.Nonempty) : sup ↑s = s.max' h :=
-  eq_of_forall_ge_iff fun a => (cSup_le_iff s.BddAbove h.to_set).trans (s.max'_le_iff h).symm
-#align finset.nonempty.cSup_eq_max' Finset.Nonempty.cSup_eq_max'
-
-theorem Finset.Nonempty.cInf_eq_min' {s : Finset α} (h : s.Nonempty) : inf ↑s = s.min' h :=
-  @Finset.Nonempty.cSup_eq_max' αᵒᵈ _ s h
-#align finset.nonempty.cInf_eq_min' Finset.Nonempty.cInf_eq_min'
-
-theorem Finset.Nonempty.cSup_mem {s : Finset α} (h : s.Nonempty) : sup (s : Set α) ∈ s := by
-  rw [h.cSup_eq_max']
-  exact s.max'_mem _
-#align finset.nonempty.cSup_mem Finset.Nonempty.cSup_mem
-
-theorem Finset.Nonempty.cInf_mem {s : Finset α} (h : s.Nonempty) : inf (s : Set α) ∈ s :=
-  @Finset.Nonempty.cSup_mem αᵒᵈ _ _ h
-#align finset.nonempty.cInf_mem Finset.Nonempty.cInf_mem
-
-theorem Set.Nonempty.cSup_mem (h : s.Nonempty) (hs : s.Finite) : sup s ∈ s := by
-  lift s to Finset α using hs
-  exact Finset.Nonempty.cSup_mem h
-#align set.nonempty.cSup_mem Set.Nonempty.cSup_mem
-
-theorem Set.Nonempty.cInf_mem (h : s.Nonempty) (hs : s.Finite) : inf s ∈ s :=
-  @Set.Nonempty.cSup_mem αᵒᵈ _ _ h hs
-#align set.nonempty.cInf_mem Set.Nonempty.cInf_mem
-
-theorem Set.Finite.cSup_lt_iff (hs : s.Finite) (h : s.Nonempty) : sup s < a ↔ ∀ x ∈ s, x < a :=
-  ⟨fun h x hx => (le_cSup hs.BddAbove hx).trans_lt h, fun H => H _ <| h.cSup_mem hs⟩
-#align set.finite.cSup_lt_iff Set.Finite.cSup_lt_iff
-
-theorem Set.Finite.lt_cInf_iff (hs : s.Finite) (h : s.Nonempty) : a < inf s ↔ ∀ x ∈ s, a < x :=
-  @Set.Finite.cSup_lt_iff αᵒᵈ _ _ _ hs h
-#align set.finite.lt_cInf_iff Set.Finite.lt_cInf_iff
 
 /-- When b < Sup s, there is an element a in s with b < a, if s is nonempty and the order is
 a linear order. -/
@@ -1365,45 +1323,6 @@ theorem cInf_image2_eq_cSup_cSup (h₁ : ∀ b, GaloisConnection (to_dual ∘ l�
 
 end
 
-/-!
-### Relation between `Sup` / `Inf` and `finset.sup'` / `finset.inf'`
-
-Like the `Sup` of a `conditionally_complete_lattice`, `finset.sup'` also requires the set to be
-non-empty. As a result, we can translate between the two.
--/
-
-
-namespace Finset
-
-theorem sup'_eq_cSup_image [ConditionallyCompleteLattice β] (s : Finset α) (H) (f : α → β) :
-    s.sup' H f = sup (f '' s) := by
-  apply le_antisymm
-  · refine' (Finset.sup'_le _ _) fun a ha => _
-    refine' le_cSup ⟨s.sup' H f, _⟩ ⟨a, ha, rfl⟩
-    rintro i ⟨j, hj, rfl⟩
-    exact Finset.le_sup' _ hj
-    
-  · apply cSup_le ((coe_nonempty.mpr H).image _)
-    rintro _ ⟨a, ha, rfl⟩
-    exact Finset.le_sup' _ ha
-    
-#align finset.sup'_eq_cSup_image Finset.sup'_eq_cSup_image
-
-theorem inf'_eq_cInf_image [ConditionallyCompleteLattice β] (s : Finset α) (H) (f : α → β) :
-    s.inf' H f = inf (f '' s) :=
-  @sup'_eq_cSup_image _ βᵒᵈ _ _ H _
-#align finset.inf'_eq_cInf_image Finset.inf'_eq_cInf_image
-
-theorem sup'_id_eq_cSup [ConditionallyCompleteLattice α] (s : Finset α) (H) : s.sup' H id = sup s := by
-  rw [sup'_eq_cSup_image s H, Set.image_id]
-#align finset.sup'_id_eq_cSup Finset.sup'_id_eq_cSup
-
-theorem inf'_id_eq_cInf [ConditionallyCompleteLattice α] (s : Finset α) (H) : s.inf' H id = inf s :=
-  @sup'_id_eq_cSup αᵒᵈ _ _ H
-#align finset.inf'_id_eq_cInf Finset.inf'_id_eq_cInf
-
-end Finset
-
 section WithTopBot
 
 /-!
@@ -1514,45 +1433,5 @@ theorem WithTop.supr_coe_lt_top {ι : Sort _} {α : Type _} [ConditionallyComple
 
 end WithTopBot
 
-section Group
-
-variable {ι' : Sort _} [Nonempty ι] [Nonempty ι'] [ConditionallyCompleteLattice α] [Group α]
-
-@[to_additive]
-theorem le_mul_cinfi [CovariantClass α α (· * ·) (· ≤ ·)] {a : α} {g : α} {h : ι → α} (H : ∀ j, a ≤ g * h j) :
-    a ≤ g * infi h :=
-  inv_mul_le_iff_le_mul.mp <| le_cinfi fun hi => inv_mul_le_iff_le_mul.mpr <| H _
-#align le_mul_cinfi le_mul_cinfi
-
-@[to_additive]
-theorem mul_csupr_le [CovariantClass α α (· * ·) (· ≤ ·)] {a : α} {g : α} {h : ι → α} (H : ∀ j, g * h j ≤ a) :
-    g * supr h ≤ a :=
-  @le_mul_cinfi αᵒᵈ _ _ _ _ _ _ _ _ H
-#align mul_csupr_le mul_csupr_le
-
-@[to_additive]
-theorem le_cinfi_mul [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a : α} {g : ι → α} {h : α}
-    (H : ∀ i, a ≤ g i * h) : a ≤ infi g * h :=
-  mul_inv_le_iff_le_mul.mp <| le_cinfi fun gi => mul_inv_le_iff_le_mul.mpr <| H _
-#align le_cinfi_mul le_cinfi_mul
-
-@[to_additive]
-theorem csupr_mul_le [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a : α} {g : ι → α} {h : α}
-    (H : ∀ i, g i * h ≤ a) : supr g * h ≤ a :=
-  @le_cinfi_mul αᵒᵈ _ _ _ _ _ _ _ _ H
-#align csupr_mul_le csupr_mul_le
-
-@[to_additive]
-theorem le_cinfi_mul_cinfi [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)]
-    {a : α} {g : ι → α} {h : ι' → α} (H : ∀ i j, a ≤ g i * h j) : a ≤ infi g * infi h :=
-  le_cinfi_mul fun i => le_mul_cinfi <| H _
-#align le_cinfi_mul_cinfi le_cinfi_mul_cinfi
-
-@[to_additive]
-theorem csupr_mul_csupr_le [CovariantClass α α (· * ·) (· ≤ ·)] [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)]
-    {a : α} {g : ι → α} {h : ι' → α} (H : ∀ i j, g i * h j ≤ a) : supr g * supr h ≤ a :=
-  csupr_mul_le fun i => mul_csupr_le <| H _
-#align csupr_mul_csupr_le csupr_mul_csupr_le
-
-end Group
-
+/- ./././Mathport/Syntax/Translate/Command.lean:719:14: unsupported user command assert_not_exists -/
+-- Guard against import creep

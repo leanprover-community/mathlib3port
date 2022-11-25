@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Data.Set.Countable
 import Mathbin.Logic.Encodable.Lattice
-import Mathbin.Order.ConditionallyCompleteLattice
+import Mathbin.Order.ConditionallyCompleteLattice.Basic
 import Mathbin.Order.Disjointed
 
 /-!

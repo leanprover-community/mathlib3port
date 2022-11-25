@@ -1401,7 +1401,7 @@ theorem infi_image : ∀ {γ} {f : β → γ} {g : γ → α} {t : Set β}, (⨅
 
 theorem supr_extend_bot {e : ι → β} (he : Injective e) (f : ι → α) : (⨆ j, extend e f ⊥ j) = ⨆ i, f i := by
   rw [supr_split _ fun j => ∃ i, e i = j]
-  simp (config := { contextual := true }) [extend_apply he, extend_apply', @supr_comm _ β ι]
+  simp (config := { contextual := true }) [he.extend_apply, extend_apply', @supr_comm _ β ι]
 #align supr_extend_bot supr_extend_bot
 
 theorem infi_extend_top {e : ι → β} (he : Injective e) (f : ι → α) : (⨅ j, extend e f ⊤ j) = infi f :=

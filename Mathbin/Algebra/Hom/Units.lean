@@ -170,7 +170,7 @@ def toHomUnits {G M : Type _} [Group G] [Monoid M] (f : G →* M) : G →* Mˣ :
     fun g => rfl
 #align monoid_hom.to_hom_units MonoidHom.toHomUnits
 
-@[simp]
+@[simp, to_additive]
 theorem coe_to_hom_units {G M : Type _} [Group G] [Monoid M] (f : G →* M) (g : G) : (f.toHomUnits g : M) = f g :=
   rfl
 #align monoid_hom.coe_to_hom_units MonoidHom.coe_to_hom_units

@@ -835,10 +835,7 @@ section
 variable [DivisionRing K] [AddCommGroup V] [Module K V]
 
 instance finiteDimensionalFinsupp {ι : Type _} [Finite ι] [h : FiniteDimensional K V] : FiniteDimensional K (ι →₀ V) :=
-  by
-  cases nonempty_fintype ι
-  letI : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance
-  exact (Finsupp.linearEquivFunOnFintype K V ι).symm.FiniteDimensional
+  (Finsupp.linearEquivFunOnFinite K V ι).symm.FiniteDimensional
 #align finite_dimensional_finsupp finiteDimensionalFinsupp
 
 end
@@ -1570,7 +1567,7 @@ theorem cardinal_mk_eq_cardinal_mk_field_pow_dim (K V : Type u) [DivisionRing K]
   let hs := Basis.ofVectorSpace K V
   calc
     (#V) = (#s →₀ K) := Quotient.sound ⟨hs.repr.to_equiv⟩
-    _ = (#s → K) := Quotient.sound ⟨Finsupp.equivFunOnFintype⟩
+    _ = (#s → K) := Quotient.sound ⟨Finsupp.equivFunOnFinite⟩
     _ = _ := by rw [← Cardinal.lift_inj.1 hs.mk_eq_dim, Cardinal.power_def]
     
 #align cardinal_mk_eq_cardinal_mk_field_pow_dim cardinal_mk_eq_cardinal_mk_field_pow_dim

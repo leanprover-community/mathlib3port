@@ -26,12 +26,12 @@ variable {n : ℕ} (i : Fin n) {M : Type _} [Zero M] (y : M) (t : Fin (n + 1) �
 
 /-- `tail` for maps `fin (n + 1) →₀ M`. See `fin.tail` for more details. -/
 def tail (s : Fin (n + 1) →₀ M) : Fin n →₀ M :=
-  Finsupp.equivFunOnFintype.symm (Fin.tail s)
+  Finsupp.equivFunOnFinite.symm (Fin.tail s)
 #align finsupp.tail Finsupp.tail
 
 /-- `cons` for maps `fin n →₀ M`. See `fin.cons` for more details. -/
 def cons (y : M) (s : Fin n →₀ M) : Fin (n + 1) →₀ M :=
-  Finsupp.equivFunOnFintype.symm (Fin.cons y s : Fin (n + 1) → M)
+  Finsupp.equivFunOnFinite.symm (Fin.cons y s : Fin (n + 1) → M)
 #align finsupp.cons Finsupp.cons
 
 theorem tail_apply : tail t i = t i.succ :=

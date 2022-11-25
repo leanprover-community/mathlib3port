@@ -346,10 +346,10 @@ theorem card_support_eq {n : ℕ} :
         rw [Fin.range_cast_succ, Set.mem_def]
         exact lt_of_lt_of_le hij (nat.lt_succ_iff.mp j.2)
       obtain ⟨i, rfl⟩ := hi
-      rw [Function.extend_apply fin.cast_succ.injective]
+      rw [fin.cast_succ.injective.extend_apply]
       by_cases hj : ∃ j₀, Fin.castSucc j₀ = j
       · obtain ⟨j, rfl⟩ := hj
-        rwa [Function.extend_apply fin.cast_succ.injective, hk.lt_iff_lt, ← Fin.cast_succ_lt_cast_succ_iff]
+        rwa [fin.cast_succ.injective.extend_apply, hk.lt_iff_lt, ← Fin.cast_succ_lt_cast_succ_iff]
         
       · rw [Function.extend_apply' _ _ _ hj]
         apply lt_nat_degree_of_mem_erase_lead_support
@@ -367,7 +367,7 @@ theorem card_support_eq {n : ℕ} :
     · intro i
       by_cases hi : ∃ i₀, Fin.castSucc i₀ = i
       · obtain ⟨i, rfl⟩ := hi
-        rw [Function.extend_apply fin.cast_succ.injective]
+        rw [fin.cast_succ.injective.extend_apply]
         exact hx i
         
       · rw [Function.extend_apply' _ _ _ hi, Ne, leading_coeff_eq_zero, ← card_support_eq_zero, h]
@@ -375,7 +375,7 @@ theorem card_support_eq {n : ℕ} :
         
       
     · rw [Fin.sum_univ_cast_succ]
-      simp only [Function.extend_apply fin.cast_succ.injective]
+      simp only [fin.cast_succ.injective.extend_apply]
       rw [← hf, Function.extend_apply', Function.extend_apply', erase_lead_add_C_mul_X_pow]
       all_goals exact H
       
