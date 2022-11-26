@@ -247,7 +247,7 @@ def AddMonoidHom.completion (f : α →+ β) (hf : Continuous f) : Completion α
 @[continuity]
 theorem AddMonoidHom.continuous_completion (f : α →+ β) (hf : Continuous f) :
     Continuous (f.Completion hf : Completion α → Completion β) :=
-  ContinuousMap
+  continuous_map
 #align add_monoid_hom.continuous_completion AddMonoidHom.continuous_completion
 
 theorem AddMonoidHom.completion_coe (f : α →+ β) (hf : Continuous f) (a : α) : f.Completion hf a = f a :=

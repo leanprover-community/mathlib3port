@@ -117,7 +117,7 @@ abbrev openFunctor :=
   algebraic_geometry.PresheafedSpace.is_open_immersion.open_functor AlgebraicGeometry.PresheafedSpaceCat.IsOpenImmersion.openFunctor
 
 /-- An open immersion `f : X ⟶ Y` induces an isomorphism `X ≅ Y|_{f(X)}`. -/
-@[simps]
+@[simps hom_c_app]
 noncomputable def isoRestrict : X ≅ Y.restrict H.base_open :=
   PresheafedSpaceCat.isoOfComponents (Iso.refl _)
     (by
@@ -153,15 +153,14 @@ theorem iso_restrict_hom_of_restrict : H.isoRestrict.Hom ≫ Y.of_restrict _ = f
     · erw [X.presheaf.map_id, category.comp_id]
       
     
-  · simp
+  · rfl
     
 #align
   algebraic_geometry.PresheafedSpace.is_open_immersion.iso_restrict_hom_of_restrict AlgebraicGeometry.PresheafedSpaceCat.IsOpenImmersion.iso_restrict_hom_of_restrict
 
 @[simp]
 theorem iso_restrict_inv_of_restrict : H.isoRestrict.inv ≫ f = Y.of_restrict _ := by
-  rw [iso.inv_comp_eq]
-  simp
+  rw [iso.inv_comp_eq, iso_restrict_hom_of_restrict]
 #align
   algebraic_geometry.PresheafedSpace.is_open_immersion.iso_restrict_inv_of_restrict AlgebraicGeometry.PresheafedSpaceCat.IsOpenImmersion.iso_restrict_inv_of_restrict
 

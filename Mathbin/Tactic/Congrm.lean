@@ -159,7 +159,7 @@ private unsafe def extract_subgoals : List expr → List CongrArgKind → List e
 (assuming that `lhs` and `rhs` are unifiable with `pat`)
 by applying congruence lemmas until `pat` is a metavariable.
 The subgoals for the leafs are prepended to the goals.
---/
+-/
 unsafe def equate_with_pattern (pat : expr) : tactic Unit := do
   let congr_subgoals ← solve1 (equate_with_pattern_core pat)
   let gs ← get_goals

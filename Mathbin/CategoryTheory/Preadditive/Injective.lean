@@ -48,6 +48,8 @@ structure InjectivePresentation (X : C) where
   Mono : Mono f := by infer_instance
 #align category_theory.injective_presentation CategoryTheory.InjectivePresentation
 
+attribute [instance] injective_presentation.injective injective_presentation.mono
+
 variable (C)
 
 /-- A category "has enough injectives" if every object has an injective presentation,
@@ -840,6 +842,73 @@ theorem Exact.comp_desc {J Q R S : C} [Injective J] (h : R ⟶ J) (f : Q ⟶ R) 
 end
 
 end Injective
+
+namespace Adjunction
+
+variable {D : Type _} [Category D] {F : C ⥤ D} {G : D ⥤ C}
+
+theorem map_injective (adj : F ⊣ G) [F.PreservesMonomorphisms] (I : D) (hI : Injective I) : Injective (G.obj I) :=
+  ⟨fun X Y f g => by
+    intro
+    rcases hI.factors (F.map f ≫ adj.counit.app _) (F.map g) with ⟨⟩
+    use adj.unit.app Y ≫ G.map w
+    rw [← unit_naturality_assoc, ← G.map_comp, h]
+    simp⟩
+#align category_theory.adjunction.map_injective CategoryTheory.Adjunction.map_injective
+
+theorem injective_of_map_injective (adj : F ⊣ G) [Full G] [Faithful G] (I : D) (hI : Injective (G.obj I)) :
+    Injective I :=
+  ⟨fun X Y f g => by
+    intro
+    haveI := adj.right_adjoint_preserves_limits
+    rcases hI.factors (G.map f) (G.map g) with ⟨⟩
+    use inv (adj.counit.app _) ≫ F.map w ≫ adj.counit.app _
+    refine' faithful.map_injective G _
+    simpa⟩
+#align category_theory.adjunction.injective_of_map_injective CategoryTheory.Adjunction.injective_of_map_injective
+
+/-- Given an adjunction `F ⊣ G` such that `F` preserves monos, `G` maps an injective presentation
+of `X` to an injective presentation of `G(X)`. -/
+def mapInjectivePresentation (adj : F ⊣ G) [F.PreservesMonomorphisms] (X : D) (I : InjectivePresentation X) :
+    InjectivePresentation (G.obj X) where
+  j := G.obj I.j
+  Injective := adj.map_injective _ I.Injective
+  f := G.map I.f
+  Mono := by haveI := adj.right_adjoint_preserves_limits <;> infer_instance
+#align category_theory.adjunction.map_injective_presentation CategoryTheory.Adjunction.mapInjectivePresentation
+
+end Adjunction
+
+namespace Equivalence
+
+variable {D : Type _} [Category D] (F : C ≌ D)
+
+/-- Given an equivalence of categories `F`, an injective presentation of `F(X)` induces an
+injective presentation of `X.` -/
+def injectivePresentationOfMapInjectivePresentation (X : C) (I : InjectivePresentation (F.Functor.obj X)) :
+    InjectivePresentation X where
+  j := F.inverse.obj I.j
+  Injective := Adjunction.map_injective F.toAdjunction I.j I.Injective
+  f := F.Unit.app _ ≫ F.inverse.map I.f
+  Mono := mono_comp _ _
+#align
+  category_theory.equivalence.injective_presentation_of_map_injective_presentation CategoryTheory.Equivalence.injectivePresentationOfMapInjectivePresentation
+
+theorem enough_injectives_iff (F : C ≌ D) : EnoughInjectives C ↔ EnoughInjectives D := by
+  constructor
+  all_goals
+  intro H
+  constructor
+  intro X
+  constructor
+  · exact
+      F.symm.injective_presentation_of_map_injective_presentation _ (Nonempty.some (H.presentation (F.inverse.obj X)))
+    
+  · exact F.injective_presentation_of_map_injective_presentation X (Nonempty.some (H.presentation (F.functor.obj X)))
+    
+#align category_theory.equivalence.enough_injectives_iff CategoryTheory.Equivalence.enough_injectives_iff
+
+end Equivalence
 
 end CategoryTheory
 

@@ -435,7 +435,7 @@ protected theorem orthonormal (b : OrthonormalBasis ι 𝕜 E) : Orthonormal �
     EuclideanSpace.single_apply, map_one, one_mul]
 #align orthonormal_basis.orthonormal OrthonormalBasis.orthonormal
 
-/-- The `basis ι 𝕜 E` underlying the `orthonormal_basis` --/
+/-- The `basis ι 𝕜 E` underlying the `orthonormal_basis` -/
 protected def toBasis (b : OrthonormalBasis ι 𝕜 E) : Basis ι 𝕜 E :=
   Basis.ofEquivFun b.repr.toLinearEquiv
 #align orthonormal_basis.to_basis OrthonormalBasis.toBasis

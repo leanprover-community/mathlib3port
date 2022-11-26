@@ -7,6 +7,7 @@ Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo, Yury Kudryashov, Fréd
 import Mathbin.Topology.Algebra.Ring
 import Mathbin.Topology.Algebra.MulAction
 import Mathbin.Topology.Algebra.UniformGroup
+import Mathbin.Topology.ContinuousFunction.Basic
 import Mathbin.Topology.UniformSpace.UniformEmbedding
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.LinearAlgebra.Projection

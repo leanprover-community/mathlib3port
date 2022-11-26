@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 -/
 import Mathbin.Topology.Algebra.Order.ProjIcc
+import Mathbin.Topology.CompactOpen
 import Mathbin.Topology.ContinuousFunction.Basic
 import Mathbin.Topology.UnitInterval
 

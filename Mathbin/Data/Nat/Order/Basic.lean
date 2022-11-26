@@ -210,12 +210,17 @@ theorem add_pos_iff_pos_or_pos (m n : ℕ) : 0 < m + n ↔ 0 < m ∨ 0 < n :=
       apply add_pos_right _ npos)
 #align nat.add_pos_iff_pos_or_pos Nat.add_pos_iff_pos_or_pos
 
-theorem add_eq_one_iff : ∀ {a b : ℕ}, a + b = 1 ↔ a = 0 ∧ b = 1 ∨ a = 1 ∧ b = 0
-  | 0, 0 => by decide
-  | 1, 0 => by decide
-  | a + 2, _ => by rw [add_right_comm] <;> exact by decide
-  | _, b + 1 => by rw [← add_assoc] <;> simp only [Nat.succ_inj', Nat.succ_ne_zero] <;> simp
+theorem add_eq_one_iff : m + n = 1 ↔ m = 0 ∧ n = 1 ∨ m = 1 ∧ n = 0 := by
+  cases n <;> simp [succ_eq_add_one, ← add_assoc, succ_inj']
 #align nat.add_eq_one_iff Nat.add_eq_one_iff
+
+theorem add_eq_two_iff : m + n = 2 ↔ m = 0 ∧ n = 2 ∨ m = 1 ∧ n = 1 ∨ m = 2 ∧ n = 0 := by
+  cases n <;> simp [(succ_ne_zero 1).symm, succ_eq_add_one, ← add_assoc, succ_inj', add_eq_one_iff]
+#align nat.add_eq_two_iff Nat.add_eq_two_iff
+
+theorem add_eq_three_iff : m + n = 3 ↔ m = 0 ∧ n = 3 ∨ m = 1 ∧ n = 2 ∨ m = 2 ∧ n = 1 ∨ m = 3 ∧ n = 0 := by
+  cases n <;> simp [(succ_ne_zero 1).symm, succ_eq_add_one, ← add_assoc, succ_inj', add_eq_two_iff]
+#align nat.add_eq_three_iff Nat.add_eq_three_iff
 
 theorem le_add_one_iff {i j : ℕ} : i ≤ j + 1 ↔ i ≤ j ∨ i = j + 1 :=
   ⟨fun h =>

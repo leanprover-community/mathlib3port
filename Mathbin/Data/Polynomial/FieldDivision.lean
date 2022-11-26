@@ -356,7 +356,7 @@ theorem root_set_monomial [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn 
 #align polynomial.root_set_monomial Polynomial.root_set_monomial
 
 theorem root_set_C_mul_X_pow [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) {a : R} (ha : a ≠ 0) :
-    (c a * X ^ n).rootSet S = {0} := by rw [← monomial_eq_C_mul_X, root_set_monomial hn ha]
+    (c a * X ^ n).rootSet S = {0} := by rw [C_mul_X_pow_eq_monomial, root_set_monomial hn ha]
 #align polynomial.root_set_C_mul_X_pow Polynomial.root_set_C_mul_X_pow
 
 theorem root_set_X_pow [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) : (X ^ n : R[X]).rootSet S = {0} :=

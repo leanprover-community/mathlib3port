@@ -167,7 +167,7 @@ private theorem smul_left' (f g : α →₂[μ] E) (r : 𝕜) : ⟪r • f, g⟫
 instance innerProductSpace : InnerProductSpace 𝕜 (α →₂[μ] E) where
   norm_sq_eq_inner := norm_sq_eq_inner'
   conj_sym _ _ := by simp_rw [inner_def, ← integral_conj, inner_conj_sym]
-  add_left := add_left'
+  addLeft := add_left'
   smul_left := smul_left'
 #align measure_theory.L2.inner_product_space MeasureTheory.L2Cat.innerProductSpace
 

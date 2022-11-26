@@ -30,7 +30,7 @@ local notation "GL(" n ", " R ")" "⁺" => Matrix.gLPos (Fin n) R
 local notation "SL(" n ", " R ")" => Matrix.SpecialLinearGroup (Fin n) R
 
 /-- A general version of the slash action of the space of modular forms.-/
-class SlashAction (β : Type _) (G : Type _) (α : Type _) (γ : Type _) [Group G] [Ring α] [HasSmul γ α] where
+class SlashAction (β G α γ : Type _) [Group G] [Zero α] [One α] [HasSmul γ α] [Add α] where
   map : β → G → α → α
   mul_zero : ∀ (k : β) (g : G), map k g 0 = 0
   one_mul : ∀ (k : β) (a : α), map k 1 a = a
@@ -40,41 +40,29 @@ class SlashAction (β : Type _) (G : Type _) (α : Type _) (γ : Type _) [Group 
 #align slash_action SlashAction
 
 /-- Slash_action induced by a monoid homomorphism.-/
-def monoidHomSlashAction {β : Type _} {G : Type _} {H : Type _} {α : Type _} {γ : Type _} [Group G] [Ring α]
-    [HasSmul γ α] [Group H] [SlashAction β G α γ] (h : H →* G) : SlashAction β H α γ where
-  map k g a := SlashAction.map γ k (h g) a
-  mul_zero := by
-    intro k g
-    apply SlashAction.mul_zero k (h g)
-  one_mul := by
-    intro k a
-    simp only [map_one]
-    apply SlashAction.one_mul
-  right_action := by
-    simp only [map_mul]
-    intro k g gg a
-    apply SlashAction.right_action
-  smul_action := by
-    intro k g a z
-    apply SlashAction.smul_action
-  AddAction := by
-    intro k g a b
-    apply SlashAction.add_action
+def monoidHomSlashAction {β G H α γ : Type _} [Group G] [Zero α] [One α] [HasSmul γ α] [Add α] [Group H]
+    [SlashAction β G α γ] (h : H →* G) : SlashAction β H α γ where
+  map k g := SlashAction.map γ k (h g)
+  mul_zero k g := SlashAction.mul_zero k (h g)
+  one_mul k a := by simp only [map_one, SlashAction.one_mul]
+  right_action k g gg a := by simp only [map_mul, SlashAction.right_action]
+  smul_action _ _ := SlashAction.smul_action _ _
+  AddAction _ g _ _ := SlashAction.add_action _ (h g) _ _
 #align monoid_hom_slash_action monoidHomSlashAction
 
-namespace ModularForms
+namespace ModularForm
 
 noncomputable section
 
 /-- The weight `k` action of `GL(2, ℝ)⁺` on functions `f : ℍ → ℂ`. -/
-def slash : ℤ → GL(2, ℝ)⁺ → (ℍ → ℂ) → ℍ → ℂ := fun k γ f => fun x : ℍ =>
+def slash (k : ℤ) (γ : GL(2, ℝ)⁺) (f : ℍ → ℂ) (x : ℍ) : ℂ :=
   f (γ • x) * ((↑ₘγ).det : ℝ) ^ (k - 1) * UpperHalfPlane.denom γ x ^ (-k)
-#align modular_forms.slash ModularForms.slash
+#align modular_form.slash ModularForm.slash
 
 variable {Γ : Subgroup SL(2, ℤ)} {k : ℤ} (f : ℍ → ℂ)
 
--- mathport name: modular_forms.slash
-scoped notation:100 f " ∣[" k "]" γ:100 => ModularForms.slash k γ f
+-- mathport name: modular_form.slash
+scoped notation:100 f " ∣[" k "]" γ:100 => ModularForm.slash k γ f
 
 theorem slash_right_action (k : ℤ) (A B : GL(2, ℝ)⁺) (f : ℍ → ℂ) : (f ∣[k]A) ∣[k]B = f ∣[k](A * B) := by
   ext1
@@ -93,20 +81,17 @@ theorem slash_right_action (k : ℤ) (A B : GL(2, ℝ)⁺) (f : ℍ → ℂ) : (
         ((↑(↑B : GL (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ).det : ℂ) ^ (k - 1) :=
     by simp_rw [← mul_zpow]
   simp_rw [this, ← mul_assoc, ← mul_zpow]
-#align modular_forms.slash_right_action ModularForms.slash_right_action
+#align modular_form.slash_right_action ModularForm.slash_right_action
 
 theorem slash_add (k : ℤ) (A : GL(2, ℝ)⁺) (f g : ℍ → ℂ) : (f + g) ∣[k]A = f ∣[k]A + g ∣[k]A := by
-  simp only [slash, Pi.add_apply, Matrix.GeneralLinearGroup.coe_det_apply, Subtype.val_eq_coe, coe_coe]
   ext1
-  simp only [Pi.add_apply]
+  simp only [slash, Pi.add_apply, denom, coe_coe, zpow_neg]
   ring
-#align modular_forms.slash_add ModularForms.slash_add
+#align modular_form.slash_add ModularForm.slash_add
 
-theorem slash_mul_one (k : ℤ) (f : ℍ → ℂ) : f ∣[k]1 = f := by
-  simp_rw [slash]
-  ext1
-  simp
-#align modular_forms.slash_mul_one ModularForms.slash_mul_one
+theorem slash_one (k : ℤ) (f : ℍ → ℂ) : f ∣[k]1 = f :=
+  funext <| by simp [slash]
+#align modular_form.slash_one ModularForm.slash_one
 
 theorem smul_slash (k : ℤ) (A : GL(2, ℝ)⁺) (f : ℍ → ℂ) (c : ℂ) : (c • f) ∣[k]A = c • f ∣[k]A := by
   ext1
@@ -114,30 +99,101 @@ theorem smul_slash (k : ℤ) (A : GL(2, ℝ)⁺) (f : ℍ → ℂ) (c : ℂ) : (
   simp only [slash, Algebra.id.smul_eq_mul, Matrix.GeneralLinearGroup.coe_det_apply, Pi.smul_apply, Subtype.val_eq_coe,
     coe_coe]
   ring
-#align modular_forms.smul_slash ModularForms.smul_slash
+#align modular_form.smul_slash ModularForm.smul_slash
+
+theorem neg_slash (k : ℤ) (A : GL(2, ℝ)⁺) (f : ℍ → ℂ) : (-f) ∣[k]A = -f ∣[k]A :=
+  funext <| by simp [slash]
+#align modular_form.neg_slash ModularForm.neg_slash
 
 instance : SlashAction ℤ GL(2, ℝ)⁺ (ℍ → ℂ) ℂ where
   map := slash
-  mul_zero := by
-    intro k g
-    rw [slash]
-    simp only [Pi.zero_apply, zero_mul]
-    rfl
-  one_mul := by apply slash_mul_one
-  right_action := by apply slash_right_action
-  smul_action := by apply smul_slash
-  AddAction := by apply slash_add
+  mul_zero k g := funext fun _ => by simp only [slash, Pi.zero_apply, zero_mul]
+  one_mul := slash_one
+  right_action := slash_right_action
+  smul_action := smul_slash
+  AddAction := slash_add
 
 instance subgroupAction (Γ : Subgroup SL(2, ℤ)) : SlashAction ℤ Γ (ℍ → ℂ) ℂ :=
   monoidHomSlashAction
     (MonoidHom.comp Matrix.SpecialLinearGroup.toGLPos
       (MonoidHom.comp (Matrix.SpecialLinearGroup.map (Int.castRingHom ℝ)) (Subgroup.subtype Γ)))
-#align modular_forms.subgroup_action ModularForms.subgroupAction
+#align modular_form.subgroup_action ModularForm.subgroupAction
+
+@[simp]
+theorem subgroup_slash (Γ : Subgroup SL(2, ℤ)) (γ : Γ) : SlashAction.map ℂ k γ f = slash k (γ : GL(2, ℝ)⁺) f :=
+  rfl
+#align modular_form.subgroup_slash ModularForm.subgroup_slash
 
 instance sLAction : SlashAction ℤ SL(2, ℤ) (ℍ → ℂ) ℂ :=
   monoidHomSlashAction
     (MonoidHom.comp Matrix.SpecialLinearGroup.toGLPos (Matrix.SpecialLinearGroup.map (Int.castRingHom ℝ)))
-#align modular_forms.SL_action ModularForms.sLAction
+#align modular_form.SL_action ModularForm.sLAction
 
-end ModularForms
+@[simp]
+theorem SL_slash (γ : SL(2, ℤ)) : SlashAction.map ℂ k γ f = slash k (γ : GL(2, ℝ)⁺) f :=
+  rfl
+#align modular_form.SL_slash ModularForm.SL_slash
+
+-- mathport name: «expr ∣[ , ]»
+local notation:73 f "∣[" k:0 "," A "]" => SlashAction.map ℂ k A f
+
+/-- The constant function 1 is invariant under any subgroup of `SL(2, ℤ)`. -/
+theorem is_invariant_one (A : SL(2, ℤ)) : (1 : ℍ → ℂ)∣[(0 : ℤ),A] = (1 : ℍ → ℂ) := by
+  have : ((↑ₘ(A : GL(2, ℝ)⁺)).det : ℝ) = 1 := by
+    simp only [coe_coe, Matrix.SpecialLinearGroup.coe_GL_pos_coe_GL_coe_matrix, Matrix.SpecialLinearGroup.det_coe]
+  funext
+  rw [SL_slash, slash, zero_sub, this]
+  simp
+#align modular_form.is_invariant_one ModularForm.is_invariant_one
+
+/-- A function `f : ℍ → ℂ` is `slash_invariant`, of weight `k ∈ ℤ` and level `Γ`,
+  if for every matrix `γ ∈ Γ` we have `f(γ • z)= (c*z+d)^k f(z)` where `γ= ![![a, b], ![c, d]]`,
+  and it acts on `ℍ` via Möbius transformations. -/
+theorem slash_action_eq'_iff (k : ℤ) (Γ : Subgroup SL(2, ℤ)) (f : ℍ → ℂ) (γ : Γ) (z : ℍ) :
+    (f∣[k,γ]) z = f z ↔ f (γ • z) = ((↑ₘγ 1 0 : ℂ) * z + (↑ₘγ 1 1 : ℂ)) ^ k * f z := by
+  simp only [subgroup_slash, ModularForm.slash]
+  convert inv_mul_eq_iff_eq_mul₀ _ using 2
+  · rw [mul_comm]
+    simp only [denom, coe_coe, Matrix.SpecialLinearGroup.coe_GL_pos_coe_GL_coe_matrix, zpow_neg,
+      Matrix.SpecialLinearGroup.det_coe, of_real_one, one_zpow, mul_one, subgroup_to_sl_moeb, sl_moeb]
+    rfl
+    
+  · convert zpow_ne_zero k (denom_ne_zero γ z)
+    
+#align modular_form.slash_action_eq'_iff ModularForm.slash_action_eq'_iff
+
+theorem mul_slash (k1 k2 : ℤ) (A : GL(2, ℝ)⁺) (f g : ℍ → ℂ) :
+    (f * g)∣[k1 + k2,A] = ((↑ₘA).det : ℝ) • f∣[k1,A] * g∣[k2,A] := by
+  ext1
+  simp only [SlashAction.map, slash, Matrix.GeneralLinearGroup.coe_det_apply, Subtype.val_eq_coe, Pi.mul_apply,
+    Pi.smul_apply, Algebra.smul_mul_assoc, real_smul]
+  set d : ℂ := ↑((↑ₘA).det : ℝ)
+  have h1 : d ^ (k1 + k2 - 1) = d * d ^ (k1 - 1) * d ^ (k2 - 1) := by
+    have : d ≠ 0 := by
+      dsimp [d]
+      norm_cast
+      exact Matrix.gLPos.det_ne_zero A
+    rw [← zpow_one_add₀ this, ← zpow_add₀ this]
+    ring
+  have h22 : denom A x ^ (-(k1 + k2)) = denom A x ^ (-k1) * denom A x ^ (-k2) := by
+    rw [Int.neg_add, zpow_add₀]
+    exact UpperHalfPlane.denom_ne_zero A x
+  rw [h1, h22]
+  ring
+#align modular_form.mul_slash ModularForm.mul_slash
+
+theorem mul_slash_SL2 (k1 k2 : ℤ) (A : SL(2, ℤ)) (f g : ℍ → ℂ) : (f * g)∣[k1 + k2,A] = f∣[k1,A] * g∣[k2,A] :=
+  calc
+    (f * g)∣[k1 + k2,(A : GL(2, ℝ)⁺)] = _ • f∣[k1,A] * g∣[k2,A] := mul_slash _ _ _ _ _
+    _ = (1 : ℝ) • f∣[k1,A] * g∣[k2,A] := by simp [-Matrix.SpecialLinearGroup.coe_matrix_coe]
+    _ = f∣[k1,A] * g∣[k2,A] := by simp
+    
+#align modular_form.mul_slash_SL2 ModularForm.mul_slash_SL2
+
+theorem mul_slash_subgroup (k1 k2 : ℤ) (Γ : Subgroup SL(2, ℤ)) (A : Γ) (f g : ℍ → ℂ) :
+    (f * g)∣[k1 + k2,A] = f∣[k1,A] * g∣[k2,A] :=
+  mul_slash_SL2 k1 k2 A f g
+#align modular_form.mul_slash_subgroup ModularForm.mul_slash_subgroup
+
+end ModularForm
 

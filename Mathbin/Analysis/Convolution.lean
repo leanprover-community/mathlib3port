@@ -1094,7 +1094,7 @@ theorem HasCompactSupport.contDiffConvolutionRight (hcg : HasCompactSupport g) (
             (ContinuousLinearMap.zero_apply x)
         
       · revert x
-        rw [← cont_diff_clm_apply]
+        rw [← cont_diff_clm_apply_iff]
         exact (cont_diff_succ_iff_fderiv.mp hg).2
         
       

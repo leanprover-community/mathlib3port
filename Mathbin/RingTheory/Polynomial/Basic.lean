@@ -78,7 +78,7 @@ theorem degree_le_eq_span_X_pow {n : ℕ} :
     refine' Submodule.sum_mem _ fun k hk => _
     show monomial _ _ ∈ _
     have := WithBot.coe_le_coe.1 (Finset.sup_le_iff.1 hp k hk)
-    rw [monomial_eq_C_mul_X, C_mul']
+    rw [← C_mul_X_pow_eq_monomial, C_mul']
     refine'
       Submodule.smul_mem _ _
         (Submodule.subset_span <|
@@ -110,7 +110,7 @@ theorem degree_lt_eq_span_X_pow {n : ℕ} :
     refine' Submodule.sum_mem _ fun k hk => _
     show monomial _ _ ∈ _
     have := WithBot.coe_lt_coe.1 ((Finset.sup_lt_iff <| WithBot.bot_lt_coe n).1 hp k hk)
-    rw [monomial_eq_C_mul_X, C_mul']
+    rw [← C_mul_X_pow_eq_monomial, C_mul']
     refine'
       Submodule.smul_mem _ _
         (Submodule.subset_span <| Finset.mem_coe.2 <| Finset.mem_image.2 ⟨_, Finset.mem_range.2 this, rfl⟩)
@@ -516,7 +516,7 @@ variable [CommSemiring R] [Semiring S]
 /-- If every coefficient of a polynomial is in an ideal `I`, then so is the polynomial itself -/
 theorem polynomial_mem_ideal_of_coeff_mem_ideal (I : Ideal R[X]) (p : R[X])
     (hp : ∀ n : ℕ, p.coeff n ∈ I.comap (c : R →+* R[X])) : p ∈ I :=
-  sum_C_mul_X_eq p ▸ Submodule.sum_mem I fun n hn => I.mul_mem_right _ (hp n)
+  sum_C_mul_X_pow_eq p ▸ Submodule.sum_mem I fun n hn => I.mul_mem_right _ (hp n)
 #align ideal.polynomial_mem_ideal_of_coeff_mem_ideal Ideal.polynomial_mem_ideal_of_coeff_mem_ideal
 
 /-- The push-forward of an ideal `I` of `R` to `R[X]` via inclusion
@@ -547,7 +547,7 @@ theorem mem_map_C_iff {I : Ideal R} {f : R[X]} :
   · intro hf
     rw [← sum_monomial_eq f]
     refine' (I.map C : Ideal R[X]).sum_mem fun n hn => _
-    simp [monomial_eq_C_mul_X]
+    simp [← C_mul_X_pow_eq_monomial]
     rw [mul_comm]
     exact (I.map C : Ideal R[X]).mul_mem_left _ (mem_map_of_mem _ (hf n))
     
@@ -723,7 +723,7 @@ def polynomialQuotientEquivQuotientPolynomial (I : Ideal R) : (R ⧸ I)[X] ≃+*
       simp only [coe_eval₂_ring_hom, hp, hq, RingHom.map_add]
       
     · rintro n ⟨x⟩
-      simp only [monomial_eq_smul_X, C_mul', Quotient.lift_mk, Submodule.Quotient.quot_mk_eq_mk, quotient.mk_eq_mk,
+      simp only [← smul_X_eq_monomial, C_mul', Quotient.lift_mk, Submodule.Quotient.quot_mk_eq_mk, quotient.mk_eq_mk,
         eval₂_X_pow, eval₂_smul, coe_eval₂_ring_hom, RingHom.map_pow, eval₂_C, RingHom.coe_comp, RingHom.map_mul,
         eval₂_X]
       
@@ -734,7 +734,7 @@ def polynomialQuotientEquivQuotientPolynomial (I : Ideal R) : (R ⧸ I)[X] ≃+*
       rw [hp, hq]
       
     · intro n a
-      simp only [monomial_eq_smul_X, ← C_mul' a (X ^ n), Quotient.lift_mk, Submodule.Quotient.quot_mk_eq_mk,
+      simp only [← smul_X_eq_monomial, ← C_mul' a (X ^ n), Quotient.lift_mk, Submodule.Quotient.quot_mk_eq_mk,
         quotient.mk_eq_mk, eval₂_X_pow, eval₂_smul, coe_eval₂_ring_hom, RingHom.map_pow, eval₂_C, RingHom.coe_comp,
         RingHom.map_mul, eval₂_X]
       

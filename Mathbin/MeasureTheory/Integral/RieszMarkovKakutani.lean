@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jesse Reimann, Kalle Kytölä
 -/
 import Mathbin.Topology.ContinuousFunction.Bounded
+import Mathbin.Topology.Sets.Compacts
 
 /-!
 #  Riesz–Markov–Kakutani representation theorem

@@ -59,6 +59,8 @@ structure ProjectivePresentation (X : C) where
   Epi : Epi f := by infer_instance
 #align category_theory.projective_presentation CategoryTheory.ProjectivePresentation
 
+attribute [instance] projective_presentation.projective projective_presentation.epi
+
 variable (C)
 
 /-- A category "has enough projectives" if for every object `X` there is a projective object `P` and
@@ -233,6 +235,73 @@ end
 end EnoughProjectives
 
 end Projective
+
+namespace Adjunction
+
+variable {D : Type _} [Category D] {F : C ⥤ D} {G : D ⥤ C}
+
+theorem map_projective (adj : F ⊣ G) [G.PreservesEpimorphisms] (P : C) (hP : Projective P) : Projective (F.obj P) :=
+  ⟨fun X Y f g => by
+    intro
+    rcases hP.factors (adj.unit.app P ≫ G.map f) (G.map g) with ⟨⟩
+    use F.map w ≫ adj.counit.app X
+    rw [category.assoc, ← adjunction.counit_naturality, ← category.assoc, ← F.map_comp, h]
+    simp⟩
+#align category_theory.adjunction.map_projective CategoryTheory.Adjunction.map_projective
+
+theorem projective_of_map_projective (adj : F ⊣ G) [Full F] [Faithful F] (P : C) (hP : Projective (F.obj P)) :
+    Projective P :=
+  ⟨fun X Y f g => by
+    intro
+    haveI := adj.left_adjoint_preserves_colimits
+    rcases(@hP).1 (F.map f) (F.map g) with ⟨⟩
+    use adj.unit.app _ ≫ G.map w ≫ (inv <| adj.unit.app _)
+    refine' faithful.map_injective F _
+    simpa⟩
+#align category_theory.adjunction.projective_of_map_projective CategoryTheory.Adjunction.projective_of_map_projective
+
+/-- Given an adjunction `F ⊣ G` such that `G` preserves epis, `F` maps a projective presentation of
+`X` to a projective presentation of `F(X)`. -/
+def mapProjectivePresentation (adj : F ⊣ G) [G.PreservesEpimorphisms] (X : C) (Y : ProjectivePresentation X) :
+    ProjectivePresentation (F.obj X) where
+  P := F.obj Y.P
+  Projective := adj.map_projective _ Y.Projective
+  f := F.map Y.f
+  Epi := by haveI := adj.left_adjoint_preserves_colimits <;> infer_instance
+#align category_theory.adjunction.map_projective_presentation CategoryTheory.Adjunction.mapProjectivePresentation
+
+end Adjunction
+
+namespace Equivalence
+
+variable {D : Type _} [Category D] (F : C ≌ D)
+
+/-- Given an equivalence of categories `F`, a projective presentation of `F(X)` induces a
+projective presentation of `X.` -/
+def projectivePresentationOfMapProjectivePresentation (X : C) (Y : ProjectivePresentation (F.Functor.obj X)) :
+    ProjectivePresentation X where
+  P := F.inverse.obj Y.P
+  Projective := Adjunction.map_projective F.symm.toAdjunction Y.P Y.Projective
+  f := F.inverse.map Y.f ≫ F.unitInv.app _
+  Epi := epi_comp _ _
+#align
+  category_theory.equivalence.projective_presentation_of_map_projective_presentation CategoryTheory.Equivalence.projectivePresentationOfMapProjectivePresentation
+
+theorem enough_projectives_iff (F : C ≌ D) : EnoughProjectives C ↔ EnoughProjectives D := by
+  constructor
+  all_goals
+  intro H
+  constructor
+  intro X
+  constructor
+  · exact
+      F.symm.projective_presentation_of_map_projective_presentation _ (Nonempty.some (H.presentation (F.inverse.obj X)))
+    
+  · exact F.projective_presentation_of_map_projective_presentation X (Nonempty.some (H.presentation (F.functor.obj X)))
+    
+#align category_theory.equivalence.enough_projectives_iff CategoryTheory.Equivalence.enough_projectives_iff
+
+end Equivalence
 
 open Projective
 

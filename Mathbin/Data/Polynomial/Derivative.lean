@@ -92,14 +92,26 @@ theorem derivative_monomial (a : R) (n : ℕ) : derivative (monomial n a) = mono
   simp
 #align polynomial.derivative_monomial Polynomial.derivative_monomial
 
+theorem derivative_C_mul_X (a : R) : derivative (c a * X) = c a := by
+  simpa only [C_mul_X_eq_monomial, derivative_monomial, Nat.cast_one, mul_one]
+#align polynomial.derivative_C_mul_X Polynomial.derivative_C_mul_X
+
 theorem derivative_C_mul_X_pow (a : R) (n : ℕ) : derivative (c a * X ^ n) = c (a * n) * X ^ (n - 1) := by
   rw [C_mul_X_pow_eq_monomial, C_mul_X_pow_eq_monomial, derivative_monomial]
 #align polynomial.derivative_C_mul_X_pow Polynomial.derivative_C_mul_X_pow
+
+theorem derivative_C_mul_X_sq (a : R) : derivative (c a * X ^ 2) = c (a * 2) * X := by
+  rw [derivative_C_mul_X_pow, Nat.cast_two, pow_one]
+#align polynomial.derivative_C_mul_X_sq Polynomial.derivative_C_mul_X_sq
 
 @[simp]
 theorem derivative_X_pow (n : ℕ) : derivative (X ^ n : R[X]) = (n : R[X]) * X ^ (n - 1) := by
   convert derivative_C_mul_X_pow (1 : R) n <;> simp
 #align polynomial.derivative_X_pow Polynomial.derivative_X_pow
+
+@[simp]
+theorem derivative_X_sq : derivative (X ^ 2 : R[X]) = (2 : R[X]) * X := by rw [derivative_X_pow, Nat.cast_two, pow_one]
+#align polynomial.derivative_X_sq Polynomial.derivative_X_sq
 
 @[simp]
 theorem derivative_C {a : R} : derivative (c a) = 0 := by simp [derivative_apply]
@@ -268,8 +280,7 @@ theorem derivative_mul {f g : R[X]} : derivative (f * g) = derivative f * g + f 
       apply Finset.sum_congr rfl
       intro m hm
       trans
-      · apply congr_arg
-        exact monomial_eq_C_mul_X
+      · exact congr_arg _ C_mul_X_pow_eq_monomial.symm
         
       dsimp
       rw [← smul_mul_assoc, smul_C, nsmul_eq_mul']
@@ -288,8 +299,8 @@ theorem derivative_mul {f g : R[X]} : derivative (f * g) = derivative f * g + f 
       conv =>
       rhs
       congr
-      ·rw [← sum_C_mul_X_eq g]
-      ·rw [← sum_C_mul_X_eq f]
+      ·rw [← sum_C_mul_X_pow_eq g]
+      ·rw [← sum_C_mul_X_pow_eq f]
       simp only [Sum, sum_add_distrib, Finset.mul_sum, Finset.sum_mul, derivative_apply]
       simp_rw [← smul_mul_assoc, smul_C, nsmul_eq_mul']
     

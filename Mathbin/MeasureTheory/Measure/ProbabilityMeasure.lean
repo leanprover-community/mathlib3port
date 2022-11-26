@@ -5,6 +5,7 @@ Authors: Kalle Kytölä
 -/
 import Mathbin.MeasureTheory.Measure.FiniteMeasure
 import Mathbin.MeasureTheory.Integral.Average
+import Mathbin.Probability.ConditionalProbability
 
 /-!
 # Probability measures
@@ -136,6 +137,10 @@ theorem coe_fn_univ (ν : ProbabilityMeasure Ω) : ν univ = 1 :=
   congr_arg Ennreal.toNnreal ν.Prop.measure_univ
 #align measure_theory.probability_measure.coe_fn_univ MeasureTheory.ProbabilityMeasure.coe_fn_univ
 
+theorem coe_fn_univ_ne_zero (ν : ProbabilityMeasure Ω) : ν univ ≠ 0 := by
+  simp only [coe_fn_univ, Ne.def, one_ne_zero, not_false_iff]
+#align measure_theory.probability_measure.coe_fn_univ_ne_zero MeasureTheory.ProbabilityMeasure.coe_fn_univ_ne_zero
+
 /-- A probability measure can be interpreted as a finite measure. -/
 def toFiniteMeasure (μ : ProbabilityMeasure Ω) : FiniteMeasure Ω :=
   ⟨μ, inferInstance⟩
@@ -163,12 +168,32 @@ theorem ennreal_coe_fn_eq_coe_fn_to_measure (ν : ProbabilityMeasure Ω) (s : Se
 #align
   measure_theory.probability_measure.ennreal_coe_fn_eq_coe_fn_to_measure MeasureTheory.ProbabilityMeasure.ennreal_coe_fn_eq_coe_fn_to_measure
 
+theorem apply_mono (μ : ProbabilityMeasure Ω) {s₁ s₂ : Set Ω} (h : s₁ ⊆ s₂) : μ s₁ ≤ μ s₂ := by
+  rw [← coe_fn_comp_to_finite_measure_eq_coe_fn]
+  exact MeasureTheory.FiniteMeasure.apply_mono _ h
+#align measure_theory.probability_measure.apply_mono MeasureTheory.ProbabilityMeasure.apply_mono
+
+theorem nonempty_of_probability_measure (μ : ProbabilityMeasure Ω) : Nonempty Ω := by
+  by_contra maybe_empty
+  have zero : (μ : Measure Ω) univ = 0 := by rw [univ_eq_empty_iff.mpr (not_nonempty_iff.mp maybe_empty), measure_empty]
+  rw [measure_univ] at zero
+  exact zero_ne_one zero.symm
+#align
+  measure_theory.probability_measure.nonempty_of_probability_measure MeasureTheory.ProbabilityMeasure.nonempty_of_probability_measure
+
 @[ext.1]
-theorem extensionality (μ ν : ProbabilityMeasure Ω) (h : ∀ s : Set Ω, MeasurableSet s → μ s = ν s) : μ = ν := by
+theorem eq_of_forall_measure_apply_eq (μ ν : ProbabilityMeasure Ω)
+    (h : ∀ s : Set Ω, MeasurableSet s → (μ : Measure Ω) s = (ν : Measure Ω) s) : μ = ν := by
   ext1
   ext1 s s_mble
+  exact h s s_mble
+#align
+  measure_theory.probability_measure.eq_of_forall_measure_apply_eq MeasureTheory.ProbabilityMeasure.eq_of_forall_measure_apply_eq
+
+theorem eq_of_forall_apply_eq (μ ν : ProbabilityMeasure Ω) (h : ∀ s : Set Ω, MeasurableSet s → μ s = ν s) : μ = ν := by
+  ext1 s s_mble
   simpa [ennreal_coe_fn_eq_coe_fn_to_measure] using congr_arg (coe : ℝ≥0 → ℝ≥0∞) (h s s_mble)
-#align measure_theory.probability_measure.extensionality MeasureTheory.ProbabilityMeasure.extensionality
+#align measure_theory.probability_measure.eq_of_forall_apply_eq MeasureTheory.ProbabilityMeasure.eq_of_forall_apply_eq
 
 @[simp]
 theorem mass_to_finite_measure (μ : ProbabilityMeasure Ω) : μ.toFiniteMeasure.mass = 1 :=
@@ -319,7 +344,8 @@ theorem self_eq_mass_mul_normalize (s : Set Ω) : μ s = μ.mass * μ.normalize 
 #align measure_theory.finite_measure.self_eq_mass_mul_normalize MeasureTheory.FiniteMeasure.self_eq_mass_mul_normalize
 
 theorem self_eq_mass_smul_normalize : μ = μ.mass • μ.normalize.toFiniteMeasure := by
-  ext (s s_mble)
+  apply eq_of_forall_apply_eq
+  intro s s_mble
   rw [μ.self_eq_mass_mul_normalize s, coe_fn_smul_apply, smul_eq_mul,
     probability_measure.coe_fn_comp_to_finite_measure_eq_coe_fn]
 #align measure_theory.finite_measure.self_eq_mass_smul_normalize MeasureTheory.FiniteMeasure.self_eq_mass_smul_normalize
@@ -344,7 +370,8 @@ theorem coe_normalize_eq_of_nonzero (nonzero : μ ≠ 0) : (μ.normalize : Measu
 @[simp]
 theorem _root_.probability_measure.to_finite_measure_normalize_eq_self {m0 : MeasurableSpace Ω}
     (μ : ProbabilityMeasure Ω) : μ.toFiniteMeasure.normalize = μ := by
-  ext (s s_mble)
+  apply probability_measure.eq_of_forall_apply_eq
+  intro s s_mble
   rw [μ.to_finite_measure.normalize_eq_of_nonzero μ.to_finite_measure_nonzero s]
   simp only [probability_measure.mass_to_finite_measure, inv_one, one_mul,
     probability_measure.coe_fn_comp_to_finite_measure_eq_coe_fn]

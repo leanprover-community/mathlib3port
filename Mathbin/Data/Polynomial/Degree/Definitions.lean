@@ -271,7 +271,7 @@ theorem degree_monomial (n : ℕ) (ha : a ≠ 0) : degree (monomial n a) = n := 
 
 @[simp]
 theorem degree_C_mul_X_pow (n : ℕ) (ha : a ≠ 0) : degree (c a * X ^ n) = n := by
-  rw [← monomial_eq_C_mul_X, degree_monomial n ha]
+  rw [C_mul_X_pow_eq_monomial, degree_monomial n ha]
 #align polynomial.degree_C_mul_X_pow Polynomial.degree_C_mul_X_pow
 
 theorem degree_C_mul_X (ha : a ≠ 0) : degree (c a * X) = 1 := by simpa only [pow_one] using degree_C_mul_X_pow 1 ha
@@ -717,7 +717,7 @@ theorem degree_sum_le (s : Finset ι) (f : ι → R[X]) : degree (∑ i in s, f 
 theorem degree_mul_le (p q : R[X]) : degree (p * q) ≤ degree p + degree q :=
   calc
     degree (p * q) ≤ p.support.sup fun i => degree (sum q fun j a => c (coeff p i * a) * X ^ (i + j)) := by
-      simp only [monomial_eq_C_mul_X.symm]
+      simp only [← C_mul_X_pow_eq_monomial.symm]
       convert degree_sum_le _ _
       exact mul_eq_sum_sum
     _ ≤ p.support.sup fun i => q.support.sup fun j => degree (c (coeff p i * coeff q j) * X ^ (i + j)) :=
@@ -1295,11 +1295,7 @@ theorem next_coeff_X_add_C [Semiring S] (c : S) : nextCoeff (X + c c) = c := by
 #align polynomial.next_coeff_X_add_C Polynomial.next_coeff_X_add_C
 
 theorem degree_X_pow_add_C {n : ℕ} (hn : 0 < n) (a : R) : degree ((x : R[X]) ^ n + c a) = n := by
-  have : degree (c a) < degree ((x : R[X]) ^ n) :=
-    calc
-      degree (c a) ≤ 0 := degree_C_le
-      _ < degree ((x : R[X]) ^ n) := by rwa [degree_X_pow] <;> exact WithBot.coe_lt_coe.2 hn
-      
+  have : degree (c a) < degree ((x : R[X]) ^ n) := degree_C_le.trans_lt <| by rwa [degree_X_pow, WithBot.coe_pos]
   rw [degree_add_eq_left_of_degree_lt this, degree_X_pow]
 #align polynomial.degree_X_pow_add_C Polynomial.degree_X_pow_add_C
 

@@ -6,6 +6,7 @@ Authors: Floris van Doorn
 import Mathbin.MeasureTheory.Measure.Content
 import Mathbin.MeasureTheory.Group.Prod
 import Mathbin.GroupTheory.Divisible
+import Mathbin.Topology.Algebra.Group.Compact
 
 /-!
 # Haar measure

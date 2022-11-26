@@ -395,6 +395,11 @@ theorem powers_subset {n : M} {P : Submonoid M} (h : n ∈ P) : powers n ≤ P :
   | _, ⟨i, rfl⟩ => pow_mem h i
 #align submonoid.powers_subset Submonoid.powers_subset
 
+@[simp]
+theorem powers_one : powers (1 : M) = ⊥ :=
+  bot_unique <| powers_subset (one_mem _)
+#align submonoid.powers_one Submonoid.powers_one
+
 /-- Exponentiation map from natural numbers to powers. -/
 @[simps]
 def pow (n : M) (m : ℕ) : powers n :=
@@ -541,34 +546,17 @@ def multiples (x : A) : AddSubmonoid A :=
     Set.ext fun n => exists_congr fun i => by simp <;> rfl
 #align add_submonoid.multiples AddSubmonoid.multiples
 
-@[simp]
-theorem mem_multiples (x : A) : x ∈ multiples x :=
-  ⟨1, one_nsmul _⟩
-#align add_submonoid.mem_multiples AddSubmonoid.mem_multiples
+attribute [to_additive multiples] Submonoid.powers
 
-theorem mem_multiples_iff (x z : A) : x ∈ multiples z ↔ ∃ n : ℕ, n • z = x :=
-  Iff.rfl
-#align add_submonoid.mem_multiples_iff AddSubmonoid.mem_multiples_iff
+attribute [to_additive mem_multiples] Submonoid.mem_powers
 
-theorem multiples_eq_closure (x : A) : multiples x = closure {x} := by
-  ext
-  exact mem_closure_singleton.symm
-#align add_submonoid.multiples_eq_closure AddSubmonoid.multiples_eq_closure
+attribute [to_additive mem_multiples_iff] Submonoid.mem_powers_iff
 
-theorem multiples_subset {x : A} {P : AddSubmonoid A} (h : x ∈ P) : multiples x ≤ P := fun x hx =>
-  match x, hx with
-  | _, ⟨i, rfl⟩ => nsmul_mem h i
-#align add_submonoid.multiples_subset AddSubmonoid.multiples_subset
+attribute [to_additive multiples_eq_closure] Submonoid.powers_eq_closure
 
-attribute [to_additive AddSubmonoid.multiples] Submonoid.powers
+attribute [to_additive multiples_subset] Submonoid.powers_subset
 
-attribute [to_additive AddSubmonoid.mem_multiples] Submonoid.mem_powers
-
-attribute [to_additive AddSubmonoid.mem_multiples_iff] Submonoid.mem_powers_iff
-
-attribute [to_additive AddSubmonoid.multiples_eq_closure] Submonoid.powers_eq_closure
-
-attribute [to_additive AddSubmonoid.multiples_subset] Submonoid.powers_subset
+attribute [to_additive multiples_zero] Submonoid.powers_one
 
 end AddSubmonoid
 

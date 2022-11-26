@@ -37,6 +37,16 @@ theorem coe_eq_one {a : α} : (a : WithTop α) = 1 ↔ a = 1 :=
   coe_eq_coe
 #align with_top.coe_eq_one WithTop.coe_eq_one
 
+@[simp, norm_cast, to_additive coe_pos]
+theorem one_lt_coe [LT α] {a : α} : 1 < (a : WithTop α) ↔ 1 < a :=
+  coe_lt_coe
+#align with_top.one_lt_coe WithTop.one_lt_coe
+
+@[simp, norm_cast, to_additive coe_lt_zero]
+theorem coe_lt_one [LT α] {a : α} : (a : WithTop α) < 1 ↔ a < 1 :=
+  coe_lt_coe
+#align with_top.coe_lt_one WithTop.coe_lt_one
+
 @[simp, to_additive]
 protected theorem map_one {β} (f : α → β) : (1 : WithTop α).map f = (f 1 : WithTop β) :=
   rfl
@@ -443,6 +453,16 @@ theorem coe_one [One α] : ((1 : α) : WithBot α) = 1 :=
 theorem coe_eq_one [One α] {a : α} : (a : WithBot α) = 1 ↔ a = 1 :=
   WithTop.coe_eq_one
 #align with_bot.coe_eq_one WithBot.coe_eq_one
+
+@[norm_cast, to_additive coe_pos]
+theorem one_lt_coe [One α] [LT α] {a : α} : 1 < (a : WithBot α) ↔ 1 < a :=
+  coe_lt_coe
+#align with_bot.one_lt_coe WithBot.one_lt_coe
+
+@[norm_cast, to_additive coe_lt_zero]
+theorem coe_lt_one [One α] [LT α] {a : α} : (a : WithBot α) < 1 ↔ a < 1 :=
+  coe_lt_coe
+#align with_bot.coe_lt_one WithBot.coe_lt_one
 
 @[to_additive]
 protected theorem map_one {β} [One α] (f : α → β) : (1 : WithBot α).map f = (f 1 : WithBot β) :=

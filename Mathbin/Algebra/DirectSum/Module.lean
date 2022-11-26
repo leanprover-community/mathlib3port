@@ -374,7 +374,7 @@ theorem IsInternal.collected_basis_mem (h : IsInternal A) {α : ι → Type _} (
 
 /-- When indexed by only two distinct elements, `direct_sum.is_internal` implies
 the two submodules are complementary. Over a `ring R`, this is true as an iff, as
-`direct_sum.is_internal_iff_is_compl`. --/
+`direct_sum.is_internal_iff_is_compl`. -/
 theorem IsInternal.is_compl {A : ι → Submodule R M} {i j : ι} (hij : i ≠ j) (h : (Set.univ : Set ι) = {i, j})
     (hi : IsInternal A) : IsCompl (A i) (A j) :=
   ⟨hi.submoduleIndependent.PairwiseDisjoint hij,

@@ -548,7 +548,7 @@ theorem mul_mk : mk L₁ * mk L₂ = mk (L₁ ++ L₂) :=
   rfl
 #align free_group.mul_mk FreeGroup.mul_mk
 
-/-- Transform a word representing a free group element into a word representing its inverse. --/
+/-- Transform a word representing a free group element into a word representing its inverse. -/
 @[to_additive "Transform a word representing a free group element into a word representing its\nnegative."]
 def invRev (w : List (α × Bool)) : List (α × Bool) :=
   (List.map (fun g : α × Bool => (g.1, not g.2)) w).reverse
@@ -1633,7 +1633,7 @@ section Metric
 
 variable [DecidableEq α]
 
-/-- The length of reduced words provides a norm on a free group. --/
+/-- The length of reduced words provides a norm on a free group. -/
 @[to_additive "The length of reduced words provides a norm on an additive free group."]
 def norm (x : FreeGroup α) : ℕ :=
   x.toWord.length

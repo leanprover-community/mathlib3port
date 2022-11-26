@@ -8,8 +8,6 @@ import Mathbin.GroupTheory.GroupAction.Quotient
 import Mathbin.GroupTheory.QuotientGroup
 import Mathbin.Order.Filter.Pointwise
 import Mathbin.Topology.Algebra.Monoid
-import Mathbin.Topology.CompactOpen
-import Mathbin.Topology.Sets.Compacts
 import Mathbin.Topology.Algebra.Constructions
 
 /-!
@@ -1332,26 +1330,6 @@ instance (priority := 100) SeparableLocallyCompactGroup.sigmaCompactSpace [Separ
     
 #align separable_locally_compact_group.sigma_compact_space SeparableLocallyCompactGroup.sigmaCompactSpace
 
-/-- Every separated topological group in which there exists a compact set with nonempty interior
-is locally compact. -/
-@[to_additive
-      "Every separated topological group in which there exists a compact set with nonempty\ninterior is locally compact."]
-theorem TopologicalSpace.PositiveCompacts.locally_compact_space_of_group [T2Space G] (K : PositiveCompacts G) :
-    LocallyCompactSpace G := by
-  refine' locally_compact_of_compact_nhds fun x => _
-  obtain ⟨y, hy⟩ := K.interior_nonempty
-  let F := Homeomorph.mulLeft (x * y⁻¹)
-  refine' ⟨F '' K, _, K.is_compact.image F.continuous⟩
-  suffices F.symm ⁻¹' K ∈ 𝓝 x by
-    convert this
-    apply Equiv.image_eq_preimage
-  apply ContinuousAt.preimage_mem_nhds F.symm.continuous.continuous_at
-  have : F.symm x = y := by simp [F, Homeomorph.mul_left_symm]
-  rw [this]
-  exact mem_interior_iff_mem_nhds.1 hy
-#align
-  topological_space.positive_compacts.locally_compact_space_of_group TopologicalSpace.PositiveCompacts.locally_compact_space_of_group
-
 /-- Given two compact sets in a noncompact topological group, there is a translate of the second
 one that is disjoint from the first one. -/
 @[to_additive
@@ -1467,17 +1445,6 @@ theorem QuotientGroup.continuous_smul₁ (x : G ⧸ Γ) : Continuous fun g : G =
   induction x using QuotientGroup.induction_on
   exact continuous_quotient_mk.comp (continuous_mul_right x)
 #align quotient_group.continuous_smul₁ QuotientGroup.continuous_smul₁
-
-@[to_additive]
-instance QuotientGroup.has_continuous_smul [LocallyCompactSpace G] :
-    HasContinuousSmul G (G ⧸ Γ) where continuous_smul := by
-    let F : G × G ⧸ Γ → G ⧸ Γ := fun p => p.1 • p.2
-    change Continuous F
-    have H : Continuous (F ∘ fun p : G × G => (p.1, QuotientGroup.mk p.2)) := by
-      change Continuous fun p : G × G => QuotientGroup.mk (p.1 * p.2)
-      refine' continuous_coinduced_rng.comp continuous_mul
-    exact QuotientMap.continuous_lift_prod_right quotient_map_quotient_mk H
-#align quotient_group.has_continuous_smul QuotientGroup.has_continuous_smul
 
 /-- The quotient of a second countable topological group by a subgroup is second countable. -/
 @[to_additive "The quotient of a second countable additive topological group by a subgroup is second\ncountable."]

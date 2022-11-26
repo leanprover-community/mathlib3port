@@ -114,17 +114,12 @@ theorem comap_lift_eq2 {m : β → α} {g : Set β → Filter γ} (hg : Monotone
     (le_infi₂ fun s ⟨s', hs', (h_sub : m ⁻¹' s' ⊆ s)⟩ => infi₂_le_of_le s' hs' <| hg h_sub)
 #align filter.comap_lift_eq2 Filter.comap_lift_eq2
 
+theorem lift_map_le {g : Set β → Filter γ} {m : α → β} : (map m f).lift g ≤ f.lift (g ∘ image m) :=
+  le_lift.2 fun s hs => lift_le (image_mem_map hs) le_rfl
+#align filter.lift_map_le Filter.lift_map_le
+
 theorem map_lift_eq2 {g : Set β → Filter γ} {m : α → β} (hg : Monotone g) : (map m f).lift g = f.lift (g ∘ image m) :=
-  le_antisymm
-    (infi_mono' fun s =>
-      ⟨image m s, infi_mono' fun hs => ⟨(f.sets_of_superset hs) fun a h => mem_image_of_mem _ h, le_rfl⟩⟩)
-    (infi_mono' fun t =>
-      ⟨preimage m t,
-        infi_mono' fun ht =>
-          ⟨ht,
-            hg fun x => fun h : x ∈ m '' preimage m t =>
-              let ⟨y, hy, h_eq⟩ := h
-              show x ∈ t from h_eq ▸ hy⟩⟩)
+  lift_map_le.antisymm <| le_lift.2 fun s hs => lift_le hs <| hg <| image_preimage_subset _ _
 #align filter.map_lift_eq2 Filter.map_lift_eq2
 
 theorem lift_comm {g : Filter β} {h : Set α → Set β → Filter γ} :
@@ -298,6 +293,10 @@ theorem map_lift'_eq {m : β → γ} (hh : Monotone h) : map m (f.lift' h) = f.l
     _ = f.lift' (image m ∘ h) := by simp only [(· ∘ ·), Filter.lift', map_principal, eq_self_iff_true]
     
 #align filter.map_lift'_eq Filter.map_lift'_eq
+
+theorem lift'_map_le {g : Set β → Set γ} {m : α → β} : (map m f).lift' g ≤ f.lift' (g ∘ image m) :=
+  lift_map_le
+#align filter.lift'_map_le Filter.lift'_map_le
 
 theorem map_lift'_eq2 {g : Set β → Set γ} {m : α → β} (hg : Monotone g) : (map m f).lift' g = f.lift' (g ∘ image m) :=
   map_lift_eq2 <| monotone_principal.comp hg

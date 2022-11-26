@@ -47,7 +47,7 @@ numbers, such that the entries in each row are weakly increasing (left to right)
 in each column are strictly increasing (top to bottom).
 
 Here, an SSYT is represented as an unrestricted function `ℕ → ℕ → ℕ` that, for reasons
-of extensionality, is required to vanish outside `μ`. --/
+of extensionality, is required to vanish outside `μ`. -/
 structure Ssyt (μ : YoungDiagram) where
   entry : ℕ → ℕ → ℕ
   row_weak' : ∀ {i j1 j2 : ℕ}, j1 < j2 → (i, j2) ∈ μ → entry i j1 ≤ entry i j2
@@ -127,7 +127,7 @@ theorem col_weak {μ : YoungDiagram} (T : Ssyt μ) {i1 i2 j : ℕ} (hi : i1 ≤ 
   exact le_of_lt (T.col_strict h cell)
 #align ssyt.col_weak Ssyt.col_weak
 
-/-- The "highest weight" SSYT of a given shape is has all i's in row i, for each i. --/
+/-- The "highest weight" SSYT of a given shape is has all i's in row i, for each i. -/
 def highestWeight (μ : YoungDiagram) : Ssyt μ where
   entry i j := if (i, j) ∈ μ then i else 0
   row_weak' i j1 j2 hj hcell := by rw [if_pos hcell, if_pos (μ.up_left_mem (by rfl) (le_of_lt hj) hcell)]

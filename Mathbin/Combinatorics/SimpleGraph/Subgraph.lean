@@ -142,7 +142,7 @@ protected theorem Adj.coe {H : G.Subgraph} {u v : V} (h : H.Adj u v) :
   h
 #align simple_graph.subgraph.adj.coe SimpleGraph.Subgraph.Adj.coe
 
-/-- A subgraph is called a *spanning subgraph* if it contains all the vertices of `G`. --/
+/-- A subgraph is called a *spanning subgraph* if it contains all the vertices of `G`. -/
 def IsSpanning (G' : Subgraph G) : Prop :=
   ∀ v : V, v ∈ G'.verts
 #align simple_graph.subgraph.is_spanning SimpleGraph.Subgraph.IsSpanning

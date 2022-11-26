@@ -172,7 +172,7 @@ theorem coe_mk (I : Submodule R P) (hI : IsFractional S I) : (Subtype.mk I hI : 
   rfl
 #align fractional_ideal.coe_mk FractionalIdeal.coe_mk
 
-/-! Transfer instances from `submodule R P` to `fractional_ideal S P`. --/
+/-! Transfer instances from `submodule R P` to `fractional_ideal S P`. -/
 
 
 instance (I : FractionalIdeal S P) : AddCommGroup I :=

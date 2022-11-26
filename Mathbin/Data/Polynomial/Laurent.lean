@@ -200,7 +200,7 @@ theorem _root_.polynomial.to_laurent_C (r : R) : (Polynomial.c r).toLaurent = c 
 
 @[simp]
 theorem _root_.polynomial.to_laurent_X : (Polynomial.x.toLaurent : R[T;T⁻¹]) = t 1 := by
-  have : (Polynomial.x : R[X]) = monomial 1 1 := by simp [monomial_eq_C_mul_X]
+  have : (Polynomial.x : R[X]) = monomial 1 1 := by simp [← C_mul_X_pow_eq_monomial]
   simp [this, Polynomial.to_laurent_C_mul_T]
 #align laurent_polynomial._root_.polynomial.to_laurent_X laurent_polynomial._root_.polynomial.to_laurent_X
 

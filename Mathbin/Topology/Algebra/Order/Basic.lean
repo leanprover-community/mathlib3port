@@ -6,7 +6,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 import Mathbin.Data.Set.Intervals.Pi
 import Mathbin.Data.Set.Pointwise.Interval
 import Mathbin.Order.Filter.Interval
-import Mathbin.Topology.Algebra.Group
+import Mathbin.Topology.Algebra.Group.Basic
 import Mathbin.Topology.Algebra.Order.LeftRight
 
 /-!
@@ -2959,7 +2959,7 @@ instance (priority := 100) LinearOrderedAddCommGroup.topological_add_group : Top
         _ = ε := add_sub_cancel'_right _ _
         
       
-    · -- Otherewise `ε`-nhd of each point `a` is `{a}`
+    · -- Otherwise `ε`-nhd of each point `a` is `{a}`
       have hε : ∀ {x y}, |x - y| < ε → x = y := by
         intro x y h
         simpa [sub_eq_zero] using h₂ _ h

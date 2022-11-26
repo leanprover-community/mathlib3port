@@ -165,6 +165,22 @@ theorem kernel_subobject_map_comp {X'' Y'' : C} {f'' : X'' ⟶ Y''} [HasKernel f
   simp
 #align category_theory.limits.kernel_subobject_map_comp CategoryTheory.Limits.kernel_subobject_map_comp
 
+@[reassoc]
+theorem kernel_map_comp_kernel_subobject_iso_inv (sq : Arrow.mk f ⟶ Arrow.mk f') :
+    kernel.map f f' sq.1 sq.2 sq.3.symm ≫ (kernelSubobjectIso _).inv =
+      (kernelSubobjectIso _).inv ≫ kernelSubobjectMap sq :=
+  by ext <;> simp
+#align
+  category_theory.limits.kernel_map_comp_kernel_subobject_iso_inv CategoryTheory.Limits.kernel_map_comp_kernel_subobject_iso_inv
+
+@[reassoc]
+theorem kernel_subobject_iso_comp_kernel_map (sq : Arrow.mk f ⟶ Arrow.mk f') :
+    (kernelSubobjectIso _).Hom ≫ kernel.map f f' sq.1 sq.2 sq.3.symm =
+      kernelSubobjectMap sq ≫ (kernelSubobjectIso _).Hom :=
+  by simp [← iso.comp_inv_eq, kernel_map_comp_kernel_subobject_iso_inv]
+#align
+  category_theory.limits.kernel_subobject_iso_comp_kernel_map CategoryTheory.Limits.kernel_subobject_iso_comp_kernel_map
+
 end
 
 @[simp]
@@ -454,6 +470,21 @@ theorem image_subobject_map_arrow {W X Y Z : C} {f : W ⟶ X} [HasImage f] {g : 
   simp only [image_subobject_map, category.assoc, image_subobject_arrow']
   erw [image.map_ι, ← category.assoc, image_subobject_arrow]
 #align category_theory.limits.image_subobject_map_arrow CategoryTheory.Limits.image_subobject_map_arrow
+
+theorem image_map_comp_image_subobject_iso_inv {W X Y Z : C} {f : W ⟶ X} [HasImage f] {g : Y ⟶ Z} [HasImage g]
+    (sq : Arrow.mk f ⟶ Arrow.mk g) [HasImageMap sq] :
+    image.map sq ≫ (imageSubobjectIso _).inv = (imageSubobjectIso _).inv ≫ imageSubobjectMap sq := by ext <;> simp
+#align
+  category_theory.limits.image_map_comp_image_subobject_iso_inv CategoryTheory.Limits.image_map_comp_image_subobject_iso_inv
+
+theorem image_subobject_iso_comp_image_map {W X Y Z : C} {f : W ⟶ X} [HasImage f] {g : Y ⟶ Z} [HasImage g]
+    (sq : Arrow.mk f ⟶ Arrow.mk g) [HasImageMap sq] :
+    (imageSubobjectIso _).Hom ≫ image.map sq = imageSubobjectMap sq ≫ (imageSubobjectIso _).Hom := by
+  rw [← iso.comp_inv_eq, category.assoc, ← (image_subobject_iso (arrow.mk f).Hom).eq_inv_comp, ←
+      image_map_comp_image_subobject_iso_inv] <;>
+    rfl
+#align
+  category_theory.limits.image_subobject_iso_comp_image_map CategoryTheory.Limits.image_subobject_iso_comp_image_map
 
 end Image
 

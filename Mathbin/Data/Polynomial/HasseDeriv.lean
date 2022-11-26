@@ -96,7 +96,8 @@ theorem hasse_deriv_eq_zero_of_lt_nat_degree (p : R[X]) (n : ℕ) (h : p.natDegr
 #align polynomial.hasse_deriv_eq_zero_of_lt_nat_degree Polynomial.hasse_deriv_eq_zero_of_lt_nat_degree
 
 theorem hasse_deriv_one' : hasseDeriv 1 f = derivative f := by
-  simp only [hasse_deriv_apply, derivative_apply, monomial_eq_C_mul_X, Nat.choose_one_right, (Nat.cast_commute _ _).Eq]
+  simp only [hasse_deriv_apply, derivative_apply, ← C_mul_X_pow_eq_monomial, Nat.choose_one_right,
+    (Nat.cast_commute _ _).Eq]
 #align polynomial.hasse_deriv_one' Polynomial.hasse_deriv_one'
 
 @[simp]

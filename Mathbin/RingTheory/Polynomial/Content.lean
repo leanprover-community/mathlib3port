@@ -150,7 +150,7 @@ theorem content_C_mul (r : R) (p : R[X]) : (c r * p).content = normalize r * p.c
 
 @[simp]
 theorem content_monomial {r : R} {k : ℕ} : content (monomial k r) = normalize r := by
-  rw [monomial_eq_C_mul_X, content_C_mul, content_X_pow, mul_one]
+  rw [← C_mul_X_pow_eq_monomial, content_C_mul, content_X_pow, mul_one]
 #align polynomial.content_monomial Polynomial.content_monomial
 
 theorem content_eq_zero_iff {p : R[X]} : content p = 0 ↔ p = 0 := by

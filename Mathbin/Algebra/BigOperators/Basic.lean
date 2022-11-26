@@ -3,14 +3,15 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
+import Mathbin.Algebra.BigOperators.Multiset.Lemmas
 import Mathbin.Algebra.Group.Pi
+import Mathbin.Algebra.GroupPower.Lemmas
 import Mathbin.Algebra.Hom.Equiv.Basic
 import Mathbin.Algebra.Ring.Opposite
-import Mathbin.Data.Set.Pairwise
 import Mathbin.Data.Finset.Sum
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Data.Finset.Sigma
-import Mathbin.Algebra.GroupPower.Lemmas
+import Mathbin.Data.Set.Pairwise
 
 /-!
 # Big operators

@@ -160,7 +160,7 @@ theorem ext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X)
   simpa using h_map X Y f
 #align category_theory.functor.ext CategoryTheory.Functor.ext
 
-/-- Two morphisms are conjugate via eq_to_hom if and only if they are heterogeneously equal. --/
+/-- Two morphisms are conjugate via eq_to_hom if and only if they are heterogeneously equal. -/
 theorem conj_eq_to_hom_iff_heq {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) (h : W = Y) (h' : X = Z) :
     f = eqToHom h ≫ g ≫ eqToHom h'.symm ↔ HEq f g := by
   cases h

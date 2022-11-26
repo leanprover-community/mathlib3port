@@ -242,21 +242,12 @@ theorem not_dvd_card_ker_transfer_sylow : ¬p ∣ Nat.card (transferSylow P hP).
     mt index_eq_zero_of_relindex_eq_zero index_ne_zero_of_finite
 #align monoid_hom.not_dvd_card_ker_transfer_sylow MonoidHom.not_dvd_card_ker_transfer_sylow
 
-theorem ker_transfer_sylow_disjoint : Disjoint (transferSylow P hP).ker ↑P :=
-  (ker_transfer_sylow_is_complement' P hP).Disjoint
+theorem ker_transfer_sylow_disjoint (Q : Subgroup G) (hQ : IsPGroup p Q) : Disjoint (transferSylow P hP).ker Q :=
+  disjoint_iff.mpr <|
+    card_eq_one.mp <|
+      (hQ.to_le inf_le_right).card_eq_or_dvd.resolve_right fun h =>
+        not_dvd_card_ker_transfer_sylow P hP <| h.trans <| nat_card_dvd_of_le _ _ inf_le_left
 #align monoid_hom.ker_transfer_sylow_disjoint MonoidHom.ker_transfer_sylow_disjoint
-
-theorem ker_transfer_sylow_disjoint' (Q : Sylow p G) : Disjoint (transferSylow P hP).ker ↑Q := by
-  obtain ⟨g, hg⟩ := exists_smul_eq G Q P
-  rw [disjoint_iff, ← smul_left_cancel_iff (MulAut.conj g), smul_bot, smul_inf, smul_normal, ← Sylow.coe_subgroup_smul,
-    hg, ← disjoint_iff]
-  exact ker_transfer_sylow_disjoint P hP
-#align monoid_hom.ker_transfer_sylow_disjoint' MonoidHom.ker_transfer_sylow_disjoint'
-
-theorem ker_transfer_sylow_disjoint'' (Q : Subgroup G) (hQ : IsPGroup p Q) : Disjoint (transferSylow P hP).ker Q :=
-  let ⟨R, hR⟩ := hQ.exists_le_sylow
-  (ker_transfer_sylow_disjoint' P hP R).mono_right hR
-#align monoid_hom.ker_transfer_sylow_disjoint'' MonoidHom.ker_transfer_sylow_disjoint''
 
 end BurnsideTransfer
 

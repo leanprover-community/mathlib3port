@@ -3,7 +3,7 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.List.BigOperators.Lemmas
+import Mathbin.Data.List.BigOperators.Basic
 import Mathbin.Data.Multiset.Basic
 
 /-!
@@ -17,6 +17,12 @@ and sums indexed by finite sets.
 * `multiset.prod`: `s.prod f` is the product of `f i` over all `i ∈ s`. Not to be mistaken with
   the cartesian product `multiset.product`.
 * `multiset.sum`: `s.sum f` is the sum of `f i` over all `i ∈ s`.
+
+## Implementation notes
+
+Nov 2022: To speed the Lean 4 port, lemmas requiring extra algebra imports
+(`data.list.big_operators.lemmas` rather than `.basic`) have been moved to a separate file,
+`algebra.big_operators.multiset.lemmas`.  This split does not need to be permanent.
 -/
 
 
@@ -198,10 +204,6 @@ theorem prod_induction_nonempty (p : α → Prop) (p_mul : ∀ a b, p a → p b 
   exact p_mul a s.prod (hpsa a (mem_cons_self a s)) (hs hs_empty hps)
 #align multiset.prod_induction_nonempty Multiset.prod_induction_nonempty
 
-theorem dvd_prod : a ∈ s → a ∣ s.Prod :=
-  Quotient.induction_on s (fun l a h => by simpa using List.dvd_prod h) a
-#align multiset.dvd_prod Multiset.dvd_prod
-
 theorem prod_dvd_prod_of_le (h : s ≤ t) : s.Prod ∣ t.Prod := by
   obtain ⟨z, rfl⟩ := exists_add_of_le h
   simp only [prod_add, dvd_mul_right]
@@ -292,16 +294,6 @@ end DivisionCommMonoid
 section NonUnitalNonAssocSemiring
 
 variable [NonUnitalNonAssocSemiring α] {a : α} {s : Multiset ι} {f : ι → α}
-
-theorem _root_.commute.multiset_sum_right (s : Multiset α) (a : α) (h : ∀ b ∈ s, Commute a b) : Commute a s.Sum := by
-  induction s using Quotient.induction_on
-  rw [quot_mk_to_coe, coe_sum]
-  exact Commute.list_sum_right _ _ h
-#align multiset._root_.commute.multiset_sum_right multiset._root_.commute.multiset_sum_right
-
-theorem _root_.commute.multiset_sum_left (s : Multiset α) (b : α) (h : ∀ a ∈ s, Commute a b) : Commute s.Sum b :=
-  ((Commute.multiset_sum_right _ _) fun a ha => (h _ ha).symm).symm
-#align multiset._root_.commute.multiset_sum_left multiset._root_.commute.multiset_sum_left
 
 theorem sum_map_mul_left : sum (s.map fun i => a * f i) = a * sum (s.map f) :=
   Multiset.induction_on s (by simp) fun i s ih => by simp [ih, mul_add]
@@ -400,11 +392,6 @@ theorem prod_nonneg [OrderedCommSemiring α] {m : Multiset α} (h : ∀ a ∈ m,
   rw [prod_cons]
   exact mul_nonneg (ih _ <| mem_cons_self _ _) (hs fun a ha => ih _ <| mem_cons_of_mem ha)
 #align multiset.prod_nonneg Multiset.prod_nonneg
-
-@[to_additive]
-theorem prod_eq_one_iff [CanonicallyOrderedMonoid α] {m : Multiset α} : m.Prod = 1 ↔ ∀ x ∈ m, x = (1 : α) :=
-  (Quotient.induction_on m) fun l => by simpa using List.prod_eq_one_iff l
-#align multiset.prod_eq_one_iff Multiset.prod_eq_one_iff
 
 /-- Slightly more general version of `multiset.prod_eq_one_iff` for a non-ordered `monoid` -/
 @[to_additive "Slightly more general version of `multiset.sum_eq_zero_iff`\n  for a non-ordered `add_monoid`"]

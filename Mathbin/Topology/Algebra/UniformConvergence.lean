@@ -16,18 +16,23 @@ space of continuous linear maps between two topological vector spaces.
 
 ## Main statements
 
-* `uniform_convergence.uniform_group` : if `G` is a uniform group, then the uniform structure of
-  uniform convergence makes `α → G` a uniform group
-* `uniform_convergence_on.uniform_group` : if `G` is a uniform group, then the uniform structure of
-  `𝔖`-convergence, for any `𝔖 : set (set α)`, makes `α → G` a uniform group.
-* `uniform_convergence_on.has_continuous_smul_of_image_bounded` : let `E` be a TVS,
-  `𝔖 : set (set α)` and `H` a submodule of `α → E`. If the image of any `S ∈ 𝔖` by any `u ∈ H` is
-  bounded (in the sense of `bornology.is_vonN_bounded`), then `H`, equipped with the topology of
-  `𝔖`-convergence, is a TVS.
+* `uniform_fun.uniform_group` : if `G` is a uniform group, then `α →ᵤ G` a uniform group
+* `uniform_on_fun.uniform_group` : if `G` is a uniform group, then for any `𝔖 : set (set α)`,
+  `α →ᵤ[𝔖] G` a uniform group.
+* `uniform_on_fun.has_continuous_smul_of_image_bounded` : let `E` be a TVS, `𝔖 : set (set α)` and
+  `H` a submodule of `α →ᵤ[𝔖] E`. If the image of any `S ∈ 𝔖` by any `u ∈ H` is bounded (in the
+  sense of `bornology.is_vonN_bounded`), then `H`, equipped with the topology induced from
+  `α →ᵤ[𝔖] E`, is a TVS.
+
+## Implementation notes
+
+Like in `topology/uniform_space/uniform_convergence_topology`, we use the type aliases
+`uniform_fun` (denoted `α →ᵤ β`) and `uniform_on_fun` (denoted `α →ᵤ[𝔖] β`) for functions from `α`
+to `β` endowed with the structures of uniform convergence and `𝔖`-convergence.
 
 ## TODO
 
-* `uniform_convergence_on.has_continuous_smul_of_image_bounded` unnecessarily asks for `𝔖` to be
+* `uniform_on_fun.has_continuous_smul_of_image_bounded` unnecessarily asks for `𝔖` to be
   nonempty and directed. This will be easy to solve once we know that replacing `𝔖` by its
   ***noncovering*** bornology (i.e ***not*** what `bornology` currently refers to in mathlib)
   doesn't change the topology.
@@ -46,122 +51,145 @@ uniform convergence, strong dual
 
 open Filter
 
-open TopologicalSpace Pointwise
+open TopologicalSpace Pointwise UniformConvergence
+
+section AlgebraicInstances
+
+variable {α β ι R : Type _} {𝔖 : Set <| Set α}
+
+@[to_additive]
+instance [Monoid β] : Monoid (α →ᵤ β) :=
+  Pi.monoid
+
+@[to_additive]
+instance [Monoid β] : Monoid (α →ᵤ[𝔖] β) :=
+  Pi.monoid
+
+@[to_additive]
+instance [CommMonoid β] : CommMonoid (α →ᵤ β) :=
+  Pi.commMonoid
+
+@[to_additive]
+instance [CommMonoid β] : CommMonoid (α →ᵤ[𝔖] β) :=
+  Pi.commMonoid
+
+@[to_additive]
+instance [Group β] : Group (α →ᵤ β) :=
+  Pi.group
+
+@[to_additive]
+instance [Group β] : Group (α →ᵤ[𝔖] β) :=
+  Pi.group
+
+@[to_additive]
+instance [CommGroup β] : CommGroup (α →ᵤ β) :=
+  Pi.commGroup
+
+@[to_additive]
+instance [CommGroup β] : CommGroup (α →ᵤ[𝔖] β) :=
+  Pi.commGroup
+
+instance [Semiring R] [AddCommMonoid β] [Module R β] : Module R (α →ᵤ β) :=
+  Pi.module _ _ _
+
+instance [Semiring R] [AddCommMonoid β] [Module R β] : Module R (α →ᵤ[𝔖] β) :=
+  Pi.module _ _ _
+
+end AlgebraicInstances
 
 section Group
 
-variable {α G ι : Type _} [Group G] [UniformSpace G] [UniformGroup G] {𝔖 : Set <| Set α}
+variable {α G ι : Type _} [Group G] {𝔖 : Set <| Set α} [UniformSpace G] [UniformGroup G]
 
-attribute [-instance] PiCat.uniformSpace
-
-attribute [-instance] PiCat.topologicalSpace
-
-/-- If `G` is a uniform group, then the uniform structure of uniform convergence makes `α → G`
-a uniform group as well. -/
-@[to_additive
-      "If `G` is a uniform additive group, then the uniform structure of uniform\nconvergence makes `α → G` a uniform additive group as well."]
-protected theorem UniformConvergence.uniform_group : @UniformGroup (α → G) (UniformConvergence.uniformSpace α G) _ := by
-  -- Since `(/) : G × G → G` is uniformly continuous,
-  -- `uniform_convergence.postcomp_uniform_continuous` tells us that
-  -- `((/) ∘ —) : (α → G × G) → (α → G)` is uniformly continuous too. By precomposing with
-  -- `uniform_convergence.uniform_equiv_prod_arrow`, this gives that
-  -- `(/) : (α → G) × (α → G) → (α → G)` is also uniformly continuous
-  letI : UniformSpace (α → G) := UniformConvergence.uniformSpace α G
-  letI : UniformSpace (α → G × G) := UniformConvergence.uniformSpace α (G × G)
-  exact
-    ⟨(UniformConvergence.postcomp_uniform_continuous uniform_continuous_div).comp
-        uniform_convergence.uniform_equiv_prod_arrow.symm.uniform_continuous⟩
-#align uniform_convergence.uniform_group UniformConvergence.uniform_group
+/-- If `G` is a uniform group, then `α →ᵤ G` is a uniform group as well. -/
+@[to_additive "If `G` is a uniform additive group, then `α →ᵤ G` is a uniform additive group\nas well."]
+instance : UniformGroup (α →ᵤ G) :=
+  ⟨(-- Since `(/) : G × G → G` is uniformly continuous,
+          -- `uniform_fun.postcomp_uniform_continuous` tells us that
+          -- `((/) ∘ —) : (α →ᵤ G × G) → (α →ᵤ G)` is uniformly continuous too. By precomposing with
+          -- `uniform_fun.uniform_equiv_prod_arrow`, this gives that
+          -- `(/) : (α →ᵤ G) × (α →ᵤ G) → (α →ᵤ G)` is also uniformly continuous
+          UniformFun.postcomp_uniform_continuous
+          uniform_continuous_div).comp
+      UniformFun.uniformEquivProdArrow.symm.UniformContinuous⟩
 
 @[to_additive]
-protected theorem UniformConvergence.has_basis_nhds_one_of_basis {p : ι → Prop} {b : ι → Set G}
-    (h : (𝓝 1 : Filter G).HasBasis p b) :
-    (@nhds (α → G) (UniformConvergence.topologicalSpace α G) 1).HasBasis p fun i => { f : α → G | ∀ x, f x ∈ b i } := by
+protected theorem UniformFun.has_basis_nhds_one_of_basis {p : ι → Prop} {b : ι → Set G}
+    (h : (𝓝 1 : Filter G).HasBasis p b) : (𝓝 1 : Filter (α →ᵤ G)).HasBasis p fun i => { f : α →ᵤ G | ∀ x, f x ∈ b i } :=
+  by
   have := h.comap fun p : G × G => p.2 / p.1
   rw [← uniformity_eq_comap_nhds_one] at this
-  convert UniformConvergence.has_basis_nhds_of_basis α _ 1 this
+  convert UniformFun.has_basis_nhds_of_basis α _ 1 this
   ext (i f)
-  simp [UniformConvergence.gen]
-#align uniform_convergence.has_basis_nhds_one_of_basis UniformConvergence.has_basis_nhds_one_of_basis
+  simp [UniformFun.gen]
+#align uniform_fun.has_basis_nhds_one_of_basis UniformFun.has_basis_nhds_one_of_basis
 
 @[to_additive]
-protected theorem UniformConvergence.has_basis_nhds_one :
-    (@nhds (α → G) (UniformConvergence.topologicalSpace α G) 1).HasBasis (fun V : Set G => V ∈ (𝓝 1 : Filter G))
-      fun V => { f : α → G | ∀ x, f x ∈ V } :=
-  UniformConvergence.has_basis_nhds_one_of_basis (basis_sets _)
-#align uniform_convergence.has_basis_nhds_one UniformConvergence.has_basis_nhds_one
+protected theorem UniformFun.has_basis_nhds_one :
+    (𝓝 1 : Filter (α →ᵤ G)).HasBasis (fun V : Set G => V ∈ (𝓝 1 : Filter G)) fun V => { f : α → G | ∀ x, f x ∈ V } :=
+  UniformFun.has_basis_nhds_one_of_basis (basis_sets _)
+#align uniform_fun.has_basis_nhds_one UniformFun.has_basis_nhds_one
 
-/-- Let `𝔖 : set (set α)`. If `G` is a uniform group, then the uniform structure of
-`𝔖`-convergence makes `α → G` a uniform group as well. -/
+/-- Let `𝔖 : set (set α)`. If `G` is a uniform group, then `α →ᵤ[𝔖] G` is a uniform group as
+well. -/
 @[to_additive
-      "Let `𝔖 : set (set α)`. If `G` is a uniform additive group, then the uniform\nstructure of  `𝔖`-convergence makes `α → G` a uniform additive group as well. "]
-protected theorem UniformConvergenceOn.uniform_group :
-    @UniformGroup (α → G) (UniformConvergenceOn.uniformSpace α G 𝔖) _ := by
-  -- Since `(/) : G × G → G` is uniformly continuous,
-  -- `uniform_convergence_on.postcomp_uniform_continuous` tells us that
-  -- `((/) ∘ —) : (α → G × G) → (α → G)` is uniformly continuous too. By precomposing with
-  -- `uniform_convergence_on.uniform_equiv_prod_arrow`, this gives that
-  -- `(/) : (α → G) × (α → G) → (α → G)` is also uniformly continuous
-  letI : UniformSpace (α → G) := UniformConvergenceOn.uniformSpace α G 𝔖
-  letI : UniformSpace (α → G × G) := UniformConvergenceOn.uniformSpace α (G × G) 𝔖
-  exact
-    ⟨(UniformConvergenceOn.postcomp_uniform_continuous uniform_continuous_div).comp
-        uniform_convergence_on.uniform_equiv_prod_arrow.symm.uniform_continuous⟩
-#align uniform_convergence_on.uniform_group UniformConvergenceOn.uniform_group
+      "Let `𝔖 : set (set α)`. If `G` is a uniform additive group, then `α →ᵤ[𝔖] G` is a\nuniform additive group as well. "]
+instance : UniformGroup (α →ᵤ[𝔖] G) :=
+  ⟨(-- Since `(/) : G × G → G` is uniformly continuous,
+          -- `uniform_on_fun.postcomp_uniform_continuous` tells us that
+          -- `((/) ∘ —) : (α →ᵤ[𝔖] G × G) → (α →ᵤ[𝔖] G)` is uniformly continuous too. By precomposing with
+          -- `uniform_on_fun.uniform_equiv_prod_arrow`, this gives that
+          -- `(/) : (α →ᵤ[𝔖] G) × (α →ᵤ[𝔖] G) → (α →ᵤ[𝔖] G)` is also uniformly continuous
+          UniformOnFun.postcomp_uniform_continuous
+          uniform_continuous_div).comp
+      UniformOnFun.uniformEquivProdArrow.symm.UniformContinuous⟩
 
 @[to_additive]
-protected theorem UniformConvergenceOn.has_basis_nhds_one_of_basis (𝔖 : Set <| Set α) (h𝔖₁ : 𝔖.Nonempty)
+protected theorem UniformOnFun.has_basis_nhds_one_of_basis (𝔖 : Set <| Set α) (h𝔖₁ : 𝔖.Nonempty)
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) {p : ι → Prop} {b : ι → Set G} (h : (𝓝 1 : Filter G).HasBasis p b) :
-    (@nhds (α → G) (UniformConvergenceOn.topologicalSpace α G 𝔖) 1).HasBasis (fun Si : Set α × ι => Si.1 ∈ 𝔖 ∧ p Si.2)
-      fun Si => { f : α → G | ∀ x ∈ Si.1, f x ∈ b Si.2 } :=
+    (𝓝 1 : Filter (α →ᵤ[𝔖] G)).HasBasis (fun Si : Set α × ι => Si.1 ∈ 𝔖 ∧ p Si.2) fun Si =>
+      { f : α →ᵤ[𝔖] G | ∀ x ∈ Si.1, f x ∈ b Si.2 } :=
   by
   have := h.comap fun p : G × G => p.1 / p.2
   rw [← uniformity_eq_comap_nhds_one_swapped] at this
-  convert UniformConvergenceOn.has_basis_nhds_of_basis α _ 𝔖 1 h𝔖₁ h𝔖₂ this
+  convert UniformOnFun.has_basis_nhds_of_basis α _ 𝔖 1 h𝔖₁ h𝔖₂ this
   ext (i f)
-  simp [UniformConvergenceOn.gen]
-#align uniform_convergence_on.has_basis_nhds_one_of_basis UniformConvergenceOn.has_basis_nhds_one_of_basis
+  simp [UniformOnFun.gen]
+#align uniform_on_fun.has_basis_nhds_one_of_basis UniformOnFun.has_basis_nhds_one_of_basis
 
 @[to_additive]
-protected theorem UniformConvergenceOn.has_basis_nhds_one (𝔖 : Set <| Set α) (h𝔖₁ : 𝔖.Nonempty)
-    (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
-    (@nhds (α → G) (UniformConvergenceOn.topologicalSpace α G 𝔖) 1).HasBasis
-      (fun SV : Set α × Set G => SV.1 ∈ 𝔖 ∧ SV.2 ∈ (𝓝 1 : Filter G)) fun SV => { f : α → G | ∀ x ∈ SV.1, f x ∈ SV.2 } :=
-  UniformConvergenceOn.has_basis_nhds_one_of_basis 𝔖 h𝔖₁ h𝔖₂ (basis_sets _)
-#align uniform_convergence_on.has_basis_nhds_one UniformConvergenceOn.has_basis_nhds_one
+protected theorem UniformOnFun.has_basis_nhds_one (𝔖 : Set <| Set α) (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
+    (𝓝 1 : Filter (α →ᵤ[𝔖] G)).HasBasis (fun SV : Set α × Set G => SV.1 ∈ 𝔖 ∧ SV.2 ∈ (𝓝 1 : Filter G)) fun SV =>
+      { f : α →ᵤ[𝔖] G | ∀ x ∈ SV.1, f x ∈ SV.2 } :=
+  UniformOnFun.has_basis_nhds_one_of_basis 𝔖 h𝔖₁ h𝔖₂ (basis_sets _)
+#align uniform_on_fun.has_basis_nhds_one UniformOnFun.has_basis_nhds_one
 
 end Group
 
 section Module
 
 variable (𝕜 α E H : Type _) {hom : Type _} [NormedField 𝕜] [AddCommGroup H] [Module 𝕜 H] [AddCommGroup E] [Module 𝕜 E]
-  [LinearMapClass hom 𝕜 H (α → E)] [TopologicalSpace H] [UniformSpace E] [UniformAddGroup E] [HasContinuousSmul 𝕜 E]
-  {𝔖 : Set <| Set α}
-
-attribute [-instance] PiCat.uniformSpace
-
-attribute [-instance] PiCat.topologicalSpace
+  [TopologicalSpace H] [UniformSpace E] [UniformAddGroup E] [HasContinuousSmul 𝕜 E] {𝔖 : Set <| Set α}
+  [LinearMapClass hom 𝕜 H (α →ᵤ[𝔖] E)]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/-- Let `E` be a TVS, `𝔖 : set (set α)` and `H` a submodule of `α → E`. If the image of any `S ∈ 𝔖`
-by any `u ∈ H` is bounded (in the sense of `bornology.is_vonN_bounded`), then `H`, equipped with
-the topology of `𝔖`-convergence, is a TVS.
+/-- Let `E` be a TVS, `𝔖 : set (set α)` and `H` a submodule of `α →ᵤ[𝔖] E`. If the image of any
+`S ∈ 𝔖` by any `u ∈ H` is bounded (in the sense of `bornology.is_vonN_bounded`), then `H`,
+equipped with the topology of `𝔖`-convergence, is a TVS.
 
-For convenience, we don't literally ask for `H : submodule (α → E)`. Instead, we prove the result
-for any vector space `H` equipped with a linear inducing to `α → E`, which is often easier to use.
-We also state the `submodule` version as
-`uniform_convergence_on.has_continuous_smul_submodule_of_image_bounded`. -/
-theorem UniformConvergenceOn.has_continuous_smul_induced_of_image_bounded (h𝔖₁ : 𝔖.Nonempty)
-    (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) (φ : hom) (hφ : @Inducing _ _ _ (UniformConvergenceOn.topologicalSpace α E 𝔖) φ)
-    (h : ∀ u : H, ∀ s ∈ 𝔖, Bornology.IsVonNBounded 𝕜 ((φ u : α → E) '' s)) : HasContinuousSmul 𝕜 H := by
-  letI : UniformSpace (α → E) := UniformConvergenceOn.uniformSpace α E 𝔖
-  haveI : UniformAddGroup (α → E) := UniformConvergenceOn.uniform_add_group
+For convenience, we don't literally ask for `H : submodule (α →ᵤ[𝔖] E)`. Instead, we prove the
+result for any vector space `H` equipped with a linear inducing to `α →ᵤ[𝔖] E`, which is often
+easier to use. We also state the `submodule` version as
+`uniform_on_fun.has_continuous_smul_submodule_of_image_bounded`. -/
+theorem UniformOnFun.has_continuous_smul_induced_of_image_bounded (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖)
+    (φ : hom) (hφ : Inducing φ) (h : ∀ u : H, ∀ s ∈ 𝔖, Bornology.IsVonNBounded 𝕜 ((φ u : α → E) '' s)) :
+    HasContinuousSmul 𝕜 H := by
   have : TopologicalAddGroup H := by
     rw [hφ.induced]
     exact topological_add_group_induced φ
   have : (𝓝 0 : Filter H).HasBasis _ _ := by
     rw [hφ.induced, nhds_induced, map_zero]
-    exact (UniformConvergenceOn.has_basis_nhds_zero 𝔖 h𝔖₁ h𝔖₂).comap φ
+    exact (UniformOnFun.has_basis_nhds_zero 𝔖 h𝔖₁ h𝔖₂).comap φ
   refine' HasContinuousSmul.of_basis_zero this _ _ _
   · rintro ⟨S, V⟩ ⟨hS, hV⟩
     have : tendsto (fun kx : 𝕜 × E => kx.1 • kx.2) (𝓝 (0, 0)) (𝓝 <| (0 : 𝕜) • 0) := continuous_smul.tendsto (0 : 𝕜 × E)
@@ -201,24 +229,21 @@ theorem UniformConvergenceOn.has_continuous_smul_induced_of_image_bounded (h𝔖
       
     
 #align
-  uniform_convergence_on.has_continuous_smul_induced_of_image_bounded UniformConvergenceOn.has_continuous_smul_induced_of_image_bounded
+  uniform_on_fun.has_continuous_smul_induced_of_image_bounded UniformOnFun.has_continuous_smul_induced_of_image_bounded
 
-/-- Let `E` be a TVS, `𝔖 : set (set α)` and `H` a submodule of `α → E`. If the image of any `S ∈ 𝔖`
-by any `u ∈ H` is bounded (in the sense of `bornology.is_vonN_bounded`), then `H`, equipped with
-the topology of `𝔖`-convergence, is a TVS.
+/-- Let `E` be a TVS, `𝔖 : set (set α)` and `H` a submodule of `α →ᵤ[𝔖] E`. If the image of any
+`S ∈ 𝔖` by any `u ∈ H` is bounded (in the sense of `bornology.is_vonN_bounded`), then `H`,
+equipped with the topology of `𝔖`-convergence, is a TVS.
 
 If you have a hard time using this lemma, try the one above instead. -/
-theorem UniformConvergenceOn.has_continuous_smul_submodule_of_image_bounded (h𝔖₁ : 𝔖.Nonempty)
-    (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) (H : Submodule 𝕜 (α → E)) (h : ∀ u ∈ H, ∀ s ∈ 𝔖, Bornology.IsVonNBounded 𝕜 (u '' s)) :
-    @HasContinuousSmul 𝕜 H _ _ ((UniformConvergenceOn.topologicalSpace α E 𝔖).induced (coe : H → α → E)) := by
-  letI : UniformSpace (α → E) := UniformConvergenceOn.uniformSpace α E 𝔖
-  haveI : UniformAddGroup (α → E) := UniformConvergenceOn.uniform_add_group
+theorem UniformOnFun.has_continuous_smul_submodule_of_image_bounded (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖)
+    (H : Submodule 𝕜 (α →ᵤ[𝔖] E)) (h : ∀ u ∈ H, ∀ s ∈ 𝔖, Bornology.IsVonNBounded 𝕜 (u '' s)) :
+    @HasContinuousSmul 𝕜 H _ _ ((UniformOnFun.topologicalSpace α E 𝔖).induced (coe : H → α →ᵤ[𝔖] E)) :=
   haveI : TopologicalAddGroup H := topological_add_group_induced (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E)
-  exact
-    UniformConvergenceOn.has_continuous_smul_induced_of_image_bounded 𝕜 α E H h𝔖₁ h𝔖₂
-      (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E) inducing_coe fun ⟨u, hu⟩ => h u hu
+  UniformOnFun.has_continuous_smul_induced_of_image_bounded 𝕜 α E H h𝔖₁ h𝔖₂
+    (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E) inducing_coe fun ⟨u, hu⟩ => h u hu
 #align
-  uniform_convergence_on.has_continuous_smul_submodule_of_image_bounded UniformConvergenceOn.has_continuous_smul_submodule_of_image_bounded
+  uniform_on_fun.has_continuous_smul_submodule_of_image_bounded UniformOnFun.has_continuous_smul_submodule_of_image_bounded
 
 end Module
 

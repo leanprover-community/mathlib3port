@@ -185,7 +185,7 @@ protected noncomputable def equivOfSurjective {α β} (f : α ↪ β) (hf : Surj
   Equiv.ofBijective f ⟨f.Injective, hf⟩
 #align function.embedding.equiv_of_surjective Function.Embedding.equivOfSurjective
 
-/-- There is always an embedding from an empty type. --/
+/-- There is always an embedding from an empty type. -/
 protected def ofIsEmpty {α β} [IsEmpty α] : α ↪ β :=
   ⟨isEmptyElim, isEmptyElim⟩
 #align function.embedding.of_is_empty Function.Embedding.ofIsEmpty

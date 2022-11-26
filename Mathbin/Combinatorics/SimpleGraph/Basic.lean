@@ -544,7 +544,7 @@ def DartAdj (d d' : G.Dart) : Prop :=
 #align simple_graph.dart_adj SimpleGraph.DartAdj
 
 /-- For a given vertex `v`, this is the bijective map from the neighbor set at `v`
-to the darts `d` with `d.fst = v`. --/
+to the darts `d` with `d.fst = v`. -/
 @[simps]
 def dartOfNeighborSet (v : V) (w : G.neighborSet v) : G.Dart :=
   ⟨(v, w), w.property⟩
@@ -1545,7 +1545,7 @@ abbrev toHom : G →g G' :=
   f.toEmbedding.toHom
 #align simple_graph.iso.to_hom SimpleGraph.Iso.toHom
 
-/-- The inverse of a graph isomorphism. --/
+/-- The inverse of a graph isomorphism. -/
 abbrev symm : G' ≃g G :=
   f.symm
 #align simple_graph.iso.symm SimpleGraph.Iso.symm

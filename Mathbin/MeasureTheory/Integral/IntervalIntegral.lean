@@ -2655,7 +2655,7 @@ section Smul
 right-derivative `f'` in `(a, b)`, `g` is continuous on `f '' (a, b)` and integrable on
 `f '' [a, b]`, and `f' x • (g ∘ f) x` is integrable on `[a, b]`,
 then we can substitute `u = f x` to get `∫ x in a..b, f' x • (g ∘ f) x = ∫ u in f a..f b, g u`.
---/
+-/
 theorem integral_comp_smul_deriv''' {f f' : ℝ → ℝ} {g : ℝ → E} (hf : ContinuousOn f [a, b])
     (hff' : ∀ x ∈ ioo (min a b) (max a b), HasDerivWithinAt f (f' x) (ioi x) x)
     (hg_cont : ContinuousOn g (f '' ioo (min a b) (max a b))) (hg1 : IntegrableOn g (f '' [a, b]))

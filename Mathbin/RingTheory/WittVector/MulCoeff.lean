@@ -178,9 +178,9 @@ conv_lhs =>
   apply congr_arg (Add.add _)
   conv_rhs => rw [sum_range_succ]
   -- the rest is equal with proper unfolding and `ring`
-  simp only [rename_monomial, monomial_eq_C_mul_X, map_mul, rename_C, pow_one, rename_X, mvpz]
-  simp only [Int.cast_ofNat, map_pow, eq_int_cast, rename_X, pow_one, tsub_self, pow_zero]
-  ring
+  simp only [rename_monomial, ← C_mul_X_pow_eq_monomial, map_mul, rename_C, pow_one, rename_X]
+  simp only [mvpz, Int.cast_ofNat, map_pow, eq_int_cast, rename_X, pow_one, tsub_self, pow_zero]
+  ring1
 #align witt_vector.mul_poly_of_interest_aux3 WittVector.mul_poly_of_interest_aux3
 
 include hp

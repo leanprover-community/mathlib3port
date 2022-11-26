@@ -3,7 +3,8 @@ Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison, Jakob von Raumer
 -/
-import Mathbin.CategoryTheory.Abelian.Exact
+import Mathbin.Algebra.Homology.QuasiIso
+import Mathbin.CategoryTheory.Abelian.Homology
 import Mathbin.CategoryTheory.Preadditive.ProjectiveResolution
 
 /-!
@@ -23,7 +24,7 @@ open CategoryTheory.Limits
 
 open Opposite
 
-universe v u
+universe v u v' u'
 
 namespace CategoryTheory
 
@@ -102,4 +103,22 @@ instance (priority := 100) : HasProjectiveResolutions C where out Z := by infer_
 end ProjectiveResolutionCat
 
 end CategoryTheory
+
+namespace HomologicalComplex.Hom
+
+variable {C : Type u} [Category.{v} C] [Abelian C]
+
+/-- If `X` is a chain complex of projective objects and we have a quasi-isomorphism `f : X ⟶ Y[0]`,
+then `X` is a projective resolution of `Y.` -/
+def toSingle₀ProjectiveResolution {X : ChainComplex C ℕ} {Y : C} (f : X ⟶ (ChainComplex.single₀ C).obj Y) [QuasiIso f]
+    (H : ∀ n, Projective (X.x n)) : ProjectiveResolutionCat Y where
+  complex := X
+  π := f
+  Projective := H
+  exact₀ := f.to_single₀_exact_d_f_at_zero
+  exact := f.to_single₀_exact_at_succ
+  Epi := f.to_single₀_epi_at_zero
+#align homological_complex.hom.to_single₀_ProjectiveResolution HomologicalComplex.Hom.toSingle₀ProjectiveResolution
+
+end HomologicalComplex.Hom
 

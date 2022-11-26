@@ -6,7 +6,7 @@ Authors: Patrick Massot, Johannes Hölzl
 import Mathbin.Algebra.Ring.Prod
 import Mathbin.RingTheory.Ideal.Quotient
 import Mathbin.RingTheory.Subring.Basic
-import Mathbin.Topology.Algebra.Group
+import Mathbin.Topology.Algebra.Group.Basic
 
 /-!
 

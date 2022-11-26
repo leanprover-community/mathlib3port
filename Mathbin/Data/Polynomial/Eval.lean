@@ -105,7 +105,7 @@ theorem eval₂_smul (g : R →+* S) (p : R[X]) (x : S) {s : R} : eval₂ g x (s
 @[simp]
 theorem eval₂_C_X : eval₂ c x p = p :=
   Polynomial.induction_on' p (fun p q hp hq => by simp [hp, hq]) fun n x => by
-    rw [eval₂_monomial, monomial_eq_smul_X, C_mul']
+    rw [eval₂_monomial, ← smul_X_eq_monomial, C_mul']
 #align polynomial.eval₂_C_X Polynomial.eval₂_C_X
 
 /-- `eval₂_add_monoid_hom (f : R →+* S) (x : S)` is the `add_monoid_hom` from
@@ -493,7 +493,7 @@ theorem comp_eq_sum_left : p.comp q = p.Sum fun e a => c a * q ^ e :=
 
 @[simp]
 theorem comp_X : p.comp x = p := by
-  simp only [comp, eval₂, ← monomial_eq_C_mul_X]
+  simp only [comp, eval₂, C_mul_X_pow_eq_monomial]
   exact sum_monomial_eq _
 #align polynomial.comp_X Polynomial.comp_X
 
@@ -659,7 +659,7 @@ theorem map_X : x.map f = X :=
 @[simp]
 theorem map_monomial {n a} : (monomial n a).map f = monomial n (f a) := by
   dsimp only [map]
-  rw [eval₂_monomial, monomial_eq_C_mul_X]
+  rw [eval₂_monomial, ← C_mul_X_pow_eq_monomial]
   rfl
 #align polynomial.map_monomial Polynomial.map_monomial
 
@@ -733,7 +733,7 @@ theorem map_dvd (f : R →+* S) {x y : R[X]} : x ∣ y → x.map f ∣ y.map f :
 @[simp]
 theorem coeff_map (n : ℕ) : coeff (p.map f) n = f (coeff p n) := by
   rw [map, eval₂, coeff_sum, Sum]
-  conv_rhs => rw [← sum_C_mul_X_eq p, coeff_sum, Sum, RingHom.map_sum]
+  conv_rhs => rw [← sum_C_mul_X_pow_eq p, coeff_sum, Sum, RingHom.map_sum]
   refine' Finset.sum_congr rfl fun x hx => _
   simp [Function.comp, coeff_C_mul_X_pow, f.map_mul]
   split_ifs <;> simp [f.map_zero]

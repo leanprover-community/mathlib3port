@@ -141,6 +141,12 @@ theorem coe_injective : Function.Injective (coe : FiniteMeasure Ω → Measure �
   Subtype.coe_injective
 #align measure_theory.finite_measure.coe_injective MeasureTheory.FiniteMeasure.coe_injective
 
+theorem apply_mono (μ : FiniteMeasure Ω) {s₁ s₂ : Set Ω} (h : s₁ ⊆ s₂) : μ s₁ ≤ μ s₂ := by
+  change ((μ : Measure Ω) s₁).toNnreal ≤ ((μ : Measure Ω) s₂).toNnreal
+  have key : (μ : Measure Ω) s₁ ≤ (μ : Measure Ω) s₂ := (μ : Measure Ω).mono h
+  apply (Ennreal.to_nnreal_le_to_nnreal (measure_ne_top _ s₁) (measure_ne_top _ s₂)).mpr key
+#align measure_theory.finite_measure.apply_mono MeasureTheory.FiniteMeasure.apply_mono
+
 /-- The (total) mass of a finite measure `μ` is `μ univ`, i.e., the cast to `nnreal` of
 `(μ : measure Ω) univ`. -/
 def mass (μ : FiniteMeasure Ω) : ℝ≥0 :=
@@ -174,11 +180,18 @@ theorem mass_nonzero_iff (μ : FiniteMeasure Ω) : μ.mass ≠ 0 ↔ μ ≠ 0 :=
 #align measure_theory.finite_measure.mass_nonzero_iff MeasureTheory.FiniteMeasure.mass_nonzero_iff
 
 @[ext.1]
-theorem extensionality (μ ν : FiniteMeasure Ω) (h : ∀ s : Set Ω, MeasurableSet s → μ s = ν s) : μ = ν := by
+theorem eq_of_forall_measure_apply_eq (μ ν : FiniteMeasure Ω)
+    (h : ∀ s : Set Ω, MeasurableSet s → (μ : Measure Ω) s = (ν : Measure Ω) s) : μ = ν := by
   ext1
   ext1 s s_mble
+  exact h s s_mble
+#align
+  measure_theory.finite_measure.eq_of_forall_measure_apply_eq MeasureTheory.FiniteMeasure.eq_of_forall_measure_apply_eq
+
+theorem eq_of_forall_apply_eq (μ ν : FiniteMeasure Ω) (h : ∀ s : Set Ω, MeasurableSet s → μ s = ν s) : μ = ν := by
+  ext1 s s_mble
   simpa [ennreal_coe_fn_eq_coe_fn_to_measure] using congr_arg (coe : ℝ≥0 → ℝ≥0∞) (h s s_mble)
-#align measure_theory.finite_measure.extensionality MeasureTheory.FiniteMeasure.extensionality
+#align measure_theory.finite_measure.eq_of_forall_apply_eq MeasureTheory.FiniteMeasure.eq_of_forall_apply_eq
 
 instance : Inhabited (FiniteMeasure Ω) :=
   ⟨0⟩
@@ -241,6 +254,40 @@ instance {Ω : Type _} [MeasurableSpace Ω] : Module ℝ≥0 (FiniteMeasure Ω) 
 theorem coe_fn_smul_apply [IsScalarTower R ℝ≥0 ℝ≥0] (c : R) (μ : FiniteMeasure Ω) (s : Set Ω) : (c • μ) s = c • μ s :=
   by simp only [coe_fn_smul, Pi.smul_apply]
 #align measure_theory.finite_measure.coe_fn_smul_apply MeasureTheory.FiniteMeasure.coe_fn_smul_apply
+
+/-- Restrict a finite measure μ to a set A. -/
+def restrict (μ : FiniteMeasure Ω) (A : Set Ω) : FiniteMeasure Ω where
+  val := (μ : Measure Ω).restrict A
+  property := MeasureTheory.isFiniteMeasureRestrict μ A
+#align measure_theory.finite_measure.restrict MeasureTheory.FiniteMeasure.restrict
+
+theorem restrict_measure_eq (μ : FiniteMeasure Ω) (A : Set Ω) :
+    (μ.restrict A : Measure Ω) = (μ : Measure Ω).restrict A :=
+  rfl
+#align measure_theory.finite_measure.restrict_measure_eq MeasureTheory.FiniteMeasure.restrict_measure_eq
+
+theorem restrict_apply_measure (μ : FiniteMeasure Ω) (A : Set Ω) {s : Set Ω} (s_mble : MeasurableSet s) :
+    (μ.restrict A : Measure Ω) s = (μ : Measure Ω) (s ∩ A) :=
+  Measure.restrict_apply s_mble
+#align measure_theory.finite_measure.restrict_apply_measure MeasureTheory.FiniteMeasure.restrict_apply_measure
+
+theorem restrict_apply (μ : FiniteMeasure Ω) (A : Set Ω) {s : Set Ω} (s_mble : MeasurableSet s) :
+    (μ.restrict A) s = μ (s ∩ A) := by
+  apply congr_arg Ennreal.toNnreal
+  exact measure.restrict_apply s_mble
+#align measure_theory.finite_measure.restrict_apply MeasureTheory.FiniteMeasure.restrict_apply
+
+theorem restrict_mass (μ : FiniteMeasure Ω) (A : Set Ω) : (μ.restrict A).mass = μ A := by
+  simp only [mass, restrict_apply μ A MeasurableSet.univ, univ_inter]
+#align measure_theory.finite_measure.restrict_mass MeasureTheory.FiniteMeasure.restrict_mass
+
+theorem restrict_eq_zero_iff (μ : FiniteMeasure Ω) (A : Set Ω) : μ.restrict A = 0 ↔ μ A = 0 := by
+  rw [← mass_zero_iff, restrict_mass]
+#align measure_theory.finite_measure.restrict_eq_zero_iff MeasureTheory.FiniteMeasure.restrict_eq_zero_iff
+
+theorem restrict_nonzero_iff (μ : FiniteMeasure Ω) (A : Set Ω) : μ.restrict A ≠ 0 ↔ μ A ≠ 0 := by
+  rw [← mass_nonzero_iff, restrict_mass]
+#align measure_theory.finite_measure.restrict_nonzero_iff MeasureTheory.FiniteMeasure.restrict_nonzero_iff
 
 variable [TopologicalSpace Ω]
 

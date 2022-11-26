@@ -205,7 +205,7 @@ theorem fg_adjoin_singleton_of_integral (x : A) (hx : IsIntegral R x) :
   rw [AlgHom.map_add, AlgHom.map_mul, hfx, zero_mul, add_zero]
   have : degree (p %ₘ f) ≤ degree f := degree_mod_by_monic_le p hfm
   generalize p %ₘ f = q at this⊢
-  rw [← sum_C_mul_X_eq q, aeval_def, eval₂_sum, sum_def]
+  rw [← sum_C_mul_X_pow_eq q, aeval_def, eval₂_sum, sum_def]
   refine' sum_mem fun k hkq => _
   rw [eval₂_mul, eval₂_C, eval₂_pow, eval₂_X, ← Algebra.smul_def]
   refine' smul_mem _ _ (subset_span _)

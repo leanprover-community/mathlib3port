@@ -329,6 +329,7 @@ theorem Gamma_aux_recurrence2 (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) : gammaAux
 #align complex.Gamma_aux_recurrence2 Complex.Gamma_aux_recurrence2
 
 /-- The `Γ` function (of a complex variable `s`). -/
+@[pp_nodot]
 def gamma (s : ℂ) : ℂ :=
   gammaAux ⌊1 - s.re⌋₊ s
 #align complex.Gamma Complex.gamma

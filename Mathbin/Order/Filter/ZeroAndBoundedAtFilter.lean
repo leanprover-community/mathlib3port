@@ -65,17 +65,17 @@ def BoundedAtFilter [HasNorm β] [One (α → β)] (l : Filter α) (f : α → �
   Asymptotics.IsO l f (1 : α → β)
 #align filter.bounded_at_filter Filter.BoundedAtFilter
 
-theorem zero_at_filter_is_bounded_at_filter [NormedField β] (l : Filter α) (f : α → β) (hf : ZeroAtFilter l f) :
+theorem ZeroAtFilter.bounded_at_filter [NormedField β] {l : Filter α} {f : α → β} (hf : ZeroAtFilter l f) :
     BoundedAtFilter l f :=
   Asymptotics.is_O_of_div_tendsto_nhds (by simp) _
     (by
       convert hf
       ext1
       simp)
-#align filter.zero_at_filter_is_bounded_at_filter Filter.zero_at_filter_is_bounded_at_filter
+#align filter.zero_at_filter.bounded_at_filter Filter.ZeroAtFilter.bounded_at_filter
 
 theorem zero_is_bounded_at_filter [NormedField β] (l : Filter α) : BoundedAtFilter l (0 : α → β) :=
-  (zero_at_filter_is_bounded_at_filter l _) (zero_is_zero_at_filter l)
+  (zero_is_zero_at_filter l).BoundedAtFilter
 #align filter.zero_is_bounded_at_filter Filter.zero_is_bounded_at_filter
 
 /-- The submodule of functions that are bounded along a filter `l`. -/

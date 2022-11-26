@@ -15,37 +15,49 @@ Lemmas about the type of natural numbers with a bottom element adjoined.
 
 namespace Nat
 
-theorem WithBot.add_eq_zero_iff : ∀ {n m : WithBot ℕ}, n + m = 0 ↔ n = 0 ∧ m = 0
-  | none, m => iff_of_false (by decide) fun h => absurd h.1 (by decide)
-  | n, none => iff_of_false (by cases n <;> exact by decide) fun h => absurd h.2 (by decide)
-  | some n, some m =>
-    show (n + m : WithBot ℕ) = (0 : ℕ) ↔ (n : WithBot ℕ) = (0 : ℕ) ∧ (m : WithBot ℕ) = (0 : ℕ) by
-      rw [← WithBot.coe_add, WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe,
-        add_eq_zero_iff' (Nat.zero_le _) (Nat.zero_le _)]
+namespace WithBot
+
+theorem add_eq_zero_iff {n m : WithBot ℕ} : n + m = 0 ↔ n = 0 ∧ m = 0 := by
+  rcases n, m with ⟨_ | _, _ | _⟩
+  any_goals tauto
+  repeat' erw [WithBot.coe_eq_coe]
+  exact add_eq_zero_iff
 #align nat.with_bot.add_eq_zero_iff Nat.WithBot.add_eq_zero_iff
 
-theorem WithBot.add_eq_one_iff : ∀ {n m : WithBot ℕ}, n + m = 1 ↔ n = 0 ∧ m = 1 ∨ n = 1 ∧ m = 0
-  | none, none => by decide
-  | none, some m => by decide
-  | some n, none =>
-    iff_of_false (by decide) fun h => h.elim (fun h => absurd h.2 (by decide)) fun h => absurd h.2 (by decide)
-  | some n, some 0 => by erw [WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe] <;> simp
-  | some n, some (m + 1) => by
-    erw [WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe, WithBot.coe_eq_coe] <;>
-      simp [Nat.add_succ, Nat.succ_inj', Nat.succ_ne_zero]
+theorem add_eq_one_iff {n m : WithBot ℕ} : n + m = 1 ↔ n = 0 ∧ m = 1 ∨ n = 1 ∧ m = 0 := by
+  rcases n, m with ⟨_ | _, _ | _⟩
+  any_goals tauto
+  repeat' erw [WithBot.coe_eq_coe]
+  exact add_eq_one_iff
 #align nat.with_bot.add_eq_one_iff Nat.WithBot.add_eq_one_iff
 
+theorem add_eq_two_iff {n m : WithBot ℕ} : n + m = 2 ↔ n = 0 ∧ m = 2 ∨ n = 1 ∧ m = 1 ∨ n = 2 ∧ m = 0 := by
+  rcases n, m with ⟨_ | _, _ | _⟩
+  any_goals tauto
+  repeat' erw [WithBot.coe_eq_coe]
+  exact add_eq_two_iff
+#align nat.with_bot.add_eq_two_iff Nat.WithBot.add_eq_two_iff
+
+theorem add_eq_three_iff {n m : WithBot ℕ} :
+    n + m = 3 ↔ n = 0 ∧ m = 3 ∨ n = 1 ∧ m = 2 ∨ n = 2 ∧ m = 1 ∨ n = 3 ∧ m = 0 := by
+  rcases n, m with ⟨_ | _, _ | _⟩
+  any_goals tauto
+  repeat' erw [WithBot.coe_eq_coe]
+  exact add_eq_three_iff
+#align nat.with_bot.add_eq_three_iff Nat.WithBot.add_eq_three_iff
+
 @[simp]
-theorem WithBot.coe_nonneg {n : ℕ} : 0 ≤ (n : WithBot ℕ) := by
-  rw [← WithBot.coe_zero, WithBot.coe_le_coe] <;> exact Nat.zero_le _
+theorem coe_nonneg {n : ℕ} : 0 ≤ (n : WithBot ℕ) := by
+  rw [← WithBot.coe_zero, WithBot.coe_le_coe]
+  exact Nat.zero_le _
 #align nat.with_bot.coe_nonneg Nat.WithBot.coe_nonneg
 
 @[simp]
-theorem WithBot.lt_zero_iff (n : WithBot ℕ) : n < 0 ↔ n = ⊥ :=
-  Option.casesOn n (by decide) fun n => iff_of_false (by simp [WithBot.some_eq_coe]) fun h => Option.noConfusion h
+theorem lt_zero_iff (n : WithBot ℕ) : n < 0 ↔ n = ⊥ :=
+  (Option.casesOn n (by decide)) fun n => iff_of_false (by simp [WithBot.some_eq_coe]) fun h => Option.noConfusion h
 #align nat.with_bot.lt_zero_iff Nat.WithBot.lt_zero_iff
 
-theorem WithBot.one_le_iff_zero_lt {x : WithBot ℕ} : 1 ≤ x ↔ 0 < x := by
+theorem one_le_iff_zero_lt {x : WithBot ℕ} : 1 ≤ x ↔ 0 < x := by
   refine' ⟨fun h => lt_of_lt_of_le (with_bot.coe_lt_coe.mpr zero_lt_one) h, fun h => _⟩
   induction x using WithBot.recBotCoe
   · exact (not_lt_bot h).elim
@@ -54,9 +66,11 @@ theorem WithBot.one_le_iff_zero_lt {x : WithBot ℕ} : 1 ≤ x ↔ 0 < x := by
     
 #align nat.with_bot.one_le_iff_zero_lt Nat.WithBot.one_le_iff_zero_lt
 
-theorem WithBot.lt_one_iff_le_zero {x : WithBot ℕ} : x < 1 ↔ x ≤ 0 :=
-  not_iff_not.mp (by simpa using with_bot.one_le_iff_zero_lt)
+theorem lt_one_iff_le_zero {x : WithBot ℕ} : x < 1 ↔ x ≤ 0 :=
+  not_iff_not.mp (by simpa using one_le_iff_zero_lt)
 #align nat.with_bot.lt_one_iff_le_zero Nat.WithBot.lt_one_iff_le_zero
+
+end WithBot
 
 end Nat
 

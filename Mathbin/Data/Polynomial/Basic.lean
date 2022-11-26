@@ -658,15 +658,13 @@ theorem coeff_C_zero : coeff (c a) 0 = a :=
 theorem coeff_C_ne_zero (h : n ≠ 0) : (c a).coeff n = 0 := by rw [coeff_C, if_neg h]
 #align polynomial.coeff_C_ne_zero Polynomial.coeff_C_ne_zero
 
-theorem monomial_eq_C_mul_X : ∀ {n}, monomial n a = c a * X ^ n
-  | 0 => (mul_one _).symm
-  | n + 1 =>
-    calc
-      monomial (n + 1) a = monomial n a * X := by rw [X, monomial_mul_monomial, mul_one]
-      _ = c a * X ^ n * X := by rw [monomial_eq_C_mul_X]
-      _ = c a * X ^ (n + 1) := by simp only [pow_add, mul_assoc, pow_one]
-      
-#align polynomial.monomial_eq_C_mul_X Polynomial.monomial_eq_C_mul_X
+theorem C_mul_X_pow_eq_monomial : ∀ {n : ℕ}, c a * X ^ n = monomial n a
+  | 0 => mul_one _
+  | n + 1 => by rw [pow_succ', ← mul_assoc, C_mul_X_pow_eq_monomial, X, monomial_mul_monomial, mul_one]
+#align polynomial.C_mul_X_pow_eq_monomial Polynomial.C_mul_X_pow_eq_monomial
+
+theorem C_mul_X_eq_monomial : c a * X = monomial 1 a := by rw [← C_mul_X_pow_eq_monomial, pow_one]
+#align polynomial.C_mul_X_eq_monomial Polynomial.C_mul_X_eq_monomial
 
 theorem C_injective : Injective (c : R → R[X]) :=
   monomial_injective 0
@@ -751,13 +749,20 @@ theorem support_monomial' (n) (a : R) : (monomial n a).support ⊆ singleton n :
   exact Finsupp.support_single_subset
 #align polynomial.support_monomial' Polynomial.support_monomial'
 
+theorem support_C_mul_X {c : R} (h : c ≠ 0) : (c c * X).support = singleton 1 := by
+  rw [C_mul_X_eq_monomial, support_monomial 1 h]
+#align polynomial.support_C_mul_X Polynomial.support_C_mul_X
+
+theorem support_C_mul_X' (c : R) : (c c * X).support ⊆ singleton 1 := by
+  simpa only [C_mul_X_eq_monomial] using support_monomial' 1 c
+#align polynomial.support_C_mul_X' Polynomial.support_C_mul_X'
+
 theorem support_C_mul_X_pow (n : ℕ) {c : R} (h : c ≠ 0) : (c c * X ^ n).support = singleton n := by
-  rw [← monomial_eq_C_mul_X, support_monomial n h]
+  rw [C_mul_X_pow_eq_monomial, support_monomial n h]
 #align polynomial.support_C_mul_X_pow Polynomial.support_C_mul_X_pow
 
 theorem support_C_mul_X_pow' (n : ℕ) (c : R) : (c c * X ^ n).support ⊆ singleton n := by
-  rw [← monomial_eq_C_mul_X]
-  exact support_monomial' n c
+  simpa only [C_mul_X_pow_eq_monomial] using support_monomial' n c
 #align polynomial.support_C_mul_X_pow' Polynomial.support_C_mul_X_pow'
 
 open Finset
@@ -788,13 +793,9 @@ theorem X_pow_eq_monomial (n) : X ^ n = monomial n (1 : R) := by
     
 #align polynomial.X_pow_eq_monomial Polynomial.X_pow_eq_monomial
 
-theorem monomial_eq_smul_X {n} : monomial n (a : R) = a • X ^ n :=
-  calc
-    monomial n a = monomial n (a * 1) := by simp
-    _ = a • monomial n 1 := by rw [smul_monomial, smul_eq_mul]
-    _ = a • X ^ n := by rw [X_pow_eq_monomial]
-    
-#align polynomial.monomial_eq_smul_X Polynomial.monomial_eq_smul_X
+theorem smul_X_eq_monomial {n} : a • X ^ n = monomial n (a : R) := by
+  rw [X_pow_eq_monomial, smul_monomial, smul_eq_mul, mul_one]
+#align polynomial.smul_X_eq_monomial Polynomial.smul_X_eq_monomial
 
 theorem support_X_pow (H : ¬(1 : R) = 0) (n : ℕ) : (X ^ n : R[X]).support = singleton n := by
   convert support_monomial n H
@@ -815,7 +816,7 @@ theorem binomial_eq_binomial {k l m n : ℕ} {u v : R} (hu : u ≠ 0) (hv : v �
     c u * X ^ k + c v * X ^ l = c u * X ^ m + c v * X ^ n ↔
       k = m ∧ l = n ∨ u = v ∧ k = n ∧ l = m ∨ u + v = 0 ∧ k = l ∧ m = n :=
   by
-  simp_rw [← monomial_eq_C_mul_X, ← to_finsupp_inj, to_finsupp_add, to_finsupp_monomial]
+  simp_rw [C_mul_X_pow_eq_monomial, ← to_finsupp_inj, to_finsupp_add, to_finsupp_monomial]
   exact Finsupp.single_add_single_eq_single_add_single hu hv
 #align polynomial.binomial_eq_binomial Polynomial.binomial_eq_binomial
 
@@ -901,9 +902,9 @@ theorem sum_monomial_eq : ∀ p : R[X], (p.Sum fun n a => monomial n a) = p
   | ⟨p⟩ => (of_finsupp_sum _ _).symm.trans (congr_arg _ <| Finsupp.sum_single _)
 #align polynomial.sum_monomial_eq Polynomial.sum_monomial_eq
 
-theorem sum_C_mul_X_eq (p : R[X]) : (p.Sum fun n a => c a * X ^ n) = p := by
-  simp_rw [← monomial_eq_C_mul_X, sum_monomial_eq]
-#align polynomial.sum_C_mul_X_eq Polynomial.sum_C_mul_X_eq
+theorem sum_C_mul_X_pow_eq (p : R[X]) : (p.Sum fun n a => c a * X ^ n) = p := by
+  simp_rw [C_mul_X_pow_eq_monomial, sum_monomial_eq]
+#align polynomial.sum_C_mul_X_pow_eq Polynomial.sum_C_mul_X_pow_eq
 
 /-- `erase p n` is the polynomial `p` in which the `X^n` term has been erased. -/
 irreducible_def erase (n : ℕ) : R[X] → R[X]

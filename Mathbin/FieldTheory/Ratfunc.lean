@@ -666,7 +666,7 @@ theorem coe_map_ring_hom_eq_coe_map [RingHomClass F R[X] S[X]] (φ : F) (hφ : R
 -- TODO: Generalize to `fun_like` classes,
 /-- Lift an monoid with zero homomorphism `R[X] →*₀ G₀` to a `ratfunc R →*₀ G₀`
 on the condition that `φ` maps non zero divisors to non zero divisors,
-by mapping both the numerator and denominator and quotienting them. --/
+by mapping both the numerator and denominator and quotienting them. -/
 def liftMonoidWithZeroHom (φ : R[X] →*₀ G₀) (hφ : R[X]⁰ ≤ G₀⁰.comap φ) : Ratfunc R →*₀ G₀ where
   toFun f :=
     (Ratfunc.liftOn f fun p q => φ p / φ q) fun p q p' q' hq hq' h => by
@@ -719,7 +719,7 @@ theorem lift_monoid_with_zero_hom_injective [Nontrivial R] (φ : R[X] →*₀ G�
 #align ratfunc.lift_monoid_with_zero_hom_injective Ratfunc.lift_monoid_with_zero_hom_injective
 
 /-- Lift an injective ring homomorphism `R[X] →+* L` to a `ratfunc R →+* L`
-by mapping both the numerator and denominator and quotienting them. --/
+by mapping both the numerator and denominator and quotienting them. -/
 def liftRingHom (φ : R[X] →+* L) (hφ : R[X]⁰ ≤ L⁰.comap φ) : Ratfunc R →+* L :=
   { liftMonoidWithZeroHom φ.toMonoidWithZeroHom hφ with
     map_add' := fun x y => by
@@ -907,7 +907,7 @@ theorem coe_map_alg_hom_eq_coe_map (φ : K[X] →ₐ[S] R[X]) (hφ : K[X]⁰ ≤
 #align ratfunc.coe_map_alg_hom_eq_coe_map Ratfunc.coe_map_alg_hom_eq_coe_map
 
 /-- Lift an injective algebra homomorphism `K[X] →ₐ[S] L` to a `ratfunc K →ₐ[S] L`
-by mapping both the numerator and denominator and quotienting them. --/
+by mapping both the numerator and denominator and quotienting them. -/
 def liftAlgHom : Ratfunc K →ₐ[S] L :=
   { liftRingHom φ.toRingHom hφ with
     commutes' := fun r => by

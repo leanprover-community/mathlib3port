@@ -434,7 +434,7 @@ depend on the finite order we consider).
 For instance, a real function which is `C^m` on `(-1/m, 1/m)` for each natural `m`, but not
 better, is `C^∞` at `0` within `univ`.
 -/
-def ContDiffWithinAt (n : ℕ∞) (f : E → F) (s : Set E) (x : E) :=
+def ContDiffWithinAt (n : ℕ∞) (f : E → F) (s : Set E) (x : E) : Prop :=
   ∀ m : ℕ, (m : ℕ∞) ≤ n → ∃ u ∈ 𝓝[insert x s] x, ∃ p : E → FormalMultilinearSeries 𝕜 E F, HasFtaylorSeriesUpToOn m f p u
 #align cont_diff_within_at ContDiffWithinAt
 
@@ -653,7 +653,7 @@ admits continuous derivatives up to order `n` on a neighborhood of `x` in `s`.
 For `n = ∞`, we only require that this holds up to any finite order (where the neighborhood may
 depend on the finite order we consider).
 -/
-def ContDiffOn (n : ℕ∞) (f : E → F) (s : Set E) :=
+def ContDiffOn (n : ℕ∞) (f : E → F) (s : Set E) : Prop :=
   ∀ x ∈ s, ContDiffWithinAt 𝕜 n f s x
 #align cont_diff_on ContDiffOn
 
@@ -1201,47 +1201,6 @@ theorem ContDiffOn.continuous_on_fderiv_of_open (h : ContDiffOn 𝕜 n f s) (hs 
   ((cont_diff_on_succ_iff_fderiv_of_open hs).1 (h.of_le hn)).2.ContinuousOn
 #align cont_diff_on.continuous_on_fderiv_of_open ContDiffOn.continuous_on_fderiv_of_open
 
-theorem ContDiffWithinAt.fderivWithin' (hf : ContDiffWithinAt 𝕜 n f s x)
-    (hs : ∀ᶠ y in 𝓝[insert x s] x, UniqueDiffWithinAt 𝕜 s y) (hmn : m + 1 ≤ n) :
-    ContDiffWithinAt 𝕜 m (fderivWithin 𝕜 f s) s x := by
-  have : ∀ k : ℕ, (k + 1 : ℕ∞) ≤ n → ContDiffWithinAt 𝕜 k (fderivWithin 𝕜 f s) s x := by
-    intro k hkn
-    obtain ⟨v, hv, -, f', hvf', hf'⟩ := cont_diff_within_at_succ_iff_has_fderiv_within_at'.mp (hf.of_le hkn)
-    apply hf'.congr_of_eventually_eq_insert
-    filter_upwards [hv, hs]
-    exact fun y hy h2y => (hvf' y hy).fderivWithin h2y
-  induction m using WithTop.recTopCoe
-  · obtain rfl := eq_top_iff.mpr hmn
-    rw [cont_diff_within_at_top]
-    exact fun m => this m le_top
-    
-  exact this m hmn
-#align cont_diff_within_at.fderiv_within' ContDiffWithinAt.fderivWithin'
-
-theorem ContDiffWithinAt.fderivWithin (hf : ContDiffWithinAt 𝕜 n f s x) (hs : UniqueDiffOn 𝕜 s) (hmn : (m + 1 : ℕ∞) ≤ n)
-    (hxs : x ∈ s) : ContDiffWithinAt 𝕜 m (fderivWithin 𝕜 f s) s x :=
-  hf.fderivWithin'
-    (by
-      rw [insert_eq_of_mem hxs]
-      exact eventually_of_mem self_mem_nhds_within hs)
-    hmn
-#align cont_diff_within_at.fderiv_within ContDiffWithinAt.fderivWithin
-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/-- If a function is at least `C^1`, its bundled derivative (mapping `(x, v)` to `Df(x) v`) is
-continuous. -/
-theorem ContDiffOn.continuous_on_fderiv_within_apply (h : ContDiffOn 𝕜 n f s) (hs : UniqueDiffOn 𝕜 s) (hn : 1 ≤ n) :
-    ContinuousOn (fun p : E × E => (fderivWithin 𝕜 f s p.1 : E → F) p.2) (s ×ˢ univ) := by
-  have A : Continuous fun q : (E →L[𝕜] F) × E => q.1 q.2 := is_bounded_bilinear_map_apply.continuous
-  have B : ContinuousOn (fun p : E × E => (fderivWithin 𝕜 f s p.1, p.2)) (s ×ˢ univ) := by
-    apply ContinuousOn.prod _ continuous_snd.continuous_on
-    exact
-      ContinuousOn.comp (h.continuous_on_fderiv_within hs hn) continuous_fst.continuous_on
-        (prod_subset_preimage_fst _ _)
-  exact A.comp_continuous_on B
-#align cont_diff_on.continuous_on_fderiv_within_apply ContDiffOn.continuous_on_fderiv_within_apply
-
 /-! ### Functions with a Taylor series on the whole space -/
 
 
@@ -1345,7 +1304,7 @@ variable (𝕜)
 /-- A function is continuously differentiable up to `n` at a point `x` if, for any integer `k ≤ n`,
 there is a neighborhood of `x` where `f` admits derivatives up to order `n`, which are continuous.
 -/
-def ContDiffAt (n : ℕ∞) (f : E → F) (x : E) :=
+def ContDiffAt (n : ℕ∞) (f : E → F) (x : E) : Prop :=
   ContDiffWithinAt 𝕜 n f univ x
 #align cont_diff_at ContDiffAt
 
@@ -1420,7 +1379,7 @@ variable (𝕜)
 order `n`, which are continuous. Contrary to the case of definitions in domains (where derivatives
 might not be unique) we do not need to localize the definition in space or time.
 -/
-def ContDiff (n : ℕ∞) (f : E → F) :=
+def ContDiff (n : ℕ∞) (f : E → F) : Prop :=
   ∃ p : E → FormalMultilinearSeries 𝕜 E F, HasFtaylorSeriesUpTo n f p
 #align cont_diff ContDiff
 
@@ -2397,6 +2356,20 @@ theorem ContDiff.compContDiffOn₃ {g : E₁ × E₂ × E₃ → G} {f₁ : F �
 
 end NAry
 
+section SpecificBilinearMaps
+
+theorem ContDiff.clmComp {g : X → F →L[𝕜] G} {f : X → E →L[𝕜] F} (hg : ContDiff 𝕜 n g) (hf : ContDiff 𝕜 n f) :
+    ContDiff 𝕜 n fun x => (g x).comp (f x) :=
+  isBoundedBilinearMapComp.ContDiff.comp₂ hg hf
+#align cont_diff.clm_comp ContDiff.clmComp
+
+theorem ContDiffOn.clmComp {g : X → F →L[𝕜] G} {f : X → E →L[𝕜] F} {s : Set X} (hg : ContDiffOn 𝕜 n g s)
+    (hf : ContDiffOn 𝕜 n f s) : ContDiffOn 𝕜 n (fun x => (g x).comp (f x)) s :=
+  isBoundedBilinearMapComp.ContDiff.compContDiffOn₂ hg hf
+#align cont_diff_on.clm_comp ContDiffOn.clmComp
+
+end SpecificBilinearMaps
+
 /-- The natural equivalence `(E × F) × G ≃ E × (F × G)` is smooth.
 
 Warning: if you think you need this lemma, it is likely that you can simplify your proof by
@@ -2418,6 +2391,32 @@ theorem contDiffProdAssocSymm : ContDiff 𝕜 ⊤ <| (Equiv.prodAssoc E F G).sym
 /-! ### Bundled derivatives -/
 
 
+theorem ContDiffWithinAt.fderivWithin' (hf : ContDiffWithinAt 𝕜 n f s x)
+    (hs : ∀ᶠ y in 𝓝[insert x s] x, UniqueDiffWithinAt 𝕜 s y) (hmn : m + 1 ≤ n) :
+    ContDiffWithinAt 𝕜 m (fderivWithin 𝕜 f s) s x := by
+  have : ∀ k : ℕ, (k + 1 : ℕ∞) ≤ n → ContDiffWithinAt 𝕜 k (fderivWithin 𝕜 f s) s x := by
+    intro k hkn
+    obtain ⟨v, hv, -, f', hvf', hf'⟩ := cont_diff_within_at_succ_iff_has_fderiv_within_at'.mp (hf.of_le hkn)
+    apply hf'.congr_of_eventually_eq_insert
+    filter_upwards [hv, hs]
+    exact fun y hy h2y => (hvf' y hy).fderivWithin h2y
+  induction m using WithTop.recTopCoe
+  · obtain rfl := eq_top_iff.mpr hmn
+    rw [cont_diff_within_at_top]
+    exact fun m => this m le_top
+    
+  exact this m hmn
+#align cont_diff_within_at.fderiv_within' ContDiffWithinAt.fderivWithin'
+
+theorem ContDiffWithinAt.fderivWithin (hf : ContDiffWithinAt 𝕜 n f s x) (hs : UniqueDiffOn 𝕜 s) (hmn : (m + 1 : ℕ∞) ≤ n)
+    (hxs : x ∈ s) : ContDiffWithinAt 𝕜 m (fderivWithin 𝕜 f s) s x :=
+  hf.fderivWithin'
+    (by
+      rw [insert_eq_of_mem hxs]
+      exact eventually_of_mem self_mem_nhds_within hs)
+    hmn
+#align cont_diff_within_at.fderiv_within ContDiffWithinAt.fderivWithin
+
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -2432,6 +2431,14 @@ theorem contDiffOnFderivWithinApply {m n : WithTop ℕ} {s : Set E} {f : E → F
     (I.comp J (prod_subset_preimage_fst _ _)).Prod IsBoundedLinearMap.snd.ContDiff.ContDiffOn
   A.compContDiffOn B
 #align cont_diff_on_fderiv_within_apply contDiffOnFderivWithinApply
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/-- If a function is at least `C^1`, its bundled derivative (mapping `(x, v)` to `Df(x) v`) is
+continuous. -/
+theorem ContDiffOn.continuous_on_fderiv_within_apply (hf : ContDiffOn 𝕜 n f s) (hs : UniqueDiffOn 𝕜 s) (hn : 1 ≤ n) :
+    ContinuousOn (fun p : E × E => (fderivWithin 𝕜 f s p.1 : E → F) p.2) (s ×ˢ univ) :=
+  (contDiffOnFderivWithinApply hf hs <| by rwa [zero_add]).ContinuousOn
+#align cont_diff_on.continuous_on_fderiv_within_apply ContDiffOn.continuous_on_fderiv_within_apply
 
 /-- The bundled derivative of a `C^{n+1}` function is `C^n`. -/
 theorem ContDiff.contDiffFderivApply {f : E → F} (hf : ContDiff 𝕜 n f) (hmn : m + 1 ≤ n) :
@@ -2994,16 +3001,6 @@ theorem contDiffProdMkRight (e₀ : E) : ContDiff 𝕜 n fun f : F => (e₀, f) 
 
 end Prod_map
 
-theorem ContDiff.clmComp {g : X → F →L[𝕜] G} {f : X → E →L[𝕜] F} (hg : ContDiff 𝕜 n g) (hf : ContDiff 𝕜 n f) :
-    ContDiff 𝕜 n fun x => (g x).comp (f x) :=
-  isBoundedBilinearMapComp.ContDiff.comp₂ hg hf
-#align cont_diff.clm_comp ContDiff.clmComp
-
-theorem ContDiffOn.clmComp {g : X → F →L[𝕜] G} {f : X → E →L[𝕜] F} {s : Set X} (hg : ContDiffOn 𝕜 n g s)
-    (hf : ContDiffOn 𝕜 n f s) : ContDiffOn 𝕜 n (fun x => (g x).comp (f x)) s :=
-  isBoundedBilinearMapComp.ContDiff.compContDiffOn₂ hg hf
-#align cont_diff_on.clm_comp ContDiffOn.clmComp
-
 /-! ### Inversion in a complete normed algebra -/
 
 
@@ -3254,9 +3251,9 @@ theorem cont_diff_on_clm_apply {n : ℕ∞} {f : E → F →L[𝕜] G} {s : Set 
   exact e₂.symm.cont_diff.comp_cont_diff_on (cont_diff_on_pi.mpr fun i => h _)
 #align cont_diff_on_clm_apply cont_diff_on_clm_apply
 
-theorem cont_diff_clm_apply {n : ℕ∞} {f : E → F →L[𝕜] G} [FiniteDimensional 𝕜 F] :
+theorem cont_diff_clm_apply_iff {n : ℕ∞} {f : E → F →L[𝕜] G} [FiniteDimensional 𝕜 F] :
     ContDiff 𝕜 n f ↔ ∀ y, ContDiff 𝕜 n fun x => f x y := by simp_rw [← cont_diff_on_univ, cont_diff_on_clm_apply]
-#align cont_diff_clm_apply cont_diff_clm_apply
+#align cont_diff_clm_apply_iff cont_diff_clm_apply_iff
 
 /-- This is a useful lemma to prove that a certain operation preserves functions being `C^n`.
 When you do induction on `n`, this gives a useful characterization of a function being `C^(n+1)`,
@@ -3269,7 +3266,7 @@ often requires an inconvenient need to generalize `F`, which results in universe
 This lemma avoids these universe issues, but only applies for finite dimensional `E`. -/
 theorem cont_diff_succ_iff_fderiv_apply [FiniteDimensional 𝕜 E] {n : ℕ} {f : E → F} :
     ContDiff 𝕜 (n + 1 : ℕ) f ↔ Differentiable 𝕜 f ∧ ∀ y, ContDiff 𝕜 n fun x => fderiv 𝕜 f x y := by
-  rw [cont_diff_succ_iff_fderiv, cont_diff_clm_apply]
+  rw [cont_diff_succ_iff_fderiv, cont_diff_clm_apply_iff]
 #align cont_diff_succ_iff_fderiv_apply cont_diff_succ_iff_fderiv_apply
 
 theorem contDiffOnSuccOfFderivApply [FiniteDimensional 𝕜 E] {n : ℕ} {f : E → F} {s : Set E}

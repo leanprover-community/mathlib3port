@@ -19,7 +19,8 @@ import Mathbin.Algebra.BigOperators.Fin
 import Mathbin.Algebra.BigOperators.Finprod
 import Mathbin.Algebra.BigOperators.Finsupp
 import Mathbin.Algebra.BigOperators.Intervals
-import Mathbin.Algebra.BigOperators.Multiset
+import Mathbin.Algebra.BigOperators.Multiset.Basic
+import Mathbin.Algebra.BigOperators.Multiset.Lemmas
 import Mathbin.Algebra.BigOperators.NatAntidiagonal
 import Mathbin.Algebra.BigOperators.NormNum
 import Mathbin.Algebra.BigOperators.Option
@@ -2163,6 +2164,7 @@ import Mathbin.NumberTheory.LucasPrimality
 import Mathbin.NumberTheory.Modular
 import Mathbin.NumberTheory.ModularForms.CongruenceSubgroups
 import Mathbin.NumberTheory.ModularForms.SlashActions
+import Mathbin.NumberTheory.ModularForms.SlashInvariantForms
 import Mathbin.NumberTheory.Multiplicity
 import Mathbin.NumberTheory.NumberField.Basic
 import Mathbin.NumberTheory.NumberField.ClassNumber
@@ -2712,7 +2714,8 @@ import Mathbin.Topology.Algebra.ContinuousAffineMap
 import Mathbin.Topology.Algebra.ContinuousMonoidHom
 import Mathbin.Topology.Algebra.Field
 import Mathbin.Topology.Algebra.FilterBasis
-import Mathbin.Topology.Algebra.Group
+import Mathbin.Topology.Algebra.Group.Basic
+import Mathbin.Topology.Algebra.Group.Compact
 import Mathbin.Topology.Algebra.GroupCompletion
 import Mathbin.Topology.Algebra.GroupWithZero
 import Mathbin.Topology.Algebra.InfiniteSum

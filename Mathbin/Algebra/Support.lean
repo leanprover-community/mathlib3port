@@ -75,17 +75,8 @@ theorem mul_support_subset_iff' {f : α → M} {s : Set α} : mulSupport f ⊆ s
 @[to_additive]
 theorem mul_support_eq_iff {f : α → M} {s : Set α} : mulSupport f = s ↔ (∀ x, x ∈ s → f x ≠ 1) ∧ ∀ x, x ∉ s → f x = 1 :=
   by
-  constructor
-  · rintro rfl
-    simp
-    
-  · rintro ⟨hs, hsc⟩
-    refine' subset.antisymm _ hs
-    simp only [mul_support_subset_iff, Ne.def]
-    intro x hx
-    contrapose! hx
-    exact hsc x hx
-    
+  simp only [Set.ext_iff, mem_mul_support, Ne.def, imp_not_comm, ← forall_and, ← iff_def, ← xor_iff_not_iff', ←
+    xor_iff_iff_not]
 #align function.mul_support_eq_iff Function.mul_support_eq_iff
 
 @[to_additive]
@@ -111,13 +102,8 @@ theorem mul_support_nonempty_iff {f : α → M} : (mulSupport f).Nonempty ↔ f 
 
 @[to_additive]
 theorem range_subset_insert_image_mul_support (f : α → M) : range f ⊆ insert 1 (f '' mulSupport f) := by
-  intro y hy
-  rcases eq_or_ne y 1 with (rfl | h2y)
-  · exact mem_insert _ _
-    
-  · obtain ⟨x, rfl⟩ := hy
-    refine' mem_insert_of_mem _ ⟨x, h2y, rfl⟩
-    
+  simpa only [range_subset_iff, mem_insert_iff, or_iff_not_imp_left] using fun x (hx : x ∈ mul_support f) =>
+    mem_image_of_mem f hx
 #align function.range_subset_insert_image_mul_support Function.range_subset_insert_image_mul_support
 
 @[simp, to_additive]
@@ -139,7 +125,7 @@ theorem mul_support_const {c : M} (hc : c ≠ 1) : (mulSupport fun x : α => c) 
 @[to_additive]
 theorem mul_support_binop_subset (op : M → N → P) (op1 : op 1 1 = 1) (f : α → M) (g : α → N) :
     (mulSupport fun x => op (f x) (g x)) ⊆ mulSupport f ∪ mulSupport g := fun x hx =>
-  Classical.by_cases (fun hf : f x = 1 => Or.inr fun hg => hx <| by simp only [hf, hg, op1]) Or.inl
+  not_or_of_imp fun hf hg => hx <| by simp only [hf, hg, op1]
 #align function.mul_support_binop_subset Function.mul_support_binop_subset
 
 @[to_additive]
@@ -235,7 +221,7 @@ theorem mul_support_pow [Monoid M] (f : α → M) (n : ℕ) : (mulSupport fun x 
   induction' n with n hfn
   · simpa only [pow_zero, mul_support_one] using empty_subset _
     
-  · simpa only [pow_succ] using subset_trans (mul_support_mul f _) (union_subset (subset.refl _) hfn)
+  · simpa only [pow_succ] using (mul_support_mul f _).trans (union_subset subset.rfl hfn)
     
 #align function.mul_support_pow Function.mul_support_pow
 
@@ -368,38 +354,34 @@ end Set
 
 namespace Pi
 
-variable {A : Type _} {B : Type _} [DecidableEq A] [Zero B] {a : A} {b : B}
+variable {A : Type _} {B : Type _} [DecidableEq A] [One B] {a : A} {b : B}
 
-theorem support_single_zero : Function.support (Pi.single a (0 : B)) = ∅ := by simp
-#align pi.support_single_zero Pi.support_single_zero
+open Function
 
-@[simp]
-theorem support_single_of_ne (h : b ≠ 0) : Function.support (Pi.single a b) = {a} := by
-  ext
-  simp only [mem_singleton_iff, Ne.def, Function.mem_support]
-  constructor
-  · contrapose!
-    exact fun h' => single_eq_of_ne h' b
-    
-  · rintro rfl
-    rw [single_eq_same]
-    exact h
-    
-#align pi.support_single_of_ne Pi.support_single_of_ne
+@[to_additive]
+theorem mul_support_mul_single_subset : mulSupport (mulSingle a b) ⊆ {a} := fun x hx =>
+  by_contra fun hx' => hx <| mul_single_eq_of_ne hx' _
+#align pi.mul_support_mul_single_subset Pi.mul_support_mul_single_subset
 
-theorem support_single [DecidableEq B] : Function.support (Pi.single a b) = if b = 0 then ∅ else {a} := by
+@[to_additive]
+theorem mul_support_mul_single_one : mulSupport (mulSingle a (1 : B)) = ∅ := by simp
+#align pi.mul_support_mul_single_one Pi.mul_support_mul_single_one
+
+@[simp, to_additive]
+theorem mul_support_mul_single_of_ne (h : b ≠ 1) : mulSupport (mulSingle a b) = {a} :=
+  mul_support_mul_single_subset.antisymm fun x (hx : x = a) => by rwa [mem_mul_support, hx, mul_single_eq_same]
+#align pi.mul_support_mul_single_of_ne Pi.mul_support_mul_single_of_ne
+
+@[to_additive]
+theorem mul_support_mul_single [DecidableEq B] : mulSupport (mulSingle a b) = if b = 1 then ∅ else {a} := by
   split_ifs with h <;> simp [h]
-#align pi.support_single Pi.support_single
+#align pi.mul_support_mul_single Pi.mul_support_mul_single
 
-theorem support_single_subset : Function.support (Pi.single a b) ⊆ {a} := by classical
-  rw [support_single]
-  split_ifs <;> simp
-#align pi.support_single_subset Pi.support_single_subset
-
-theorem support_single_disjoint {b' : B} (hb : b ≠ 0) (hb' : b' ≠ 0) {i j : A} :
-    Disjoint (Function.support (single i b)) (Function.support (single j b')) ↔ i ≠ j := by
-  rw [support_single_of_ne hb, support_single_of_ne hb', disjoint_singleton]
-#align pi.support_single_disjoint Pi.support_single_disjoint
+@[to_additive]
+theorem mul_support_mul_single_disjoint {b' : B} (hb : b ≠ 1) (hb' : b' ≠ 1) {i j : A} :
+    Disjoint (mulSupport (mulSingle i b)) (mulSupport (mulSingle j b')) ↔ i ≠ j := by
+  rw [mul_support_mul_single_of_ne hb, mul_support_mul_single_of_ne hb', disjoint_singleton]
+#align pi.mul_support_mul_single_disjoint Pi.mul_support_mul_single_disjoint
 
 end Pi
 

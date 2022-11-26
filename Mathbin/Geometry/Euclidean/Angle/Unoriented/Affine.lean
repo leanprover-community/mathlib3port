@@ -70,6 +70,60 @@ theorem _root_.affine_subspace.angle_coe {s : AffineSubspace ℝ P} (p₁ p₂ p
   s.subtypeₐᵢ.angle_map p₁ p₂ p₃
 #align euclidean_geometry._root_.affine_subspace.angle_coe euclidean_geometry._root_.affine_subspace.angle_coe
 
+/-- Angles are translation invariant -/
+@[simp]
+theorem angle_const_vadd (v : V) (p₁ p₂ p₃ : P) : ∠ (v +ᵥ p₁) (v +ᵥ p₂) (v +ᵥ p₃) = ∠ p₁ p₂ p₃ :=
+  (AffineIsometryEquiv.constVadd ℝ P v).toAffineIsometry.angle_map _ _ _
+#align euclidean_geometry.angle_const_vadd EuclideanGeometry.angle_const_vadd
+
+/-- Angles are translation invariant -/
+@[simp]
+theorem angle_vadd_const (v₁ v₂ v₃ : V) (p : P) : ∠ (v₁ +ᵥ p) (v₂ +ᵥ p) (v₃ +ᵥ p) = ∠ v₁ v₂ v₃ :=
+  (AffineIsometryEquiv.vaddConst ℝ p).toAffineIsometry.angle_map _ _ _
+#align euclidean_geometry.angle_vadd_const EuclideanGeometry.angle_vadd_const
+
+/-- Angles are translation invariant -/
+@[simp]
+theorem angle_const_vsub (p p₁ p₂ p₃ : P) : ∠ (p -ᵥ p₁) (p -ᵥ p₂) (p -ᵥ p₃) = ∠ p₁ p₂ p₃ :=
+  (AffineIsometryEquiv.constVsub ℝ p).toAffineIsometry.angle_map _ _ _
+#align euclidean_geometry.angle_const_vsub EuclideanGeometry.angle_const_vsub
+
+/-- Angles are translation invariant -/
+@[simp]
+theorem angle_vsub_const (p₁ p₂ p₃ p : P) : ∠ (p₁ -ᵥ p) (p₂ -ᵥ p) (p₃ -ᵥ p) = ∠ p₁ p₂ p₃ :=
+  (AffineIsometryEquiv.vaddConst ℝ p).symm.toAffineIsometry.angle_map _ _ _
+#align euclidean_geometry.angle_vsub_const EuclideanGeometry.angle_vsub_const
+
+/-- Angles in a vector space are translation invariant -/
+@[simp]
+theorem angle_add_const (v₁ v₂ v₃ : V) (v : V) : ∠ (v₁ + v) (v₂ + v) (v₃ + v) = ∠ v₁ v₂ v₃ :=
+  angle_vadd_const _ _ _ _
+#align euclidean_geometry.angle_add_const EuclideanGeometry.angle_add_const
+
+/-- Angles in a vector space are translation invariant -/
+@[simp]
+theorem angle_const_add (v : V) (v₁ v₂ v₃ : V) : ∠ (v + v₁) (v + v₂) (v + v₃) = ∠ v₁ v₂ v₃ :=
+  angle_const_vadd _ _ _ _
+#align euclidean_geometry.angle_const_add EuclideanGeometry.angle_const_add
+
+/-- Angles in a vector space are translation invariant -/
+@[simp]
+theorem angle_sub_const (v₁ v₂ v₃ : V) (v : V) : ∠ (v₁ - v) (v₂ - v) (v₃ - v) = ∠ v₁ v₂ v₃ := by
+  simpa only [vsub_eq_sub] using angle_vsub_const v₁ v₂ v₃ v
+#align euclidean_geometry.angle_sub_const EuclideanGeometry.angle_sub_const
+
+/-- Angles in a vector space are invariant to inversion -/
+@[simp]
+theorem angle_const_sub (v : V) (v₁ v₂ v₃ : V) : ∠ (v - v₁) (v - v₂) (v - v₃) = ∠ v₁ v₂ v₃ := by
+  simpa only [vsub_eq_sub] using angle_const_vsub _ _ _ _
+#align euclidean_geometry.angle_const_sub EuclideanGeometry.angle_const_sub
+
+/-- Angles in a vector space are invariant to inversion -/
+@[simp]
+theorem angle_neg (v₁ v₂ v₃ : V) : ∠ (-v₁) (-v₂) (-v₃) = ∠ v₁ v₂ v₃ := by
+  simpa only [zero_sub] using angle_const_sub 0 v₁ v₂ v₃
+#align euclidean_geometry.angle_neg EuclideanGeometry.angle_neg
+
 /-- The angle at a point does not depend on the order of the other two
 points. -/
 theorem angle_comm (p1 p2 p3 : P) : ∠ p1 p2 p3 = ∠ p3 p2 p1 :=

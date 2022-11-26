@@ -132,7 +132,7 @@ theorem coeff_X_mul_zero (p : R[X]) : coeff (X * p) 0 = 0 := by simp
 #align polynomial.coeff_X_mul_zero Polynomial.coeff_X_mul_zero
 
 theorem coeff_C_mul_X_pow (x : R) (k n : ℕ) : coeff (c x * X ^ k : R[X]) n = if n = k then x else 0 := by
-  rw [← monomial_eq_C_mul_X, coeff_monomial]
+  rw [C_mul_X_pow_eq_monomial, coeff_monomial]
   congr 1
   simp [eq_comm]
 #align polynomial.coeff_C_mul_X_pow Polynomial.coeff_C_mul_X_pow
@@ -244,11 +244,11 @@ theorem coeff_X_mul (p : R[X]) (n : ℕ) : coeff (X * p) (n + 1) = coeff p n := 
 #align polynomial.coeff_X_mul Polynomial.coeff_X_mul
 
 theorem coeff_mul_monomial (p : R[X]) (n d : ℕ) (r : R) : coeff (p * monomial n r) (d + n) = coeff p d * r := by
-  rw [monomial_eq_C_mul_X, ← X_pow_mul, ← mul_assoc, coeff_mul_C, coeff_mul_X_pow]
+  rw [← C_mul_X_pow_eq_monomial, ← X_pow_mul, ← mul_assoc, coeff_mul_C, coeff_mul_X_pow]
 #align polynomial.coeff_mul_monomial Polynomial.coeff_mul_monomial
 
 theorem coeff_monomial_mul (p : R[X]) (n d : ℕ) (r : R) : coeff (monomial n r * p) (d + n) = r * coeff p d := by
-  rw [monomial_eq_C_mul_X, mul_assoc, coeff_C_mul, X_pow_mul, coeff_mul_X_pow]
+  rw [← C_mul_X_pow_eq_monomial, mul_assoc, coeff_C_mul, X_pow_mul, coeff_mul_X_pow]
 #align polynomial.coeff_monomial_mul Polynomial.coeff_monomial_mul
 
 -- This can already be proved by `simp`.
@@ -275,10 +275,6 @@ theorem mul_X_pow_injective (n : ℕ) : Function.Injective fun P : R[X] => X ^ n
 theorem mul_X_injective : Function.Injective fun P : R[X] => X * P :=
   pow_one (x : R[X]) ▸ mul_X_pow_injective 1
 #align polynomial.mul_X_injective Polynomial.mul_X_injective
-
-theorem C_mul_X_pow_eq_monomial (c : R) (n : ℕ) : c c * X ^ n = monomial n c :=
-  monomial_eq_C_mul_X.symm
-#align polynomial.C_mul_X_pow_eq_monomial Polynomial.C_mul_X_pow_eq_monomial
 
 theorem coeff_X_add_C_pow (r : R) (n k : ℕ) : ((X + c r) ^ n).coeff k = r ^ (n - k) * (n.choose k : R) := by
   rw [(commute_X (C r : R[X])).add_pow, ← lcoeff_apply, LinearMap.map_sum]

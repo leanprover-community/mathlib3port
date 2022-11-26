@@ -594,7 +594,7 @@ theorem roots_C_mul_X_pow (ha : a ≠ 0) (n : ℕ) : (c a * X ^ n).roots = n •
 
 @[simp]
 theorem roots_monomial (ha : a ≠ 0) (n : ℕ) : (monomial n a).roots = n • {0} := by
-  rw [monomial_eq_C_mul_X, roots_C_mul_X_pow ha]
+  rw [← C_mul_X_pow_eq_monomial, roots_C_mul_X_pow ha]
 #align polynomial.roots_monomial Polynomial.roots_monomial
 
 theorem roots_prod_X_sub_C (s : Finset R) : (s.Prod fun a => X - c a).roots = s.val :=

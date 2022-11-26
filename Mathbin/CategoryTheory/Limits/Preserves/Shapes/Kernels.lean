@@ -108,6 +108,18 @@ instance : IsIso (kernelComparison f G) := by
   rw [← preserves_kernel.iso_hom]
   infer_instance
 
+@[reassoc]
+theorem kernel_map_comp_preserves_kernel_iso_inv {X' Y' : C} (g : X' ⟶ Y') [HasKernel g] [HasKernel (G.map g)]
+    [PreservesLimit (parallelPair g 0) G] (p : X ⟶ X') (q : Y ⟶ Y') (hpq : f ≫ q = p ≫ g) :
+    kernel.map (G.map f) (G.map g) (G.map p) (G.map q) (by rw [← G.map_comp, hpq, G.map_comp]) ≫
+        (PreservesKernel.iso G _).inv =
+      (PreservesKernel.iso G _).inv ≫ G.map (kernel.map f g p q hpq) :=
+  by
+  rw [iso.comp_inv_eq, category.assoc, preserves_kernel.iso_hom, iso.eq_inv_comp]
+  exact kernel_comparison_comp_kernel_map _ _ _ _ _ _
+#align
+  category_theory.limits.kernel_map_comp_preserves_kernel_iso_inv CategoryTheory.Limits.kernel_map_comp_preserves_kernel_iso_inv
+
 end Kernels
 
 section Cokernels
@@ -191,6 +203,18 @@ theorem PreservesCokernel.iso_inv : (PreservesCokernel.iso G f).inv = cokernelCo
 instance : IsIso (cokernelComparison f G) := by
   rw [← preserves_cokernel.iso_inv]
   infer_instance
+
+@[reassoc]
+theorem preserves_cokernel_iso_comp_cokernel_map {X' Y' : C} (g : X' ⟶ Y') [HasCokernel g] [HasCokernel (G.map g)]
+    [PreservesColimit (parallelPair g 0) G] (p : X ⟶ X') (q : Y ⟶ Y') (hpq : f ≫ q = p ≫ g) :
+    (PreservesCokernel.iso G _).Hom ≫
+        cokernel.map (G.map f) (G.map g) (G.map p) (G.map q) (by rw [← G.map_comp, hpq, G.map_comp]) =
+      G.map (cokernel.map f g p q hpq) ≫ (PreservesCokernel.iso G _).Hom :=
+  by
+  rw [← iso.comp_inv_eq, category.assoc, ← iso.eq_inv_comp]
+  exact cokernel_map_comp_cokernel_comparison _ _ _ _ _ _
+#align
+  category_theory.limits.preserves_cokernel_iso_comp_cokernel_map CategoryTheory.Limits.preserves_cokernel_iso_comp_cokernel_map
 
 end Cokernels
 

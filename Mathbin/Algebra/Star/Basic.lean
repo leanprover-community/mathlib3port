@@ -204,7 +204,7 @@ section
 
 attribute [local instance] starSemigroupOfComm
 
-/-- Note that since `star_semigroup_of_comm` is reducible, `simp` can already prove this. --/
+/-- Note that since `star_semigroup_of_comm` is reducible, `simp` can already prove this. -/
 theorem star_id_of_comm {R : Type _} [CommSemiring R] {x : R} : star x = x :=
   rfl
 #align star_id_of_comm star_id_of_comm

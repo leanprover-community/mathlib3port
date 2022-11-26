@@ -1021,6 +1021,16 @@ theorem map_lift_kernel_comparison [HasKernel f] [HasKernel (G.map f)] {Z : C} {
   simp [← G.map_comp]
 #align category_theory.limits.map_lift_kernel_comparison CategoryTheory.Limits.map_lift_kernel_comparison
 
+@[reassoc]
+theorem kernel_comparison_comp_kernel_map {X' Y' : C} [HasKernel f] [HasKernel (G.map f)] (g : X' ⟶ Y') [HasKernel g]
+    [HasKernel (G.map g)] (p : X ⟶ X') (q : Y ⟶ Y') (hpq : f ≫ q = p ≫ g) :
+    kernelComparison f G ≫ kernel.map (G.map f) (G.map g) (G.map p) (G.map q) (by rw [← G.map_comp, hpq, G.map_comp]) =
+      G.map (kernel.map f g p q hpq) ≫ kernelComparison g G :=
+  kernel.lift_map _ _ (by rw [← G.map_comp, kernel.condition, G.map_zero]) _ _
+    (by rw [← G.map_comp, kernel.condition, G.map_zero]) _ _ _
+    (by simp only [← G.map_comp] <;> exact G.congr_map (kernel.lift_ι _ _ _).symm) _
+#align category_theory.limits.kernel_comparison_comp_kernel_map CategoryTheory.Limits.kernel_comparison_comp_kernel_map
+
 /-- The comparison morphism for the cokernel of `f`. -/
 def cokernelComparison [HasCokernel f] [HasCokernel (G.map f)] : cokernel (G.map f) ⟶ G.obj (cokernel f) :=
   cokernel.desc _ (G.map (coequalizer.π _ _)) (by simp only [← G.map_comp, cokernel.condition, functor.map_zero])
@@ -1040,6 +1050,18 @@ theorem cokernel_comparison_map_desc [HasCokernel f] [HasCokernel (G.map f)] {Z 
   ext
   simp [← G.map_comp]
 #align category_theory.limits.cokernel_comparison_map_desc CategoryTheory.Limits.cokernel_comparison_map_desc
+
+@[reassoc]
+theorem cokernel_map_comp_cokernel_comparison {X' Y' : C} [HasCokernel f] [HasCokernel (G.map f)] (g : X' ⟶ Y')
+    [HasCokernel g] [HasCokernel (G.map g)] (p : X ⟶ X') (q : Y ⟶ Y') (hpq : f ≫ q = p ≫ g) :
+    cokernel.map (G.map f) (G.map g) (G.map p) (G.map q) (by rw [← G.map_comp, hpq, G.map_comp]) ≫
+        cokernelComparison _ G =
+      cokernelComparison _ G ≫ G.map (cokernel.map f g p q hpq) :=
+  cokernel.map_desc _ _ (by rw [← G.map_comp, cokernel.condition, G.map_zero]) _ _
+    (by rw [← G.map_comp, cokernel.condition, G.map_zero]) _ _ _ _
+    (by simp only [← G.map_comp] <;> exact G.congr_map (cokernel.π_desc _ _ _))
+#align
+  category_theory.limits.cokernel_map_comp_cokernel_comparison CategoryTheory.Limits.cokernel_map_comp_cokernel_comparison
 
 end Comparison
 

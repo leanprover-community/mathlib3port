@@ -77,7 +77,7 @@ theorem op_ring_equiv_symm_X : (opRingEquiv R).symm (x : Rᵐᵒᵖ[X]) = op x :
 
 theorem op_ring_equiv_symm_C_mul_X_pow (r : Rᵐᵒᵖ) (n : ℕ) :
     (opRingEquiv R).symm (c r * X ^ n : Rᵐᵒᵖ[X]) = op (c (unop r) * X ^ n) := by
-  rw [← monomial_eq_C_mul_X, op_ring_equiv_symm_monomial, monomial_eq_C_mul_X]
+  rw [C_mul_X_pow_eq_monomial, op_ring_equiv_symm_monomial, ← C_mul_X_pow_eq_monomial]
 #align polynomial.op_ring_equiv_symm_C_mul_X_pow Polynomial.op_ring_equiv_symm_C_mul_X_pow
 
 /-!  Lemmas about more global properties of polynomials and opposites. -/

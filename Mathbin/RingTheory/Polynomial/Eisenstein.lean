@@ -275,7 +275,7 @@ theorem cyclotomicCompXAddOneIsEisensteinAt [hp : Fact p.Prime] : ((cyclotomic p
     congr
     skip
     ext
-    rw [lcoeff_apply, ← C_eq_nat_cast, ← monomial_eq_C_mul_X, coeff_monomial]
+    rw [lcoeff_apply, ← C_eq_nat_cast, C_mul_X_pow_eq_monomial, coeff_monomial]
     rw [nat_degree_comp, show (X + 1 : ℤ[X]) = X + C 1 by simp, nat_degree_X_add_C, mul_one, nat_degree_cyclotomic,
       Nat.totient_prime hp.out] at hi
     simp only [lt_of_lt_of_le hi (Nat.sub_le _ _), sum_ite_eq', mem_range, if_true, Ideal.submodule_span_eq,

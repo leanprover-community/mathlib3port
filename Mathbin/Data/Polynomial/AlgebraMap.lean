@@ -120,7 +120,7 @@ theorem alg_hom_eval₂_algebra_map {R A B : Type _} [CommSemiring R] [Semiring 
 @[simp]
 theorem eval₂_algebra_map_X {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A] (p : R[X]) (f : R[X] →ₐ[R] A) :
     eval₂ (algebraMap R A) (f x) p = f p := by
-  conv_rhs => rw [← Polynomial.sum_C_mul_X_eq p]
+  conv_rhs => rw [← Polynomial.sum_C_mul_X_pow_eq p]
   dsimp [eval₂, Sum]
   simp only [f.map_sum, f.map_mul, f.map_pow, eq_int_cast, map_int_cast]
   simp [Polynomial.C_eq_algebra_map]
@@ -166,7 +166,7 @@ theorem adjoin_X : Algebra.adjoin R ({x} : Set R[X]) = ⊤ := by
   refine' top_unique fun p hp => _
   set S := Algebra.adjoin R ({X} : Set R[X])
   rw [← sum_monomial_eq p]
-  simp only [monomial_eq_smul_X, Sum]
+  simp only [← smul_X_eq_monomial, Sum]
   exact S.sum_mem fun n hn => S.smul_mem (S.pow_mem (Algebra.subset_adjoin rfl) _) _
 #align polynomial.adjoin_X Polynomial.adjoin_X
 

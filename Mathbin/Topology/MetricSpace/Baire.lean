@@ -6,6 +6,7 @@ Authors: Sébastien Gouëzel
 import Mathbin.Analysis.SpecificLimits.Basic
 import Mathbin.Order.Filter.CountableInter
 import Mathbin.Topology.GDelta
+import Mathbin.Topology.Sets.Compacts
 
 /-!
 # Baire theorem

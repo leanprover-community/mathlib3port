@@ -87,15 +87,20 @@ theorem integrableExpNegMulSq {b : ℝ} (hb : 0 < b) : Integrable fun x : ℝ =>
   simp
 #align integrable_exp_neg_mul_sq integrableExpNegMulSq
 
-theorem integrable_exp_neg_mul_sq_iff {b : ℝ} : (Integrable fun x : ℝ => exp (-b * x ^ 2)) ↔ 0 < b := by
-  refine' ⟨fun h => _, integrableExpNegMulSq⟩
+theorem integrable_on_Ioi_exp_neg_mul_sq_iff {b : ℝ} : IntegrableOn (fun x : ℝ => exp (-b * x ^ 2)) (ioi 0) ↔ 0 < b :=
+  by
+  refine' ⟨fun h => _, fun h => (integrableExpNegMulSq h).IntegrableOn⟩
   by_contra' hb
-  have : (∫⁻ x : ℝ, 1) ≤ ∫⁻ x : ℝ, ‖exp (-b * x ^ 2)‖₊ := by
+  have : (∫⁻ x : ℝ in Ioi 0, 1) ≤ ∫⁻ x : ℝ in Ioi 0, ‖exp (-b * x ^ 2)‖₊ := by
     apply lintegral_mono fun x => _
     simp only [neg_mul, Ennreal.one_le_coe_iff, ← to_nnreal_one, to_nnreal_le_iff_le_coe,
       Real.norm_of_nonneg (exp_pos _).le, coe_nnnorm, one_le_exp_iff, Right.nonneg_neg_iff]
     exact mul_nonpos_of_nonpos_of_nonneg hb (sq_nonneg _)
   simpa using this.trans_lt h.2
+#align integrable_on_Ioi_exp_neg_mul_sq_iff integrable_on_Ioi_exp_neg_mul_sq_iff
+
+theorem integrable_exp_neg_mul_sq_iff {b : ℝ} : (Integrable fun x : ℝ => exp (-b * x ^ 2)) ↔ 0 < b :=
+  ⟨fun h => integrable_on_Ioi_exp_neg_mul_sq_iff.mp h.IntegrableOn, integrableExpNegMulSq⟩
 #align integrable_exp_neg_mul_sq_iff integrable_exp_neg_mul_sq_iff
 
 theorem integrableMulExpNegMulSq {b : ℝ} (hb : 0 < b) : Integrable fun x : ℝ => x * exp (-b * x ^ 2) := by
@@ -170,4 +175,66 @@ theorem integral_gaussian (b : ℝ) : (∫ x, exp (-b * x ^ 2)) = sqrt (π / b) 
       exact div_nonneg pi_pos.le hb.le
     
 #align integral_gaussian integral_gaussian
+
+open Interval
+
+-- The Gaussian integral on the half-line, `∫ x in Ioi 0, exp (-b * x^2)`.
+theorem integral_gaussian_Ioi (b : ℝ) : (∫ x in ioi 0, exp (-b * x ^ 2)) = sqrt (π / b) / 2 := by
+  rcases le_or_lt b 0 with (hb | hb)
+  · rw [integral_undef, sqrt_eq_zero_of_nonpos, zero_div]
+    exact div_nonpos_of_nonneg_of_nonpos pi_pos.le hb
+    rwa [← integrable_on, integrable_on_Ioi_exp_neg_mul_sq_iff, not_lt]
+    
+  have full_integral := integral_gaussian b
+  have : MeasurableSet (Ioi (0 : ℝ)) := measurableSetIoi
+  rw [← integral_add_compl this (integrableExpNegMulSq hb), compl_Ioi] at full_integral
+  suffices (∫ x in Iic 0, exp (-b * x ^ 2)) = ∫ x in Ioi 0, exp (-b * x ^ 2) by
+    rw [this, ← mul_two] at full_integral
+    rwa [eq_div_iff]
+    exact two_ne_zero
+  have : ∀ c : ℝ, (∫ x in 0 ..c, exp (-b * x ^ 2)) = ∫ x in -c..0, exp (-b * x ^ 2) := by
+    intro c
+    have := @intervalIntegral.integral_comp_sub_left _ _ _ _ 0 c (fun x => exp (-b * x ^ 2)) 0
+    simpa [zero_sub, neg_sq, neg_zero] using this
+  have t1 := interval_integral_tendsto_integral_Ioi _ (integrableExpNegMulSq hb).IntegrableOn tendsto_id
+  have t2 : tendsto (fun c : ℝ => ∫ x in 0 ..c, exp (-b * x ^ 2)) at_top (𝓝 (∫ x in Iic 0, exp (-b * x ^ 2))) := by
+    simp_rw [this]
+    refine' interval_integral_tendsto_integral_Iic _ _ tendsto_neg_at_top_at_bot
+    apply (integrableExpNegMulSq hb).IntegrableOn
+  exact tendsto_nhds_unique t2 t1
+#align integral_gaussian_Ioi integral_gaussian_Ioi
+
+namespace Complex
+
+/-- The special-value formula `Γ(1/2) = √π`, which is equivalent to the Gaussian integral. -/
+theorem Gamma_one_half_eq : gamma (1 / 2) = sqrt π := by
+  -- first reduce to real integrals
+  have hh : (1 / 2 : ℂ) = ↑(1 / 2 : ℝ) := by simp only [one_div, of_real_inv, of_real_bit0, of_real_one]
+  have hh2 : (1 / 2 : ℂ).re = 1 / 2 := by convert Complex.of_real_re (1 / 2 : ℝ)
+  replace hh2 : 0 < (1 / 2 : ℂ).re := by
+    rw [hh2]
+    exact one_half_pos
+  rw [Gamma_eq_integral _ hh2, hh, Gamma_integral_of_real, of_real_inj, Real.gammaIntegral]
+  -- now do change-of-variables
+  rw [← integral_comp_rpow_Ioi_of_pos zero_lt_two]
+  have :
+    eq_on (fun x : ℝ => (2 * x ^ ((2 : ℝ) - 1)) • (Real.exp (-x ^ (2 : ℝ)) * (x ^ (2 : ℝ)) ^ (1 / (2 : ℝ) - 1)))
+      (fun x : ℝ => 2 * Real.exp (-1 * x ^ (2 : ℕ))) (Ioi 0) :=
+    by
+    intro x hx
+    dsimp only
+    have : (x ^ (2 : ℝ)) ^ (1 / (2 : ℝ) - 1) = x⁻¹ := by
+      rw [← rpow_mul (le_of_lt hx)]
+      norm_num
+      rw [rpow_neg (le_of_lt hx), rpow_one]
+    rw [smul_eq_mul, this]
+    field_simp [(ne_of_lt hx).symm]
+    norm_num
+    ring
+  rw [set_integral_congr measurableSetIoi this, integral_mul_left, integral_gaussian_Ioi]
+  field_simp
+  ring
+#align complex.Gamma_one_half_eq Complex.Gamma_one_half_eq
+
+end Complex
 

@@ -167,6 +167,10 @@ theorem mem_GL_pos (A : GL n R) : A ∈ gLPos n R ↔ 0 < (A.det : R) :=
   Iff.rfl
 #align matrix.mem_GL_pos Matrix.mem_GL_pos
 
+theorem gLPos.det_ne_zero (A : gLPos n R) : (A : Matrix n n R).det ≠ 0 :=
+  ne_of_gt A.Prop
+#align matrix.GL_pos.det_ne_zero Matrix.gLPos.det_ne_zero
+
 end
 
 section Neg

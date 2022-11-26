@@ -48,7 +48,9 @@ In this section we prove a version of the Whitney embedding theorem: for any com
 -/
 
 
-variable [T2Space M] [Fintype ι] {s : Set M} (f : SmoothBumpCovering ι I M s)
+variable [T2Space M] [hi : Fintype ι] {s : Set M} (f : SmoothBumpCovering ι I M s)
+
+include hi
 
 /-- Smooth embedding of `M` into `(E × ℝ) ^ ι`. -/
 def embeddingPiTangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × ℝ⟯ where
@@ -107,13 +109,16 @@ theorem embedding_pi_tangent_injective_mfderiv (x : M) (hx : x ∈ s) :
 #align
   smooth_bump_covering.embedding_pi_tangent_injective_mfderiv SmoothBumpCovering.embedding_pi_tangent_injective_mfderiv
 
-/-- Baby version of the Whitney weak embedding theorem: if `M` admits a finite covering by
+omit hi
+
+/-- Baby version of the **Whitney weak embedding theorem**: if `M` admits a finite covering by
 supports of bump functions, then for some `n` it can be immersed into the `n`-dimensional
 Euclidean space. -/
-theorem exists_immersion_euclidean (f : SmoothBumpCovering ι I M) :
+theorem exists_immersion_euclidean [Finite ι] (f : SmoothBumpCovering ι I M) :
     ∃ (n : ℕ)(e : M → EuclideanSpace ℝ (Fin n)),
       Smooth I (𝓡 n) e ∧ Injective e ∧ ∀ x : M, Injective (mfderiv I (𝓡 n) e x) :=
   by
+  cases nonempty_fintype ι
   set F := EuclideanSpace ℝ (Fin <| finrank ℝ (ι → E × ℝ))
   letI : IsNoetherian ℝ (E × ℝ) := IsNoetherian.iff_fg.2 inferInstance
   letI : FiniteDimensional ℝ (ι → E × ℝ) := IsNoetherian.iff_fg.1 inferInstance

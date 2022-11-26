@@ -146,7 +146,7 @@ theorem monomial_mem_lifts_and_degree_eq {s : S} {n : ℕ} (hl : monomial n s �
     intro habs
     simp only [habs, RingHom.map_zero] at hcoeff
     exact hzero hcoeff.symm
-  repeat' rw [monomial_eq_C_mul_X]
+  repeat' rw [← C_mul_X_pow_eq_monomial]
   simp only [hzero, hqzero, Ne.def, not_false_iff, degree_C_mul_X_pow]
 #align polynomial.monomial_mem_lifts_and_degree_eq Polynomial.monomial_mem_lifts_and_degree_eq
 
@@ -172,7 +172,7 @@ theorem mem_lifts_and_degree_eq {p : S[X]} (hlifts : p ∈ lifts f) : ∃ q : R[
   obtain ⟨lead, hlead⟩ :=
     monomial_mem_lifts_and_degree_eq (monomial_mem_lifts p.nat_degree ((lifts_iff_coeff_lifts p).1 hlifts p.nat_degree))
   have deg_lead : lead.degree = p.nat_degree := by
-    rw [hlead.2, monomial_eq_C_mul_X, degree_C_mul_X_pow p.nat_degree lead_zero]
+    rw [hlead.2, ← C_mul_X_pow_eq_monomial, degree_C_mul_X_pow p.nat_degree lead_zero]
   rw [hdeg] at deg_erase
   obtain ⟨erase, herase⟩ :=
     hn p.erase_lead.nat_degree deg_erase (erase_mem_lifts p.nat_degree hlifts) (refl p.erase_lead.nat_degree)

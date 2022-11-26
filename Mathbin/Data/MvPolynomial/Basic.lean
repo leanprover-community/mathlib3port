@@ -295,9 +295,13 @@ theorem monomial_single_add : monomial (single n e + s) a = x n ^ e * monomial s
   rw [X_pow_eq_monomial, monomial_mul, one_mul]
 #align mv_polynomial.monomial_single_add MvPolynomial.monomial_single_add
 
-theorem monomial_eq_C_mul_X {s : σ} {a : R} {n : ℕ} : monomial (single s n) a = c a * x s ^ n := by
+theorem C_mul_X_pow_eq_monomial {s : σ} {a : R} {n : ℕ} : c a * x s ^ n = monomial (single s n) a := by
   rw [← zero_add (single s n), monomial_add_single, C_apply]
-#align mv_polynomial.monomial_eq_C_mul_X MvPolynomial.monomial_eq_C_mul_X
+#align mv_polynomial.C_mul_X_pow_eq_monomial MvPolynomial.C_mul_X_pow_eq_monomial
+
+theorem C_mul_X_eq_monomial {s : σ} {a : R} : c a * x s = monomial (single s 1) a := by
+  rw [← C_mul_X_pow_eq_monomial, pow_one]
+#align mv_polynomial.C_mul_X_eq_monomial MvPolynomial.C_mul_X_eq_monomial
 
 @[simp]
 theorem monomial_zero {s : σ →₀ ℕ} : monomial s (0 : R) = 0 :=

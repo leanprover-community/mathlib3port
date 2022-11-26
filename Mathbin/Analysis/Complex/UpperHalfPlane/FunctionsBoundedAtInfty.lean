@@ -67,9 +67,9 @@ def boundedAtImInftySubalgebra (α : Type _) [NormedField α] : Subalgebra α (�
   boundedFilterSubalgebra atImInfty
 #align upper_half_plane.bounded_at_im_infty_subalgebra UpperHalfPlane.boundedAtImInftySubalgebra
 
-theorem prod_of_bounded_is_bounded {f g : ℍ → ℂ} (hf : IsBoundedAtImInfty f) (hg : IsBoundedAtImInfty g) :
+theorem IsBoundedAtImInfty.mul {f g : ℍ → ℂ} (hf : IsBoundedAtImInfty f) (hg : IsBoundedAtImInfty g) :
     IsBoundedAtImInfty (f * g) := by simpa only [Pi.one_apply, mul_one, norm_eq_abs] using hf.mul hg
-#align upper_half_plane.prod_of_bounded_is_bounded UpperHalfPlane.prod_of_bounded_is_bounded
+#align upper_half_plane.is_bounded_at_im_infty.mul UpperHalfPlane.IsBoundedAtImInfty.mul
 
 @[simp]
 theorem bounded_mem (f : ℍ → ℂ) : IsBoundedAtImInfty f ↔ ∃ M A : ℝ, ∀ z : ℍ, A ≤ im z → abs (f z) ≤ M := by

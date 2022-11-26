@@ -1,10 +1,12 @@
 /-
 Copyright (c) 2022 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Adam Topaz
+Authors: Adam Topaz, Amelia Livingston
 -/
-import Mathbin.CategoryTheory.Abelian.Exact
+import Mathbin.Algebra.Homology.Additive
 import Mathbin.CategoryTheory.Abelian.Pseudoelements
+import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Kernels
+import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Images
 
 /-!
 
@@ -315,4 +317,49 @@ theorem map_ι (α β h) :
 end
 
 end homology
+
+namespace CategoryTheory.Functor
+
+variable {ι : Type _} {c : ComplexShape ι} {B : Type _} [Category B] [Abelian B] (F : A ⥤ B) [Functor.Additive F]
+  [PreservesFiniteLimits F] [PreservesFiniteColimits F]
+
+/-- When `F` is an exact additive functor, `F(Hᵢ(X)) ≅ Hᵢ(F(X))` for `X` a complex. -/
+noncomputable def homologyIso (C : HomologicalComplex A c) (j : ι) :
+    F.obj (C.homology j) ≅ ((F.mapHomologicalComplex _).obj C).homology j :=
+  (PreservesCokernel.iso _ _).trans
+    (cokernel.mapIso _ _
+      ((F.mapIso (imageSubobjectIso _)).trans ((PreservesImage.iso _ _).symm.trans (imageSubobjectIso _).symm))
+      ((F.mapIso (kernelSubobjectIso _)).trans ((PreservesKernel.iso _ _).trans (kernelSubobjectIso _).symm))
+      (by
+        dsimp
+        ext
+        simp only [category.assoc, image_to_kernel_arrow]
+        erw [kernel_subobject_arrow', kernel_comparison_comp_ι, image_subobject_arrow']
+        simp [← F.map_comp]))
+#align category_theory.functor.homology_iso CategoryTheory.Functor.homologyIso
+
+/-- If `F` is an exact additive functor, then `F` commutes with `Hᵢ` (up to natural isomorphism). -/
+noncomputable def homologyFunctorIso (i : ι) :
+    homologyFunctor A c i ⋙ F ≅ F.mapHomologicalComplex c ⋙ homologyFunctor B c i :=
+  NatIso.ofComponents (fun X => homologyIso F X i)
+    (by
+      intro X Y f
+      dsimp
+      rw [← iso.inv_comp_eq, ← category.assoc, ← iso.eq_comp_inv]
+      refine' coequalizer.hom_ext _
+      dsimp [homology_iso]
+      simp only [homology.map, ← category.assoc, cokernel.π_desc]
+      simp only [category.assoc, cokernel_comparison_map_desc, cokernel.π_desc, π_comp_cokernel_comparison, ←
+        F.map_comp]
+      erw [← kernel_subobject_iso_comp_kernel_map_assoc]
+      simp only [HomologicalComplex.Hom.sq_from_right, HomologicalComplex.Hom.sq_from_left,
+        F.map_homological_complex_map_f, F.map_comp]
+      dsimp only [HomologicalComplex.dFrom, HomologicalComplex.Hom.next]
+      dsimp
+      rw [kernel_map_comp_preserves_kernel_iso_inv_assoc, ← F.map_comp_assoc, ←
+        kernel_map_comp_kernel_subobject_iso_inv]
+      any_goals simp)
+#align category_theory.functor.homology_functor_iso CategoryTheory.Functor.homologyFunctorIso
+
+end CategoryTheory.Functor
 

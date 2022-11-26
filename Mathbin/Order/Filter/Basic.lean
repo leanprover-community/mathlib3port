@@ -755,7 +755,7 @@ theorem _root_.set.pairwise_disjoint.exists_mem_filter {ι : Type _} {l : ι →
   exact ⟨fun i => s i, fun i => (s i).2, Pairwise.set_of_subtype _ _ hd⟩
 #align filter._root_.set.pairwise_disjoint.exists_mem_filter filter._root_.set.pairwise_disjoint.exists_mem_filter
 
-/-- There is exactly one filter on an empty type. --/
+/-- There is exactly one filter on an empty type. -/
 instance unique [IsEmpty α] : Unique (Filter α) where
   default := ⊥
   uniq := filter_eq_bot_of_is_empty

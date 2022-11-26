@@ -51,7 +51,7 @@ protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (c
       rw [sum_insert ns]
       exact h_add _ _ A ih
       
-  rw [← sum_C_mul_X_eq p, Polynomial.sum]
+  rw [← sum_C_mul_X_pow_eq p, Polynomial.sum]
   exact B _
 #align polynomial.induction_on Polynomial.induction_on
 
@@ -63,7 +63,7 @@ and it holds for monomials.
 protected theorem induction_on' {M : R[X] → Prop} (p : R[X]) (h_add : ∀ p q, M p → M q → M (p + q))
     (h_monomial : ∀ (n : ℕ) (a : R), M (monomial n a)) : M p :=
   Polynomial.induction_on p (h_monomial 0) h_add fun n a h => by
-    rw [← monomial_eq_C_mul_X]
+    rw [C_mul_X_pow_eq_monomial]
     exact h_monomial _ _
 #align polynomial.induction_on' Polynomial.induction_on'
 
@@ -80,7 +80,7 @@ theorem span_le_of_C_coeff_mem (cf : ∀ i : ℕ, c (f.coeff i) ∈ I) : Ideal.s
 
 theorem mem_span_C_coeff : f ∈ Ideal.span { g : R[X] | ∃ i : ℕ, g = c (coeff f i) } := by
   let p := Ideal.span { g : R[X] | ∃ i : ℕ, g = C (coeff f i) }
-  nth_rw 0 [(sum_C_mul_X_eq f).symm]
+  nth_rw 0 [(sum_C_mul_X_pow_eq f).symm]
   refine' Submodule.sum_mem _ fun n hn => _
   dsimp
   have : C (coeff f n) ∈ p := by
@@ -89,7 +89,7 @@ theorem mem_span_C_coeff : f ∈ Ideal.span { g : R[X] | ∃ i : ℕ, g = c (coe
   have : monomial n (1 : R) • C (coeff f n) ∈ p := p.smul_mem _ this
   convert this using 1
   simp only [monomial_mul_C, one_mul, smul_eq_mul]
-  rw [monomial_eq_C_mul_X]
+  rw [← C_mul_X_pow_eq_monomial]
 #align polynomial.mem_span_C_coeff Polynomial.mem_span_C_coeff
 
 theorem exists_C_coeff_not_mem : f ∉ I → ∃ i : ℕ, c (coeff f i) ∉ I :=

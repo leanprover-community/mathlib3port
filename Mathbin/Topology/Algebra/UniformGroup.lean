@@ -7,7 +7,7 @@ import Mathbin.Topology.UniformSpace.UniformConvergence
 import Mathbin.Topology.UniformSpace.UniformEmbedding
 import Mathbin.Topology.UniformSpace.CompleteSeparated
 import Mathbin.Topology.UniformSpace.Compact
-import Mathbin.Topology.Algebra.Group
+import Mathbin.Topology.Algebra.Group.Basic
 import Mathbin.Tactic.Abel
 
 /-!

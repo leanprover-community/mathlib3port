@@ -158,7 +158,7 @@ theorem left_inv (x : A ⊗ R[X]) : invFun R A ((toFunAlgHom R A) x) = x := by
     simp_rw [eval₂_monomial, AlgHom.coe_to_ring_hom, Algebra.TensorProduct.tmul_pow, one_pow,
       Algebra.TensorProduct.include_left_apply, Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul, ←
       Algebra.commutes, ← Algebra.smul_def, smul_tmul, sum_def, ← tmul_sum]
-    conv_rhs => rw [← sum_C_mul_X_eq p]
+    conv_rhs => rw [← sum_C_mul_X_pow_eq p]
     simp only [Algebra.smul_def]
     rfl
     
@@ -243,7 +243,7 @@ theorem mat_poly_equiv_coeff_apply_aux_1 (i j : n) (k : ℕ) (x : R) :
   convert eval₂_monomial _ _
   simp only [Algebra.TensorProduct.tmul_mul_tmul, one_pow, one_mul, Matrix.mul_one, Algebra.TensorProduct.tmul_pow,
     Algebra.TensorProduct.include_left_apply, mul_eq_mul]
-  rw [monomial_eq_smul_X, ← TensorProduct.smul_tmul]
+  rw [← smul_X_eq_monomial, ← TensorProduct.smul_tmul]
   congr with (i' j') <;> simp
 #align mat_poly_equiv_coeff_apply_aux_1 mat_poly_equiv_coeff_apply_aux_1
 

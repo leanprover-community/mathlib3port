@@ -59,7 +59,7 @@ theorem expand_X : expand R p x = X ^ p :=
 
 @[simp]
 theorem expand_monomial (r : R) : expand R p (monomial q r) = monomial (q * p) r := by
-  simp_rw [monomial_eq_smul_X, AlgHom.map_smul, AlgHom.map_pow, expand_X, mul_comm, pow_mul]
+  simp_rw [← smul_X_eq_monomial, AlgHom.map_smul, AlgHom.map_pow, expand_X, mul_comm, pow_mul]
 #align polynomial.expand_monomial Polynomial.expand_monomial
 
 theorem expand_expand (f : R[X]) : expand R p (expand R q f) = expand R (p * q) f :=
@@ -251,7 +251,8 @@ theorem expand_char (f : R[X]) : map (frobenius R p) (expand R p f) = f ^ p := b
   refine' f.induction_on' (fun a b ha hb => _) fun n a => _
   · rw [AlgHom.map_add, Polynomial.map_add, ha, hb, add_pow_char]
     
-  · rw [expand_monomial, map_monomial, monomial_eq_C_mul_X, monomial_eq_C_mul_X, mul_pow, ← C.map_pow, frobenius_def]
+  · rw [expand_monomial, map_monomial, ← C_mul_X_pow_eq_monomial, ← C_mul_X_pow_eq_monomial, mul_pow, ← C.map_pow,
+      frobenius_def]
     ring
     
 #align polynomial.expand_char Polynomial.expand_char

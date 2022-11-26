@@ -171,7 +171,7 @@ open Polynomial
 /-- The characteristic polynomial of `fib_rec` is `X² - (X + 1)`. -/
 theorem fib_rec_char_poly_eq {β : Type _} [CommRing β] : fibRec.charPoly = X ^ 2 - (X + (1 : β[X])) := by
   rw [fibRec, LinearRecurrence.charPoly]
-  simp [Finset.sum_fin_eq_sum_range, Finset.sum_range_succ', monomial_eq_smul_X]
+  simp [Finset.sum_fin_eq_sum_range, Finset.sum_range_succ', ← smul_X_eq_monomial]
 #align fib_rec_char_poly_eq fib_rec_char_poly_eq
 
 end Poly

@@ -277,7 +277,7 @@ theorem mono_map_nat_degree_eq {S F : Type _} [Semiring S] [AddMonoidHomClass F 
     (φ p).natDegree = fu p.natDegree := by
   refine' induction_with_nat_degree_le (fun p => _ = fu _) p.nat_degree (by simp [fu0]) _ _ _ rfl.le
   · intro n r r0 np
-    rw [nat_degree_C_mul_X_pow _ _ r0, ← monomial_eq_C_mul_X, φ_mon_nat _ _ r0]
+    rw [nat_degree_C_mul_X_pow _ _ r0, C_mul_X_pow_eq_monomial, φ_mon_nat _ _ r0]
     
   · intro f g fg gp fk gk
     rw [nat_degree_add_eq_right_of_nat_degree_lt fg, _root_.map_add]

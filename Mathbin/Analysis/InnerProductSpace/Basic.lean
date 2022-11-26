@@ -109,7 +109,7 @@ class InnerProductSpace (𝕜 : Type _) (E : Type _) [IsROrC 𝕜] extends Norme
   HasInner 𝕜 E where
   norm_sq_eq_inner : ∀ x : E, ‖x‖ ^ 2 = re (inner x x)
   conj_sym : ∀ x y, conj (inner y x) = inner x y
-  add_left : ∀ x y z, inner (x + y) z = inner x z + inner y z
+  addLeft : ∀ x y z, inner (x + y) z = inner x z + inner y z
   smul_left : ∀ x y r, inner (r • x) y = conj r * inner x y
 #align inner_product_space InnerProductSpace
 
@@ -143,7 +143,7 @@ structure InnerProductSpace.Core (𝕜 : Type _) (F : Type _) [IsROrC 𝕜] [Add
   conj_sym : ∀ x y, conj (inner y x) = inner x y
   nonneg_re : ∀ x, 0 ≤ re (inner x x)
   definite : ∀ x, inner x x = 0 → x = 0
-  add_left : ∀ x y z, inner (x + y) z = inner x z + inner y z
+  addLeft : ∀ x y z, inner (x + y) z = inner x z + inner y z
   smul_left : ∀ x y r, inner (r • x) y = conj r * inner x y
 #align inner_product_space.core InnerProductSpace.Core
 
@@ -207,7 +207,7 @@ theorem inner_self_im_zero {x : F} : im ⟪x, x⟫ = 0 :=
 #align inner_product_space.of_core.inner_self_im_zero InnerProductSpace.OfCore.inner_self_im_zero
 
 theorem inner_add_left {x y z : F} : ⟪x + y, z⟫ = ⟪x, z⟫ + ⟪y, z⟫ :=
-  c.add_left _ _ _
+  c.addLeft _ _ _
 #align inner_product_space.of_core.inner_add_left InnerProductSpace.OfCore.inner_add_left
 
 theorem inner_add_right {x y z : F} : ⟪x, y + z⟫ = ⟪x, y⟫ + ⟪x, z⟫ := by
@@ -2094,7 +2094,7 @@ theorem Orthonormal.compLinearIsometryEquiv {v : ι → E} (hv : Orthonormal �
 #align orthonormal.comp_linear_isometry_equiv Orthonormal.compLinearIsometryEquiv
 
 /-- A linear isometric equivalence, applied with `basis.map`, preserves the property of being
-orthonormal. --/
+orthonormal. -/
 theorem Orthonormal.mapLinearIsometryEquiv {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) (f : E ≃ₗᵢ[𝕜] E') :
     Orthonormal 𝕜 (v.map f.toLinearEquiv) :=
   hv.compLinearIsometryEquiv f
@@ -2664,9 +2664,9 @@ instance may be not definitionally equal to some other “natural” instance. S
 `[normed_space ℝ E]`.
 -/
 theorem isBoundedBilinearMapInner [NormedSpace ℝ E] : IsBoundedBilinearMap ℝ fun p : E × E => ⟪p.1, p.2⟫ :=
-  { add_left := fun _ _ _ => inner_add_left,
+  { addLeft := fun _ _ _ => inner_add_left,
     smul_left := fun r x y => by simp only [← algebra_map_smul 𝕜 r x, algebra_map_eq_of_real, inner_smul_real_left],
-    add_right := fun _ _ _ => inner_add_right,
+    addRight := fun _ _ _ => inner_add_right,
     smul_right := fun r x y => by simp only [← algebra_map_smul 𝕜 r y, algebra_map_eq_of_real, inner_smul_real_right],
     bound :=
       ⟨1, zero_lt_one, fun x y => by
@@ -2729,7 +2729,7 @@ instance IsROrC.innerProductSpace : InnerProductSpace 𝕜 𝕜 where
     unfold inner
     rw [mul_comm, mul_conj, of_real_re, norm_sq_eq_def']
   conj_sym x y := by simp [mul_comm]
-  add_left x y z := by simp [inner, add_mul]
+  addLeft x y z := by simp [inner, add_mul]
   smul_left x y z := by simp [inner, mul_assoc]
 #align is_R_or_C.inner_product_space IsROrC.innerProductSpace
 
@@ -2745,7 +2745,7 @@ theorem IsROrC.inner_apply (x y : 𝕜) : ⟪x, y⟫ = conj x * y :=
 instance Submodule.innerProductSpace (W : Submodule 𝕜 E) : InnerProductSpace 𝕜 W :=
   { Submodule.normedSpace W with toNormedAddCommGroup := Submodule.normedAddCommGroup _,
     inner := fun x y => ⟪(x : E), (y : E)⟫, conj_sym := fun _ _ => inner_conj_sym _ _,
-    norm_sq_eq_inner := fun _ => norm_sq_eq_inner _, add_left := fun _ _ _ => inner_add_left,
+    norm_sq_eq_inner := fun _ => norm_sq_eq_inner _, addLeft := fun _ _ _ => inner_add_left,
     smul_left := fun _ _ _ => inner_smul_left }
 #align submodule.inner_product_space Submodule.innerProductSpace
 
@@ -4827,7 +4827,7 @@ def InnerProductSpace.isROrCToReal : InnerProductSpace ℝ E :=
   { HasInner.isROrCToReal 𝕜 E, NormedSpace.restrictScalars ℝ 𝕜 E with
     toNormedAddCommGroup := InnerProductSpace.toNormedAddCommGroup 𝕜, norm_sq_eq_inner := norm_sq_eq_inner,
     conj_sym := fun x y => inner_re_symm,
-    add_left := fun x y z => by
+    addLeft := fun x y z => by
       change re ⟪x + y, z⟫ = re ⟪x, z⟫ + re ⟪y, z⟫
       simp [inner_add_left],
     smul_left := fun x y r => by
@@ -5174,7 +5174,7 @@ instance : InnerProductSpace 𝕜 (Completion E) where
       (isClosedEq (continuous_conj.comp (Continuous.inner continuous_snd continuous_fst))
         (Continuous.inner continuous_fst continuous_snd))
       fun a b => by simp only [inner_coe, inner_conj_sym]
-  add_left x y z :=
+  addLeft x y z :=
     Completion.inductionOn₃ x y z
       (isClosedEq
         (Continuous.inner (continuous_fst.add (continuous_fst.comp continuous_snd))
