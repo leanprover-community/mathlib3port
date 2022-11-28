@@ -8,7 +8,7 @@ import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Biproducts
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Products
-import Mathbin.CategoryTheory.Preadditive.Default
+import Mathbin.CategoryTheory.Preadditive.Basic
 import Mathbin.Tactic.Abel
 
 /-!

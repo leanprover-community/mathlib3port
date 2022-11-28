@@ -7,7 +7,7 @@ import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
 import Mathbin.CategoryTheory.Limits.Shapes.Kernels
 import Mathbin.CategoryTheory.Limits.Shapes.NormalMono.Equalizers
 import Mathbin.CategoryTheory.Abelian.Images
-import Mathbin.CategoryTheory.Preadditive.Default
+import Mathbin.CategoryTheory.Preadditive.Basic
 
 /-!
 # Every non_preadditive_abelian category is preadditive

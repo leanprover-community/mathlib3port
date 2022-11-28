@@ -170,57 +170,5 @@ theorem ideal_prod_prime (I : Ideal (R × S)) :
     
 #align ideal.ideal_prod_prime Ideal.ideal_prod_prime
 
-@[simp]
-private def prime_ideals_equiv_impl :
-    Sum { I : Ideal R // I.IsPrime } { J : Ideal S // J.IsPrime } → { K : Ideal (R × S) // K.IsPrime }
-  | Sum.inl ⟨I, hI⟩ => ⟨Ideal.prod I ⊤, is_prime_ideal_prod_top⟩
-  | Sum.inr ⟨J, hJ⟩ => ⟨Ideal.prod ⊤ J, is_prime_ideal_prod_top'⟩
-#align ideal.prime_ideals_equiv_impl ideal.prime_ideals_equiv_impl
-
-section
-
-variable (R S)
-
-/-- The prime ideals of `R × S` are in bijection with the disjoint union of the prime ideals
-    of `R` and the prime ideals of `S`. -/
-noncomputable def primeIdealsEquiv :
-    { K : Ideal (R × S) // K.IsPrime } ≃ Sum { I : Ideal R // I.IsPrime } { J : Ideal S // J.IsPrime } :=
-  Equiv.symm <|
-    Equiv.ofBijective primeIdealsEquivImpl
-      (by
-        constructor
-        · rintro (⟨I, hI⟩ | ⟨J, hJ⟩) (⟨I', hI'⟩ | ⟨J', hJ'⟩) h <;> simp [Prod.ext_iff] at h
-          · simp [h]
-            
-          · exact False.elim (hI.ne_top h.1)
-            
-          · exact False.elim (hJ.ne_top h.2)
-            
-          · simp [h]
-            
-          
-        · rintro ⟨I, hI⟩
-          rcases(ideal_prod_prime I).1 hI with (⟨p, ⟨hp, rfl⟩⟩ | ⟨p, ⟨hp, rfl⟩⟩)
-          · exact ⟨Sum.inl ⟨p, hp⟩, rfl⟩
-            
-          · exact ⟨Sum.inr ⟨p, hp⟩, rfl⟩
-            
-          )
-#align ideal.prime_ideals_equiv Ideal.primeIdealsEquiv
-
-end
-
-@[simp]
-theorem prime_ideals_equiv_symm_inl (h : I.IsPrime) :
-    (primeIdealsEquiv R S).symm (Sum.inl ⟨I, h⟩) = ⟨prod I ⊤, is_prime_ideal_prod_top⟩ :=
-  rfl
-#align ideal.prime_ideals_equiv_symm_inl Ideal.prime_ideals_equiv_symm_inl
-
-@[simp]
-theorem prime_ideals_equiv_symm_inr (h : J.IsPrime) :
-    (primeIdealsEquiv R S).symm (Sum.inr ⟨J, h⟩) = ⟨prod ⊤ J, is_prime_ideal_prod_top'⟩ :=
-  rfl
-#align ideal.prime_ideals_equiv_symm_inr Ideal.prime_ideals_equiv_symm_inr
-
 end Ideal
 

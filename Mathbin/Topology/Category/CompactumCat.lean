@@ -6,8 +6,8 @@ Authors: Adam Topaz
 import Mathbin.CategoryTheory.Monad.Types
 import Mathbin.CategoryTheory.Monad.Limits
 import Mathbin.CategoryTheory.Equivalence
-import Mathbin.Topology.Category.CompHausCat.Default
-import Mathbin.Topology.Category.ProfiniteCat.Default
+import Mathbin.Topology.Category.CompHausCat.Basic
+import Mathbin.Topology.Category.ProfiniteCat.Basic
 import Mathbin.Data.Set.Constructions
 
 /-!

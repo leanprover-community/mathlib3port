@@ -411,7 +411,7 @@ def primeSpectrumEquiv : PrimeSpectrum A ≃ { S | A ≤ S } where
   invFun S := ⟨idealOfLe _ S S.2, inferInstance⟩
   left_inv P := by
     ext1
-    simpa
+    simp
   right_inv S := by
     ext1
     simp
@@ -433,7 +433,7 @@ def primeSpectrumOrderEquiv : (PrimeSpectrum A)ᵒᵈ ≃o { S | A ≤ S } :=
 instance linearOrderOverring : LinearOrder { S | A ≤ S } :=
   { (inferInstance : PartialOrder _) with
     le_total :=
-      let i : IsTotal (PrimeSpectrum A) (· ≤ ·) := (Subtype.relEmbedding _ _).IsTotal
+      let i : IsTotal (PrimeSpectrum A) (· ≤ ·) := ⟨fun ⟨x, _⟩ ⟨y, _⟩ => LE.le.is_total.Total x y⟩
       (prime_spectrum_order_equiv A).symm.toRelEmbedding.IsTotal.Total,
     decidableLe := inferInstance }
 #align valuation_subring.linear_order_overring ValuationSubring.linearOrderOverring

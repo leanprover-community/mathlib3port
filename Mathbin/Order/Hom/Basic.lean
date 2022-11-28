@@ -7,7 +7,7 @@ import Mathbin.Logic.Equiv.Option
 import Mathbin.Order.RelIso.Basic
 import Mathbin.Tactic.Monotonicity.Basic
 import Mathbin.Tactic.AssertExists
-import Mathbin.Order.BoundedOrder
+import Mathbin.Order.Disjoint
 
 /-!
 # Order homomorphisms

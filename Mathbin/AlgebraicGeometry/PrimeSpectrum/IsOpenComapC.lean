@@ -34,7 +34,7 @@ def imageOfDf (f) : Set (PrimeSpectrum R) :=
 #align algebraic_geometry.polynomial.image_of_Df AlgebraicGeometry.Polynomial.imageOfDf
 
 theorem is_open_image_of_Df : IsOpen (imageOfDf f) := by
-  rw [image_of_Df, set_of_exists fun i (x : PrimeSpectrum R) => coeff f i ∉ x.val]
+  rw [image_of_Df, set_of_exists fun i (x : PrimeSpectrum R) => coeff f i ∉ x.asIdeal]
   exact is_open_Union fun i => is_open_basic_open
 #align algebraic_geometry.polynomial.is_open_image_of_Df AlgebraicGeometry.Polynomial.is_open_image_of_Df
 
@@ -50,12 +50,14 @@ theorem comap_C_mem_image_of_Df {I : PrimeSpectrum R[X]} (H : I ∈ (zeroLocus {
 morphism `C⁺ : Spec R[x] → Spec R`. -/
 theorem image_of_Df_eq_comap_C_compl_zero_locus :
     imageOfDf f = PrimeSpectrum.comap (c : R →+* R[X]) '' zeroLocus {f}ᶜ := by
-  refine' ext fun x => ⟨fun hx => ⟨⟨map C x.val, is_prime_map_C_of_is_prime x.property⟩, ⟨_, _⟩⟩, _⟩
+  ext x
+  refine' ⟨fun hx => ⟨⟨map C x.as_ideal, is_prime_map_C_of_is_prime x.is_prime⟩, ⟨_, _⟩⟩, _⟩
   · rw [mem_compl_iff, mem_zero_locus, singleton_subset_iff]
     cases' hx with i hi
     exact fun a => hi (mem_map_C_iff.mp a i)
     
-  · refine' Subtype.ext (ext fun x => ⟨fun h => _, fun h => subset_span (mem_image_of_mem C.1 h)⟩)
+  · ext x
+    refine' ⟨fun h => _, fun h => subset_span (mem_image_of_mem C.1 h)⟩
     rw [← @coeff_C_zero R x _]
     exact mem_map_C_iff.mp h 0
     

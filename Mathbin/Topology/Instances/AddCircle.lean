@@ -57,9 +57,9 @@ def AddCircle [LinearOrderedAddCommGroup 𝕜] [TopologicalSpace 𝕜] [OrderTop
 
 namespace AddCircle
 
-section LinearOrderedField
+section LinearOrderedAddCommGroup
 
-variable [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜] (p q : 𝕜)
+variable [LinearOrderedAddCommGroup 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜] (p : 𝕜)
 
 instance : CoeIsAddMonoidHom 𝕜 (AddCircle p) where
   coe_zero := rfl
@@ -85,6 +85,47 @@ theorem coe_eq_zero_of_pos_iff (hp : 0 < p) {x : 𝕜} (hx : 0 < x) : (x : AddCi
 protected theorem continuous_mk' : Continuous (QuotientAddGroup.mk' (zmultiples p) : 𝕜 → AddCircle p) :=
   continuous_coinduced_rng
 #align add_circle.continuous_mk' AddCircle.continuous_mk'
+
+variable [hp : Fact (0 < p)]
+
+include hp
+
+variable [Archimedean 𝕜]
+
+/-- The natural equivalence between `add_circle p` and the half-open interval `[0, p)`. -/
+def equivIco : AddCircle p ≃ ico 0 p where
+  invFun := QuotientAddGroup.mk' _ ∘ coe
+  toFun x := ⟨(to_Ico_mod_periodic 0 hp.out).lift x, Quot.induction_on x <| to_Ico_mod_mem_Ico' hp.out⟩
+  right_inv := by
+    rintro ⟨x, hx⟩
+    ext
+    simp [to_Ico_mod_eq_self, hx.1, hx.2]
+  left_inv := by
+    rintro ⟨x⟩
+    change QuotientAddGroup.mk (toIcoMod 0 hp.out x) = QuotientAddGroup.mk x
+    rw [QuotientAddGroup.eq', neg_add_eq_sub, self_sub_to_Ico_mod]
+    apply zsmul_mem_zmultiples
+#align add_circle.equiv_Ico AddCircle.equivIco
+
+@[continuity]
+theorem continuous_equiv_Ico_symm : Continuous (equivIco p).symm :=
+  continuous_coinduced_rng.comp continuous_induced_dom
+#align add_circle.continuous_equiv_Ico_symm AddCircle.continuous_equiv_Ico_symm
+
+/-- The image of the closed interval `[0, p]` under the quotient map `𝕜 → add_circle p` is the
+entire space. -/
+@[simp]
+theorem coe_image_Icc_eq : (coe : 𝕜 → AddCircle p) '' icc 0 p = univ := by
+  refine' eq_univ_iff_forall.mpr fun x => _
+  let y := equiv_Ico p x
+  exact ⟨y, ⟨y.2.1, y.2.2.le⟩, (equiv_Ico p).symm_apply_apply x⟩
+#align add_circle.coe_image_Icc_eq AddCircle.coe_image_Icc_eq
+
+end LinearOrderedAddCommGroup
+
+section LinearOrderedField
+
+variable [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜] (p q : 𝕜)
 
 /-- An auxiliary definition used only for constructing `add_circle.equiv_add_circle`. -/
 private def equiv_add_circle_aux (hp : p ≠ 0) : AddCircle p →+ AddCircle q :=
@@ -127,39 +168,10 @@ section FloorRing
 
 variable [FloorRing 𝕜]
 
-/-- The natural equivalence between `add_circle p` and the half-open interval `[0, p)`. -/
-def equivIco : AddCircle p ≃ ico 0 p where
-  invFun := QuotientAddGroup.mk' _ ∘ coe
-  toFun x := ⟨(to_Ico_mod_periodic 0 hp.out).lift x, Quot.induction_on x <| to_Ico_mod_mem_Ico' hp.out⟩
-  right_inv := by
-    rintro ⟨x, hx⟩
-    ext
-    simp [to_Ico_mod_eq_self, hx.1, hx.2]
-  left_inv := by
-    rintro ⟨x⟩
-    change QuotientAddGroup.mk (toIcoMod 0 hp.out x) = QuotientAddGroup.mk x
-    rw [QuotientAddGroup.eq', neg_add_eq_sub, self_sub_to_Ico_mod, zsmul_eq_mul]
-    apply int_cast_mul_mem_zmultiples
-#align add_circle.equiv_Ico AddCircle.equivIco
-
 @[simp]
 theorem coe_equiv_Ico_mk_apply (x : 𝕜) : (equivIco p <| QuotientAddGroup.mk x : 𝕜) = Int.fract (x / p) * p :=
   to_Ico_mod_eq_fract_mul _ x
 #align add_circle.coe_equiv_Ico_mk_apply AddCircle.coe_equiv_Ico_mk_apply
-
-@[continuity]
-theorem continuous_equiv_Ico_symm : Continuous (equivIco p).symm :=
-  continuous_coinduced_rng.comp continuous_induced_dom
-#align add_circle.continuous_equiv_Ico_symm AddCircle.continuous_equiv_Ico_symm
-
-/-- The image of the closed interval `[0, p]` under the quotient map `𝕜 → add_circle p` is the
-entire space. -/
-@[simp]
-theorem coe_image_Icc_eq : (coe : 𝕜 → AddCircle p) '' icc 0 p = univ := by
-  refine' eq_univ_iff_forall.mpr fun x => _
-  let y := equiv_Ico p x
-  exact ⟨y, ⟨y.2.1, y.2.2.le⟩, (equiv_Ico p).symm_apply_apply x⟩
-#align add_circle.coe_image_Icc_eq AddCircle.coe_image_Icc_eq
 
 instance : DivisibleBy (AddCircle p) ℤ where
   div x n := (↑((n : 𝕜)⁻¹ * (equivIco p x : 𝕜)) : AddCircle p)

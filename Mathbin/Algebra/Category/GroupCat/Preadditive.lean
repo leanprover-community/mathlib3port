@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
 import Mathbin.Algebra.Category.GroupCat.Basic
-import Mathbin.CategoryTheory.Preadditive.Default
+import Mathbin.CategoryTheory.Preadditive.Basic
 
 /-!
 # The category of additive commutative groups is preadditive.

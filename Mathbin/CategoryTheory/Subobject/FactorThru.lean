@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Scott Morrison
 -/
 import Mathbin.CategoryTheory.Subobject.Basic
-import Mathbin.CategoryTheory.Preadditive.Default
+import Mathbin.CategoryTheory.Preadditive.Basic
 
 /-!
 # Factoring through subobjects

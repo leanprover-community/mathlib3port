@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
 import Mathbin.Algebra.Group.WithOne
-import Mathbin.Algebra.GroupWithZero.Default
+import Mathbin.Algebra.GroupWithZero.Basic
 import Mathbin.Algebra.Order.Monoid.Canonical.Defs
 
 /-!

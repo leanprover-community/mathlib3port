@@ -25,11 +25,11 @@ variable {A : Type u} [CommRing A] [IsDomain A] [IsNoetherianRing A]
 /-- In a noetherian ring, every ideal contains a product of prime ideals
 ([samuel, § 3.3, Lemma 3])-/
 theorem exists_prime_spectrum_prod_le (I : Ideal R) :
-    ∃ Z : Multiset (PrimeSpectrum R), Multiset.prod (Z.map (coe : Subtype _ → Ideal R)) ≤ I := by
+    ∃ Z : Multiset (PrimeSpectrum R), Multiset.prod (Z.map asIdeal) ≤ I := by
   refine' IsNoetherian.induction (fun (M : Ideal R) hgt => _) I
   by_cases h_prM : M.is_prime
   · use {⟨M, h_prM⟩}
-    rw [Multiset.map_singleton, Multiset.prod_singleton, Subtype.coe_mk]
+    rw [Multiset.map_singleton, Multiset.prod_singleton]
     exact le_rfl
     
   by_cases htop : M = ⊤
@@ -59,9 +59,7 @@ theorem exists_prime_spectrum_prod_le (I : Ideal R) :
   product of prime ideals; in a field, the whole ring is a non-zero ideal containing only 0 as
   product or prime ideals ([samuel, § 3.3, Lemma 3]) -/
 theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) {I : Ideal A} (h_nzI : I ≠ ⊥) :
-    ∃ Z : Multiset (PrimeSpectrum A),
-      Multiset.prod (Z.map (coe : Subtype _ → Ideal A)) ≤ I ∧ Multiset.prod (Z.map (coe : Subtype _ → Ideal A)) ≠ ⊥ :=
-  by
+    ∃ Z : Multiset (PrimeSpectrum A), Multiset.prod (Z.map asIdeal) ≤ I ∧ Multiset.prod (Z.map asIdeal) ≠ ⊥ := by
   revert h_nzI
   refine' IsNoetherian.induction (fun (M : Ideal A) hgt => _) I
   intro h_nzM
@@ -71,11 +69,11 @@ theorem exists_prime_spectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) 
   · rcases h_topM with rfl
     obtain ⟨p_id, h_nzp, h_pp⟩ : ∃ p : Ideal A, p ≠ ⊥ ∧ p.IsPrime := by apply ring.not_is_field_iff_exists_prime.mp h_fA
     use ({⟨p_id, h_pp⟩} : Multiset (PrimeSpectrum A)), le_top
-    rwa [Multiset.map_singleton, Multiset.prod_singleton, Subtype.coe_mk]
+    rwa [Multiset.map_singleton, Multiset.prod_singleton]
     
   by_cases h_prM : M.is_prime
   · use ({⟨M, h_prM⟩} : Multiset (PrimeSpectrum A))
-    rw [Multiset.map_singleton, Multiset.prod_singleton, Subtype.coe_mk]
+    rw [Multiset.map_singleton, Multiset.prod_singleton]
     exact ⟨le_rfl, h_nzM⟩
     
   obtain ⟨x, hx, y, hy, h_xy⟩ := (ideal.not_is_prime_iff.mp h_prM).resolve_left h_topM

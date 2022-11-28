@@ -3,7 +3,7 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 -/
-import Mathbin.Topology.Category.ProfiniteCat.Default
+import Mathbin.Topology.Category.ProfiniteCat.Basic
 import Mathbin.Topology.LocallyConstant.Basic
 import Mathbin.Topology.DiscreteQuotient
 

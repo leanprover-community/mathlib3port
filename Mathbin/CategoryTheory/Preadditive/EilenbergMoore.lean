@@ -3,7 +3,7 @@ Copyright (c) 2022 Julian Kuelshammer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
-import Mathbin.CategoryTheory.Preadditive.Default
+import Mathbin.CategoryTheory.Preadditive.Basic
 import Mathbin.CategoryTheory.Monad.Algebra
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 

@@ -927,7 +927,7 @@ import Mathbin.CategoryTheory.Limits.SmallComplete
 import Mathbin.CategoryTheory.Limits.Types
 import Mathbin.CategoryTheory.Limits.Unit
 import Mathbin.CategoryTheory.Limits.Yoneda
-import Mathbin.CategoryTheory.Linear.Default
+import Mathbin.CategoryTheory.Linear.Basic
 import Mathbin.CategoryTheory.Linear.FunctorCategory
 import Mathbin.CategoryTheory.Linear.LinearFunctor
 import Mathbin.CategoryTheory.Linear.Yoneda
@@ -991,8 +991,8 @@ import Mathbin.CategoryTheory.Pempty
 import Mathbin.CategoryTheory.Pi.Basic
 import Mathbin.CategoryTheory.Preadditive.MatCat
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
+import Mathbin.CategoryTheory.Preadditive.Basic
 import Mathbin.CategoryTheory.Preadditive.Biproducts
-import Mathbin.CategoryTheory.Preadditive.Default
 import Mathbin.CategoryTheory.Preadditive.EilenbergMoore
 import Mathbin.CategoryTheory.Preadditive.EndoFunctor
 import Mathbin.CategoryTheory.Preadditive.FunctorCategory
@@ -2232,6 +2232,7 @@ import Mathbin.Order.CountableDenseLinearOrder
 import Mathbin.Order.Cover
 import Mathbin.Order.Default
 import Mathbin.Order.Directed
+import Mathbin.Order.Disjoint
 import Mathbin.Order.Disjointed
 import Mathbin.Order.Extension.Linear
 import Mathbin.Order.Extension.Well
@@ -2296,6 +2297,7 @@ import Mathbin.Order.Partition.Equipartition
 import Mathbin.Order.Partition.Finpartition
 import Mathbin.Order.Pfilter
 import Mathbin.Order.PrimeIdeal
+import Mathbin.Order.PropInstances
 import Mathbin.Order.RelClasses
 import Mathbin.Order.RelIso.Basic
 import Mathbin.Order.RelIso.Group
@@ -2312,6 +2314,7 @@ import Mathbin.Order.Synonym
 import Mathbin.Order.UpperLower
 import Mathbin.Order.WellFounded
 import Mathbin.Order.WellFoundedSet
+import Mathbin.Order.WithBot
 import Mathbin.Order.Zorn
 import Mathbin.Order.ZornAtoms
 import Mathbin.Probability.BorelCantelli
@@ -2771,13 +2774,13 @@ import Mathbin.Topology.Bornology.Basic
 import Mathbin.Topology.Bornology.Constructions
 import Mathbin.Topology.Bornology.Hom
 import Mathbin.Topology.Category.BornCat
-import Mathbin.Topology.Category.CompHausCat.Default
+import Mathbin.Topology.Category.CompHausCat.Basic
 import Mathbin.Topology.Category.CompHausCat.Projective
 import Mathbin.Topology.Category.CompactumCat
 import Mathbin.Topology.Category.LocaleCat
 import Mathbin.Topology.Category.ProfiniteCat.AsLimit
+import Mathbin.Topology.Category.ProfiniteCat.Basic
 import Mathbin.Topology.Category.ProfiniteCat.CofilteredLimit
-import Mathbin.Topology.Category.ProfiniteCat.Default
 import Mathbin.Topology.Category.ProfiniteCat.Projective
 import Mathbin.Topology.Category.TopCat.Adjunctions
 import Mathbin.Topology.Category.TopCat.Basic

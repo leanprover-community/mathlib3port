@@ -1066,7 +1066,7 @@ theorem mul_hom_ext' [MulOneClass N] {f g : Multiplicative (α →₀ M) →* N}
 
 theorem map_range_add [AddZeroClass N] {f : M → N} {hf : f 0 = 0} (hf' : ∀ x y, f (x + y) = f x + f y)
     (v₁ v₂ : α →₀ M) : mapRange f hf (v₁ + v₂) = mapRange f hf v₁ + mapRange f hf v₂ :=
-  ext fun a => by simp only [hf', add_apply, map_range_apply]
+  ext fun _ => by simp only [hf', add_apply, map_range_apply]
 #align finsupp.map_range_add Finsupp.map_range_add
 
 /-- Bundle `emb_domain f` as an additive map from `α →₀ M` to `β →₀ M`. -/
@@ -1109,29 +1109,40 @@ end AddMonoid
 instance [AddCommMonoid M] : AddCommMonoid (α →₀ M) :=
   FunLike.coe_injective.AddCommMonoid _ Finsupp.coe_zero Finsupp.coe_add fun _ _ => rfl
 
-instance [AddGroup G] : Neg (α →₀ G) :=
+instance [NegZeroClass G] : Neg (α →₀ G) :=
   ⟨mapRange Neg.neg neg_zero⟩
 
 @[simp]
-protected theorem coe_neg [AddGroup G] (g : α →₀ G) : ⇑(-g) = -g :=
+protected theorem coe_neg [NegZeroClass G] (g : α →₀ G) : ⇑(-g) = -g :=
   rfl
 #align finsupp.coe_neg Finsupp.coe_neg
 
-theorem neg_apply [AddGroup G] (g : α →₀ G) (a : α) : (-g) a = -g a :=
+theorem neg_apply [NegZeroClass G] (g : α →₀ G) (a : α) : (-g) a = -g a :=
   rfl
 #align finsupp.neg_apply Finsupp.neg_apply
 
-instance [AddGroup G] : Sub (α →₀ G) :=
+theorem map_range_neg [NegZeroClass G] [NegZeroClass H] {f : G → H} {hf : f 0 = 0} (hf' : ∀ x, f (-x) = -f x)
+    (v : α →₀ G) : mapRange f hf (-v) = -mapRange f hf v :=
+  ext fun _ => by simp only [hf', neg_apply, map_range_apply]
+#align finsupp.map_range_neg Finsupp.map_range_neg
+
+instance [SubNegZeroMonoid G] : Sub (α →₀ G) :=
   ⟨zipWith Sub.sub (sub_zero _)⟩
 
 @[simp]
-protected theorem coe_sub [AddGroup G] (g₁ g₂ : α →₀ G) : ⇑(g₁ - g₂) = g₁ - g₂ :=
+protected theorem coe_sub [SubNegZeroMonoid G] (g₁ g₂ : α →₀ G) : ⇑(g₁ - g₂) = g₁ - g₂ :=
   rfl
 #align finsupp.coe_sub Finsupp.coe_sub
 
-theorem sub_apply [AddGroup G] (g₁ g₂ : α →₀ G) (a : α) : (g₁ - g₂) a = g₁ a - g₂ a :=
+theorem sub_apply [SubNegZeroMonoid G] (g₁ g₂ : α →₀ G) (a : α) : (g₁ - g₂) a = g₁ a - g₂ a :=
   rfl
 #align finsupp.sub_apply Finsupp.sub_apply
+
+theorem map_range_sub [SubNegZeroMonoid G] [SubNegZeroMonoid H] {f : G → H} {hf : f 0 = 0}
+    (hf' : ∀ x y, f (x - y) = f x - f y) (v₁ v₂ : α →₀ G) :
+    mapRange f hf (v₁ - v₂) = mapRange f hf v₁ - mapRange f hf v₂ :=
+  ext fun _ => by simp only [hf', sub_apply, map_range_apply]
+#align finsupp.map_range_sub Finsupp.map_range_sub
 
 /-- Note the general `finsupp.has_smul` instance doesn't apply as `ℤ` is not distributive
 unless `β i`'s addition is commutative. -/

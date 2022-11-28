@@ -5,7 +5,7 @@ Authors: Markus Himmel, Scott Morrison
 -/
 import Mathbin.Algebra.Group.Ext
 import Mathbin.CategoryTheory.Simple
-import Mathbin.CategoryTheory.Linear.Default
+import Mathbin.CategoryTheory.Linear.Basic
 import Mathbin.CategoryTheory.Endomorphism
 import Mathbin.Algebra.Algebra.Spectrum
 

@@ -352,8 +352,8 @@ theorem exists_multiset_prod_cons_le_and_prod_not_le [IsDedekindDomain A] (hNF :
   obtain ⟨_, hPZ', hPM⟩ := (hM.is_prime.multiset_prod_le (mt multiset.map_eq_zero.mp hZ0)).mp hZM
   -- Then in fact there is a `P ∈ Z` with `P ≤ M`.
   obtain ⟨P, hPZ, rfl⟩ := multiset.mem_map.mp hPZ'
-  letI := Classical.decEq (Ideal A)
-  have := Multiset.map_erase PrimeSpectrum.asIdeal Subtype.coe_injective P Z
+  classical
+  have := Multiset.map_erase PrimeSpectrum.asIdeal PrimeSpectrum.ext P Z
   obtain ⟨hP0, hZP0⟩ : P.as_ideal ≠ ⊥ ∧ ((Z.erase P).map PrimeSpectrum.asIdeal).Prod ≠ ⊥ := by
     rwa [Ne.def, ← Multiset.cons_erase hPZ', Multiset.prod_cons, Ideal.mul_eq_bot, not_or, ← this] at hprodZ
   -- By maximality of `P` and `M`, we have that `P ≤ M` implies `P = M`.

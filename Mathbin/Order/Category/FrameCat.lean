@@ -5,7 +5,7 @@ Authors: Yaël Dillies
 -/
 import Mathbin.Order.Category.LatticeCat
 import Mathbin.Order.Hom.CompleteLattice
-import Mathbin.Topology.Category.CompHausCat.Default
+import Mathbin.Topology.Category.CompHausCat.Basic
 import Mathbin.Topology.Sets.Opens
 
 /-!

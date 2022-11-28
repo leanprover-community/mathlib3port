@@ -6,7 +6,7 @@ Authors: Scott Morrison
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.BigOperators.Pi
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
-import Mathbin.CategoryTheory.Preadditive.Default
+import Mathbin.CategoryTheory.Preadditive.Basic
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 import Mathbin.Data.Matrix.Dmatrix
 import Mathbin.Data.Matrix.Basic

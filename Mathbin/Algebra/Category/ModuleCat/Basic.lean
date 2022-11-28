@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert A. Spencer, Markus Himmel
 -/
 import Mathbin.Algebra.Category.GroupCat.Preadditive
-import Mathbin.CategoryTheory.Linear.Default
+import Mathbin.CategoryTheory.Linear.Basic
 import Mathbin.CategoryTheory.Elementwise
 import Mathbin.LinearAlgebra.Basic
 import Mathbin.CategoryTheory.Conj
